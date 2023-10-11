@@ -54,6 +54,8 @@
         'web.qunit_suite_tests': [
             'hr/static/tests/**/*',
             ('remove', 'hr/static/tests/tours/**/*'),
+            ('remove', 'hr/static/tests/disable_patch.js'),
+            'hr/static/tests/disable_patch.js',
         ],
         'web.assets_tests': [
             'hr/static/tests/tours/**/*',

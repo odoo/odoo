@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.AvatarCardEmployeePopover" t-inherit="mail.AvatarCardPopover">
+        <xpath expr="//span[hasclass('o_avatar')]/img" position="attributes">
+            <attribute name="t-attf-src">/web/image/{{ props.recordModel }}/{{ props.id }}/avatar_128</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="replace">
+            <span t-if="record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status">
+                <i t-if="record.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                <i t-elif="record.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
+                <i t-elif="record.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
+                <i t-elif="record.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+                <i t-elif="record.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+            </span>
+            <span t-elif="record.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status">
+                <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                <i t-if="record.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Present"/>
+                <!-- Employee is not present/connected and it is normal according to his work schedule -->
+                <i t-if="record.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle-o text-warning" title="Absent" role="img" aria-label="Absent"/>
+                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                <i t-if="record.hr_icon_display == 'presence_absent_active'" class="fa fa-fw fa-circle-o text-success" title="Present but not active" role="img" aria-label="Present but not active"/>
+                <!-- Employee is not here but according to his work schedule, he should be connected -->
+                <i t-if="record.hr_icon_display == 'presence_to_define'" class="fa fa-fw fa-circle-o text-muted" title="No information" role="img" aria-label="To define"/>
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_card_user_infos')]/span" position="attributes">
+            <attribute name="t-esc">record.name</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="replace">
+            <div class="d-flex gap-2 o_avatar_card_buttons">
+                <button class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick" t-if="record.user_id and !record.share"> Send message </button>
+                <button class="btn btn-secondary btn-sm o_employee_profile_button" t-on-click.stop="onClickViewEmployee"> View profile </button>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="hr.avatarCardEmployeeInfos">
+        <small class="text-muted" t-if="record.job_title" t-esc="record.job_title"/>
+        <span class="text-muted" t-if="record.department_id" data-tooltip="Department" t-esc="record.department_id[1]"/>
+    </t>
+</templates>
