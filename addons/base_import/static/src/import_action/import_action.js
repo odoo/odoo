@@ -57,7 +57,7 @@ export class ImportAction extends Component {
         this.router.pushState(newState, { replace: true });
     }
 
-    exit() {
+    exit(resIds) {
         this.env.config.historyBack();
     }
 
@@ -180,7 +180,7 @@ export class ImportAction extends Component {
             this.notification.add(_t("%s records successfully imported", res.ids.length), {
                 type: "success",
             });
-            this.exit();
+            this.exit(res.ids);
         }
     }
 
