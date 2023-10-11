@@ -1737,6 +1737,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'uom_po_id': uom_unit.id,
         })
 
+<<<<<<< HEAD
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
 
@@ -2514,3 +2515,60 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move2.quantity_done = 2
         picking2.button_validate()
         self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
+||||||| parent of a4b7e551b82 (temp)
+        # Check if something was posted in the price difference account
+        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(len(price_diff_aml), 1, "A line should have been generated in the price difference account.")
+        self.assertAlmostEqual(price_diff_aml.balance, 18.90)
+=======
+        # Check if something was posted in the price difference account
+        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(len(price_diff_aml), 1, "A line should have been generated in the price difference account.")
+        self.assertAlmostEqual(price_diff_aml.balance, 18.90)
+
+    def test_tax_included_in_price_and_price_difference(self):
+        """
+        FIFO auto, bill ordered qties
+        Tax incl. in price
+        PO 1@100 with tax
+        Bill 1@100 with tax
+        It should not generate any line in price diff account
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.categ_id.property_account_creditor_price_difference_categ = self.price_diff_account
+        self.product1.product_tmpl_id.purchase_method = 'purchase'
+
+        tax = self.product1.supplier_taxes_id
+        tax.price_include = True
+
+        uom_ten = self.env['uom.uom'].create({
+            'name': 'Ten',
+            'category_id': self.product1.uom_id.category_id.id,
+            'factor_inv': 10,
+            'uom_type': 'bigger',
+            'rounding': 0.001,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': uom_ten.id,
+                    'price_unit': 100.0,
+                    'taxes_id': [(6, 0, tax.ids)]
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        self.assertEqual(bill.state, 'posted')
+        self.assertFalse(bill.line_ids.filtered(lambda l: l.account_id == self.price_diff_account))
+>>>>>>> a4b7e551b82 (temp)
