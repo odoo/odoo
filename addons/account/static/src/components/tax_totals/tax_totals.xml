@@ -23,9 +23,8 @@
                     </t>
                     <t t-else="">
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
-                            <i class="fa fa-pencil me-2"/>
                             <span class="o_tax_group_amount_value o_list_monetary">
-                                <t t-out="props.taxGroup.formatted_tax_group_amount"/>
+                                <i class="fa fa-pencil me-2"/> <t t-out="props.taxGroup.formatted_tax_group_amount"/>
                             </span>
                         </span>
                     </t>
