@@ -4,12 +4,6 @@ import { Order, Payment } from "@point_of_sale/app/store/models";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 patch(Order.prototype, {
-    _get_online_payment_url() {
-        return `${this.pos.base_url}/pos/pay/${this.server_id}?access_token=${this.access_token}`;
-    },
-    _get_online_payment_qr_code_data() {
-        return this.server_id ? this._make_qr_code_data(this._get_online_payment_url()) : false;
-    },
     async update_online_payments_data_with_server(orm, next_online_payment_amount) {
         if (!this.server_id) {
             return false;

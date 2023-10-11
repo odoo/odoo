@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { uuidv4, constructFullProductName } from "@point_of_sale/utils";
+import { qrCodeSrc, uuidv4, constructFullProductName } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import {
@@ -1627,7 +1627,11 @@ export class Order extends PosModel {
                 logo: this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
+            pos_qr_code:
+                this.pos.company.point_of_sale_use_ticket_qr_code &&
+                qrCodeSrc(
+                    `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
+                ),
             ticket_code: this.pos.company.point_of_sale_ticket_unique_code
                 ? this.ticketCode
                 : false,
@@ -2811,21 +2815,6 @@ export class Order extends PosModel {
         } else {
             return true;
         }
-    }
-    _get_qr_code_data() {
-        if (this.pos.company.point_of_sale_use_ticket_qr_code) {
-            // Use the unique access token to ensure the authenticity of the request. Use the order reference as a second check just in case.
-            return this._make_qr_code_data(
-                `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
-            );
-        } else {
-            return false;
-        }
-    }
-    _make_qr_code_data(url) {
-        const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-        const qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(url, 150, 150));
-        return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
     }
     /**
      * Returns a random 5 digits alphanumeric code
