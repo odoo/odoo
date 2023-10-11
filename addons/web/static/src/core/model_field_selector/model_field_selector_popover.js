@@ -91,7 +91,7 @@ export class ModelFieldSelectorPopover extends Component {
         filter: { type: Function, optional: true },
         followRelations: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
-        path: String,
+        path: [String, { value: 0 }, { value: 1 }],
         resModel: String,
         showSearchInput: { type: Boolean, optional: true },
         update: Function,
