@@ -133,6 +133,12 @@ export class Wysiwyg extends Component {
         }),
     }
     imageCropProps = useState({
+<<<<<<< HEAD
+||||||| parent of 26488da34931 (temp)
+        rpc: this._rpc.bind(this),
+=======
+        rpc: this._serviceRpc.bind(this),
+>>>>>>> 26488da34931 (temp)
         showCount: 0,
         media: undefined,
         mimetype: undefined,
