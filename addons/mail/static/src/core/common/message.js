@@ -52,6 +52,7 @@ import { cookie } from "@web/core/browser/cookie";
 export class Message extends Component {
     // This is the darken version of #71639e
     static SHADOW_LINK_COLOR = "#66598f";
+    static SHADOW_HIGHLIGHT_COLOR = "#e99d00bf";
     static SHADOW_LINK_HOVER_COLOR = "#564b79";
     static components = {
         ActionSwiper,
@@ -155,7 +156,8 @@ export class Message extends Component {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const body = document.createElement("span");
-                body.innerHTML = this.message.body;
+                body.innerHTML =
+                    this.props.messageSearch?.highlight(this.message.body) ?? this.message.body;
                 this.insertReadMoreLess($(body));
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 this.shadowStyle = document.createElement("style");
@@ -169,6 +171,9 @@ export class Message extends Component {
                     }
                     a:hover, a *:hover {
                         color: ${this.constructor.SHADOW_LINK_HOVER_COLOR} !important;
+                    }
+                    .o-mail-Message-searchHighlight {
+                        background: ${this.constructor.SHADOW_HIGHLIGHT_COLOR} !important;
                     }
                 `;
                 this.shadowRoot.appendChild(this.shadowStyle);
