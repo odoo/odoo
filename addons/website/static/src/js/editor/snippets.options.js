@@ -412,6 +412,8 @@ const GPSPicker = InputUserValueWidget.extend({
         // not having to load it in the backend too and just using the iframe
         // google object instead.
         this.contentWindow = this.$target[0].ownerDocument.defaultView;
+
+        this.notification = this.bindService("notification");
     },
     /**
      * @override
@@ -570,11 +572,10 @@ const GPSPicker = InputUserValueWidget.extend({
         }
         this._gmapErrorNotified = true;
 
-        this.displayNotification({
-            type: 'danger',
-            sticky: true,
-            message: _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
-        });
+        this.notification.add(
+            _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
+            { type: 'danger', sticky: true }
+        );
         this.trigger_up('gmap_api_request', {
             editableMode: true,
             reconfigure: true,
@@ -1577,6 +1578,7 @@ options.registry.menu_data = options.Class.extend({
         this._super(...arguments);
         this.user = this.bindService("user");
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -1595,7 +1597,7 @@ options.registry.menu_data = options.Class.extend({
             target: this.$target[0],
             wysiwyg,
             container: popoverContainer,
-            notify: this.displayNotification.bind(this),
+            notify: this.notification.add,
             checkIsWebsiteDesigner: () => this.user.hasGroup("website.group_website_designer"),
             onEditLinkClick: (widget) => {
                 var $menu = widget.$target.find('[data-oe-id]');
@@ -2661,6 +2663,13 @@ options.registry.anchor = options.Class.extend({
     /**
      * @override
      */
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
+    /**
+     * @override
+     */
     start() {
         // Generate anchor and copy it to clipboard on click, show the tooltip on success
         const buttonEl = this.el.querySelector("we-button");
@@ -2705,10 +2714,9 @@ options.registry.anchor = options.Class.extend({
         const clipboard = new ClipboardJS(buttonEl, {text: () => this._getAnchorLink()});
         clipboard.on("success", () => {
             const message = markup(_t("Anchor copied to clipboard<br>Link: %s", this._getAnchorLink()));
-            this.displayNotification({
+            this.notification.add(message, {
                 type: "success",
-                message: message,
-                buttons: [{text: _t("Edit"), click: () => this._openAnchorDialog(buttonEl), primary: true}],
+                buttons: [{name: _t("Edit"), onClick: () => this._openAnchorDialog(buttonEl), primary: true}],
             });
         });
     },

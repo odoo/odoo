@@ -362,6 +362,13 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
+    /**
+     * @override
+     */
     willStart: async function () {
         const _super = this._super.bind(this);
 
@@ -517,8 +524,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                                 },
                                 onFailure: () => {
                                     restore();
-                                    this.displayNotification({
-                                        message: _t("Something went wrong."),
+                                    this.notification.add(_t("Something went wrong."), {
                                         type: 'danger',
                                         sticky: true,
                                     });

@@ -29,6 +29,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     init() {
         this.isFullscreen = false;
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
         return this._super(...arguments);
     },
     /**
@@ -115,15 +116,13 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
                     if (!editableMode && session.is_admin) {
                         const message = _t("Cannot load google map.");
                         const urlTitle = _t("Check your configuration.");
-                        this.displayNotification({
-                            type: 'warning',
-                            sticky: true,
-                            message:
-                                markup(`<div>
-                                    <span>${message}</span><br/>
-                                    <a href="/web#action=website.action_website_configuration">${urlTitle}</a>
-                                </div>`),
-                        });
+                        this.notification.add(
+                            markup(`<div>
+                                <span>${message}</span><br/>
+                                <a href="/web#action=website.action_website_configuration">${urlTitle}</a>
+                            </div>`),
+                            { type: 'warning', sticky: true }
+                        );
                     }
                     resolve(false);
                     this._gmapAPILoading = false;

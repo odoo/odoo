@@ -18,6 +18,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this._onReminderToggleClick = debounce(this._onReminderToggleClick, 500, true);
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
     },
 
     //--------------------------------------------------------------------------
@@ -45,10 +46,9 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
             set_reminder_on: reminderOnValue,
         }).then(function (result) {
             if (result.error && result.error === 'ignored') {
-                self.displayNotification({
+                self.notification.add(_t('Talk already in your Favorites'), {
                     type: 'info',
                     title: _t('Error'),
-                    message: _t('Talk already in your Favorites'),
                 });
             } else {
                 self.reminderOn = reminderOnValue;
@@ -56,9 +56,8 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 self.$('.o_wetrack_js_reminder_text').text(reminderText);
                 self._updateDisplay();
                 var message = self.reminderOn ? _t('Talk added to your Favorites') : _t('Talk removed from your Favorites');
-                self.displayNotification({
+                self.notification.add(message, {
                     type: 'info',
-                    title: message
                 });
                 if (self.reminderOn) {
                     core.bus.trigger('open_notification_request', 'add_track_to_favorite', {

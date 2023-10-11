@@ -3,11 +3,15 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-import { markup } from "@odoo/owl";
-
 publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
     selector: '.o_wevent_register_toaster',
-
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
     /**
      * This widget allows to display a toast message on the page.
      *
@@ -16,9 +20,8 @@ publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
     start: function () {
         const message = this.$el.data('message');
         if (message && message.length) {
-            this.displayNotification({
+            this.notification.add(message, {
                 title: _t("Register"),
-                message: markup(message),
                 type: 'info',
             });
         }

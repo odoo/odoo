@@ -8,11 +8,7 @@ import { registry } from '@web/core/registry';
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
-import {
-    makeLegacyNotificationService,
-    mapLegacyEnvToWowlEnv,
-    createWidgetParent,
-} from "../../utils";
+import { mapLegacyEnvToWowlEnv, createWidgetParent } from "../../utils";
 
 import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
@@ -22,8 +18,6 @@ import { _t } from "@web/core/l10n/translation";
 import { App, Component, whenReady } from "@odoo/owl";
 
 const { Settings } = luxon;
-
-const serviceRegistry = registry.category("services");
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -323,9 +317,6 @@ Component.env = legacyEnv;
  */
 export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
-    // add a bunch of mapping services that will redirect service calls from the legacy env
-    // to the wowl env
-    serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     await whenReady();
     const wowlEnv = makeEnv();
 

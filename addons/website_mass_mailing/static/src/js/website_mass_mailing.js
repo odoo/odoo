@@ -18,6 +18,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
     },
     /**
      * @override
@@ -99,10 +100,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         this.$el.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
         const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
         if (tokenObj.error) {
-            self.displayNotification({
+            self.notification.add(tokenObj.error, {
                 type: 'danger',
                 title: _t("Error"),
-                message: tokenObj.error,
                 sticky: true,
             });
             return false;
@@ -123,10 +123,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
                     $popup.modal('hide');
                 }
             }
-            self.displayNotification({
+            self.notification.add(result.toast_content, {
                 type: toastType,
                 title: toastType === 'success' ? _t('Success') : _t('Error'),
-                message: result.toast_content,
                 sticky: true,
             });
         });

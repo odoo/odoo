@@ -11,6 +11,7 @@ options.registry.InstagramPage = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
         this.instagramUrlStr = "instagram.com/";
     },
     /**
@@ -54,8 +55,7 @@ options.registry.InstagramPage = options.Class.extend({
             widgetValue = this._getInstagramPageNameFromUrl(widgetValue);
         }
         if (!widgetValue) {
-            this.displayNotification({
-                message: _t("The Instagram page name is not valid"),
+            this.notification.add(_t("The Instagram page name is not valid"), {
                 type: "warning",
             });
         }

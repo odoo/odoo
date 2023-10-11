@@ -385,6 +385,7 @@
             this.session = session;
 
             this.rpc = this.bindService("rpc");
+            this.notification = this.bindService("notification");
         },
 
         //--------------------------------------------------------------------------
@@ -419,13 +420,13 @@
                         form.find('.alert-info').removeClass('d-none');
                         form.find('.input-group').addClass('d-none');
                     } else {
-                        this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
+                        this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
                         form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                         input.focus();
                     }
                 });
             } else {
-                this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
+                this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
                 form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                 input.focus();
             }

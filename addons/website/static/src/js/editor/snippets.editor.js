@@ -39,6 +39,13 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     /**
      * @override
      */
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
+    /**
+     * @override
+     */
     async start() {
         await this._super(...arguments);
 
@@ -428,11 +435,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 });
                 this.options.wysiwyg.odooEditor.historyStep();
             } else {
-                this.displayNotification({
-                    message: _t("The current text selection cannot be animated. Try clearing the format and try again."),
-                    type: 'danger',
-                    sticky: true,
-                });
+                this.notification.add(
+                    _t("The current text selection cannot be animated. Try clearing the format and try again."),
+                    { type: 'danger', sticky: true }
+                );
             }
         }
     },
