@@ -3943,7 +3943,7 @@ var SnippetsMenu = Widget.extend({
                 classes: 'btn-primary',
                 click: function () {
                     this.$footer.find('.btn').toggleClass('o_hidden');
-                    this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]).then(() => {
+                    self.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]).then(() => {
                         self.trigger_up('request_save', {
                             invalidateSnippetCache: true,
                             _toMutex: true,
