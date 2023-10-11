@@ -276,7 +276,7 @@ class Meeting(models.Model):
     def _cancel(self):
         # only owner can delete => others refuse the event
         user = self.env.user
-        my_cancelled_records = self.filtered(lambda e: e.user_id == user)
+        my_cancelled_records = self.exists().filtered(lambda e: e.user_id == user)
         super(Meeting, my_cancelled_records)._cancel()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.state = 'declined'
