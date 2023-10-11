@@ -44,7 +44,7 @@ $o-cw-filter-avatar-size: 20px;
         .o_datetime_picker {
             --DateTimePicker__Cell-size-md: 1.8rem;
             @include media-breakpoint-up(xl){
-                --DateTimePicker__Cell-size-md: 2.2rem;
+                --DateTimePicker__Cell-size-md: 1.5rem;
             }
             padding-right: 0 !important;
             padding-left: 0 !important;
@@ -52,6 +52,10 @@ $o-cw-filter-avatar-size: 20px;
             .o_day_of_week_cell {
                 --background-color: transparent;
                 border: none !important;
+            }
+
+            .o_cell_md {
+                font-size: .75rem;
             }
         }
 
