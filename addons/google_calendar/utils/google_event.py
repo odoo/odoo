@@ -160,7 +160,7 @@ class GoogleEvent(abc.Set):
     def is_recurrence(self):
         if self._is_type_ambiguous():
             _logger.warning("Ambiguous event type: cannot accurately tell whether a cancelled event is a recurrence or not")
-        return bool(self.recurrence)
+        return bool(self.recurrence or self.rrule)
 
     def is_recurrent(self):
         return bool(self.recurringEventId or self.is_recurrence())
