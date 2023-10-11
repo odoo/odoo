@@ -164,6 +164,9 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
+            if (this.thread && !["chatter", "mailbox"].includes(this.thread.type)) {
+                this.threadService.fetchChannelMembers(this.thread);
+            }
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
     }
