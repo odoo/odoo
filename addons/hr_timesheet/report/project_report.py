@@ -14,6 +14,7 @@ class ReportProjectTaskUser(models.Model):
     progress = fields.Float('Progress', group_operator='avg', readonly=True)
     overtime = fields.Float(readonly=True)
     total_hours_spent = fields.Float("Total Hours", help="Time spent on this task, including its sub-tasks.")
+    subtask_effective_hours = fields.Float("Hours Spent on Sub-Tasks", help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
 
     def _select(self):
         return super()._select() +  """,
@@ -23,7 +24,8 @@ class ReportProjectTaskUser(models.Model):
                 CASE WHEN t.allocated_hours > 0 THEN t.remaining_hours / t.allocated_hours ELSE 0 END as remaining_hours_percentage,
                 t.allocated_hours,
                 t.overtime,
-                t.total_hours_spent
+                t.total_hours_spent,
+                t.subtask_effective_hours
         """
 
     def _group_by(self):
