@@ -19,7 +19,7 @@
                         <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load File</button>
                         <button t-else="" type="button" class="btn btn-primary o_import_file">Upload File</button>
                     </FileInput>
-                    <button t-on-click="exit" type="button" class="btn btn-secondary">Cancel</button>
+                    <button t-on-click="() => this.exit()" type="button" class="btn btn-secondary">Cancel</button>
                 </t>
                 <t t-if="isPreviewing">
                     <ImportDataSidepanel
