@@ -500,7 +500,7 @@ class IrActionsServer(models.Model):
         'ir.model', string='Record to Create',
         compute='_compute_crud_model_id', readonly=False, store=True,
         help="Specify which kind of record should be created. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
+    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name')
     link_field_id = fields.Many2one(
         'ir.model.fields', string='Link Field',
         compute='_compute_link_field_id', readonly=False, store=True,
