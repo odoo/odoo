@@ -140,6 +140,8 @@ class EventEvent(models.Model):
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
         store=True, compute="_compute_tag_ids")
+    # properties
+    registration_properties_definition = fields.PropertiesDefinition('Registration Properties')
     # Kanban fields
     kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal', copy=False)
     kanban_state_label = fields.Char(
@@ -197,7 +199,6 @@ class EventEvent(models.Model):
     start_sale_datetime = fields.Datetime(
         'Start sale date', compute='_compute_start_sale_date',
         help='If ticketing is used, contains the earliest starting sale date of tickets.')
-
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,

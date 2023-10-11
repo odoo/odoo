@@ -12,6 +12,7 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -111,6 +112,7 @@ async function makePropertiesGroupView(properties) {
                 </sheet>
             </form>`,
         mockRPC,
+        actionMenus: {},
     });
 }
 
@@ -352,13 +354,18 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC,
+            actionMenus: {},
         });
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
-        const addButton = target.querySelector(".o_field_property_add button");
-        assert.notOk(addButton, "The add button must not be in the view");
+        await toggleActionMenu(target);
+        assert.containsOnce(
+            target,
+            ".o_cp_action_menus span:contains(Add Properties)",
+            "Show Add Properties btn in cog menu",
+        );
 
         const editButton = field.querySelector(".o_field_property_open_popover");
         assert.notOk(editButton, "The edit definition button must not be in the view");
@@ -393,13 +400,18 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC,
+            actionMenus: {},
         });
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
-        const addButton = target.querySelector(".o_field_property_add button");
-        assert.ok(addButton, "The add button must be in the view");
+        await toggleActionMenu(target);
+        assert.containsOnce(
+            target,
+            ".o_cp_action_menus span:contains(Add Properties)",
+            "The add button must be in the cog menu",
+        );
 
         const editButton = field.querySelectorAll(".o_field_property_open_popover");
         assert.ok(editButton, "The edit definition button must be in the view");
@@ -491,16 +503,21 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC,
+            actionMenus: {},
         });
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
-        const addButton = target.querySelector(".o_field_property_add button");
-        assert.ok(addButton, "The add button must be in the view");
+        await toggleActionMenu(target);
+        assert.containsOnce(
+            target,
+            ".o_cp_action_menus span:contains(Add Properties)",
+            "The add button must be in the cog menu",
+        );
 
         // Create a new property
-        await click(target, ".o_field_property_add button");
+        await click(target, ".o_cp_action_menus span .fa-cogs");
 
         await nextTick();
 
@@ -1805,6 +1822,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC,
+            actionMenus: {},
         });
 
         const field = target.querySelector(".o_field_properties");
@@ -1813,7 +1831,8 @@ QUnit.module("Fields", (hooks) => {
         // create a new property
         // edit the default value and close the popover definition
         // because we just created the property, the default value should be propagated
-        await click(target, ".o_field_property_add button");
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
         await nextTick();
         await editInput(target, ".o_field_property_definition_value input", "First Default Value");
         await closePopover(target);
@@ -1969,11 +1988,13 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
                 mockRPC,
+                actionMenus: {},
             });
             assert.notOk(target.querySelector(".o_test_properties_not_empty"));
 
             // create the first property
-            await click(target, ".o_field_property_add button");
+            await toggleActionMenu(target);
+            await click(target, ".o_cp_action_menus span .fa-cogs");
             assert.ok(target.querySelector(".o_test_properties_not_empty"));
         }
     );
@@ -2041,7 +2062,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // create 3 new properties
-        await click(target, ".o_field_property_add button");
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
         await click(target, ".o_field_property_add button");
         await click(target, ".o_field_property_add button");
         await nextTick();
@@ -2283,7 +2305,8 @@ QUnit.module("Fields", (hooks) => {
         assertFolded([false, false, false, true]);
 
         // now, create a new property, it must unfold the last group
-        await click(target, ".o_field_property_add button");
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
         assert.deepEqual(getGroups(), [
             [
                 ["SEPARATOR 2", "property_2"],
@@ -2454,4 +2477,49 @@ QUnit.module("Fields", (hooks) => {
             ],
         ]);
     });
+
+    QUnit.test("properties: showAddButton option", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties" showAddButton="True"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+        assert.containsOnce(
+            target,
+            ".o_field_property_add button",
+            "The add button must be in the view",
+        );
+    });
+
+    QUnit.test(
+        "properties: no add properties action in cogmenu if no properties field",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "res.users",
+                resId: 1,
+                serverData,
+                arch: '<form><field name="name"/></form>',
+                actionMenus: {},
+            });
+            await toggleActionMenu(target);
+            assert.containsNone(target, ".o_cp_action_menus span:contains(Add Properties)");
+        },
+    );
 });

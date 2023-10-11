@@ -13,14 +13,6 @@
             <field eval="False" name="doall" />
         </record>
 
-        <record id="fleet_vehicle_action_configure_properties_field" model="ir.actions.client">
-            <field name="name">Add Properties</field>
-            <field name="res_model">fleet.vehicle</field>
-            <field name="tag">action_configure_properties_field</field>
-            <field name="binding_model_id" ref="fleet.model_fleet_vehicle"/>
-            <field name="binding_view_types">form</field>
-        </record>
-
         <record id="fleet_vehicle_state_new_request" model="fleet.vehicle.state">
             <field name="name">New Request</field>
             <field name="sequence">4</field>
