@@ -30,7 +30,7 @@
                            <t t-if="course.total_time"> - </t><t t-out="course.total_slides"/> step(s)
                         </t>
                     </div>
-                    <a role="button" class="btn btn-primary ms-2 my-2" t-attf-href="/slides/#{slug(course)}">
+                    <a role="button" class="btn btn-primary ms-2 my-2" t-attf-href="/web/login?redirect=/slides/#{slug(course)}">
                         Start Learning
                     </a>
                 </div>
