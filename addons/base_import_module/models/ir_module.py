@@ -87,7 +87,10 @@ class IrModule(models.Model):
             self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
-        for kind in ['data', 'init_xml', 'update_xml']:
+        kinds = ['data', 'init_xml', 'update_xml']
+        if self._context.get('import_with_demo_data', False):
+            kinds.append('demo')
+        for kind in kinds:
             for filename in terp.get(kind, []):
                 ext = os.path.splitext(filename)[1].lower()
                 if ext not in ('.xml', '.csv', '.sql'):
@@ -210,7 +213,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []):
+                    demo_data = []
+                    if self._context.get('import_with_demo_data', False):
+                        demo_data = terp.get('demo', [])
+                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []) + demo_data:
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
