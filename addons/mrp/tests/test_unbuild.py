@@ -152,7 +152,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 10, 'You should have consumed all the 5 product in stock')
 
-    def test_unbuild_with_comnsumed_lot(self):
+    def test_unbuild_with_consumed_lot(self):
         """ This test creates a MO and then creates 3 unbuild
         orders for the final product. Only once of the two consumed
         product is tracked by lot. It checks the stock state after each
@@ -199,7 +199,6 @@ class TestUnbuild(TestMrpCommon):
         x = Form(self.env['mrp.unbuild'])
         x.product_id = p_final
         x.bom_id = bom
-        x.product_qty = 3
         unbuild_order = x.save()
 
         # This should fail since we do not provide the MO that we wanted to unbuild. (without MO we do not know which consumed lot we have to restore)
@@ -209,6 +208,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 5, 'You should have consumed 3 final product in stock')
 
         unbuild_order.mo_id = mo.id
+        unbuild_order.product_qty = 3
         unbuild_order.action_unbuild()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, 'You should have consumed 3 final product in stock')
