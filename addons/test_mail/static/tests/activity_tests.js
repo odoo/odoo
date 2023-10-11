@@ -6,7 +6,10 @@ import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
+import { deepEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
@@ -23,6 +26,28 @@ QUnit.module("test_mail", {}, function () {
     QUnit.module("activity view", {
         async beforeEach() {
             patchDate(2023, 4, 8, 10, 0, 0);
+            patchWithCleanup(RelationalModel.prototype, {
+                async load(params) {
+                    if (params.domain) {
+                        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
+                        const domain = new Domain(params.domain);
+                        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
+                            "activity_ids.active",
+                        ]);
+                        if (!deepEqual(domain.toList(), newDomain.toList())) {
+                            return super.load({
+                                ...params,
+                                domain: newDomain.toList(),
+                                context: params.context
+                                    ? { ...params.context, active_test: false }
+                                    : { active_test: false },
+                            });
+                        }
+                        return super.load(params);
+                    }
+                    return super.load(params);
+                },
+            });
             pyEnv = await startServer();
             const mailTemplateIds = pyEnv["mail.template"].create([
                 { name: "Template1" },
@@ -186,7 +211,7 @@ QUnit.module("test_mail", {}, function () {
             'should contain "Meeting Room Furnitures" in first colum of second row'
         );
 
-        const today = DateTime.now().toLocaleString({ day: "numeric", month: "short" });
+        const today = DateTime.now().toLocaleString(luxon.DateTime.DATE_SHORT);
 
         assert.ok(
             $activity.find(
@@ -380,8 +405,8 @@ QUnit.module("test_mail", {}, function () {
         });
 
         assert.verifySteps([
-            JSON.stringify([["activity_ids", "!=", false]]),
-            JSON.stringify([["activity_ids", "!=", false]]),
+            JSON.stringify([["activity_ids.active", "in", [true, false]]]),
+            '[[1,"=",1]]', // Due to the patch above that removes it
         ]);
     });
 

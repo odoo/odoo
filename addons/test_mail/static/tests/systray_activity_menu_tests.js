@@ -81,7 +81,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
     const actionChecks = {
         context: { force_search_count: 1 },
-        domain: [["activity_ids.user_id", "=", session.uid]],
+        domain: [["activity_user_id", "=", session.uid]],
     };
     patchWithCleanup(env.services.action, {
         doAction(action) {
