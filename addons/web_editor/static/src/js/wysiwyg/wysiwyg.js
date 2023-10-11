@@ -213,6 +213,7 @@ const Wysiwyg = Widget.extend({
                 if (!this.scrollContainer || !this.scrollContainer.getBoundingClientRect) {
                     this.scrollContainer = document.querySelector('.o_action_manager') || document.body;
                 }
+                console.log("woowwowo", this.scrollContainer)
                 return this.scrollContainer.getBoundingClientRect();
             },
             getPowerboxElement: () => {
