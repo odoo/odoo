@@ -97,22 +97,51 @@
                 <t t-if="props.hasActivities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
                 </t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative" t-ref="attachment-box">
+                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative py-1 px-3" t-ref="attachment-box">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
-                            Files
+                            Attachments
                         </span>
                         <hr class="flex-grow-1"/>
                     </div>
                     <div class="d-flex flex-column">
-                        <AttachmentList
-                            attachments="attachments"
-                            unlinkAttachment.bind="unlinkAttachment"
-                            imagesHeight="100"
-                        />
+                        <div class="flex-grow-1">
+                    </div>
+                    <div class="o-mail-Chatter-Attachment d-flex flex-column">
+                        <div class="o-mail-AttachmentpanelCatgory mb-2" t-on-click="(ev) => this.handleTabSelection(ev)">
+                            <div class="o-mail-AttachmentPanelCategory-title " t-att-class="state.current === 'media' ? 'active' : ''" data-tab="media" title="Media">
+                                Media
+                            </div>
+                            <div class="o-mail-AttachmentPanelCategory-title" t-att-class="state.current === 'link' ? 'active' : ''" data-tab="link" title="Links">
+                                Links
+                            </div>
+                            <div class="o-mail-AttachmentPanelCategory-title" t-att-class="state.current === 'file' ? 'active' : ''" data-tab="file" title="Files">
+                                Files
+                            </div>
+                        </div>
+                        <div class="o-mail-ChatterAttachement-Panel-media" t-if="this.state.current === 'media'">
+                            <p t-if="this.state.attachmentLength.media === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any media attachments.</p>
+                            <AttachmentList imagesHeight="100" attachments="getAttachment('media')"  unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                        </div>
+                        <div class="o-mail-ChatterAttachement-Panel-link" t-elif="this.state.current === 'link'">
+                            <p t-if="this.state.attachmentLength.link === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any link attachments.</p>
+                            <t t-foreach="getAttachment('link')" t-as="links" t-key="links.id">
+                                <div class="o-mail-LinkAttachment card rounded shadow-sm" >
+                                    <LinkPreview linkPreview="links" deletable="true" />
+                                    <div class="o-mail-LinkAttachment-Content">
+                                        <a href="links.source_url" t-esc="links.source_url"></a>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="o-mail-ChatterAttachement-Panel-file" t-elif="this.state.current === 'file'">
+                            <p t-if="this.state.attachmentLength.file === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any file attachments.</p>
+                            <AttachmentList imagesHeight="100" attachments="getAttachment('file')"  unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                        </div>
+                    </div>
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
-                            <t t-set-slot="toggler">
+                            <t t-set-slot="toggler" t-if="this.state.current != 'link'">
                                 <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
                                     <i class="fa fa-plus-square"/>
                                     Attach files
@@ -152,7 +181,7 @@
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
         <i class="fa fa-paperclip fa-lg me-1"/>
-        <span t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <span t-if="total > 0" t-esc="total"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>
