@@ -4,7 +4,6 @@ import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
-import makeTestEnvironment from "../helpers/test_env";
 import { SERVICES_METADATA } from "@web/env";
 import { Component } from "@odoo/owl";
 
@@ -405,10 +404,14 @@ QUnit.module('core', {}, function () {
 
         SERVICES_METADATA.rpc = true;
         var def;
-        Component.env = await makeTestEnvironment({}, () => {
-            def = testUtils.makeTestPromise();
-            return def;
-        });
+        Component.env = {
+            services: {
+                rpc: () => {
+                    def = testUtils.makeTestPromise();
+                    return def;
+                },
+            },
+        };
 
         const ChildWidget = Widget.extend({
             init() {
@@ -421,6 +424,7 @@ QUnit.module('core', {}, function () {
         widget.rpc('/a/route').then(function () {
             assert.ok(true, "The ajax call should be resolve");
         });
+        await testUtils.nextMicrotaskTick();
         def.resolve();
         await testUtils.nextMicrotaskTick();
         def = null;

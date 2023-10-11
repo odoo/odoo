@@ -1,14 +1,13 @@
 /** @odoo-module */
 
 import dom from '@web/legacy/js/core/dom';
-import legacyEnv from '@web/legacy/js/public/public_env';
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
-import { mapLegacyEnvToWowlEnv, createWidgetParent } from "../../utils";
+import { createWidgetParent } from "../../utils";
 
 import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
@@ -52,9 +51,9 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     /**
      * @constructor
      */
-    init: function () {
+    init: function (_, env) {
         this._super.apply(this, arguments);
-        this.env = legacyEnv;
+        this.env = env;
         this.publicWidgets = [];
     },
     /**
@@ -305,11 +304,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 });
 
 /**
- * Configure Owl with the public env
- */
-Component.env = legacyEnv;
-
-/**
  * This widget is important, because the tour manager needs a root widget in
  * order to work. The root widget must be a service provider with the ajax
  * service, so that the tour manager can let the server know when tours have
@@ -318,16 +312,15 @@ Component.env = legacyEnv;
 export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
     await whenReady();
-    const wowlEnv = makeEnv();
-
-    await startServices(wowlEnv);
-    await wowlEnv.services.public_component.mountComponents();
-    mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-    const publicRoot = new RootWidget(createWidgetParent(legacyEnv));
+    const env = makeEnv();
+    await startServices(env);
+    Component.env = env;
+    await env.services.public_component.mountComponents();
+    const publicRoot = new RootWidget(createWidgetParent(env), env);
     const app = new App(MainComponentsContainer, {
         templates,
-        env: wowlEnv,
-        dev: wowlEnv.debug,
+        env,
+        dev: env.debug,
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });

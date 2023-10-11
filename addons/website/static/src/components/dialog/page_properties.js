@@ -4,7 +4,6 @@ import {CheckBox} from '@web/core/checkbox/checkbox';
 import { _t } from "@web/core/l10n/translation";
 import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
-import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import { renderToElement } from "@web/core/utils/render";
@@ -13,13 +12,7 @@ import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
 export class PageDependencies extends Component {
     setup() {
         super.setup();
-        try {
-            this.orm = useService('orm');
-        } catch {
-            // We are in a legacy environment.
-            // TODO check with framework team to know if this is really needed.
-            this.orm = useWowlService('orm');
-        }
+        this.orm = useService('orm');
 
         this.action = useRef('action');
         this.sprintf = sprintf;
