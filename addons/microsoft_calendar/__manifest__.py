@@ -8,6 +8,7 @@
     'depends': ['microsoft_account', 'calendar'],
     'data': [
         'data/microsoft_calendar_data.xml',
+        'security/microsoft_calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',
