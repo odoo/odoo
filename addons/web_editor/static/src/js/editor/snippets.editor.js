@@ -1768,6 +1768,7 @@ var SnippetsMenu = Widget.extend({
         this._onClick = this._onClick.bind(this);
 
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
     /**
      * @override
@@ -3827,8 +3828,7 @@ var SnippetsMenu = Widget.extend({
                         reason.event.preventDefault();
                         this.close();
                         const message = markup(_t("Could not install module <strong>%s</strong>", escape(name)));
-                        self.displayNotification({
-                            message: message,
+                        self.notification.add(message, {
                             type: 'danger',
                             sticky: true,
                         });

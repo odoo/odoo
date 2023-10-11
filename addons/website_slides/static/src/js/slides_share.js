@@ -13,6 +13,7 @@ export const ShareMail = publicWidget.Widget.extend({
     init() {
         this._super(...arguments);
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
     },
 
     //--------------------------------------------------------------------------
@@ -57,13 +58,13 @@ export const ShareMail = publicWidget.Widget.extend({
                     this.$('.alert-info').removeClass('d-none');
                     this.$('.input-group').addClass('d-none');
                 } else {
-                    this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
+                    this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
                     this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                     input.focus();
                 }
             });
         } else {
-            this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
+            this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
             this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             input.focus();
         }

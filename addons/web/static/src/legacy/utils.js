@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { browser } from "../core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import {
     App,
@@ -43,72 +42,6 @@ export function cleanDomFromBootstrap() {
             tt.parentNode.removeChild(tt);
         }
     }
-}
-
-export function makeLegacyNotificationService(legacyEnv) {
-    return {
-        dependencies: ["notification"],
-        start(env, { notification }) {
-            let notifId = 0;
-            const idsToRemoveFn = {};
-
-            function notify({
-                title,
-                message,
-                subtitle,
-                buttons = [],
-                sticky,
-                type,
-                className,
-                onClose,
-            }) {
-                if (subtitle) {
-                    title = [title, subtitle].filter(Boolean).join(" ");
-                }
-                if (!message && title) {
-                    message = title;
-                    title = undefined;
-                }
-
-                buttons = buttons.map((button) => {
-                    return {
-                        name: button.text,
-                        icon: button.icon,
-                        primary: button.primary,
-                        onClick: button.click,
-                    };
-                });
-
-                const removeFn = notification.add(message, {
-                    sticky,
-                    title,
-                    type,
-                    className,
-                    onClose,
-                    buttons,
-                });
-                const id = ++notifId;
-                idsToRemoveFn[id] = removeFn;
-                return id;
-            }
-
-            function close(id, _, wait) {
-                //the legacy close method had 3 arguments : the notification id, silent and wait.
-                //the new close method only has 2 arguments : the notification id and wait.
-                const removeFn = idsToRemoveFn[id];
-                delete idsToRemoveFn[id];
-                if (wait) {
-                    browser.setTimeout(() => {
-                        removeFn(id);
-                    }, wait);
-                } else {
-                    removeFn(id);
-                }
-            }
-
-            legacyEnv.services.notification = { notify, close, add: notification.add };
-        },
-    };
 }
 
 /**

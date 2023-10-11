@@ -94,9 +94,8 @@ export class LinkPopoverWidget {
         );
         clipboard.on('success', () => {
             this.$copyLink.tooltip('hide');
-            this.notify({
+            this.notify(_t("Link copied to clipboard."), {
                 type: 'success',
-                message: _t("Link copied to clipboard."),
             });
             this.popover.hide();
         });
@@ -246,9 +245,8 @@ export class LinkPopoverWidget {
         } catch {
             // Invalid URL, might happen with editor unsuported protocol. eg type
             // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
-            this.notify({
+            this.notify(_t("This URL is invalid. Preview couldn't be updated."), {
                 type: 'danger',
-                message: _t("This URL is invalid. Preview couldn't be updated."),
             });
             return;
         }

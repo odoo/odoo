@@ -47,6 +47,7 @@ var Quiz = publicWidget.Widget.extend({
         this.redirectURL = encodeURIComponent(document.URL);
 
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -87,10 +88,9 @@ var Quiz = publicWidget.Widget.extend({
             message = _t('This quiz is already done. Retaking it is not possible.');
         }
 
-        this.displayNotification({
+        this.notification.add(message, {
             type: 'warning',
             title: _t('Quiz validation error'),
-            message: message,
             sticky: true
         });
     },

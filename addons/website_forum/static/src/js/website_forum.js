@@ -37,6 +37,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         this._super(...arguments);
         this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -281,11 +282,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 </a>`)
             : "";
         const translatedText = _t("karma is required to perform this action. ");
-        this.displayNotification({
+        const message = markup(`${karma} ${translatedText}${additionalInfoWithForumID}`);
+        this.notification.add(message, {
             type: "warning",
             sticky: false,
             title: _t("Karma Error"),
-            message: markup(`${karma} ${translatedText}${additionalInfoWithForumID}`)
         });
     },
     /**
@@ -579,8 +580,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         });
     },
     _displayAccessDeniedNotification(message) {
-        this.displayNotification({
-            message: message,
+        this.notification.add(message, {
             title: _t('Access Denied'),
             sticky: false,
             type: 'warning',

@@ -37,6 +37,7 @@ var PortalComposer = publicWidget.Widget.extend({
         }, options || {});
         this.attachments = [];
         this.rpc = this.bindService("rpc");
+        this.notification = this.bindService("notification");
     },
     /**
      * @override
@@ -124,11 +125,10 @@ var PortalComposer = publicWidget.Widget.extend({
                     self._updateAttachments();
                     resolve();
                 }).guardedCatch(function (error) {
-                    self.displayNotification({
-                        message: _t("Could not save file <strong>%s</strong>", escape(file.name)),
-                        type: 'warning',
-                        sticky: true,
-                    });
+                    self.notification.add(
+                        _t("Could not save file <strong>%s</strong>", escape(file.name)),
+                        { type: 'warning', sticky: true }
+                    );
                     resolve();
                 });
             });
