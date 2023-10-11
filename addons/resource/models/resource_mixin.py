@@ -18,7 +18,7 @@ class ResourceMixin(models.AbstractModel):
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
-        index=True, related='resource_id.company_id', store=True, readonly=False)
+        index=True, related='resource_id.company_id', precompute=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env.company.resource_calendar_id,
