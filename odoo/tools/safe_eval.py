@@ -99,6 +99,9 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_BLOCK', 'POP_EXCEPT',
 
+    # python 3.10
+    'POP_JUMP_FORWARD_IF_NOT_NONE',
+
     # note: removed in 3.8
     'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
 
@@ -138,7 +141,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'RETURN_GENERATOR',
     'PUSH_EXC_INFO',
     'NOP',
-    'FORMAT_VALUE', 'BUILD_STRING'
+    'FORMAT_VALUE', 'BUILD_STRING',
 
 ])) - _BLACKLIST
 
