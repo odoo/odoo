@@ -297,7 +297,7 @@ class Contract(models.Model):
         calendar = vals.get('resource_calendar_id')
         if calendar:
             self.filtered(
-                lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done')
+                lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
             ).mapped('employee_id').filtered(
                 lambda e: e.resource_calendar_id
             ).write({'resource_calendar_id': calendar})
@@ -311,7 +311,9 @@ class Contract(models.Model):
     def create(self, vals_list):
         contracts = super().create(vals_list)
         contracts.filtered(lambda c: c.state == 'open')._assign_open_contract()
-        open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
+        open_contracts = contracts.filtered(
+            lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
+        )
         # sync contract calendar -> calendar employee
         for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
