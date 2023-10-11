@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField">
         <div t-ref="properties" class="row"
-            t-att-class="{'d-none': propertiesList.length === 0 and state.hideAddButton}"
+            t-att-class="{'d-none': propertiesList.length === 0 and !state.showAddButton}"
             t-att-columns="renderedColumnsCount">
             <t t-set="unfoldedSeparators" t-value="state.unfoldedSeparators"/>
             <t t-set="_groupedPropertiesList" t-value="groupedPropertiesList"/>
@@ -76,9 +76,9 @@
                         </div>
                     </div>
                     <div
-                        t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1"
+                        t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1 and state.showAddButton"
                         class="o_field_property_add"
-                        t-att-class="{'g-col-2': props.columns !== 1, 'd-none': state.hideAddButton}">
+                        t-att-class="{'g-col-2': props.columns !== 1}">
                         <button
                             t-if="!props.readonly and state.canChangeDefinition and definitionRecordId"
                             class="btn btn-light text-muted text-break m-0"
