@@ -378,6 +378,7 @@ Object.assign(AutoComplete, {
         dropdown: { type: Boolean, optional: true },
         autofocus: { type: Boolean, optional: true },
         class: { type: String, optional: true },
+        inputClass: { type: String, optional: true },
     },
     defaultProps: {
         placeholder: "",
@@ -387,6 +388,7 @@ Object.assign(AutoComplete, {
         onChange: () => {},
         onBlur: () => {},
         onFocus: () => {},
+        inputClass: "",
     },
     timeout: 250,
 });

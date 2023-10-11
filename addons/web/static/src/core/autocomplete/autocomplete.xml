@@ -6,7 +6,7 @@
             <input
                 type="text"
                 t-att-id="props.id"
-                class="o-autocomplete--input o_input"
+                t-attf-class="o-autocomplete--input o_input #{props.inputClass}"
                 autocomplete="off"
                 t-att-placeholder="props.placeholder"
                 t-model="state.value"
