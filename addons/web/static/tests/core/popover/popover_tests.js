@@ -141,7 +141,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     // Should have classes for a "bottom-middle" placement
     assert.strictEqual(
         popover.className,
-        "o_popover popover mw-100 shadow-sm bs-popover-bottom o-popover-bottom o-popover--bm"
+        "o_popover popover mw-25 shadow-sm bs-popover-bottom o-popover-bottom o-popover--bm"
     );
     assert.strictEqual(arrow.className, "popover-arrow start-0 end-0 mx-auto");
 
@@ -154,7 +154,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     // Should have classes for a "right-end" placement
     assert.strictEqual(
         popover.className,
-        "o_popover popover mw-100 shadow-sm bs-popover-end o-popover-right o-popover--re"
+        "o_popover popover mw-25 shadow-sm bs-popover-end o-popover-right o-popover--re"
     );
     assert.strictEqual(arrow.className, "popover-arrow top-auto");
 });
