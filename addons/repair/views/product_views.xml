@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_general']/field[@name='uom_po_id']" position="after">
                 <field name="create_repair" invisible="detailed_type not in ('consu', 'product', 'service')"/>
+                <field name="show_repair_picking_type" invisible="1"/>
+                <field name="repair_picking_type_id" invisible='not show_repair_picking_type'/>
             </xpath>
         </field>
     </record>
