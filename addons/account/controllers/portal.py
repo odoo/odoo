@@ -152,10 +152,10 @@ class PortalAccount(CustomerPortal):
     # My Home
     # ------------------------------------------------------------
 
-    def details_form_validate(self, data, partner_creation=False):
-        error, error_message = super(PortalAccount, self).details_form_validate(data)
+    def details_form_validate(self, data, partner_creation=False, partner=None):
+        error, error_message = super(PortalAccount, self).details_form_validate(data, partner_creation=partner_creation, partner=partner)
         # prevent VAT/name change if invoices exist
-        partner = request.env['res.users'].browse(request.uid).partner_id
+        partner = partner or request.env['res.users'].browse(request.uid).partner_id
         # Skip this test if we're creating a new partner as we won't ever block him from filling values.
         if not partner_creation and not partner.can_edit_vat():
             if 'vat' in data and (data['vat'] or False) != (partner.vat or False):

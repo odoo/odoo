@@ -140,7 +140,11 @@
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
             <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
+            <li t-if="page_name == 'my_addresses'" class="breadcrumb-item">Addresses</li>
+            <t t-if="page_name == 'my_details'">
+                <li class="breadcrumb-item"><a href="/my/addresses" aria-label="Addresses" title="Addresses">Addresses</a></li>
+                <li class="breadcrumb-item">Details</li>
+            </t>
         </ol>
     </template>
 
@@ -231,8 +235,8 @@
                         <t t-call="portal.portal_docs_entry">
                             <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
                             <t t-set="title">Addresses</t>
-                            <t t-set="text">Add, remove or modify your addresses</t>
-                            <t t-set="url" t-value="'/my/account'"/>
+                            <t t-set="text">Add or Modify your addresses</t>
+                            <t t-set="url" t-value="'/my/addresses'"/>
                             <t t-set="config_card" t-value="True"/>
                         </t>
                         <t t-call="portal.portal_docs_entry">
@@ -515,12 +519,21 @@
                 </t>
             </select>
         </div>
+        <div t-attf-class="col-xl-6 mb-3">
+            <label class="col-form-label label-optional" for="type">Use this address for</label>
+            <select name="type" t-attf-class="form-select">
+                <option value="other" t-att-selected="partner.type == 'other'"></option>
+                <option value="delivery" t-att-selected="partner.type == 'delivery'">Delivery</option>
+                <option value="invoice" t-att-selected="partner.type == 'invoice'">Invoice</option>
+                <option value="contact" t-att-selected="partner.type == 'contact'">Contact</option>
+            </select>
+        </div>
     </template>
 
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
-            <form action="/my/account" method="post">
+            <form t-attf-action="/my/account?address={{partner.id}}" method="post">
                 <div class="row o_portal_details">
                     <div class="col-lg-8">
                         <div class="row">
@@ -528,7 +541,7 @@
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
                         </div>
                         <div class="clearfix text-end mb-5">
-                            <a href="/my/" class="btn btn-secondary me-2">
+                            <a href="/my/addresses" class="btn btn-secondary me-2">
                                 Discard
                             </a>
                             <button type="submit" class="btn btn-primary float-end">
@@ -826,6 +839,46 @@
             <hr t-if="sales_user"/>
             <div class="o_my_contact" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_my_addresses" name="Addresses">
+        <t t-call="portal.portal_layout">
+            <h3>Your Account Address</h3>
+            <t t-call="portal.address_card">
+                <t t-set="_classes" t-value="'w-md-50 bg-primary'"/>
+            </t>
+            <h4 class="mt32">Other Addresses</h4>
+            <ul class="list-unstyled d-flex flex-wrap gap-3">
+                <t t-foreach="partner.child_ids" t-as="partner">
+                    <t t-call="portal.address_card">
+                        <t t-set="_classes" t-value="'w-md-auto'"/>
+                    </t>
+                </t>
+            </ul>
+            <a href="/my/addresses/new" class="btn btn-primary justify-content-start align-items-center gap-3 h-100">Add an address</a>
+        </t>
+    </template>
+
+    <template id="address_card">
+        <div t-attf-class="card w-100 {{ _classes }}">
+            <div class="card-body">
+                <a t-attf-href="/my/account?address={{partner.id}}" t-att-title="title" class="float-end ms-2">
+                    <i class="fa fa-pencil me-1"/>
+                    Edit
+                </a>
+                <h5>
+                    <i t-if="partner.type == 'invoice'" class="fa fa-fw fa-file-text-o text-primary" role="img"/>
+                    <i t-if="partner.type == 'delivery'" class="fa fa-truck fa-fw text-primary" role="img"/>
+                    <i t-if="partner.type == 'contact'" class="fa fa-address-card-o fa-fw text-primary" role="img"/>
+                    <t t-out="partner.name"/>
+                </h5>
+                <div class="d-flex flex-column">
+                    <span t-if="partner.email" t-out="partner.email"/>
+                    <span t-if="partner.zip" t-out="partner.zip + ' ' + partner.city"/>
+                    <span t-if="partner.state_id" t-out="partner.state_id.name + ' ' + partner.country_id.name"/>
+                </div>
             </div>
         </div>
     </template>

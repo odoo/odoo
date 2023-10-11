@@ -134,7 +134,7 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
 class CustomerPortal(Controller):
 
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
+    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name", "type"]
 
     _items_per_page = 80
 
@@ -176,20 +176,44 @@ class CustomerPortal(Controller):
         values = self._prepare_portal_layout_values()
         return request.render("portal.portal_my_home", values)
 
+    @route(['/my/addresses'], type='http', auth='user', website=True)
+    def addresses(self):
+        values = {
+            **self._prepare_portal_layout_values(),
+            'partner': request.env.user.partner_id,
+            'page_name': 'my_addresses'
+        }
+        return request.render("portal.portal_my_addresses", values)
+
+    @route(['/my/addresses/new'], type='http', auth='user', website=True)
+    def addresses_new(self):
+        new_partner = request.env.user.partner_id.sudo().copy({
+            'name': 'New Address',
+            'type':'other',
+            'parent_id': request.env.user.partner_id.id
+        })
+        return request.redirect(f"/my/account?address={new_partner.id}")
+
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        user_partner = request.env.user.partner_id
+        partner_id = int(post.pop('address', user_partner.id))
+        if partner_id == user_partner.id:
+            partner = user_partner
+        elif partner_id in user_partner.child_ids.ids:
+            partner = user_partner.browse(partner_id)
+        else:
+            raise request.not_found()
         values.update({
             'error': {},
             'error_message': [],
         })
-
         if post and request.httprequest.method == 'POST':
             if not partner.can_edit_vat():
                 post['country_id'] = str(partner.country_id.id)
 
-            error, error_message = self.details_form_validate(post)
+            error, error_message = self.details_form_validate(post, partner=partner)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
@@ -205,7 +229,7 @@ class CustomerPortal(Controller):
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
-                return request.redirect('/my/home')
+                return request.redirect('/my/addresses')
 
         countries = request.env['res.country'].sudo().search([])
         states = request.env['res.country.state'].sudo().search([])
@@ -372,7 +396,7 @@ class CustomerPortal(Controller):
 
         return attachment_sudo.unlink()
 
-    def details_form_validate(self, data, partner_creation=False):
+    def details_form_validate(self, data, partner_creation=False, partner=None):
         error = dict()
         error_message = []
 
@@ -387,7 +411,7 @@ class CustomerPortal(Controller):
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
         # vat validation
-        partner = request.env.user.partner_id
+        partner = partner or request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
             # Check the VAT if it is the public user too.
             if partner_creation or partner.can_edit_vat():
