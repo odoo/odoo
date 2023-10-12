@@ -113,9 +113,6 @@ export class WebClient extends Component {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/web" })
-                .then((registration) => {
-                    console.info("Registration successful, scope is:", registration.scope);
-                })
                 .catch((error) => {
                     console.error("Service worker registration failed, error:", error);
                 });
