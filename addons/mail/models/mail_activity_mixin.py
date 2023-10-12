@@ -8,6 +8,7 @@ import pytz
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -263,26 +264,30 @@ class MailActivityMixin(models.AbstractModel):
         self.env['res.partner'].flush_model(['tz'])
 
         tz = 'UTC'
-        if 'tz' in self.env.context and self.env.context.get('tz') in pytz.all_timezones_set:
+        if self.env.context.get('tz') in pytz.all_timezones_set:
             tz = self.env.context['tz']
 
-        join_query = f"""
-        (SELECT res_id,
-            CASE
-                WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz}'))::date) > 0 THEN 'planned'
-                WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz}'))::date) < 0 THEN 'overdue'
-                WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, '{tz}'))::date) = 0 THEN 'today'
-                ELSE null
-            END AS activity_state
-        FROM mail_activity
-        JOIN res_users ON (res_users.id = mail_activity.user_id)
-        JOIN res_partner ON (res_partner.id = res_users.partner_id)
-        WHERE res_model = '{self._name}'
-        GROUP BY res_id)
-        """
-        alias = query.join(self._table, "id", join_query, "res_id", "last_activity_state")
+        sql_join = SQL(
+            """
+            (SELECT res_id,
+                CASE
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) > 0 THEN 'planned'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) < 0 THEN 'overdue'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))::date) = 0 THEN 'today'
+                    ELSE null
+                END AS activity_state
+            FROM mail_activity
+            JOIN res_users ON (res_users.id = mail_activity.user_id)
+            JOIN res_partner ON (res_partner.id = res_users.partner_id)
+            WHERE res_model = %(res_model)s
+            GROUP BY res_id)
+            """,
+            res_model=self._name,
+            tz=tz,
+        )
+        alias = query.join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
-        return f'"{alias}"."activity_state"', ['activity_state']
+        return SQL.identifier(alias, 'activity_state'), ['activity_state']
 
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing
