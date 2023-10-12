@@ -35,6 +35,7 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
+import { useResizeObserver } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
@@ -110,6 +111,7 @@ export class Message extends Component {
         this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
+        this.textContentRef = useRef("textContent");
         this.rpc = useService("rpc");
         this.threadService = useState(useService("mail.thread"));
         this.messageService = useState(useService("mail.message"));
@@ -118,6 +120,8 @@ export class Message extends Component {
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
+        useResizeObserver("body", () => this.render());
+        useResizeObserver("textContent", () => this.render());
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -189,6 +193,8 @@ export class Message extends Component {
 
     get attClass() {
         return {
+            "o-important": this.message.isSelfImportant && this.important.active,
+            "o-alignedLeft": !(this.env.inChatWindow && this.isAlignedRight),
             [this.props.className]: true,
             "o-highlighted bg-view shadow-lg": this.props.highlighted,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
@@ -227,6 +233,38 @@ export class Message extends Component {
 
     get expandText() {
         return _t("Expand");
+    }
+
+    get important() {
+        let ref;
+        let offsetX;
+        let offsetY;
+        if (
+            !this.message.hasTextContent ||
+            (!this.state.isEditing && this.message.linkPreviewSquash)
+        ) {
+            // single file view
+            if (!this.textContentRef.el) {
+                return { active: false };
+            }
+            ref = this.textContentRef;
+            offsetX = 22;
+            offsetY = 10;
+        } else {
+            if (!this.messageBody.el) {
+                return { active: false };
+            }
+            ref = this.messageBody;
+            offsetX = 15;
+            offsetY = 5;
+        }
+        return {
+            active: true,
+            x:
+                (this.env.inChatWindow && this.isAlignedRight ? -1 : 1) *
+                (ref.el.clientWidth - offsetX),
+            y: offsetY,
+        };
     }
 
     get message() {
