@@ -1,3 +1,11 @@
 .o_control_panel_navigation .o_switch_view .o_hierarchy_icon { // button in view switcher
     rotate: 90deg;
 }
+
+.o_hierarchy_view { // uses for auto-scroll when drag&drop or unfold node
+    scroll-behavior: smooth;
+
+    .o_content {
+        scroll-behavior: smooth;
+    }
+}
