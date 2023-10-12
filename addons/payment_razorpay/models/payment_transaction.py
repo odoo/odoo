@@ -5,7 +5,7 @@ import pprint
 
 from werkzeug.urls import url_encode, url_join
 
-from odoo import _, models
+from odoo import api, models, _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -20,6 +20,32 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    @api.model
+    def _validate_and_sanatize_phone_number(self, phone):
+        """ Sanatize and validate phone number if phone number if not
+        valid then raise validation error.
+
+        :param char phone
+        :return: Sanatized and validated phone number.
+        :rtype: char
+        """
+        phone = self.partner_phone
+        error_message = _("The phone number is missing.")
+        if phone:
+            # sanitize partner phone
+            country_code = self.partner_country_id.code
+            country_phone_code = self.partner_country_id.phone_code
+            phone_info = phone_sanitize_numbers([phone], country_code, country_phone_code)
+            phone = phone_info[self.partner_phone]['sanitized']
+            error_message = phone_info[self.partner_phone]['msg']
+        if not phone:
+            raise ValidationError("Razorpay: " + error_message)
+        return phone
+
+
+    def _should_not_proccess_rendering_values_for_razorpay(self):
+        return self.provider_code != 'razorpay'
+
     def _get_specific_rendering_values(self, processing_values):
         """ Override of `payment` to return razorpay-specific rendering values.
 
@@ -31,7 +57,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider_code != 'razorpay':
+        if self._should_not_proccess_rendering_values_for_razorpay():
             return res
 
         # Initiate the payment and retrieve the related order id.
@@ -51,18 +77,7 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         return_url_params = {'reference': self.reference}
 
-        phone = self.partner_phone
-        error_message = _("The phone number is missing.")
-        if phone:
-            # sanitize partner phone
-            country_code = self.partner_country_id.code
-            country_phone_code = self.partner_country_id.phone_code
-            phone_info = phone_sanitize_numbers([phone], country_code, country_phone_code)
-            phone = phone_info[self.partner_phone]['sanitized']
-            error_message = phone_info[self.partner_phone]['msg']
-        if not phone:
-            raise ValidationError("Razorpay: " + error_message)
-
+        phone = self._validate_and_sanatize_phone_number(self.partner_phone)
         rendering_values = {
             'key_id': self.provider_id.razorpay_key_id,
             'name': self.company_id.name,
@@ -276,8 +291,12 @@ class PaymentTransaction(models.Model):
         if entity_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif entity_status in PAYMENT_STATUS_MAPPING['authorized']:
+            if self.tokenize:
+                self._razorpay_tokenize_from_notification_data(notification_data)
             self._set_authorized()
         elif entity_status in PAYMENT_STATUS_MAPPING['done']:
+            if self.tokenize:
+                self._razorpay_tokenize_from_notification_data(notification_data)
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing
@@ -300,3 +319,6 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Razorpay: " + _("Received data with invalid status: %s", entity_status)
             )
+
+    def _razorpay_tokenize_from_notification_data(self, notification_data):
+        pass
