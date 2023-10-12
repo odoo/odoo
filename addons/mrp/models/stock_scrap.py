@@ -20,15 +20,23 @@ class StockScrap(models.Model):
         domain="[('type', '=', 'phantom'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_template)]",
         check_company=True)
 
-    @api.onchange('workorder_id')
-    def _onchange_workorder_id(self):
-        if self.workorder_id:
-            self.location_id = self.workorder_id.production_id.location_src_id.id
+    @api.depends('workorder_id', 'production_id')
+    def _compute_location_id(self):
+        remaining_scrap = self.browse()
 
-    @api.onchange('production_id')
-    def _onchange_production_id(self):
-        if self.production_id:
-            self.location_id = self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and self.production_id.location_src_id.id or self.production_id.location_dest_id.id
+        for scrap in self:
+            if scrap.production_id:
+                if scrap.production_id.state != 'done':
+                    scrap.location_id = scrap.production_id.location_src_id.id
+                else:
+                    scrap.location_id = scrap.production_id.location_dest_id.id
+            elif scrap.workorder_id:
+                scrap.location_id = scrap.workorder_id.production_id.location_src_id.id
+            else:
+                remaining_scrap |= scrap
+
+        res = super(StockScrap, remaining_scrap)._compute_location_id()
+        return res
 
     def _prepare_move_values(self):
         vals = super(StockScrap, self)._prepare_move_values()
