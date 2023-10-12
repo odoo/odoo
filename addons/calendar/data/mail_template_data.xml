@@ -13,7 +13,6 @@
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
-    <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="target_customer" t-value="object.partner_id == customer"/>
@@ -22,21 +21,7 @@
     <p>
         Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
 
-        <t t-if="is_online and target_customer">
-            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> <t t-if="object.event_id.appointment_type_id.category != 'custom' and object.event_id.appointment_type_id.schedule_based_on == 'users'"> with <t t-out="object.event_id.user_id.name or ''">Ready Mat</t></t> has been booked.
-            <t t-if="is_online and object.state != 'accepted' and object.event_id.appointment_type_id.resource_manual_confirmation">
-                You will receive a mail of confirmation with more details when your appointment will be confirmed.
-            </t>
-        </t>
-        <t t-elif="is_online and target_responsible">
-            <t t-if="customer">
-                <t t-out="customer.name or ''"></t> scheduled the following appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> with you.
-            </t>
-            <t t-else="">
-                Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> has been booked.
-            </t>
-        </t>
-        <t t-elif="not target_responsible">
+        <t t-if="not target_responsible">
             <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> invited you for the <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> meeting.
         </t>
         <t t-else="">
@@ -45,17 +30,15 @@
 
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <t t-if="not is_online or object.state != 'accepted'">
-            <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
-                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                Accept</a>
-            <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
-                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-                Decline</a>
-        </t>
+        <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Accept</a>
+        <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+            Decline</a>
         <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"
-            ><t t-out="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
+            >View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
         <td width="130px;" style="min-width: 130px;">
@@ -85,9 +68,6 @@
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
-                <t t-if="is_online">
-                    <li>Appointment Type: <t t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</t></li>
-                </t>
                 <t t-if="object.event_id.location">
                     <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
                         (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">View Map</a>)
@@ -111,17 +91,6 @@
                         </t>
                     </li>
                 </ul></li>
-                <li t-if="is_online and object.event_id.appointment_type_id.resource_manage_capacity">
-                    For: <t t-out="object.event_id.resource_total_capacity_reserved"/> people
-                </li>
-                <li t-if="is_online and object.event_id.appointment_type_id.assign_method != 'time_auto_assign'">
-                    Resources
-                    <ul>
-                        <li t-foreach="object.event_id.appointment_resource_ids" t-as="resource">
-                            <span style="margin-left:5px" t-out="resource.name or ''">Table 1</span>
-                        </li>
-                    </ul>
-                </li>
                 <t t-if="object.event_id.videocall_location">
                     <li>
                         How to Join:
