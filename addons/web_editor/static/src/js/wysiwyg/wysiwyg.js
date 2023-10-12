@@ -1386,6 +1386,7 @@ export class Wysiwyg extends Component {
                 startNode: options.link,
             });
             if (!link) {
+                this.odooEditor.historyUnpauseSteps();
                 return
             }
             this._shouldDelayBlur = true;
@@ -1404,13 +1405,14 @@ export class Wysiwyg extends Component {
                         data.rel = 'ugc';
                     }
                     data.linkDialog.applyLinkToDom(data);
+                    this.odooEditor.historyUnpauseSteps();
                     this.odooEditor.historyStep();
                     const link = data.linkDialog.$link[0];
                     this.odooEditor.setContenteditableLink(link);
                     setSelection(link, 0, link, link.childNodes.length, false);
                     link.focus();
                 },
-                close: () => {
+                onClose: () => {
                     this.odooEditor.historyUnpauseSteps();
                     this.odooEditor.historyRevertUntil(historyStepIndex)
                 }
