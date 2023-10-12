@@ -5,6 +5,7 @@ import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
 import { RecordAutocomplete } from "./record_autocomplete";
 import { _t } from "@web/core/l10n/translation";
+import { useTagNavigation } from "./tag_navigation_hook";
 
 export class MultiRecordSelector extends Component {
     static props = {
@@ -21,6 +22,7 @@ export class MultiRecordSelector extends Component {
 
     setup() {
         this.nameService = useService("name");
+        this.onTagKeydown = useTagNavigation("multiRecordSelector", this.deleteTag.bind(this));
         onWillStart(() => this.computeDerivedParams());
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
     }
@@ -57,13 +59,18 @@ export class MultiRecordSelector extends Component {
             return {
                 text,
                 onDelete: () => {
-                    this.props.update([
-                        ...this.props.resIds.slice(0, index),
-                        ...this.props.resIds.slice(index + 1),
-                    ]);
+                    this.deleteTag(index);
                 },
+                onKeydown: this.onTagKeydown,
             };
         });
+    }
+
+    deleteTag(index) {
+        this.props.update([
+            ...this.props.resIds.slice(0, index),
+            ...this.props.resIds.slice(index + 1),
+        ]);
     }
 
     update(resIds) {

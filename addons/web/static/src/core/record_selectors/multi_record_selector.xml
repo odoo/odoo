@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.MultiRecordSelector" >
-        <div class="o_input d-flex flex-wrap gap-1 o_multi_record_selector">
+        <div class="o_input d-flex flex-wrap gap-1 o_multi_record_selector" t-ref="multiRecordSelector">
             <TagsList tags="tags"/>
             <RecordAutocomplete
                 resModel="props.resModel"
