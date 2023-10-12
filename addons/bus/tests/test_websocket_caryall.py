@@ -7,6 +7,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
+from weakref import WeakSet
 try:
     from websocket._exceptions import WebSocketBadStatusException
 except ImportError:
@@ -48,18 +49,18 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(events, ['open', 'close'])
 
     def test_instances_weak_set(self):
-        gc.collect()
-        first_ws = self.websocket_connect()
-        second_ws = self.websocket_connect()
-        self.assertEqual(len(Websocket._instances), 2)
-        first_ws.close(CloseCode.CLEAN)
-        second_ws.close(CloseCode.CLEAN)
-        self.wait_remaining_websocket_connections()
-        # serve_forever_patch prevent websocket instances from being
-        # collected. Stop it now.
-        self._serve_forever_patch.stop()
-        gc.collect()
-        self.assertEqual(len(Websocket._instances), 0)
+        with patch.object(Websocket, "_instances", WeakSet()):
+            first_ws = self.websocket_connect()
+            second_ws = self.websocket_connect()
+            self.assertEqual(len(Websocket._instances), 2)
+            first_ws.close(CloseCode.CLEAN)
+            second_ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+            # serve_forever_patch prevent websocket instances from being
+            # collected. Stop it now.
+            self._serve_forever_patch.stop()
+            gc.collect()
+            self.assertEqual(len(Websocket._instances), 0)
 
     def test_timeout_manager_no_response_timeout(self):
         with freeze_time('2022-08-19') as frozen_time:
@@ -115,7 +116,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
-        websocket.send(json.dumps({'event_name': 'subscribe'}))
+        self.subscribe(websocket, wait_for_dispatch=False)
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_incoming_message(self):
@@ -126,117 +127,59 @@ class TestWebsocketCaryall(WebsocketCase):
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
-        websocket.send(json.dumps({'event_name': 'subscribe'}))
+        self.subscribe(websocket, wait_for_dispatch=False)
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_outgoing_message(self):
-        subscribe_done_event = Event()
-        original_subscribe = Websocket.subscribe
-        odoo_ws = None
-
-        def patched_subscribe(self, *args):
-            nonlocal odoo_ws
-            odoo_ws = self
-            original_subscribe(self, *args)
-            subscribe_done_event.set()
-
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        with patch.object(Websocket, 'subscribe', patched_subscribe):
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['channel1'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
-            self.url_open('/web/session/logout')
-            # Simulate postgres notify. The session with whom the websocket
-            # connected has been deleted. WebSocket should be closed without
-            # receiving the message.
-            self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-            odoo_ws.trigger_notification_dispatching()
-            self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+        self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
+        self.url_open('/web/session/logout')
+        # Simulate postgres notify. The session with whom the websocket
+        # connected has been deleted. WebSocket should be closed without
+        # receiving the message.
+        self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+        self.trigger_notification_dispatching(["channel1"])
+        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_channel_subscription_disconnect(self):
-        subscribe_done_event = Event()
-        original_subscribe = dispatch.subscribe
-
-        def patched_subscribe(*args):
-            original_subscribe(*args)
-            subscribe_done_event.set()
-
-        with patch.object(dispatch, 'subscribe', patched_subscribe):
-            websocket = self.websocket_connect()
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
-            # channel is added as expected to the channel to websocket map.
-            self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-            websocket.close(CloseCode.CLEAN)
-            self.wait_remaining_websocket_connections()
-            # channel is removed as expected when removing the last
-            # websocket that was listening to this channel.
-            self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        # channel is added as expected to the channel to websocket map.
+        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        websocket.close(CloseCode.CLEAN)
+        self.wait_remaining_websocket_connections()
+        # channel is removed as expected when removing the last
+        # websocket that was listening to this channel.
+        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
 
     def test_channel_subscription_update(self):
-        subscribe_done_event = Event()
-        original_subscribe = dispatch.subscribe
-
-        def patched_subscribe(*args):
-            original_subscribe(*args)
-            subscribe_done_event.set()
-
-        with patch.object(dispatch, 'subscribe', patched_subscribe):
-            websocket = self.websocket_connect()
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
-            subscribe_done_event.clear()
-            # channel is added as expected to the channel to websocket map.
-            self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel_2'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
-            # channel is removed as expected when updating the subscription.
-            self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        # channel is added as expected to the channel to websocket map.
+        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        self.subscribe(websocket, ['my_channel_2'], self.env['bus.bus']._bus_last_id())
+        # channel is removed as expected when updating the subscription.
+        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
 
     def test_trigger_notification(self):
-        original_subscribe = Websocket.subscribe
-        odoo_ws = None
-
-        def patched_subscribe(self, *args):
-            nonlocal odoo_ws
-            odoo_ws = self
-            original_subscribe(self, *args)
-
-        with patch.object(Websocket, 'subscribe', patched_subscribe):
-            websocket = self.websocket_connect()
-            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': 0}
-            }))
-
-            notifications = json.loads(websocket.recv())
-            self.assertEqual(1, len(notifications))
-            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
-            self.assertEqual(notifications[0]['message']['payload'], 'message')
-
-            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
-            odoo_ws.trigger_notification_dispatching()
-
-            notifications = json.loads(websocket.recv())
-            # First notification has been received, we should only receive
-            # the second one.
-            self.assertEqual(1, len(notifications))
-            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
-            self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+        self.trigger_notification_dispatching(["my_channel"])
+        notifications = json.loads(websocket.recv())
+        self.assertEqual(1, len(notifications))
+        self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+        self.assertEqual(notifications[0]['message']['payload'], 'message')
+        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
+        self.trigger_notification_dispatching(["my_channel"])
+        notifications = json.loads(websocket.recv())
+        # First notification has been received, we should only receive
+        # the second one.
+        self.assertEqual(1, len(notifications))
+        self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+        self.assertEqual(notifications[0]['message']['payload'], 'another_message')
 
     def test_opening_websocket_connection_during_tests(self):
         # During tests, browsers can't open websocket connections.
@@ -250,40 +193,22 @@ class TestWebsocketCaryall(WebsocketCase):
         self.websocket_connect()
 
     def test_subscribe_higher_last_notification_id(self):
-        subscribe_done_event = Event()
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
         client_last_notification_id = server_last_notification_id + 1
 
-        def subscribe_side_effect(_, last):
-            # Last notification id given by the client is higher than
-            # the one known by the server, should default to 0.
-            self.assertEqual(last, 0)
-            subscribe_done_event.set()
-
-        with patch.object(Websocket, 'subscribe', side_effect=subscribe_side_effect):
+        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
             websocket = self.websocket_connect()
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': client_last_notification_id}
-            }))
-            subscribe_done_event.wait()
+            self.subscribe(websocket, ['my_channel'], client_last_notification_id)
+            self.assertEqual(mock.call_args[0][2], 0)
 
     def test_subscribe_lower_last_notification_id(self):
-        subscribe_done_event = Event()
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
         client_last_notification_id = server_last_notification_id - 1
 
-        def subscribe_side_effect(_, last):
-            self.assertEqual(last, client_last_notification_id)
-            subscribe_done_event.set()
-
-        with patch.object(Websocket, 'subscribe', side_effect=subscribe_side_effect):
+        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
             websocket = self.websocket_connect()
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': client_last_notification_id}
-            }))
-            subscribe_done_event.wait()
+            self.subscribe(websocket, ['my_channel'], client_last_notification_id)
+            self.assertEqual(mock.call_args[0][2], client_last_notification_id)
 
     def test_no_cursor_when_no_callback_for_lifecycle_event(self):
         with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
