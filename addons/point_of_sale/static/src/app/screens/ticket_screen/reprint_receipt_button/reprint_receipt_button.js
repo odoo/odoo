@@ -2,8 +2,8 @@
 
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
-import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
 export class ReprintReceiptButton extends Component {
@@ -11,7 +11,7 @@ export class ReprintReceiptButton extends Component {
 
     setup() {
         this.pos = usePos();
-        this.hardwareProxy = useService("hardware_proxy");
+        this.printer = useService("printer");
         this.click = useAsyncLockedMethod(this.click);
     }
 
@@ -19,19 +19,10 @@ export class ReprintReceiptButton extends Component {
         if (!this.props.order) {
             return;
         }
-        if (this.hardwareProxy.printer) {
-            const orderReceipt = renderToElement("point_of_sale.OrderReceipt", {
-                receiptData: {
-                    ...this.props.order.getOrderReceiptEnv(),
-                },
-                pos: this.pos,
-                env: this.env,
-            });
-
-            // Need to await to have the result in case of automatic skip screen.
-            await this.hardwareProxy.printer.printReceipt(orderReceipt);
-        } else {
-            this.pos.showScreen("ReprintReceiptScreen", { order: this.props.order });
-        }
+        // Need to await to have the result in case of automatic skip screen.
+        (await this.printer.print(OrderReceipt, {
+            data: this.props.order.export_for_printing(),
+            formatCurrency: this.env.utils.formatCurrency,
+        })) || this.pos.showScreen("ReprintReceiptScreen", { order: this.props.order });
     }
 }

@@ -93,32 +93,6 @@ class Check {
             },
         ];
     }
-
-    customerNoteIsThere(note) {
-        return [
-            {
-                trigger: `.receipt-screen .orderlines .pos-receipt-left-padding:contains("${note}")`,
-            },
-        ];
-    }
-
-    discountAmountIs(value) {
-        return [
-            {
-                trigger: `.pos-receipt>div:contains("Discounts")>span:contains("${value}")`,
-                run: () => {},
-            },
-        ];
-    }
-
-    noOrderlineContainsDiscount() {
-        return [
-            {
-                trigger: `.orderlines:not(:contains('->'))`,
-                run: () => {},
-            },
-        ];
-    }
 }
 
 class Execute {

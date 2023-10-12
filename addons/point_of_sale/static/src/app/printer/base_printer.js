@@ -1,8 +1,7 @@
 /* @odoo-module */
-/* global html2canvas */
 
 import { _t } from "@web/core/l10n/translation";
-
+import { htmlToCanvas } from "@point_of_sale/app/printer/render_service";
 /**
  * Implements basic printer functions.
  */
@@ -28,7 +27,9 @@ export class BasePrinter {
         let image, printResult;
         while (this.receiptQueue.length > 0) {
             receipt = this.receiptQueue.shift();
-            image = await this.htmlToImg(receipt);
+            image = this.processCanvas(
+                await htmlToCanvas(receipt, { addClass: "pos-receipt-print" })
+            );
             try {
                 printResult = await this.sendPrintingJob(image);
             } catch {
@@ -63,33 +64,6 @@ export class BasePrinter {
     }
 
     /**
-     * This function renders `el` as an image for printing assuming the following
-     * - a `div.pos-receipt-print` is present in the dom and will serve as the container
-     * - a `.pos-receipt` is the root element of `el`.
-     * @param {HTMLElement} el The element to be converted as image
-     * @returns {HTMLCanvasElement}
-     */
-    async htmlToImg(el) {
-        const elClone = el.cloneNode(true);
-        const receiptContainer = document.querySelector(".pos-receipt-print");
-        receiptContainer.appendChild(elClone);
-        const receipt = receiptContainer.querySelector(".pos-receipt");
-        // Odoo RTL support automatically flip left into right but html2canvas
-        // won't work as expected if the receipt is aligned to the right of the
-        // screen so we need to flip it back.
-        const parent = receipt.parentElement;
-        parent.style.left = 0;
-        parent.style.right = "auto";
-        const canvas = await html2canvas(receipt, {
-            height: Math.ceil(receipt.clientHeight),
-            width: Math.ceil(receipt.clientWidth),
-            scale: 1,
-        });
-        receipt.remove();
-        return this.processCanvas(canvas);
-    }
-
-    /**
      * Return value of this method will be the result of calling `printReceipt`
      * if it failed to connect to the IoT box.
      */
@@ -116,7 +90,7 @@ export class BasePrinter {
                     "Please check if the printer is still connected. \n" +
                         "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). " +
                         "If it is the case, you will need to follow Odoo's documentation for " +
-                        "'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+                        "'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
                 ),
             },
         };

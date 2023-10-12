@@ -60,13 +60,12 @@ patch(Orderline.prototype, {
         }
         return false;
     },
-    export_for_printing() {
-        var json = super.export_for_printing(...arguments);
-        json.down_payment_details = this.down_payment_details;
-        if (this.sale_order_origin_id) {
-            json.so_reference = this.sale_order_origin_id.name;
-        }
-        return json;
+    getDisplayData() {
+        return {
+            ...super.getDisplayData(),
+            down_payment_details: this.down_payment_details,
+            so_reference: this.sale_order_origin_id?.name,
+        };
     },
     /**
      * Set quantity based on the give sale order line.

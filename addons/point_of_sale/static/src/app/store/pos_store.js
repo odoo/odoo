@@ -276,7 +276,6 @@ export class PosStore extends Reactive {
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
-        await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
         this.open_orders_json = loadedData["open_orders"];
     }
@@ -1869,8 +1868,6 @@ export class PosStore extends Reactive {
             const image = new Image();
             image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
         }
-        const image = new Image();
-        image.src = "/point_of_sale/static/src/img/backspace.png";
     }
 
     /**
@@ -1909,6 +1906,14 @@ export class PosStore extends Reactive {
 
     doNotAllowRefundAndSales() {
         return false;
+    }
+
+    getReceiptHeaderData() {
+        return {
+            company: this.company,
+            cashier: this.get_cashier()?.name,
+            header: this.config.receipt_header,
+        };
     }
 }
 

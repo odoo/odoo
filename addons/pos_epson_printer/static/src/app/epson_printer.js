@@ -61,15 +61,17 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     async sendPrintingJob(img) {
-        const res = await $.ajax({
-            url: this.address,
+        const res = await fetch(this.address, {
             method: "POST",
-            data: img,
+            body: img,
         });
-        const response = $(res).find("response");
+        const body = await res.text();
+        const parser = new DOMParser();
+        const parsedBody = parser.parseFromString(body, "application/xml");
+        const response = parsedBody.querySelector("response");
         return {
-            result: response.attr("success") === "true",
-            printerErrorCode: response.attr("code"),
+            result: response.getAttribute("success") === "true",
+            printerErrorCode: response.getAttribute("code"),
         };
     }
 
@@ -152,21 +154,10 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     getActionError() {
-        const printRes = {
-            successful: false,
-            message: {
-                title: _t("Connection to the printer failed"),
-                body: _t(
-                    "Please check if the printer is still connected. \n" +
-                        "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). " +
-                        "If it is the case, you will need to follow Odoo's documentation for " +
-                        "'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
-                ),
-            },
-        };
+        const printRes = super.getResultsError();
         if (window.location.protocol === "https:") {
             printRes.message.body += _t(
-                "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s",
+                "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s. ",
                 this.url
             );
         }

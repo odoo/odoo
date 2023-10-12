@@ -5,7 +5,8 @@ import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScre
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
-import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+import { getSteps, startSteps, insertSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
 import { nbsp } from "@web/core/utils/strings";
 
@@ -71,7 +72,7 @@ registry
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod("Bank");
             PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.customerNoteIsThere("Test customer note");
+            insertSteps(Order.hasLine({ customerNote: "Test customer note" }));
             return getSteps(); 
         } 
 });
@@ -92,7 +93,7 @@ registry
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod("Cash");
             PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.discountAmountIs("0.7");
+            insertSteps(Order.hasLine({ discount: "0.7" }));
             return getSteps();
         },
     });

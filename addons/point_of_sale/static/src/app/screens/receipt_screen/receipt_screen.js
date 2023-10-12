@@ -2,24 +2,25 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
-import { AbstractReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/abstract_receipt_screen";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { registry } from "@web/core/registry";
-import { useRef, useState, onWillStart } from "@odoo/owl";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { useRef, useState, onWillStart, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 
-export class ReceiptScreen extends AbstractReceiptScreen {
+export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
+    static components = { OrderReceipt };
 
     setup() {
         super.setup();
         this.pos = usePos();
+        this.printer = useService("printer");
         useErrorHandlers();
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");
-        this.orderReceipt = useRef("order-receipt");
+        this.renderer = useService("renderer");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
         this.buttonPrintReceipt = useRef("order-print-receipt-button");
         this.currentOrder = this.pos.get_order();
@@ -35,9 +36,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
                 await this.pos.sendOrderInPreparation(this.currentOrder);
             }
         });
-    }
-    get receiptData() {
-        return this.pos.get_order().getOrderReceiptEnv();
     }
     _addNewOrder() {
         this.pos.add_new_order();
@@ -118,11 +116,17 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     }
     async printReceipt() {
         this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
-        const currentOrder = this.currentOrder;
-        const isPrinted = await this._printReceipt();
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
 
         if (isPrinted) {
-            currentOrder._printed = true;
+            this.currentOrder._printed = true;
         }
 
         if (this.buttonPrintReceipt.el) {
@@ -130,16 +134,24 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
     }
     async _sendReceiptToCustomer() {
-        const printer = new BasePrinter();
-        const receiptString = this.orderReceipt.el.firstChild;
-        const ticketImage = await printer.htmlToImg(receiptString);
-        const order = this.currentOrder;
-        const partner = order.get_partner();
-        const orderName = order.get_name();
+        const partner = this.currentOrder.get_partner();
         const orderPartner = {
             email: this.orderUiState.inputEmail,
             name: partner ? partner.name : this.orderUiState.inputEmail,
         };
+        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
+    }
+    async sendToCustomer(orderPartner, methodName) {
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print" }
+        );
+        const order = this.currentOrder;
+        const orderName = order.get_name();
         const order_server_id = this.pos.validated_orders_name_server_id_map[orderName];
         if (!order_server_id) {
             this.popup.add(OfflineErrorPopup, {
@@ -150,7 +162,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             });
             return Promise.reject();
         }
-        await this.orm.call("pos.order", "action_receipt_to_customer", [
+        await this.orm.call("pos.order", methodName, [
             [order_server_id],
             orderName,
             orderPartner,

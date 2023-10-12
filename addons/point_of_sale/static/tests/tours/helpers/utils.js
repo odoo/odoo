@@ -60,7 +60,9 @@ export function startSteps() {
         },
     ];
 }
-
+export function insertSteps(...steps) {
+    steps.push(...steps);
+}
 export function getSteps() {
     return steps;
 }

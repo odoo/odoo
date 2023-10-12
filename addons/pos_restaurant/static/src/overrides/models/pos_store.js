@@ -62,6 +62,16 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen", { floor: table?.floor });
         }
     },
+    getReceiptHeaderData() {
+        const json = super.getReceiptHeaderData(...arguments);
+        if (this.config.module_pos_restaurant) {
+            if (this.get_order().getTable()) {
+                json.table = this.get_order().getTable().name;
+            }
+            json.customer_count = this.get_order().getCustomerCount();
+        }
+        return json;
+    },
     shouldResetIdleTimer() {
         const stayPaymentScreen =
             this.mainScreen.component === PaymentScreen && this.get_order().paymentlines.length > 0;
