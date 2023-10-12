@@ -8,6 +8,7 @@ from . import controller
 from . import populate
 
 from odoo import api, SUPERUSER_ID
+from odoo.osv import expression
 
 
 def _pre_init_mrp(cr):
@@ -35,6 +36,16 @@ def _create_warehouse_data(cr, registry):
 def uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     warehouses = env["stock.warehouse"].search([])
+    #clean-up sequences at uninstall
+    domain = []
+    for warehouse in warehouses:
+        for (key, value) in warehouse._get_sequence_values().items():
+            if key in ['pbm_type_id', 'sam_type_id', 'manu_type_id']:
+                domain.append([('sequence_id.name', '=', value.get('name'))])
+    domain = expression.OR(domain)
+    picking_type_ids = env['stock.picking.type'].with_context({"active_test": False}).search(domain)
+    picking_type_ids.sequence_id.unlink()
+
     pbm_routes = warehouses.mapped("pbm_route_id")
     warehouses.write({"pbm_route_id": False})
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
