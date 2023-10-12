@@ -14,6 +14,7 @@ export class MultiRecordSelector extends Component {
         domain: { type: Array, optional: true },
         context: { type: Object, optional: true },
         fieldString: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
     };
     static components = { RecordAutocomplete, TagsList };
     static template = "web.MultiRecordSelector";
@@ -32,6 +33,15 @@ export class MultiRecordSelector extends Component {
     async getDisplayNames(props) {
         const ids = this.getIds(props);
         return this.nameService.loadDisplayNames(props.resModel, ids);
+    }
+
+    /**
+     * Placeholder should be empty if there is at least one tag. We cannot use
+     * the default behavior of the input placeholder because even if there is
+     * a tag, the input is still empty.
+     */
+    get placeholder() {
+        return this.getIds().length ? "" : this.props.placeholder;
     }
 
     getIds(props = this.props) {
