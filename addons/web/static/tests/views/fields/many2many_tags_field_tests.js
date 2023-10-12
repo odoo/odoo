@@ -351,14 +351,14 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".badge.dropdown-toggle", "the tags should not be dropdowns");
 
         // click on the tag: should do nothing and open the form view
-        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        await click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
         assert.verifySteps(["selectRecord"]);
         await nextTick();
 
         assert.containsNone(target, ".o_colorlist");
 
         await click(target.querySelectorAll(".o_list_record_selector")[1]);
-        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        await click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
         assert.verifySteps(["selectRecord"]);
         await nextTick();
 
@@ -386,14 +386,14 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".badge.dropdown-toggle", "the tags should not be dropdowns");
 
         // click on the tag: should do nothing and open the form view
-        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        await click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
         assert.verifySteps(["selectRecord"]);
         await nextTick();
 
         assert.containsNone(target, ".o_colorlist");
 
         await click(target.querySelectorAll(".o_list_record_selector")[1]);
-        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        await click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
         assert.verifySteps([]);
         await nextTick();
 
