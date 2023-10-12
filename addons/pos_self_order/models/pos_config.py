@@ -333,7 +333,7 @@ class PosConfig(models.Model):
     def _get_self_ordering_data(self):
         self.ensure_one()
         payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal == 'adyen' or p.is_online_payment).read(payment_search_params['search_params']['fields'])
+        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal in ['adyen', 'stripe'] or p.is_online_payment).read(payment_search_params['search_params']['fields'])
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
 
         return {

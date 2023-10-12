@@ -154,6 +154,16 @@ export class SelfOrder extends Reactive {
 
     initKioskData() {
         this.ordering = true;
+        this.idleTimout = false;
+
+        window.addEventListener("click", (event) => {
+            this.idleTimout && clearTimeout(this.idleTimout);
+            this.idleTimout = setTimeout(() => {
+                if (this.router.activeSlot !== "payment") {
+                    this.router.navigate("default");
+                }
+            }, 5 * 1000 * 60);
+        });
     }
 
     async initMobileData() {
