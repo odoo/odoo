@@ -157,6 +157,8 @@ export const CLIPBOARD_WHITELISTS = {
     styles: ['text-decoration', 'font-weight', 'background-color', 'color', 'font-style', 'text-decoration-line', 'font-size']
 };
 
+const EDITABLE_LINK_SELECTOR = 'a:not(.nav-link):not([contenteditable="false"])';
+
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
     for (const [key, value] of Object.entries(object)) {
@@ -1358,7 +1360,7 @@ export class OdooEditor extends EventTarget {
         if (!selection.isCollapsed) {
             return;
         }
-        const linkInSelection = getInSelection(this.document, 'a');
+        const linkInSelection = getInSelection(this.document, EDITABLE_LINK_SELECTOR);
         const isLinkSelection = selection.anchorNode === linkInSelection;
         let commonAncestorContainer = selection.rangeCount && selection.getRangeAt(0).commonAncestorContainer;
         if (commonAncestorContainer) {
@@ -1371,13 +1373,13 @@ export class OdooEditor extends EventTarget {
             if (!block || !this.editable.contains(block)) {
                 block = this.editable;
             }
-            let links = [...block.querySelectorAll('a')];
+            let links = [...block.querySelectorAll(EDITABLE_LINK_SELECTOR)];
             // Consider the links at the edges of the sibling blocks, limiting
             // to the editable.
             if (this.editable.contains(block)) {
                 links.push(
-                    closestElement(previousLeaf(block, this.editable, true), 'a'),
-                    closestElement(nextLeaf(block, this.editable, true), 'a'),
+                    closestElement(previousLeaf(block, this.editable, true), EDITABLE_LINK_SELECTOR),
+                    closestElement(nextLeaf(block, this.editable, true), EDITABLE_LINK_SELECTOR),
                 );
             }
             const offset = selection.anchorOffset;
@@ -2822,7 +2824,7 @@ export class OdooEditor extends EventTarget {
         }
         if (selection.rangeCount && selection.getRangeAt(0)) {
             // Handle selection/navigation at the edges of links.
-            const link = getInSelection(this.document, 'a');
+            const link = getInSelection(this.document, EDITABLE_LINK_SELECTOR);
             if (link && selection.isCollapsed) {
                 // 1. If the selection starts or ends at the end of a link
                 //    (after the end zws), move the selection after the "after"
@@ -2835,8 +2837,8 @@ export class OdooEditor extends EventTarget {
                     // The selection is at the end of the link, ie. at offset
                     // max of the link, with no next leaf that is in the link.
                     endZws && selection.anchorOffset === nodeSize(selection.anchorNode) &&
-                    closestElement(selection.anchorNode, 'a') === link &&
-                    closestElement(nextLeaf(selection.anchorNode, this.editable), 'a') !== link
+                    closestElement(selection.anchorNode, EDITABLE_LINK_SELECTOR) === link &&
+                    closestElement(nextLeaf(selection.anchorNode, this.editable), EDITABLE_LINK_SELECTOR) !== link
                 );
                 if (isAtEndOfLink) {
                     let afterZws = link.nextElementSibling;
