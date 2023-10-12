@@ -705,9 +705,9 @@ class AccountJournal(models.Model):
             self = self.env['account.journal'].browse(self._context.get("default_journal_id"))
         context_move_type = self._context.get("default_move_type", "entry")
         if not self:
-            if context_move_type in self.env['account.move'].get_sale_types():
+            if context_move_type in self.env['account.move'].get_sale_types(include_receipts=True):
                 journal_type = "sale"
-            elif context_move_type in self.env['account.move'].get_purchase_types():
+            elif context_move_type in self.env['account.move'].get_purchase_types(include_receipts=True):
                 journal_type = "purchase"
             else:
                 raise UserError(_("The journal in which to upload the invoice is not specified. "))
