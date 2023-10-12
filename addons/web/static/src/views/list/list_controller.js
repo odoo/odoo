@@ -233,6 +233,10 @@ export class ListController extends Component {
     }
 
     async openRecord(record) {
+        if (await record.isDirty()) {
+            await record.save();
+            await record.model.root.load();
+        }
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
                 name: this.archInfo.openAction.action,

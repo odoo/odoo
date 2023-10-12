@@ -228,7 +228,11 @@ export class X2ManyField extends Component {
         return props;
     }
 
-    switchToForm(record) {
+    async switchToForm(record) {
+        if (await this.props.record.isDirty()) {
+            await record.save();
+            await record.model.root.load();
+        }
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
