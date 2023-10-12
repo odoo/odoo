@@ -28,18 +28,52 @@ class ResPartner(models.Model):
             if result <= 1:
                 return 0
             return 11 - result
+        def _l10n_br_is_valid_cnpj(vat_clean):
+            weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+            vat_check = vat_clean[:12]
+            vat_check.append(_l10n_br_calculate_mod_11(vat_check, weights[1:]))
+            vat_check.append(_l10n_br_calculate_mod_11(vat_check, weights))
+            return vat_check == vat_clean
+
+        def _l10n_br_is_valid_cpf(vat_clean): #http://www.receita.fazenda.gov.br/aplicacoes/atcta/cpf/funcoes.js
+            total_sum = 0
+            # If the CPF list contains all zeros, it's not valid
+            if vat_clean == [0] * 11:
+                return False
+            # Calculate the sum for the first verification digit
+            for i in range(1, 10):
+                total_sum = total_sum + vat_clean[i - 1] * (11 - i)
+            remainder = (total_sum * 10) % 11
+            # If the remainder is 10 or 11, set it to 0
+            if remainder in (10, 11):
+                remainder = 0
+            # Check the first verification digit
+            if remainder != vat_clean[9]:
+                return False
+            total_sum = 0
+            # Calculate the sum for the second verification digit
+            for i in range(1, 11):
+                total_sum = total_sum + vat_clean[i - 1] * (12 - i)
+            remainder = (total_sum * 10) % 11
+            # If the remainder is 10 or 11, set it to 0
+            if remainder in (10, 11):
+                remainder = 0
+            # Check the second verification digit
+            if remainder != vat_clean[10]:
+                return False
+            return True
 
         for partner in self:
             if not partner.vat:
                 return
             if not partner.country_code == 'BR':
                 return super().check_vat()
-            weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
             vat_clean = list(map(int, re.sub("[^0-9]", "", partner.vat)))
-            if len(vat_clean) != 14:
-                raise ValidationError(_("Invalid CNPJ. Make sure that the CNPJ is a 14 digits number."))
-            vat_check = vat_clean[:12]
-            vat_check.append(_l10n_br_calculate_mod_11(vat_check, weights[1:]))
-            vat_check.append(_l10n_br_calculate_mod_11(vat_check, weights))
-            if vat_check != vat_clean:
-                raise ValidationError(_("Invalid CNPJ. Make sure that all the digits are entered correctly."))
+            if len(vat_clean) == 14:
+                if not _l10n_br_is_valid_cnpj(vat_clean):
+                    raise ValidationError(_("Invalid CNPJ. Make sure that all the digits are entered correctly."))
+            elif len(vat_clean) == 11:
+                if not _l10n_br_is_valid_cpf(vat_clean):
+                    raise ValidationError(_("Invalid CPF. Make sure that all the digits are entered correctly."))
+            else:
+                raise ValidationError(_("Invalid CNPJ/CPF. Make sure that the CNPJ is a 14 digits number or CPF is a 11 digits number."))

@@ -370,6 +370,9 @@
                 <cbc:AllowanceTotalAmount
                     t-att-currencyID="monetary_tot_vals['currency'].name"
                     t-out="format_float(monetary_tot_vals.get('allowance_total_amount'), monetary_tot_vals.get('currency_dp'))"/>
+                <cbc:ChargeTotalAmount
+                    t-att-currencyID="monetary_tot_vals['currency'].name"
+                    t-out="format_float(monetary_tot_vals.get('charge_total_amount'), monetary_tot_vals.get('currency_dp'))"/>
                 <cbc:PrepaidAmount
                     t-att-currencyID="monetary_tot_vals['currency'].name"
                     t-out="format_float(monetary_tot_vals.get('prepaid_amount'), monetary_tot_vals.get('currency_dp'))"/>

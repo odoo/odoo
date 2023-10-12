@@ -27,10 +27,17 @@ class Employee(models.Model):
                 self._create_future_public_holidays_timesheets(self)
             else:
                 # Delete future holiday timesheets
-                future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
-                future_timesheets.write({'global_leave_id': False})
-                future_timesheets.unlink()
+                self._delete_future_public_holidays_timesheets()
+        elif 'resource_calendar_id' in vals:
+            # Update future holiday timesheets
+            self._delete_future_public_holidays_timesheets()
+            self._create_future_public_holidays_timesheets(self)
         return result
+
+    def _delete_future_public_holidays_timesheets(self):
+        future_timesheets = self.env['account.analytic.line'].sudo().search([('global_leave_id', '!=', False), ('date', '>=', fields.date.today()), ('employee_id', 'in', self.ids)])
+        future_timesheets.write({'global_leave_id': False})
+        future_timesheets.unlink()
 
     def _create_future_public_holidays_timesheets(self, employees):
         lines_vals = []

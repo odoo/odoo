@@ -19,6 +19,7 @@ import {
     editInput,
     getFixture,
     mount,
+    nextTick,
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
@@ -63,7 +64,7 @@ async function mountPicker(Picker, props) {
     `;
 
     const env = await makeTestEnv();
-    await mount(Parent, target, { env, props: { Picker } });
+    return await mount(Parent, target, { env, props: { Picker } });
 }
 
 function useFRLocale() {
@@ -772,5 +773,34 @@ QUnit.module("Components", ({ beforeEach }) => {
         await editInput(input, null, "15 07, 2020 12:30:43");
 
         assert.strictEqual(input.value, "١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣");
+    });
+
+    QUnit.test("keep date between component and datepicker in sync", async (assert) => {
+        const parent = await mountPicker(DatePicker, {
+            date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy"),
+            format: "dd/MM/yyyy",
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+        assert.strictEqual(input.value, "09/01/1997");
+        await nextTick();
+
+        await click(input);
+        assert.hasClass(document.querySelector("td.day[data-day='01/09/1997']"), "active");
+
+        // Change the date of the component externally (not through the
+        // datepicker interface)
+        parent.state.date = parent.state.date.plus({ days: 1 });
+        await nextTick();
+
+        assert.strictEqual(input.value, "10/01/1997");
+        assert.hasClass(document.querySelector("td.day[data-day='01/10/1997']"), "active");
+
+        parent.state.date = false;
+        await nextTick();
+
+        assert.strictEqual(input.value, "");
+        assert.containsN(document.body, "td.day", 42);
+        assert.containsNone(document.body, "td.day.active");
     });
 });

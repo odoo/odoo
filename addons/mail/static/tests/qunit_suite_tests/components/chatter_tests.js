@@ -2,16 +2,12 @@
 
 import {
     afterNextRender,
-    dragenterFiles,
-    dropFiles,
     nextAnimationFrame,
     start,
     startServer
 } from '@mail/../tests/helpers/test_utils';
 
-import { file } from 'web.test_utils';
-
-const { createFile } = file;
+import { contains, createFile, dragenterFiles, dropFiles } from "@web/../tests/utils";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -226,71 +222,42 @@ QUnit.test('show attachment box', async function (assert) {
     );
 });
 
-QUnit.test('chatter: drop attachments', async function (assert) {
-    assert.expect(4);
-
+QUnit.test("chatter: drop attachments", async () => {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { afterEvent, openView } = await start();
-    await openView({
-        res_id: resPartnerId1,
-        res_model: 'res.partner',
-        views: [[false, 'form']],
+    const partnerId = pyEnv["res.partner"].create({});
+    const { openView } = await start();
+    openView({
+        res_id: partnerId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
     });
-    let files = [
+    const files = [
         await createFile({
-            content: 'hello, world',
-            contentType: 'text/plain',
-            name: 'text.txt',
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
         }),
         await createFile({
-            content: 'hello, worlduh',
-            contentType: 'text/plain',
-            name: 'text2.txt',
+            content: "hello, worlduh",
+            contentType: "text/plain",
+            name: "text2.txt",
         }),
     ];
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
-    assert.ok(
-        document.querySelector('.o_Chatter_dropZone'),
-        "should have a drop zone"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
-        0,
-        "should have no attachment before files are dropped"
-    );
-
-    await afterNextRender(() => afterEvent({
-        eventName: 'o-file-uploader-upload',
-        func: () => dropFiles(document.querySelector('.o_Chatter_dropZone'), files),
-        message: "should wait until files are uploaded",
-        predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
-    }));
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
-        2,
-        "should have 2 attachments in the attachment box after files dropped"
-    );
-
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
-    files = [
+    await dragenterFiles(".o_Chatter", files);
+    await contains(".o_Chatter_dropZone");
+    await contains(".o_AttachmentCard", { count: 0 });
+    await dropFiles(".o_Chatter_dropZone", files);
+    await contains(".o_AttachmentCard", { count: 2 });
+    const extraFiles = [
         await createFile({
-            content: 'hello, world',
-            contentType: 'text/plain',
-            name: 'text3.txt',
-        })
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
     ];
-    await afterNextRender(() => afterEvent({
-        eventName: 'o-file-uploader-upload',
-        func: () => dropFiles(document.querySelector('.o_Chatter_dropZone'), files),
-        message: "should wait until files are uploaded",
-        predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
-    }));
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
-        3,
-        "should have 3 attachments in the attachment box after files dropped"
-    );
+    await dragenterFiles(".o_Chatter", extraFiles);
+    await dropFiles(".o_Chatter_dropZone", extraFiles);
+    await contains(".o_AttachmentCard", { count: 3 });
 });
 
 QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async function (assert) {

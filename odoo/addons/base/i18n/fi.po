@@ -37,8 +37,9 @@
 # Konsta Aavaranta, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomas Suutari <tuomas.suutari@anders.fi>, 2023
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tuomas Suutari <tuomas.suutari@anders.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6972,7 +6973,7 @@ msgstr "\"%s\" ei näyttäisi olevan kenttään \"%%(field)s\" tarkoitettu numer
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a valid JSON for field '%%(field)s'"
-msgstr "'%s' ei näytä olevan kelvollinen JSON kentälle '%%(kenttä)s'"
+msgstr "'%s' ei näytä olevan kelvollinen JSON kentälle '%%(field)s'"
 
 #. module: base
 #. odoo-python
@@ -14441,7 +14442,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Found multiple matches for value '%s' in field '%%(field)s' (%d matches)"
-msgstr "Löytyi useita osumia arvolle '%s' kentässä '%%(kenttä)s' (%d osumaa)"
+msgstr "Löytyi useita osumia arvolle '%s' kentässä '%%(field)s' (%d osumaa)"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -16247,6 +16248,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Virheellinen 'group by' -parametri"
+
+#. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -28995,6 +29002,8 @@ msgid ""
 "Deleting the template users is not allowed. Deleting this profile will "
 "compromise critical functionalities."
 msgstr ""
+"Mallikäyttäjien poistaminen ei ole sallittua. Tämän profiilin poistaminen "
+"vaarantaa kriittiset toiminnot."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key

@@ -43,7 +43,9 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
-        for move in self.move_ids.filtered(lambda move: move.is_subcontract):
+        for move in self.move_ids:
+            if not move.is_subcontract:
+                continue
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
             productions = move._get_subcontract_production()
@@ -78,6 +80,7 @@ class StockPicking(models.Model):
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
+            productions_to_done._subcontract_sanity_check()
             if not productions_to_done:
                 continue
             productions_to_done = productions_to_done.sudo()
@@ -91,6 +94,7 @@ class StockPicking(models.Model):
             production_moves = productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
             production_moves.write({'date': minimum_date - timedelta(seconds=1)})
             production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
+
         return res
 
     def action_record_components(self):

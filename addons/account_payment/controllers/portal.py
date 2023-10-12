@@ -41,7 +41,7 @@ class PortalAccount(portal.PortalAccount):
 
         fees_by_provider = {
             pro_sudo: pro_sudo._compute_fees(
-                invoice.amount_total, invoice.currency_id, invoice.partner_id.country_id
+                invoice.amount_residual, invoice.currency_id, invoice.partner_id.country_id
             ) for pro_sudo in providers_sudo.filtered('fees_active')
         }
         values.update({

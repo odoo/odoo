@@ -289,8 +289,12 @@ class IoTboxHomepage(Home):
 
     @http.route('/six_payment_terminal_add', type='http', auth='none', cors='*', csrf=False)
     def add_six_payment_terminal(self, terminal_id):
-        helpers.write_file('odoo-six-payment-terminal.conf', terminal_id)
-        service.server.restart()
+        if terminal_id.isdigit():
+            helpers.write_file('odoo-six-payment-terminal.conf', terminal_id)
+            service.server.restart()
+        else:
+            _logger.warning('Ignoring invalid Six TID: "%s". Only digits are allowed', terminal_id)
+            self.clear_six_payment_terminal()
         return 'http://' + helpers.get_ip() + ':8069'
 
     @http.route('/six_payment_terminal_clear', type='http', auth='none', cors='*', csrf=False)

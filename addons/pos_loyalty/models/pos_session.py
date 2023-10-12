@@ -61,6 +61,7 @@ class PosSession(models.Model):
         self = self.with_context(**params['context'])
         rewards = self.config_id._get_program_ids().reward_ids
         products = rewards.discount_line_product_id | rewards.reward_product_ids
+        products |= self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'ewallet').trigger_product_ids
         # Only load products that are not already in the result
         products = list(set(products.ids) - set(product['id'] for product in result))
         products = self.env['product.product'].search_read([('id', 'in', products)], fields=params['search_params']['fields'])

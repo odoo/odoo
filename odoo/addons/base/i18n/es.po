@@ -10332,7 +10332,7 @@ msgstr "Calcular"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "El método compute no puede depender del campo 'id'"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -12585,6 +12585,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Ocurrió un error al procesar la vista:\n"
+"\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -15472,10 +15475,16 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Expresión no válida al procesar el xpath %r"
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "Formato JSON no válido en el campo \"valor predeterminado\"."
 
 #. module: base
 #: code:addons/models.py:0
@@ -28345,7 +28354,7 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
-msgstr ""
+msgstr "No puede eliminar el registro %s."
 
 #. module: base
 #. odoo-python
@@ -28387,6 +28396,8 @@ msgstr ""
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
 msgstr ""
+"No puede cambiar el nombre de los parámetros de configuración con las claves"
+" %s"
 
 #. module: base
 #. odoo-python

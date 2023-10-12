@@ -29,6 +29,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_published
@@ -136,7 +138,7 @@ msgstr "Condição baseada em tempo"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "Antes da Atualização de Domínio"
+msgstr "Domínio antes da atualização"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -164,8 +166,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Ações de servidor filho que serão executadas. Note-se que o último retorno "
-"retornou o valor da ação que será usado como valor de retorno global."
+"Ações secundárias de servidor que serão executadas. Observe que o último "
+"valor de ação retornado será usado como valor de retorno global."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
@@ -246,6 +248,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Desativar esta ação automatizada permitirá que você continue seu fluxo de trabalho,\n"
+"                mas quaisquer dados criados depois disso podem ser corrompidos,\n"
+"                já que você está efetivamente desativando uma personalização que pode estar definindo\n"
+"                campos importantes e/ou obrigatórios."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -281,6 +287,8 @@ msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
 msgstr ""
+"Os tipos de ação 'e-mail', 'seguidores' ou 'atividades' não podem ser usados"
+" ao excluir registros."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -298,6 +306,8 @@ msgstr "Campos que acionam o onchange."
 msgid ""
 "Form Modification based actions can only be used with code action type."
 msgstr ""
+"As ações baseadas em modificação de formulário só podem ser usadas com ação "
+"do tipo 'código'."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -412,6 +422,7 @@ msgstr "Nota"
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
+"Observe que essa ação pode ser acionada até %d minutos após seu agendamento."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -557,6 +568,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"O erro ocorreu durante a execução da ação automatizada\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
@@ -734,3 +747,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Não é possível enviar um e-mail, adicionar seguidores ou criar uma atividade"
+" para um registro excluído."

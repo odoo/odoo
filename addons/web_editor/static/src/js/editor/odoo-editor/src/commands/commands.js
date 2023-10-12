@@ -49,10 +49,12 @@ import {
     fillEmpty,
     isEmptyBlock,
     getCursorDirection,
+    firstLeaf,
+    lastLeaf,
 } from '../utils/utils.js';
 
-const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
-const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
+const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
+const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
 
 function align(editor, mode) {
     const sel = editor.document.getSelection();
@@ -148,27 +150,26 @@ export const editorCommands = {
     insert: (editor, content) => {
         if (!content) return;
         const selection = editor.document.getSelection();
-        const range = selection.getRangeAt(0);
         let startNode;
         let insertBefore = false;
-        if (selection.isCollapsed) {
-            if (range.startContainer.nodeType === Node.TEXT_NODE) {
-                insertBefore = !range.startOffset;
-                splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
-                startNode = range.startContainer;
-            }
-        } else {
+        if (!selection.isCollapsed) {
             editor.deleteRange(selection);
+        }
+        const range = selection.getRangeAt(0);
+        if (range.startContainer.nodeType === Node.TEXT_NODE) {
+            insertBefore = !range.startOffset;
+            splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
+            startNode = range.startContainer;
         }
 
         const container = document.createElement('fake-element');
         const containerFirstChild = document.createElement('fake-element-fc');
         const containerLastChild = document.createElement('fake-element-lc');
 
-        if (content instanceof Node) {
-            container.replaceChildren(content);
-        } else {
+        if (typeof content === 'string') {
             container.textContent = content;
+        } else {
+            container.replaceChildren(content);
         }
 
         // In case the html inserted starts with a list and will be inserted within
@@ -319,13 +320,13 @@ export const editorCommands = {
 
     // Change tags
     setTag(editor, tagName) {
-        const restoreCursor = preserveCursor(editor.document);
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
             block.isContentEditable
         ));
+        const [startContainer, startOffset, endContainer, endOffset] = [firstLeaf(range.startContainer), range.startOffset, lastLeaf(range.endContainer), range.endOffset];
         for (const block of deepestSelectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
@@ -347,7 +348,10 @@ export const editorCommands = {
                 children.forEach(child => newBlock.appendChild(child));
             }
         }
-        restoreCursor();
+        const newRange = new Range();
+        newRange.setStart(startContainer,startOffset);
+        newRange.setEnd(endContainer,endOffset);
+        getDeepRange(editor.editable, { range: newRange, select: true, });
         editor.historyStep();
     },
 
@@ -386,11 +390,21 @@ export const editorCommands = {
         }
     },
     removeFormat: editor => {
+        const textAlignStyles = new Map();
+        getTraversedNodes(editor.editable).forEach((element) => {
+            const block = closestBlock(element);
+            if (block.style.textAlign) {
+                textAlignStyles.set(block, block.style.textAlign);
+            }
+        });
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
             // The only possible background image on text is the gradient.
             closestElement(node).style.backgroundImage = '';
         }
+        textAlignStyles.forEach((textAlign, block) => {
+            block.style.setProperty('text-align', textAlign);
+        });
     },
 
     // Align
@@ -605,7 +619,7 @@ export const editorCommands = {
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
             colorElement(font, color, mode);
-            if (!hasColor(font, mode) && !font.hasAttribute('style')) {
+            if ((!hasColor(font, 'color') && !hasColor(font,'backgroundColor')) && (!font.hasAttribute('style') || !color)) {
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
@@ -671,7 +685,9 @@ export const editorCommands = {
         }
         referenceColumn.forEach((cell, rowIndex) => {
             const newCell = document.createElement('td');
-            newCell.append(document.createElement('br'));
+            const p = document.createElement('p');
+            p.append(document.createElement('br'));
+            newCell.append(p);
             cell[beforeOrAfter](newCell);
             if (rowIndex === 0) {
                 newCell.style.width = cell.style.width;
@@ -697,7 +713,9 @@ export const editorCommands = {
         const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
         newRow.append(...Array.from(Array(cells.length)).map(() => {
             const td = document.createElement('td');
-            td.append(document.createElement('br'));
+            const p = document.createElement('p');
+            p.append(document.createElement('br'));
+            td.append(p);
             return td;
         }));
         referenceRow[beforeOrAfter](newRow);
@@ -737,6 +755,22 @@ export const editorCommands = {
         const siblingRow = rows[rowIndex - 1] || rows[rowIndex + 1];
         row.remove();
         siblingRow ? setSelection(...startPos(siblingRow)) : editorCommands.deleteTable(editor, table);
+    },
+    resetSize: (editor,table) => {
+        if (!table) {
+            getDeepRange(editor.editable, { select: true });
+            table = getInSelection(editor.document,'table');
+        }
+        table.removeAttribute('style');
+        const cells = [...table.querySelectorAll('tr, td')];
+        cells.forEach( cell => {
+            const cStyle = cell.style;
+            if (cell.tagName === 'TR') {
+                cStyle.height = '';
+            } else {
+                cStyle.width = '';
+            }
+        })
     },
     deleteTable: (editor, table) => {
         table = table || getInSelection(editor.document, 'table');

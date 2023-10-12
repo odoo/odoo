@@ -1589,6 +1589,8 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
+        cr.execute("SELECT code FROM res_lang WHERE active = 't'")
+        languages = {l[0] for l in cr.fetchall()}
         query = f"""
             SELECT t.res_id, m."{field.name}", t.value, t.noupdate
               FROM t
@@ -1642,6 +1644,12 @@ def _get_translation_upgrade_queries(cr, field):
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
             if extra and extra[0] not in new_values:
                 new_values[extra[0]] = new_values["en_US"]
+            elif not extra:
+                missing_languages = languages - set(translations)
+                if missing_languages:
+                    src_value = field.translate(lambda v: None, src_value)
+                    for lang in sorted(missing_languages):
+                        new_values[lang] = src_value
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 

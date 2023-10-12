@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict, OrderedDict
+from datetime import date, timedelta
 import json
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_round, format_date, float_is_zero
-from datetime import timedelta
-from collections import defaultdict
 
 class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
@@ -127,6 +127,66 @@ class ReportBomStructure(models.AbstractModel):
         }
 
     @api.model
+    def _get_components_closest_forecasted(self, lines, line_quantities, parent_bom, product_info, ignore_stock=False):
+        """
+            Returns a dict mapping products to a dict of their corresponding BoM lines,
+            which are mapped to their closest date in the forecast report where consumed quantity >= forecasted quantity.
+
+            E.g. {'product_1_id': {'line_1_id': date_1, line_2_id: date_2}, 'product_2': {line_3_id: date_3}, ...}.
+
+            Note that
+                - if a product is unavailable + not forecasted for a specific bom line => its date will be `date.max`
+                - if a product's type is not `product` or is already in stock for a specific bom line => its date will be `date.min`.
+        """
+        if ignore_stock:
+            return {}
+        # Use defaultdict(OrderedDict) in case there are lines with the same component.
+        closest_forecasted = defaultdict(OrderedDict)
+        remaining_products = []
+        product_quantities_info = defaultdict(OrderedDict)
+        for line in lines:
+            product = line.product_id
+            quantities_info = self._get_quantities_info(product, line.product_uom_id, parent_bom, product_info)
+            stock_loc = quantities_info['stock_loc']
+            product_info[product.id]['consumptions'][stock_loc] += line_quantities.get(line.id, 0.0)
+            product_quantities_info[product.id][line.id] = product_info[product.id]['consumptions'][stock_loc]
+            if (product.detailed_type != 'product' or
+                    float_compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty'], precision_rounding=product.uom_id.rounding) <= 0):
+                # Use date.min as a sentinel value for _get_stock_availability
+                closest_forecasted[product.id][line.id] = date.min
+            elif stock_loc != 'in_stock':
+                closest_forecasted[product.id][line.id] = date.max
+            else:
+                remaining_products.append(product.id)
+                closest_forecasted[product.id][line.id] = None
+        date_today = self.env.context.get('from_date', fields.date.today())
+        domain = [('state', '=', 'forecast'), ('date', '>=', date_today), ('product_id', 'in', list(set(remaining_products)))]
+        if self.env.context.get('warehouse'):
+            domain.append(('warehouse_id', '=', self.env.context.get('warehouse')))
+        if remaining_products:
+            res = self.env['report.stock.quantity']._read_group(
+                domain,
+                ['min_date:min(date)', 'product_id', 'product_qty'],
+                ['product_id', 'product_qty'],
+                orderby='product_id asc, min_date asc', lazy=False
+            )
+            available_quantities = defaultdict(list)
+            for group in res:
+                product_id = group['product_id'][0]
+                available_quantities[product_id].append([group['min_date'], group['product_qty']])
+            for product_id in remaining_products:
+                # Find the first empty line_id for the given product_id.
+                line_id = next(filter(lambda k: not closest_forecasted[product_id][k], closest_forecasted[product_id].keys()), None)
+                # Find the first available quantity for the given product and update closest_forecasted
+                for min_date, product_qty in available_quantities[product_id]:
+                    if product_qty >= product_quantities_info[product_id][line_id]:
+                        closest_forecasted[product_id][line_id] = min_date
+                        break
+                if not closest_forecasted[product_id][line_id]:
+                    closest_forecasted[product_id][line_id] = date.max
+        return closest_forecasted
+
+    @api.model
     def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, index=0, product_info=False, ignore_stock=False):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
@@ -141,9 +201,6 @@ class ReportBomStructure(models.AbstractModel):
 
         if not product_info:
             product_info = {}
-        key = product.id
-        if key not in product_info:
-            product_info[key] = {'consumptions': {'in_stock': 0}}
 
         company = bom.company_id or self.env.company
         current_quantity = line_qty
@@ -163,9 +220,9 @@ class ReportBomStructure(models.AbstractModel):
                 prod_cost = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * current_quantity
                 attachment_ids = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)]).ids
 
+        key = product.id
         bom_key = bom.id
-        if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, product, current_quantity, bom)
+        self._update_product_info(product, bom_key, product_info, warehouse, current_quantity, bom=bom, parent_bom=parent_bom)
         route_info = product_info[key].get(bom_key, {})
         quantities_info = {}
         if not ignore_stock:
@@ -212,16 +269,31 @@ class ReportBomStructure(models.AbstractModel):
             bom_report_line['bom_cost'] += bom_report_line['operations_cost']
 
         components = []
+        no_bom_lines = self.env['mrp.bom.line']
+        line_quantities = {}
+        for line in bom.bom_line_ids:
+            if product and line._skip_bom_line(product):
+                continue
+            line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
+            line_quantities[line.id] = line_quantity
+            if not line.child_bom_id:
+                no_bom_lines |= line
+                # Update product_info for all the components before computing closest forecasted.
+                self._update_product_info(line.product_id, bom.id, product_info, warehouse, line_quantity, bom=False, parent_bom=bom)
+        components_closest_forecasted = self.with_context(parent_product_id=product.id)._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
             if product and line._skip_bom_line(product):
                 continue
-            line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
+            line_quantity = line_quantities.get(line.id, 0.0)
             if line.child_bom_id:
                 component = self.with_context(parent_product_id=product.id)._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
                                                                                           index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
-                component = self.with_context(parent_product_id=product.id)._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                component = self.with_context(
+                    parent_product_id=product.id,
+                    components_closest_forecasted=components_closest_forecasted,
+                )._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
             components.append(component)
             bom_report_line['bom_cost'] += component['bom_cost']
         bom_report_line['components'] = components
@@ -246,23 +318,19 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_component_data(self, parent_bom, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
         company = parent_bom.company_id or self.env.company
-        key = bom_line.product_id.id
-        if key not in product_info:
-            product_info[key] = {'consumptions': {'in_stock': 0}}
-
         price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
+        key = bom_line.product_id.id
         bom_key = parent_bom.id
-        if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self.with_context(product_info=product_info, parent_bom=parent_bom)._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
+        self._update_product_info(bom_line.product_id, bom_key, product_info, warehouse, line_quantity, bom=False, parent_bom=parent_bom)
         route_info = product_info[key].get(bom_key, {})
 
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
             quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.product_uom_id, parent_bom, product_info)
-        availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock)
+        availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock, bom_line=bom_line)
 
         attachment_ids = []
         if not self.env.context.get('minimized', False):
@@ -310,6 +378,16 @@ class ReportBomStructure(models.AbstractModel):
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.detailed_type == 'product' else False,
             'stock_loc': 'in_stock',
         }
+
+    @api.model
+    def _update_product_info(self, product, bom_key, product_info, warehouse, quantity, bom, parent_bom):
+        key = product.id
+        if key not in product_info:
+            product_info[key] = {'consumptions': {'in_stock': 0}}
+        if not product_info[key].get(bom_key):
+            product_info[key][bom_key] = self.with_context(
+                product_info=product_info, parent_bom=parent_bom
+            )._get_resupply_route_info(warehouse, product, quantity, bom)
 
     @api.model
     def _get_byproducts_lines(self, product, bom, bom_quantity, level, total, index):
@@ -512,11 +590,11 @@ class ReportBomStructure(models.AbstractModel):
         return {}
 
     @api.model
-    def _get_availabilities(self, product, quantity, product_info, bom_key, quantities_info, level, ignore_stock=False, components=False):
+    def _get_availabilities(self, product, quantity, product_info, bom_key, quantities_info, level, ignore_stock=False, components=False, bom_line=None):
         # Get availabilities according to stock (today & forecasted).
         stock_state, stock_delay = ('unavailable', False)
         if not ignore_stock:
-            stock_state, stock_delay = self._get_stock_availability(product, quantity, product_info, quantities_info)
+            stock_state, stock_delay = self._get_stock_availability(product, quantity, product_info, quantities_info, bom_line=bom_line)
 
         # Get availabilities from applied resupply rules
         components = components or []
@@ -544,7 +622,14 @@ class ReportBomStructure(models.AbstractModel):
         }}
 
     @api.model
-    def _get_stock_availability(self, product, quantity, product_info, quantities_info):
+    def _get_stock_availability(self, product, quantity, product_info, quantities_info, bom_line=None):
+        closest_forecasted = None
+        if bom_line:
+            closest_forecasted = self.env.context.get('components_closest_forecasted', {}).get(product.id, {}).get(bom_line.id)
+        if closest_forecasted == date.min:
+            return ('available', 0)
+        if closest_forecasted == date.max:
+            return ('unavailable', False)
         date_today = self.env.context.get('from_date', fields.date.today())
         if product.detailed_type != 'product':
             return ('available', 0)
@@ -562,9 +647,11 @@ class ReportBomStructure(models.AbstractModel):
                 domain.append(('warehouse_id', '=', self.env.context.get('warehouse')))
 
             # Seek the closest date in the forecast report where consummed quantity >= forecasted quantity
-            closest_forecasted = self.env['report.stock.quantity']._read_group(domain, ['min_date:min(date)', 'product_id'], ['product_id'])
+            if not closest_forecasted:
+                closest_forecasted = self.env['report.stock.quantity']._read_group(domain, ['min_date:min(date)', 'product_id'], ['product_id'])
+                closest_forecasted = closest_forecasted and closest_forecasted[0]['min_date']
             if closest_forecasted:
-                days_to_forecast = (closest_forecasted[0]['min_date'] - date_today).days
+                days_to_forecast = (closest_forecasted - date_today).days
                 return ('expected', days_to_forecast)
         return ('unavailable', False)
 

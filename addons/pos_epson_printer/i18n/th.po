@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,7 @@ msgid ""
 "Check on the printer configuration for the 'Device ID' setting. It should be"
 " set to: "
 msgstr ""
+"ตรวจสอบการกำหนดค่าเครื่องพิมพ์สำหรับการตั้งค่า 'รหัสอุปกรณ์' ควรตั้งค่าเป็น:"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_res_config_settings
@@ -79,7 +81,7 @@ msgstr "ที่อยู่ Local IP ในเครื่องพิมพ�
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "No paper was detected by the printer"
-msgstr ""
+msgstr "เครื่องพิมพ์ตรวจไม่พบกระดาษ"
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -96,6 +98,8 @@ msgid ""
 "Please check if the printer is still connected. \n"
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
+"โปรดตรวจสอบว่าเครื่องพิมพ์ยังคงเชื่อมต่ออยู่หรือไม่\n"
+"เบราว์เซอร์บางตัวไม่อนุญาตให้มีการโทร HTTP จากเว็บไซต์ไปยังอุปกรณ์ในเครือข่าย (ด้วยเหตุผลด้านความปลอดภัย) หากเป็นกรณีนี้ คุณจะต้องปฏิบัติตามเอกสารของ Odoo สำหรับ 'ใบรับรองที่ลงนามด้วยตนเองสำหรับเครื่องพิมพ์ ePOS' และ 'การเชื่อมต่อที่ปลอดภัย (HTTPS)' เพื่อแก้ไขปัญหานี้"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
@@ -105,7 +109,7 @@ msgstr "กำหนดค่าการขายหน้าร้าน"
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_res_config_settings__pos_epson_printer_ip
 msgid "Pos Epson Printer Ip"
-msgstr ""
+msgstr "เครื่องพิมพ์ POS Epson Ip"
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -129,14 +133,14 @@ msgstr ""
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "The following error code was given by the printer:"
-msgstr ""
+msgstr "เครื่องพิมพ์ได้รับรหัสข้อผิดพลาดต่อไปนี้:"
 
 #. module: pos_epson_printer
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "The printer was successfully reached, but it wasn't able to print."
-msgstr ""
+msgstr "เข้าถึงเครื่องพิมพ์สำเร็จแล้ว แต่ไม่สามารถพิมพ์ได้"
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -144,3 +148,5 @@ msgstr ""
 #, python-format
 msgid "To find more details on the error reason, please search online for:"
 msgstr ""
+"หากต้องการดูรายละเอียดเพิ่มเติมเกี่ยวกับสาเหตุของข้อผิดพลาด "
+"โปรดค้นหาทางออนไลน์ด้วย:"

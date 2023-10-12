@@ -541,7 +541,7 @@ class Project(models.Model):
         revenue_items_from_invoices = self._get_revenues_items_from_invoices(
             excluded_move_line_ids=self.env['sale.order.line'].browse(
                 [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
-            ).invoice_lines.ids
+            ).sudo().invoice_lines.ids
         )
         revenues['data'] += revenue_items_from_invoices['data']
         revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
@@ -614,7 +614,7 @@ class ProjectTask(models.Model):
         compute='_compute_sale_line', store=True, readonly=False,
         domain="""[
             ('company_id', '=', company_id),
-            '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
+            '|', ('order_partner_id', 'child_of', commercial_partner_id if commercial_partner_id else []),
                  ('order_partner_id', '=?', partner_id),
             ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])
         ]""",

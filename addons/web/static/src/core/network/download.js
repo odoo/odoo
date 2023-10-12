@@ -318,10 +318,7 @@ function _download(data, filename, mimetype) {
             // if the browser determines that it's a potentially valid url path:
             let ajax = new XMLHttpRequest();
             ajax.open("GET", url, true);
-            ajax.responseType = "blob";
-            ajax.onload = function (e) {
-                _download(e.target.response, fileName, defaultMime);
-            };
+            configureBlobDownloadXHR(ajax);
             setTimeout(() => {
                 ajax.send();
             }, 0); // allows setting custom ajax headers using the return:
@@ -493,58 +490,71 @@ download._download = (options) => {
         if (odoo.csrf_token) {
             data.append("csrf_token", odoo.csrf_token);
         }
-        // IE11 wants this after xhr.open or it throws
-        xhr.responseType = "blob";
-        xhr.onload = () => {
-            const mimetype = xhr.response.type;
-            const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
-                /;$/,
-                ""
-            );
-            // replace because apparently we send some C-D headers with a trailing ";"
-            const filename = header ? parse(header).parameters.filename : null;
-            // In Odoo, the default mimetype, including for JSON errors is text/html (ref: http.py:Root.get_response )
-            // in that case, in order to also be able to download html files, we check if we get a proper filename to be able to download
-            if (xhr.status === 200 && (mimetype !== "text/html" || filename)) {
-                _download(xhr.response, filename, mimetype);
-                return resolve(filename);
-            } else if (xhr.status === 502) {
-                // If Odoo is behind another server (nginx)
-                reject(new ConnectionLostError());
-            } else {
-                const decoder = new FileReader();
-                decoder.onload = () => {
-                    const contents = decoder.result;
-                    const doc = new DOMParser().parseFromString(contents, "text/html");
-                    const nodes =
-                        doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
-
-                    let error;
-                    try {
-                        // a Serialized python Error
-                        const node = nodes[1] || nodes[0];
-                        error = JSON.parse(node.textContent);
-                    } catch (_e) {
-                        error = {
-                            message: "Arbitrary Uncaught Python Exception",
-                            data: {
-                                debug:
-                                    `${xhr.status}` +
-                                    `\n` +
-                                    `${nodes.length > 0 ? nodes[0].textContent : ""}
-                                    ${nodes.length > 1 ? nodes[1].textContent : ""}`,
-                            },
-                        };
-                    }
-                    error = makeErrorFromResponse(error);
-                    reject(error);
-                };
-                decoder.readAsText(xhr.response);
-            }
-        };
-        xhr.onerror = () => {
-            reject(new ConnectionLostError());
-        };
+        configureBlobDownloadXHR(xhr, {
+            onSuccess: resolve,
+            onFailure: reject,
+        });
         xhr.send(data);
     });
 };
+
+/**
+ * Setup a download xhr request response handling
+ * (onload, onerror, responseType), with hooks when the download succeeds or
+ * fails.
+ *
+ * @param {XMLHttpRequest} xhr
+ * @param {object} [options]
+ * @param {(filename: string) => void} [options.onSuccess]
+ * @param {(Error) => void} [options.onFailure]
+ */
+export function configureBlobDownloadXHR(xhr, { onSuccess = () => {}, onFailure = () => {} } = {}) {
+    xhr.responseType = "blob";
+    xhr.onload = () => {
+        const mimetype = xhr.response.type;
+        const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(/;$/, "");
+        // replace because apparently we send some C-D headers with a trailing ";"
+        const filename = header ? parse(header).parameters.filename : null;
+        // In Odoo, the default mimetype, including for JSON errors is text/html (ref: http.py:Root.get_response )
+        // in that case, in order to also be able to download html files, we check if we get a proper filename to be able to download
+        if (xhr.status === 200 && (mimetype !== "text/html" || filename)) {
+            _download(xhr.response, filename, mimetype);
+            onSuccess(filename);
+        } else if (xhr.status === 502) {
+            // If Odoo is behind another server (nginx)
+            onFailure(new ConnectionLostError());
+        } else {
+            const decoder = new FileReader();
+            decoder.onload = () => {
+                const contents = decoder.result;
+                const doc = new DOMParser().parseFromString(contents, "text/html");
+                const nodes =
+                    doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
+
+                let error;
+                try {
+                    // a Serialized python Error
+                    const node = nodes[1] || nodes[0];
+                    error = JSON.parse(node.textContent);
+                } catch {
+                    error = {
+                        message: "Arbitrary Uncaught Python Exception",
+                        data: {
+                            debug:
+                                `${xhr.status}` +
+                                `\n` +
+                                `${nodes.length > 0 ? nodes[0].textContent : ""}
+                                ${nodes.length > 1 ? nodes[1].textContent : ""}`,
+                        },
+                    };
+                }
+                error = makeErrorFromResponse(error);
+                onFailure(error);
+            };
+            decoder.readAsText(xhr.response);
+        }
+    };
+    xhr.onerror = () => {
+        onFailure(new ConnectionLostError());
+    };
+}

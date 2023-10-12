@@ -146,7 +146,11 @@
                             <th t-if="groupby == 'status'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().kanban_state"/></th>
                             <th t-if="groupby == 'customer'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
+                                <span t-if="tasks[0].sudo().partner_id"
+                                      class="text-truncate"
+                                      t-field="tasks[0].sudo().partner_id.name"/>
+                                <span t-else="">No Customer</span>
+                            </th>
                         </tr>
                     </tbody>
                     <tbody t-if="tasks">

@@ -190,7 +190,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         continue;
                     }
 
-                    let new_line = Orderline.create({}, {
+                    const line_values = {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
@@ -201,7 +201,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         sale_order_origin_id: clickedOrder,
                         sale_order_line_id: line,
                         customer_note: line.customer_note,
-                    });
+                    };
+                    let new_line = Orderline.create({}, line_values);
 
                     if (
                         new_line.get_product().tracking !== 'none' &&
@@ -231,7 +232,19 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
-                    this.env.pos.get_order().add_orderline(new_line);
+                    const product = this.env.pos.db.get_product_by_id(line.product_id[0]);
+                    const product_unit = product.get_unit();
+                    if (product_unit && !product.get_unit().is_pos_groupable) {
+                        //loop for value of quantity
+                        for (let j = 0; j < new_line.quantity; j++) {
+                            let splitted_line = Orderline.create({}, line_values);
+                            splitted_line.quantity = 1;
+                            this.env.pos.get_order().add_orderline(splitted_line);
+                        }
+                    }
+                    else {
+                        this.env.pos.get_order().add_orderline(new_line);
+                    }
                 }
               }
               else {

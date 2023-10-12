@@ -259,7 +259,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         mail = _find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']")
         vat = _find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID")
         phone = _find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber")
-        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
+        country_code = _find_value(f'//ram:{role}/ram:PostalTradeAddress//ram:CountryID')
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
 

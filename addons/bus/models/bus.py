@@ -3,11 +3,12 @@ import contextlib
 import datetime
 import json
 import logging
+import os
 import random
 import selectors
 import threading
 import time
-from psycopg2 import InterfaceError
+from psycopg2 import InterfaceError, sql
 
 import odoo
 from odoo import api, fields, models
@@ -19,6 +20,9 @@ _logger = logging.getLogger(__name__)
 
 # longpolling timeout connection
 TIMEOUT = 50
+
+# custom function to call instead of NOTIFY postgresql command (opt-in)
+ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
 #----------------------------------------------------------
 # Bus
@@ -77,7 +81,11 @@ class ImBus(models.Model):
             @self.env.cr.postcommit.add
             def notify():
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
-                    cr.execute("notify imbus, %s", (json_dump(list(channels)),))
+                    if ODOO_NOTIFY_FUNCTION:
+                        query = sql.SQL("SELECT {}('imbus', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+                    else:
+                        query = "NOTIFY imbus, %s"
+                    cr.execute(query, (json_dump(list(channels)), ))
 
     @api.model
     def _sendone(self, channel, notification_type, message):

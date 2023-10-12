@@ -8,6 +8,15 @@ from odoo import models, api, _
 class AccountChartTemplate(models.Model):
     _inherit = "account.chart.template"
 
+    def _load(self, company):
+        res = super()._load(company)
+        if company.chart_template_id == self.env.ref('l10n_mx.mx_coa'):
+            company.write({
+                'account_sale_tax_id': self.env.ref(f'l10n_mx.{company.id}_tax12'),
+                'account_purchase_tax_id': self.env.ref(f'l10n_mx.{company.id}_tax14'),
+            })
+        return res
+
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         """Set the tax_cash_basis_journal_id on the company"""

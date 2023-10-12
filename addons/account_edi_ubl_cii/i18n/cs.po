@@ -8,6 +8,8 @@
 # Martin Trigaux, 2022
 # Jiří Podhorecký, 2022
 # Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
+# Tomáš Píšek, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Tomáš Píšek, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +40,7 @@ msgstr "42"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "<strong>Format used to import the invoice: %s</strong>"
-msgstr ""
+msgstr "<strong>Formát použitý pro import faktury: %s</strong>"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -47,13 +49,14 @@ msgstr ""
 msgid ""
 "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
 msgstr ""
+"<strong>Formát použitý pro import faktury: %s</strong> <p><li> %s </li></p>"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A payment of %s was detected."
-msgstr ""
+msgstr "Platba %s byla detekována."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -73,7 +76,7 @@ msgstr "Článek 226 body 11 až 15 Směrnice 2006/112/ES"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
-msgstr ""
+msgstr "Alespoň jedno z následujících polí %s je povinné na %s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -88,6 +91,14 @@ msgstr "Společné funkce pro dokumenty EDI: generování dat, omezení atd."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
+msgstr "Podmíněná sleva z platby"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -95,6 +106,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency ?"
 msgstr ""
+"Nepodařilo se načíst měnu: %s. Zapnuli jste nastavení více měn a aktivovali "
+"danou měnu?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -102,14 +115,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr ""
+msgstr "Nepodařilo se obdržet daň: %s %% pro položku '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
-msgstr ""
+msgstr "Nepodařilo se načíst měrnou jednotku pro položku s popisem '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -167,6 +180,8 @@ msgid ""
 "Errors occured while creating the EDI document (format: %s). The receiver "
 "might refuse it."
 msgstr ""
+"Během generování EDI dokumentu (formát: %s) nastala chyba. Příjemce by jej "
+"mohl odmítnout."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -217,7 +232,7 @@ msgstr "Faktura generovaná aplikací Odoo"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "No Electronic Address Scheme (EAS) could be found for %s."
-msgstr ""
+msgstr "Nelze nalézt žádné EAS (Electronic Address Scheme) pro %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -226,6 +241,7 @@ msgstr ""
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
+"Žádná brutto, netto nebo jiná částka nebyla nalezena pro položku v xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -280,7 +296,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "Daň '%s' není platná: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -298,14 +314,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr ""
+msgstr "Měna '%s' není aktivní."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The customer %s must have a KVK or OIN number."
-msgstr ""
+msgstr "Zákazník %s musí mít KVK nebo OIN číslo."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -313,14 +329,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "Element %s je vyžadován na %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
-msgstr ""
+msgstr "Pole %s je vyžadováno na %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -347,7 +363,7 @@ msgstr "Faktura byla převedena na dobropis a množství bylo vráceno zpět."
 msgid ""
 "The journal in which to upload should either be a sale or a purchase "
 "journal."
-msgstr ""
+msgstr "Deník, do kterého se má nahrávat, má být typu Prodej nebo Nákup."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -355,14 +371,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr ""
+msgstr "Dodavatel %s musí být uveden v Bronnoysund obchodním rejstříku."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a KVK or OIN number."
-msgstr ""
+msgstr "Dodavatel %s musí mít KVK nebo OIN číslo."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -421,4 +437,4 @@ msgstr "fx"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"

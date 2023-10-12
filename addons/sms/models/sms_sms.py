@@ -93,6 +93,7 @@ class SmsSms(models.Model):
           :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
+        self = self.filtered(lambda sms: sms.state == 'outgoing')
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
@@ -101,9 +102,10 @@ class SmsSms(models.Model):
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error')
+        sms_to_send.state = 'outgoing'
         notification_title = _('Warning')
         notification_type = 'danger'
-        notification_message = ''
+
         if sms_to_send:
             sms_to_send.send()
             success_sms = len(sms_to_send) - len(sms_to_send.exists())

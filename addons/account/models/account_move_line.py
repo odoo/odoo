@@ -1666,11 +1666,19 @@ class AccountMoveLine(models.Model):
             * partial_vals: The newly computed values for the partial.
         """
 
-        def get_odoo_rate(vals):
+        def is_payment(vals):
+            return vals.get('is_payment') or (
+                vals.get('record')
+                and bool(vals['record'].move_id.payment_id or vals['record'].move_id.statement_line_id)
+            )
+
+        def get_odoo_rate(vals, other_line=None):
             if vals.get('record') and vals['record'].move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = vals['record'].move_id.invoice_date
             else:
                 exchange_rate_date = vals['date']
+            if not is_payment(vals) and other_line and is_payment(other_line):
+                exchange_rate_date = other_line['date']
             return recon_currency._get_conversion_rate(company_currency, recon_currency, vals['company'], exchange_rate_date)
 
         def get_accounting_rate(vals):
@@ -1716,7 +1724,7 @@ class AccountMoveLine(models.Model):
             # The credit line is using a foreign currency but not the opposite line.
             # In that case, convert the amount in company currency to the foreign currency one.
             recon_currency = credit_vals['currency']
-            debit_rate = get_odoo_rate(debit_vals)
+            debit_rate = get_odoo_rate(debit_vals, other_line=credit_vals)
             credit_rate = get_accounting_rate(credit_vals)
             recon_debit_amount = recon_currency.round(remaining_debit_amount * debit_rate)
             recon_credit_amount = -remaining_credit_amount_curr
@@ -1738,7 +1746,7 @@ class AccountMoveLine(models.Model):
             # In that case, convert the amount in company currency to the foreign currency one.
             recon_currency = debit_vals['currency']
             debit_rate = get_accounting_rate(debit_vals)
-            credit_rate = get_odoo_rate(credit_vals)
+            credit_rate = get_odoo_rate(credit_vals, other_line=debit_vals)
             recon_debit_amount = remaining_debit_amount_curr
             recon_credit_amount = recon_currency.round(-remaining_credit_amount * credit_rate)
 

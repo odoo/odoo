@@ -1700,6 +1700,7 @@ class Task(models.Model):
         if self.ids:
             # fetch 'user_ids' in superuser mode (and override value in cache
             # browse is useful to avoid miscache because of the newIds contained in self
+            self.invalidate_recordset(fnames=['user_ids'])
             self.browse(self.ids)._read(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
@@ -2760,6 +2761,8 @@ class ProjectTags(models.Model):
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         ids = []
         if not (name == '' and operator in ('like', 'ilike')):
+            if args is None:
+                args = []
             args += [('name', operator, name)]
         if self.env.context.get('project_id'):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.

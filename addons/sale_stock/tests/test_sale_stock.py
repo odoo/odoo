@@ -1570,3 +1570,23 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         backorder_wizard.process()
 
         self.assertRecordValues(out_picking.move_line_ids, [{'result_package_id': False}, {'result_package_id': package_2.id}])
+
+    def test_inventory_admin_no_backorder_not_own_sale_order(self):
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+        pick = sale_order.picking_ids
+        inventory_admin_user = self.env['res.users'].create({
+            'name': "documents test basic user",
+            'login': "dtbu",
+            'email': "dtbu@yourcompany.com",
+            'groups_id': [(6, 0, [
+                self.ref('base.group_user'),
+                self.ref('stock.group_stock_manager'),
+                self.ref('sales_team.group_sale_salesman')])]
+        })
+        pick.with_user(inventory_admin_user).move_ids.write(
+            {'quantity_done': 1})
+        res_dict = pick.button_validate()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_user(inventory_admin_user).with_context(
+            res_dict['context'])).save()
+        wizard.with_user(inventory_admin_user).process_cancel_backorder()

@@ -28,7 +28,7 @@ msgstr "Acara Kalender"
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr ""
+msgstr "Acara Kalender: Pengingat"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -38,14 +38,14 @@ msgstr "Alarm Acara"
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Manajer Alarm Acara"
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
-msgstr ""
+msgstr "Pengingat acara: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
@@ -53,6 +53,8 @@ msgid ""
 "Event reminder: {{ object.name }}, {{ "
 "object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
+"Pengingat acara: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -84,19 +86,19 @@ msgstr "Kirim Pesan Teks SMS"
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "Send SMS to attendees"
-msgstr ""
+msgstr "Kirim SMS ke pesertra"
 
 #. module: calendar_sms
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "Template used to render SMS reminder content."
-msgstr ""
+msgstr "Templat yang digunakan untuk merender konten pengingat SMS."
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Tidak ada peserta pada acara-acara tersebut"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

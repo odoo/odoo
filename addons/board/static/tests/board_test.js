@@ -6,6 +6,8 @@ import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import ListView from "web.ListView";
+import legacyViewRegistry from "web.view_registry";
 
 const serviceRegistry = registry.category("services");
 
@@ -758,5 +760,41 @@ QUnit.module("Board", (hooks) => {
             target.querySelector(".o-dashboard-action .o_graph_renderer canvas").offsetHeight,
             300
         );
+    });
+
+    QUnit.test("Carry over the filter to legacy views", async function (assert) {
+        const TestView = ListView.extend({
+            viewType: "test_view",
+        });
+        legacyViewRegistry.add("test_view", TestView);
+        serverData.views["partner,false,test_view"] = `<tree string="Partner"></tree>`;
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action string="ABC" name="Partners Action 1" domain="[['foo', '!=', 'False']]"></action>
+                        </column>
+                    </board>
+                </form>`,
+            mockRPC(route, args) {
+                if (route === "/web/action/load") {
+                    return {
+                        id: 1,
+                        name: "Partners Action 1",
+                        res_model: "partner",
+                        type: "ir.actions.act_window",
+                        views: [[false, "test_view"]],
+                    };
+                }
+                if (route === "/web/dataset/search_read") {
+                    assert.deepEqual(args.domain, [["foo", "!=", "False"]]);
+                }
+            },
+        });
     });
 });

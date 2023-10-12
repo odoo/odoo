@@ -1217,7 +1217,7 @@ var BasicModel = AbstractModel.extend({
                             record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
                                     resolve(changedFields);
                                 });
                             } else {
@@ -3425,10 +3425,12 @@ var BasicModel = AbstractModel.extend({
                     // least one id was updated
                     var didChange = false;
                     var changes, command, relRecord;
+                    const addedById = Object.fromEntries(relRecordAdded.map(r => [r.res_id, r]));
+                    const updatedById = Object.fromEntries(relRecordUpdated.map(r => [r.res_id, r]));
                     for (var i = 0; i < list.res_ids.length; i++) {
                         if (_.contains(keptIds, list.res_ids[i])) {
                             // this is an id that already existed
-                            relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
+                            relRecord = updatedById[list.res_ids[i]];
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
@@ -3439,7 +3441,7 @@ var BasicModel = AbstractModel.extend({
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
-                            relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            relRecord = addedById[list.res_ids[i]];
                             if (!relRecord) {
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
@@ -4797,9 +4799,16 @@ var BasicModel = AbstractModel.extend({
             }));
         }
         return def.then(function (records) {
+            const context = list.getContext();
+            const changeMap = Object.fromEntries(
+              (list._changes || [])
+                .filter((c) => c.operation === "ADD")
+                .map((c) => [c.resID, c])
+            );
+            const recordsById = Object.fromEntries(records.map(r => [r.id, r]));
             _.each(resIDs, function (id) {
                 var dataPoint;
-                var data = _.findWhere(records, {id: id});
+                var data = recordsById[id];
                 if (id in list._cache) {
                     dataPoint = self.localData[list._cache[id]];
                     if (data) {
@@ -4808,7 +4817,7 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else {
                     dataPoint = self._makeDataPoint({
-                        context: list.getContext(),
+                        context,
                         data: data,
                         fieldsInfo: list.fieldsInfo,
                         fields: list.fields,
@@ -4822,11 +4831,9 @@ var BasicModel = AbstractModel.extend({
                     list._cache[id] = dataPoint.id;
                 }
                 // set the dataPoint id in potential 'ADD' operation adding the current record
-                _.each(list._changes, function (change) {
-                    if (change.operation === 'ADD' && !change.id && change.resID === id) {
-                        change.id = dataPoint.id;
-                    }
-                });
+                if (changeMap[id] && !changeMap[id].id) {
+                    changeMap[id].id = dataPoint.id;
+                }
             });
             return list;
         });

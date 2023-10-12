@@ -18,6 +18,8 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo.tools import pycompat
+from odoo.tools.misc import file_path
+
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -146,7 +148,7 @@ class UpgradeHook(object):
     """Makes the legacy `migrations` package being `odoo.upgrade`"""
 
     def find_module(self, name, path=None):
-        if re.match(r"^odoo.addons.base.maintenance.migrations\b", name):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", name):
             # We can't trigger a DeprecationWarning in this case.
             # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
             # the tests, and the common files (utility functions) still needs to import from the
@@ -228,6 +230,8 @@ def get_module_path(module, downloaded=False, display_warning=True):
     path if nothing else is found.
 
     """
+    if re.search(r"[\/\\]", module):
+        return False
     for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
@@ -281,19 +285,19 @@ def get_resource_path(module, *args):
 
     :rtype: str
     :return: absolute path to the resource
-
-    TODO make it available inside on osv object (self.get_resource_path)
     """
-    mod_path = get_module_path(module)
-    if not mod_path:
+    resource_path = opj(module, *args)
+    try:
+        return file_path(resource_path)
+    except (FileNotFoundError, ValueError):
         return False
-    return check_resource_path(mod_path, *args)
 
 def check_resource_path(mod_path, *args):
     resource_path = opj(mod_path, *args)
-    if os.path.exists(resource_path):
-        return resource_path
-    return False
+    try:
+        return file_path(resource_path)
+    except (FileNotFoundError, ValueError):
+        return False
 
 # backwards compatibility
 get_module_resource = get_resource_path

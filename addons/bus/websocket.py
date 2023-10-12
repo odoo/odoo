@@ -811,17 +811,30 @@ class WebsocketConnectionHandler:
         :raise: BadRequest if the handshake data is incorrect.
         """
         cls._handle_public_configuration(request)
-        response = cls._get_handshake_response(request.httprequest.headers)
-        response.call_on_close(functools.partial(
-            cls._serve_forever,
-            Websocket(request.httprequest.environ['socket'], request.session),
-            request.db,
-            request.httprequest
-        ))
-        # Force save the session. Session must be persisted to handle
-        # WebSocket authentication.
-        request.session.is_dirty = True
-        return response
+        try:
+            response = cls._get_handshake_response(request.httprequest.headers)
+            socket = request.httprequest.environ['socket']
+            response.call_on_close(functools.partial(
+                cls._serve_forever,
+                Websocket(socket, request.session),
+                request.db,
+                request.httprequest
+            ))
+            # Force save the session. Session must be persisted to handle
+            # WebSocket authentication.
+            request.session.is_dirty = True
+            return response
+        except KeyError as exc:
+            raise RuntimeError(
+                f"Couldn't bind the websocket. Is the connection opened on the evented port ({config['gevent_port']})?"
+            ) from exc
+        except HTTPException as exc:
+            # The HTTP stack does not log exceptions derivated from the
+            # HTTPException class since they are valid responses.
+            _logger.error(exc)
+            raise
+
+
 
     @classmethod
     def _get_handshake_response(cls, headers):
@@ -840,7 +853,7 @@ class WebsocketConnectionHandler:
         return Response(status=101, headers={
             'Upgrade': 'websocket',
             'Connection': 'Upgrade',
-            'Sec-WebSocket-Accept': accept_header,
+            'Sec-WebSocket-Accept': accept_header.decode(),
         })
 
     @classmethod
