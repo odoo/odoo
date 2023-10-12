@@ -2374,7 +2374,12 @@ export class OdooEditor extends EventTarget {
      * @param {Node} node
      */
     _cleanForPaste(node) {
-        if (!this._isWhitelisted(node) || this._isBlacklisted(node)) {
+        if (
+            !this._isWhitelisted(node) ||
+            this._isBlacklisted(node) ||
+            // Google Docs have their html inside a B tag with custom id.
+            node.id && node.id.startsWith('docs-internal-guid')
+        ) {
             if (!node.matches || node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
                 node.remove();
             } else {
