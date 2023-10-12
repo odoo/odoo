@@ -540,9 +540,8 @@ class Meeting(models.Model):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees(
-            self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
-        )
+        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
+
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
         if not self.env.context.get('dont_notify'):
             alarm_events = self.env['calendar.event']
