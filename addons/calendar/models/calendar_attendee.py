@@ -92,6 +92,13 @@ class Attendee(models.Model):
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
             event.message_unsubscribe(partner_ids=partners.ids)
 
+    def _send_invitation_emails(self):
+        """ Hook to be able to override the invitation email sending process.
+         Notably inside appointment to use a different mail template from the appointment type. """
+        self._send_mail_to_attendees(
+            self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
+        )
+
     def _send_mail_to_attendees(self, mail_template, force_send=False):
         """ Send mail for event invitation to event attendees.
             :param mail_template: a mail.template record
