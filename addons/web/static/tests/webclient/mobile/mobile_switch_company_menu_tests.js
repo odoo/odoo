@@ -104,7 +104,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 1);
@@ -138,7 +138,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 1);
@@ -177,7 +177,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 3
          */
         assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 1 });
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 1);
@@ -190,7 +190,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          */
         await click(scMenuEl.querySelectorAll(".toggle_company")[0]);
         assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 1 });
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-squarqe", 0);
         assert.containsN(scMenuEl, "[data-company-id] .fa-square-o", 3);
@@ -210,7 +210,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 1);
@@ -240,7 +240,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [x] **Company 3**
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3, 1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3, 1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 2);
@@ -270,7 +270,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [x] **Company 2**
          *   [x] Company 3
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [2, 3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [2, 3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 2);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 2);
@@ -299,7 +299,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 1);
