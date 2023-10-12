@@ -4,7 +4,7 @@ import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScre
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
-import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+import { getSteps, startSteps, insertSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
         PaymentScreen.check.remainingIs("0.00");
         PaymentScreen.do.clickValidate();
         ReceiptScreen.check.isShown();
-        ReceiptScreen.check.noOrderlineContainsDiscount();
+        insertSteps(Order.doesNotHaveLine({ discount: "" }));
         return getSteps();
     },
 });

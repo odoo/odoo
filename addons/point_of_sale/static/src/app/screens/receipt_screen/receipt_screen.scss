@@ -32,7 +32,7 @@
         top: 0;
         left: 0;
     }
-    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  *, .render-container * {
         visibility: visible;
         background: white !important;
         color: black !important;
@@ -44,5 +44,10 @@
         border: none !important;
         font-size: 14px !important;
         width: 266px !important;
+    }
+    .render-container {
+        position: absolute !important;
+        top: 10px;
+        left: 10px;
     }
 }

@@ -5,7 +5,7 @@
         <li class="orderline p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
             <div class="d-flex justify-content-between">
                 <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
-                    <span t-esc="line.productName"/>
+                    <span class="text-wrap" t-esc="line.productName"/>
                     <t t-slot="product-name"/>
                 </div>
                 <div t-esc="line.price" class="price fw-bolder"/>
@@ -16,15 +16,15 @@
                     x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
                     <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
                 </li>
-                <li t-if="line.discount !== '0'">
+                <li t-if="line.discount and line.discount !== '0'">
                     With a <em><t t-esc="line.discount" />% </em> discount
                 </li>
                 <t t-slot="default" />
-                <li t-if="line.customerNote" class="customer-note w-50 p-2 my-1 rounded text-bg-warning text-warning bg-opacity-25 text-break">
+                <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break text-bg-warning text-warning bg-opacity-25">
                     <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                     <t t-esc="line.customerNote" />
                 </li>
-                <li t-if="line.internalNote" class="internal-note w-50 p-2 my-1 rounded text-bg-info text-info bg-opacity-25 text-break">
+                <li t-if="line.internalNote" class="internal-note w-100 p-2 my-1 rounded text-bg-info text-info bg-opacity-25 text-break">
                     <i class="fa fa-tag me-1" role="img" aria-label="Note" title="Note"/>
                     <t t-esc="line.internalNote" />
                 </li>

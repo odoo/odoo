@@ -10,7 +10,7 @@
                         <i class="fa fa-angle-double-left me-2"/>
                         <span>Back</span>
                     </button>
-                    <button class="button btn btn-lg btn-outline-primary" t-if="hardwareProxy.printer" t-on-click="printTipReceipt">
+                    <button class="button btn btn-lg btn-outline-primary" t-if="printer.is()" t-on-click="printTipReceipt">
                         <i class="fa fa-print"></i>
                         <span> </span>
                         <span>Reprint receipts</span>

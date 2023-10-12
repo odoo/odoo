@@ -33,9 +33,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pos-receipt-container bg-200 text-center overflow-auto" t-ref="order-receipt">
+                    <div class="pos-receipt-container bg-200 text-center overflow-auto">
                         <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
-                            <t t-call="point_of_sale.OrderReceipt" />
+                            <OrderReceipt data="pos.get_order().export_for_printing()" formatCurrency="env.utils.formatCurrency" />
                         </div>
                     </div>
                 </div>
