@@ -313,3 +313,21 @@ class AccountAnalyticLine(models.Model):
     def _employee_timesheet_cost(self):
         self.ensure_one()
         return self.employee_id.timesheet_cost or 0.0
+
+    @api.model
+    def _ensure_uom_hours(self):
+        uom_hours = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        if not uom_hours:
+            uom_hours = self.env['uom.uom'].create({
+                'name': "Hours",
+                'category_id': self.env.ref('uom.uom_categ_wtime').id,
+                'factor': 8,
+                'uom_type': "smaller",
+            })
+            self.env['ir.model.data'].create({
+                'name': 'product_uom_hour',
+                'model': 'uom.uom',
+                'module': 'uom',
+                'res_id': uom_hours.id,
+                'noupdate': True,
+            })
