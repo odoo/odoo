@@ -27,6 +27,7 @@ class TestSnippets(HttpCase):
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
             's_map',  # avoid call to maps.google.com
+            's_instagram_page',  # avoid call to instagram.com
         ]
         snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
         snippets_names_encoded = url_encode({'snippets_names': snippets_names})
