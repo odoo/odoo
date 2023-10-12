@@ -101,8 +101,6 @@ export class PosStore extends Reactive {
         this.pushOrderMutex = new Mutex();
 
         // Business data; loaded from the server at launch
-        this.company_logo = null;
-        this.company_logo_base64 = "";
         this.currency = null;
         this.company = null;
         this.user = null;
@@ -377,38 +375,6 @@ export class PosStore extends Reactive {
             // The JS used to detect font loading is not 100% robust, so
             // do not wait more than 5sec
             setTimeout(resolve, 5000);
-        });
-    }
-    async _loadPictures() {
-        this.company_logo = new Image();
-        return new Promise((resolve, reject) => {
-            this.company_logo.onload = () => {
-                const img = this.company_logo;
-                let ratio = 1;
-                const targetwidth = 300;
-                const maxheight = 150;
-                if (img.width !== targetwidth) {
-                    ratio = targetwidth / img.width;
-                }
-                if (img.height * ratio > maxheight) {
-                    ratio = maxheight / img.height;
-                }
-                const width = Math.floor(img.width * ratio);
-                const height = Math.floor(img.height * ratio);
-                const c = document.createElement("canvas");
-                c.width = width;
-                c.height = height;
-                const ctx = c.getContext("2d");
-                ctx.drawImage(this.company_logo, 0, 0, width, height);
-
-                this.company_logo_base64 = c.toDataURL();
-                resolve();
-            };
-            this.company_logo.onerror = () => {
-                reject();
-            };
-            this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src = `/web/image?model=res.company&id=${this.company.id}&field=logo`;
         });
     }
     prepare_new_partners_domain() {
