@@ -5,7 +5,7 @@
         <xpath expr="//t[@t-set='card_body']" position="inside">
             <div class="container" t-if="timesheets">
                 <hr class="mt-4 mb-1"/>
-                <h5 class="mt-2 mb-2">Timesheets</h5>
+                <h5 class="mt-2 mb-2"><strong>Timesheets</strong></h5>
                 <t t-call="hr_timesheet.portal_timesheet_table"/>
             </div>
             <t t-if="timesheets_by_subtask">

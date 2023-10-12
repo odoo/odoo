@@ -183,10 +183,10 @@
                     <div class="row no-gutters">
                         <div class="col-12">
                             <h5 class="d-flex mb-1 mb-md-0 row">
-                                <span t-field="task.name" class="col-9 text-truncate"/>
+                                <span t-field="task.name" class="col-9 text-truncate font-weight-bold"/>
                                 <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
                                 <div class="col-3 col-md-2 text-right">
-                                    <small class="text-right">Status:</small>
+                                    <small class="text-right"><strong>Status:</strong></small>
                                     <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
                                 </div>
                             </h5>
