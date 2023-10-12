@@ -17,6 +17,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useResizeObserver } from "@mail/utils/common/hooks";
 
 /**
  * @typedef CardData
@@ -55,14 +56,10 @@ export class Call extends Component {
         });
         this.store = useState(useService("mail.store"));
         this.userSettings = useState(useService("mail.user_settings"));
-        onMounted(() => {
-            this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
-            this.resizeObserver.observe(this.grid.el);
-            this.arrangeTiles();
-        });
+        useResizeObserver("grid", () => this.arrangeTiles());
+        onMounted(() => this.arrangeTiles());
         onPatched(() => this.arrangeTiles());
         onWillUnmount(() => {
-            this.resizeObserver.disconnect();
             browser.clearTimeout(this.overlayTimeout);
         });
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
