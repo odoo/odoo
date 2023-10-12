@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 /**
- * @typedef {"fixedPeriod"|"relative"} RangeType
+ * @typedef {"fixedPeriod"|"relative"|"from_to"} RangeType
  *
  * @typedef {"last_month" | "last_week" | "last_year" | "last_three_years" | "this_month" | "this_quarter" | "this_year"} RelativePeriod
  *
