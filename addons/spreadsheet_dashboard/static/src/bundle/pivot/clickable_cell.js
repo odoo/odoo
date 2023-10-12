@@ -1,8 +1,12 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "@spreadsheet/pivot/pivot_actions";
-import { getFirstPivotFunction } from "@spreadsheet/pivot/pivot_helpers";
+import {
+    SEE_RECORDS_PIVOT,
+    SEE_RECORDS_PIVOT_VISIBLE,
+    SET_FILTER_MATCHING,
+    SET_FILTER_MATCHING_CONDITION,
+} from "@spreadsheet/pivot/pivot_actions";
 
 const { clickableCellRegistry } = spreadsheet.registries;
 
@@ -13,18 +17,7 @@ clickableCellRegistry.add("pivot", {
 });
 
 clickableCellRegistry.add("pivot_set_filter_matching", {
-    condition: (position, env) => {
-        const cell = env.model.getters.getCell(position);
-        return (
-            SEE_RECORDS_PIVOT_VISIBLE(position, env) &&
-            getFirstPivotFunction(cell.content).functionName === "ODOO.PIVOT.HEADER" &&
-            env.model.getters.getFiltersMatchingPivot(cell.content).length > 0
-        );
-    },
-    execute: (position, env) => {
-        const cell = env.model.getters.getCell(position);
-        const filters = env.model.getters.getFiltersMatchingPivot(cell.content);
-        env.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
-    },
+    condition: SET_FILTER_MATCHING_CONDITION,
+    execute: SET_FILTER_MATCHING,
     sequence: 2,
 });
