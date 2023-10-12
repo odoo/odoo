@@ -6,14 +6,18 @@
             <field name="name">view.partner.base.vat.form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="replace">
+                <xpath expr="//field[@name='vat']" position="after">
                     <field name="perform_vies_validation" invisible="1"/>
                     <label for="vat" string="Tax ID"/>
-                    <div>
-                        <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" class="oe_inline"/>
-                        <label for="vies_valid" invisible="not perform_vies_validation"/>
-                        <field name="vies_valid" invisible="not perform_vies_validation"/>
-                    </div>
+                    <div name="vat_vies_container"/>
+                </xpath>
+                <xpath expr="//div[@name='vat_vies_container']" position="inside">
+                    <xpath expr="//field[@name='vat']" position="move"/>
+                    <label for="vies_valid" invisible="not perform_vies_validation"/>
+                    <field name="vies_valid" invisible="not perform_vies_validation" class="oe_inline"/>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="class" position="add" separator=" ">oe_inline</attribute>
                 </xpath>
             </field>
         </record>
