@@ -169,29 +169,25 @@
         <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <search string="Timesheet">
-                    <field name="date"/>
+                <xpath expr="//group[@name='groupby']" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
                     <field name="parent_task_id"/>
-                    <field name="name"/>
                     <field name="department_id"/>
                     <field name="manager_id"/>
                     <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter name="month" string="Date" date="date"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
-                        <filter string="Parent Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'parent_task_id'}"/>
-                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
-                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Timesheet by Date"/>
-                        <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Manager" name="groupby_manager" domain="[]" context="{'group_by': 'manager_id'}"/>
-                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                    </group>
-                </search>
+                </xpath>
+                <xpath expr="//group[@name='groupby']" position="inside">
+                    <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Parent Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'parent_task_id'}"/>
+                    <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
+                    <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Manager" name="groupby_manager" domain="[]" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                </xpath>
             </field>
         </record>
 
