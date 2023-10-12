@@ -91,7 +91,8 @@ export class SpreadsheetPivotTable {
         this._rows = rows;
         this._measures = measures;
         this._rowTitle = rowTitle;
-        this.pivotCells = this._getPivotCells();
+        this._maxIndent = Math.max(...this._rows.map((row) => row.indent));
+        this.pivotCells = this.getPivotCells();
     }
 
     /**
@@ -188,24 +189,34 @@ export class SpreadsheetPivotTable {
      * @private
      * @returns {PivotCell[][]}
      */
-    _getPivotCells() {
+    getPivotCells(includeTotal = true, includeColumnHeaders = true) {
         const pivotHeight = this.getNumberOfHeaderRows() + this.getNumberOfDataRows();
-        const pivotWidth = this.getNumberOfDataColumns() + 1;
-
+        let pivotWidth = 1 /*(row headers)*/ + this.getNumberOfDataColumns();
+        if (!includeTotal) {
+            pivotWidth -= this._measures.length;
+        }
         const domainArray = [];
+        const startRow = includeColumnHeaders ? 0 : this.getNumberOfHeaderRows();
         for (let col = 0; col < pivotWidth; col++) {
             domainArray.push([]);
-            for (let row = 0; row < pivotHeight; row++) {
-                domainArray[col].push(this._getPivotCell(col, row));
+            for (let row = startRow; row < pivotHeight; row++) {
+                if (!includeTotal && row === pivotHeight - 1) {
+                    continue;
+                }
+                domainArray[col].push(this._getPivotCell(col, row, includeTotal));
             }
         }
         return domainArray;
     }
 
+    _isTotalRow(row) {
+        return this._rows[row].indent !== this._maxIndent;
+    }
+
     /**
      * @returns {PivotCell}
      */
-    _getPivotCell(col, row) {
+    _getPivotCell(col, row, includeTotal = true) {
         const colHeadersHeight = this.getNumberOfHeaderRows();
         if (col === 0 && row === colHeadersHeight - 1) {
             return { content: this._rowTitle, isHeader: true, style: HEADER_STYLE };
@@ -221,6 +232,9 @@ export class SpreadsheetPivotTable {
             return { domain, isHeader: true, style };
         } else {
             const rowIndex = row - colHeadersHeight;
+            if (!includeTotal && this._isTotalRow(rowIndex)) {
+                return { isHeader: false };
+            }
             const domain = [...this._getRowDomain(rowIndex), ...this._getColDomain(col)];
             const measure = this._getColMeasure(col);
             return { domain, isHeader: false, measure };

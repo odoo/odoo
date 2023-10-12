@@ -263,6 +263,11 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return dataSource.getPivotCellValue(measure, domain);
     }
 
+    getPivotTableStructure(pivotId) {
+        const dataSource = this.getters.getPivotDataSource(pivotId);
+        return dataSource.getTableStructure();
+    }
+
     /**
      * Get the filter impacted by a pivot formula's argument
      * @param {string} formula Formula of the pivot cell
@@ -442,4 +447,5 @@ PivotUIPlugin.getters = [
     "getPivotGroupByValues",
     "getFiltersMatchingPivot",
     "getPivotDataSourceId",
+    "getPivotTableStructure",
 ];
