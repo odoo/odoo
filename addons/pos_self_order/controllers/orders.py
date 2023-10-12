@@ -177,14 +177,15 @@ class PosSelfOrderController(http.Controller):
 
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='json', website=True)
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
+        pos_config = self._verify_pos_config(access_token)
         order_dict = self.process_new_order(order, access_token, None, device_type)
 
         if not order_dict.get('id'):
             raise BadRequest("Something went wrong")
 
         # access_token verified in process_new_order
-        order_sudo = request.env['pos.order'].sudo().browse(order_dict.get('id'))
-        payment_method_sudo = request.env["pos.payment.method"].sudo().browse(payment_method_id)
+        order_sudo = pos_config.env['pos.order'].browse(order_dict.get('id'))
+        payment_method_sudo = pos_config.env["pos.payment.method"].browse(payment_method_id)
         if not order_sudo or not payment_method_sudo or payment_method_sudo not in order_sudo.config_id.payment_method_ids:
             raise NotFound("Order or payment method not found")
 
@@ -193,7 +194,7 @@ class PosSelfOrderController(http.Controller):
         if not status:
             raise BadRequest("Something went wrong")
 
-        return order_sudo._export_for_self_order()
+        return {'order': order_sudo._export_for_self_order(), 'payment_status': status}
 
     def _process_lines(self, lines, pos_config, pos_order_id, take_away=False):
         appended_uuid = []
