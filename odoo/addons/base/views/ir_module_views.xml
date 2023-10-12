@@ -52,11 +52,16 @@
                     <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar"/>
-                    <div class="oe_title mb32">
-                        <h1><field name="shortdesc" placeholder="Module Name"/></h1>
-                        <h3 class="oe_fade">
-                            By <field name="author" class="oe_inline" placeholder="Author Name"/>
-                        </h3>
+                    <div class="mb32">
+                        <h1 class="d-flex flex-column">
+                            <field name="shortdesc" placeholder="Module Name"/>
+                            <field class="fs-2 text-muted" name="summary" invisible="not summary"/>
+                        </h1>
+                        <h4 class="text-muted d-flex flex-column">
+                            <div>By <field name="author" class="oe_inline" placeholder="Author Name"/> </div>
+                            <small><field name="website" widget="url" invisible="not website"/></small>
+                        </h4>
+
                         <div>
                             <field name="state" invisible="1"/>
                             <field name="to_buy" invisible="1"/>
@@ -77,12 +82,8 @@
                         <page string="Information" name="information">
                             <group>
                                 <group>
-                                    <field name="website" widget="url" invisible="not website"/>
                                     <field name="category_id" options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="summary"/>
-                                </group>
-                                <group>
-                                    <field name="name"/>
+                                    <field name="name" />
                                     <field name="license"/>
                                     <field name="installed_version"/>
                                 </group>
@@ -94,36 +95,35 @@
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
-                            <group string="Created Views" invisible="state != 'installed'"/>
-                            <p class="oe_grey" invisible="not (views_by_module) or state != 'installed'"> -This module does not create views.</p>
-                            <field name="views_by_module"/>
-                            <group string="Dependencies"/>
-                            <p class="oe_grey" invisible="not (dependencies_id)"> -This module does not depends on any other module.</p>
-                            <field name="dependencies_id">
-                                <tree string="Dependencies">
-                                    <field name="name"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                            <group string="Exclusions"/>
-                            <p class="oe_grey" invisible="not (exclusion_ids)"> -This module does not exclude any other module.</p>
-                            <field name="exclusion_ids">
-                                <tree string="Exclusions">
-                                    <field name="name"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
+                            <group>
+                                <group string="Dependencies">
+                                    <field name="dependencies_id" colspan="2" nolabel="1">
+                                        <tree string="Dependencies">
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Exclusions">
+                                    <field name="exclusion_ids" colspan="2" nolabel="1">
+                                        <tree string="Exclusions">
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
                         </page>
                         <page string="Installed Features" name="installed_features" invisible="state != 'installed'">
                             <group string="Created Menus"/>
-                            <p class="oe_grey" invisible="not (menus_by_module)"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>
+                            <group string="Created Views"/>
+                            <field name="views_by_module"/>
                             <group string="Defined Reports"/>
-                            <p class="oe_grey" invisible="not (reports_by_module)"> -This module does not create report.</p>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
-                    <field name="description_html" class='oe_styling_v8'/>
+                    <field name="description_html" class='oe_styling_v8' invisible="not description_html"/>
                     </sheet>
                 </form>
             </field>
