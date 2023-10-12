@@ -788,16 +788,17 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         parent_combination = parent_combination or self.env['product.template.attribute.value']
         archived_products = self.with_context(active_test=False).product_variant_ids.filtered(lambda l: not l.active)
+        active_combinations = set(tuple(product.product_template_attribute_value_ids.ids) for product in self.product_variant_ids)
         return {
             'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
-            'archived_combinations': [
-                product.product_template_attribute_value_ids.ids
+            'archived_combinations': list(set(
+                tuple(product.product_template_attribute_value_ids.ids)
                 for product in archived_products
                 if product.product_template_attribute_value_ids and all(
                     ptav.ptav_active
                     for ptav in product.product_template_attribute_value_ids
                 )
-            ],
+            ) - active_combinations),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
             'parent_product_name': parent_name,
