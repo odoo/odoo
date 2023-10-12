@@ -2,9 +2,10 @@
 <templates>
     <t t-name="spreadsheet_edition.FilterValue"
        >
-        <div class="o-filter-value d-flex align-items-start w-100">
-            <t t-set="filter"
-                t-value="props.filter"/>
+        <t t-set="filter"
+            t-value="props.filter"/>
+        <div class="o-filter-value d-flex align-items-start w-100" 
+            t-att-class="filter.rangeType === 'from_to' ? 'o-filter-value-double-size':''">
             <t t-set="filterValue"
                 t-value="getters.getGlobalFilterValue(filter.id) || []"/>
             <div t-if="filter.type === 'text'" class="w-100">
@@ -22,10 +23,6 @@
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
             </span>
             <div t-if="filter.type === 'date'" class="w-100">
-                <DateFilterValue t-if="filter.rangeType !== 'relative'"
-                    period="filterValue &amp;&amp; filterValue.period"
-                    yearOffset="filterValue &amp;&amp; filterValue.yearOffset"
-                    onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)" />
                 <select t-if="filter.rangeType === 'relative'"
                     t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
                     class="date_filter_values o_input me-3"
@@ -40,6 +37,15 @@
                         </option>
                     </t>
                 </select>
+                <DateFromToValue t-elif="filter.rangeType === 'from_to'"
+                    from="filterValue?.from"
+                    to="filterValue?.to"
+                    onFromToChanged="(value) => this.onDateInput(filter.id, value)"/>
+
+                <DateFilterValue t-else=""
+                    period="filterValue?.period"
+                    yearOffset="filterValue?.yearOffset"
+                    onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
             </div>
             <i t-if="getters.isGlobalFilterActive(filter.id)"
                 class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1"

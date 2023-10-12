@@ -1173,6 +1173,24 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         });
     });
 
+    QUnit.test(
+        "Date filter automatic undefined values for from_to filter",
+        async function (assert) {
+            const label = "From to";
+            const { model } = await createSpreadsheetWithPivot();
+            await addGlobalFilter(model, {
+                id: "1",
+                type: "date",
+                label,
+                rangeType: "from_to",
+            });
+            assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
+                from: undefined,
+                to: undefined,
+            });
+        }
+    );
+
     QUnit.test("Date filter automatic default value at model loading", async function (assert) {
         const label = "This year";
         const model = new Model({
@@ -1315,6 +1333,122 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 3 * 365);
         assertDateDomainEqual(assert, "date", "2016-05-18", "2019-05-17", computedDomain);
+    });
+
+    QUnit.test("from_to date filter at model loading", async function (assert) {
+        const model = new Model({
+            globalFilters: [
+                { type: "date", rangeType: "from_to", label: "From To", fields: {}, id: "1" },
+            ],
+        });
+        assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
+            from: undefined,
+            to: undefined,
+        });
+    });
+
+    QUnit.test("from_to date filter domain value", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        /**@type GlobalFilter */
+        const filter = {
+            id: "42",
+            type: "date",
+            label: "From To",
+            rangeType: "from_to",
+        };
+        const value = {
+            from: "2022-01-01",
+            to: "2022-05-16",
+        };
+        await addGlobalFilter(model, filter, { pivot: { 1: { chain: "date", type: "date" } } });
+        await setGlobalFilterValue(model, { id: "42", value });
+        const computedDomain = model.getters.getPivotComputedDomain("1");
+        assertDateDomainEqual(assert, "date", "2022-01-01", "2022-05-16", computedDomain);
+    });
+
+    QUnit.test(
+        "set 'from_to' date filter domain value from specific date --> to specific date",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: "2022-05-16",
+            };
+            await addGlobalFilter(model, filter, { pivot: { 1: { chain: "date", type: "date" } } });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assertDateDomainEqual(assert, "date", "2022-01-01", "2022-05-16", computedDomain);
+        }
+    );
+
+    QUnit.test(
+        "set 'from_to' date filter domain value from specific date",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: undefined,
+            };
+            await addGlobalFilter(model, filter, { pivot: { 1: { chain: "date", type: "date" } } });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assert.deepEqual(computedDomain, [["date", ">=", "2022-01-01"]]);
+        }
+    );
+
+    QUnit.test("set 'from_to' date filter domain value to specific date", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        /**@type GlobalFilter */
+        const filter = {
+            id: "42",
+            type: "date",
+            label: "From To",
+            rangeType: "from_to",
+        };
+        const value = {
+            from: undefined,
+            to: "2022-05-16",
+        };
+        await addGlobalFilter(model, filter, { pivot: { 1: { chain: "date", type: "date" } } });
+        await setGlobalFilterValue(model, { id: "42", value });
+        const computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.deepEqual(computedDomain, [["date", "<=", "2022-05-16"]]);
+    });
+
+    QUnit.test("can clear 'from_to' date filter values", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            label: "From To",
+            rangeType: "from_to",
+        });
+        const [filter] = model.getters.getGlobalFilters();
+        const value = {
+            from: "2022-01-01",
+            to: "2022-05-16",
+        };
+        await setGlobalFilterValue(model, { id: "42", value });
+        model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
+        assert.deepEqual(
+            model.getters.getGlobalFilterValue(filter.id),
+            { preventAutomaticValue: true },
+            "can clear 'from_to' date filter values"
+        );
     });
 
     QUnit.test(
