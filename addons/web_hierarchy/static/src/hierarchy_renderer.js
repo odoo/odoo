@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 
 import { HierarchyCard } from "./hierarchy_card";
-import { useHierarchyNodeDraggable } from "../../hooks/hierarchy_node_draggable";
+import { useHierarchyNodeDraggable } from "./hierarchy_node_draggable";
 
 export class HierarchyRenderer extends Component {
     static components = {
@@ -19,7 +19,7 @@ export class HierarchyRenderer extends Component {
         archInfo: Object,
         templates: Object,
     };
-    static template = "hr_org_chart.HierarchyRenderer";
+    static template = "web_hierarchy.HierarchyRenderer";
 
     setup() {
         this.rendererRef = useRef("renderer");
