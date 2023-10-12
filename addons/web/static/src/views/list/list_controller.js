@@ -236,6 +236,7 @@ export class ListController extends Component {
     }
 
     async openRecord(record) {
+        await record.save();
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
                 name: this.archInfo.openAction.action,
