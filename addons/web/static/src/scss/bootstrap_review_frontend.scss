@@ -60,7 +60,8 @@ $o-btn-outline-border-width-defaults: () !default;
 }
 
 // Highlight '.btn-group's active buttons
-.btn-group .btn-light.active {
+.btn-group .btn-light.active,
+.btn-group .btn-check:checked + .btn-light {
     box-shadow: inset 0 0 0 $border-width $component-active-bg;
     border-color: transparent;
     background-color: mix($component-active-bg, $light, 10%);
