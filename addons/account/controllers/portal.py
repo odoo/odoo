@@ -14,9 +14,13 @@ class PortalAccount(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'invoice_count' in counters:
-            invoice_count = request.env['account.move'].search_count(self._get_invoices_domain()) \
+            invoice_count = request.env['account.move'].search_count([('move_type', 'in', ('out_invoice', 'out_refund'))] + self._get_invoices_domain()) \
                 if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
             values['invoice_count'] = invoice_count
+        if 'bill_count' in counters:
+            bill_count = request.env['account.move'].search_count([('move_type', 'in', ('in_invoice', 'in_refund'))] + self._get_invoices_domain()) \
+                if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
+            values['bill_count'] = bill_count
         return values
 
     # ------------------------------------------------------------
