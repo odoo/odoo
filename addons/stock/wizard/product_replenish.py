@@ -20,7 +20,8 @@ class ProductReplenish(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
     forecast_uom_id = fields.Many2one(related='product_id.uom_id')
     quantity = fields.Float('Quantity', default=1, required=True)
-    date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
+    date_planned = fields.Datetime('Scheduled Date', required=True, compute="_compute_date_planned", readonly=False,
+        help="Date at which the replenishment should take place.", store=True, precompute=True)
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
         domain="[('company_id', '=', company_id)]")
@@ -62,30 +63,33 @@ class ProductReplenish(models.TransientModel):
         if 'warehouse_id' in fields and 'warehouse_id' not in res:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             res['warehouse_id'] = warehouse.id
-        if 'date_planned' in fields:
-            res['date_planned'] = datetime.datetime.now()
-        if 'route_id' in fields and 'route_id' not in res:
-            route_id = False
-            domain = expression.AND([self._get_allowed_route_domain(), ['|', ('company_id', '=', False), ('company_id', '=', company.id)]])
-            if product_tmpl_id.route_ids:
-                product_route_domain = expression.AND([domain, [('product_ids', '=', product_tmpl_id.id)]])
-                route_id = self.env['stock.route'].search(product_route_domain, limit=1).id
-            if not route_id:
-                route_id = self.env['stock.route'].search(domain, limit=1).id
-            if route_id:
-                res['route_id'] = route_id
+        if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
+            res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
+            if not res['route_id']:
+                res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
         return res
 
     def launch_replenishment(self):
+        if not self.route_id:
+            raise UserError(_("You need to select a route to replenish your products"))
         uom_reference = self.product_id.uom_id
         self.quantity = self.product_uom_id._compute_quantity(self.quantity, uom_reference, rounding_method='HALF-UP')
         try:
-            orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', self.product_id.id)])
-            if orderpoint:
-                orderpoint.write(self._prepare_orderpoint_values())
-            else:
-                orderpoint = self.env['stock.warehouse.orderpoint'].create(self._prepare_orderpoint_values())
-            notification = orderpoint.action_replenish()
+            now = self.env.cr.now()
+            self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
+                self.env['procurement.group'].Procurement(
+                    self.product_id,
+                    self.quantity,
+                    uom_reference,
+                    self.warehouse_id.lot_stock_id,  # Location
+                    _("Manual Replenishment"),  # Name
+                    _("Manual Replenishment"),  # Origin
+                    self.warehouse_id.company_id,
+                    self._prepare_run_values()  # Values
+                )
+            ])
+            move = self._get_record_to_notify(now)
+            notification = self._get_replenishment_order_notification(move)
             act_window_close = {
                 'type': 'ir.actions.act_window_close',
                 'infos': {'done': True},
@@ -97,6 +101,7 @@ class ProductReplenish(models.TransientModel):
         except UserError as error:
             raise UserError(error)
 
+    # TODO: to remove in master
     def _prepare_orderpoint_values(self):
         values = {
             'location_id': self.warehouse_id.lot_stock_id.id,
@@ -106,6 +111,44 @@ class ProductReplenish(models.TransientModel):
         if self.route_id:
             values['route_id'] = self.route_id.id
         return values
+
+    def _prepare_run_values(self):
+        replenishment = self.env['procurement.group'].create({})
+        values = {
+            'warehouse_id': self.warehouse_id,
+            'route_ids': self.route_id,
+            'date_planned': self.date_planned,
+            'group_id': replenishment,
+        }
+        return values
+
+    def _get_record_to_notify(self, date):
+        return self.env['stock.move'].search([('write_date', '>=', date)], limit=1)
+
+    def _get_replenishment_order_notification_link(self, move):
+        if move.picking_id:
+            action = self.env.ref('stock.stock_picking_action_picking_type')
+            return [{
+                'label': move.picking_id.name,
+                'url': f'#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
+            }]
+        return False
+
+    def _get_replenishment_order_notification(self, move):
+        link = self._get_replenishment_order_notification_link(move)
+        if not link:
+            return False
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('The following replenishment order have been generated'),
+                'message': '%s',
+                'links': link,
+                'sticky': False,
+            }
+        }
+
 
     @api.depends('warehouse_id', 'product_id')
     def _compute_forecasted_quantity(self):

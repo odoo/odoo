@@ -48,10 +48,10 @@ class ProductReplenish(models.TransientModel):
                     },
                 }
 
-    def _prepare_orderpoint_values(self):
-        res = super()._prepare_orderpoint_values()
+    def _prepare_run_values(self):
+        res = super()._prepare_run_values()
         if self.supplier_id:
-            res['supplier_id'] = self.supplier_id.id
+            res['supplierinfo_id'] = self.supplier_id
         return res
 
     def action_stock_replenishment_info(self):
@@ -69,3 +69,16 @@ class ProductReplenish(models.TransientModel):
             'replenish_id': self.id,
         }
         return action
+
+    def _get_record_to_notify(self, date):
+        order_line = self.env['purchase.order.line'].search([('write_date', '>=', date)], limit=1)
+        return order_line or super()._get_record_to_notify(date)
+
+    def _get_replenishment_order_notification_link(self, order_line):
+        if order_line._name == 'purchase.order.line':
+            action = self.env.ref('purchase.action_rfq_form')
+            return [{
+                'label': order_line.order_id.display_name,
+                'url': f'#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
+            }]
+        return super()._get_replenishment_order_notification_link(order_line)
