@@ -679,6 +679,13 @@ a.no-decoration {
     .o_total_border {
         border: $border-width solid $border-color;
 
+        // TODO VCR This value should adapt to the offsetHeight
+        // of the header this is an arbitrary value as a temporary solution
+        // to offset the summary regarding the tallest header (Magazine)
+        @include media-breakpoint-up(lg) {
+            top: 9rem;
+        }
+
         @include media-breakpoint-down(lg) {
             border: 0;
         }
