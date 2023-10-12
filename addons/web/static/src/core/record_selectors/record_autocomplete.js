@@ -21,6 +21,7 @@ export class RecordAutocomplete extends Component {
         context: { type: Object, optional: true },
         className: { type: String, optional: true },
         fieldString: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
     };
     static components = { AutoComplete };
     static template = "web.RecordAutocomplete";

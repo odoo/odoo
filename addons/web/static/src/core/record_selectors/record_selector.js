@@ -13,6 +13,7 @@ export class RecordSelector extends Component {
         domain: { type: Array, optional: true },
         context: { type: Object, optional: true },
         fieldString: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
     };
     static components = { RecordAutocomplete };
     static template = "web.RecordSelector";

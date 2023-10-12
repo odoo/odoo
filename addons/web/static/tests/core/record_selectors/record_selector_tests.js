@@ -147,4 +147,14 @@ QUnit.module("Web Components", (hooks) => {
         await click(input);
         assert.verifySteps(["name_search"]);
     });
+
+    QUnit.test("Support placeholder", async (assert) => {
+        await makeRecordSelector({
+            resModel: "partner",
+            resId: false,
+            placeholder: "Select a partner",
+        });
+        const input = target.querySelector(".o_record_selector input");
+        assert.strictEqual(input.placeholder, "Select a partner");
+    });
 });

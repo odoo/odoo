@@ -163,4 +163,28 @@ QUnit.module("Web Components", (hooks) => {
         await click(input);
         assert.verifySteps(["name_search"]);
     });
+
+    QUnit.test("Support placeholder", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [],
+            placeholder: "Select a partner",
+        });
+        const input = target.querySelector(".o_multi_record_selector input");
+        assert.strictEqual(input.placeholder, "Select a partner");
+        await click(input);
+        const firstItem = target.querySelectorAll("li.o-autocomplete--dropdown-item")[0];
+        await click(firstItem);
+        assert.strictEqual(input.placeholder, "");
+    });
+
+    QUnit.test("Placeholder is not set if values are selected", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [1],
+            placeholder: "Select a partner",
+        });
+        const input = target.querySelector(".o_multi_record_selector input");
+        assert.strictEqual(input.placeholder, "");
+    });
 });
