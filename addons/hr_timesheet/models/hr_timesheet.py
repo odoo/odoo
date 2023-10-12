@@ -324,3 +324,21 @@ class AccountAnalyticLine(models.Model):
         if len(task_ids) == 1:
             return _('Timesheets - %s', task_ids.name)
         return _('Timesheets')
+
+    @api.model
+    def _ensure_uom_hours(self):
+        uom_hours = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        if not uom_hours:
+            uom_hours = self.env['uom.uom'].create({
+                'name': "Hours",
+                'category_id': self.env.ref('uom.uom_categ_wtime').id,
+                'factor': 8,
+                'uom_type': "smaller",
+            })
+            self.env['ir.model.data'].create({
+                'name': 'product_uom_hour',
+                'model': 'uom.uom',
+                'module': 'uom',
+                'res_id': uom_hours.id,
+                'noupdate': True,
+            })
