@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
-from odoo.exceptions import UserError
-from odoo.osv.expression import expression
+from odoo import fields, models, tools
+from odoo.tools import SQL
 
 
 class VendorDelayReport(models.Model):
@@ -57,6 +56,6 @@ GROUP  BY m.id
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec == 'on_time_rate:sum':
             # Make a weigthed average instead of simple average for these fields
-            sql_expression = 'SUM(qty_on_time) / SUM(qty_total) * 100'
-            return sql_expression, ['on_time_rate', 'qty_on_time', 'qty_total']
+            sql_expr = SQL('SUM(qty_on_time) / SUM(qty_total) * 100')
+            return sql_expr, ['on_time_rate', 'qty_on_time', 'qty_total']
         return super()._read_group_select(aggregate_spec, query)
