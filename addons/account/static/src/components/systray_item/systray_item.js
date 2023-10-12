@@ -18,8 +18,8 @@ export class AccountSystrayItem extends Component {
 export const systrayItem = {
     Component: AccountSystrayItem,
     isDisplayed : function(env) {
-        const { availableCompanies } = env.services.company;
-        return Object.keys(availableCompanies).length === 1;
+        const { allowedCompanies } = env.services.company;
+        return Object.keys(allowedCompanies).length === 1;
     },
 };
 

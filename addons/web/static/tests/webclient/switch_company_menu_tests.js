@@ -95,7 +95,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -158,7 +158,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -202,7 +202,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hulk
          */
         assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 3 });
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -218,7 +218,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          */
         await click(target.querySelectorAll(".toggle_company")[0]);
         assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 3 });
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         assert.containsOnce(target, ".dropdown-menu", "dropdown is still opened");
         assert.containsN(target, "[data-company-id] .fa-check-square", 0);
@@ -240,7 +240,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -275,7 +275,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3, 1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3, 1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -310,7 +310,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [2, 1]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [2, 1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 2);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
@@ -344,7 +344,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [3]);
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
         assert.containsN(target, "[data-company-id]", 5);
