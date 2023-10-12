@@ -40,26 +40,11 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.confirm(),
         ...ProductScreen.check.selectedOrderlineHas("Office Combo"),
         ...ProductScreen.do.clickOrderline("Combo Product 3"),
-        ...ProductScreen.check.selectedOrderlineHas(
-            "Combo Product 3",
-            "1.0",
-            "12.92",
-            "Office Combo"
-        ),
+        ...ProductScreen.check.selectedOrderlineHas("Combo Product 3", "1.0", "12.92"),
         ...ProductScreen.do.clickOrderline("Combo Product 5"),
-        ...ProductScreen.check.selectedOrderlineHas(
-            "Combo Product 5",
-            "1.0",
-            "17.87",
-            "Office Combo"
-        ),
+        ...ProductScreen.check.selectedOrderlineHas("Combo Product 5", "1.0", "17.87"),
         ...ProductScreen.do.clickOrderline("Combo Product 8"),
-        ...ProductScreen.check.selectedOrderlineHas(
-            "Combo Product 8",
-            "1.0",
-            "28.81",
-            "Office Combo"
-        ),
+        ...ProductScreen.check.selectedOrderlineHas("Combo Product 8", "1.0", "28.81"),
 
         // check that you cannot change the quantity of a combo product
         ...ProductScreen.do.pressNumpad("2"),

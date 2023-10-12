@@ -19,23 +19,12 @@ patch(CartPage.prototype, {
         const service = this.selfOrder.config.self_ordering_service_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
 
-        if (this.sendInProgress) {
-            return;
-        }
-
         if (!this.selfOrder.table && service === "table" && !takeAway) {
             this.state.selectTable = true;
             return;
         }
 
         if (mode === "meal" && isOnlinePayment && order.isSavedOnServer) {
-            if (!order) {
-                this.selfOrder.notification.add(_t("The current order is invalid."), {
-                    type: "danger",
-                });
-                return;
-            }
-
             this.checkAndOpenPaymentPage(order);
         } else if (mode === "meal" && !isOnlinePayment && order.isSavedOnServer) {
             this.router.navigate("confirmation", {

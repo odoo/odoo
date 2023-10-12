@@ -48,12 +48,16 @@ patch(PosBus.prototype, {
             }
         }
 
+        for (const floor of this.pos.floors) {
+            floor.changes_count = 0;
+        }
         for (const table of data) {
             const table_obj = this.pos.tables_by_id[table.id];
             if (table_obj) {
                 table_obj.order_count = table.orders;
                 table_obj.changes_count = table.changes;
                 table_obj.skip_changes = table.skip_changes;
+                table_obj.floor.changes_count += table.changes;
             }
         }
     },

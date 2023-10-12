@@ -318,7 +318,7 @@ class Check {
             },
         ];
     }
-    selectedOrderlineHas(name, quantity, price, comboParent) {
+    selectedOrderlineHas(name, quantity, price) {
         return [
             ...adaptForMobile(
                 Order.hasLine({
@@ -326,7 +326,6 @@ class Check {
                     productName: name,
                     quantity,
                     price,
-                    comboParent,
                 })
             ),
             {

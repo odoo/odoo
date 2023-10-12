@@ -75,13 +75,4 @@ export class ConfirmationPage extends Component {
 
         return this.state.onReload;
     }
-
-    get showPayMessage() {
-        const config = this.selfOrder.config;
-        const paymentMethods = this.selfOrder.pos_payment_methods.filter((p) =>
-            config.self_ordering_mode === "mobile" ? p.is_online_payment : !p.is_online_payment
-        );
-
-        return paymentMethods.length === 0 && config.self_ordering_pay_after === "each";
-    }
 }
