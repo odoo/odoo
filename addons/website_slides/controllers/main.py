@@ -1077,7 +1077,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if post.get('duration'):
             # minutes to hours conversion
-            values['completion_time'] = int(post['duration']) / 60
+            values['completion_time'] = max(int(float(post['duration'])) / 60, 0)
 
         category = False
         # handle creation of new categories on the fly
