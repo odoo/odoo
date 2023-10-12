@@ -12,6 +12,9 @@
                         <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
                     </group>
                 </page>
+                <page name="invoicing" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_readonly</attribute>
+                </page>
             </field>
         </record>
 
