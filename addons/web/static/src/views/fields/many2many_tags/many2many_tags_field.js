@@ -5,7 +5,6 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import {
     Many2XAutocomplete,
     useActiveActions,
@@ -16,6 +15,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -64,7 +64,10 @@ export class Many2ManyTagsField extends Component {
         this.popover = usePopover(this.constructor.components.Popover);
         this.dialog = useService("dialog");
         this.dialogClose = [];
-
+        this.onTagKeydown = useTagNavigation(
+            "many2ManyTagsField",
+            this.deleteTagByIndex.bind(this)
+        );
         this.autoCompleteRef = useRef("autoComplete");
 
         const { saveRecord, removeRecord } = useX2ManyCrud(
@@ -125,7 +128,12 @@ export class Many2ManyTagsField extends Component {
             text: record.data.display_name,
             colorIndex: record.data[this.props.colorField],
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
-            onKeydown: this.onTagKeydown.bind(this),
+            onKeydown: (ev) => {
+                if (this.props.readonly) {
+                    return;
+                }
+                this.onTagKeydown(ev);
+            },
         };
     }
 
@@ -137,6 +145,11 @@ export class Many2ManyTagsField extends Component {
 
     get showM2OSelectionField() {
         return !this.props.readonly;
+    }
+
+    async deleteTagByIndex(index) {
+        const { id } = this.tags[index] || {};
+        this.deleteTag(id);
     }
 
     async deleteTag(id) {
@@ -156,103 +169,6 @@ export class Many2ManyTagsField extends Component {
             domain,
             Domain.not([["id", "in", this.props.record.data[this.props.name].currentIds]]),
         ]).toList(this.props.context);
-    }
-
-    focusTag(index) {
-        const autoCompleteParent = this.autoCompleteRef.el.parentElement;
-        const tags = autoCompleteParent.getElementsByClassName("o_tag");
-        if (tags.length) {
-            if (index === undefined) {
-                tags[tags.length - 1].focus();
-            } else {
-                tags[index].focus();
-            }
-        }
-    }
-
-    onAutoCompleteKeydown(ev) {
-        if (ev.isComposing) {
-            // This case happens with an IME for example: we let it handle all key events.
-            return;
-        }
-        const hotkey = getActiveHotkey(ev);
-        const input = ev.target.closest(".o-autocomplete--input");
-        const autoCompleteMenuOpened = !!this.autoCompleteRef.el.querySelector(
-            ".o-autocomplete--dropdown-menu"
-        );
-        switch (hotkey) {
-            case "arrowleft": {
-                if (input.selectionStart || autoCompleteMenuOpened) {
-                    return;
-                }
-                // focus rightmost tag if any.
-                this.focusTag();
-                break;
-            }
-            case "arrowright": {
-                if (input.selectionStart !== input.value.length || autoCompleteMenuOpened) {
-                    return;
-                }
-                // focus leftmost tag if any.
-                this.focusTag(0);
-                break;
-            }
-            case "backspace": {
-                if (input.value) {
-                    return;
-                }
-                const tags = this.tags;
-                if (tags.length) {
-                    const { id } = tags[tags.length - 1];
-                    this.deleteTag(id);
-                }
-                break;
-            }
-            default:
-                return;
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
-    }
-
-    onTagKeydown(ev) {
-        if (this.props.readonly) {
-            return;
-        }
-        const hotkey = getActiveHotkey(ev);
-        const autoCompleteParent = this.autoCompleteRef.el.parentElement;
-        const tags = [...autoCompleteParent.getElementsByClassName("o_tag")];
-        const closestTag = ev.target.closest(".o_tag");
-        const tagIndex = tags.indexOf(closestTag);
-        const input = this.autoCompleteRef.el.querySelector(".o-autocomplete--input");
-        switch (hotkey) {
-            case "arrowleft": {
-                if (tagIndex === 0) {
-                    input.focus();
-                } else {
-                    this.focusTag(tagIndex - 1);
-                }
-                break;
-            }
-            case "arrowright": {
-                if (tagIndex === tags.length - 1) {
-                    input.focus();
-                } else {
-                    this.focusTag(tagIndex + 1);
-                }
-                break;
-            }
-            case "backspace": {
-                input.focus();
-                const { id } = this.tags[tagIndex] || {};
-                this.deleteTag(id);
-                break;
-            }
-            default:
-                return;
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
     }
 }
 
