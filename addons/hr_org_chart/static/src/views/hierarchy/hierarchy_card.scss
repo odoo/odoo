@@ -15,6 +15,19 @@
         height: 30px;
     }
 
+    &.o_hierarchy_dragged {
+        .o_hierarchy_node {
+            background-color: $hierarchy_element_dragged-background;
+        }
+    }
+
+    &.o_hierarchy_hover {
+        .o_hierarchy_node {
+            background-color: $hierarchy_element_hover-background;
+            border: 3px solid green !important;
+        }
+    }
+
     .o_hierarchy_node {
         &:hover {
             cursor: pointer;
