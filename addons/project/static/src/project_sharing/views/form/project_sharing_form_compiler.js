@@ -42,7 +42,7 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
             setAttributes(chatterContainerHookXml, {
                 "t-if": `__comp__.uiService.size >= ${SIZES.XXL}`,
             });
-            chatterContainerHookXml.classList.add('overflow-x-hidden', 'overflow-y-auto', 'o-aside', 'h-100');
+            chatterContainerHookXml.classList.add('overflow-x-hidden', 'overflow-y-auto', 'o-aside', 'h-100', 'd-none');
         }
         return res;
     }
@@ -97,7 +97,10 @@ patch(FormCompiler.prototype, {
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            't-if': `__comp__.uiService.size < ${SIZES.XXL}`,
+            't-att-class': `{
+                'overflow-x-hidden overflow-y-auto o-aside h-100': __comp__.uiService.size >= ${SIZES.XXL},
+                'px-3 py-0': __comp__.uiService.size < ${SIZES.XXL},
+            }`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;
