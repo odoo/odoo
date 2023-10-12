@@ -36,7 +36,7 @@ class Company(models.Model):
                 company.catchall_email = ''
                 company.catchall_formatted = ''
 
-    @api.depends('partner_id.email_formatted', 'catchall_formatted')
+    @api.depends('partner_id', 'catchall_formatted')
     def _compute_email_formatted(self):
         for company in self:
             if company.partner_id.email_formatted:
