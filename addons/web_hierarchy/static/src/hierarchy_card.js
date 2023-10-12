@@ -26,7 +26,7 @@ export class HierarchyCard extends Component {
     static defaultProps = {
         classNames: "",
     };
-    static template = "hr_org_chart.HierarchyCard";
+    static template = "web_hierarchy.HierarchyCard";
     static Compiler = HierarchyCompiler;
 
     setup() {

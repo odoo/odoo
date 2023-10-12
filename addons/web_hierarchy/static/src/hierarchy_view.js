@@ -17,7 +17,7 @@ export const hierarchyView = {
     Controller: HierarchyController,
     Model: HierarchyModel,
     Renderer: HierarchyRenderer,
-    buttonTemplate: "hr_org_chart.HierarchyButtons",
+    buttonTemplate: "web_hierarchy.HierarchyButtons",
     searchMenuTypes: [],
 
     props: (genericProps, view) => {

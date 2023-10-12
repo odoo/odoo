@@ -25,7 +25,7 @@ export class HierarchyController extends Component {
         buttonTemplate: String,
         archInfo: Object,
     };
-    static template = "hr_org_chart.HierarchyView";
+    static template = "web_hierarchy.HierarchyView";
 
     setup() {
         this.rootRef = useRef("root");
