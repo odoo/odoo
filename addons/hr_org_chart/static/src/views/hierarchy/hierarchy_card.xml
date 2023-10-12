@@ -45,6 +45,10 @@
                         <span style="grid-column: 2;">
                             Unfold
                         </span>
+                        <span class="text-end" style="grid-column: 3;">
+                            <t t-out="props.node.childResIds.length"/>
+                            <i class="fa ps-1 fa-share-alt o_hierarchy_icon"/>
+                        </span>
                     </t>
                     <t t-else="">
                         <span style="grid-column: 2;">
