@@ -4,8 +4,13 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { arg, toString } = spreadsheet.helpers;
+import { range } from "@web/core/utils/numbers";
+const { arg, toBoolean, toString, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
+
+/**
+ * @typedef {import("@spreadsheet/pivot/pivot_table.js").SpreadsheetPivotTable} SpreadsheetPivotTable
+ */
 
 //--------------------------------------------------------------------------
 // Spreadsheet functions
@@ -155,8 +160,80 @@ const ODOO_PIVOT_POSITION = {
     hidden: true,
 };
 
+const ODOO_PIVOT_TABLE = {
+    description: _t("Get a pivot table."),
+    args: [
+        arg("pivot_id (string)", _t("ID of the pivot.")),
+        arg("row_count (number, optional, default=10000)", _t("number of rows")),
+        arg(
+            "include_total (boolean, default=TRUE)",
+            _t("Whether to include total/sub-totals or not.")
+        ),
+        arg(
+            "include_column_titles (boolean, default=TRUE)",
+            _t("Whether to include the column titles or not.")
+        ),
+    ],
+    computeValueAndFormat: function (
+        pivotId,
+        rowCount = { value: 10000 },
+        includeTotal = { value: true },
+        includeColumnHeaders = { value: true }
+    ) {
+        const _pivotId = toString(pivotId.value);
+        assertPivotsExists(_pivotId, this.getters);
+        /** @type {SpreadsheetPivotTable} */
+        const table = this.getters.getPivotTableStructure(_pivotId);
+        const _includeColumnHeaders = toBoolean(includeColumnHeaders.value);
+        const cells = table.getPivotCells(toBoolean(includeTotal.value), _includeColumnHeaders);
+        const headerRows = _includeColumnHeaders ? table.getNumberOfHeaderRows() : 0;
+        const pivotTitle = _t("Pivot #%s", _pivotId);
+        const _rowCount = toNumber(rowCount.value);
+        if (_rowCount < 0) {
+            throw new Error(_t("The number of rows must be positive."));
+        }
+        const end = Math.min(headerRows + _rowCount, cells[0].length);
+        if (end === 0) {
+            return [[{ value: pivotTitle }]];
+        }
+        const tableWidth = cells.length;
+        const tableRows = range(0, end);
+        const result = [];
+        for (const col of range(0, tableWidth)) {
+            result[col] = [];
+            for (const row of tableRows) {
+                const pivotCell = cells[col][row];
+                result[col].push(getPivotCellValueAndFormat.call(this, _pivotId, pivotCell));
+            }
+        }
+        if (_includeColumnHeaders) {
+            result[0][0] = { value: pivotTitle };
+        }
+        return result;
+    },
+    category: "Odoo",
+    returns: ["RANGE<ANY>"],
+};
+
+function getPivotCellValueAndFormat(pivotId, pivotCell) {
+    if (!pivotCell.domain) {
+        return { value: "", format: undefined };
+    } else {
+        const domain = pivotCell.domain;
+        const measure = pivotCell.measure;
+        const fn = pivotCell.isHeader ? ODOO_PIVOT_HEADER : ODOO_PIVOT;
+        const args = pivotCell.isHeader ? [pivotId, ...domain] : [pivotId, measure, ...domain];
+
+        return {
+            value: fn.compute.call(this, ...args),
+            format: fn.computeFormat.call(this, ...args.map((a) => ({ value: a }))),
+        };
+    }
+}
+
 functionRegistry
     .add("ODOO.FILTER.VALUE", ODOO_FILTER_VALUE)
     .add("ODOO.PIVOT", ODOO_PIVOT)
     .add("ODOO.PIVOT.HEADER", ODOO_PIVOT_HEADER)
-    .add("ODOO.PIVOT.POSITION", ODOO_PIVOT_POSITION);
+    .add("ODOO.PIVOT.POSITION", ODOO_PIVOT_POSITION)
+    .add("ODOO.PIVOT.TABLE", ODOO_PIVOT_TABLE);
