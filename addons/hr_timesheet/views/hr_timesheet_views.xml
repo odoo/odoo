@@ -105,6 +105,24 @@
             </field>
         </record>
 
+        <!-- For a single project Timesheet view, group by month then task -->
+        <record id="view_hr_timesheet_line_by_project" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph.by.project</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_graph_all"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="project_id" position="replace"/>
+                <field name="employee_id" position="before">
+                    <field name="date" interval="month"/>
+                    <field name="task_id"/>
+                </field>
+                <field name="employee_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="view_hr_timesheet_line_graph_by_employee" model="ir.ui.view">
             <field name="name">account.analytic.line.graph.by.employee</field>
             <field name="model">account.analytic.line</field>
@@ -448,7 +466,7 @@
         <record id="act_hr_timesheet_line_by_project_view_graph" model="ir.actions.act_window.view">
             <field name="view_mode">graph</field>
             <field name="sequence" eval="4"/>
-            <field name="view_id" ref="view_hr_timesheet_line_graph_all"/>
+            <field name="view_id" ref="view_hr_timesheet_line_by_project"/>
             <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
         </record>
 
