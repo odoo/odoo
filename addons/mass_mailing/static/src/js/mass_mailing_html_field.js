@@ -14,7 +14,7 @@ import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { useSubEnv, status } from "@odoo/owl";
+import { useSubEnv, status, markup } from "@odoo/owl";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -270,7 +270,7 @@ export class MassMailingHtmlField extends HtmlField {
             });
             this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
                 title: _t("Mobile Preview"),
-                preview: mailingHtml.body.innerHTML,
+                preview: markup(mailingHtml.body.innerHTML),
             }, {
                 onClose: () => $previewBtn.prop('disabled', false),
             });
