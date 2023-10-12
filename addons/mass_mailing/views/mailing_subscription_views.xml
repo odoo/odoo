@@ -16,6 +16,7 @@
                                 aria-label="Blacklisted" invisible="not is_blacklisted" groups="base.group_user"></i>
                             <field name="contact_id"/>
                         </div>
+                        <field name="create_date" string="Subscription Date"/>
                         <field name="opt_out_datetime" readonly="1"/>
                         <field name="opt_out"/>
                         <field name="opt_out_reason_id"/>
@@ -32,6 +33,7 @@
         <field name="arch" type="xml">
             <tree string="Mailing List Subscriptions">
                 <field name="contact_id"/>
+                <field name="create_date" string="Subscription Date"/>
                 <field name="list_id"/>
                 <field name="opt_out"/>
                 <field name="opt_out_reason_id"/>
