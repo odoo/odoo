@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import struct
 from threading import Event
 import unittest
@@ -12,7 +13,8 @@ except ImportError:
 
 import odoo.tools
 from odoo.tests import HOST, common
-from ..websocket import CloseCode, WebsocketConnectionHandler
+from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
+from ..models.bus import dispatch, hashable, channel_with_db
 
 
 class WebsocketCase(common.HttpCase):
@@ -75,6 +77,47 @@ class WebsocketCase(common.HttpCase):
         )
         self._websockets.add(ws)
         return ws
+
+    def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
+        """ Subscribe the websocket to the given channels.
+
+        :param websocket: The websocket of the client.
+        :param channels: The list of channels to subscribe to.
+        :param last: The last notification id the client received.
+        :param wait_for_dispatch: Whether to wait for the notification
+            dispatching trigerred by the subscription.
+        """
+        dispatch_bus_notification_done = Event()
+        original_dispatch_bus_notifications = Websocket._dispatch_bus_notifications
+
+        def _mocked_dispatch_bus_notifications(self, *args):
+            original_dispatch_bus_notifications(self, *args)
+            dispatch_bus_notification_done.set()
+
+        with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
+            sub = {'event_name': 'subscribe', 'data': {
+                'channels': channels or [],
+            }}
+            if last:
+                sub['data']['last'] = last
+            websocket.send(json.dumps(sub))
+            if wait_for_dispatch:
+                dispatch_bus_notification_done.wait(timeout=5)
+
+    def trigger_notification_dispatching(self, channels):
+        """ Notify the websockets subscribed to the given channels that new
+        notifications are available. Usefull since the bus is not able to do
+        it during tests.
+        """
+        channels = [
+            hashable(channel_with_db(self.registry.db_name, c))
+            if isinstance(c, str) else c for c in channels
+        ]
+        websockets = set()
+        for channel in channels:
+            websockets.update(dispatch._channels_to_ws.get(hashable(channel), []))
+        for websocket in websockets:
+            websocket.trigger_notification_dispatching()
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
