@@ -1,16 +1,18 @@
 /** @odoo-module */
 
-import { RecordsSelector } from "../records_selector/records_selector";
+import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";
 
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class FilterValue extends Component {
     setup() {
         this.getters = this.props.model.getters;
         this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
+        this.nameService = useService("name");
     }
     onDateInput(id, value) {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
@@ -20,15 +22,19 @@ export class FilterValue extends Component {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
     }
 
-    onTagSelected(id, values) {
-        if (!values.length) {
+    async onTagSelected(id, resIds) {
+        if (!resIds.length) {
             // force clear, even automatic default values
             this.clear(id);
         } else {
+            const displayNames = await this.nameService.loadDisplayNames(
+                this.props.filter.modelName,
+                resIds
+            );
             this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
                 id,
-                value: values.map((record) => record.id),
-                displayNames: values.map((record) => record.display_name),
+                value: resIds,
+                displayNames: Object.values(displayNames),
             });
         }
     }
@@ -42,7 +48,7 @@ export class FilterValue extends Component {
     }
 }
 FilterValue.template = "spreadsheet_edition.FilterValue";
-FilterValue.components = { RecordsSelector, DateFilterValue };
+FilterValue.components = { DateFilterValue, MultiRecordSelector };
 FilterValue.props = {
     filter: Object,
     model: Object,
