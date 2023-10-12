@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
 
 class Partner(models.Model):
     _inherit = ['res.partner']
@@ -49,3 +50,9 @@ class Partner(models.Model):
             self.city = False
             self.zip = False
             self.state_id = False
+
+    @api.constrains('city_id', 'state_id')
+    def _check_city_state(self):
+        for partner in self:
+            if partner.city_id and partner.state_id and partner.city_id.state_id != partner.state_id:
+                raise ValidationError(_('The selected city is not in the selected state.'))
