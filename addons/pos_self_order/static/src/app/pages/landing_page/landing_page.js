@@ -70,9 +70,7 @@ export class LandingPage extends Component {
         }
 
         return (
-            routeName === "products" &&
-            this.draftOrder.length > 0 &&
-            this.selfOrder.config.self_ordering_pay_after === "each"
+            this.draftOrder.length > 0 && this.selfOrder.config.self_ordering_pay_after === "each"
         );
     }
 

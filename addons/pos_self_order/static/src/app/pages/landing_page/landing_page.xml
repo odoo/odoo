@@ -36,8 +36,9 @@
             <div t-if="selfOrder.custom_links.length" class="d-flex gap-3 flex-grow-1">
                 <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
                     <a type="button"
+                        t-if="!hideBtn(link)"
                         t-on-click="(event) => this.clickCustomLink(link)"
-                        t-attf-class="btn btn-lg btn-{{link.style}} {{ hideBtn(link) ? 'd-none' : ''}}">
+                        t-attf-class="btn btn-lg btn-{{link.style}}">
                         <t t-esc="link.name"/>
                     </a>
                 </t>

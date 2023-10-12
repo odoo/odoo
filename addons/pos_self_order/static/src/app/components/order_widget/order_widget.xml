@@ -6,10 +6,10 @@
             t-att-class="{
                 'shadow-lg border-top' : !props.removeTopClasses
             }">
-            <button t-attf-class="btn btn-secondary btn-lg h-auto w-auto opacity-75 px-4 d-sm-none" t-att-class="leftButtonName.icon" t-on-click="leftButton">
+            <button t-attf-class="btn btn-secondary btn-lg h-auto w-auto opacity-75 px-4 d-sm-none" t-att-class="leftButton.icon" t-on-click="onClickleftButton">
                 <span class="px-1"/><!-- Spacer -->
             </button>
-            <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap" t-on-click="leftButton" t-esc="leftButtonName.name" />
+            <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap" t-on-click="onClickleftButton" t-esc="leftButton.name" />
             <div class="d-flex align-items-center flex-grow-1 w-100 w-md-auto">
                 <div class="to-order">
                     <span t-if="!this.selfOrder.currentOrder.isSavedOnServer">To Order</span>
