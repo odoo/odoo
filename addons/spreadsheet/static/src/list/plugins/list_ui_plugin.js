@@ -66,6 +66,11 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;
+            case "REMOVE_ODOO_LIST":
+                if (cmd.listId === this.selectedListId) {
+                    this.selectedListId = undefined;
+                }
+                break;
             case "REFRESH_ODOO_LIST":
                 this._refreshOdooList(cmd.listId);
                 break;
@@ -120,6 +125,10 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                     const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                     const dataSourceId = this._getListDataSourceId(cmd.listId);
                     this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                }
+
+                if (!this.getters.getListIds().length) {
+                    this.selectedListId = undefined;
                 }
                 break;
             }
