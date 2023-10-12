@@ -39,9 +39,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             } else {
                 carrierChecked[0].click();
             }
+            await this._getCurrentLocation();
         }
 
-        await this._getCurrentLocation();
         await this.carriers.forEach(async (carrierInput) => {
             this._showLoading((carrierInput));
             await this._getCarrierRateShipment(carrierInput);
