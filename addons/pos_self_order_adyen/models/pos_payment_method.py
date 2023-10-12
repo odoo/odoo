@@ -8,7 +8,7 @@ class PosPaymentMethod(models.Model):
 
     def payment_request_from_kiosk(self, order):
         if self.use_payment_terminal != 'adyen':
-            super().payment_request_from_kiosk(order)
+            return super().payment_request_from_kiosk(order)
         else:
             pos_config = order.session_id.config_id
             random_number = random.randrange(10**9, 10**10 - 1)
