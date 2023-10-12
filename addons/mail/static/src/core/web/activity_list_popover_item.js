@@ -78,11 +78,7 @@ export class ActivityListPopoverItem extends Component {
     onClickEditActivityButton() {
         this.props.onClickEditActivityButton();
         this.env.services["mail.activity"]
-            .schedule(
-                this.props.activity.res_model,
-                this.props.activity.res_id,
-                this.props.activity.id
-            )
+            .edit(this.props.activity.id)
             .then(() => this.props.onActivityChanged());
     }
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_plan_template_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.plan.template.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan.template</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_template_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='responsible_type']" position="replace">
+                    <field name="responsible_type"
+                           invisible="res_model != 'hr.employee'"/>
+                    <field name="responsible_type" widget="filterable_selection"
+                           options="{'whitelisted_values': ['on_demand', 'other']}"
+                           invisible="res_model == 'hr.employee'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_plan_fields']" position="inside">
+                    <field name="department_id" invisible="res_model != 'hr.employee'"/>
+                </xpath>
+                <xpath expr="//field[@name='res_model']" position="attributes">
+                    <attribute name="invisible">res_model == 'hr.employee'</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_tree" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.tree.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='steps_count']" position="after">
+                    <field name="department_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_action" model="ir.actions.act_window">
+            <field name="name">On/Offboarding Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+            <field name="context">{'default_res_model': 'hr.employee'}</field>
+            <field name="domain">[('res_model', '=', 'hr.employee')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
+            </field>
+        </record>
+
+        <!-- This id is referenced in chatter message as a link to launch the plan -->
+        <record id="plan_wizard_action" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">mail.activity.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'plan_mode': True}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
