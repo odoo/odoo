@@ -510,7 +510,7 @@ class WebsiteSale(http.Controller):
         access_token: Abandoned cart SO access token
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(update_pricelist=True)
         if order and order.state != 'draft':
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order()
@@ -958,7 +958,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(update_pricelist=True)
 
         redirection = self.checkout_redirection(order)
         if redirection:
@@ -1083,7 +1083,7 @@ class WebsiteSale(http.Controller):
            did go to a payment.acquirer website but closed the tab without
            paying / canceling
         """
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(update_pricelist=True)
         redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
