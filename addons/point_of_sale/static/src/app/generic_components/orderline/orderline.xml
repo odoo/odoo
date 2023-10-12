@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <t t-set="line" t-value="props.line" />
-        <li class="orderline w-100 p-2 lh-sm cursor-pointer" t-att-class="props.class">
+        <li class="orderline p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
             <div class="d-flex justify-content-between">
                 <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
                     <span t-esc="line.productName"/>
@@ -18,10 +18,6 @@
                 </li>
                 <li t-if="line.discount !== '0'">
                     With a <em><t t-esc="line.discount" />% </em> discount
-                </li>
-                <li t-if="line.comboParent" class="combo-parent-name">
-                    <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
-                    <t t-esc="line.comboParent" />
                 </li>
                 <t t-slot="default" />
                 <li t-if="line.customerNote" class="customer-note w-50 p-2 my-1 rounded text-bg-warning text-warning bg-opacity-25 text-break">

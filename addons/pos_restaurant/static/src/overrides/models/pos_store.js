@@ -34,6 +34,7 @@ patch(PosStore.prototype, {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.table?.floor || null });
         }
+        this.currentFloor = this.floors?.length > 0 ? this.floors[0] : null;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);

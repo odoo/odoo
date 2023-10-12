@@ -91,7 +91,7 @@ export class OrderWidget extends Component {
         );
     }
 
-    get leftButtonName() {
+    get leftButton() {
         const order = this.selfOrder.currentOrder;
         const back =
             order.isSavedOnServer || this.router.activeSlot === "cart" || order.lines.length === 0;
@@ -102,7 +102,7 @@ export class OrderWidget extends Component {
         };
     }
 
-    leftButton() {
+    onClickleftButton() {
         const order = this.selfOrder.currentOrder;
 
         if (

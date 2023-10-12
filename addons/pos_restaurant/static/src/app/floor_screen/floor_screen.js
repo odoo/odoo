@@ -36,7 +36,7 @@ export class FloorScreen extends Component {
         this.pos = usePos();
         this.popup = useService("popup");
         this.orm = useService("orm");
-        const floor = this.props.floor || this.pos.floors[0];
+        const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
             selectedTableIds: [],
@@ -334,6 +334,7 @@ export class FloorScreen extends Component {
         }
     }
     selectFloor(floor) {
+        this.pos.currentFloor = floor;
         this.state.selectedFloorId = floor.id;
         this.state.floorBackground = this.activeFloor.background_color;
         this.state.selectedTableIds = [];
