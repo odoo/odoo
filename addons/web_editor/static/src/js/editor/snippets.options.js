@@ -1286,7 +1286,38 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
      * @param {Event} ev
      */
     _onInputInput: function (ev) {
+        // First record the input value as the new current value and bound it if
+        // necessary (min / max params).
         this._value = this.inputEl.value;
+
+        const params = this._methodsParams;
+        const hasMin = ('min' in params);
+        const hasMax = ('max' in params);
+        if (hasMin || hasMax) {
+            // Bounding the value in [min, max] if specified.
+            const boundedValue = this._value.split(/\s+/g).map(v => {
+                let numValue = parseFloat(v);
+                if (isNaN(numValue)) {
+                    return hasMin ? params.min : v;
+                } else {
+                    numValue = hasMin ? Math.max(params.min, numValue) : numValue;
+                    numValue = hasMax ? Math.min(numValue, params.max) : numValue;
+                    return numValue;
+                }
+            }).join(" ");
+
+            // If the bounded version is different from the value, forget about
+            // the old value so that we properly update the UI in any case.
+            this._oldValue = undefined;
+
+            // Note: we do not change the input's value because we want the user
+            // to be able to enter anything without it being auto-fixed. For
+            // example, just emptying the input to enter new numbers: you don't
+            // want the min value to pop up unexpectedly. The next UI update
+            // will take care of showing the user that the value was bound.
+            this._value = boundedValue;
+        }
+
         // When the value changes as a result of a arrow up/down, the change
         // event is not called, unless a real user input has been triggered.
         // This event handler holds a variable for this in order to not call
@@ -1336,8 +1367,27 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                 if (isNaN(step)) {
                     step = 1.0;
                 }
-                value += (ev.which === $.ui.keyCode.UP ? step : -step);
+
+                const increasing = ev.which === $.ui.keyCode.UP;
+                const hasMin = ('min' in params);
+                const hasMax = ('max' in params);
+
+                // If value already at min and trying to decrease, do nothing
+                if (!increasing && hasMin && Math.abs(value - params.min) < 0.001) {
+                    return;
+                }
+                // If value already at max and trying to increase, do nothing
+                if (increasing && hasMax && Math.abs(value - params.max) < 0.001) {
+                    return;
+                }
+
+                // If trying to decrease/increase near min/max, we still need to
+                // bound the produced value and immediately show the user.
+                value += (increasing ? step : -step);
+                value = hasMin ? Math.max(params.min, value) : value;
+                value = hasMax ? Math.min(value, params.max) : value;
                 input.value = this._floatToStr(value);
+
                 // We need to know if the change event will be triggered or not.
                 // Change is triggered if there has been a "natural" input event
                 // from the user. Since we are triggering a "fake" input event,
