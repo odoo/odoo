@@ -18,8 +18,12 @@ export const pivotFormulaRegex = /^=.*PIVOT/;
  * @returns {number}
  */
 export function getNumberOfPivotFormulas(formula) {
-    return getOdooFunctions(formula, ["ODOO.PIVOT", "ODOO.PIVOT.HEADER", "ODOO.PIVOT.POSITION"])
-        .length;
+    return getOdooFunctions(formula, [
+        "ODOO.PIVOT",
+        "ODOO.PIVOT.HEADER",
+        "ODOO.PIVOT.POSITION",
+        "ODOO.PIVOT.TABLE",
+    ]).length;
 }
 
 /**
@@ -30,7 +34,12 @@ export function getNumberOfPivotFormulas(formula) {
  * @returns {import("../helpers/odoo_functions_helpers").OdooFunctionDescription|undefined}
  */
 export function getFirstPivotFunction(formula) {
-    return getOdooFunctions(formula, ["ODOO.PIVOT", "ODOO.PIVOT.HEADER", "ODOO.PIVOT.POSITION"])[0];
+    return getOdooFunctions(formula, [
+        "ODOO.PIVOT",
+        "ODOO.PIVOT.HEADER",
+        "ODOO.PIVOT.POSITION",
+        "ODOO.PIVOT.TABLE",
+    ])[0];
 }
 
 /**

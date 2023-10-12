@@ -1,17 +1,13 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
 
-const { Model } = spreadsheet;
-const { functionRegistry } = spreadsheet.registries;
-
-async function createDashboardWithModel(model) {
+async function createDashboardActionWithData(data) {
     const serverData = getDashboardServerData();
-    const json = JSON.stringify(model.exportData());
+    const json = JSON.stringify(data);
     const dashboard = serverData.models["spreadsheet.dashboard"].records[0];
     dashboard.spreadsheet_data = json;
     dashboard.json_data = json;
@@ -34,8 +30,7 @@ QUnit.test("A link in a dashboard should be clickable", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { mode: "dashboard" });
-    const target = await createDashboardWithModel(model);
+    const target = await createDashboardActionWithData(data);
     assert.containsOnce(target, ".o-dashboard-clickable-cell");
 });
 
@@ -50,40 +45,41 @@ QUnit.test("Invalid pivot/list formulas should not be clickable", async (assert)
             },
         ],
     };
-    const model = new Model(data, { mode: "dashboard" });
-    const target = await createDashboardWithModel(model);
+    const target = await createDashboardActionWithData(data);
     assert.containsNone(target, ".o-dashboard-clickable-cell");
 });
 
 QUnit.test("pivot/list formulas should be clickable", async (assert) => {
-    const list = functionRegistry.get("ODOO.LIST");
-    const pivot = functionRegistry.get("ODOO.PIVOT");
-
-    const mock = {
-        description: "Mock function to avoid setup all data sources process",
-        compute: () => 1,
-        args: [],
-        returns: ["NUMBER"],
-    };
-
-    functionRegistry.add("ODOO.LIST", mock);
-    functionRegistry.add("ODOO.PIVOT", mock);
-
     const data = {
         sheets: [
             {
                 cells: {
-                    A1: { content: `=ODOO.PIVOT()` },
-                    A2: { content: `=ODOO.LIST()` },
+                    A1: { content: `=ODOO.PIVOT("1", "probability", "bar", "false")` },
+                    A2: { content: `=ODOO.LIST(1, 1, "foo")` },
                 },
             },
         ],
+        lists: {
+            1: {
+                id: 1,
+                columns: ["foo"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+            },
+        },
+        pivots: {
+            1: {
+                id: 1,
+                colGroupBys: ["foo"],
+                domain: [],
+                measures: [{ field: "probability", operator: "avg" }],
+                model: "partner",
+                rowGroupBys: ["bar"],
+                context: {},
+            },
+        },
     };
-
-    const model = new Model(data);
-    const target = await createDashboardWithModel(model);
+    const target = await createDashboardActionWithData(data);
     assert.containsN(target, ".o-dashboard-clickable-cell", 2);
-
-    functionRegistry.add("ODOO.LIST", list);
-    functionRegistry.add("ODOO.PIVOT", pivot);
 });

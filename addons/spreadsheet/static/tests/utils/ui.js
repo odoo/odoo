@@ -65,10 +65,10 @@ export async function mountPublicSpreadsheet(data, dataUrl, mode) {
 }
 
 export async function doMenuAction(registry, path, env) {
-    await getMenuItem(registry, path, env).execute(env);
+    await getActionMenu(registry, path, env).execute(env);
 }
 
-function getMenuItem(registry, _path, env) {
+export function getActionMenu(registry, _path, env) {
     const path = [..._path];
     let items = registry.getMenuItems();
     while (items.length && path.length) {

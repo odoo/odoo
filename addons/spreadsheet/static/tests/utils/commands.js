@@ -12,8 +12,11 @@ const { toCartesian, toZone } = spreadsheet.helpers;
 /**
  * Select a cell
  */
-export function selectCell(model, xc) {
+export function selectCell(model, xc, sheetId = model.getters.getActiveSheetId()) {
     const { col, row } = toCartesian(xc);
+    if (sheetId !== model.getters.getActiveSheetId()) {
+        model.dispatch("ACTIVATE_SHEET", { sheetIdTo: sheetId });
+    }
     return model.selection.selectCell(col, row);
 }
 
