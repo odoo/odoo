@@ -62,7 +62,7 @@ class ReportSaleDetails(models.AbstractModel):
         else:
             config_currencies = self.env['pos.session'].search([('id', 'in', session_ids)]).mapped('config_id.currency_id')
         # If all the pos.config have the same currency, we can use it, else we use the company currency
-        if all(i == config_currencies.ids[0] for i in config_currencies.ids):
+        if config_currencies and all(i == config_currencies.ids[0] for i in config_currencies.ids):
             user_currency = config_currencies[0]
         else:
             user_currency = self.env.company.currency_id
@@ -92,7 +92,7 @@ class ReportSaleDetails(models.AbstractModel):
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
-                SELECT method.id as id, payment.session_id as session, COALESCE(method.name->>%s, method.name->>'en_US') as name, method.is_cash_count as cash, 
+                SELECT method.id as id, payment.session_id as session, COALESCE(method.name->>%s, method.name->>'en_US') as name, method.is_cash_count as cash,
                      sum(amount) total, method.journal_id journal_id
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
