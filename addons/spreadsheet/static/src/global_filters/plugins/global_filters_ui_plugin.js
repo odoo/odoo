@@ -163,6 +163,9 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
 
         const value = filterId in this.values ? this.values[filterId].value : undefined;
         const preventAutomaticValue = this.values[filterId]?.value?.preventAutomaticValue;
+        if (filter.type === "date" && filter.rangeType === "from_to") {
+            return value || { from: undefined, to: undefined };
+        }
         const defaultValue = (!preventAutomaticValue && filter.defaultValue) || undefined;
         if (filter.type === "date" && preventAutomaticValue) {
             return undefined;
@@ -193,7 +196,11 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
             case "date":
                 return (
                     value &&
-                    (typeof value === "string" || value.yearOffset !== undefined || value.period)
+                    (typeof value === "string" ||
+                        value.yearOffset !== undefined ||
+                        value.period ||
+                        value.from ||
+                        value.to)
                 );
             case "relation":
                 return value && value.length;
@@ -315,7 +322,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 value = "";
                 break;
             case "date":
-                value = { yearOffset: undefined, preventAutomaticValue: true };
+                value = { preventAutomaticValue: true };
                 break;
             case "relation":
                 value = { preventAutomaticValue: true };
@@ -348,6 +355,19 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         const type = fieldMatching.type;
         const offset = fieldMatching.offset || 0;
         const now = DateTime.local();
+
+        if (filter.rangeType === "from_to") {
+            if (value.from && value.to) {
+                return new Domain(["&", [field, ">=", value.from], [field, "<=", value.to]]);
+            }
+            if (value.from) {
+                return new Domain([[field, ">=", value.from]]);
+            }
+            if (value.to) {
+                return new Domain([[field, "<=", value.to]]);
+            }
+            return new Domain();
+        }
 
         if (filter.rangeType === "relative") {
             return getRelativeDateDomain(now, offset, value, field, type);

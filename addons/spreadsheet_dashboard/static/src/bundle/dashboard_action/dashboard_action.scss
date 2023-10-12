@@ -67,16 +67,16 @@
         .o-filter-value {
             min-height: 25px;
             min-width: 100px;
+            flex-basis: 100px;
+            flex-grow: 1;
 
             .o_multi_record_selector {
                 width: 100%;
             }
+        }
 
-            .date_filter_values {
-                display: flex;
-                gap: map-get($spacers, 2);
-                align-items: baseline;
-            }
+        .o-filter-value-double-size {
+            flex-basis: 200px;
         }
     }
 }
