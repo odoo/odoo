@@ -352,17 +352,17 @@ READ_GROUP_TIME_GRANULARITY = {
 
 # valid SQL aggregation functions
 READ_GROUP_AGGREGATE = {
-    'sum': lambda table, expr: f'SUM({expr})',
-    'avg': lambda table, expr: f'AVG({expr})',
-    'max': lambda table, expr: f'MAX({expr})',
-    'min': lambda table, expr: f'MIN({expr})',
-    'bool_and': lambda table, expr: f'BOOL_AND({expr})',
-    'bool_or': lambda table, expr: f'BOOL_OR({expr})',
-    'array_agg': lambda table, expr: f'ARRAY_AGG({expr} ORDER BY "{table}"."id")',
+    'sum': lambda table, expr: SQL('SUM(%s)', expr),
+    'avg': lambda table, expr: SQL('AVG(%s)', expr),
+    'max': lambda table, expr: SQL('MAX(%s)', expr),
+    'min': lambda table, expr: SQL('MIN(%s)', expr),
+    'bool_and': lambda table, expr: SQL('BOOL_AND(%s)', expr),
+    'bool_or': lambda table, expr: SQL('BOOL_OR(%s)', expr),
+    'array_agg': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
     # 'recordset' aggregates will be post-processed to become recordsets
-    'recordset': lambda table, expr: f'ARRAY_AGG({expr} ORDER BY "{table}"."id")',
-    'count': lambda table, expr: f'COUNT({expr})',
-    'count_distinct': lambda table, expr: f'COUNT(DISTINCT {expr})',
+    'recordset': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
+    'count': lambda table, expr: SQL('COUNT(%s)', expr),
+    'count_distinct': lambda table, expr: SQL('COUNT(DISTINCT %s)', expr),
 }
 
 READ_GROUP_DISPLAY_FORMAT = {
@@ -1860,28 +1860,25 @@ class BaseModel(metaclass=MetaModel):
         query = self._search(domain)
 
         fnames_to_flush = OrderedSet()
-        groupby_terms_map = {}  # {spec: <SQL expression>}
+
+        groupby_terms: dict[str, SQL] = {}
         for spec in groupby:
-            sql_expression, fnames_used = self._read_group_groupby(spec, query)
-            groupby_terms_map[spec] = SQL(sql_expression)
+            groupby_terms[spec], fnames_used = self._read_group_groupby(spec, query)
             fnames_to_flush.update(fnames_used)
 
-        select_terms = []  # [<SQL expression>,]
+        select_terms: list[SQL] = []
         for spec in aggregates:
-            sql_expression, fnames_used = self._read_group_select(spec, query)
-            select_terms.append(SQL(sql_expression))
+            sql_expr, fnames_used = self._read_group_select(spec, query)
+            select_terms.append(sql_expr)
             fnames_to_flush.update(fnames_used)
 
-        having_expression, having_params, fnames_used = self._read_group_having(having, query)
-        having_term = SQL(having_expression, *having_params)
+        sql_having, fnames_used = self._read_group_having(having, query)
         fnames_to_flush.update(fnames_used)
 
-        orderby_terms, extra_groupby_terms, fnames_used = self._read_group_orderby(order, groupby_terms_map, query)
-        orderby_terms = [SQL(term) for term in orderby_terms]
-        extra_groupby_terms = [SQL(term) for term in extra_groupby_terms]
+        sql_order, sql_extra_groupby, fnames_used = self._read_group_orderby(order, groupby_terms, query)
         fnames_to_flush.update(fnames_used)
 
-        groupby_terms = list(groupby_terms_map.values())
+        groupby_terms = list(groupby_terms.values())
 
         query_parts = [
             SQL("SELECT %s", SQL(", ").join(groupby_terms + select_terms)),
@@ -1890,11 +1887,13 @@ class BaseModel(metaclass=MetaModel):
         if query.where_clause:
             query_parts.append(SQL("WHERE %s", query.where_clause))
         if groupby_terms:
-            query_parts.append(SQL("GROUP BY %s", SQL(", ").join(groupby_terms + extra_groupby_terms)))
-        if having_term:
-            query_parts.append(SQL("HAVING %s", having_term))
-        if orderby_terms:
-            query_parts.append(SQL("ORDER BY %s", SQL(", ").join(orderby_terms)))
+            if sql_extra_groupby:
+                groupby_terms.append(sql_extra_groupby)
+            query_parts.append(SQL("GROUP BY %s", SQL(", ").join(groupby_terms)))
+        if sql_having:
+            query_parts.append(SQL("HAVING %s", sql_having))
+        if sql_order:
+            query_parts.append(SQL("ORDER BY %s", sql_order))
         if limit:
             query_parts.append(SQL("LIMIT %s", limit))
         if offset:
@@ -1927,13 +1926,12 @@ class BaseModel(metaclass=MetaModel):
         # return [(a1, b1, c1), (a2, b2, c2), ...]
         return list(zip(*column_result))
 
-    @api.model
-    def _read_group_select(self, aggregate_spec, query):
+    def _read_group_select(self, aggregate_spec: str, query: Query) -> tuple[SQL, list[str]]:
         """ Return a pair (<SQL expression>, [<field names used in SQL expression>])
         corresponding to the given aggregation.
         """
         if aggregate_spec == '__count':
-            return 'COUNT(*)', []
+            return SQL("COUNT(*)"), []
 
         fname, property_name, func = parse_read_group_spec(aggregate_spec)
 
@@ -1950,13 +1948,11 @@ class BaseModel(metaclass=MetaModel):
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
-        field_expression = self._inherits_join_calc(self._table, access_fname, query)
+        sql_field = self._field_to_sql(self._table, access_fname, query)
+        sql_expr = READ_GROUP_AGGREGATE[func](self._table, sql_field)
+        return sql_expr, [fname]
 
-        expression = READ_GROUP_AGGREGATE[func](self._table, field_expression)
-        return expression, [fname]
-
-    @api.model
-    def _read_group_groupby(self, groupby_spec, query):
+    def _read_group_groupby(self, groupby_spec: str, query: Query) -> tuple[SQL, list[str]]:
         """ Return a pair (<SQL expression>, [<field names used in SQL expression>])
         corresponding to the given groupby element.
         """
@@ -1967,10 +1963,8 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
 
         if property_name:
-            check_property_field_value_name(property_name)
             if field.type != "properties":
                 raise ValueError(f"Property set on a non properties field: {property_name!r}")
-
             access_fname = f"{fname}.{property_name}"
         else:
             access_fname = fname
@@ -1978,13 +1972,9 @@ class BaseModel(metaclass=MetaModel):
         if granularity and field.type not in ('datetime', 'date', 'properties'):
             raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
 
-        if not field.store and not field.inherited:  # TODO: should be manage by _inherits_join_calc
-            raise ValueError(f"Groupby on no-store field: {groupby_spec!r}")
-
-        field_expression = self._inherits_join_calc(self._table, access_fname, query)
+        sql_expr = self._field_to_sql(self._table, access_fname, query)
         if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
-            # TODO: `self.env.context.get('tz')` should be passed as args
-            field_expression = f"timezone('{self.env.context.get('tz')}', timezone('UTC', {field_expression}))"
+            sql_expr = SQL("timezone(%s, timezone('UTC', %s))", self.env.context['tz'], sql_expr)
 
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
@@ -1992,67 +1982,66 @@ class BaseModel(metaclass=MetaModel):
             if granularity not in READ_GROUP_TIME_GRANULARITY:
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
-            # TODO: `granularity` should be passed as args
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
                 first_week_day = int(get_lang(self.env).week_start) - 1
                 days_offset = first_week_day and 7 - first_week_day
-                field_expression = f"(date_trunc('week', {field_expression}::timestamp - INTERVAL '-{days_offset} DAY') + INTERVAL '-{days_offset} DAY')"
+                interval = f"-{days_offset} DAY"
+                sql_expr = SQL(
+                    "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
+                    sql_expr, interval, interval,
+                )
             else:
-                field_expression = f"date_trunc('{granularity}', {field_expression}::timestamp)"
+                sql_expr = SQL("date_trunc(%s, %s::timestamp)", granularity, sql_expr)
+
             if field.type == 'date':
-                field_expression += '::date'
+                sql_expr = SQL("%s::date", sql_expr)
+
         elif field.type == 'boolean':
-            field_expression = f"COALESCE({field_expression}, FALSE)"
+            sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
 
-        return field_expression, [fname]
+        return sql_expr, [fname]
 
-    @api.model
-    def _read_group_having(self, having_domain, query):
-        """ Return (<SQL expression>, [<SQL expression parameter>], [<used field name>])
-        corresponding to the having domain.
+    def _read_group_having(self, having_domain: list, query: Query) -> tuple[SQL, list[str]]:
+        """ Return a pair (<SQL expression>, [<used field name>]) corresponding
+        to the having domain.
         """
         if not having_domain:
-            return "", [], []
+            return SQL(), []
 
-        # stack of [(sql_expr, params)]
-        stack = []
+        stack: list[SQL] = []
         fnames_used = []
         SUPPORTED = ('in', 'not in', '<', '>', '<=', '>=', '=', '!=')
         for item in reversed(having_domain):
             if item == '!':
-                expr, params = stack.pop()
-                stack.append((f'(NOT {expr})', params))
-            elif item in ('&', '|'):
-                expr1, params1 = stack.pop()
-                expr2, params2 = stack.pop()
-                operator = 'AND' if item == '&' else 'OR'
-                stack.append((f'({expr1} {operator} {expr2})', params1 + params2))
+                stack.append(SQL("(NOT %s)", stack.pop()))
+            elif item == '&':
+                stack.append(SQL("(%s AND %s)", stack.pop(), stack.pop()))
+            elif item == '|':
+                stack.append(SQL("(%s OR %s)", stack.pop(), stack.pop()))
             elif isinstance(item, (list, tuple)) and len(item) == 3:
                 left, operator, right = item
                 if operator not in SUPPORTED:
                     raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
-                expr, fnames = self._read_group_select(left, query)
-                stack.append((f'{expr} {operator} %s', [right]))
+                sql_left, fnames = self._read_group_select(left, query)
+                sql_operator = expression.SQL_OPERATORS[operator]
+                stack.append(SQL("%s %s %s", sql_left, sql_operator, right))
                 fnames_used.extend(fnames)
             else:
                 raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
 
         while len(stack) > 1:
-            expr1, params1 = stack.pop()
-            expr2, params2 = stack.pop()
-            stack.append((f'({expr1} AND {expr2})', params1 + params2))
+            stack.append(SQL("(%s AND %s)", stack.pop(), stack.pop()))
 
-        expr, params = stack[0]
-        return expr, params, fnames_used
+        return stack[0], fnames_used
 
-    @api.model
-    def _read_group_orderby(self, order, groupby_terms, query):
-        """ Return ([<SQL expression>], [<SQL expression>], [<field names used>])
+    def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL],
+                            query: Query) -> tuple[SQL, SQL, list[str]]:
+        """ Return (<SQL expression>, <SQL expression>, [<field names used>])
         corresponding to the given order and groupby terms.
 
-        :param order: The order to use in SQL format
-        :param groupby_terms: The group by terms ({spec: sql_expression})
+        :param order: the order specification
+        :param groupby_terms: the group by terms mapping ({spec: sql_expression})
         :param query: The query we are building
         """
         if order:
@@ -2061,40 +2050,50 @@ class BaseModel(metaclass=MetaModel):
             order = ','.join(groupby_terms)
             traverse_many2one = False
 
+        if not order:
+            return SQL(), SQL(), []
+
         orderby_terms = []
         extra_groupby_terms = []
         fnames_used = []
-        if not order:
-            return orderby_terms, extra_groupby_terms, fnames_used
 
         for order_part in order.split(','):
             order_match = regex_order.match(order_part)
             if not order_match:
                 raise ValueError(f"Invalid order {order!r} for _read_group()")
-            order_term = order_match['term']
-            order_direction = (order_match['direction'] or 'ASC').upper()
-            order_nulls = (order_match['nulls'] or '').upper()
+            term = order_match['term']
+            direction = (order_match['direction'] or 'ASC').upper()
+            nulls = (order_match['nulls'] or '').upper()
 
-            if order_term not in groupby_terms:
+            sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
+            sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
+
+            if term not in groupby_terms:
                 try:
-                    sql_expression, fnames_used_select = self._read_group_select(order_term, query)
-                    fnames_used.extend(fnames_used_select)
-                    orderby_terms.append(f'{sql_expression} {order_direction} {order_nulls}')
-                    continue
+                    sql_expr, fnames = self._read_group_select(term, query)
                 except ValueError as e:
                     raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
+                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
+                fnames_used.extend(fnames)
+                continue
 
-            if traverse_many2one and order_term in self and self._fields[order_term].type == 'many2one':
-                # It will generated extra clause to add in the group by.
-                extra_order = self._generate_order_by(f'{order_term} {order_direction} {order_nulls}', query)
-                extra_order = extra_order.replace(' ORDER BY ', '')
-                orderby_terms.extend(order.strip() for order in extra_order.split(",") if order.strip())
-                extra_groupby_terms.extend(order.strip().split()[0] for order in extra_order.split(",") if order.strip())
+            field = self._fields.get(term)
+            if traverse_many2one and field and field.type == 'many2one':
+                # this generates an extra clause to add in the group by
+                sql_order = self._order_to_sql(f'{term} {direction} {nulls}', query)
+                orderby_terms.append(sql_order)
+                sql_order_str = self.env.cr.mogrify(sql_order).decode()
+                extra_groupby_terms.extend(
+                    SQL(order.strip().split()[0])
+                    for order in sql_order_str.split(",")
+                    if order.strip()
+                )
+
             else:
-                sql_expression = groupby_terms[order_term]
-                orderby_terms.append(SQL(f'%s {order_direction} {order_nulls}', sql_expression))
+                sql_expr = groupby_terms[term]
+                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
 
-        return orderby_terms, extra_groupby_terms, fnames_used
+        return SQL(", ").join(orderby_terms), SQL(", ").join(extra_groupby_terms), fnames_used
 
     @api.model
     def _read_group_check_field_access_rights(self, field_names):

@@ -11,7 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import check_barcode_encoding, groupby
+from odoo.tools import check_barcode_encoding, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -300,11 +300,12 @@ class StockQuant(models.Model):
 
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec == 'inventory_quantity:sum' and self.env.context.get('inventory_report_mode'):
-            return "NULL", []
+            return SQL("NULL"), []
         if aggregate_spec == 'available_quantity:sum':
-            quantity_expr, quantity_fnames = self._read_group_select('quantity:sum', query)
-            reserved_quantity_expr, reserved_quantity_fnames = self._read_group_select('reserved_quantity:sum', query)
-            return f'{quantity_expr} - {reserved_quantity_expr}', quantity_fnames + reserved_quantity_fnames
+            sql_quantity, quantity_fnames = self._read_group_select('quantity:sum', query)
+            sql_reserved_quantity, reserved_quantity_fnames = self._read_group_select('reserved_quantity:sum', query)
+            sql_expr = SQL("%s - %s", sql_quantity, sql_reserved_quantity)
+            return sql_expr, quantity_fnames + reserved_quantity_fnames
         if aggregate_spec == 'inventory_quantity_auto_apply:sum':
             return self._read_group_select('quantity:sum', query)
         return super()._read_group_select(aggregate_spec, query)

@@ -81,6 +81,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
 
         simple_date_groupby_sql, __ = self._read_group_groupby(f"date:{interval}", main_query)
         # Removing unexistant table name from the expression
+        simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
 
         burndown_chart_query = """
@@ -232,7 +233,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
 
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec == '__count':
-            return f'SUM("{self._table}"."__count")', []
+            return SQL("SUM(%s)", SQL.identifier(self._table, '__count')), []
         return super()._read_group_select(aggregate_spec, query)
 
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
