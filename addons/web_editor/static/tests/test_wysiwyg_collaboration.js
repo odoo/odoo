@@ -14,7 +14,7 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 import { mount, getFixture } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 
-function makeSpy() {
+export function makeSpy() {
     const spy = function() {
         spy.callCount++;
         return this._super.apply(this, arguments);
@@ -131,7 +131,7 @@ class PeerTest {
     }
 }
 
-function insert(string) {
+export function insert(string) {
     return (peer) => {
         peer.wysiwyg.odooEditor.execCommand('insert', string);
     }
@@ -145,7 +145,7 @@ class PeerPool {
     }
 }
 
-async function createPeers(peers) {
+export async function createPeers(peers) {
     const pool = new PeerPool();
 
     let lastGeneratedId = 0;
@@ -291,7 +291,7 @@ async function createPeers(peers) {
     }
     return pool;
 }
-function removePeers(peers) {
+export function removePeers(peers) {
     for (const peer of Object.values(peers)) {
         peer.wysiwyg.destroy();
         peer.wrapper.remove();
