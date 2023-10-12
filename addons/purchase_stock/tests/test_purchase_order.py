@@ -660,3 +660,34 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             ]
         })
         self.assertEqual(len(po_2.picking_ids), 1)
+
+    def test_receive_returned_product_without_po_update(self):
+        """
+        Receive again the returned qty, but with the option "Update PO" disabled
+        At the end, the received qty of the POL should be correct
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.quantity_done = 5
+        receipt01.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_ids.quantity_done = 5
+        return_pick.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        receipt02 = self.env['stock.picking'].browse(res['res_id'])
+        receipt02.move_ids.quantity_done = 5
+        receipt02.button_validate()
+
+        self.assertEqual(po.order_line[0].qty_received, 5)
+        self.assertEqual(po.order_line[1].qty_received, 5)
