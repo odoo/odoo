@@ -26,7 +26,7 @@
               t-att-class="{o_burger_menu_app: !isUserMenuUnfolded, 'bg-view': isUserMenuUnfolded}">
               <!-- -->
               <t t-if="isUserMenuUnfolded">
-                  <MobileSwitchCompanyMenu t-if="Object.values(company.availableCompanies).length > 1" />
+                  <MobileSwitchCompanyMenu t-if="Object.values(company.allowedCompanies).length > 1" />
                   <BurgerUserMenu/>
               </t>
               <!-- Current App Sections -->

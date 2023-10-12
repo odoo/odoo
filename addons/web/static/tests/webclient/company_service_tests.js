@@ -79,15 +79,15 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
     Object.assign(browser.location, { hash: "cids=3-1" });
     let env = await makeTestEnv();
     assert.deepEqual(
-        Object.values(env.services.company.availableCompanies).map((c) => c.id),
+        Object.values(env.services.company.allowedCompanies).map((c) => c.id),
         [1, 2, 3]
     );
-    assert.deepEqual(env.services.company.allowedCompanyIds, [3, 1]);
+    assert.deepEqual(env.services.company.activeCompanyIds, [3, 1]);
     assert.strictEqual(env.services.company.currentCompany.id, 3);
 
     // backward compatibility
     Object.assign(browser.location, { hash: "cids=3%2C1" });
     env = await makeTestEnv();
-    assert.deepEqual(env.services.company.allowedCompanyIds, [3, 1]);
+    assert.deepEqual(env.services.company.activeCompanyIds, [3, 1]);
     assert.strictEqual(env.services.company.currentCompany.id, 3);
 });

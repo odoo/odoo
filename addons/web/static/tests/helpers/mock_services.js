@@ -267,8 +267,8 @@ export function makeFakeUserService(hasGroup = () => false) {
 export const fakeCompanyService = {
     start() {
         return {
-            availableCompanies: {},
-            allowedCompanyIds: [],
+            allowedCompanies: {},
+            activeCompanyIds: [],
             currentCompany: {},
             setCompanies: () => {},
         };
@@ -282,7 +282,7 @@ export function makeFakeBarcodeService() {
                 bus: {
                     async addEventListener() {},
                     async removeEventListener() {},
-                }
+                },
             };
         },
     };

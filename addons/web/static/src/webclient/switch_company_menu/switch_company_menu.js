@@ -2,71 +2,121 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 
-import { Component, useState, reactive } from "@odoo/owl";
+import { Component, useChildSubEnv, useState } from "@odoo/owl";
+import { debounce } from "@web/core/utils/timing";
+import { useService } from "@web/core/utils/hooks";
 
-const store = reactive({
-    toggleTimer: null,
-    nextAvailableCompanies: [],
-});
+class CompanySelector {
+    constructor(companyService, toggleDelay) {
+        this.companyService = companyService;
+        this.selectedCompaniesIds = companyService.activeCompanyIds.slice();
 
+        this._debouncedApply = debounce(() => this._apply(), toggleDelay);
+    }
+
+    isCompanySelected(companyId) {
+        return this.selectedCompaniesIds.includes(companyId);
+    }
+
+    switchCompany(mode, companyId) {
+        if (mode === "toggle") {
+            if (this.selectedCompaniesIds.includes(companyId)) {
+                this._deselectCompany(companyId);
+            } else {
+                this._selectCompany(companyId);
+            }
+            this._debouncedApply();
+        } else if (mode === "loginto") {
+            this.selectedCompaniesIds.splice(0, this.selectedCompaniesIds.length);
+            this._selectCompany(companyId);
+            this._apply();
+        }
+    }
+
+    _selectCompany(companyId) {
+        if (!this.selectedCompaniesIds.includes(companyId)) {
+            this.selectedCompaniesIds.push(companyId);
+            this._getBranches(companyId).forEach((companyId) => this._selectCompany(companyId));
+        }
+    }
+
+    _deselectCompany(companyId) {
+        if (this.selectedCompaniesIds.includes(companyId)) {
+            this.selectedCompaniesIds.splice(this.selectedCompaniesIds.indexOf(companyId), 1);
+            this._getBranches(companyId).forEach((companyId) => this._deselectCompany(companyId));
+        }
+    }
+
+    _getBranches(companyId) {
+        return this.companyService.getCompany(companyId).child_ids;
+    }
+
+    _apply() {
+        this.companyService.setCompanies(this.selectedCompaniesIds, false);
+    }
+}
 
 export class SwitchCompanyItem extends Component {
+    static template = "web.SwitchCompanyItem";
+    static components = { DropdownItem, SwitchCompanyItem };
+    static props = {
+        company: {},
+        level: { type: Number },
+    };
+
     setup() {
         this.companyService = useService("company");
-        this.store = useState(store);
+        this.companySelector = useState(this.env.companySelector);
     }
 
-    get selectedCompanies() {
-        this.store.nextAvailableCompanies;  // check if the state changed
-        return this.companyService.nextAvailableCompanies;
+    get isCompanySelected() {
+        return this.companySelector.isCompanySelected(this.props.company.id);
     }
 
-    logIntoCompany(companyId) {
-        this.companyService.setCompanies("loginto", companyId);
-        browser.clearTimeout(this.store.toggleTimer);
-        this.companyService.logNextCompanies();
+    get isCompanyAllowed() {
+        return this.props.company.id in this.companyService.allowedCompanies;
     }
 
-    toggleCompany(companyId) {
-        this.companyService.setCompanies("toggle", companyId);
-        // trigger state change
-        this.store.nextAvailableCompanies = this.companyService.nextAvailableCompanies.slice();
+    get isCurrent() {
+        return this.props.company.id === this.companyService.currentCompany.id;
+    }
 
-        browser.clearTimeout(this.store.toggleTimer);
-        this.store.toggleTimer = browser.setTimeout(() => {
-            this.companyService.logNextCompanies();
-        }, this.constructor.toggleDelay);
+    logIntoCompany() {
+        if (this.isCompanyAllowed) {
+            this.companySelector.switchCompany("loginto", this.props.company.id);
+        }
+    }
+
+    toggleCompany() {
+        if (this.isCompanyAllowed) {
+            this.companySelector.switchCompany("toggle", this.props.company.id);
+        }
     }
 }
-SwitchCompanyItem.template = 'web.SwitchCompanyItem';
-SwitchCompanyItem.components = { DropdownItem, SwitchCompanyItem };
-SwitchCompanyItem.props = {
-    company: {},
-    level: {type: Number},
-};
-SwitchCompanyItem.toggleDelay = 1000;
-
 
 export class SwitchCompanyMenu extends Component {
+    static template = "web.SwitchCompanyMenu";
+    static components = { Dropdown, DropdownItem, SwitchCompanyItem };
+    static props = {};
+    static toggleDelay = 1000;
+
     setup() {
         this.companyService = useService("company");
-        this.store = useState(store);
-        this.store.nextAvailableCompanies = [];
+
+        this.companySelector = useState(
+            new CompanySelector(this.companyService, this.constructor.toggleDelay)
+        );
+        useChildSubEnv({ companySelector: this.companySelector });
     }
 }
-SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
-SwitchCompanyMenu.components = { Dropdown, DropdownItem, SwitchCompanyItem };
-SwitchCompanyMenu.props = {};
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,
     isDisplayed(env) {
-        const { availableCompanies } = env.services.company;
-        return Object.keys(availableCompanies).length > 1;
+        const { allowedCompanies } = env.services.company;
+        return Object.keys(allowedCompanies).length > 1;
     },
 };
 
