@@ -2,7 +2,7 @@
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, mount, click } from "../../helpers/utils";
+import { getFixture, mount, click, triggerEvent, editInput } from "../../helpers/utils";
 import { registry } from "@web/core/registry";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
@@ -186,5 +186,60 @@ QUnit.module("Web Components", (hooks) => {
         });
         const input = target.querySelector(".o_multi_record_selector input");
         assert.strictEqual(input.placeholder, "");
+    });
+
+    QUnit.test("Can delete a tag with Backspace", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [1, 2],
+        });
+        await triggerEvent(target, ".o-autocomplete input", "keydown", { key: "Backspace" });
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 1);
+        assert.strictEqual(target.querySelector(".o_tag").textContent, "Alice");
+    });
+
+    QUnit.test("Can focus tags with arrow right and left", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [1, 2],
+        });
+        target.querySelector(".o-autocomplete input").focus();
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowleft" });
+        assert.strictEqual(document.activeElement.textContent, "Bob");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowleft" });
+        assert.strictEqual(document.activeElement.textContent, "Alice");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowleft" });
+        assert.hasClass(document.activeElement, "o-autocomplete--input");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowright" });
+        assert.strictEqual(document.activeElement.textContent, "Alice");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowright" });
+        assert.strictEqual(document.activeElement.textContent, "Bob");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowright" });
+        assert.hasClass(document.activeElement, "o-autocomplete--input");
+    });
+
+    QUnit.test("Delete the focused element", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [1, 2],
+        });
+        target.querySelector(".o-autocomplete input").focus();
+        await triggerEvent(document.activeElement, "", "keydown", { key: "arrowright" });
+        assert.strictEqual(document.activeElement.textContent, "Alice");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "Backspace" });
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 1);
+        assert.strictEqual(target.querySelector(".o_tag").textContent, "Bob");
+    });
+
+    QUnit.test("Backspace do nothing when the input is currently edited", async (assert) => {
+        await makeMultiRecordSelector({
+            resModel: "partner",
+            resIds: [1, 2],
+        });
+        target.querySelector(".o-autocomplete input").focus();
+        await editInput(target, ".o-autocomplete input", "a");
+        assert.strictEqual(document.activeElement.value, "a");
+        await triggerEvent(document.activeElement, "", "keydown", { key: "Backspace" });
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 2);
     });
 });
