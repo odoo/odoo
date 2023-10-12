@@ -103,7 +103,6 @@ export class MassMailingHtmlField extends HtmlField {
             const $editable = this.wysiwyg.getEditable();
             this.wysiwyg.odooEditor.historyPauseSteps();
             await this.wysiwyg.cleanForSave();
-            await this.wysiwyg.saveModifiedImages(this.$content);
 
             await super.commitChanges();
 
