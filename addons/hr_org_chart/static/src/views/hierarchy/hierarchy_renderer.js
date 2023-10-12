@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, onPatched } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 import { HierarchyCard } from "./hierarchy_card";
 import { useHierarchyNodeDraggable } from "../../hooks/hierarchy_node_draggable";
@@ -60,6 +61,17 @@ export class HierarchyRenderer extends Component {
                     removeClass(row, "o_hierarchy_hover");
                 },
             });
+        }
+        onPatched(this.onPatched);
+    }
+
+    onPatched() {
+        const row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child");
+        if (row) {
+            const scrollable = this.env.isSmall ? document.querySelector(".o_hierarchy_view") : this.rendererRef.el.parentNode;
+            scrollable.classList.add(".o_hierarchy_auto-scroll");
+            scrollTo(row, { scrollable, isAnchor: true });
+            scrollable.classList.remove(".o_hierarchy_auto-scroll");
         }
     }
 
