@@ -205,7 +205,7 @@ QUnit.test("Can delete record tag in the filter by hitting Backspace", async fun
     const serverData = getServerData(spreadsheetData);
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
-    const filter = fixture.querySelector(".o_control_panel_actions div.o_field_tags");
+    const filter = fixture.querySelector(".o_control_panel_actions div.o_multi_record_selector");
     const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
     assert.equal(filter.querySelectorAll(".o_tag").length, 1);
 
