@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 
 @tagged('post_install', '-at_install')
@@ -19,24 +20,24 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
                 'peppol_endpoint': False,
             })
         yield
-        partner.country_id = self.env.ref('base.dk')
+        partner.country_id = self.env.ref('base.ba')
         self.assertEqual((partner.peppol_eas, partner.peppol_endpoint), expected)
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ Mock _build_error_peppol_endpoint"""
-        if eas == "0184" and endpoint != "digstorg":
+        if eas == "0184" and endpoint != "12345674":
             return f"(0184, {endpoint}) is not a valid peppol couple."
 
     @patch(
         'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._build_error_peppol_endpoint',
         _build_error_peppol_endpoint,
     )
+    @patch.dict(EAS_MAPPING, {'BA': {'0184': 'company_registry', '0198': 'vat'}})
     def test_peppol_eas_endpoint(self):
-        # NB: the EAS_MAPPING for DK is: {'DK': {'0184': 'company_registry', '0198': 'vat'}}
         partner = self.company_data['company'].partner_id
 
-        partner.company_registry = "digstorg"
-        partner.vat = "DK12345674"
+        partner.company_registry = "12345674"
+        partner.vat = "BA12345674"
 
         # Base case -> (0184, company_registry)
         with self.check_peppol_vals(partner, expected=("0184", partner.company_registry)):
@@ -61,20 +62,20 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         partner_1 = self.env['res.partner'].create({
             'name': "A new partner",
             'peppol_eas': '0184',
-            'peppol_endpoint': 'digstorg'
+            'peppol_endpoint': '12345674'
         })
-        with self.check_peppol_vals(partner_1, expected=("0184", 'digstorg'), reset=False):
+        with self.check_peppol_vals(partner_1, expected=("0184", '12345674'), reset=False):
             pass
 
         # Create a partner, set the country, then fill the peppol fields
         partner_2 = self.env['res.partner'].create({
             'name': "A new partner",
-            'country_id': self.env.ref('base.dk').id,
+            'country_id': self.env.ref('base.ba').id,
         })
-        with self.check_peppol_vals(partner_2, expected=("0184", 'digstorg'), reset=False):
+        with self.check_peppol_vals(partner_2, expected=("0184", '12345674'), reset=False):
             partner_2.peppol_eas = '0184'
-            partner_2.peppol_endpoint = 'digstorg'
+            partner_2.peppol_endpoint = '12345674'
 
         # Change the country, the EAS changes but we do not overwrite the existing endpoint
         partner_2.country_id = self.env.ref('base.be')
-        self.assertEqual((partner_2.peppol_eas, partner_2.peppol_endpoint), ('0208', 'digstorg'))
+        self.assertEqual((partner_2.peppol_eas, partner_2.peppol_endpoint), ('0208', '12345674'))
