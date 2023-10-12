@@ -23,6 +23,8 @@ from . import fetchmail
 from . import mail_notification  # keep before as decorated m2m
 from . import mail_activity_type
 from . import mail_activity
+from . import mail_activity_plan
+from . import mail_activity_plan_template
 from . import mail_blacklist
 from . import mail_followers
 from . import mail_gateway_allowed

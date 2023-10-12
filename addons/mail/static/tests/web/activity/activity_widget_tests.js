@@ -7,7 +7,7 @@ import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
 import { serializeDate } from "@web/core/l10n/dates";
 import { ListController } from "@web/views/list/list_controller";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 const { DateTime } = luxon;
@@ -236,6 +236,114 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
     assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
+});
+
+QUnit.test("list activity widget: batch selection from list", async (assert) => {
+    function selectContaining(domElement, selector, containing) {
+        return Array.from(domElement.querySelectorAll(selector)).filter((sel) => sel.textContent.includes(containing));
+    }
+
+    const pyEnv = await startServer();
+    const [marioId, matildeId, alexanderId] = pyEnv["res.partner"].create([
+        { name: "Mario" }, { name: "Matilde" }, { name: "Alexander" }]);
+    const views = {
+        "res.partner,false,list": `
+            <tree>
+                <field name="name"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </tree>`,
+    };
+    const { env, openView } = await start({
+        serverData: { views },
+    });
+    let scheduleWizardContext = null;
+    let wizardOpened = makeDeferred();
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
+            if (action.res_model === "mail.activity.schedule") {
+                scheduleWizardContext = action.context;
+                assert.step("do_action_activity");
+                options.onClose();
+                wizardOpened.resolve();
+                return true;
+            }
+            return super.doAction(action);
+        },
+    });
+    await openView({
+        res_model: "res.partner",
+        views: [[false, "list"]],
+    });
+    const marioRow = selectContaining(document.body, '.o_data_row', 'Mario')[0];
+    const matildeRow = selectContaining(document.body, '.o_data_row', 'Matilde')[0];
+    const alexanderRow = selectContaining(document.body, '.o_data_row', 'Alexander')[0];
+    assert.ok(marioRow);
+    assert.ok(matildeRow);
+    assert.ok(alexanderRow);
+
+    // Clicking on the clock of a partner without selection, open the wizard for that record only
+    await click(".o-mail-ActivityButton", { target: matildeRow });
+    await click('.o-mail-ActivityListPopover button');
+    await wizardOpened;
+    assert.deepEqual(
+        scheduleWizardContext,
+        {
+            active_ids: [matildeId],
+            active_id: matildeId,
+            active_model: "res.partner",
+        }
+    );
+
+    // We select 2 among the 3 partners created above and click on the clock of one of them
+    await click('.o_list_record_selector .o-checkbox', { target: matildeRow });
+    await click('.o_list_record_selector .o-checkbox', { target: marioRow });
+    await contains(".o_list_selection_box", { text: "2 selected" });
+    await click(".o-mail-ActivityButton", { target: matildeRow });
+    await contains(".o-mail-ActivityListPopover button", { text: 'Schedule an activity on selected records' });
+    assert.equal(document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
+        'Schedule an activity on selected records');
+    await click('.o-mail-ActivityListPopover button');
+    await wizardOpened;
+    assert.deepEqual(
+        scheduleWizardContext,
+        {
+            active_ids: [marioId, matildeId],
+            active_id: marioId,
+            active_model: "res.partner",
+        }
+    );
+    // But when clicking on the clock of one of the non-selected row, it applies to only that row
+    wizardOpened = makeDeferred();
+    await click(".o-mail-ActivityButton", { target: alexanderRow });
+    await contains(".o-mail-ActivityListPopover button", { text: "Schedule an activity" });
+    // await contains(".o-mail-ActivityListPopover button:not(:contains('Schedule an activity on selected records'))");
+    await click('.o-mail-ActivityListPopover button');
+    await wizardOpened;
+    assert.deepEqual(
+        scheduleWizardContext,
+        {
+            active_ids: [alexanderId],
+            active_id: alexanderId,
+            active_model: "res.partner",
+        }
+    );
+    // We now check that when clicking on the clock of the other selected row, it applies to both row
+    wizardOpened = makeDeferred();
+    await click(".o-mail-ActivityButton", { target: marioRow });
+    await contains(".o-mail-ActivityListPopover", { text: 'Schedule an activity on selected records' });
+    assert.equal(document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
+        'Schedule an activity on selected records');
+    await click('.o-mail-ActivityListPopover button');
+    await wizardOpened;
+    assert.deepEqual(
+        scheduleWizardContext,
+        {
+            active_ids: [marioId, matildeId],
+            active_id: marioId,
+            active_model: "res.partner",
+        }
+    );
+    assert.verifySteps(Array(4).fill('do_action_activity'));
 });
 
 QUnit.test("list activity exception widget with activity", async () => {

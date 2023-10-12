@@ -377,7 +377,7 @@ export class Chatter extends Component {
     async scheduleActivity() {
         this.closeSearch();
         const schedule = async (threadId) => {
-            await this.activityService.schedule(this.props.threadModel, threadId);
+            await this.activityService.schedule(this.props.threadModel, [threadId]);
             this.load(this.props.threadId, ["activities", "messages"]);
         };
         if (this.props.threadId) {
