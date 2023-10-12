@@ -15,10 +15,10 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useState, useRef, onMounted } from "@odoo/owl";
-import { renderToElement } from "@web/core/utils/render";
+import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero } from "@web/core/utils/numbers";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -36,7 +36,7 @@ export class PaymentScreen extends Component {
         this.report = useService("report");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
-        this.orderReceipt = useRef("order-receipt");
+        this.printer = useService("printer");
         this.payment_methods_from_config = this.pos.payment_methods.filter((method) =>
             this.pos.config.payment_method_ids.includes(method.id)
         );
@@ -357,16 +357,12 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (this.hardwareProxy.printer && invoiced_finalized) {
-                const orderReceipt = renderToElement("point_of_sale.OrderReceipt", {
-                    receiptData: this.pos.get_order().getOrderReceiptEnv(),
-                    pos: this.pos,
-                    env: this.env,
+                const printResult = await this.printer.print(OrderReceipt, {
+                    data: this.pos.get_order().export_for_printing(),
+                    formatCurrency: this.env.utils.formatCurrency,
                 });
 
-                // Need to await to have the result in case of automatic skip screen.
-                const printResult = await this.hardwareProxy.printer.printReceipt(orderReceipt);
-
-                if (printResult.successful && this.pos.config.iface_print_skip_screen) {
+                if (printResult && this.pos.config.iface_print_skip_screen) {
                     this.pos.removeOrder(this.currentOrder);
                     this.pos.add_new_order();
                     nextScreen = "ProductScreen";

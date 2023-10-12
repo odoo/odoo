@@ -3,11 +3,8 @@
     <t t-name="point_of_sale.OrderWidget">
         <t t-if="props.lines?.length">
             <div t-ref="scrollable" class="order-container bg-view overflow-y-auto flex-grow-1 d-flex flex-column text-start">
-                <!-- this is similar to doing `for i in range(mylist)` -->
-                <!-- we do this instead of looping directly on the lines because the lines might not have -->
-                <!-- an element that we could use as a `t-key` -->
-                <t t-foreach="props.lines.map((el, idx) => idx)" t-as="i" t-key="i">
-                    <t t-slot="default" line="props.lines[i]"/>
+                <t t-foreach="props.lines" t-as="line" t-key="line_index">
+                    <t t-slot="default" line="line"/>
                 </t>
             </div>
             <div t-if="props.total or props.tax" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
