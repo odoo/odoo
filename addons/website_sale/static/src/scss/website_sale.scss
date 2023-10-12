@@ -668,16 +668,16 @@ a.no-decoration {
     min-width: 3em;
 }
 
-#cart_total {
-    @include media-breakpoint-down(lg) {
-        border-top: $border-width solid $border-color;
-        padding-top: map-get($spacers, 3);
-    }
-}
-
 .o_website_sale_checkout {
-    .o_total_border {
+    .o_total_card {
+        // The accordion have to mimick the styling of a card
+        background-color: $card-bg;
         border: $border-width solid $border-color;
+        border-radius: $card-border-radius;
+
+        .accordion-item {
+            @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+        }
 
         // TODO VCR This value should adapt to the offsetHeight
         // of the header this is an arbitrary value as a temporary solution
@@ -688,6 +688,19 @@ a.no-decoration {
 
         @include media-breakpoint-down(lg) {
             border: 0;
+
+            .card-body, .accordion-item, .accordion-button {
+                border-radius: 0;
+                background-color: var(--o-cc1-bg) !important;
+                color: inherit;
+            }
+        }
+    }
+
+    #cart_total {
+        @include media-breakpoint-down(lg) {
+            padding-top: map-get($spacers, 3);
+            border-top: $border-width solid $border-color;
         }
     }
 
@@ -708,7 +721,6 @@ a.no-decoration {
         }
     }
 
-
     span[itemprop='name'] {
         font-size: $h6-font-size;
         font-weight: $headings-font-weight;
@@ -719,7 +731,6 @@ a.no-decoration {
         margin: map-get($spacers, 2) 0;
         font-size: $font-size-sm;
     }
-
 
     .o_wsale_address_fill {
         .col-form-label:not(.label-optional)::after {
@@ -760,8 +771,7 @@ a.no-decoration {
         }
     }
 
-
-    // TODO: This height is arbitrary and the calculation should be improved.
+    // TODO This height is arbitrary and the calculation should be improved.
     .o_cta_navigation_placeholder {
         height: o-to-rem(111px) + map-get($spacers, 4) + 2rem;
     }

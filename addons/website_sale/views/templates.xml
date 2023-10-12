@@ -2122,7 +2122,7 @@
                         <div t-if="show_shorter_cart_summary"
                              class="offset-xl-1 col-lg-5 col-xl-4 order-2"
                              id="o_cart_summary">
-                            <div class="o_total_border card sticky-lg-top"
+                            <div class="o_total_card card sticky-lg-top"
                                  t-if="website_sale_order and website_sale_order.website_order_line">
                                 <div class="card-body p-0 p-lg-4">
                                     <t t-call="website_sale.total"/>
@@ -2134,90 +2134,92 @@
                         <div t-else=""
                              class="o_wsale_accordion accordion sticky-lg-top offset-xl-1 col-12 col-lg-5 col-xl-4 order-lg-2 rounded"
                              id="o_wsale_total_accordion">
-                            <div class="o_total_border accordion-item p-0 p-lg-4">
-                                <div class="accordion-header d-block d-lg-none align-items-center mb-4">
-                                    <button class="accordion-button px-0 collapsed"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#o_wsale_total_accordion_item"
-                                            aria-expanded="false"
-                                            aria-controls="o_wsale_total_accordion_item">
-                                        <div class="d-flex flex-wrap">
-                                            <b class="w-100">Order summary</b>
-                                            <span t-out="str(website_sale_order.cart_quantity)"/>
-                                            &amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;
-                                            <span id="amount_total_summary"
-                                                class="monetary_field ms-1"
-                                                t-field="website_sale_order.amount_total"
-                                                t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
-                                        </div>
-                                    </button>
-                                </div>
-                                <div name="cart_summary_info" t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
-                                    Your cart is empty!
-                                </div>
-                                <!-- Cart lines are showed in desktop but are in an hidden accordion in mobile -->
-                                <div id="o_wsale_total_accordion_item"
-                                    class="accordion-collapse collapse mb-4 mb-lg-0"
-                                    data-bs-parent="#o_wsale_total_accordion">
-                                    <div t-att-class="len(website_sale_order.website_order_line) &gt; 4 and 'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4'">
-                                        <table t-if="website_sale_order and website_sale_order.website_order_line"
-                                            class="table accordion-body mb-0"
-                                            id="cart_products">
-                                            <tbody>
-                                                <tr t-foreach="website_sale_order.website_order_line" t-as="line" t-att-class="line_last and 'border-transparent'">
-                                                    <t t-set="o_cart_sum_padding_top"
-                                                    t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
-                                                    <td t-if="not line.product_id" colspan="2"/>
-                                                    <t t-else="">
-                                                        <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
-                                                            <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                                                                <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
-                                                            </span>
-                                                            <span t-else=""
-                                                                t-field="line.product_id.image_128"
-                                                                t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
-                                                            />
-                                                        </td>
-                                                        <td t-attf-class="#{o_cart_sum_padding_top} td-product_name td-qty w-100"
-                                                            name='website_sale_cart_summary_product_name'>
-                                                            <h6>
-                                                                <t t-out="int(line.product_uom_qty)" />
-                                                                <t t-if="line._get_shop_warning(clear=False)">
-                                                                    <i class="fa fa-warning text-warning"
-                                                                    role="img"
-                                                                    t-att-title="line._get_shop_warning()"
-                                                                    aria-label="Warning"/>
-                                                                </t>
-                                                                x
-                                                                <t t-out="line.name_short"/>
-                                                            </h6>
-                                                        </td>
-                                                    </t>
-                                                    <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
-                                                        name="website_sale_cart_summary_line_price">
-                                                        <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                                            t-field="line.price_subtotal" style="white-space: nowrap;"
-                                                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                                                        <span t-else=""
-                                                            t-field="line.price_total" style="white-space: nowrap;"
-                                                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                            <div class="o_total_card">
+                                <div class="accordion-item p-lg-4 border-0">
+                                    <div class="accordion-header d-block d-lg-none align-items-center mb-4">
+                                        <button class="accordion-button px-0 collapsed"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#o_wsale_total_accordion_item"
+                                                aria-expanded="false"
+                                                aria-controls="o_wsale_total_accordion_item">
+                                            <div class="d-flex flex-wrap">
+                                                <b class="w-100">Order summary</b>
+                                                <span t-out="str(website_sale_order.cart_quantity)"/>
+                                                &amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;
+                                                <span id="amount_total_summary"
+                                                    class="monetary_field ms-1"
+                                                    t-field="website_sale_order.amount_total"
+                                                    t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                                            </div>
+                                        </button>
                                     </div>
-                                    <t t-if='website_sale_order'>
-                                        <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
-                                        <div t-if='warning' class="alert alert-warning" role="alert">
-                                            <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                                    <div name="cart_summary_info" t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
+                                        Your cart is empty!
+                                    </div>
+                                    <!-- Cart lines are showed in desktop but are in an hidden accordion in mobile -->
+                                    <div id="o_wsale_total_accordion_item"
+                                        class="accordion-collapse collapse mb-4 mb-lg-0"
+                                        data-bs-parent="#o_wsale_total_accordion">
+                                        <div t-att-class="len(website_sale_order.website_order_line) &gt; 4 and 'o_wsale_scrollable_table mt-n4 me-n4 pt-4 pe-4'">
+                                            <table t-if="website_sale_order and website_sale_order.website_order_line"
+                                                class="table accordion-body mb-0"
+                                                id="cart_products">
+                                                <tbody>
+                                                    <tr t-foreach="website_sale_order.website_order_line" t-as="line" t-att-class="line_last and 'border-transparent'">
+                                                        <t t-set="o_cart_sum_padding_top"
+                                                        t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
+                                                        <td t-if="not line.product_id" colspan="2"/>
+                                                        <t t-else="">
+                                                            <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
+                                                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                                                    <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
+                                                                </span>
+                                                                <span t-else=""
+                                                                    t-field="line.product_id.image_128"
+                                                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
+                                                                />
+                                                            </td>
+                                                            <td t-attf-class="#{o_cart_sum_padding_top} td-product_name td-qty w-100"
+                                                                name='website_sale_cart_summary_product_name'>
+                                                                <h6>
+                                                                    <t t-out="int(line.product_uom_qty)" />
+                                                                    <t t-if="line._get_shop_warning(clear=False)">
+                                                                        <i class="fa fa-warning text-warning"
+                                                                        role="img"
+                                                                        t-att-title="line._get_shop_warning()"
+                                                                        aria-label="Warning"/>
+                                                                    </t>
+                                                                    x
+                                                                    <t t-out="line.name_short"/>
+                                                                </h6>
+                                                            </td>
+                                                        </t>
+                                                        <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
+                                                            name="website_sale_cart_summary_line_price">
+                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                                                t-field="line.price_subtotal" style="white-space: nowrap;"
+                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                                            <span t-else=""
+                                                                t-field="line.price_total" style="white-space: nowrap;"
+                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </t>
-                                    <t t-call="website_sale.total">
-                                        <t t-set="_cart_total_classes" t-valuef="border-top pt-3"/>
-                                    </t>
-                                </div>
-                                <div t-if="show_navigation_button" class="o_cta_navigation_container position-absolute position-lg-static start-0 bottom-0 col-12">
-                                    <t t-call="website_sale.navigation_buttons"/>
+                                        <t t-if='website_sale_order'>
+                                            <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
+                                            <div t-if='warning' class="alert alert-warning" role="alert">
+                                                <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                                            </div>
+                                        </t>
+                                        <t t-call="website_sale.total">
+                                            <t t-set="_cart_total_classes" t-valuef="border-top pt-3"/>
+                                        </t>
+                                    </div>
+                                    <div t-if="show_navigation_button" class="o_cta_navigation_container position-absolute position-lg-static start-0 bottom-0 col-12">
+                                        <t t-call="website_sale.navigation_buttons"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
