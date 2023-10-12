@@ -242,15 +242,20 @@ class ResConfigSettings(models.TransientModel):
         Sets the peppol registration to canceled
         - If the user is active on the SMP, we can't just cancel it.
           They have to request a migration key using the `button_migrate_peppol_registration` action
+          or deregister.
         - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
           makes no sense, so we don't do it
         - Calls the IAP server first before setting the state as canceled on the client side,
           in case they've been activated on the IAP side in the meantime
         """
         self.ensure_one()
+        # check if the participant has been already registered
+        self.account_peppol_edi_user._peppol_get_participant_status()
+        if not tools.config['test_enable'] and not modules.module.current_test:
+            self.env.cr.commit()
 
         if self.account_peppol_proxy_state == 'active':
-            raise UserError(_("Can't cancel an active registration. Please request a migration instead."))
+            raise UserError(_("Can't cancel an active registration. Please request a migration or deregister instead."))
 
         if self.account_peppol_proxy_state in {'not_registered', 'rejected', 'canceled'}:
             raise UserError(_(
@@ -258,30 +263,8 @@ class ResConfigSettings(models.TransientModel):
             ))
 
         self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
-        self.account_peppol_proxy_state = 'canceled'
-
-    def button_reopen_peppol_registration(self):
-        """
-        Reopen a canceled or rejected peppol application.
-        This means that the EDI user already exists in the DB and on the IAP proxy.
-        So, reopening resets the user to the stage after validating (not_verified).
-        The user then needs to verify their phone number, even if they verified before canceling.
-        """
-        self.ensure_one()
-
-        if self.account_peppol_proxy_state in {'rejected', 'canceled'}:
-            params = {
-                'update_data': {
-                    'peppol_state': 'draft',
-                }
-            }
-
-            self._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
-                params=params,
-            )
-
-            self.account_peppol_proxy_state = 'not_verified'
+        self.account_peppol_proxy_state = 'not_registered'
+        self.account_peppol_edi_user.unlink()
 
     @handle_demo
     def button_migrate_peppol_registration(self):
@@ -316,6 +299,8 @@ class ResConfigSettings(models.TransientModel):
         # so that the invoices are acknowledged
         self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
         self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+        if not tools.config['test_enable'] and not modules.module.current_test:
+            self.env.cr.commit()
 
         self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
         self.account_peppol_proxy_state = 'not_registered'

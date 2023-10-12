@@ -217,10 +217,11 @@ class AccountEdiProxyClientUser(models.Model):
                 )
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.env['account_edi_proxy_client.user'].search(
-            [('company_id.account_peppol_proxy_state', '=', 'pending')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'pending')])
+        edi_users._peppol_get_participant_status()
 
-        for edi_user in edi_users:
+    def _peppol_get_participant_status(self):
+        for edi_user in self:
             try:
                 proxy_user = edi_user._make_request(
                     f"{edi_user._get_server_url()}/api/peppol/1/participant_status")
