@@ -93,7 +93,6 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/legacy_account_activity.scss',
             'account/static/src/components/**/*',
             'account/static/src/js/tours/account.js',
-            'account/static/src/xml/**/*',
             'account/static/src/views/**/*.js',
         ],
         'web.assets_frontend': [
