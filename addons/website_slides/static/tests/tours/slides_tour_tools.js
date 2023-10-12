@@ -236,14 +236,14 @@ var addExistingCourseTag = function (backend = false) {
     trigger: (backend ? 'iframe ' : '' ) + 'a.o_wslides_js_channel_tag_add',
 }, {
     content: 'eLearning: click on tag dropdown',
-    trigger: (backend ? 'iframe ' : '' ) + 'a.select2-choice:first',
+    trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:first',
 }, {
     content: 'eLearning: select advanced tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.select2-result-label:contains("Advanced")',
+    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Advanced")',
     in_modal: false,
 }, {
     content: 'eLearning: add existing course tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Add")'
+    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer a:contains("Add")'
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: (backend ? 'iframe ' : '' ) + 'body:not(.modal-open)',
@@ -257,29 +257,24 @@ var addNewCourseTag = function (courseTagName, backend) {
     trigger: (backend ? 'iframe ' : '' ) + 'a.o_wslides_js_channel_tag_add',
 }, {
     content: 'eLearning: click on tag dropdown',
-	trigger: (backend ? 'iframe ' : '' ) + 'a.select2-choice:first',
+	trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:first',
 }, {
     content: 'eLearning: add a new course tag',
-	trigger: (backend ? 'iframe ' : '' ) + 'a.select2-choice:first',
-	run: function () {
-		// directly add new tag since we can assume select2 works correctly
-		let $jq = $;
-		if (backend) {
-			$jq = $('.o_website_preview iframe:not(.o_ignore_in_tour)').contents()[0].defaultView.$;
-		}
-		$jq('#tag_id').select2('data', {id:'123', text: courseTagName, create: true});
-		$jq('#tag_id').trigger('change');
-	}
+	trigger: (backend ? 'iframe ' : '' ) + 'input.dropdown-item:first',
+	run:"text 123",
 }, {
+    content: 'eLearning: click on create this tag',
+    trigger: (backend ? 'iframe ' : '') + 'i:contains("123")',
+},{
     content: 'eLearning: click on tag group dropdown',
-	trigger: (backend ? 'iframe ' : '' ) + 'a.select2-choice:last',
+	trigger: (backend ? 'iframe ' : '' ) + 'button.o_select_menu_toggler:last',
 }, {
 	content: 'eLearning: select Tags tag group',
-    trigger: (backend ? 'iframe ' : '' ) + 'div.select2-result-label:contains("Tags")',
+    trigger: (backend ? 'iframe ' : '' ) + 'div.o_select_menu_item_label:contains("Tags")',
 	in_modal: false,
 }, {
     content: 'eLearning: add new course tag',
-    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer button:contains("Add")'
+    trigger: (backend ? 'iframe ' : '' ) + 'footer.modal-footer a:contains("Add")',
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: (backend ? 'iframe ' : '' ) + 'body:not(.modal-open)',

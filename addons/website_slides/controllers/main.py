@@ -904,8 +904,8 @@ class WebsiteSlides(WebsiteProfile):
                               tag group to generate and expects a second list value of the name of the
                               new tag group. This value is required for when a new tag is being created.
 
-        tag_id and group_id values are provided by a Select2. Default "None" values allow for
-        graceful failures in exceptional cases when values are not provided.
+        tag_id and group_id values are provided by a SelectMenu OWL component. Default "None" values
+        allow for graceful failures in exceptional cases when values are not provided.
 
         :return: channel's course page
         """
