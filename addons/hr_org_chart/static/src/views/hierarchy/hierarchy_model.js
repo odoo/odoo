@@ -1,7 +1,9 @@
 /** @odoo-module */
 
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { pick } from "@web/core/utils/objects";
 import { Model } from "@web/model/model";
 
 let nodeId = 0;
@@ -218,6 +220,12 @@ export class HierarchyNode {
         );
     }
 
+    removeParentNode() {
+        this.parentNode?.removeChildNode(this);
+        this.parentNode = null;
+        this.data[this.parentFieldName] = false;
+    }
+
     /**
      * Fetch parent node
      */
@@ -249,6 +257,12 @@ export class HierarchyNode {
         this.data[this.childFieldName] = childrenData;
         this.removeChildNodes();
         this.model.notify();
+    }
+
+    removeChildNode(node) {
+        this.tree.removeNodes([node, ...node.descendantNodes]);
+        this.nodes = this.nodes.filter((n) => n.id !== node.id);
+        this.data[this.childFieldName] = this.nodes.map((n) => n.data);
     }
 
     /**
@@ -313,11 +327,13 @@ export class HierarchyTree {
         this.id = treeId++;
         this.nodePerNodeId = {};
         this.forest = forest;
-        this.root = new HierarchyNode(model, config, data, this);
-        this.forest.nodePerNodeId = {
-            ...this.forest.nodePerNodeId,
-            ...this.nodePerNodeId,
-        };
+        if (data) {
+            this.root = new HierarchyNode(model, config, data, this);
+            this.forest.nodePerNodeId = {
+                ...this.forest.nodePerNodeId,
+                ...this.nodePerNodeId,
+            };
+        }
         this.model = model;
         this._config = config;
     }
@@ -419,6 +435,17 @@ export class HierarchyForest {
         );
     }
 
+    addNewRootNode(node) {
+        const tree = new HierarchyTree(this.model, this._config, null, this);
+        tree.root = node;
+        node.tree = tree;
+        tree.addNode(node);
+        for (const subNode of node.descendantNodes) {
+            tree.addNode(subNode);
+        }
+        this.trees.push(tree);
+    }
+
     removeTree(tree) {
         this.nodePerNodeId = Object.fromEntries(
             Object.entries(this.nodePerNodeId)
@@ -431,7 +458,9 @@ export class HierarchyForest {
 }
 
 export class HierarchyModel extends Model {
-    setup(params) {
+    static services = ["notification"];
+
+    setup(params, { notification }) {
         this.keepLast = new KeepLast();
         this.mutex = new Mutex();
         this.resModel = params.resModel;
@@ -439,6 +468,7 @@ export class HierarchyModel extends Model {
         this.parentFieldName = params.parentFieldName;
         this.childFieldName = params.childFieldName;
         this.activeFields = params.activeFields;
+        this.notification = notification;
         this.config = {
             domain: this.defaultDomain,
             isRoot: true,
@@ -787,6 +817,108 @@ export class HierarchyModel extends Model {
                     d[this.defaultChildFieldName] = childIdsPerId[d.id.toString()];
                 }
             }
+        }
+    }
+
+    async updateParentNode(nodeId, { parentNodeId, parentResId }) {
+        const node = this.root.nodePerNodeId[nodeId];
+        const parentNode = parentNodeId ? this.root.nodePerNodeId[parentNodeId] : null;
+        if (node) {
+            const oldParentNode = node.parentNode;
+            let fetchParentChildren = false;
+            let domain = new Domain([]);
+            if (oldParentNode) {
+                domain = new Domain([["id", "=", oldParentNode.resId]]);
+            }
+            if (parentNode) {
+                if (parentNode.resId === node.resId) {
+                    this.notification.add(
+                        _t("The parent record cannot be the record dragged."),
+                        {
+                            type: "danger",
+                        }
+                    );
+                    return;
+                }
+                domain = Domain.or([
+                    domain,
+                    [["id", "in", [parentNode.resId, node.resId]]],
+                ]);
+                if (parentNode.nodes.length === 0 && parentNode.childResIds.length > 0) {
+                    fetchParentChildren = true;
+                    domain = Domain.or([
+                        domain,
+                        [[this.parentFieldName, "=", parentNode.resId], ["id", "!=", node.resId]],
+                    ]);
+                }
+                if (node.id === node.tree.root.id) {
+                    this.root.removeTree(node.tree);
+                    node.tree = parentNode.tree;
+                } else {
+                    node.removeParentNode();
+                }
+            } else {
+                node.removeParentNode();
+                this.root.addNewRootNode(node);
+            }
+            this.notify();
+            await this.mutex.exec(async () => {
+                await this.orm.write(
+                    this.resModel,
+                    [node.resId],
+                    { [this.parentFieldName]: parentResId || parentNode?.resId || false },
+                    { context: this.config.context }
+                );
+            });
+            domain = domain.toList({});
+            if (domain.length) {
+                const data = await this.orm.searchRead(
+                    this.resModel,
+                    domain,
+                    this.fieldsToFetch,
+                    { context: this.config.context },
+                );
+                const children = [];
+                for (const d of data) {
+                    if (d.id === node.resId) {
+                        node.data = d;
+                    } else if (d.id === oldParentNode?.resId) {
+                        oldParentNode.data = d;
+                    } else if (parentNode) {
+                        if (parentNode.resId === d.id) {
+                            const parentData = fetchParentChildren ? {} : pick(parentNode.data, this.childFieldName);
+                            parentNode.data = {
+                                ...d,
+                                ...parentData,
+                            };
+                        } else if (fetchParentChildren) {
+                            children.push(d);
+                        }
+                    }
+                }
+                if (children.length) {
+                    parentNode.data[this.childFieldName || this.defaultChildFieldName] = children;
+                }
+            }
+            const treeExpanded = this._findTreeExpanded();
+            if (parentNode) {
+                if (treeExpanded && treeExpanded.id !== parentNode.tree.id) {
+                    treeExpanded.root.nodes = [];
+                    treeExpanded.nodePerNodeId = { [treeExpanded.root.id]: treeExpanded.root };
+                } else if (treeExpanded) {
+                    const nodeToCollapse = this._searchNodeToCollapse(parentNode);
+                    if (nodeToCollapse && nodeToCollapse.id !== parentNode.id) {
+                        nodeToCollapse.collapseChildNodes();
+                    }
+                }
+                if (fetchParentChildren) {
+                    parentNode.populateChildNodes();
+                }
+                node.setParentNode(parentNode);
+            } else if (treeExpanded && node.nodes.length) {
+                treeExpanded.root.collapseChildNodes();
+            }
+            this.notify();
         }
     }
 }

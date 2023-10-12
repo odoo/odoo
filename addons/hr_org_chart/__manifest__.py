@@ -24,8 +24,12 @@ This module extend the employee form with a organizational chart.
             'hr_org_chart/static/src/scss/variables.scss',
         ],
         'web.assets_backend': [
+            'hr_org_chart/static/src/scss/hierarchy.variables.scss',
             'hr_org_chart/static/src/fields/*',
             'hr_org_chart/static/src/views/**/*',
+        ],
+        'web.assets_web_dark': [
+            ('before', 'hr_org_chart/static/src/scss/hierarchy.variables.scss', 'hr_org_chart/static/src/scss/**/*.variables.dark.scss'),
         ],
         'web.qunit_suite_tests': [
             'hr_org_chart/static/tests/**/*',
