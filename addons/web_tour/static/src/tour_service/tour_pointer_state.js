@@ -94,7 +94,7 @@ export function createPointerState() {
      * @param {Partial<TourPointerState>} newState
      */
     const setState = (newState) => {
-        Object.assign(state, newState, { rev: currentRev++ });
+        Object.assign(state, newState);
     };
 
     /**
@@ -171,7 +171,6 @@ export function createPointerState() {
         }
     }
 
-    let currentRev = 1;
     /** @type {TourPointerState} */
     const state = reactive({});
     const intersection = new Intersection();
