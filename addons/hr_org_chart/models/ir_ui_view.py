@@ -14,6 +14,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'delete',
     'parent_field',
     'child_field',
+    'icon',
 }
 
 class View(models.Model):

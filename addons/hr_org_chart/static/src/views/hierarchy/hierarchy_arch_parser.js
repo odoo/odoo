@@ -8,6 +8,7 @@ export class HierarchyArchParser {
     parse(xmlDoc, models, modelName) {
         const archInfo = {
             activeActions: getActiveActions(xmlDoc),
+            icon: "fa-share-alt o_hierarchy_icon",
             parentFieldName: "parent_id",
             fieldNodes: {},
             templateDocs: {},
@@ -43,6 +44,9 @@ export class HierarchyArchParser {
                         throw new Error(`Invalid child field, the co-model should be same model than the current one (expected: ${modelName}).`);
                     }
                     archInfo.childFieldName = childFieldName;
+                }
+                if (node.hasAttribute("icon")) {
+                    archInfo.icon = node.getAttribute("icon");
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "hierarchy");
