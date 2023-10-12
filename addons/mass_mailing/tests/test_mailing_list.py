@@ -120,6 +120,19 @@ class TestMailingListMerge(MassMailCommon):
         self.assertFalse(contact.subscription_ids[1].opt_out_datetime)
 
     @users('user_marketing')
+    def test_mailing_list_action_send_mailing(self):
+        mailing_ctx = self.mailing_list_1.action_send_mailing().get('context', {})
+        form = Form(self.env['mailing.mailing'].with_context(mailing_ctx))
+        form.subject = 'Test Mail'
+        mailing = form.save()
+        # Check that mailing model and mailing list are set properly
+        self.assertEqual(
+            mailing.mailing_model_id, self.env['ir.model']._get('mailing.list'),
+            'Should have correct mailing model set')
+        self.assertEqual(mailing.contact_list_ids, self.mailing_list_1, 'Should have correct mailing list set')
+        self.assertEqual(mailing.mailing_type, 'mail', 'Should have correct mailing_type')
+
+    @users('user_marketing')
     def test_mailing_list_contact_copy_in_context_of_mailing_list(self):
         MailingContact = self.env['mailing.contact']
         contact_1 = MailingContact.create({
@@ -243,6 +256,7 @@ class TestMailingContactImport(MassMailCommon):
         # Test that the context key "default_list_ids" is ignored (because we manually set list_ids)
         contact_import.with_context(default_list_ids=(first_list | second_list).ids).action_import()
 
+        self.env['mailing.list'].invalidate_model(['contact_ids'])
         # Check the contact of the first mailing list
         contacts = [
             (contact.name, contact.email)
