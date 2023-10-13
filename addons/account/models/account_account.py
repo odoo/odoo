@@ -119,18 +119,25 @@ class AccountAccount(models.Model):
 
     @api.constrains('company_id', 'code')
     def _constrains_code(self):
-        domains = []
-        for record in self:
-            domains.append([
-                ('company_id', 'child_of', record.company_id.root_id.id),
-                ('code', '=', record.code),
-                ('id', '!=', record.id),
-            ])
-        if duplicates := self.search(expression.OR(domains)):
-            raise ValidationError(
-                _("The code of the account must be unique per company!")
-                + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
-            )
+        # check for duplicates in each root company
+        by_root_company = self.grouped(lambda record: record.company_id.root_id)
+        for root_company, records in by_root_company.items():
+            by_code = records.grouped('code')
+            if len(by_code) < len(records):
+                # retrieve duplicates within self
+                duplicates = next(recs for recs in by_code.values() if len(recs) > 1)
+            else:
+                # search for duplicates of self in database
+                duplicates = self.search([
+                    ('company_id', 'child_of', root_company.id),
+                    ('code', 'in', list(by_code)),
+                    ('id', 'not in', records.ids),
+                ])
+            if duplicates:
+                raise ValidationError(
+                    _("The code of the account must be unique per company!")
+                    + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
+                )
 
     @api.constrains('reconcile', 'internal_group', 'tax_ids')
     def _constrains_reconcile(self):
