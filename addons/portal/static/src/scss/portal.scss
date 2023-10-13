@@ -486,16 +486,18 @@ img, .media_iframe_video, .o_image {
 }
 
 .o_portal_security_body {
-    @extend .mx-auto;
+    margin-right: auto;
+    margin-left: auto;
+
     max-width: map-get($container-max-widths, sm);
     section {
-        @extend .mt-4;
+        margin-top: map-get($spacers, 4);
         form.oe_reset_password_form {
             max-width: initial;
             margin: initial;
         }
         label, button {
-            @extend .text-nowrap;
+            white-space: nowrap;
         }
     }
     section[name="portal_deactivate_account"] {
