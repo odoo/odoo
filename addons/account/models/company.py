@@ -470,12 +470,18 @@ class ResCompany(models.Model):
             ('code', '=', str(code)),
         ]):
             code -= 1
-        return self.env['account.account'].create({
-                'code': str(code),
-                'name': _('Undistributed Profits/Losses'),
-                'account_type': unaffected_earnings_type,
-                'company_id': self.id,
-            })
+        return self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'values': {
+                              'code': str(code),
+                              'name': _('Undistributed Profits/Losses'),
+                              'account_type': unaffected_earnings_type,
+                              'company_id': self.id,
+                          },
+                'noupdate': True,
+            }
+        ])
 
     def get_opening_move_differences(self, opening_move_lines):
         # TO BE REMOVED IN MASTER
