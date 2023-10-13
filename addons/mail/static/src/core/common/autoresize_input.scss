@@ -1,9 +1,9 @@
 .o-mail-AutoresizeInput:not([disabled]):focus {
-    @extend .border-dark;
-    @extend .bg-white;
+    border-color: map-get($theme-colors, "dark");
+    background-color: $white;
 }
 
 .o-mail-AutoresizeInput:not([disabled]):hover {
-    @extend .bg-white;
-    @extend .border;
+    background-color: $white;
+    border: $border-width solid $border-color;
 }
