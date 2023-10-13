@@ -385,10 +385,12 @@
                                     invisible="state != 'object_create'"
                                     required="state == 'object_create'"/>
                                 <field name="crud_model_name" invisible="1"/>
-                                <field name="value" widget="char" string="Name" invisible="state != 'object_create'"/>
+                                <field name="value" widget="char" string="Name" invisible="state != 'object_create'"
+                                       help="The name of the record to create" placeholder="e.g. Follow-up"/>
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
+                                    placeholder="Select a field to link the record to"
                                     options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
@@ -405,11 +407,11 @@
                             If several child actions return an action, only the last one will be executed.
                             This may happen when having server actions executing code that returns an action, or server actions returning a client action.
                         </p>
-                        <label for="code" invisible="state != 'code'"/>
-                        <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
-                        <div class="mb-3 opacity-75" invisible="state != 'code'">
-                            <button class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#code-help-collapse" aria-expanded="false" aria-controls="code-help-collapse">Available variables and libraries</button>
-                            <div class="collapse ps-3" id="code-help-collapse">
+                        <notebook invisible="state != 'code'">
+                            <page string="Code">
+                                <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                            </page>
+                            <page string="Help">
                                 <p>The following variables can be used:</p>
                                 <ul>
                                     <li><code>env</code>: environment on which the action is triggered</li>
@@ -430,8 +432,8 @@
 env['res.partner'].create({'name': partner_name})
     </pre>
                                 </div>
-                            </div>
-                        </div>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
