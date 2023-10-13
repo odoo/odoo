@@ -124,14 +124,14 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         res = super().button_validate()
-        if res is not True:
-            return res
         to_assign_ids = set()
         if self and self.env.context.get('pickings_to_detach'):
             self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
+            if picking.state != 'done':
+                continue
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
             if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
