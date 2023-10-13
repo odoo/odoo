@@ -31,19 +31,22 @@ invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
 invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
 invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
 
-cellMenuRegistry.add("list_see_record", {
-    name: _t("See record"),
-    sequence: 200,
-    execute: async (env) => {
-        const position = env.model.getters.getActivePosition();
-        await SEE_RECORD_LIST(position, env);
-    },
-    isVisible: (env) => {
-        const position = env.model.getters.getActivePosition();
-        return SEE_RECORD_LIST_VISIBLE(position, env);
-    },
-    icon: "o-spreadsheet-Icon.SEE_RECORDS",
-});
+cellMenuRegistry.add(
+    "list_see_record",
+    /** @type {import("@odoo/o-spreadsheet").ActionSpec}*/ ({
+        name: _t("See record"),
+        sequence: 200,
+        execute: async (env) => {
+            const position = env.model.getters.getActivePosition();
+            await SEE_RECORD_LIST(position, env);
+        },
+        isVisible: (env) => {
+            const position = env.model.getters.getActivePosition();
+            return SEE_RECORD_LIST_VISIBLE(position, env);
+        },
+        icon: "o-spreadsheet-Icon.SEE_RECORDS",
+    })
+);
 
 inverseCommandRegistry
     .add("INSERT_ODOO_LIST", identity)
