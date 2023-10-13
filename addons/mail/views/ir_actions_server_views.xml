@@ -21,18 +21,21 @@
                         </div>
                         <field name="activity_user_type" required="state == 'next_activity'"/>
                         <field name="activity_user_field_name" placeholder="e.g. user_id" invisible="activity_user_type == 'specific'" required="state == 'next_activity' and activity_user_type == 'generic'"/>
-                        <field name="activity_user_id" placeholder="Select a user..." invisible="activity_user_type == 'generic'" required="state == 'next_activity' and activity_user_type == 'specific'"/>
+                        <field name="activity_user_id" placeholder="Choose a user..." invisible="activity_user_type == 'generic'" required="state == 'next_activity' and activity_user_type == 'specific'"/>
                     </group>
                     <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..." invisible="state != 'next_activity'"/>
                 </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
                     <field name="partner_ids" string="Followers to add" widget="many2many_tags"
+                           placeholder="Choose a user..."
                            invisible="state != 'followers'"
                            required="state == 'followers'"/>
                     <field name="partner_ids" string="Followers to remove" widget="many2many_tags"
+                           placeholder="Choose a user..."
                            invisible="state != 'remove_followers'"
                            required="state == 'remove_followers'"/>
                     <field name="template_id"
+                           placeholder="Choose a template..."
                            invisible="state != 'mail_post'"
                            required="state == 'mail_post'"
                            context="{'default_model': model_name,
