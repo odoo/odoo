@@ -18,6 +18,11 @@
         <field name="domain"></field>
         <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'dropship', 'search_default_dropships': 1}</field>
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new Dropship
+            </p>
+        </field>
     </record>
 
     <menuitem id="dropship_picking" name="Dropships" parent="stock.menu_stock_transfers"
