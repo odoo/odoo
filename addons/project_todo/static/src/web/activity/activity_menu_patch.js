@@ -11,6 +11,8 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 
+const { DateTime } = luxon;
+
 // Add a to-do category for the command palette
 registry.category("command_categories").add("to-do", {}, { sequence: 105 });
 
@@ -87,7 +89,6 @@ patch(ActivityMenu.prototype, {
     },
 
     async saveTodo() {
-        const { DateTime } = luxon;
         const urlRegExp = /http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%_+~#=~#?&/=\-;!.]{3,2000}/g;
         const todo = this.todoInputRef.el.value.replace(urlRegExp, '<a href="$&">$&</a>').trim();
         if (!todo) {

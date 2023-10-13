@@ -187,7 +187,6 @@ Featuring
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/core/**/*.js',

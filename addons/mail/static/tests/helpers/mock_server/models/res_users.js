@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { date_to_str } from "@web/legacy/js/core/time";
+import { today, serializeDate } from "@web/core/l10n/dates";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
@@ -57,10 +57,10 @@ patch(MockServer.prototype, {
         const activities = this.pyEnv["mail.activity"].searchRead([]);
         const userActivitiesByModelName = {};
         for (const activity of activities) {
-            const today = date_to_str(new Date());
-            if (today === activity["date_deadline"]) {
+            const day = serializeDate(today());
+            if (day === activity["date_deadline"]) {
                 activity["states"] = "today";
-            } else if (today > activity["date_deadline"]) {
+            } else if (day > activity["date_deadline"]) {
                 activity["states"] = "overdue";
             } else {
                 activity["states"] = "planned";

@@ -99,7 +99,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
 
@@ -222,7 +221,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
 

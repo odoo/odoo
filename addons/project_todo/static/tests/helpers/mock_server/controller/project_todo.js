@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
+import { serializeDate } from "@web/core/l10n/dates";
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
-import { date_to_str } from '@web/legacy/js/core/time';
+const { DateTime } = luxon;
 
 patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
@@ -33,7 +34,7 @@ patch(MockServer.prototype, {
         const taskId = this.pyEnv['project.task'].create({ description: values['todo_description'] });
         if (values['date_deadline']) {
             this.pyEnv['mail.activity'].create({
-                date_deadline: date_to_str(new Date(values['date_deadline'])),
+                date_deadline: serializeDate(DateTime.fromISO(values['date_deadline'])),
                 note: values['todo_description'],
                 res_model: 'project.task',
                 res_id: taskId,
