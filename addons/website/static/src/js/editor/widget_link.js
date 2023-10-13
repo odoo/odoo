@@ -95,7 +95,7 @@ patch(LinkTools.prototype, {
      * @private
      */
     _onAutocompleteClose() {
-        this._onURLInput();
+        this.__onURLInput();
     },
     /**
      * @override
