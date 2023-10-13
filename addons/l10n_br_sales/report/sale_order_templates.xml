@@ -15,9 +15,6 @@
         <td name="td_taxes" position="replace"/>
         <th name="th_subtotal" position="replace"/>
         <td name="td_subtotal" position="replace"/>
-        <xpath expr="//th[@name='th_total']/span" position="replace">
-            <span>Total</span>
-        </xpath>
         <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
             <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
         </xpath>

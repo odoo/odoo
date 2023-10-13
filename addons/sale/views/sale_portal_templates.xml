@@ -541,10 +541,7 @@
                                     <span>Taxes</span>
                                 </th>
                                 <th class="text-end" id="subtotal_header">
-                                    <span>Tax excl.</span>
-                                </th>
-                                <th class="text-end" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line'" id="total_header">
-                                    <span>Tax incl.</span>
+                                    <span>Amount</span>
                                 </th>
                             </tr>
                         </thead>
@@ -556,7 +553,6 @@
                             <t t-foreach="lines_to_report" t-as="line">
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-                                <t t-set="current_total" t-value="current_subtotal + line.price_total" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line'"/>
 
                                 <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                     <t t-if="not line.display_type">
@@ -590,9 +586,6 @@
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
-                                        </td>
-                                        <td class="text-end" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line' and not line.is_downpayment" >
-                                            <span class="oe_order_line_price_total" t-field="line.price_total"/>
                                         </td>
                                     </t>
                                     <t t-if="line.display_type == 'line_section'">

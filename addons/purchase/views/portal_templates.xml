@@ -267,10 +267,7 @@
                                 <span>Taxes</span>
                             </th>
                             <th class="text-end" t-if="order.state in ['purchase', 'done']" >
-                                <span>Tax excl.</span>
-                            </th>
-                            <th class="text-end" t-if="order.state in ['purchase', 'done'] and order.tax_calculation_rounding_method == 'round_per_line'" >
-                                <span>Tax incl.</span>
+                                <span>Amount</span>
                             </th>
                         </tr>
                     </thead>
@@ -281,7 +278,6 @@
                           <t t-foreach="order.order_line" t-as="line">
 
                               <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-                          <t t-set="current_total" t-value="current_subtotal + line.price_total" t-if="order.tax_calculation_rounding_method == 'round_per_line'"/>
 
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic text-break' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type">
@@ -321,9 +317,6 @@
                                     </td>
                                     <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
-                                    </td>
-                                    <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done'] and order.tax_calculation_rounding_method == 'round_per_line'" >
-                                        <span class="oe_order_line_price_total" t-field="line.price_total"/>
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
