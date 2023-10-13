@@ -76,6 +76,7 @@
             'spreadsheet/static/src/public_readonly_app/**/*.scss',
             'spreadsheet/static/src/public_readonly_app/**/*',
             'spreadsheet/static/src/hooks.js',
+            'spreadsheet/static/src/plugins.js',
         ],
         'web.assets_backend': [
             'spreadsheet/static/src/**/*.scss',

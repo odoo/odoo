@@ -11,9 +11,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      *
      * @override
      * @param {Object} services Services (see DataSource)
-     * @param {Object} params
-     * @param {import("./pivot_model").PivotMetaData} params.metaData
-     * @param {import("./pivot_model").PivotSearchParams} params.searchParams
+     * @param {import("@spreadsheet").PivotRuntime} params
      */
     constructor(services, params) {
         super(services, params);

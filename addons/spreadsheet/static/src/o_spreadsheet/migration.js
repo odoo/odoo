@@ -1,7 +1,8 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { load, CorePlugin, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
+import { OdooCorePlugin } from "@spreadsheet/plugins";
+const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
 export const ODOO_VERSION = 6;
@@ -237,12 +238,12 @@ function migrate5to6(data) {
     return data;
 }
 
-export class OdooVersion extends CorePlugin {
+export class OdooVersion extends OdooCorePlugin {
+    static getters = /** @type {const} */ ([]);
+
     export(data) {
         data.odooVersion = ODOO_VERSION;
     }
 }
-
-OdooVersion.getters = [];
 
 corePluginRegistry.add("odooMigration", OdooVersion);
