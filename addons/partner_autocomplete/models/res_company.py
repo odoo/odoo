@@ -31,6 +31,19 @@ class ResCompany(models.Model):
             res.iap_enrich_auto()
         return res
 
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+
+        if view_type == 'form':
+            for node in arch.xpath(
+                "//field[@name='name']"
+                "|//field[@name='vat']"
+            ):
+                node.attrib['widget'] = 'field_partner_autocomplete'
+
+        return arch, view
+
     def iap_enrich_auto(self):
         """ Enrich company. This method should be called by automatic processes
         and a protection is added to avoid doing enrich in a loop. """
