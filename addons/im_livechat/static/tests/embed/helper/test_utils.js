@@ -2,7 +2,7 @@
 
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
-import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
 import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
 import { setupManager } from "@mail/../tests/helpers/webclient_setup";

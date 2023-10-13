@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { RATING } from "@im_livechat/embed/core/livechat_service";
+import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
