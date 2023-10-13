@@ -417,4 +417,40 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.verifySteps(["discard"]);
         assert.containsNone(target, ".o_dialog .o_form_view");
     });
+
+    QUnit.test(
+        "Save a FormViewDialog when a required field is empty don't close the dialog",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,form": `
+                        <form string="Partner">
+                            <sheet>
+                                <group><field name="foo" required="1"/></group>
+                            </sheet>
+                            <footer>
+                                <button name="save" special="save" class="btn-primary"/>
+                            </footer>
+                        </form>
+                `,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.services.dialog.add(FormViewDialog, {
+                resModel: "partner",
+                context: { answer: 42 },
+            });
+
+            await nextTick();
+
+            await click(target, '.modal button[name="save"]');
+            await nextTick();
+
+            assert.containsOnce(target, ".modal", "modal should still be opened");
+            await editInput(target, "[name='foo'] input", "new");
+
+            await click(target, '.modal button[name="save"]');
+            assert.containsNone(target, ".modal", "modal should be closed");
+        }
+    );
+
 });
