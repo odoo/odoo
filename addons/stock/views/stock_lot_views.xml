@@ -121,6 +121,7 @@
                 <field name="product_id"/>
                 <field name="lot_properties"/>
                 <field name="create_date"/>
+                <field name="last_delivery_partner_id"/>
                 <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
                 <filter string="On Hand" name="on_hand" domain="[('product_qty', '>', 0)]"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>

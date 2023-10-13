@@ -40,7 +40,7 @@ class StockWarehouseOrderpoint(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
-        ondelete="cascade", required=True, check_company=True)
+        domain="[('id', 'in', allowed_location_ids)]", ondelete="cascade", required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
         'product.product', 'Product',
@@ -97,14 +97,14 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
-        loc_domain = [('usage', 'in', ('internal', 'view'))]
+        loc_domain = [('usage', '=', 'internal')]
         # We want to keep only the locations
         #  - strictly belonging to our warehouse
         #  - not belonging to any warehouses
         for orderpoint in self:
             other_warehouses = self.env['stock.warehouse'].search([('id', '!=', orderpoint.warehouse_id.id)])
-            for view_location_id in other_warehouses.mapped('view_location_id'):
-                loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
+            for lot_stock_id in other_warehouses.mapped('lot_stock_id'):
+                loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', lot_stock_id.id)]])
                 loc_domain = expression.AND([loc_domain, ['|', ('company_id', '=', False), ('company_id', '=', orderpoint.company_id.id)]])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)
 

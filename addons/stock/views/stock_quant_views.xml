@@ -439,7 +439,7 @@ in this location. That leads to a negative stock.
         </field>
     </record>
 
-    <!-- Inventory Adjustments + Update Quantity (via product) view -->
+    <!-- Inventory Adjustments -->
     <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
         <field name="name">stock.quant.inventory.tree.editable</field>
         <field name="model">stock.quant</field>
@@ -499,6 +499,29 @@ in this location. That leads to a negative stock.
                 <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" invisible="inventory_quantity_set"/>
                 <button name="action_clear_inventory_quantity" type="object" string="Clear" class="btn text-warning" icon="fa-times" invisible="not inventory_quantity_set"/>
             </tree>
+        </field>
+    </record>
+
+    <!-- Update Quantity (via product) view -->
+    <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable_update_qty">
+        <field name="name">stock.quant.inventory.tree.editable.update.qty</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@icon='fa-pencil']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reserved_quantity']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_stock_moves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_orderpoints']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
