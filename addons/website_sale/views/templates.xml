@@ -1306,10 +1306,10 @@
 
     <template id="website_sale.tax_indication" active="False">
         <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="h6 text-muted">
-            VAT Excluded
+            <t t-out="website.company_id.country_id.tax_label">VAT</t> Excluded
         </span>
         <span t-else="" class="h6 text-muted">
-            VAT Included
+            <t t-out="website.company_id.country_id.tax_label">VAT</t> Included
         </span>
     </template>
 
