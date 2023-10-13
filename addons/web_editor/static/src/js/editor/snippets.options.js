@@ -6721,21 +6721,38 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async setImgShapeHoverEffect(previewMode, widgetValue, params) {
         const imgEl = this._getImg();
+        if (previewMode !== "reset") {
+            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
+            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
+            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
+        }
         delete imgEl.dataset.hoverEffectColor;
         delete imgEl.dataset.hoverEffectIntensity;
         delete imgEl.dataset.hoverEffectStrokeWidth;
-        if (params.name === "hover_effect_overlay_opt") {
-            imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
-        } else if (params.name === "hover_effect_outline_opt") {
-            imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
-            imgEl.dataset.hoverEffectStrokeWidth = 10;
+        if (previewMode === true) {
+            if (params.name === "hover_effect_overlay_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
+            } else if (params.name === "hover_effect_outline_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
+                imgEl.dataset.hoverEffectStrokeWidth = 10;
+            } else {
+                imgEl.dataset.hoverEffectIntensity = 20;
+                if (params.name !== "hover_effect_mirror_blur_opt") {
+                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+                }
+            }
         } else {
-            imgEl.dataset.hoverEffectIntensity = 20;
-            if (params.name !== "hover_effect_mirror_blur_opt") {
-                imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+            if (this.prevHoverEffectColor) {
+                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
+            }
+            if (this.prevHoverEffectIntensity) {
+                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
+            }
+            if (this.prevHoverEffectStrokeWidth) {
+                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
             }
         }
-        await this._applyOptions();
+        await this._reapplyCurrentShape();
     },
     /**
      * @see this.selectClass for parameters
@@ -6743,7 +6760,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
         if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
-            await this._applyOptions();
+            await this._reapplyCurrentShape();
         }
     },
     /**
@@ -6760,7 +6777,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             defaultColor = "primary";
         }
         img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
-        await this._applyOptions();
+        await this._reapplyCurrentShape();
     },
 
     //--------------------------------------------------------------------------
@@ -6960,6 +6977,7 @@ registry.ImageTools = ImageHandlerOption.extend({
 
         const initialImageWidth = img.naturalWidth;
         let needToRefreshPublicWidgets = false;
+        let hasHoverEffect = false;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
 
@@ -6988,6 +7006,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             // The "ImageShapeHoverEffet" public widget needs to restart
             // (e.g. image replacement).
             needToRefreshPublicWidgets = true;
+            hasHoverEffect = true;
         }
 
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
@@ -7008,7 +7027,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Force natural width & height (note: loading the original image is
         // needed for Safari where natural width & height of SVG does not return
         // the correct values).
-        const originalImage = await loadImage(imgDataURL, img);
+        const originalImage = await loadImage(imgDataURL);
         // If the svg forces the size of the shape we still want to have the resized
         // width
         if (!svg.dataset.forcedSize) {
@@ -7027,7 +7046,26 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+        let clonedImgEl = null;
+        if (hasHoverEffect) {
+            // This is useful during hover effects previews. Without this, in
+            // Chrome, the 'mouse out' animation is triggered very briefly when
+            // previewMode === 'reset' (when transitioning from one hover effect
+            // to another), causing a visual glitch. To avoid this, we hide the
+            // image with its clone when the source is set.
+            clonedImgEl = img.cloneNode(true);
+            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
+            img.classList.add("d-none");
+            img.insertAdjacentElement("afterend", clonedImgEl);
+            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
+        }
         const loadedImg = await loadImage(dataURL, img);
+        if (hasHoverEffect) {
+            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
+            clonedImgEl.remove();
+            img.classList.remove("d-none");
+            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
+        }
         if (needToRefreshPublicWidgets) {
             await this._refreshPublicWidgets();
         }
@@ -7549,6 +7587,31 @@ registry.ImageTools = ImageHandlerOption.extend({
         // without hover effect.
         if (shapeName === "geo_square") {
             this._requestUserValueWidgets("remove_img_shape_opt")[0].enable();
+        }
+    },
+    /**
+     * @override
+     */
+    async _select(previewMode, widget) {
+        await this._super(...arguments);
+        // This is a special case where we need to override the "_select"
+        // function in order to trigger mouse events for hover effects on the
+        // images when previewing the options. This is done here because if it
+        // was done in one of the widget methods, the animation would be
+        // canceled when "_refreshPublicWidgets" is executed in the "_super"
+        if (widget.$el[0].closest("#o_hover_effects_options")) {
+            const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
+            // We trigger the animation when preview mode is "false", except for
+            // the "setImgShapeHoverEffect" option, where we trigger it when
+            // preview mode is "true".
+            if (previewMode === hasSetImgShapeHoverEffectMethod) {
+                this.$target[0].dispatchEvent(new Event("mouseover"));
+                this.hoverTimeoutId = setTimeout(() => {
+                    this.$target[0].dispatchEvent(new Event("mouseout"));
+                }, 700);
+            } else if (previewMode === "reset") {
+                clearTimeout(this.hoverTimeoutId);
+            }
         }
     },
 
