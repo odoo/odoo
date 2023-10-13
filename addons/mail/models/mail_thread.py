@@ -657,7 +657,13 @@ class MailThread(models.AbstractModel):
         # leading to a traceback in case the related message_id
         # doesn't exist
         cleaned_self = self.with_context(clean_context(self._context))._fallback_lang()
-        templates = self._track_template(changes)
+        try:
+            templates = self._track_template(changes)
+        except MissingError:
+            if not self.exists():
+                return
+            raise
+
         default_composition_mode = 'mass_mail' if len(self) != 1 else 'comment'
         for _field_name, (template, post_kwargs) in templates.items():
             if not template:
