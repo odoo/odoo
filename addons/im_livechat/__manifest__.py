@@ -64,7 +64,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_frontend': [
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/views/fields/formatters.js',
-            ('include', 'im_livechat.assets_core'),
+            ('include', 'im_livechat.assets_embed_core'),
             'im_livechat/static/src/embed/frontend/**/*',
         ],
         'web.assets_backend': [
@@ -72,14 +72,10 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/js/im_livechat_chatbot_steps_one2many.js',
             'im_livechat/static/src/js/im_livechat_chatbot_script_answers_m2m.js',
             'im_livechat/static/src/views/**/*',
-            'im_livechat/static/src/chat_window/**/*',
-            'im_livechat/static/src/composer/**/*',
-            'im_livechat/static/src/core/**/*',
-            'im_livechat/static/src/core_ui/**/*',
-            'im_livechat/static/src/discuss_app/**/*',
-            'im_livechat/static/src/messaging_menu/**/*',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
+            'im_livechat/static/src/core/common/**/*',
+            'im_livechat/static/src/core/web/**/*',
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/helpers/**/*.js',
@@ -93,7 +89,7 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
         ],
-        'im_livechat.assets_core': [
+        'im_livechat.assets_embed_core': [
             'web/static/lib/odoo_ui_icons/style.css',
             'web/static/src/scss/ui.scss',
             'mail/static/src/core/common/**/*',
@@ -102,17 +98,13 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/discuss/typing/**/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
-
-            'im_livechat/static/src/embed/**/*',
-            'im_livechat/static/src/embed/livechat_data.js',
-            ('remove', 'im_livechat/static/src/embed/frontend/**/*'),
-            ('remove', 'im_livechat/static/src/embed/external/**/*'),
-            ('remove', 'im_livechat/static/src/embed/cors/**/*'),
+            'im_livechat/static/src/core/common/**/*',
+            'im_livechat/static/src/embed/common/**/*',
         ],
-        'im_livechat.assets_embed': [
+        'im_livechat.assets_embed_external': [
             'web/static/lib/jquery/jquery.js',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'im_livechat/static/src/embed/scss/bootstrap_overridden.scss',
+            'im_livechat/static/src/embed/common/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -130,11 +122,11 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
 
-            ('include', 'im_livechat.assets_core'),
+            ('include', 'im_livechat.assets_embed_core'),
             'im_livechat/static/src/embed/external/**/*',
         ],
-        'im_livechat.assets_cors': [
-            ('include', 'im_livechat.assets_embed'),
+        'im_livechat.assets_embed_cors': [
+            ('include', 'im_livechat.assets_embed_external'),
             'im_livechat/static/src/embed/cors/**/*',
         ],
         'im_livechat.embed_test_assets': [
@@ -142,9 +134,7 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'web/static/tests/mock_server_tests.js'),
             ('remove', 'im_livechat/static/**'),
             'im_livechat/static/tests/helpers/**',
-            'im_livechat/static/src/embed/**/*',
-            ('remove', 'im_livechat/static/src/embed/frontend/**/*'),
-            ('remove', 'im_livechat/static/src/embed/external/**/*'),
+            ('include', 'im_livechat.assets_embed_core'),
         ],
         'im_livechat.qunit_embed_suite': [
             'im_livechat/static/tests/embed/**/*',

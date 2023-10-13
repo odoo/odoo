@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { makeRoot, makeShadow } from "@im_livechat/embed/boot_helpers";
-import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
-import { serverUrl } from "@im_livechat/embed/livechat_data";
+import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { serverUrl } from "@im_livechat/embed/common/livechat_data";
 
 import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
 
