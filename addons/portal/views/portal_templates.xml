@@ -139,7 +139,7 @@
         <div t-ignore="true" class="text-center">
             <t t-if="custom_html" t-out="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
-            <a t-att-href="backend_url"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
+            <a class="alert-link" t-att-href="backend_url"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </template>
