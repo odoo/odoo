@@ -13,7 +13,7 @@ class AccountPaymentRegister(models.TransientModel):
     l10n_ar_withholding_ids = fields.One2many(
         'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute='_compute_withholdings', readonly=False, store=True)
-    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True,  help="Net amount after withholdings")
+    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', inverse='_inverse_l10n_ar_net_amount', readonly=True,  help="Net amount after withholdings")
 
     @api.depends('line_ids', 'can_group_payments', 'group_payment')
     def _compute_withholdings(self):
@@ -38,6 +38,10 @@ class AccountPaymentRegister(models.TransientModel):
                 rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
             else:
                 rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+
+    def _inverse_l10n_ar_net_amount(self):
+        print("Inverse triggered")
+        return
 
     def _get_withholding_tax(self):
         self.ensure_one()
