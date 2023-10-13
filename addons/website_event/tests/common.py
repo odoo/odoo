@@ -69,7 +69,6 @@ class TestEventOnlineCommon(OnlineEventCase):
         # event if 8-18 in Europe/Brussels (DST) (first day: begins at 9, last day: ends at 15)
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
-            'auto_confirm': True,
             'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
             'date_tz': 'Europe/Brussels',
@@ -84,7 +83,6 @@ class TestEventQuestionCommon(EventCase):
 
         cls.event_type_questions = cls.env['event.type'].create({
             'name': 'Update Type',
-            'auto_confirm': True,
             'has_seats_limitation': True,
             'seats_max': 30,
             'default_timezone': 'Europe/Paris',

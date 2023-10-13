@@ -39,10 +39,9 @@ class EventSaleReport(models.Model):
     sale_price = fields.Float('Revenues', readonly=True)
     sale_price_untaxed = fields.Float('Untaxed Revenues', readonly=True)
     invoice_partner_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True)
-    is_paid = fields.Boolean('Is Paid', readonly=True)
-    payment_status = fields.Selection(string="Payment Status", selection=[
-            ('to_pay', 'Not Paid'),
-            ('paid', 'Paid'),
+    sale_status = fields.Selection(string="Payment Status", selection=[
+            ('to_pay', 'Not Sold'),
+            ('sold', 'Sold'),
             ('free', 'Free'),
         ])
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
@@ -81,7 +80,7 @@ SELECT
     event_registration.active AS active,
     event_registration.sale_order_id AS sale_order_id,
     event_registration.sale_order_line_id AS sale_order_line_id,
-    event_registration.is_paid AS is_paid,
+    event_registration.sale_status AS sale_status,
 
     event_event.event_type_id AS event_type_id,
     event_event.date_begin AS event_date_begin,
@@ -109,12 +108,7 @@ SELECT
         sale_order_line.price_subtotal
             / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
             / sale_order_line.product_uom_qty
-        END AS sale_price_untaxed,
-    CASE
-        WHEN sale_order_line.price_total = 0 THEN 'free'
-        WHEN event_registration.is_paid THEN 'paid'
-        ELSE 'to_pay'
-    END payment_status""" + (',\n    ' + ',\n    '.join(select) if select else '')
+    END AS sale_price_untaxed""" + (',\n    ' + ',\n    '.join(select) if select else '')
 
     def _from_clause(self, *join_):
         # Extra clauses formatted as `column1`, `column2`...

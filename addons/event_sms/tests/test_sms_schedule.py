@@ -30,7 +30,6 @@ class TestSMSSchedule(EventCase, SMSCase):
         })
 
         cls.test_event = cls.env['event.event'].create({
-            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'date_tz': 'Europe/Brussels',

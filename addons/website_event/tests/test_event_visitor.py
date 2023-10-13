@@ -37,7 +37,6 @@ class TestEventVisitor(TestEventOnlineCommon, WebsiteVisitorTests):
 
         event_1 = self.env['event.event'].create({
             'name': 'OtherEvent',
-            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
         })

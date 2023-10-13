@@ -42,7 +42,7 @@ class EventTemplateTicket(models.Model):
 
 
 class EventTicket(models.Model):
-    """ Ticket model allowing to have differnt kind of registrations for a given
+    """ Ticket model allowing to have different kind of registrations for a given
     event. Ticket are based on ticket type as they share some common fields
     and behavior. Those models come from <= v13 Odoo event.event.ticket that
     modeled both concept: tickets for event templates, and tickets for events. """
@@ -76,8 +76,8 @@ class EventTicket(models.Model):
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=False)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=False)
-    seats_unconfirmed = fields.Integer(string='Unconfirmed Seats', compute='_compute_seats', store=False)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=False)
+    seats_taken = fields.Integer(string="Taken Seats", compute="_compute_seats", store=False)
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
     # reports
@@ -113,21 +113,20 @@ class EventTicket(models.Model):
 
     @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
-        """ Determine reserved, available, reserved but unconfirmed and used seats. """
+        """ Determine available, reserved, used and taken seats. """
         # initialize fields to 0 + compute seats availability
         for ticket in self:
-            ticket.seats_unconfirmed = ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
+            ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
         # aggregate registrations by ticket and by state
         results = {}
         if self.ids:
             state_field = {
-                'draft': 'seats_unconfirmed',
                 'open': 'seats_reserved',
                 'done': 'seats_used',
             }
             query = """ SELECT event_ticket_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
+                        WHERE event_ticket_id IN %s AND state IN ('open', 'done') AND active = true
                         GROUP BY event_ticket_id, state
                     """
             self.env['event.registration'].flush_model(['event_id', 'event_ticket_id', 'state', 'active'])
@@ -140,6 +139,7 @@ class EventTicket(models.Model):
             ticket.update(results.get(ticket._origin.id or ticket.id, {}))
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
+            ticket.seats_taken = ticket.seats_reserved + ticket.seats_used
 
     @api.depends('seats_limited', 'seats_available')
     def _compute_is_sold_out(self):

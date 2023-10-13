@@ -105,6 +105,8 @@ class Event(models.Model):
         """Heuristic
 
           * public, no visitor: not participating as we have no information;
+          * check only confirmed and attended registrations, a draft registration
+            does not make the attendee participating;
           * public and visitor: check visitor is linked to a registration. As
             visitors are merged on the top parent, current visitor check is
             sufficient even for successive visits;
@@ -114,14 +116,13 @@ class Event(models.Model):
             registration;
         """
         current_visitor = self.env['website.visitor']._get_visitor_from_request(force_create=False)
+        base_domain = [('event_id', 'in', self.ids), ('state', 'in', ['open', 'done'])]
         if self.env.user._is_public() and not current_visitor:
             events = self.env['event.event']
         elif self.env.user._is_public():
-            events = self.env['event.registration'].sudo().search([
-                ('event_id', 'in', self.ids),
-                ('state', '!=', 'cancel'),
-                ('visitor_id', '=', current_visitor.id),
-            ]).event_id
+            events = self.env['event.registration'].sudo().search(
+                expression.AND([base_domain, [('visitor_id', '=', current_visitor.id)]])
+            ).event_id
         else:
             if current_visitor:
                 domain = [
@@ -132,10 +133,7 @@ class Event(models.Model):
             else:
                 domain = [('partner_id', '=', self.env.user.partner_id.id)]
             events = self.env['event.registration'].sudo().search(
-                expression.AND([
-                    domain,
-                    ['&', ('event_id', 'in', self.ids), ('state', '!=', 'cancel')]
-                ])
+                expression.AND([base_domain, domain])
             ).event_id
 
         for event in self:

@@ -24,7 +24,6 @@ class TestEventSaleCommon(EventCase, TestSalesCommon):
 
         cls.event_type_tickets = cls.env['event.type'].create({
             'name': 'Update Type',
-            'auto_confirm': True,
             'has_seats_limitation': True,
             'seats_max': 30,
             'default_timezone': 'Europe/Paris',
@@ -39,7 +38,6 @@ class TestEventSaleCommon(EventCase, TestSalesCommon):
 
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
-            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'date_tz': 'Europe/Brussels',

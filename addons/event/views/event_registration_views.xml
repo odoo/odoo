@@ -24,7 +24,7 @@
                        decoration-muted="state == 'cancel'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="state != 'draft'"/>
                 <field name="message_needaction" column_invisible="True"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-check"
+                <button name="action_confirm" string="Registered" type="object" icon="fa-check"
                         invisible="not active or state != 'draft'"/>
                 <button name="action_set_done" string="Mark as Attending" type="object" icon="fa-level-down"
                         invisible="not active or state != 'open'"/>
@@ -45,15 +45,13 @@
                 <header>
                     <button name="action_send_badge_email" string="Send by Email" type="object" class="oe_highlight"
                             invisible="not active or state != 'open' and state != 'done'"/>
-                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                    <button name="action_confirm" string="Registered" type="object" class="oe_highlight"
                             invisible="not active or state != 'draft'"/>
                     <button name="action_set_done" string="Attended" type="object" class="oe_highlight"
                             invisible="not active or state != 'open'"/>
-                    <button name="action_set_draft" string="Set To Unconfirmed" type="object"
-                            invisible="not active or state != 'cancel' and state != 'done'"/>
                     <button name="action_cancel" string="Cancel Registration" type="object"
-                            invisible="not active or state != 'open' and state != 'draft'"/>
-                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"
+                            invisible="not active or state == 'cancel'"/>
+                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="open,done"
                             readonly="false" options="{'clickable': '1'}"/>
                 </header>
                 <sheet string="Registration">
@@ -67,10 +65,10 @@
                             <field name="company_name" placeholder='e.g. "Azure Interior"'/>
                         </group>
                         <group string="Event Information" name="event">
-                            <field class="text-break" name="event_id" readonly="state != 'draft'"
+                            <field class="text-break" name="event_id" readonly="event_id and state != 'draft' and id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
                             <field name="barcode" groups="base.group_no_one"/>
-                            <field name="event_ticket_id" invisible="not event_id" readonly="state != 'draft'"
+                            <field name="event_ticket_id" invisible="not event_id" readonly="event_ticket_id and state != 'draft' and id"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
@@ -233,10 +231,10 @@
                 <field name="event_user_id" string="Responsible" invisible="1"/>
                 <field name="event_organizer_id" string="Organizer" invisible="1"/>
                 <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
-                <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
+                <filter string="Taken" name="taken" domain="[('state', 'in', ['open', 'done'])]"/>
                 <separator/>
                 <filter string="Unconfirmed" name="unconfirmed" domain="[('state', '=', 'draft')]"/>
-                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'open')]"/>
+                <filter string="Registered" name="confirmed" domain="[('state', '=', 'open')]"/>
                 <filter string="Attended" name="attended" domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter string="Registration Date" name="filter_create_date" date="create_date"/>
@@ -293,7 +291,11 @@
         <field name="name">Attendees</field>
         <field name="view_mode">tree,kanban,form,calendar,graph</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
-        <field name="context">{'default_event_id': active_id, 'name_with_seats_availability': True}</field>
+        <field name="context">{
+            'default_event_id': active_id,
+            'name_with_seats_availability': True,
+            'search_default_taken': True,
+        }</field>
         <field name="search_view_id" ref="event_registration_view_search_event_specific"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -347,6 +349,7 @@
         <field name="view_mode">graph,pivot,kanban,tree,form</field>
         <field name="context">{
                 'search_default_filter_last_month_creation': 1,
+                'search_default_taken': 1,
                 'search_default_status': 2,
                 'search_default_group_by_create_date_day': 3,
                 'search_default_group_event': 1,
