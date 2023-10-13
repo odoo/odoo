@@ -655,7 +655,15 @@ class AccountJournal(models.Model):
             if not has_liquidity_accounts:
                 default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
-                vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
+                default_account = self.env['account.account'].create(default_account_vals)
+                self.env['ir.model.data']._update_xmlids([
+                    {
+                        'xml_id': f"account.{str(company.id)}_{journal_type}_journal_default_account_{default_account.id}",
+                        'record': default_account,
+                        'noupdate': True,
+                    }
+                ])
+                vals['default_account_id'] = default_account.id
             if journal_type in ('cash', 'bank') and not has_profit_account:
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type in ('cash', 'bank') and not has_loss_account:
