@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
@@ -10,6 +9,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
+import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 /**
  * @typedef {Object} ListDefinition
@@ -30,9 +30,18 @@ import { deepCopy } from "@web/core/utils/objects";
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
-const { CorePlugin } = spreadsheet;
-
-export class ListCorePlugin extends CorePlugin {
+export class ListCorePlugin extends OdooCorePlugin {
+    static getters = /** @type {const} */ ([
+        "getListDisplayName",
+        "getListDefinition",
+        "getListModelDefinition",
+        "getListIds",
+        "getListName",
+        "getNextListId",
+        "isExistingList",
+        "getListFieldMatch",
+        "getListFieldMatching",
+    ]);
     constructor(config) {
         super(config);
 
@@ -437,15 +446,3 @@ export class ListCorePlugin extends CorePlugin {
         data.listNextId = this.nextId;
     }
 }
-
-ListCorePlugin.getters = [
-    "getListDisplayName",
-    "getListDefinition",
-    "getListModelDefinition",
-    "getListIds",
-    "getListName",
-    "getNextListId",
-    "isExistingList",
-    "getListFieldMatch",
-    "getListFieldMatching",
-];
