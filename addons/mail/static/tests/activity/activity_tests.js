@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { date_to_str } from "@web/legacy/js/core/time";
+import { serializeDate, today } from "@web/core/l10n/dates";
 import {
     mockTimeout,
     patchDate,
@@ -106,13 +106,10 @@ QUnit.test("activity with note layout", async () => {
 
 QUnit.test("activity info layout when planned after tomorrow", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const fiveDaysFromNow = new Date();
-    fiveDaysFromNow.setDate(today.getDate() + 5);
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(fiveDaysFromNow),
+        date_deadline: serializeDate(today().plus({ days: 5 })),
         res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
@@ -124,13 +121,11 @@ QUnit.test("activity info layout when planned after tomorrow", async () => {
 
 QUnit.test("activity info layout when planned tomorrow", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
+    const tomorrow = today().plus({ days: 1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(tomorrow),
+        date_deadline: serializeDate(tomorrow),
         res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
@@ -145,7 +140,7 @@ QUnit.test("activity info layout when planned today", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(new Date()),
+        date_deadline: serializeDate(today()),
         res_id: partnerId,
         res_model: "res.partner",
         state: "today",
@@ -157,13 +152,11 @@ QUnit.test("activity info layout when planned today", async () => {
 
 QUnit.test("activity info layout when planned yesterday", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+    const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(yesterday),
+        date_deadline: serializeDate(yesterday),
         res_id: partnerId,
         res_model: "res.partner",
         state: "overdue",
@@ -175,13 +168,10 @@ QUnit.test("activity info layout when planned yesterday", async () => {
 
 QUnit.test("activity info layout when planned before yesterday", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const fiveDaysBeforeNow = new Date();
-    fiveDaysBeforeNow.setDate(today.getDate() - 5);
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(fiveDaysBeforeNow),
+        date_deadline: serializeDate(today().plus({ days: -5 })),
         res_id: partnerId,
         res_model: "res.partner",
         state: "overdue",
@@ -199,13 +189,11 @@ QUnit.test("activity info layout when planned before yesterday", async () => {
 QUnit.skip("activity info layout change at midnight", async () => {
     const mock = mockTimeout();
     patchDate(2023, 11, 7, 23, 59, 59);
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
+    const tomorrow = today().plus({ days: 1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(tomorrow),
+        date_deadline: serializeDate(tomorrow),
         res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
@@ -247,16 +235,14 @@ QUnit.test("activity without summary layout", async () => {
 
 QUnit.test("activity details toggle", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
+    const tomorrow = today().plus({ days: 1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["mail.activity"].create({
-        create_date: date_to_str(today),
+        create_date: serializeDate(today()),
         create_uid: userId,
-        date_deadline: date_to_str(tomorrow),
+        date_deadline: serializeDate(tomorrow),
         res_id: partnerId,
         res_model: "res.partner",
     });
@@ -489,27 +475,24 @@ QUnit.test("activity mark done popover click on discard", async () => {
 
 QUnit.test("Activity are sorted by deadline", async () => {
     patchDate(2023, 0, 11, 12, 0, 0);
-    const today = new Date();
-    const dateBefore = new Date();
-    dateBefore.setDate(today.getDate() - 5);
-    const dateAfter = new Date();
-    dateAfter.setDate(today.getDate() + 4);
+    const dateBefore = today().plus({ days: -5 });
+    const dateAfter = today().plus({ days: 4 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(dateAfter),
+        date_deadline: serializeDate(dateAfter),
         res_id: partnerId,
         res_model: "res.partner",
         state: "planned",
     });
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(today),
+        date_deadline: serializeDate(today()),
         res_id: partnerId,
         res_model: "res.partner",
         state: "today",
     });
     pyEnv["mail.activity"].create({
-        date_deadline: date_to_str(dateBefore),
+        date_deadline: serializeDate(dateBefore),
         res_id: partnerId,
         res_model: "res.partner",
         state: "overdue",

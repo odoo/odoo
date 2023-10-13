@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { date_to_str } from "@web/legacy/js/core/time";
+import { serializeDate, today } from "@web/core/l10n/dates";
 import { session } from "@web/session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
@@ -26,13 +26,12 @@ QUnit.test("menu with no records", async () => {
 });
 
 QUnit.test("do not show empty text when at least some future activities", async () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = today().plus({ days: 1 });
     const pyEnv = await startServer();
     const activityId = pyEnv["mail.test.activity"].create({});
     pyEnv["mail.activity"].create([
         {
-            date_deadline: date_to_str(tomorrow),
+            date_deadline: serializeDate(tomorrow),
             res_id: activityId,
             res_model: "mail.test.activity",
         },
@@ -46,10 +45,8 @@ QUnit.test("do not show empty text when at least some future activities", async 
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = today().plus({ days: 1 });
+    const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityIds = pyEnv["mail.test.activity"].create([{}, {}, {}, {}]);
@@ -57,17 +54,17 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         { res_id: partnerId, res_model: "res.partner" },
         { res_id: activityIds[0], res_model: "mail.test.activity" },
         {
-            date_deadline: date_to_str(tomorrow),
+            date_deadline: serializeDate(tomorrow),
             res_id: activityIds[1],
             res_model: "mail.test.activity",
         },
         {
-            date_deadline: date_to_str(tomorrow),
+            date_deadline: serializeDate(tomorrow),
             res_id: activityIds[2],
             res_model: "mail.test.activity",
         },
         {
-            date_deadline: date_to_str(yesterday),
+            date_deadline: serializeDate(yesterday),
             res_id: activityIds[3],
             res_model: "mail.test.activity",
         },
@@ -116,10 +113,8 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
 });
 
 QUnit.test("activity menu widget: activity view icon", async (assert) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = today().plus({ days: 1 });
+    const yesterday = today().plus({ days: -1 });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityIds = pyEnv["mail.test.activity"].create([{}, {}, {}, {}]);
@@ -127,17 +122,17 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
         { res_id: partnerId, res_model: "res.partner" },
         { res_id: activityIds[0], res_model: "mail.test.activity" },
         {
-            date_deadline: date_to_str(tomorrow),
+            date_deadline: serializeDate(tomorrow),
             res_id: activityIds[1],
             res_model: "mail.test.activity",
         },
         {
-            date_deadline: date_to_str(tomorrow),
+            date_deadline: serializeDate(tomorrow),
             res_id: activityIds[2],
             res_model: "mail.test.activity",
         },
         {
-            date_deadline: date_to_str(yesterday),
+            date_deadline: serializeDate(yesterday),
             res_id: activityIds[3],
             res_model: "mail.test.activity",
         },
