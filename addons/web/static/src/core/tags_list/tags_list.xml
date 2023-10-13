@@ -18,7 +18,7 @@
 
                 <!-- Avatar's :hover backdrop -->
                 <span
-                    t-if="tag.img &amp;&amp; props.displayText"
+                    t-if="tag.img and props.displayText and tag.onDelete"
                     class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0 opacity-100-hover"/>
 
                 <img
