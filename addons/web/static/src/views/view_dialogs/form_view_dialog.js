@@ -46,6 +46,7 @@ export class FormViewDialog extends Component {
                         this.props.close();
                     }
                 }
+                return saved;
             },
         };
         if (this.props.removeRecord) {
