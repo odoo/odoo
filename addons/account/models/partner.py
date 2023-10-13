@@ -432,7 +432,8 @@ class ResPartner(models.Model):
                 domain=[
                     ('state', 'not in', ['draft', 'cancel']),
                     ('move_type', 'in', self.env["account.move"].get_sale_types(include_receipts=True)),
-                    ('company_id', '=', self.env.company.id)
+                    ('company_id', '=', self.env.company.id),
+                    ('commercial_partner_id', 'in', self.commercial_partner_id.ids),
                 ],
                 groupby=['commercial_partner_id'],
                 aggregates=['invoice_date:min', 'amount_total_signed:sum'],
