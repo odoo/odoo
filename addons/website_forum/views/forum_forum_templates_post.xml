@@ -62,12 +62,15 @@
                     <t t-set="show_name" t-value="True"/>
                     <t t-set="compact" t-value="True"/>
                 </t>
-                <small class="text-muted">
-                    <i class="fa fa-calendar me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                </small>
+                <div class="small d-inline-flex gap-2">
+                    <div t-if="not answer">Created on <span t-field="question.create_date" t-options='{"format": "d MMM yy "}'/></div>
+                    <div t-if="answer">Answered on <span t-field="answer.create_date" t-options='{"format": "d MMM yy "}'/></div>
+                    <div class="text-muted" title="Last Activity">
+                        <i class="fa fa-calendar me-1"/><span t-field="question.last_activity_date" t-options='{"format":"short"}'/>
+                    </div>
+                </div>
             </div>
             <div t-if="not answer" t-call="website_forum.post_stats" class="d-inline-flex align-items-center"/>
-            <div t-if="answer" class="d-inline-flex gap-1 small">Answered on<span t-field="answer.write_date" t-options='{"format": "d MMM yy "}'></span></div>
         </div>
     </div>
     <tr t-else="" class="position-relative d-flex d-lg-table-row">
