@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='link_field_id']" position="after">
                 <field name="sms_template_id"
+                    placeholder="Choose a template..."
                     context="{'default_model': model_name}"
                     invisible="state != 'sms'"
                     required="state == 'sms'"/>
