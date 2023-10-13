@@ -622,6 +622,8 @@ class ReportBomStructure(models.AbstractModel):
         component_1["base_bom_line_qty"] = component_1["quantity"] + qty
         component_1["prod_cost"] = component_1["prod_cost"] + component_2["prod_cost"]
         component_1["bom_cost"] = component_1["bom_cost"] + component_2["bom_cost"]
+        if component_2.get('availability_delay') is False or component_2.get('availability_delay') > component_1.get('availability_delay'):
+            component_1.update(self._format_availability(component_2))
         if not component_1.get("components"):
             return
         for index in range(len(component_1.get("components"))):
@@ -637,8 +639,13 @@ class ReportBomStructure(models.AbstractModel):
             elif component["availability_delay"] >= delay:
                 component_max_delay = component
                 delay = component["availability_delay"]
-        return {'resupply_avail_delay': component_max_delay['resupply_avail_delay'],
-                'stock_avail_state': component_max_delay['stock_avail_state'],
-                'availability_display': component_max_delay['availability_display'],
-                'availability_state': component_max_delay['availability_state'],
-                'availability_delay': component_max_delay['availability_delay']}
+        return self._format_availability(component_max_delay)
+
+    def _format_availability(self, component):
+        return {
+            'resupply_avail_delay': component['resupply_avail_delay'],
+            'stock_avail_state': component['stock_avail_state'],
+            'availability_display': component['availability_display'],
+            'availability_state': component['availability_state'],
+            'availability_delay': component['availability_delay'],
+        }
