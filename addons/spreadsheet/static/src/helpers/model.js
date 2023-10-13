@@ -1,13 +1,18 @@
 /** @odoo-module */
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { Model, parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
+import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
+import { OdooSpreadsheetModel } from "@spreadsheet/model";
 
 const { toCartesian, UuidGenerator, createEmptySheet } = helpers;
 const uuidGenerator = new UuidGenerator();
+
+/**
+ * @typedef {import("@spreadsheet/@types/model").OdooSpreadsheetModel} OdooSpreadsheetModel
+ */
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -18,13 +23,13 @@ export async function fetchSpreadsheetModel(env, resModel, resId) {
 
 export function createSpreadsheetModel({ env, data, revisions }) {
     const dataSources = new DataSources(env);
-    const model = new Model(migrate(data), { custom: { dataSources } }, revisions);
+    const model = new OdooSpreadsheetModel(migrate(data), { custom: { dataSources } }, revisions);
     return model;
 }
 
 /**
  * Ensure that the spreadsheet does not contains cells that are in loading state
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @returns {Promise<void>}
  */
 export async function waitForDataLoaded(model) {
@@ -44,7 +49,7 @@ export async function waitForDataLoaded(model) {
 }
 
 /**
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @returns {object}
  */
 export async function freezeOdooData(model) {
@@ -85,6 +90,10 @@ export async function freezeOdooData(model) {
     return data;
 }
 
+/**
+ * @param {OdooSpreadsheetModel} model
+ * @returns {object}
+ */
 function exportGlobalFiltersToSheet(model, data) {
     const styles = Object.entries(data.styles);
     data.styles[styles.length + 1] = { bold: true };
@@ -154,6 +163,10 @@ function containsOdooFunction(content) {
     }
 }
 
+/**
+ * @param {OdooSpreadsheetModel} model
+ * @returns {boolean}
+ */
 function isLoaded(model) {
     for (const sheetId of model.getters.getSheetIds()) {
         for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
@@ -168,7 +181,7 @@ function isLoaded(model) {
 /**
  * Return the chart figure as a base64 image.
  * "data:image/png;base64,iVBORw0KGg..."
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @param {object} figure
  * @returns {string}
  */

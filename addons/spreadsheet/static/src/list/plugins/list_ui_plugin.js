@@ -5,6 +5,7 @@ import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { astToFormula } = spreadsheet;
 
@@ -12,7 +13,16 @@ const { astToFormula } = spreadsheet;
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
-export class ListUIPlugin extends spreadsheet.UIPlugin {
+export class ListUIPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getListComputedDomain",
+        "getListHeaderValue",
+        "getListIdFromPosition",
+        "getListCellValue",
+        "getListDataSource",
+        "getAsyncListDataSource",
+        "isListUnused",
+    ]);
     constructor(config) {
         super(config);
         /** @type {string} */
@@ -318,7 +328,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
 
     /**
      * @param {string} id
-     * @returns {Promise<import("@spreadsheet/list/list_data_source").default>}
+     * @returns {Promise<import("@spreadsheet/list/list_data_source").ListDataSource>}
      */
     async getAsyncListDataSource(id) {
         const dataSourceId = this._getListDataSourceId(id);
@@ -340,13 +350,3 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         return this._getUnusedLists().includes(listId);
     }
 }
-
-ListUIPlugin.getters = [
-    "getListComputedDomain",
-    "getListHeaderValue",
-    "getListIdFromPosition",
-    "getListCellValue",
-    "getListDataSource",
-    "getAsyncListDataSource",
-    "isListUnused",
-];

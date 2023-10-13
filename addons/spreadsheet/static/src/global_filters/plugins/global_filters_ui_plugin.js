@@ -13,7 +13,7 @@ import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
-import { EvaluationError, helpers, UIPlugin } from "@odoo/o-spreadsheet";
+import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
@@ -23,6 +23,7 @@ import {
     getRelativeDateDomain,
 } from "@spreadsheet/global_filters/helpers";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { DateTime } = luxon;
 
@@ -44,7 +45,16 @@ const MONTHS = {
 const { UuidGenerator, createEmptyExcelSheet } = helpers;
 const uuidGenerator = new UuidGenerator();
 
-export class GlobalFiltersUIPlugin extends UIPlugin {
+export class GlobalFiltersUIPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getFilterDisplayValue",
+        "getGlobalFilterDomain",
+        "getGlobalFilterValue",
+        "getActiveFilterCount",
+        "isGlobalFilterActive",
+        "getTextFilterOptions",
+        "getTextFilterOptionsFromRange",
+    ]);
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;
@@ -549,13 +559,3 @@ export class GlobalFiltersUIPlugin extends UIPlugin {
         });
     }
 }
-
-GlobalFiltersUIPlugin.getters = [
-    "getFilterDisplayValue",
-    "getGlobalFilterDomain",
-    "getGlobalFilterValue",
-    "getActiveFilterCount",
-    "isGlobalFilterActive",
-    "getTextFilterOptions",
-    "getTextFilterOptionsFromRange",
-];

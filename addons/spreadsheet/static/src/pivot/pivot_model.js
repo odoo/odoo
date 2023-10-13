@@ -14,29 +14,15 @@ const { toString, toNumber, toBoolean } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 /**
- * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
+ * @typedef {import("@spreadsheet").Field} Field
  * @typedef {import("@spreadsheet/pivot/pivot_table").Row} Row
  * @typedef {import("@spreadsheet/pivot/pivot_table").Column} Column
- *
- * @typedef {Object} PivotMetaData
- * @property {Array<string>} colGroupBys
- * @property {Array<string>} rowGroupBys
- * @property {Array<string>} activeMeasures
- * @property {string} resModel
- * @property {Record<string, Field>} fields
- * @property {string|undefined} modelLabel
- *
- * @typedef {Object} PivotSearchParams
- * @property {Array<string>} groupBy
- * @property {Array<string>} orderBy
- * @property {Object} domain
- * @property {Object} context
  */
 
 /**
  * Parses the positional char (#), the field and operator string of pivot group.
  * e.g. "create_date:month"
- * @param {Record<string, Field>} allFields
+ * @param {Record<string, Field | undefined>} allFields
  * @param {string} groupFieldString
  * @returns {{field: Field, aggregateOperator: string, isPositional: boolean}}
  */
@@ -128,9 +114,7 @@ export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
  */
 export class SpreadsheetPivotModel extends PivotModel {
     /**
-     * @param {Object} params
-     * @param {PivotMetaData} params.metaData
-     * @param {PivotSearchParams} params.searchParams
+     * @param {import("@spreadsheet").PivotRuntime} params
      * @param {Object} services
      * @param {import("../data_sources/metadata_repository").MetadataRepository} services.metadataRepository
      */

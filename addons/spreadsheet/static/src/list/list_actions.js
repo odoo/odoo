@@ -3,6 +3,11 @@
 import { astToFormula } from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
+/**
+ * @param {import("@odoo/o-spreadsheet").CellPosition} position
+ * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @returns {Promise<void>}
+ */
 export const SEE_RECORD_LIST = async (position, env) => {
     const cell = env.model.getters.getCell(position);
     const sheetId = position.sheetId;
@@ -29,6 +34,11 @@ export const SEE_RECORD_LIST = async (position, env) => {
     });
 };
 
+/**
+ * @param {import("@odoo/o-spreadsheet").CellPosition} position
+ * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @returns {boolean}
+ */
 export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);
     const cell = env.model.getters.getCell(position);

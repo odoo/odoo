@@ -1,14 +1,21 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { AccountingDataSource } from "../accounting_datasource";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 const DATA_SOURCE_ID = "ACCOUNTING_AGGREGATES";
 
 /**
  * @typedef {import("../accounting_functions").DateRange} DateRange
  */
 
-export class AccountingPlugin extends spreadsheet.UIPlugin {
+export class AccountingPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getAccountPrefixCredit",
+        "getAccountPrefixDebit",
+        "getAccountGroupCodes",
+        "getFiscalStartDate",
+        "getFiscalEndDate",
+    ]);
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;
@@ -92,11 +99,3 @@ export class AccountingPlugin extends spreadsheet.UIPlugin {
         );
     }
 }
-
-AccountingPlugin.getters = [
-    "getAccountPrefixCredit",
-    "getAccountPrefixDebit",
-    "getAccountGroupCodes",
-    "getFiscalStartDate",
-    "getFiscalEndDate",
-];

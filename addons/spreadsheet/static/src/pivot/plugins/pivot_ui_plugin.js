@@ -8,6 +8,7 @@ import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { PivotDataSource } from "../pivot_data_source";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -50,7 +51,22 @@ function pivotPeriodToFilterValue(timeRange, value) {
     }
 }
 
-export class PivotUIPlugin extends spreadsheet.UIPlugin {
+export class PivotUIPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getPivotDataSource",
+        "getAsyncPivotDataSource",
+        "getFirstPivotFunction",
+        "getPivotComputedDomain",
+        "getDisplayedPivotHeaderValue",
+        "getPivotIdFromPosition",
+        "getPivotCellValue",
+        "getPivotGroupByValues",
+        "getFiltersMatchingPivotArgs",
+        "getPivotDataSourceId",
+        "getPivotTableStructure",
+        "getPivotDomainArgsFromPosition",
+        "isPivotUnused",
+    ]);
     constructor(config) {
         super(config);
         /** @type {string} */
@@ -529,19 +545,3 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return this.unusedPivots;
     }
 }
-
-PivotUIPlugin.getters = [
-    "getPivotDataSource",
-    "getAsyncPivotDataSource",
-    "getFirstPivotFunction",
-    "getPivotComputedDomain",
-    "getDisplayedPivotHeaderValue",
-    "getPivotIdFromPosition",
-    "getPivotCellValue",
-    "getPivotGroupByValues",
-    "getFiltersMatchingPivotArgs",
-    "getPivotDataSourceId",
-    "getPivotTableStructure",
-    "getPivotDomainArgsFromPosition",
-    "isPivotUnused",
-];

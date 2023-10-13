@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { ChartDataSource } from "../data_source/chart_data_source";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 
-const { UIPlugin } = spreadsheet;
+export class OdooChartUIPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ (["getChartDataSource"]);
 
-export class OdooChartUIPlugin extends UIPlugin {
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;
@@ -226,5 +226,3 @@ export class OdooChartUIPlugin extends UIPlugin {
         }
     }
 }
-
-OdooChartUIPlugin.getters = ["getChartDataSource"];
