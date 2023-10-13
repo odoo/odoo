@@ -4,7 +4,8 @@ import datetime
 import dateutil
 import logging
 import time
-from collections import defaultdict, Mapping
+from collections import defaultdict
+from collections.abc import Mapping
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
