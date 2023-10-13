@@ -92,7 +92,7 @@ class SlideChannelInvite(models.TransientModel):
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'author_id': self.env.user.partner_id.id,
-            'auto_delete': True,
+            'auto_delete': self.template_id.auto_delete if self.template_id else True,
             'body_html': body,
             'email_from': self.env.user.email_formatted,
             'model': None,
