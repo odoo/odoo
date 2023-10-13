@@ -640,7 +640,7 @@ export class SearchModel extends EventBus {
             custom: true,
         };
         if (invisible) {
-            preSearchItem.invisible = true;
+            preSearchItem.invisible = "True";
         }
         if (["date", "datetime"].includes(fieldType)) {
             this.searchItems[this.nextId] = Object.assign(
@@ -774,10 +774,9 @@ export class SearchModel extends EventBus {
     getSearchItems(predicate) {
         const searchItems = [];
         Object.values(this.searchItems).forEach((searchItem) => {
-            if (
-                (!("invisible" in searchItem) || !searchItem.invisible) &&
-                (!predicate || predicate(searchItem))
-            ) {
+            const isInvisible =
+                "invisible" in searchItem && evaluateExpr(searchItem.invisible, this.globalContext);
+            if (!isInvisible && (!predicate || predicate(searchItem))) {
                 const enrichedSearchitem = this._enrichItem(searchItem);
                 if (enrichedSearchitem) {
                     searchItems.push(enrichedSearchitem);
@@ -832,7 +831,7 @@ export class SearchModel extends EventBus {
             const preFilter = {
                 description,
                 domain: toDomain(tree),
-                invisible: true,
+                invisible: "True",
                 type: "filter",
             };
             if (context) {

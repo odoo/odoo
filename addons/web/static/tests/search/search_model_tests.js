@@ -965,6 +965,44 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(model.domain, [["date_deadline", "<", "2021-09-17"]]);
     });
 
+    QUnit.test("field tags with invisible attribute", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch: `
+                    <search>
+                        <field name="foo" invisible="context.get('abc')"/>
+                        <field name="bar" invisible="context.get('def')"/>
+                        <field name="float_field" invisible="1"/>
+                    </search>
+                `,
+            context: { abc: true },
+        });
+        assert.deepEqual(
+            model.getSearchItems((f) => f.type === "field").map((item) => item.fieldName),
+            ["bar"]
+        );
+    });
+
+    QUnit.test("filter tags with invisible attribute", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch: `
+                    <search>
+                        <filter name="filter1" string="Invisible ABC" domain="[]" invisible="context.get('abc')"/>
+                        <filter name="filter2" string="Invisible DEF" domain="[]" invisible="context.get('def')"/>
+                        <filter name="filter3" string="Always invisible" domain="[]" invisible="1"/>
+                    </search>
+                `,
+            context: { abc: true },
+        });
+        assert.deepEqual(
+            model
+                .getSearchItems((item) => ["filter", "dateFilter"].includes(item.type))
+                .map((item) => item.name),
+            ["filter2"]
+        );
+    });
+
     QUnit.test("no search items created for search panel sections", async function (assert) {
         const model = await makeSearchModel({
             serverData,

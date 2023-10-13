@@ -107,8 +107,8 @@ export class SearchArchParser {
     visitField(node) {
         this.pushGroup("field");
         const preField = { type: "field" };
-        if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
-            preField.invisible = "True";
+        if (node.hasAttribute("invisible")) {
+            preField.invisible = node.getAttribute("invisible");
         }
         if (node.hasAttribute("domain")) {
             preField.domain = node.getAttribute("domain");
@@ -219,8 +219,8 @@ export class SearchArchParser {
                 preSearchItem.domain = stringRepr;
             }
         }
-        if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
-            preSearchItem.invisible = "True";
+        if (node.hasAttribute("invisible")) {
+            preSearchItem.invisible = node.getAttribute("invisible");
             const fieldName = preSearchItem.fieldName;
             if (fieldName && !this.fields[fieldName]) {
                 // In some case when a field is limited to specific groups
