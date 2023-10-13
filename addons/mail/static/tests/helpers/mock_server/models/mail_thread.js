@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-import { datetime_to_str } from "@web/legacy/js/core/time";
+import { serializeDateTime, today } from "@web/core/l10n/dates";
 
 patch(MockServer.prototype, {
     async _performRPC(route, args) {
@@ -290,7 +290,7 @@ patch(MockServer.prototype, {
             const channels = this.getRecords("discuss.channel", [["id", "=", message.res_id]]);
             for (const channel of channels) {
                 // notify update of last_interest_dt
-                const now = datetime_to_str(new Date());
+                const now = serializeDateTime(today());
                 const members = this.getRecords("discuss.channel.member", [
                     ["id", "in", channel.channel_member_ids],
                 ]);

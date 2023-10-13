@@ -5,6 +5,8 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { editInput, patchDate } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
+const { DateTime } = luxon;
+
 QUnit.test("create todo from activity menu without date", async function () {
     await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
@@ -47,9 +49,7 @@ QUnit.test("create todo from activity menu without date", async function () {
 
 QUnit.test("create to-do from activity menu with date", async function () {
     patchDate(2023, 1, 1, 6, 0, 0);
-    const { DateTime } = luxon;
-    const today = DateTime.utc();
-    const futureDay = today.plus({ days: 2 });
+    const futureDay = DateTime.utc().plus({ days: 2 });
     await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter", { count: 0 });
