@@ -2,7 +2,7 @@
 
 import { markRaw } from "@odoo/owl";
 import { registry } from "../registry";
-import { PopoverController } from "./popover_controller";
+import { POPOVER_SYMBOL, PopoverController } from "./popover_controller";
 
 /**
  * @typedef {{
@@ -40,6 +40,7 @@ export const popoverService = {
                     target,
                     close: () => remove(),
                     closeOnClickAway,
+                    subPopovers: options[POPOVER_SYMBOL],
                     component,
                     componentProps: markRaw(props),
                     popoverProps: {
