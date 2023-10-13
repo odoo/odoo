@@ -477,6 +477,55 @@ QUnit.module("Search", (hooks) => {
             }
         );
 
+        QUnit.test("edit a favorite with a groupby", async function (assert) {
+            const irFilters = [
+                {
+                    context: "{ 'some_key': 'some_value', 'group_by': ['bar'] }",
+                    domain: "[('foo', 'ilike', 'abc')]",
+                    id: 1,
+                    is_default: true,
+                    name: "My favorite",
+                    sort: "[]",
+                    user_id: [2, "Mitchell Admin"],
+                },
+            ];
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
+                searchViewId: false,
+                searchViewArch: `<search/>`,
+                irFilters,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
+            });
+            assert.deepEqual(getFacetTexts(target), ["My favorite"]);
+
+            await toggleSearchBarMenu(target);
+            assert.containsNone(
+                target,
+                ".o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)"
+            );
+
+            await click(target, ".o_searchview_facet_label");
+            assert.containsOnce(target, ".modal");
+
+            await dsHelpers.editValue(target, "abcde");
+            await click(target.querySelector(".modal footer button"));
+            assert.containsNone(target, ".modal");
+            assert.deepEqual(getFacetTexts(target), ["Bar", "Foo contains abcde"]);
+
+            await toggleSearchBarMenu(target);
+            assert.containsNone(
+                target,
+                ".o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)"
+            );
+        });
+
         QUnit.module("Group by");
         QUnit.test(
             "simple rendering with neither groupbys nor groupable fields",
@@ -1645,6 +1694,8 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getDomain(controlPanel), [["foo", "=", "abc"]]);
 
             await toggleSearchBarMenu(target);
+            assert.containsOnce(target, ".o_filter_menu .o_menu_item:not(.o_add_custom_filter)");
+
             await openAddCustomFilterDialog(target);
             await dsHelpers.clickOnButtonAddNewRule(target);
 
@@ -1676,6 +1727,10 @@ QUnit.module("Search", (hooks) => {
                 ["id", "=", 1],
                 ["id", "=", 1],
             ]);
+
+            // open again the search menu -> the custom filter should not be displayed
+            await toggleSearchBarMenu(target);
+            assert.containsOnce(target, ".o_filter_menu .o_menu_item:not(.o_add_custom_filter)");
         });
 
         QUnit.test("Add a custom filter containing an expression", async function (assert) {
