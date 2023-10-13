@@ -5,13 +5,10 @@
         <th id="taxes_header" position="replace"/>
         <!-- hide the taxes td -->
         <td id="taxes" position="replace"/>
-        <!-- hide the "Tax excl." th -->
+        <!-- hide the "Amount" th -->
         <th id="subtotal_header" position="replace"/>
-        <!-- hide the "Tax excl." td -->
+        <!-- hide the "Amount" td -->
         <td id='subtotal' position="replace"/>
-        <xpath expr="//th[@id='total_header']/span" position="replace">
-            <span>Total</span>
-        </xpath>
         <xpath expr="//t[@t-call='sale.sale_order_portal_content_totals_table']" position="replace">
             <table class="table table-sm">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>

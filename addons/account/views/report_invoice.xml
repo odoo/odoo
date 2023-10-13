@@ -115,10 +115,7 @@
                                     </th>
                                     <th name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                     <th name="th_subtotal" class="text-end">
-                                        <span>Tax excl.</span>
-                                    </th>
-                                    <th t-if="o.tax_calculation_rounding_method == 'round_per_line'" name="th_total" class="text-end">
-                                        <span>Tax incl.</span>
+                                        <span>Amount</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -149,9 +146,6 @@
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
                                                 <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
-                                            </td>
-                                            <td t-if="o.tax_calculation_rounding_method == 'round_per_line'" name="td_total" class="text-end o_price_total">
-                                                <span class="text-nowrap" t-field="line.price_total">31.05</span>
                                             </td>
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
