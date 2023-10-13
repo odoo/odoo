@@ -22,12 +22,9 @@ class LivechatController(http.Controller):
         serves javascript since the css will be fetched by the shadow
         DOM of the livechat to avoid conflicts.
         """
-        bundle = 'im_livechat.assets_embed'
-        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext == 'css':
             raise request.not_found()
-        stream = request.env['ir.binary']._get_stream_from(asset.js())
-        return stream.get_response()
+        return self.assets_embed(ext, **kwargs)
 
     @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
@@ -35,9 +32,9 @@ class LivechatController(http.Controller):
         # assets to enable the redirection of routes to the CORS controller.
         headers = request.httprequest.headers
         origin_url = urlsplit(headers.get('referer'))
-        bundle = 'im_livechat.assets_embed'
+        bundle = 'im_livechat.assets_embed_external'
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
-            bundle = 'im_livechat.assets_cors'
+            bundle = 'im_livechat.assets_embed_cors'
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext not in ('css', 'js'):
             raise request.not_found()

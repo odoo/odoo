@@ -5,7 +5,7 @@ import { endDiscussion, okRating, feedback, transcript, close } from "./website_
 import { registry } from "@web/core/registry";
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName === "@im_livechat/embed/core/livechat_service") {
+    if (e.detail.moduleName === "@im_livechat/embed/common/livechat_service") {
         const { LivechatService, ODOO_VERSION_KEY } = e.detail.module;
         // Livechat sessions are deleted if they come from a different odoo version than
         // the current one. Since each test is run with a different browser the version
@@ -25,12 +25,12 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
                 } catch {
                     // Could be intentional (tour ended successfully while version still loading)
                 }
-    
+
                 return super.initialize(...arguments);
             },
         });
     }
-})
+});
 
 const chatRequest = [
     {

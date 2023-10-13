@@ -7,5 +7,5 @@ patch(OverlayContainer.prototype, {
     isVisible(overlay) {
         const targetInShadow = overlay.props.target?.getRootNode() instanceof ShadowRoot;
         return targetInShadow ? this.env.inShadow : !this.env.inShadow;
-    }
+    },
 });

@@ -3,7 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
-import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
 import { mockTimeout, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";

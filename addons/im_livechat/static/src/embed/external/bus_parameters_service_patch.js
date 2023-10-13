@@ -2,7 +2,7 @@
 
 import { busParametersService } from "@bus/bus_parameters_service";
 
-import { serverUrl } from "@im_livechat/embed/livechat_data";
+import { serverUrl } from "@im_livechat/embed/common/livechat_data";
 
 import { patch } from "@web/core/utils/patch";
 

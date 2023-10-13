@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { makeRoot, makeShadow } from "@im_livechat/embed/boot_helpers";
+import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
-import { serverUrl, isAvailable } from "@im_livechat/embed/livechat_data";
+import { serverUrl, isAvailable } from "@im_livechat/embed/common/livechat_data";
 import { _t } from "@web/core/l10n/translation";
 import { App } from "@odoo/owl";
 

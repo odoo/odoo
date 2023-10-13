@@ -25,8 +25,8 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
-        'im_livechat.assets_core': [
-            'website_livechat/static/src/embed/**/*',
+        'im_livechat.assets_embed_core': [
+            'website_livechat/static/src/embed/common/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_livechat/static/src/scss/**/*',

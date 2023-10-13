@@ -829,7 +829,7 @@ export class ThreadService {
         if (thread.type === "mailbox") {
             return thread.counter;
         }
-        if (thread.type === "chat" || thread.type === "group") {
+        if (thread.isChatChannel) {
             return thread.message_unread_counter || thread.message_needaction_counter;
         }
         return thread.message_needaction_counter;
