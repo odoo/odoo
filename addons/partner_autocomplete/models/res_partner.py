@@ -181,3 +181,16 @@ class ResPartner(models.Model):
             self._update_autocomplete_data(values.get('vat', False))
 
         return res
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+
+        if view_type == 'form':
+            for node in arch.xpath(
+                "//field[@name='name']"
+                "|//field[@name='vat']"
+            ):
+                node.attrib['widget'] = 'field_partner_autocomplete'
+
+        return arch, view
