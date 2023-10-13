@@ -1538,3 +1538,25 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard = Form(self.env[(res_dict.get('res_model'))].with_user(inventory_admin_user).with_context(
             res_dict['context'])).save()
         wizard.with_user(inventory_admin_user).process_cancel_backorder()
+
+    def test_reduce_qty_ordered_no_backorder(self):
+        """
+        When validating a reduced picking, declining a backorder then reducing the quantity ordered on the SO line
+        to match the quantity delivered, make sure that no additional picking is created.
+        """
+
+        so_1 = self._get_new_sale_order(amount=3, product=self.test_product_delivery)
+        so_1.action_confirm()
+        self.assertEqual(so_1.order_line.product_uom_qty, 3)
+        self.assertEqual(len(so_1.picking_ids), 1)
+
+        delivery_picking = so_1.picking_ids
+        delivery_picking.move_ids.quantity_done = 2
+        backorder_wizard_dict = delivery_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process_cancel_backorder()
+        self.assertEqual(so_1.order_line.product_uom_qty, 3)
+        self.assertEqual(so_1.order_line.qty_delivered, 2)
+
+        so_1.write({'order_line': [(1, so_1.order_line.id, {'product_uom_qty': so_1.order_line.qty_delivered})]})
+        self.assertEqual(len(so_1.picking_ids), 1)
