@@ -4,6 +4,10 @@
 <!-- Index -->
 <template id="index" name="Events" track="1">
     <t t-call="website.layout">
+        <t t-set="head">
+            <meta t-if="search_tags" name="robots" content="none"/>
+        </t>
+
         <div id="wrap" class="o_wevent_index">
             <!-- Options -->
             <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
