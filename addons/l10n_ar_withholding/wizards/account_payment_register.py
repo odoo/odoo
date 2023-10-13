@@ -13,7 +13,8 @@ class AccountPaymentRegister(models.TransientModel):
     l10n_ar_withholding_ids = fields.One2many(
         'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute='_compute_withholdings', readonly=False, store=True)
-    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', inverse='_inverse_l10n_ar_net_amount', readonly=True,  help="Net amount after withholdings")
+    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=False,  help="Net amount after withholdings")
+    l10n_ar_target_amount = fields.Monetary("Target Amount")
 
     @api.depends('line_ids', 'can_group_payments', 'group_payment')
     def _compute_withholdings(self):
@@ -34,14 +35,15 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
-            if rec.l10n_latam_check_id:
-                rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
-            else:
-                rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
 
-    def _inverse_l10n_ar_net_amount(self):
-        print("Inverse triggered")
-        return
+    @api.onchange('l10n_ar_target_amount')
+    def _l10n_ar_adjust_amount(self):
+        if self.l10n_ar_target_amount > 0:
+            total_factor_percent = 1.0
+            for line in self.l10n_ar_withholding_ids:
+                total_factor_percent -= line.amount / self.amount
+            self.amount = self.l10n_ar_target_amount / total_factor_percent
 
     def _get_withholding_tax(self):
         self.ensure_one()
@@ -67,6 +69,8 @@ class AccountPaymentRegister(models.TransientModel):
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
         payment_vals['amount'] = self.l10n_ar_net_amount
+        if self.l10n_latam_check_id and self.l10n_latam_check_id.amount != self.l10n_ar_net_amount:
+            raise UserError(_("The net amount should correspond to the check amount. "))
         conversion_rate = self._get_conversion_rate()
         sign = 1
         if self.partner_type == 'supplier':
