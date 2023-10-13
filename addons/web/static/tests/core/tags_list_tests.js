@@ -179,4 +179,32 @@ QUnit.module("Web Components", (hooks) => {
             "the counter has a tooltip displaying other items"
         );
     });
+
+    QUnit.test("Tags with img have a backdrop only if they can be deleted", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.tags = [
+                    {
+                        id: "tag1",
+                        text: "Earth",
+                        img: "fake/url",
+                    },
+                    {
+                        colorIndex: 1,
+                        id: "tag2",
+                        text: "Wind",
+                        img: "fake/url",
+                        onDelete: () => {},
+                    },
+                ];
+            }
+        }
+        Parent.components = { TagsList };
+        Parent.template = xml`<TagsList tags="tags" />`;
+
+        await mount(Parent, target, { env });
+        assert.containsN(target, ".o_tag", 2);
+        assert.containsNone(target.querySelectorAll(".o_tag")[0], ".o_avatar_backdrop");
+        assert.containsOnce(target.querySelectorAll(".o_tag")[1], ".o_avatar_backdrop");
+    });
 });
