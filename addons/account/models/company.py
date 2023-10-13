@@ -458,12 +458,18 @@ class ResCompany(models.Model):
             ('code', '=', str(code)),
         ]):
             code -= 1
-        return self.env['account.account'].create({
-                'code': str(code),
-                'name': _('Undistributed Profits/Losses'),
-                'account_type': unaffected_earnings_type,
-                'company_id': self.id,
-            })
+        return self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'values': {
+                              'code': str(code),
+                              'name': _('Undistributed Profits/Losses'),
+                              'account_type': unaffected_earnings_type,
+                              'company_id': self.id,
+                          },
+                'noupdate': True,
+            }
+        ])
 
     def _update_opening_move(self, to_update):
         """ Create or update the opening move for the accounts passed as parameter.
