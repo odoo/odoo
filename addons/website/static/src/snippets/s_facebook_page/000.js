@@ -26,7 +26,9 @@ const FacebookPageWidget = publicWidget.Widget.extend({
         delete params.id;
         params.width = clamp(Math.floor(this.$el.width()), 180, 500);
 
-        var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
+        const searchParams = new URLSearchParams(params);
+        const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
+
         this.$iframe = $('<iframe/>', {
             src: src,
             width: params.width,
