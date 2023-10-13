@@ -290,9 +290,24 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             }
         }
     },
+     // 10.Pick a URL with auto-complete
+    {
+        content: "Enter partial URL",
+        trigger: "#o_link_dialog_url_input",
+        run: 'text /contact'
+    },
+    {
+        content: "Pick '/contactus",
+        trigger: "ul.ui-autocomplete li div:contains('/contactus (Contact Us)')",
+    },
+    {
+        content: "Check that links's href and label were updated",
+        trigger: "iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
+        run: () => null,
+    },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    // 10. Add mega menu with Cards template and edit URL on text-selected card.
+    // 11. Add mega menu with Cards template and edit URL on text-selected card.
     wTourUtils.clickOnElement("menu link", "iframe header .nav-item a"),
     wTourUtils.clickOnElement("'Edit menu' icon", "iframe .o_edit_menu_popover .fa-sitemap"),
     {

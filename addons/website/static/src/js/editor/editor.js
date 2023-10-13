@@ -18,6 +18,7 @@ patch(LinkDialog.prototype, {
     async start() {
         const options = {
             body: this.$link && this.$link[0].ownerDocument.body,
+            urlChosen: () => this.__onURLInput(),
         };
         const result = await super.start(...arguments);
         wUtils.autocompleteWithPages(this.rpc.bind(this), this.$el.find('input[name="url"]'), options);
