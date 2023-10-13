@@ -160,6 +160,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         channel.with_user(operator).message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
         message_formats = channel.with_user(None).sudo()._channel_fetch_message()
         self.assertEqual(len(message_formats), 1)
+        self.assertNotIn('name', message_formats[0]['author'])
         self.assertEqual(message_formats[0]['author']['id'], operator.partner_id.id)
         self.assertEqual(message_formats[0]['author']['user_livechat_username'], operator.livechat_username)
         self.assertFalse(message_formats[0].get('email_from'), "should not send email_from to livechat user")

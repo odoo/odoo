@@ -39,10 +39,8 @@ class MailMessage(models.Model):
                 if message_sudo.author_id:
                     vals.pop('email_from')
                 if message_sudo.author_id.user_livechat_username:
-                    vals['author'] = {
-                        'id': message_sudo.author_id.id,
-                        'user_livechat_username': message_sudo.author_id.user_livechat_username,
-                    }
+                    del vals['author']['name']
+                    vals['author']['user_livechat_username'] = message_sudo.author_id.user_livechat_username
                 if discuss_channel.chatbot_current_step_id \
                         and message_sudo.author_id == discuss_channel.chatbot_current_step_id.chatbot_script_id.operator_partner_id:
                     chatbot_message_id = self.env['chatbot.message'].sudo().search([
