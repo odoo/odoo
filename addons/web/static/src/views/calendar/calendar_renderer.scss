@@ -550,6 +550,36 @@
     }
 }
 
+.o_calendar_renderer .fc-view {
+    .fc-bgevent {
+        opacity: 0.5;
+    }
+    .fc-event {
+        opacity: 1;
+
+        &.o_event_highlight {
+            opacity: 1;
+            .fc-content {
+                font-weight: bold;
+            }
+        }
+
+        &.o_cw_custom_highlight {
+            z-index: 10 !important;
+            opacity: 1;
+            right: 1px !important;
+            left: 1px !important;
+            margin-right: 0 !important;
+        }
+    }
+}
+
+.o_cw_popover {
+    .card-header {
+        padding-left: 2px;
+    }
+}
+
 // ===============  Generate color classes ===============
 @for $i from 1 through length($o-colors-complete) {
     $color: nth($o-colors-complete, $i);
@@ -559,31 +589,17 @@
             border-color: $color;
             &.fc-bgevent {
                 background-color: $color;
-                opacity: 0.5;
             }
             &.fc-event {
                 color: darken($color, 45%);
-                opacity: 1;
                 background: scale-color($color, $lightness: 50%);
                 .fc-bg {
                     background: scale-color($color, $lightness: 50%);
                 }
 
-                &.o_event_highlight {
-                    opacity: 1;
-                    .fc-content {
-                        font-weight: bold;
-                    }
-                }
-
                 &.o_cw_custom_highlight {
                     box-shadow: 0 12px 12px -5px rgba($color, 0.3);
                     color: color-contrast($color);
-                    z-index: 10 !important;
-                    opacity: 1;
-                    right: 1px !important;
-                    left: 1px !important;
-                    margin-right: 0 !important;
                 }
             }
 
@@ -634,7 +650,6 @@
         }
 
         .card-header {
-            padding-left: 2px;
             border-color: mix($card-border-color, mix($o-white, $color));
         }
     }
