@@ -23,6 +23,7 @@ import {
     getRelativeDateDomain,
 } from "@spreadsheet/global_filters/helpers";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { DateTime } = luxon;
 
@@ -44,7 +45,16 @@ const MONTHS = {
 const { UuidGenerator, createEmptyExcelSheet } = spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
-export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
+export class GlobalFiltersUIPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getFilterDisplayValue",
+        "getGlobalFilterDomain",
+        "getGlobalFilterValue",
+        "getActiveFilterCount",
+        "isGlobalFilterActive",
+        "getTextFilterOptions",
+        "getTextFilterOptionsFromRange",
+    ]);
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;
@@ -549,13 +559,3 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         });
     }
 }
-
-GlobalFiltersUIPlugin.getters = [
-    "getFilterDisplayValue",
-    "getGlobalFilterDomain",
-    "getGlobalFilterValue",
-    "getActiveFilterCount",
-    "isGlobalFilterActive",
-    "getTextFilterOptions",
-    "getTextFilterOptionsFromRange",
-];

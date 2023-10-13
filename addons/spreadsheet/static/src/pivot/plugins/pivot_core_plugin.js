@@ -23,7 +23,7 @@
  * @typedef {import("../pivot_table.js").PivotCell} PivotCell
  */
 
-import { CorePlugin, helpers } from "@odoo/o-spreadsheet";
+import { helpers } from "@odoo/o-spreadsheet";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
@@ -34,10 +34,22 @@ import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
+import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 const { isDefined } = helpers;
 
-export class PivotCorePlugin extends CorePlugin {
+export class PivotCorePlugin extends OdooCorePlugin {
+    static getters = /** @type {const} */ ([
+        "getNextPivotId",
+        "getPivotDefinition",
+        "getPivotDisplayName",
+        "getPivotIds",
+        "getPivotName",
+        "isExistingPivot",
+        "getPivotFieldMatch",
+        "getPivotFieldMatching",
+        "getPivotModelDefinition",
+    ]);
     constructor(config) {
         super(config);
 
@@ -460,15 +472,3 @@ export class PivotCorePlugin extends CorePlugin {
         data.pivotNextId = this.nextId;
     }
 }
-
-PivotCorePlugin.getters = [
-    "getNextPivotId",
-    "getPivotDefinition",
-    "getPivotDisplayName",
-    "getPivotIds",
-    "getPivotName",
-    "isExistingPivot",
-    "getPivotFieldMatch",
-    "getPivotFieldMatching",
-    "getPivotModelDefinition",
-];

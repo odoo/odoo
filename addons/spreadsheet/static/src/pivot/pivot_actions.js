@@ -1,6 +1,11 @@
 /** @odoo-module */
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
 
+/**
+ * @param {import("@odoo/o-spreadsheet").CellPosition} position
+ * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @returns {Promise<void>}
+ */
 export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
     const { model } = env.model.getters.getPivotDefinition(pivotId);
@@ -23,6 +28,11 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     });
 };
 
+/**
+ * @param {import("@odoo/o-spreadsheet").CellPosition} position
+ * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @returns {boolean}
+ */
 export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
     const cell = env.model.getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);

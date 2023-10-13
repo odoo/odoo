@@ -1,11 +1,9 @@
 /** @odoo-module */
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { Domain } from "@web/core/domain";
-
-const { CorePlugin } = spreadsheet;
+import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 /**
  * @typedef {Object} Chart
@@ -14,7 +12,14 @@ const { CorePlugin } = spreadsheet;
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
-export class OdooChartCorePlugin extends CorePlugin {
+export class OdooChartCorePlugin extends OdooCorePlugin {
+    static getters = /** @type {const} */ ([
+        "getOdooChartIds",
+        "getChartFieldMatch",
+        "getOdooChartDisplayName",
+        "getOdooChartFieldMatching",
+    ]);
+
     constructor(config) {
         super(config);
 
@@ -194,10 +199,3 @@ export class OdooChartCorePlugin extends CorePlugin {
         this.history.update("charts", charts);
     }
 }
-
-OdooChartCorePlugin.getters = [
-    "getOdooChartIds",
-    "getChartFieldMatch",
-    "getOdooChartDisplayName",
-    "getOdooChartFieldMatching",
-];

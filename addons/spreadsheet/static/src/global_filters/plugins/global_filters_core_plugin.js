@@ -36,13 +36,20 @@
 
 export const globalFiltersFieldMatchers = {};
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { OdooCorePlugin } from "@spreadsheet/plugins";
 
-export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
+export class GlobalFiltersCorePlugin extends OdooCorePlugin {
+    static getters = /** @type {const} */ ([
+        "getGlobalFilter",
+        "getGlobalFilters",
+        "getGlobalFilterDefaultValue",
+        "getGlobalFilterLabel",
+        "getFieldMatchingForModel",
+    ]);
     constructor(config) {
         super(config);
         /** @type {Array.<GlobalFilter>} */
@@ -354,11 +361,3 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
         this.history.update("globalFilters", filters);
     }
 }
-
-GlobalFiltersCorePlugin.getters = [
-    "getGlobalFilter",
-    "getGlobalFilters",
-    "getGlobalFilterDefaultValue",
-    "getGlobalFilterLabel",
-    "getFieldMatchingForModel",
-];

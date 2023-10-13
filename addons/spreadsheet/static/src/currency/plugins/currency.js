@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import { helpers, registries, UIPlugin } from "@odoo/o-spreadsheet";
+import { helpers, registries } from "@odoo/o-spreadsheet";
 import { CurrencyDataSource } from "../currency_data_source";
+import { OdooUIPlugin } from "@spreadsheet/plugins";
 const { featurePluginRegistry } = registries;
 const { createCurrencyFormat } = helpers;
 
@@ -11,7 +12,13 @@ const DATA_SOURCE_ID = "CURRENCIES";
  * @typedef {import("../currency_data_source").Currency} Currency
  */
 
-class CurrencyPlugin extends UIPlugin {
+export class CurrencyPlugin extends OdooUIPlugin {
+    static getters = /** @type {const} */ ([
+        "getCurrencyRate",
+        "getCurrencyFormat",
+        "getCompanyCurrencyFormat",
+    ]);
+
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;
@@ -80,7 +87,5 @@ class CurrencyPlugin extends UIPlugin {
         return this.computeFormatFromCurrency(currency);
     }
 }
-
-CurrencyPlugin.getters = ["getCurrencyRate", "getCurrencyFormat", "getCompanyCurrencyFormat"];
 
 featurePluginRegistry.add("odooCurrency", CurrencyPlugin);
