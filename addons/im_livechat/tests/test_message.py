@@ -22,7 +22,7 @@ class TestImLivechatMessage(HttpCase):
                 'odoobot_state': 'disabled',
                 'signature': '--\nErnest',
             },
-            {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com'},
+            {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'livechat_username': 'chuck'},
         ])
 
     @users('emp')
@@ -57,7 +57,7 @@ class TestImLivechatMessage(HttpCase):
             'author': {
                 'id': self.users[1].partner_id.id,
                 'is_company': self.users[1].partner_id.is_company,
-                'name': "test1",
+                'user_livechat_username': self.users[1].livechat_username,
                 'type': "partner",
                 'user': {
                     'id': self.users[1].id,
