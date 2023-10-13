@@ -134,7 +134,6 @@ class TestEventCrmCommon(EventCrmCase):
 
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
-            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'date_tz': 'Europe/Brussels',

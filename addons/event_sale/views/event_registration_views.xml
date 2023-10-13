@@ -8,7 +8,11 @@
         <field name="arch" type="xml">
             <field name="event_id" position="after">
                 <field name="sale_order_id" optional="hide"/>
-                <field name="payment_status" optional="hide"/>
+            </field>
+            <field name="state" position="after">
+                <field name="sale_status" optional="show" widget="badge"
+                    decoration-success="sale_status == 'sold'"
+                    decoration-danger="sale_status == 'to_pay'"/>
             </field>
         </field>
     </record>
@@ -20,14 +24,25 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='event_attendees_kanban_icons_desktop']" position="inside">
                 <div class="mt-auto pt-2">
-                    <field name="payment_status"/>
+                    <field name="sale_status"/>
                 </div>
             </xpath>
             <xpath expr="//div[@id='event_ticket_id']" position="before">
                 <div class="d-md-none" >
-                    <field name="payment_status"/>
+                    <field name="sale_status"/>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="event_registration_view_graph" model="ir.ui.view">
+        <field name="name">event.registration.graph.inherit.event.sale</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_graph"/>
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="sale_status"/>
+            </field>
         </field>
     </record>
 
@@ -48,8 +63,11 @@
                 <field name="sale_order_id" invisible="1"/>
             </xpath>
             <xpath expr="//group" position="before">
-                <field name="is_paid" invisible="1"/>
-                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="not is_paid"/>
+                <field name="sale_status" invisible="1"/>
+                <widget name="web_ribbon" title="Sold" bg_color="text-bg-success"
+                    invisible="sale_status != 'sold'"/>
+                <widget name="web_ribbon" title="Not Sold" bg_color="text-bg-danger"
+                    invisible="sale_status in ('sold', 'free') or not id"/>
             </xpath>
             <group name="utm_link" position="before">
                 <group string="Transaction" groups="base.group_no_one">

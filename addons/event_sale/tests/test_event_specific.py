@@ -30,7 +30,6 @@ class TestEventSpecific(TestEventSaleCommon):
             event_event_form.date_begin = datetime.datetime.now() + relativedelta(days=2)
             event_event_form.date_end = datetime.datetime.now() + relativedelta(days=3)
             event_event_form.event_type_id = event_type  # Set the template
-            event_event_form.auto_confirm = True
             # Create second ticket (VIP)
             with event_event_form.event_ticket_ids.new() as ticket_line:
                 ticket_line.name = 'VIP (Very Important Pastafarian)'

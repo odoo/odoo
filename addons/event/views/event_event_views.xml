@@ -35,7 +35,7 @@
                                 class="oe_stat_button"
                                 icon="fa-users"
                                 help="Total Registrations for this Event">
-                            <field name="seats_expected" widget="statinfo" string="Attendees"/>
+                            <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
 
                         <button name="%(event_barcode_action_main_view)d"
@@ -78,9 +78,8 @@
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
-                                <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Confirmed Attendees</span>
+                                <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees</span>
                             </div>
-                            <field name="auto_confirm"/>
                             <field name="badge_format"/>
                             <field name="badge_image"/>
                         </group>
@@ -148,11 +147,10 @@
                 <field name="date_begin" readonly="1" widget="date"/>
                 <field name="date_end" readonly="1" widget="date"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
+                <field name="seats_taken" string="Total Attendees" sum="Total" readonly="1"/>
                 <field name="seats_used" sum="Total" readonly="1"/>
                 <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
-                <field name="seats_unconfirmed" string="Unconfirmed Seats" sum="Total" readonly="1" optional="hide"/>
                 <field name="stage_id" readonly="1"/>
                 <field name="message_needaction" readonly="1" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
@@ -186,11 +184,9 @@
                 <field name="address_id"/>
                 <field name="date_begin"/>
                 <field name="date_end"/>
-                <field name="auto_confirm"/>
-                <field name="seats_unconfirmed"/>
                 <field name="seats_reserved"/>
                 <field name="seats_used"/>
-                <field name="seats_expected"/>
+                <field name="seats_taken"/>
                 <field name="legend_blocked"/>
                 <field name="legend_normal"/>
                 <field name="legend_done"/>
@@ -216,24 +212,15 @@
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value" class="d-flex">
-                                            <i class="fa fa-map-marker mt-1 me-1" title="Location"/>
-                                            <span t-esc="record.address_id.value"/>
+                                        <div t-if="record.address_id.value" class="d-flex ps-1">
+                                            <i class="fa fa-map-marker mt-1 me-2 text-center ps-1" title="Location"/>
+                                            <span t-esc="record.address_id.value" class="ms-1"/>
+                                        </div>
+                                        <div class="d-flex ps-1">
+                                            <i class="fa fa-group mt-1 me-2 text-center" title="Attendees"/>
+                                            <span t-out="record.seats_taken.raw_value" class="me-1"/> Attendees
                                         </div>
                                     </div>
-                                    <h5 class="p-0">
-                                        <a name="%(event_registration_action_stats_from_event)d"
-                                           type="action"
-                                           context="{'search_default_expected': True}">
-                                            <t t-esc="record.seats_expected.raw_value"/> Expected attendees
-                                        </a>
-                                        <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
-                                        <div  class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value"><br/>
-                                            <a class="ps-2" name="%(event_registration_action_stats_from_event)d" type="action" context="{'search_default_confirmed': True}">
-                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="ps-2"><t t-esc="total_seats"/> Confirmed</span>
-                                            </a>
-                                        </div>
-                                    </h5>
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="activity_ids" widget="kanban_activity"/>
@@ -259,10 +246,9 @@
         <field name="arch" type="xml">
             <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" mode="month" color="event_type_id" event_limit="5">
                 <field name="user_id" avatar_field="avatar_128"/>
-                <field name="seats_expected"/>
+                <field name="seats_taken"/>
                 <field name="seats_reserved"/>
                 <field name="seats_used"/>
-                <field name="seats_unconfirmed"/>
                 <field name="event_type_id" filters="1" invisible="1"/>
             </calendar>
         </field>
