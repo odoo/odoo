@@ -43,6 +43,46 @@
     border-color: map-get($theme-colors, 'light');
 }
 
+.o_cw_popover_link {
+    &.o_attendee_status_needsAction {
+        background-color: rgba($o-view-background-color, 0.9) !important;
+    }
+
+    &.o_attendee_status_declined {
+        text-decoration: line-through;
+        background-color: rgba($o-view-background-color, 0.9) !important;
+    }
+}
+
+.o_calendar_renderer {
+    .fc-event {
+        &.o_attendee_status_needsAction,
+        &.o_attendee_status_tentative,
+        &.o_attendee_status_declined,
+        &.o_attendee_status_alone {
+            border-width: 2px !important;
+        }
+
+        &.o_attendee_status_alone,
+        &.o_attendee_status_needsAction {
+            background-color: rgba($o-view-background-color, 0.9) !important;
+            color: $o-black !important;
+            .fc-bg {
+                background-color: rgba($o-view-background-color, 0.9) !important;
+            }
+        }
+
+        &.o_attendee_status_declined {
+            text-decoration: line-through;
+            background-color: rgba($o-view-background-color, 0.9) !important;
+            color: $o-black !important;
+            .fc-bg {
+                background-color: rgba($o-view-background-color, 0.9) !important;
+            }
+        }
+    }
+}
+
 @for $i from 1 through length($o-colors-complete) {
     $color: nth($o-colors-complete, $i);
 
@@ -57,15 +97,6 @@
                 rgba($color, 0.7) 20px
             ) !important;
         }
-
-        &.o_attendee_status_needsAction {
-            background-color: rgba($o-view-background-color, 0.9) !important;
-        }
-
-        &.o_attendee_status_declined {
-            text-decoration: line-through;
-            background-color: rgba($o-view-background-color, 0.9) !important;
-        }
     }
 
     .o_calendar_renderer {
@@ -74,8 +105,6 @@
             &.o_attendee_status_tentative,
             &.o_attendee_status_declined,
             &.o_attendee_status_alone {
-                border-width: 2px 2px 2px !important;
-
                 &.o_cw_custom_highlight {
                     background-color: $color;
                 }
@@ -91,24 +120,6 @@
                         rgba(white, 0.4) 10px,
                         rgba(white, 0.4) 20px
                     ) !important;
-                }
-            }
-
-            &.o_attendee_status_alone,
-            &.o_attendee_status_needsAction {
-                background-color: rgba($o-view-background-color, 0.9) !important;
-                color: $o-black !important;
-                .fc-bg {
-                    background-color: rgba($o-view-background-color, 0.9) !important;
-                }
-            }
-
-            &.o_attendee_status_declined {
-                text-decoration: line-through;
-                background-color: rgba($o-view-background-color, 0.9) !important;
-                color: $o-black !important;
-                .fc-bg {
-                    background-color: rgba($o-view-background-color, 0.9) !important;
                 }
             }
         }
