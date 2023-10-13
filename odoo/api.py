@@ -46,7 +46,8 @@ __all__ = [
 ]
 
 import logging
-from collections import defaultdict, Mapping
+from collections import defaultdict
+from collections.abc import Mapping
 from contextlib import contextmanager
 from inspect import currentframe, getargspec
 from pprint import pformat

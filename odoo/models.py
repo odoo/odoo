@@ -33,7 +33,8 @@ import operator
 import pytz
 import re
 import uuid
-from collections import defaultdict, MutableMapping, OrderedDict
+from collections import defaultdict, OrderedDict
+from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -5586,9 +5587,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return result
 
-collections.Set.register(BaseModel)
+collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
-collections.Sequence.register(BaseModel)
+collections.abc.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ A mapping from field names to values, to read and update the cache of a record. """

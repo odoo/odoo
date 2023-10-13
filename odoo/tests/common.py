@@ -2009,7 +2009,7 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
-class M2MProxy(X2MProxy, collections.Sequence):
+class M2MProxy(X2MProxy, collections.abc.Sequence):
     """ M2MProxy()
 
     Behaves as a :class:`~collection.Sequence` of recordsets, can be
