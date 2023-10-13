@@ -36,6 +36,8 @@ class ResConfigSettings(models.TransientModel):
         'Twilio Account Auth Token',
         config_parameter='mail.twilio_account_token',
     )
+    sfu_server_url = fields.Char("SFU Server URL", config_parameter="mail.sfu_server_url")
+    sfu_server_key = fields.Char("SFU Server key", config_parameter="mail.sfu_server_key", help="Base64 encoded key")
     email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
