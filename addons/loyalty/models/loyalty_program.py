@@ -216,7 +216,16 @@ class LoyaltyProgram(models.Model):
     def _program_type_default_values(self):
         # All values to change when program_type changes
         # NOTE: any field used in `rule_ids`, `reward_ids` and `communication_plan_ids` MUST be present in the kanban view for it to work properly.
+<<<<<<< 17.0
         first_sale_product = self.env['product.product'].search([('company_id', 'in', [False, self.env.company.id]), ('sale_ok', '=', True)], limit=1)
+||||||| 4d29b6eaf348db955175c072b68aa5e810298a79
+        first_sale_product = self.env['product.product'].search([('sale_ok', '=', True)], limit=1)
+=======
+        first_sale_product = self.env['product.product'].search([
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
+            ('sale_ok', '=', True)
+        ], limit=1)
+>>>>>>> 225d791d3170a079afdba218c2c84498efde7f84
         return {
             'coupons': {
                 'applies_on': 'current',
