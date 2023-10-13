@@ -175,6 +175,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             brandSelectorEl.dataset.selector = brandSelectorEl.dataset.selector
                 .replace('.navbar-brand.logo', '.navbar-brand');
         }
+
+        // TODO adapt in master: as a stable imp we added a preview for the
+        // "Effect" option of the "On Hover" animation option.
+        const hoverEffectSelectEl = $html.find('[data-set-img-shape-hover-effect]')[0];
+        delete hoverEffectSelectEl.dataset.noPreview;
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
