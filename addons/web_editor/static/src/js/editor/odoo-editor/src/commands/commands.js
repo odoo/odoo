@@ -233,12 +233,14 @@ export const editorCommands = {
                 reference = child;
             }
         }
+        const lastInsertedNodes = [...containerLastChild.childNodes];
         if (containerLastChild.hasChildNodes()) {
             const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
             _insertAt(currentNode, [...toInsert], insertBefore);
             currentNode = insertBefore ? toInsert[0] : currentNode;
             lastChildNode = toInsert[toInsert.length - 1];
         }
+        const firstInsertedNodes = [...containerFirstChild.childNodes];
         if (containerFirstChild.hasChildNodes()) {
             const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
             _insertAt(currentNode, [...toInsert], insertBefore);
@@ -310,7 +312,7 @@ export const editorCommands = {
         newRange.setStart(lastPosition[0], lastPosition[1]);
         newRange.setEnd(lastPosition[0], lastPosition[1]);
         selection.addRange(newRange);
-        return insertedNodes;
+        return [...firstInsertedNodes, ...insertedNodes, ...lastInsertedNodes];
     },
     insertFontAwesome: (editor, faClass = 'fa fa-star') => {
         const insertedNode = editorCommands.insert(editor, document.createElement('i'))[0];
