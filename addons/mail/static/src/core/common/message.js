@@ -225,6 +225,10 @@ export class Message extends Component {
         return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
     }
 
+    get authorName() {
+        return this.props.message.author?.name;
+    }
+
     get expandText() {
         return _t("Expand");
     }

@@ -13,6 +13,13 @@ patch(Message.prototype, {
         this.session = session;
     },
 
+    get authorName() {
+        if (this.props.message.originThread?.type === "livechat") {
+            return this.props.author.user_livechat_username || super.authorName;
+        }
+        return super.authorName;
+    },
+
     /**
      * @param {import("@im_livechat/embed/chatbot/chatbot_step_model").StepAnswer} answer
      */
