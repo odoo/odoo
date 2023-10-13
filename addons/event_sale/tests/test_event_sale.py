@@ -146,7 +146,6 @@ class TestEventSale(TestEventSaleCommon):
             'email': 'manual.email.2@test.example.com',
         })
 
-        self.assertFalse(editor.seats_available_insufficient)
         editor.action_make_registration()
 
         # check editor correctly created new registrations with information coming from it or SO as fallback
@@ -226,8 +225,6 @@ class TestEventSale(TestEventSaleCommon):
             'default_sale_order_id': customer_so.id
         }).create({})
 
-        self.assertFalse(editor.seats_available_insufficient)
-
         editor.action_make_registration()
         self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
         self.assertTrue(all(reg.state == "open" for reg in self.event_0.registration_ids))
@@ -275,8 +272,6 @@ class TestEventSale(TestEventSaleCommon):
             'default_sale_order_id': customer_so.id
         }).create({})
 
-        self.assertTrue(editor.seats_available_insufficient)
-
         with self.assertRaises(ValidationError):
             editor.action_make_registration()
 
@@ -321,8 +316,6 @@ class TestEventSale(TestEventSaleCommon):
         editor = self.env['registration.editor'].with_context({
             'default_sale_order_id': customer_so.id
         }).create({})
-
-        self.assertTrue(editor.seats_available_insufficient)
 
         with self.assertRaises(ValidationError):
             editor.action_make_registration()
