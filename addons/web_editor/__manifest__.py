@@ -86,7 +86,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
             ('include', 'web_editor.assets_wysiwyg'),

@@ -3,9 +3,8 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-import { datetime_to_str } from "@web/legacy/js/core/time";
 import { assignDefined } from "@mail/utils/common/misc";
-import { formatDate } from "@web/core/l10n/dates";
+import { formatDate, serializeDateTime, today } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";
 const { DateTime } = luxon;
 
@@ -211,7 +210,7 @@ patch(MockServer.prototype, {
             );
             if (memberOfCurrentUser) {
                 this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                    last_interest_dt: datetime_to_str(new Date()),
+                    last_interest_dt: serializeDateTime(today()),
 
                     is_pinned: true,
                 });

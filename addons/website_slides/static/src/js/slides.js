@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from '@web/legacy/js/public/public_widget';
-import time from '@web/legacy/js/core/time';
+import { deserializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
@@ -16,7 +16,7 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
 
         $("timeago.timeago").toArray().forEach((el) => {
             var datetime = $(el).attr('datetime');
-            var datetimeObj = time.str_to_datetime(datetime);
+            var datetimeObj = deserializeDateTime(datetime);
             // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
             // then return fix formate string else timeago
             var displayStr = '';
