@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Layna Nascimento, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,17 +27,19 @@ msgid ""
 "' recycling rule.<br/>\n"
 "You can validate those changes"
 msgstr ""
+"\" regra de reciclagem.<br/>\n"
+"Você pode validar essas alterações"
 
 #. module: data_recycle
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 #, python-format
 msgid "**Record Deleted**"
-msgstr ""
+msgstr "**Registro excluído**"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 msgid "<span class=\"me-1\">Every</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">A cada</span>"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
@@ -68,7 +71,7 @@ msgstr "Configuração"
 #: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
 #: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
 msgid "Configure rules to identify records to clean"
-msgstr ""
+msgstr "Configurar regras que identifiquem registros para limpar"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
@@ -92,7 +95,7 @@ msgstr "Limpeza de Dados"
 #: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
 #: model:ir.cron,name:data_recycle.ir_cron_clean_records
 msgid "Data Recycle: Clean Records"
-msgstr ""
+msgstr "Reciclagem de dados: Limpar registros"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
@@ -108,12 +111,12 @@ msgstr "Excluir"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
 msgid "Delta"
-msgstr ""
+msgstr "Delta"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
 msgid "Delta Unit"
-msgstr ""
+msgstr "Unidade delta"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
@@ -123,7 +126,7 @@ msgstr "Descartar"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
 msgid "Discarded"
-msgstr ""
+msgstr "Descartado"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
@@ -135,7 +138,7 @@ msgstr "Nome exibido"
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
 msgid "Field Recycle Records"
-msgstr ""
+msgstr "Registro de reciclagem de campo"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
@@ -151,7 +154,7 @@ msgstr "ID"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
 msgid "Include Archived"
-msgstr ""
+msgstr "Incluir arquivo"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
@@ -162,7 +165,7 @@ msgstr "Última modificação em"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
 msgid "Last Notification"
-msgstr ""
+msgstr "Última notificação"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
@@ -180,6 +183,7 @@ msgstr "Última atualização em"
 #: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
 msgid "List of users to notify when there are new records to recycle"
 msgstr ""
+"Lista de usuários a notificar quando houver novos registros para limpar"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
@@ -213,22 +217,22 @@ msgstr "Nome"
 #: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
 #: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
 msgid "No cleaning suggestions"
-msgstr ""
+msgstr "Sem sugestões de limpeza"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
 msgid "Notify"
-msgstr ""
+msgstr "Notificar"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
 msgid "Notify Frequency Period"
-msgstr ""
+msgstr "Período de frequência das notificações"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
 msgid "Notify Users"
-msgstr ""
+msgstr "Notificar usuários"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
@@ -244,63 +248,63 @@ msgstr "Nome do registro"
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
 msgid "Records"
-msgstr ""
+msgstr "Registro"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
 msgid "Records To Recycle"
-msgstr ""
+msgstr "Registros a reciclar"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
 msgid "Recycle Action"
-msgstr ""
+msgstr "Ação de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
 msgid "Recycle Mode"
-msgstr ""
+msgstr "Modo de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
 msgid "Recycle Model"
-msgstr ""
+msgstr "Modelo de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
 msgid "Recycle Record"
-msgstr ""
+msgstr "Registro de reciclagem"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
 msgid "Recycle Records"
-msgstr ""
+msgstr "Registros de reciclagem"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 msgid "Recycle Rule"
-msgstr ""
+msgstr "Regra de reciclagem"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
 msgid "Recycle Rules"
-msgstr ""
+msgstr "Regras de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model,name:data_recycle.model_data_recycle_model
 msgid "Recycling Model"
-msgstr ""
+msgstr "Modelo de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model,name:data_recycle.model_data_recycle_record
 msgid "Recycling Record"
-msgstr ""
+msgstr "Registro de reciclagem"
 
 #. module: data_recycle
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
 msgid "Recyle Records Rules"
-msgstr ""
+msgstr "Regras de registros de reciclagem"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
@@ -310,41 +314,42 @@ msgstr "Regras"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 msgid "Run Now"
-msgstr ""
+msgstr "Executar agora"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
 msgid "Select a model to configure recycling actions"
-msgstr ""
+msgstr "Selecione um modelo para configurar ações de reciclagem"
 
 #. module: data_recycle
 #: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
 msgid "The notification frequency should be greater than 0"
-msgstr ""
+msgstr "A frequência de notificação deve ser superior a 0"
 
 #. module: data_recycle
 #: code:addons/data_recycle/models/data_recycle_model.py:0
 #, python-format
 msgid "This model doesn't manage archived records. Only deletion is possible."
 msgstr ""
+"Este modelo não gerencia registros arquivados. Só é possível exclui-los."
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
 msgid "Time Field"
-msgstr ""
+msgstr "Campo de tempo"
 
 #. module: data_recycle
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 #, python-format
 msgid "Undefined Name"
-msgstr ""
+msgstr "Nome indefinido"
 
 #. module: data_recycle
 #. openerp-web
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #, python-format
 msgid "Unselect"
-msgstr ""
+msgstr "Desmarcar"
 
 #. module: data_recycle
 #. openerp-web
@@ -357,7 +362,7 @@ msgstr "Validar"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "We've identified"
-msgstr ""
+msgstr "Identificamos"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
@@ -378,4 +383,4 @@ msgstr "aqui"
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "records to clean with the '"
-msgstr ""
+msgstr "registros para limpar com \""

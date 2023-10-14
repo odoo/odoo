@@ -13,7 +13,7 @@
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # Diego Sayron, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2023
 # Wil Odoo, 2023
 # Layna Nascimento, 2023
 # 
@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 13:48+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -1807,8 +1807,8 @@ msgid "Customer Screen Warning"
 msgstr "Aviso de tela do cliente"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -4014,8 +4014,8 @@ msgstr ""
 " pedido."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4171,8 +4171,8 @@ msgid "Pay Order"
 msgstr "Pagamento do Pedido"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4580,6 +4580,8 @@ msgid "Point Of Sale"
 msgstr "Ponto de Venda"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4593,6 +4595,7 @@ msgstr "Ponto de Venda"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Ponto de Venda"
 
@@ -7539,16 +7542,6 @@ msgstr "Não é possível fechar o PDV quando as ordens ainda estão em rascunho
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
 "Você não pode criar uma sessão antes da data de bloqueio da contabilidade."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
-"Não é possível excluir uma linha de extrato bancário vinculada à sessão do "
-"ponto de venda."
 
 #. module: point_of_sale
 #. odoo-python

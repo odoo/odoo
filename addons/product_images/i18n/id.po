@@ -27,6 +27,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"%(matching_images_count)s gambar yang cocok telah ditemukan untuk "
+"%(product_count)s produk."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -36,6 +38,10 @@ msgid ""
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"                            Karena hanya 10,000 produk yang dapat diproses per hari, sisanya akan\n"
+"                            diselesaikan besok.\n"
+"                        </span>"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0

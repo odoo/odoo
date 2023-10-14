@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +41,8 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"ทั้งโปรเจ็กต์ภายในและงานจำเป็นต้องสร้างใบบันทึกเวลาสำหรับเวลาที่หยุดทำงาน %s"
+" หากคุณไม่ต้องการใบบันทึกเวลา คุณควรปล่อยให้โปรเจ็กต์ภายในและงานว่างไว้"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -59,12 +62,12 @@ msgstr "พนักงาน"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "สร้างใบบันทึกเวลา"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr ""
+msgstr "การลาหยุดสากล"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -72,6 +75,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"หากทำเครื่องหมาย เมื่อตรวจสอบการลาหยุด "
+"ใบบันทึกเวลาจะถูกสร้างขึ้นในโปรเจ็กต์วันหยุดของบริษัท"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -89,7 +94,7 @@ msgstr "โปรเจกต์เบื้องต้น"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__is_timeoff_task
 msgid "Is Time off Task"
-msgstr ""
+msgstr "เป็นงานของการลาหยุด"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
@@ -134,6 +139,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"โปรเจ็กต์เริ่มต้นที่ใช้เมื่อสร้างใบบันทึกเวลาโดยอัตโนมัติผ่านคำขอการลาหยุด "
+"คุณสามารถระบุโปรเจ็กต์อื่นในแต่ละประเภทการลาหยุดเป็นรายบุคคลได้"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -141,6 +148,8 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"งานเริ่มต้นที่ใช้เมื่อสร้างใบบันทึกเวลาโดยอัตโนมัติผ่านคำขอการลาหยุด "
+"คุณสามารถระบุงานอื่นในแต่ละประเภทการลาหยุดเป็นรายบุคคลได้"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -157,13 +166,13 @@ msgstr "การลา"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr ""
+msgstr "การลาหยุด (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "งานการลาหยุด"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -183,6 +192,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"คุณไม่สามารถสร้างใบบันทึกเวลาสำหรับงานที่เชื่อมโยงกับชนิดการลาหยุดได้ "
+"โปรดใช้แอปพลิเคชันระบบการลา เพื่อขอการลาหยุดใหม่แทน"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -192,6 +203,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"คุณไม่สามารถลบใบบันทึกเวลาที่เชื่อมโยงกับคำขอวันลาหยุดได้ "
+"กรุณายกเลิกคำขอลาหยุดจากแอปพลิเคชันระบบการลาแทน"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -201,3 +214,5 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"คุณไม่สามารถแก้ไขใบบันทึกเวลาที่เชื่อมโยงกับคำขอลาหยุดได้ โปรดใช้แอปพลิเคชัน"
+" ระบบการลา เพื่อแก้ไขคำขอลาหยุดของคุณแทน"

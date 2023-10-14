@@ -8,8 +8,8 @@
 # Thin Tran <trvathin@gmail.com>, 2022
 # Trần Hà <tranthuha13590@gmail.com>, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Thi Huong Nguyen, 2023
 # Martin Trigaux, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -327,7 +327,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">Thuế 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -360,6 +360,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"<span>Hoá đơn</span>\n"
+"                           <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -417,7 +419,7 @@ msgstr "<strong>Tổng tiền</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
-msgstr ""
+msgstr "<strong>Số tiền trước thuế</strong>"
 
 #. module: web
 #. odoo-javascript
@@ -1188,7 +1190,6 @@ msgstr "Gọi"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1609,7 +1610,6 @@ msgstr "Quốc gia"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1645,6 +1645,13 @@ msgstr "Tạo \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Tạo %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr "Tạo <strong>%s</strong> dưới dạng một %s mới?"
 
 #. module: web
 #. odoo-javascript
@@ -1935,7 +1942,7 @@ msgstr "Developer Tools"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "Không thể tổng hợp các loại tiền tệ khác nhau"
 
 #. module: web
 #. odoo-javascript
@@ -2811,6 +2818,13 @@ msgid "Invalid fields: "
 msgstr "Trường không hợp lệ: "
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr "Model không hợp lệ: %s"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -2834,7 +2848,7 @@ msgstr "Đang mời..."
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "Thông tin công ty trống"
 
 #. module: web
 #. odoo-javascript
@@ -4077,6 +4091,8 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2023/00003</span></b>"
 msgstr ""
+"Vui lòng điền thông tin thanh toán như sau: <b><span>\n"
+"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4427,7 +4443,7 @@ msgstr "Quan hệ:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Bảng quan hệ"
 
 #. module: web
 #. odoo-javascript
@@ -5197,6 +5213,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Mã số thuế. Các giá trị ở đây sẽ được xác thực dựa trên định dạng quốc gia. "
+"Bạn có thể sử dụng dấu '/' để chỉ một đối tác không phải chịu thuế."
 
 #. module: web
 #. odoo-python
@@ -6045,7 +6063,7 @@ msgstr "Bạn có thể không tin,<br /> nhưng thực sự hệ thống vẫn 
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
-msgstr ""
+msgstr "Trước tiên, bạn cần có khả năng chỉnh sửa cha để thêm thẻ thuộc tính"
 
 #. module: web
 #. odoo-javascript
@@ -6054,6 +6072,8 @@ msgstr ""
 #, python-format
 msgid "You need to be able to edit parent first to configure property fields"
 msgstr ""
+"Trước tiên, bạn cần có khả năng chỉnh sửa cha để cấu hình các trường thuộc "
+"tính"
 
 #. module: web
 #. odoo-javascript
@@ -6191,7 +6211,6 @@ msgstr "được phép cho bản cập nhật này."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "như cái mới"
@@ -6581,6 +6600,13 @@ msgstr "ms"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr "new tab"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6743,13 +6769,6 @@ msgstr "đặt"
 #, python-format
 msgid "set (true)"
 msgstr "đặt (đúng)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
