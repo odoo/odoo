@@ -66,7 +66,7 @@ msgstr "販売者アカウントID"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr " txn_id (%(txn_id)s) または txn_type (%(txn_type)s)用の欠損値"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment_transaction.py:0
@@ -149,7 +149,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
-msgstr ""
+msgstr "Paypalのアカウントを識別するためにのみ使用される公開取引先ID"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -159,6 +159,7 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"参照 %(ref)sの取引ステータスが同期されなかったのは、PayPalダッシュボードで'支払いデータ転送'オプションが有効になっていないためです。"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
