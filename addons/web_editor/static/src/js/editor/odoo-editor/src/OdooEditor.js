@@ -753,13 +753,6 @@ export class OdooEditor extends EventTarget {
                         this.historyResetLatestComputedSelection(true);
                     }
                     this.execCommand('setFontSize', fontSize === 'default' ? undefined : parseInt(fontSize) + 'px');
-                    fontSizeInput.closest('#font-size').querySelectorAll('.show').forEach(el => {
-                        el.classList.remove('show'); // Close the dropdown.
-                        // Remove Popper's styles to ensure proper positioning
-                        // of the dropdown next time it opens.
-                        el.style.removeProperty('inset');
-                        el.style.removeProperty('transform');
-                    });
                     fontSizeInput.blur();
                 }
             }
