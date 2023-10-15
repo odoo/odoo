@@ -1731,7 +1731,7 @@ msgstr "ไม่มีสิทธิ์เข้าถึงข้ามข้
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "คุณต้องการพิมพ์โดยใช้เครื่องพิมพ์เว็บหรือไม่?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2916,7 +2916,7 @@ msgstr "Offline"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Offline Orders"
-msgstr ""
+msgstr "การสั่งซื้อแบบออฟไลน์"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2938,12 +2938,12 @@ msgstr "ต่อเนื่อง"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "ใช้การปัดเศษเป็นเงินสดเท่านั้น"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "เฉพาะวิธีเงินสดเท่านั้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -2951,6 +2951,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"เฉพาะผู้ใช้ที่มีสิทธิ์การเข้าถึงระดับผู้จัดการสำหรับแอป PoS "
+"เท่านั้นที่สามารถแก้ไขราคาสินค้าตามคำสั่งซื้อได้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2958,6 +2960,7 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"รองรับเฉพาะรูปแบบรูปภาพที่เข้ากันได้กับเว็บ เช่น .png หรือ .jpeg เท่านั้น"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2972,7 +2975,7 @@ msgstr "เปิด"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "เปิดกล่องเงินสด"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -2982,7 +2985,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "เปิดเซสชัน PoS ที่ใช้วิธีการชำระเงินนี้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2994,18 +2997,18 @@ msgstr "เปิดวาระการขาย"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "เปิดโดย"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opened by"
-msgstr ""
+msgstr "เปิดโดย"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opening Control"
-msgstr ""
+msgstr "เปิดการควบคุม"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__start_at
@@ -3042,7 +3045,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "ประเภทการดำเนินการจะแสดงในแดชบอร์ดสินค้าคงคลัง"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3060,14 +3063,14 @@ msgstr "Order"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Order %s"
-msgstr ""
+msgstr "คำสั่งซื้อ %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "คำสั่งซื้อ %s ไม่ได้รับชำระเต็มจำนวน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -3084,12 +3087,12 @@ msgstr "วันที่สั่งซื้อ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_id
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "รหัสคำสั่งซื้อตามลำดับ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "ลำดับรหัสรายการสั่งซื้อ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -3114,19 +3117,19 @@ msgstr "อ้างอิงคำสั่ง"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
-msgstr ""
+msgstr "หมายเลขลำดับคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Order is empty"
-msgstr ""
+msgstr "คำสั่งซื้อว่างเปล่า"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3150,12 +3153,12 @@ msgstr "คำสั่งขาย"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
-msgstr ""
+msgstr "การวิเคราะห์คำสั่งซื้อ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
 msgid "Other Devices"
-msgstr ""
+msgstr "อุปกรณ์อื่นๆ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3173,38 +3176,38 @@ msgstr "อื่น ๆ "
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "คำสั่งซื้อ POS %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr ""
+msgstr "คำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
 msgid "POS Sales"
-msgstr ""
+msgstr "การขาย POS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
@@ -3242,7 +3245,7 @@ msgstr "จ่าย"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr ""
+msgstr "ชำระเงินคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3284,7 +3287,7 @@ msgstr "วิธีการชำระเงิน"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "ข้อมูลใบเสร็จรับเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -3301,36 +3304,36 @@ msgstr "สถานะการชำระเงิน"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment Successful"
-msgstr ""
+msgstr "ชำระเงินสำเร็จ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Terminals"
-msgstr ""
+msgstr "เทอร์มินัลการชำระเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "รหัสธุรกรรมการชำระเงิน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment methods available"
-msgstr ""
+msgstr "มีวิธีการชำระเงินให้เลือก"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "คำขอชำระเงินอยู่ระหว่างดำเนินการ"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "การชำระเงินกลับรายการแล้ว"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3352,14 +3355,14 @@ msgstr "การชำระ"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr ""
+msgstr "วิธีการชำระเงิน"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #, python-format
 msgid "Payments:"
-msgstr ""
+msgstr "การชำระเงิน:"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
@@ -3386,7 +3389,7 @@ msgstr "โทรศัพท์"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Pick which product categories are available"
-msgstr ""
+msgstr "เลือกหมวดหมู่สินค้าที่มีอยู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -3398,13 +3401,13 @@ msgstr "การรับสินค้า"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "จำนวนการเบิกสินค้า"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "การเลือก POS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3426,14 +3429,14 @@ msgstr "รูปภาพ"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "พลาสติก"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr ""
+msgstr "โปรดยืนยันจำนวนเงินจำนวนมาก"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3458,46 +3461,48 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"กรุณาปิดเซสซันการขายหน้าร้านทั้งหมดในช่วงเวลานี้ก่อนที่จะปิด "
+"เซสชั่นที่เปิดคือ:%s "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "โปรดกำหนดค่าวิธีการชำระเงินใน POS ของคุณ"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "โปรดกำหนดบัญชีรายได้สำหรับสินค้านี้: \"%s\" (รหัส:%d)"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "กรุณาพิมพ์ใบแจ้งหนี้จากการทำงานเบื้องหลัง"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "กรุณาระบุพาร์ทเนอร์สำหรับการขาย"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "กรุณาเลือกวิธีการชำระเงิน"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Please select the Customer"
-msgstr ""
+msgstr "กรุณาเลือกลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3507,7 +3512,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "อินเตอร์เฟซ PoS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -3522,17 +3527,17 @@ msgstr "คำสั่ง PoS"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "หมวดหมู่สินค้า PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "หมวดหมู่สินค้า PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
-msgstr ""
+msgstr "ระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
@@ -3557,7 +3562,7 @@ msgstr "จุดขาย"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_pivot
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "การวิเคราะห์การขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
@@ -3569,7 +3574,7 @@ msgstr "หมวดจุดขาย"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "การกำหนดค่าการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
@@ -3587,32 +3592,32 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr ""
+msgstr "รายละเอียดการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr ""
+msgstr "รายงานรายละเอียดการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr ""
+msgstr "รายงานใบแจ้งหนี้ของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "โปรแกรมชำระเงินของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "กลุ่มผู้จัดการระบบขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "ประเภทการดำเนินงานของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3653,18 +3658,18 @@ msgstr "เซสชั่นการขายหน้าร้าน"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.qunit_suite
 msgid "Point of Sale Tests"
-msgstr ""
+msgstr "การทดสอบระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "กลุ่มผู้ใช้ระบบขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "การกำหนดค่า Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -3685,7 +3690,7 @@ msgstr "จำนวนคำสั่ง Pos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ Pos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -3695,27 +3700,27 @@ msgstr "หมวดหมู่สินค้าสำหรับจุดข
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "เซสซัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr ""
+msgstr "ระยะเวลาเซสซัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "สถานะเซสชัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "ชื่อผู้ใช้เซสชัน POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr ""
+msgstr "เซสชัน Pos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3727,7 +3732,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3771,12 +3776,12 @@ msgstr "ราคาต่อหน่วย"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/SetPricelistButton.xml:0
 #, python-format
 msgid "Price list"
-msgstr ""
+msgstr "รายการราคา"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__price
 msgid "Priced Product"
-msgstr ""
+msgstr "ราคาสินค้า"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3824,7 +3829,7 @@ msgstr "พิมพ์ใบเสร็จรับเงิน"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SaleDetailsButton.xml:0
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr ""
+msgstr "พิมพ์รายงานยอดขายทั้งหมดของเซสชัน PoS ปัจจุบัน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3834,7 +3839,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr ""
+msgstr "พิมพ์ใบเสร็จรับเงินโดยอัตโนมัติเมื่อลงทะเบียนการชำระเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3901,7 +3906,7 @@ msgstr "ราคาสินค้า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "สินค้า หมวดหมู่สินค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
@@ -3938,12 +3943,12 @@ msgstr "แบบที่ต่างกันของสินค้า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Product prices on receipts"
-msgstr ""
+msgstr "ราคาสินค้าในใบเสร็จรับเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "เคล็ดลับสินค้า"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3961,7 +3966,7 @@ msgstr "สินค้า"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Connected"
-msgstr ""
+msgstr "เชื่อมต่อพร็อกซีแล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3969,7 +3974,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Disconnected"
-msgstr ""
+msgstr "ยกเลิกการเชื่อมต่อพร็อกซีแล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3977,7 +3982,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Warning"
-msgstr ""
+msgstr "คำเตือนพร็อกซี"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3999,7 +4004,7 @@ msgstr "จำนวน"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "อ่านเครื่องชั่งน้ำหนัก"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4007,7 +4012,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
-msgstr ""
+msgstr "พร้อมที่จะเปิดตัว <b>การขายหน้าร้าน</b> ของคุณแล้วหรือยัง?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4020,7 +4025,7 @@ msgstr "การรับ"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "ใบเสร็จ %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -4049,7 +4054,7 @@ msgstr "เครื่องพิมพ์ใบเสร็จ"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "บันทึกการชำระเงินด้วยเครื่องเทอร์มินัลในสมุดรายวันนี้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4059,14 +4064,14 @@ msgstr "Record transactions in foreign currencies"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "เซสชันการกู้คืน"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Refresh Display"
-msgstr ""
+msgstr "รีเฟรชจอแสดงผล"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4080,7 +4085,7 @@ msgstr "เหลืออยู่"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "คำสั่งซื้อที่ไม่ซิงค์ที่เหลืออยู่"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4105,7 +4110,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Request sent"
-msgstr ""
+msgstr "ส่งคำขอแล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4127,7 +4132,7 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "จำกัดการแก้ไขราคาเฉพาะผู้จัดการ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
@@ -4163,7 +4168,7 @@ msgstr "คืนแล้ว"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "คำขอกลับรายการส่งไปยังเทอร์มินัล"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4204,14 +4209,14 @@ msgstr "Rounding Factor"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "ข้อผิดพลาดในการปัดเศษในรายการการชำระเงิน"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/debug_manager.xml:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "เรียกใช้การทดสอบ JS ระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -4224,19 +4229,19 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "SN"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "จำนวนรายการขาย"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "รายการขาย"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -4252,7 +4257,7 @@ msgstr "รายละเอียดการขาย"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Sales Journal"
-msgstr ""
+msgstr "สมุดรายวันการขาย"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4333,14 +4338,14 @@ msgstr "เลือก"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js:0
 #, python-format
 msgid "Select Fiscal Position"
-msgstr ""
+msgstr "เลือกสถานะทางการเงิน"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select an order"
-msgstr ""
+msgstr "เลือกคำสั่งซื้อ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4359,7 +4364,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
-msgstr ""
+msgstr "เลือกรายการราคา"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
@@ -4380,7 +4385,7 @@ msgstr "ส่ง"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr ""
+msgstr "ส่งคำขอการชำระเงิน"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4395,7 +4400,7 @@ msgstr "ส่งทางอีเมล"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "การส่งอีเมลล้มเหลว กรุณาลองอีกครั้ง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4449,7 +4454,7 @@ msgstr "วาระการขาย"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "รายการสมุดรายวันเซสชัน"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4468,7 +4473,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr ""
+msgstr "เซสชั่นเปิดมากกว่า 7 วัน"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -4516,7 +4521,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.xml:0
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "กำหนดสถานะทางการเงิน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4533,7 +4538,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Set the new quantity"
-msgstr ""
+msgstr "กำหนดปริมาณใหม่"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -4567,17 +4572,17 @@ msgstr "แสดงการชำระเงินให้กับลูก
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "แสดงหน้าจอเข้าสู่ระบบของพนักงาน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Six"
-msgstr ""
+msgstr "หก"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr ""
+msgstr "Six เทอร์มินัลการชำระเงิน"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -4594,7 +4599,7 @@ msgstr "ข้าม"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "ข้ามหน้าจอแสดงตัวอย่าง"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4607,7 +4612,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "ชั้นวางขนาดเล็ก"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -4622,7 +4627,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "หมายเลขซีเรียล/ล็อตบางส่วนหายไป"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4633,6 +4638,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อบางรายการไปยังเซิร์ฟเวอร์ได้เนื่องจากข้อผิดพลาดในการกำหนดค่า"
+" คุณสามารถออกจากระบบขายหน้าร้านได้ "
+"แต่อย่าปิดเซสชันก่อนที่ปัญหาจะได้รับการแก้ไข"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4643,11 +4651,14 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อบางรายการไปยังเซิร์ฟเวอร์ได้เนื่องจากปัญหาการเชื่อมต่ออินเทอร์เน็ต"
+" คุณสามารถออกจากระบบขายหน้าร้านได้ "
+"แต่อย่าปิดเซสชันก่อนที่ปัญหาจะได้รับการแก้ไข"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "ระบุล็อตสินค้า/หมายเลขซีเรียลในรายการใบสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -4657,7 +4668,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
-msgstr ""
+msgstr "เริ่มหมวดหมู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
@@ -4667,7 +4678,7 @@ msgstr "วันที่เริ่ม"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "เริ่มขายจากหมวดหมู่สินค้าเริ่มต้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -4709,7 +4720,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "ควรอัพเดตสต็อกเมื่อจะทำการปิด"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4743,7 +4754,7 @@ msgstr "ยอดยังไม่ลด"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Successfully imported"
-msgstr ""
+msgstr "นำเข้าเรียบร้อยแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4753,7 +4764,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
-msgstr ""
+msgstr "ผลรวมของยอดรวมย่อย"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4761,7 +4772,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connected"
-msgstr ""
+msgstr "เชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4769,7 +4780,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connecting"
-msgstr ""
+msgstr "กำลังเชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4777,7 +4788,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Disconnected"
-msgstr ""
+msgstr "ยกเลิกการเชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4785,7 +4796,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Error"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการซิงโครไนซ์"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4815,7 +4826,7 @@ msgstr "ยอดภาษี"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
 msgid "Tax Display"
-msgstr ""
+msgstr "แสดงภาษี"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4833,7 +4844,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "ค่าการเลือกระบบภาษี"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
@@ -4859,7 +4870,7 @@ msgstr "ภาษี"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
 msgid "Taxes to Apply"
-msgstr ""
+msgstr "ภาษีที่จะใช้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4889,6 +4900,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"ระบบขายหน้าร้านรองรับเฉพาะกลยุทธ์การปัดเศษแบบ \"เพิ่มรายการปัดเศษ\" เท่านั้น"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4898,12 +4910,13 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"ยอดเงินของรายการการชำระเงินของคุณต้องถูกปัดเศษเพื่อตรวจสอบความถูกต้องของธุรกรรม"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องรวมอยู่ในรายการราคาที่มีอยู่"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4911,7 +4924,7 @@ msgstr ""
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องไม่เป็นของบริษัทหรือระบบการขายหน้าร้านใด"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4919,7 +4932,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "โมดูลข้อมูลทางการเงินเกิดข้อผิดพลาดขณะรับคำสั่งซื้อของคุณ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -4927,6 +4940,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"ชื่อโฮสต์หรือที่อยู่ IP ของพร็อกซีฮาร์ดแวร์ "
+"จะถูกตรวจจับอัตโนมัติหากเว้นว่างไว้"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4942,6 +4957,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"สมุดรายวันใบแจ้งหนี้จะต้องอยู่ในสกุลเงินเดียวกันกับสมุดรายวันการขายหรือสกุลเงินของบริษัท"
+" ถ้าไม่ได้ถูกตั้งค่าไว้"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -4952,7 +4969,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "จำนวนใบสั่งขายหน้าร้านที่เกี่ยวข้องกับลูกค้ารายนี้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4960,6 +4977,8 @@ msgstr ""
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อไปยังเซิร์ฟเวอร์ได้ "
+"เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4969,6 +4988,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"คำสั่งซื้อได้รับการซิงโครไนซ์ก่อนหน้านี้ "
+"โปรดสร้างใบแจ้งหนี้จากส่วนหลังสำหรับคำสั่งซื้อ:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -4982,7 +5003,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
-msgstr ""
+msgstr "ไม่อนุญาตให้ใช้วิธีการชำระเงินที่เลือกในการกำหนดค่าของเซสชัน POS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5013,6 +5034,8 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"ระบบการขายหน้าร้านจะแสดงเฉพาะสินค้าที่อยู่ในแผนผังหมวดหมู่ที่เลือกเท่านั้น "
+"หากไม่มีการระบุหมวดหมู่ สินค้าที่มีอยู่ทั้งหมดจะแสดงขึ้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -5045,7 +5068,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "ใบเสร็จจะถูกพิมพ์โดยอัตโนมัติเมื่อสิ้นสุดการสั่งซื้อแต่ละครั้ง"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5060,7 +5083,7 @@ msgstr ""
 msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องไม่เป็นของบริษัทหรือระบบการขายหน้าร้านใด"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5068,14 +5091,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr ""
+msgstr "เซิร์ฟเวอร์พบข้อผิดพลาดขณะรับคำสั่งซื้อของคุณ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
-msgstr ""
+msgstr "เซสชั่นนี้ถูกเปิดมาเป็นเวลานานผิดปกติ โปรดพิจารณาในการปิด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -5084,6 +5107,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Adyen ตั้งค่าข้อมูลประจำตัว Adyen "
+"ของคุณเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -5092,6 +5117,8 @@ msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Six ตั้งค่าที่อยู่ IP "
+"ของเครื่องเทอร์มินัลเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -5100,18 +5127,20 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Vantiv ตั้งค่าข้อมูลประจำตัว Vantiv "
+"ของคุณเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "ยอดปิดบัญชีตามทฤษฎี"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductList.xml:0
 #, python-format
 msgid "There are no products in this category."
-msgstr ""
+msgstr "ไม่มีสินค้าในหมวดนี้."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5120,20 +5149,22 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"ยังคงมีคำสั่งซื้ออยู่ในสถานะร่างบนเซสชัน ชำระเงินหรือยกเลิกคำสั่งซื้อต่อไปนี้เพื่อตรวจสอบเซสชัน:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
-msgstr ""
+msgstr "มีคำสั่งซื้อที่ไม่ซิงค์กัน คุณต้องการซิงค์คำสั่งซื้อเหล่านี้หรือไม่"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "มีการชำระเงินทางอิเล็กทรอนิกส์อยู่ในระหว่างดำเนินการ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5141,6 +5172,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"ไม่มีการกำหนดค่าผังบัญชีในบริษัท "
+"โปรดไปที่การตั้งค่าการออกใบแจ้งหนี้เพื่อติดตั้งผังบัญชี"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5182,6 +5215,9 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"ฟิลด์นี้แสดงให้เห็นถึงผลต่างสูงสุดที่อนุญาตระหว่างยอดคงเหลือสิ้นสุดและเงินสดตามทฤษฎีเมื่อปิดเซสชันแล้วสำหรับผู้จัดการที่ไม่ใช่"
+" POS หากถึงค่าสูงสุดนี้ "
+"ผู้ใช้จะได้รับข้อความแสดงข้อผิดพลาดเมื่อปิดเซสชันโดยแจ้งว่าเขาจำเป็นต้องติดต่อกับผู้จัดการของเขา"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -5189,6 +5225,7 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"ช่องนี้มีไว้เพื่อส่งรหัสของกลุ่มผู้จัดการ POS ไปยังลูกค้าบนการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -5196,6 +5233,7 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"ฟิลด์นี้มีไว้เพื่อส่ง ID ของกลุ่มผู้ใช้ POS ไปยังลูกค้าบนการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5216,6 +5254,7 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
+"สิ่งนี้มีประโยชน์สำหรับร้านอาหารที่มีบริการนอกสถานที่และบริการแบบซื้อกลับบ้านซึ่งระบุถึงอัตราภาษีที่เฉพาะเจาะจง"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5226,6 +5265,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"การดำเนินการนี้จะทำลายคำสั่งซื้อที่ค้างชำระทั้งหมดในเบราว์เซอร์ "
+"คุณจะสูญเสียข้อมูลที่ยังไม่ได้บันทึกทั้งหมดและออกจากระบบการขายหน้าร้าน "
+"การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5235,13 +5277,15 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"การดำเนินการนี้จะทำลายคำสั่งซื้อที่ชำระเงินทั้งหมดจากที่จัดเก็บในตัวเครื่องอย่างถาวร"
+" คุณจะสูญเสียข้อมูลทั้งหมดและการดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/OrderWidget.xml:0
 #, python-format
 msgid "This order is empty"
-msgstr ""
+msgstr "คำสั่งซื้อนี้ว่างเปล่า"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5266,6 +5310,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
+"ลำดับนี้ถูกสร้างขึ้นโดยอัตโนมัติโดย Odoo "
+"แต่คุณสามารถเปลี่ยนเพื่อกำหนดหมายเลขอ้างอิงของรายการคำสั่งซื้อของคุณได้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -5273,18 +5319,20 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"ลำดับนี้ถูกสร้างขึ้นโดยอัตโนมัติจาก Odoo "
+"แต่คุณสามารถเปลี่ยนเพื่อปรับแต่งหมายเลขอ้างอิงของคำสั่งซื้อของคุณได้"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "เซสชันนี้ถูกปิดแล้ว"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
-msgstr ""
+msgstr "ภาษีนี้ใช้กับสินค้าใหม่ที่สร้างขึ้นในแค็ตตาล็อก"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_closing_balance_confirm_wizard
@@ -5304,7 +5352,7 @@ msgstr "ิทิป"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "จำนวนทิป"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -5335,7 +5383,7 @@ msgstr "ค้างจ่าย"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "การชั่งน้ำหนักด้วยเครื่องชั่ง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -5346,13 +5394,13 @@ msgstr "ออกใบแจ้งหนี้"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "หากต้องการบันทึกคำสั่งซื้อใหม่ ให้เริ่มเซสชันใหม่"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr ""
+msgstr "หากต้องการคืนสินค้า คุณต้องเปิดเซสชั่นใน POS %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5384,7 +5432,7 @@ msgstr "ครบกำหนดชำระทั้งหมด"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "ชำระแล้วทั้งหมด (มีการปัดเศษ)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
@@ -5406,7 +5454,7 @@ msgstr "ภาษีทั้งหมด"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr ""
+msgstr "จำนวนเงินที่ชำระทั้งหมด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -5426,7 +5474,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Total qty"
-msgstr ""
+msgstr "จำนวนรวม"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5447,7 +5495,7 @@ msgstr "Balance as calculated based on Opening Balance and transaction lines"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr ""
+msgstr "ธุรกรรมถูกยกเลิก"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
@@ -5462,7 +5510,7 @@ msgstr "ประเภท"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
 msgid "Type of card used"
-msgstr ""
+msgstr "ประเภทของบัตรที่ใช้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
@@ -5477,13 +5525,16 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"ไม่สามารถปิดและตรวจสอบเซสชันได้\n"
+"โปรดตั้งค่าบัญชีภาษีที่เกี่ยวข้องในแต่ละรายการการแบ่งส่วนของภาษีต่อไปนี้:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Unable to download invoice."
-msgstr ""
+msgstr "ไม่สามารถดาวน์โหลดใบแจ้งหนี้ได้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5506,6 +5557,8 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"ไม่สามารถแก้ไขการกำหนดค่า PoS นี้ได้ เนื่องจากคุณไม่สามารถแก้ไข %s "
+"ในขณะที่เซสชันเปิดอยู่"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5519,7 +5572,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unable to sync order"
-msgstr ""
+msgstr "ไม่สามารถซิงค์คำสั่งซื้อได้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -5561,14 +5614,14 @@ msgstr "หน่วย"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorBarcodePopup.xml:0
 #, python-format
 msgid "Unknown Barcode"
-msgstr ""
+msgstr "ไม่ทราบบาร์โค้ด"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "ไม่ทราบข้อผิดพลาด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_unread
@@ -5585,7 +5638,7 @@ msgstr "ตัวนับข้อความที่ยังไม่ได
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
 #, python-format
 msgid "Unsupported File Format"
-msgstr ""
+msgstr "รูปแบบไฟล์ที่ไม่รองรับ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5604,12 +5657,12 @@ msgstr "หน่วยวัด"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "อัปเดตจำนวนในสต็อก"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Use a Payment Terminal"
-msgstr ""
+msgstr "ใช้เทอร์มินัลการชำระเงิน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5619,12 +5672,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist
 msgid "Use a pricelist."
-msgstr ""
+msgstr "ใช้รายการราคา"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "ใช้บาร์โค้ดเพื่อสแกนสินค้า บัตรลูกค้า และอื่นๆ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5644,12 +5697,12 @@ msgstr "ผู้ใช้งาน"
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "ป้ายกำกับผู้ใช้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5657,7 +5710,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Valid product lot"
-msgstr ""
+msgstr "ล็อตสินค้าที่ถูกต้อง"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5670,12 +5723,12 @@ msgstr "ตรวจสอบ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Vantiv (US & Canada)"
-msgstr ""
+msgstr "Vantiv (สหรัฐอเมริกาและแคนาดา)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Vantiv Payment Terminal"
-msgstr ""
+msgstr "เทอร์มินัลการชำระเงิน Vantiv"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_vkeyboard
@@ -5687,13 +5740,13 @@ msgstr "คีย์บอร์ดบนหน้าจอ"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Waiting for card"
-msgstr ""
+msgstr "รอรับบัตร"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.wall_shelf
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "ชั้นวางของติดผนัง"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -5715,7 +5768,7 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "การชั่งน้ำหนัก"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
@@ -5729,6 +5782,9 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
+"เมื่อใดก็ตามที่คุณปิดเซสชัน "
+"รายการหนึ่งรายการจะถูกสร้างขึ้นในสมุดรายวันการบัญชีต่อไปนี้สำหรับใบสั่งทั้งหมดที่ไม่ได้รับการออกใบแจ้งหนี้"
+" ใบแจ้งหนี้จะถูกบันทึกในการบัญชีแยกต่างหาก"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.whiteboard
@@ -5742,7 +5798,7 @@ msgstr "ไวท์บอร์ด"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Whiteboard Pen"
-msgstr ""
+msgstr "ปากกาไวท์บอร์ด"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5780,13 +5836,15 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"คุณไม่ได้รับอนุญาตให้เปลี่ยนการกำหนดค่าการปัดเศษเงินสดในขณะที่เซสชั่น POS "
+"ที่ใช้งานนั้นเปิดอยู่แล้ว"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "You are not allowed to change this quantity"
-msgstr ""
+msgstr "คุณไม่ได้รับอนุญาตให้เปลี่ยนแปลงปริมาณนี้"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5796,6 +5854,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"คุณกำลังพยายามขายสินค้าที่มีหมายเลขซีเรียล/ล็อต แต่บางรายการไม่ได้ตั้งค่าไว้\n"
+"คุณต้องการดำเนินการต่อหรือไม่?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5813,6 +5873,10 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"คุณไม่สามารถ: สร้างคำสั่งซื้อ POS จากอินเทอร์เฟซแบ็กเอนด์ "
+"หรือยกเลิกการตั้งค่ารายการราคา หรือสร้าง pos.order ในการทดสอบ python "
+"ด้วยเครื่องมือแบบฟอร์มได้ หรือแก้ไขมุมมองแบบฟอร์มในสตูดิโอหากไม่มีคำสั่งซื้อ"
+" PoS อยู่"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5821,18 +5885,20 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"คุณไม่สามารถปิด POS ได้ เมื่อไม่มีการลงรายการบัญชีใบแจ้งหนี้\n"
+"ใบแจ้งหนี้: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "คุณไม่สามารถปิด POS ได้เมื่อใบสั่งยังคงอยู่ในแบบร่าง"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างเซสชันก่อนวันที่ล็อคบัญชีได้"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5845,7 +5911,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
-msgstr ""
+msgstr "คุณไม่สามารถลบหมวดหมู่การขายหน้าร้านในขณะที่เซสชันยังคงเปิดอยู่ได้"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5855,6 +5921,7 @@ msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
+"คุณไม่สามารถลบสินค้าที่ขายในการขายหน้าร้านในขณะที่เซสชันยังคงเปิดอยู่ได้"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_partner.py:0
@@ -5888,7 +5955,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "คุณต้องปัดเศษรายการการชำระเงินของคุณ ไม่ถูกปัดเศษ"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
