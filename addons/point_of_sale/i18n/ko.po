@@ -5,8 +5,8 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-25 07:43+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1797,8 +1797,8 @@ msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
 msgstr "고객 화면이 지원되지 않습니다. IoT 박스를 업그레이드하십시오."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2749,7 +2749,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"모든 제품을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 "
+"모든 품목을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 "
 "합니다."
 
 #. module: point_of_sale
@@ -3540,7 +3540,7 @@ msgstr "다음 활동 요약"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_id
 msgid "Next Activity Type"
-msgstr "업무 유형 유형"
+msgstr "다음 활동 유형"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4035,8 +4035,8 @@ msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr "이 필드의 주문 내역은 해당 주문을 환불한 내용입니다."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4198,8 +4198,8 @@ msgid "Pay Order"
 msgstr "지불 주문"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4586,6 +4586,8 @@ msgid "Point Of Sale"
 msgstr "POS"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4601,6 +4603,7 @@ msgstr "POS"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "POS"
 
@@ -7727,7 +7730,7 @@ msgstr "세션에 점포판매시스템을 할당해야 합니다."
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "You're offline"
-msgstr "오프라인 상태입니다"
+msgstr "오프라인 상태입니다."
 
 #. module: point_of_sale
 #. odoo-javascript

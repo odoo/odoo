@@ -35,7 +35,7 @@ msgstr "Alipay"
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "Alipay Seller Email"
-msgstr ""
+msgstr "Alipay販売者Eメール"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
@@ -45,27 +45,27 @@ msgstr "コード"
 #. module: payment_alipay
 #: model:payment.provider,display_as:payment_alipay.payment_provider_alipay
 msgid "Credit Card (powered by Alipay)"
-msgstr ""
+msgstr "クレジットカード (powered by Alipay)"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
 msgid "Cross-border"
-msgstr ""
+msgstr "越境"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "エクスプレス支払 (中国のマーチャントのみ)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
 msgid "MD5 Signature Key"
-msgstr ""
+msgstr "MD5署名キー"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
-msgstr ""
+msgstr "マーチャント取引先ID"
 
 #. module: payment_alipay
 #. odoo-python
@@ -89,17 +89,17 @@ msgstr "決済トランザクション"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "欠落している参照%(r)sまたはr txn_id%(t)sのデータを受信しました。"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "公開Alipay取引先Eメール"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
-msgstr ""
+msgstr "Alipayのアカウントを識別するためにのみ使用される公開取引先ID"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
@@ -112,6 +112,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Asiapay</strong>."
 msgstr ""
+"このプロバイダーは非推奨です。\n"
+"                    無効にして <strong>Asiapay</strong>に移行することを検討して下さい。"
 
 #. module: payment_alipay
 #: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
@@ -139,4 +141,4 @@ msgstr "お支払いは無事処理されました。ありがとうございま
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "無効な取引ステータスを受信しました: %s"

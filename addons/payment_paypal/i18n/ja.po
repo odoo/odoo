@@ -41,7 +41,7 @@ msgstr "PayPalアカウントをどのように設定すればよいですか？
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr " txn_id (%(txn_id)s) または txn_type (%(txn_type)s)用の欠損値"
 
 #. module: payment_paypal
 #. odoo-python
@@ -87,13 +87,13 @@ msgstr "無効な支払ステータスのデータを受信しました: %s"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "顧客が支払ページを去りました。"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
-msgstr ""
+msgstr "Paypalのアカウントを識別するためにのみ使用される公開ビジネスEメール"
 
 #. module: payment_paypal
 #. odoo-python
@@ -104,6 +104,7 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"参照 %(ref)sの取引ステータスが同期されなかったのは、PayPalダッシュボードで'支払いデータ転送'オプションが有効になっていないためです。"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code

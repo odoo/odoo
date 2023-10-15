@@ -27,7 +27,7 @@ msgstr ""
 msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
-msgstr ""
+msgstr "支払処理中にエラーが発生しました(ステータス %s) 。再度試して下さい。"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -49,22 +49,22 @@ msgstr "Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "Flutterwave顧客Eメール"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Flutterwave公開キー"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Flutterwaveシークレットキー"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Flutterwave Webhookシークレット"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -91,14 +91,14 @@ msgstr "決済トランザクション"
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Public Key"
-msgstr ""
+msgstr "公開キー"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr "参照が不明なデータを受信しました。"
+msgstr "参照が欠落しているデータを受信しました。"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -112,17 +112,17 @@ msgstr "シークレットキー"
 msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
-msgstr ""
+msgstr "APIとの通信に失敗しました。Flutterwaveが以下の情報を提供しています: '%s"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "トークンが作成された時の顧客のEメール"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
-msgstr ""
+msgstr "Flutterwaveでアカウントを識別するためにのみ使用されるキー"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
@@ -141,7 +141,7 @@ msgstr "取引はトークンにリンクしていません。"
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "不明な支払ステータス: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form

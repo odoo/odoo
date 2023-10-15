@@ -8619,7 +8619,7 @@ msgstr "Biarkan kosong untuk menetapkan Salesperson pada faktur."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr "Biarkan kosong untuk menggunakan akun outstanding yang default"
+msgstr "Biarkan kosong untuk menggunakan akun piutang default"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -8782,7 +8782,7 @@ msgstr "Akun Rugi"
 #: model:ir.model.fields,field_description:account.field_res_company__expense_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_id
 msgid "Loss Exchange Rate Account"
-msgstr "Akun Kerugian Valas"
+msgstr "Loss Exchange Rate Account"
 
 #. module: account
 #. odoo-python
@@ -10103,7 +10103,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Akun Piutang"
+msgstr "Akun Outstanding"
 
 #. module: account
 #. odoo-python
@@ -15940,6 +15940,13 @@ msgstr ""
 "Anda dapat menetapkan di sini keterangan komunikasi yang akan muncul pada "
 "faktur pelanggan, setelah divalidasi, untuk membantu pelanggan mengingat dan"
 " merujuk pada faktur tersebut saat melakukan pembayaran."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr ""
 
 #. module: account
 #. odoo-python

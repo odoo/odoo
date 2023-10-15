@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "라인 수"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# 판매 주문서"
+msgstr "# 판매주문서"
 
 #. module: sale
 #. odoo-python
@@ -2126,7 +2126,7 @@ msgstr "예정일"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr "예상일 :"
+msgstr "예정일:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2178,7 +2178,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr "재정 상태는 세금 및 계정을 특정 고객이나 판매주문서/청구서용으로 조정할 때 사용합니다. 기본값은 고객 정보에서 가져옵니다."
+msgstr "재정 상태는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 사용합니다. 기본값은 고객 정보에서 가져옵니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2198,7 +2198,7 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "회계 처리할 수 없는 판매 주문 내역에서 금지된 값"
+msgstr "비회계 판매주문서 내역으로는 허용되지 않는 값입니다."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2207,8 +2207,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"이 보고서에서 고객에게 청구된 금액에 대한 전반적인 내용를 확인할 수 있습니다. 검색 도구는 또한 청구서 발행 보고서를 맞춤 설정하는 데"
-" 사용할 수 있으므로 이 분석을 필요에 맞게 사용할 수 있습니다."
+"이 보고서에서 고객에게 청구된 금액 전체를 확인할 수 있습니다. 검색 도구를 사용하여 청구서 관련 보고서를 맞춤 설정할 수도 있으므로, "
+"필요에 맞게 분석 내용을 활용해 보세요."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2328,25 +2328,25 @@ msgstr "예외 활동을 표시하기 위한 아이콘"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+msgstr "선택할 경우, 새로운 메시지에 주의를 기울여야 합니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+msgstr "선택할 경우, 일부 메시지에 전송 오류가 발생합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "판매를 잠글 경우 더이상 수정불가합니다. 그러나 청구서 발행이나 납품은 가능합니다."
+msgstr "판매를 잠글 경우, 더 이상 수정할 수 없습니다. 다만, 청구서를 발행하거나 배송하는 것은 가능합니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "해당되는 경우, 판매 주문서에 포장 항목을사용할 수 있습니다."
+msgstr "예를 선택하면, 판매주문서에 포장 항목을 사용할 수 있습니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2363,7 +2363,7 @@ msgstr "아마존 주문 가져오기 및 배송 동기화"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "품목 가져오기"
+msgstr "품목 서식 가져오기"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
@@ -2460,8 +2460,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"이번 달의 청구서 수익 금액입니다. 영업 채널에서 이번 달에 청구서를 발행한 금액입니다. 칸반 화면에서 현재 매출 상황 및 목표 매출의 "
-"진행률 계산에 사용합니다."
+"이번 달에 청구된 매출액입니다. 이 금액은 판매 채널에서 이번 달에 청구서를 발행한 금액입니다. 칸반 화면에서 현재 및 목표 매출에 대한"
+" 진행률을 계산하는 데에 사용합니다."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -2716,9 +2716,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"주문서에 수기로 수량을 설정합니다: 수기로 입력한 수량을 기준으로 청구서를 발행합니다. 분석 계정을 생성하지 않습니다.\n"
-"연락처의 작업 기록: 관련 작업 기록를 통해 추적된 시간을 청구서에 반영합니다.\n"
-"작업 생성 및 시간 추적: 승인된 판매주문서에서 작업을 생성하고 작업 시간을 추적합니다."
+"주문서에 수기로 수량을 설정합니다: 수기 입력된 수량을 기준으로 청구서를 발행합니다. 분석 계정을 생성하지 않습니다.\n"
+"연락처의 작업시간표: 관련 작업시간표에서 확인한 시간을 청구서에 반영합니다.\n"
+"작업 생성 및 시간 추적: 판매주문서 승인 항목에서 작업을 생성하고 작업 시간을 추적합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -2845,7 +2845,7 @@ msgstr "다음 활동 요약"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
 msgid "Next Activity Type"
-msgstr "업무 유형 유형"
+msgstr "다음 활동 유형"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
@@ -3639,7 +3639,7 @@ msgstr "판매주문서 발행의 근거가 되는 문서입니다."
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
 msgid "Register Payment"
-msgstr "결제 등록"
+msgstr "결제 항목을 처리합니다."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -4288,10 +4288,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"활동에 기조한 상태입니다\n"
-"기한초과: 이미 기한이 지났습니다\n"
-"오늘: 활동 날짜가 오늘입니다\n"
-"계획: 향후 활동입니다."
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
 
 #. module: sale
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -4677,7 +4677,7 @@ msgstr "다양한 캠페인을 진행할 때 쉽게 추적할 수 있도록 타�
 msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
-msgstr "고객에게 배송되는 날짜입니다. 설정하면, 배송 주문 예약일은 품목 리드 타임이 아니라 여기에 있는 날짜가 기준이 됩니다."
+msgstr "고객에게 배송되는 날짜입니다. 설정하면, 배송 주문 예약일은 품목 리드타임이 아니라 여기에 있는 날짜가 기준이 됩니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id

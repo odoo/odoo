@@ -3,8 +3,8 @@
 # 	* fleet
 # 
 # Translators:
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -266,7 +266,7 @@ msgstr "จักรยาน"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_type
 msgid "Bike Frame Type"
-msgstr ""
+msgstr "ประเภทเฟรมจักรยาน"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -324,7 +324,7 @@ msgstr "การปล่อย CO2 ของยานพาหนะ"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr "การคำนวณผลประโยชน์ในแต่ล่ะประเภท"
+msgstr "การคำนวณผลประโยชน์ในแต่ละประเภท"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -334,7 +334,7 @@ msgstr "ยกเลิก"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
 msgid "Cancellation Date"
-msgstr ""
+msgstr "วันที่ยกเลิก"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
@@ -379,6 +379,7 @@ msgid ""
 "Categories will help you manage your fleet more efficiently and arrange your"
 " vehicles."
 msgstr ""
+"หมวดหมู่จะช่วยให้คุณจัดการกลุ่มยานพาหนะได้อย่างมีประสิทธิภาพมากขึ้นและจัดเตรียมความพร้อมยานพาหนะของคุณ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -481,7 +482,7 @@ msgstr "ติดต่อ"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Contains Vehicle"
-msgstr ""
+msgstr "มียานพาหนะ"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
@@ -680,6 +681,11 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
+msgid "Date of vehicle registration"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
@@ -700,14 +706,9 @@ msgstr ""
 "หนึ่งปีหลังจากวันที่เริ่มต้น)"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
-msgid "Date when the vehicle has been immatriculated"
-msgstr "วันที่ยานพาหนะได้รับการตรวจทะเบียน"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
 msgid "Date when the vehicle's license plate has been cancelled/removed."
-msgstr ""
+msgstr "วันที่ป้ายทะเบียนรถถูกยกเลิก/ถอดออก"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
@@ -868,7 +869,7 @@ msgstr "วันที่สิ้นสุด"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "End Date Contract Alert"
-msgstr ""
+msgstr "การแจ้งเตือนวันที่สิ้นสุดสัญญา"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -904,6 +905,8 @@ msgid ""
 "Every service and contract of this vehicle will be considered as archived. "
 "Are you sure that you want to archive this record?"
 msgstr ""
+"การบริการและสัญญาทั้งหมดของยานพาหนะนี้จะถือว่าถูกเก็บถาวร "
+"คุณแน่ใจหรือไม่ว่าต้องการเก็บถาวรบันทึกนี้"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -920,7 +923,7 @@ msgstr "หมดอายุ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "หมดอายุวันนี้"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
@@ -1028,7 +1031,7 @@ msgstr "ประเภทเชื้อเพลิง"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid
 msgid "Full Hybrid"
-msgstr ""
+msgstr "ไฮบริดเต็มรูปแบบ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -1201,11 +1204,6 @@ msgstr "รูปภาพ 256"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_512
 msgid "Image 512"
 msgstr "รูปภาพ 512"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
-msgid "Immatriculation Date"
-msgstr "วันที่ป้ายทะเบียน"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
@@ -1496,14 +1494,7 @@ msgstr "ใหม่"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
 msgid "New Request"
-msgstr "คำร้องขอใหม่"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+msgstr "คำขอใหม่"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
@@ -1659,7 +1650,7 @@ msgstr "เครื่องวัดระยะทาง"
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
 msgid "Officer: Manage all vehicles"
-msgstr ""
+msgstr "เจ้าหน้าที่: จัดการยานพาหนะทั้งหมด"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1681,7 +1672,7 @@ msgstr "จำนวนรวมทั้งหมด"
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "ไม่รองรับการดำเนินการ"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1783,7 +1774,7 @@ msgstr "การซ่อมหม้อน้ำ"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
-msgstr ""
+msgstr "พร้อมที่จะจัดการกลุ่มยานพาหนะของคุณอย่างมีประสิทธิภาพแล้วหรือยัง?"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
@@ -1809,6 +1800,11 @@ msgstr "การเติมเชื้อเพลิง"
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
 msgid "Registered"
 msgstr "ลงทะเบียนแล้ว"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Registration Date"
+msgstr "วันที่การลงทะเบียน"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1924,7 +1920,7 @@ msgstr "บริการ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_activity
 msgid "Service Activity"
-msgstr ""
+msgstr "กิจกรรมการบริการ"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__service_type_id
@@ -2403,17 +2399,17 @@ msgstr "พร้อมโมเดล"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr "เขียนข้อมูลอื่น ๆ ทั้งหมดที่เกี่ยวข้องกับสัญญานี้ที่นี่"
+msgstr "เขียนข้อมูลอื่นทั้งหมดที่เกี่ยวข้องกับสัญญานี้ที่นี่"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr "เขียนข้อมูลอื่น ๆ ที่เกี่ยวข้องกับบริการที่เสร็จสมบูรณ์แล้วที่นี่"
+msgstr "เขียนข้อมูลอื่นที่เกี่ยวข้องกับบริการที่เสร็จสมบูรณ์แล้วที่นี่"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Write here any other information related to this vehicle"
-msgstr "เขียนข้อมูลอื่น ๆ ที่เกี่ยวข้องกับยานพาหนะนี้ที่นี่"
+msgstr "เขียนข้อมูลอื่นที่เกี่ยวข้องกับยานพาหนะนี้ที่นี่"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year

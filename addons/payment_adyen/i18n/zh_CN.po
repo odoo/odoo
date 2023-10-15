@@ -28,13 +28,15 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>警告：</strong> 要手动捕获金额，您还需要\n"
+"                    在 Adyen 账户设置中将捕获延迟设置为手动。"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
-msgstr ""
+msgstr "已请求将交易作废，参考编号为 %s （%s）。"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -91,7 +93,7 @@ msgstr "HMAC密钥"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "有 Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -149,7 +151,7 @@ msgstr "请核实您的付款细节。"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
-msgstr ""
+msgstr "收到的下级交易数据缺少交易值"
 
 #. module: payment_adyen
 #. odoo-python
@@ -216,7 +218,7 @@ msgstr "Webhook的HMAC密钥"
 msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
-msgstr ""
+msgstr "Adyen 处理的交易%s金额与所请求金额不同。另一个交易已创建，并且金额正确。"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
@@ -234,6 +236,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"交易生效或作废可能需要几分钟时间\n"
+"才能由 Adyen 处理并反馈在 Odoo 中。"
 
 #. module: payment_adyen
 #. odoo-python
@@ -242,7 +246,7 @@ msgstr ""
 msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
-msgstr ""
+msgstr "已请求（%(provider_name)s）为参考编号%(ref)s的交易获取%(amount)s。"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -252,14 +256,14 @@ msgstr "网络服务用户的客户密钥"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "该提供商的商户账户代码"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "与 API 通信失败。详情：%s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code

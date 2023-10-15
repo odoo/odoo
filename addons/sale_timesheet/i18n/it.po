@@ -34,6 +34,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nessuna attività trovata. Creiamone una!\n"
+"                </p><p>\n"
+"                    Monitora, ogni giorno, le ore lavorative per progetto e fattura il tempo speso con i clienti.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -95,7 +102,7 @@ msgstr "portando a"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "- Timesheet product"
-msgstr ""
+msgstr "- Prodotto foglio ore"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -159,6 +166,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica dalle spese: quantità calcolata come somma delle spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -481,7 +493,7 @@ msgstr "Data fine"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
 msgid "Existing Employee"
-msgstr ""
+msgstr "Dipendente esistente"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -790,7 +802,7 @@ msgstr "Ore non fatturabili"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Non fatturato"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1014,7 +1026,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1146,7 +1158,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Seleziona chi fatturare..."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1201,7 +1213,7 @@ msgstr "Servizi"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
 msgid "Show Hours Recorded Button"
-msgstr ""
+msgstr "Mostra pulsante ore registrate"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description

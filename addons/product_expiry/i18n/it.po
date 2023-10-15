@@ -36,6 +36,9 @@ msgid ""
 "attrs=\"{'invisible': ['|', '|', ('product_qty', '&lt;=', 0), "
 "('product_expiry_alert', '=', False), ('expiration_date', '=', False)]}\"/>"
 msgstr ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger ms-2\" "
+"attrs=\"{'invisible': ['|', '|', ('product_qty', '&lt;=', 0), "
+"('product_expiry_alert', '=', False), ('expiration_date', '=', False)]}\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -173,7 +176,7 @@ msgstr "Le date di scadenza compaiono nella distinta di consegna"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid "Expiration:"
-msgstr ""
+msgstr "Scadenza:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
@@ -188,7 +191,7 @@ msgstr "La scadenza è stata ricordata"
 #. module: product_expiry
 #: model:product.removal,name:product_expiry.removal_fefo
 msgid "First Expiry First Out (FEFO)"
-msgstr ""
+msgstr "First Expiry First Out (FEFO)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -318,7 +321,7 @@ msgstr "Data di rimozione"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid "Removal:"
-msgstr ""
+msgstr "Rimozione:"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
@@ -545,4 +548,4 @@ msgstr ""
 #. module: product_expiry
 #: model:product.removal,method:product_expiry.removal_fefo
 msgid "fefo"
-msgstr ""
+msgstr "fefo"

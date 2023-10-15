@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1035,15 +1035,15 @@ msgstr ""
 "            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
-"                        안녕하세요 <t t-out=\"object.name or 'Guest'\"></t>님,<br>\n"
-"                        다음의 행사에 고객님의 등록이 완료되었음을 알려드립니다.\n"
+"                        안녕하세요, <t t-out=\"object.name or 'Guest'\"></t>님.<br>\n"
+"                        다음 행사에 등록이 완료되었음을 알려드립니다.\n"
 "                        <t t-if=\"is_online\">\n"
-"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood 컬렉션 온라인 공개</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>\n"
+"                            <strong t-out=\"object.event_id.name or ''\">OpenWood 컬렉션 온라인 공개</strong>\n"
 "                        </t>\n"
-"                        참가자 자격 <t t-out=\"object.name or 'Guest'\"></t>\n"
+"                        참가 자격 <t t-out=\"object.name or 'Guest'\"></t>\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
@@ -1085,8 +1085,8 @@ msgstr ""
 "                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>행사 시작</strong> <t t-out=\"object.event_id.date_begin_located or ''\">May 4, 2021, 7:00:00 AM</t></div>\n"
-"                                <div><strong>행사 종료</strong> <t t-out=\"object.event_id.date_end_located or ''\">May 6, 2021, 5:00:00 PM</t></div>\n"
+"                                <div><strong>행사 시작일</strong> <t t-out=\"object.event_id.date_begin_located or ''\">May 4, 2021, 7:00:00 AM</t></div>\n"
+"                                <div><strong>행사 종료일</strong> <t t-out=\"object.event_id.date_end_located or ''\">May 6, 2021, 5:00:00 PM</t></div>\n"
 "                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t>)</i></div>\n"
 "                            </td>\n"
 "                            <td style=\"vertical-align:top;\">\n"
@@ -1141,8 +1141,8 @@ msgstr ""
 "                    <!-- CONTACT ORGANIZER -->\n"
 "                    <t t-if=\"event_organizer\">\n"
 "                        <div>\n"
-"                            <span style=\"font-weight:300;margin:10px 0px\">행사 관련 궁금한 점이 있으신가요?</span>\n"
-"                            <div>주최 측으로 연락주시기 바랍니다:</div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">행사와 관련하여 궁금한 점이 있으신가요?</span>\n"
+"                            <div>아래 주최 측으로 연락주시기 바랍니다:</div>\n"
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
@@ -1166,7 +1166,7 @@ msgstr ""
 "                    <!-- PWA MARKGETING -->\n"
 "                    <t t-if=\"is_online\">\n"
 "                        <div>\n"
-"                            <strong>모바일에서 최고의 경험을 선사합니다.</strong>\n"
+"                            <strong>모바일에서도 최고의 경험을 선사합니다.</strong>\n"
 "                            <a href=\"/event\">모바일 앱 설치</a>\n"
 "                        </div>\n"
 "                    </t>\n"
@@ -2864,7 +2864,7 @@ msgstr "다음 활동 요약"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
-msgstr "업무 유형 유형"
+msgstr "다음 활동 유형"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3775,7 +3775,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
-msgstr "트리거"
+msgstr "자동 실행"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type

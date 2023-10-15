@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -261,7 +261,7 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "(from"
-msgstr "(보낸사람"
+msgstr "(보낸 사람"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -394,9 +394,9 @@ msgid ""
 "type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to "
 "<a href='#' data-type='%(save_type)s'>save</a></i>"
 msgstr ""
-"<samp>%(cancel_keybind)s</samp><i><a href='#' data-type='%(cancel_type)s'> "
-"취소 버튼</a></i>, <samp>%(save_keybind)s</samp><i><a href='#' data-"
-"type='%(save_type)s'> 저장 버튼</a></i>"
+"<samp>%(cancel_keybind)s</samp><i><a href='#' data-type='%(cancel_type)s'>: "
+"취소</a></i>, <samp>%(save_keybind)s</samp><i><a href='#' data-"
+"type='%(save_type)s'>: 저장</a></i>"
 
 #. module: mail
 #. odoo-javascript
@@ -633,7 +633,7 @@ msgstr "작업 윈도우 보기"
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr "활동을 통해 캘린더 화면 열기와 같은 특정 작업을 진행하거나 문서가 업로드되면 자동으로 완료 표시를 할 수 있습니다. "
+msgstr "캘린더 화면 열기와 같은 특정한 작업이 활동에서 진행되도록 하거나 문서 업로드가 되면 자동 완료로 표시되게 합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -801,7 +801,7 @@ msgstr "사용자 추가"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Add a Reaction"
-msgstr "응답 추가"
+msgstr "리액션 추가"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -873,7 +873,7 @@ msgstr "ICE 서버용 twilio 자격증명 추가"
 msgid ""
 "Adding followers on channels is not possible. Consider adding members "
 "instead."
-msgstr "채널에 팔로워를 추가할 수 없습니다. 대신 구성원을 추가실 수 있습니다."
+msgstr "채널에 팔로워를 추가할 수 없습니다. 대신 구성원을 추가하세요."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -1267,7 +1267,7 @@ msgstr "자동 메시지"
 #: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
 msgid ""
 "Automatically schedule this activity once the current one is marked as done."
-msgstr "현재 활동 중인 내용을 완료로 표시하면 이 작업에 대해서 자동으로 일정을 예약합니다."
+msgstr "현재 활동을 완료로 표시하면, 이 활동이 자동으로 예약됩니다."
 
 #. module: mail
 #. odoo-javascript
@@ -1564,7 +1564,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Cannot change the channel type of: %(channel_names)s"
-msgstr "다음 채널의 유형을 변경할 수 없습니다: %(channel_names)s"
+msgstr "다음 채널 유형을 변경할 수 없습니다: %(channel_names)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -1602,7 +1602,7 @@ msgstr "참조"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr "체인 유형"
+msgstr "연결 방식"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -1632,7 +1632,7 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(guest_names)s"
 msgstr ""
-"\"%(channel_name)s\" 채널은 \"%(group_name)s\" 그룹의 구성원만 허용됩니다. 금지 대상: "
+"\"%(channel_name)s\" 채널은 \"%(group_name)s\" 그룹 구성원에게만 허용되어 있습니다. 허용 대상이 아님: "
 "%(guest_names)s"
 
 #. module: mail
@@ -1643,8 +1643,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
-"\"%(channel_name)s\" 채널은 \"%(group_name)s\" 그룹의 구성원만 허용됩니다. 금지 대상: "
-"%(partner_names)s"
+"\"%(channel_name)s\" 채널은 \"%(group_name)s\" 그룹의 구성원에게만 허용되어 있습니다. 허용 대상이 아님:"
+" %(partner_names)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_member_id
@@ -2033,7 +2033,7 @@ msgstr "그룹 채팅 생성"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Next Activity"
-msgstr "새 활동 만들기"
+msgstr "다음 활동 만들기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
@@ -2287,7 +2287,7 @@ msgstr "안녕하세요"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Dear Sender,"
-msgstr "안녕하세요"
+msgstr "안녕하세요,"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -2836,7 +2836,7 @@ msgstr "이메일 서식 미리보기"
 #: model:ir.ui.menu,name:mail.menu_email_templates
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Email Templates"
-msgstr "이메일 양식"
+msgstr "이메일 서식"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -2914,7 +2914,7 @@ msgstr "이메일 재전송 마법사"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Email templates"
-msgstr "이메일 양식"
+msgstr "이메일 서식"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -2957,14 +2957,14 @@ msgstr "PTT (push-to-talk) 기능 사용"
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #, python-format
 msgid "Enable desktop notifications to chat"
-msgstr "채팅에 데스크탑 알림 활성화"
+msgstr "채팅 관련 데스크탑 알림을 활성화하세요."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Enter"
-msgstr "엔터"
+msgstr "Enter"
 
 #. module: mail
 #. odoo-javascript
@@ -3029,7 +3029,7 @@ msgstr "오류, 협력사가 동일한 객체를 두 번 팔로우할 수 없습
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Escape"
-msgstr "Esc 키"
+msgstr "ESC"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -3330,8 +3330,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
 msgstr ""
-"%(channels)s의 경우, 그룹 기준으로 승인을 하거나 그룹에서 자동 구독을 하려면 channel_type을 '채널'로 설정해야 "
-"합니다."
+"%(channels)s의 경우, channel_type을 '채널'로 설정해야 그룹 기준으로 승인을 하거나 그룹 자동 구독을 할 수 "
+"있습니다. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -4140,7 +4140,7 @@ msgstr "잘못된 서식이나 화면 소스 참조 %(svalue)s, 대신 %(model)s
 #, python-format
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
-msgstr "채널을 생성할 때 구성원 값이 잘못되었으며, 4 나 6의 값만 허용됩니다. "
+msgstr "채널을 생성할 때 구성원 값이 잘못되었습니다. 4나 6만 사용할 수 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -4148,7 +4148,7 @@ msgstr "채널을 생성할 때 구성원 값이 잘못되었으며, 4 나 6의 
 #, python-format
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
-msgstr "채널을 생성할 때 멤버십 값이 잘못되었으며, 0 값만 허용됩니다. "
+msgstr "채널을 생성할 때 구성원 값이 잘못되었습니다. 0만 사용할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invitation_url
@@ -4861,7 +4861,7 @@ msgstr "같은 스레드를 유지하여 답신하는 대신 새로운 수신 �
 #: code:addons/mail/static/src/core/web/notification_item.xml:0
 #, python-format
 msgid "Mark As Read"
-msgstr "읽은 상태로 표시"
+msgstr "읽음 표시"
 
 #. module: mail
 #. odoo-javascript
@@ -4889,7 +4889,7 @@ msgstr "완료"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Mark as Read"
-msgstr "읽음으로 표시"
+msgstr "읽음 표시"
 
 #. module: mail
 #. odoo-javascript
@@ -4904,7 +4904,7 @@ msgstr "할 일로 표시"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Mark as Unread"
-msgstr "읽지 않은 상태로 표시"
+msgstr "안읽음 표시"
 
 #. module: mail
 #. odoo-javascript
@@ -4966,7 +4966,7 @@ msgstr "협력사 병합 마법사"
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "팔로우하는 협력사와 병합 :"
+msgstr "다음 협력사 정보와 합쳐졌습니다:"
 
 #. module: mail
 #. odoo-javascript
@@ -5371,7 +5371,7 @@ msgstr "다음 활동 요약"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "업무 유형 유형"
+msgstr "다음 활동 유형"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -5660,7 +5660,7 @@ msgstr "작업 수"
 msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
 " action deadline."
-msgstr "작업을 실행하기 전의 일/주/월의 숫자. 행동 기한을 계획할 수 있습니다."
+msgstr "활동 실행 전까지의 일, 주 및 월 기간입니다. 활동 마감일을 계획할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error_counter
@@ -5837,7 +5837,7 @@ msgstr "메시지 유형 코멘트에서만 내용을 업데이트할 수 있습
 msgid ""
 "Only messages type comment can have their content updated on model "
 "'discuss.channel'"
-msgstr "메시지 유형 코멘트에서만 '메일및채팅 채널' 모델에서 내용을 업데이트할 수 있습니다."
+msgstr "댓글 종류가 메시지인 경우에만 '메일 및 채팅 채널' 모델에서 업데이트됩니다."
 
 #. module: mail
 #. odoo-python
@@ -6152,7 +6152,7 @@ msgstr "전화 통화"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_patch.js:0
 #, python-format
 msgid "Pin"
-msgstr "핀"
+msgstr "핀 고정"
 
 #. module: mail
 #. odoo-javascript
@@ -6734,13 +6734,13 @@ msgstr "답글"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
-msgstr "회신"
+msgstr "답장"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To"
-msgstr "회신"
+msgstr "답장하기: "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -6768,7 +6768,7 @@ msgstr "회신 주소"
 #: code:addons/mail/static/src/core/common/composer.xml:0
 #, python-format
 msgid "Replying to"
-msgstr "다음에 회신"
+msgstr "다음 사용자에게 답장합니다:"
 
 #. module: mail
 #. odoo-python
@@ -7079,7 +7079,7 @@ msgstr "오류 세부 정보 보기"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "See all pinned messages."
-msgstr "핀고정되어 있는 전체 메시지를 봅니다."
+msgstr "전체 핀 고정한 메시지를 확인합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -7614,7 +7614,7 @@ msgstr "제목 (자리 표시자를 여기에 사용할 수 있습니다)"
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Subject:"
-msgstr "제목 :"
+msgstr "제목:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
@@ -8322,7 +8322,7 @@ msgstr "추적값"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
-msgstr "트리거"
+msgstr "자동 실행"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
@@ -8380,15 +8380,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
-"서버 작업 유형입니다. 다음과 같은 값을 사용할 수 있습니다:\n"
+"서버의 작업 유형으로, 다음과 같은 값을 사용할 수 있습니다:\n"
 "- 'Python 코드 실행': 실행할 Python 코드 블록입니다.\n"
-"- '새로운 레코드 생성': 새로운 값을 가진 새 레코드를 생성합니다,\n"
-"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
-"- '여러 작업 실행': 여러 가지의 다른 서버 작업을 동작시키는 작업을 정의합니다.\n"
-"- '이메일 전송': 메시지나 메모를 게시하거나 이메일을 전송합니다 (메일 및 채팅 앱).\n"
-"- '팔로워 추가': 레코드에 팔로워를 추가합니다 (메일 및 채팅 앱).\n"
-"- '다음 작업 생성': 작업을 생성합니다 (메일 및 채팅 앱).\n"
-"- 'SMS 문자 메시지 전송': SMS를 전송하고, 문서에 기록합니다 (SMS)."
+"- '새로운 레코드 생성': 새로운 값을 가진 신규 레코드를 생성합니다,\n"
+"- '레코드 업데이트': 기존 레코드 값을 업데이트합니다.\n"
+"- '여러 작업 실행': 여러 가지의 다른 서버의 작업을 트리거하는 작업을 정의합니다.\n"
+"- '이메일 전송': 메시지, 메모를 게시하거나 이메일을 전송합니다. (메일 및 채팅 앱)\n"
+"- '팔로워 추가': 레코드에 팔로워를 추가합니다. (메일 및 채팅 앱)\n"
+"- '다음 활동 생성': 활동을 생성합니다. (메일 및 채팅 앱)\n"
+"- 'SMS 문자 메시지 전송': SMS를 전송하고, 이를 문서에 기록합니다. (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -8502,7 +8502,7 @@ msgstr "소리 켜기"
 #: code:addons/mail/static/src/discuss/message_pin/common/pinned_messages_panel.xml:0
 #, python-format
 msgid "Unpin"
-msgstr "핀고정 해제"
+msgstr "핀 고정 해제"
 
 #. module: mail
 #. odoo-javascript
@@ -8912,7 +8912,7 @@ msgstr "MyCompany에 오신 것을 환영합니다!"
 msgid ""
 "Well, nothing lasts forever, but are you sure you want to unpin this "
 "message?"
-msgstr "이 메시지의 고정을 정말로 해제하시겠습니까?"
+msgstr "메시지 핀 고정을 해제할까요?"
 
 #. module: mail
 #. odoo-javascript
@@ -8972,7 +8972,7 @@ msgstr "YYYY-MM-DD HH:MM:SS"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Yeah, pin it!"
-msgstr "네, 핀으로 고정 합니다."
+msgstr "네, 핀 고정합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -8986,7 +8986,7 @@ msgstr "예"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Yes, remove it please"
-msgstr "네, 삭제해주십시오."
+msgstr "네, 해제합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9018,7 +9018,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in this channel."
-msgstr "이 채널에서 모두 나갔습니다."
+msgstr "채널에 아무도 없습니다."
 
 #. module: mail
 #. odoo-python
@@ -9032,7 +9032,7 @@ msgstr "<b>@%s</b> 사용자와 비공개 대화 중입니다."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr "<b>#%s</b> 채널에 있습니다."
+msgstr "현재 <b>#%s</b> 채널에 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9097,7 +9097,7 @@ msgstr "이 메시지는 무시하셔도 됩니다."
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr "전체 그룹은 다른 모듈에서 필요하므로 이러한 그룹을 삭제할 수 없습니다."
+msgstr "해당 그룹을 삭제할 수 없습니다. 전체 회사 그룹은 다른 모듈에서 사용합니다."
 
 #. module: mail
 #. odoo-python
@@ -9161,7 +9161,7 @@ msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
 #, python-format
 msgid ""
 "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr "이 메시지를 %(conversation)s에 고정하시겠습니까?"
+msgstr "이 메시지를 %(conversation)s로 핀 고정할까요?"
 
 #. module: mail
 #. odoo-javascript
@@ -9330,8 +9330,8 @@ msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
-"처리할 수 없습니다.\n"
-"          이 주소는 회신을 수집하는 데 사용되며 직접 연락하는 데 사용해서는 안 됩니다"
+"항목을 처리할 수 없습니다.\n"
+"          답장을 수신하기 위한 것이며 직접적인 연락을 위해 사용해서는 안 됩니다."
 
 #. module: mail
 #. odoo-python
@@ -9352,7 +9352,7 @@ msgstr "채널"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "created %(link)s"
-msgstr "%(link)s 생성됨"
+msgstr "%(link)s 항목이 생성되었습니다."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -9505,7 +9505,7 @@ msgstr "잘못 구성된 별칭 (알 수 없는 참조 레코드)"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "invited %s to the channel"
-msgstr "채널에 %s를 초대했습니다"
+msgstr "%s 사용자를 채널에 초대했습니다."
 
 #. module: mail
 #. odoo-python
@@ -9513,14 +9513,14 @@ msgstr "채널에 %s를 초대했습니다"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "joined the channel"
-msgstr "채널에 가입했습니다"
+msgstr "사용자가 채널에 들어왔습니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "left the channel"
-msgstr "채널에서 나갔습니다"
+msgstr "사용자가 채널에서 나갔습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9601,14 +9601,14 @@ msgstr "지금"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr "있음"
+msgstr "대상: "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 #, python-format
 msgid "on:"
-msgstr "켜짐:"
+msgstr ", 관련:"
 
 #. module: mail
 #. odoo-javascript

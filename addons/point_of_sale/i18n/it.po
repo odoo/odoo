@@ -177,6 +177,8 @@ msgstr "<i class=\"fa fa-pencil\"/> Modifica"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Come gestire i prodotti con prezzo al "
+"lordo delle imposte"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1435,7 +1437,7 @@ msgstr "Differenza in chiusura di %s (%s)"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "Closing note"
-msgstr ""
+msgstr "Nota di chiusura"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1843,8 +1845,8 @@ msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
 msgstr "Schermo cliente non supportato. Aggiorna il box IoT"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -1875,7 +1877,7 @@ msgstr "DETTAGLI"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "Daily Sale"
-msgstr ""
+msgstr "Vendita giornaliera"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -2299,6 +2301,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Ogni stampante per ordini ha un indirizzo IP che denifisce il box/hardware IoT\n"
+"            Proxy dove poter trovare la stampante ed elenco delle categorie prodotto.\n"
+"            Una stampante per ordini può stampare solo gli aggiornamenti per i prodotti che appartengono ad una\n"
+"            delle categorie."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3213,7 +3219,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Ultimo cambiamento preparazioen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
@@ -3289,7 +3295,7 @@ msgstr "Riga n."
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Carica menu prodotti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3646,6 +3652,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
+"Non è stata configurata nessuna nomenclatura per codici a barre. È possibile"
+" apportare modifiche tramite le impostazioni di configurazione."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3979,7 +3987,7 @@ msgstr "Cassa in apertura"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "Opening note"
-msgstr ""
+msgstr "Nota di apertura"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -4065,6 +4073,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "            order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Le stampanti per gli ordini vengono utilizzate dai ristoranti e bar per stampare gli\n"
+"            aggiornamenti in cucina/bar quando il cameriere aggiorna l'ordine."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -4115,8 +4125,8 @@ msgstr ""
 "linea d'ordine."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4278,8 +4288,8 @@ msgid "Pay Order"
 msgstr "Ordine di pagamento"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4630,7 +4640,7 @@ msgstr "Fornire un partner per la vendita."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "Please reload this page once products have been created"
-msgstr ""
+msgstr "Ricarica la pagina una volta che i prodotti sono stati creati"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4678,6 +4688,8 @@ msgid "Point Of Sale"
 msgstr "Punto vendita"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4693,6 +4705,7 @@ msgstr "Punto vendita"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Punto vendita"
 
@@ -4801,7 +4814,7 @@ msgstr "Pagamenti punto vendita"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
 msgid "Point of Sale Printer"
-msgstr ""
+msgstr "Stampante Punto Vendita"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -4970,7 +4983,7 @@ msgstr "Schermo di preparazione"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
-msgstr ""
+msgstr "Preparazione stampanti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5297,7 +5310,7 @@ msgstr "Indirizzo IP proxy"
 #: code:addons/point_of_sale/models/pos_printer.py:0
 #, python-format
 msgid "Proxy IP cannot be empty."
-msgstr ""
+msgstr "L'IP del proxy non può essere vuoto:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7479,7 +7492,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/barcode/barcode_reader_service.js:0
 #, python-format
 msgid "Unable to parse barcode"
-msgstr ""
+msgstr "Impossible analizzare il codice a barre"
 
 #. module: point_of_sale
 #. odoo-javascript

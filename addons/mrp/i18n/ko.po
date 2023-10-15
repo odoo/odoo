@@ -228,7 +228,7 @@ msgstr "<span class=\"o_stat_text\">하위 생산계획</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
-msgstr "<span class=\"o_stat_text\">불러오기</span>"
+msgstr "<span class=\"o_stat_text\">적재</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -650,7 +650,7 @@ msgstr "부품에 대한 새로운 로트/일련 번호 생성 허용"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_consumption_warning__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 msgid "Allowed"
-msgstr "허용함"
+msgstr "허용"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -679,7 +679,7 @@ msgstr "대체 작업장"
 msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
-msgstr "생산 파견을 위해 대체할 수 있는 대체 작업장"
+msgstr "생산 파견 근무를 위해 이 작업 센터를 대체할 대체 작업장입니다."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -810,8 +810,8 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"이 품목을 생산하는 데 걸리는 평균 리드 타임입니다. 여러 단계로 이루어진 자재명세서의 경우 부품의 제조 리드 타임이 추가로 계산됩니다."
-" 품목이 하청을 통해 제작되는 경우 부품을 하청업체에 보내야 하는 날짜를 결정하는 데 사용할 수 있습니다."
+"이 품목을 생산하는 데 걸리는 평균 리드타임입니다. 여러 단계로 이루어진 자재명세서의 경우 부품의 제조 리드타임이 추가로 계산됩니다. "
+"품목이 하청을 통해 제작되는 경우 부품을 하청업체에 보내야 하는 날짜를 결정하는 데 사용할 수 있습니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -970,7 +970,7 @@ msgstr "작업장 차단"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter__working_state__blocked
 msgid "Blocked"
-msgstr "거부됨"
+msgstr "거부"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
@@ -1490,7 +1490,7 @@ msgid ""
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
 "부족한 부품을 보충하거나 반제품을 생산할 충분한 시간을 확보하도록 며칠 전에 제조 주문을 생성하고 확인합니다.\n"
-"필요한 경우 보안 리드 타임도 함께 계산됩니다."
+"필요한 경우 보안 리드타임도 함께 계산됩니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2222,7 +2222,7 @@ msgstr "이 제조주문서에서 신규 자재명세서 생성"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
 msgid "Get statistics about the work orders duration related to this routing."
-msgstr "해당 공정과 관련 있는 작업 지시 기간의 통계를 가져옵니다."
+msgstr "해당 공정과 관련된 작업 주문 기간에 대한 통계를 가져옵니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__sequence
@@ -2786,7 +2786,7 @@ msgstr "제조 주문 현황"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "제조요청서 전체 보고서"
+msgstr "제조요청서 현황 보고서"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3711,7 +3711,7 @@ msgstr "플라스틱 라미네이트"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "첫 번째 일련번호 또는 기본 순서값을 설정하세요."
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -4047,12 +4047,12 @@ msgstr "생산적"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__productive_time
 msgid "Productive Time"
-msgstr "생산에 소요된 시간"
+msgstr "작업 시간"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__productive_time
 msgid "Productive hours over the last month"
-msgstr "지난 달과 비교한 생산 시간"
+msgstr "지난 달과 비교한 작업 시간"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4251,7 +4251,7 @@ msgstr "참조"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_name_uniq
 msgid "Reference must be unique per Company!"
-msgstr "참조는 회사마다 고유합니다!"
+msgstr "참조 번호는 회사마다 고유해야 합니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
@@ -5500,7 +5500,7 @@ msgstr "유형"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr "운영 유형"
+msgstr "작업 유형"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
@@ -6035,7 +6035,7 @@ msgstr "소모품 작업지시서"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Work Orders"
-msgstr "작업지시서"
+msgstr "작업지시"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
@@ -6178,7 +6178,7 @@ msgstr ""
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
-msgstr "컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여 넣을 수 있습니다."
+msgstr "컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여넣기 할 수 있습니다."
 
 #. module: mrp
 #. odoo-python
@@ -6513,7 +6513,7 @@ msgstr "다음 대신 주문됨"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "per workcenter"
-msgstr "작업장 당"
+msgstr "/ 작업장"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message

@@ -83,6 +83,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"In base alla configurazione del prodotto, la quantità ricevuta può essere calcolata in modo automatico secondo la procedura:\n"
+"  - manuale: quantità impostata manualmente sulla riga\n"
+"  - movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -288,7 +291,7 @@ msgstr "Ritorna all'ordine di acquisto per generare la fattura fornitore."
 #: code:addons/purchase_stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Go on the product form and add the list of vendors"
-msgstr ""
+msgstr "Vai alla scheda del prodotto e aggiungi la lista di fornitori"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -440,6 +443,9 @@ msgid ""
 " number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"Negli ultimi x giorni, il numero di prodotti ricevuti in tempo diviso per il"
+" numero di prodotti ordinati. x rappresenta il parametro di sistema "
+"purchase_stock.on_time_delivery_days o il valore predefinito 365"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -638,7 +644,7 @@ msgstr "Mostra pulsante Definisci fornitore"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
 #: model_terms:ir.ui.view,arch_db:purchase_stock.view_product_replenish_form_inherit_stock
 msgid "Show Vendor"
-msgstr ""
+msgstr "Mostra fornitore"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -840,7 +846,7 @@ msgstr "Tempo di risposta fornitore"
 #: code:addons/purchase_stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Vendor Not Found in Product %s"
-msgstr ""
+msgstr "Fornitore non trovato nel prodotto %s"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report

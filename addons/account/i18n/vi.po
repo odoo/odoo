@@ -3501,6 +3501,7 @@ msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
 msgstr ""
+"Không thể tạo mã sổ nhật ký chưa sử dụng. Vui lòng đổi tên sổ nhật ký %s."
 
 #. module: account
 #. odoo-python
@@ -4783,7 +4784,7 @@ msgstr ""
 #: model:account.account,name:account.1_current_assets
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 msgid "Current Assets"
-msgstr "Tài sản ngắn hạn"
+msgstr "Tài sản lưu động"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -15918,6 +15919,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16744,7 +16752,7 @@ msgstr "VD: Tiền mặt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr "VD: Tài sản ngắn hạn"
+msgstr "VD: Tài sản lưu động"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

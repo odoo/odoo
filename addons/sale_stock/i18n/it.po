@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>In attesa dell'arrivo</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -48,7 +48,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Annullato</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Received</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Ricevuto</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -73,11 +73,14 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"small badge text-bg-success orders_label_text_align\">\n"
+"                                    <i class=\"fa fa-fw fa-truck\"/> <b>Spedito</b>\n"
+"                                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_product_catalog_kanban_view_inherit
 msgid "<span>On Hand: </span>"
-msgstr ""
+msgstr "<span>A disposizione: </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -110,6 +113,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"  - Manuale: quantità impostata manualmente sulla riga\n"
+"  - Analitica dalle spese: quantità calcolata come somma delle spese confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -172,7 +180,7 @@ msgstr "Impostazioni di configurazione"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Customer reference"
-msgstr ""
+msgstr "Riferimento cliente"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -325,7 +333,7 @@ msgstr "Ubicazione Incoterm"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "Dettagli incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm

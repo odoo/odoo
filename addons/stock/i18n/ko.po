@@ -708,12 +708,12 @@ msgstr "<strong>패키지 날짜:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>꾸러미 상품 유형 : </strong>"
+msgstr "<strong>패키지 유형 : </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr "<strong>꾸러미 상품</strong>"
+msgstr "<strong>패키지</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1940,7 +1940,7 @@ msgstr "새 작업 유형 만들기"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr "새 꾸러미 상품 만들기"
+msgstr "신규 패키지 생성"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1952,7 +1952,7 @@ msgstr "품질 검사를 위한 맞춤형 워크시트를 생성합니다."
 msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
-msgstr "특정 품목을 정확한 목적 공간에 자동으로 보관하기 위해 신규 보관규칙을 생성하십시오."
+msgstr "제품 입고 시 특정 품목을 정확한 목적지로 자동 발송할 수 있도록 새로운 보관규칙을 생성합니다."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2617,7 +2617,7 @@ msgstr "이동 목적지"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Destination Package"
-msgstr "대상 꾸러미 상품"
+msgstr "목적지 패키지"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -2773,7 +2773,7 @@ msgstr "납품 전표에 일련번호 및 로트 번호 표시"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
 msgid "Display package content"
-msgstr "꾸러미 상품 내용 표시"
+msgstr "패키지 내용 표시"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__disposable
@@ -3241,7 +3241,7 @@ msgstr "사용 가능"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, python-format
 msgid "From"
-msgstr "시작"
+msgstr "기존 위치"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -3383,7 +3383,7 @@ msgstr "포장 작업 있음"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_packages
 msgid "Has Packages"
-msgstr "꾸러미 상품 있음"
+msgstr "패키지"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
@@ -3666,7 +3666,7 @@ msgstr "이 발송물이 분리된 경우 이 필드는 이미 처리된 부품�
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "체크하면 이동시킬 전체 꾸러미 상품을 선택할 수 있습니다"
+msgstr "체크 시 이동시킬 전체 패키지 품목을 선택할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -3902,7 +3902,7 @@ msgstr "잘못된 도메인 피연산자 %s"
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
-msgstr ""
+msgstr "도메인의 우측 피연산자 값 '%s' 항목이 잘못되었습니다. 값은 반드시 정수 또는 부동 소수점 형식이어야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -4330,12 +4330,12 @@ msgstr "지연된 활동"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "지연된 이송"
+msgstr "지연된 이송 작업"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
 msgid "Latest product availability status of the picking"
-msgstr "최근 픽업 품목 사용 상황"
+msgstr "피킹 품목의 최근 가용성 상태를 나타냅니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
@@ -4446,7 +4446,7 @@ msgstr "위치 명칭"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
 msgid "Location Stock"
-msgstr "위치 재고"
+msgstr "재고 위치"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
@@ -4641,7 +4641,7 @@ msgstr "다수의 창고 관리"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr "꾸러미 상품 관리"
+msgstr "패키지 품목 관리"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
@@ -4807,7 +4807,7 @@ msgstr "이동 세부 내용"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_entire_packs
 msgid "Move Entire Packages"
-msgstr "전체 꾸러미 상품 이동"
+msgstr "전체 패키지 품목 이동"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_ids
@@ -5003,7 +5003,7 @@ msgstr "다음 활동 요약"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_id
 msgid "Next Activity Type"
-msgstr "업무 유형 유형"
+msgstr "다음 활동 유형"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
@@ -5622,12 +5622,12 @@ msgstr "패키지 A"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr "꾸러미 상품 바코드 (PDF)"
+msgstr "패키지 바코드 (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr "꾸러미 상품 바코드 (ZPL)"
+msgstr "패키지 바코드 (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
@@ -5644,36 +5644,36 @@ msgstr "패키지 용량"
 #: code:addons/stock/models/stock_package_level.py:0
 #, python-format
 msgid "Package Content"
-msgstr "꾸러미 상품 내용"
+msgstr "패키지 내용물"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids
 msgid "Package Level"
-msgstr "꾸러미 상품 단계"
+msgstr "패키지 단계"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr "꾸러미 상품 단계 ids 세부사항"
+msgstr "패키지 단계 ids 세부사항"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
-msgstr "꾸러미 상품 이름"
+msgstr "패키지 이름"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__name
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Reference"
-msgstr "꾸러미 상품 정보"
+msgstr "패키지 참조"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "꾸러미 상품 이송"
+msgstr "패키지 이송"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
@@ -5684,7 +5684,7 @@ msgstr "꾸러미 상품 이송"
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
-msgstr "꾸러미 상품 유형"
+msgstr "패키지 유형"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -5701,7 +5701,7 @@ msgstr "패키지 유형"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_use
 msgid "Package Use"
-msgstr "패키지 사용"
+msgstr "포장 사용"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
@@ -5736,7 +5736,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr "포장중"
+msgstr "패키징"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6397,7 +6397,7 @@ msgstr "제품을 패키지(예: 소포, 박스)에 포장하고 추적합니다
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
 msgid "Putaway Rule"
-msgstr "반입 규칙"
+msgstr "보관 규칙"
 
 #. module: stock
 #. odoo-python
@@ -6416,7 +6416,7 @@ msgstr "반입 규칙"
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr "반입 규칙"
+msgstr "보관 규칙"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6426,7 +6426,7 @@ msgstr "반입 :"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
 msgid "Putaways Rules"
-msgstr "반입 규칙"
+msgstr "보관 규칙"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
@@ -7002,7 +7002,7 @@ msgstr "예약"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
 msgid "Reserve Only Full Packagings"
-msgstr "예약 전용 전체 포장"
+msgstr "전체 패키지 예약"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
@@ -7010,8 +7010,8 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
-"전체 포장만 예약: 부분 포장은 예약되지 않습니다. 고객이 각 1000개 단위인 팔레트 2개를 주문했으나, 재고가 1600개만 있는 경우에는 1000개만 예약됩니다. \n"
-"부분 포장 예약: 고객이 각 1000개 단위인 팔레트 2개를 주문하고 재고가 1600개만 있는 경우에는 1600개가 예약됩니다."
+"전체 패키지 예약: 패키지는 부분적으로 예약되지 않습니다. 고객이 각 1000개 단위인 팔레트 2개를 주문했으나 재고가 1600개만 있는 경우 1000개만 예약됩니다. \n"
+"부분 패키지 예약: 패키지를 부분적으로 예약할 수 있습니다. 고객이 각 1000개 단위인 팔레트 2개를 주문했으나 재고가 1600개만 있는 경우 1600개만 예약됩니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
@@ -7021,7 +7021,7 @@ msgstr "포장 예약"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr "부분 포장 예약"
+msgstr "부분 패키지 예약"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7147,8 +7147,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"재사용 가능한 상자는 일괄 선별에 사용되며 나중에 비워져 재사용됩니다. 바코드 애플리케이션에서 재사용 가능한 상자를 스캔하면이 상자에 제품이 추가됩니다.\n"
-"일회용 상자는 재사용되지 않습니다. 바코드 애플리케이션에서 일회용 상자를 스캔 할 때 포함 된 제품이 이동에 추가됩니다."
+"재사용 가능한 상자는 일괄 피킹에 사용되며 나중에 비워 재사용할 수 있습니다. 바코드 앱에서 재사용 가능한 상자를 스캔하면 이 상자에 제품이 추가됩니다.\n"
+"        일회용 상자는 재사용되지 않습니다. 바코드 앱에서 일회용 상자를 스캔하면 포함된 제품이 이동에 추가됩니다."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -7854,7 +7854,7 @@ msgstr "선택한 항목 일부에 이미 수량이 설정되어 있으므로, �
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid ""
 "Some selected lines don't have any quantities set, they will be ignored."
-msgstr "선택 항목 일부에 설정된 수량이 없으므로, 해당 내용을 적용할 수 없습니다."
+msgstr "일부 선택 항목에 설정된 수량이 없으므로, 해당 내용을 적용할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -7897,7 +7897,7 @@ msgstr "기존 위치 :"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr "원 꾸러미 상품"
+msgstr "원본 패키지"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -7940,10 +7940,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"활동에 기조한 상태입니다\n"
-"기한초과: 이미 기한이 지났습니다\n"
-"오늘: 활동 날짜가 오늘입니다\n"
-"계획: 향후 활동입니다."
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
 
 #. module: stock
 #. odoo-python
@@ -8084,7 +8084,7 @@ msgstr "재고 추적 내역"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr "꾸러미 상품을 포함하지 않는 재고 이동"
+msgstr "패키지에 포함되지 않은 재고 이동"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -8333,7 +8333,7 @@ msgstr "마감일이 %s 지연으로 인하여 자동으로 변경되었습니�
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr "생성한 전송의 예상일은 이 리드 타임을 기준으로 계산됩니다."
+msgstr "생성한 전송의 예상일은 이 리드타임을 기준으로 계산됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -8794,7 +8794,7 @@ msgstr "팁: 바코드를 활용하면 재고 작업 속도가 빨라집니다."
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, python-format
 msgid "To"
-msgstr "종료 시간"
+msgstr "목적지 위치"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9038,7 +9038,7 @@ msgstr "이송 위치"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger"
-msgstr "트리거"
+msgstr "자동 실행"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
@@ -9668,7 +9668,7 @@ msgstr "선택하면 품목 패키지에서 경로를 선택할 수 있습니다
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "When product arrives in"
-msgstr "품목이 다음에 도착했을 때"
+msgstr "품목 도착 위치"
 
 #. module: stock
 #. odoo-python
@@ -9789,7 +9789,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "아직 재보충이 필요한 주문이 없습니다."
+msgstr "아직 재보충해야 할 주문이 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10024,7 +10024,7 @@ msgstr "재고 손실 수량을 수정할 수 없습니다"
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
-msgstr "동일한 이송에서 동일한 꾸러미 상품 내용을 두 번 이상 이동하거나 동일한 꾸러미 상품을 두 위치로 분할할 수 없습니다."
+msgstr "동일한 이송에서 동일한 패키지 내용을 두 번 이상 이동하거나 동일한 패키지를 두 위치로 분할할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10237,7 +10237,7 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "여기에서 재고 예측을 기반으로 한 스마트 보충 안내를 확인할 수 있습니다.\n"
-"            클릭 한 번으로 구매 또는 제조 수량을 선택하여 주문을 시작하세요. \n"
+"            클릭 한 번으로 구매 또는 제조 수량을 선택하여 재보충 주문을 시작하세요. \n"
 "            규칙을 \"자동\"으로 설정해놓으면 주문에 소요되는 시간을 줄일 수 있습니다. "
 
 #. module: stock

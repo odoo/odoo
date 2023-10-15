@@ -36,14 +36,14 @@ msgstr "已發送郵件數目"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (尚餘名額： %(count)s)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (已售完)"
 
 #. module: event
 #. odoo-python
@@ -57,21 +57,21 @@ msgstr "%(event_name)s - 登記 #%(registration_id)s"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - %(attendee_name)s 的報名"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (尚餘名額： %(count)s)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (已售完)"
 
 #. module: event
 #. odoo-python
@@ -86,11 +86,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'可摺疊證件 - %s - %s' % ((object.event_id.name or '活動').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'可折疊出席證 - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'可摺疊證件 - %s' % (object.name or '活動').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -98,18 +100,20 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'整頁門票 - %s - %s' % ((object.event_id.name or '活動').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'整頁入場券 - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'整頁門票 - %s' % (object.name or '活動').replace('/','')"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- 「%(event_name)s」：尚欠 %(nb_too_many)i 座位。"
 
 #. module: event
 #. odoo-python
@@ -118,7 +122,7 @@ msgstr ""
 msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
-msgstr ""
+msgstr "- 門票「%(ticket_name)s」(%(event_name)s)：尚欠 %(nb_too_many)i 座位。"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -178,6 +182,8 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>整個活動對所有公眾開放！</b> <br>我們要求支付 49.50 歐元的參加費，用於 3 "
+"天的費用（茶歇、餐飲、飲料，以及令人驚喜的音樂會和啤酒派對）。<br> 對於不想捐款的人，可選擇免費門票，但不包括餐飲和參加晚間活動的費用。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -190,6 +196,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">透過 YouTube 整合，線上公開播放你的曲目</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -197,6 +205,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">曲目結束後，立即向參加者分享測驗</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -217,7 +227,7 @@ msgstr ""
 "<div>\n"
 "    <t t-out=\"object.name or '訪客'\"></t> 你好！<br>\n"
 "    多謝你查詢。<br>\n"
-"    謹附上「<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>」活動的徽章。<br>\n"
+"    謹附上「<t t-out=\"object.event_id.name or ''\">OpenWood 系列網上發佈會</t>」活動的證件。<br>\n"
 "    若有任何疑問，歡迎聯絡我們。\n"
 "    <br><br>\n"
 "    謝謝！\n"
@@ -244,23 +254,21 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
-msgstr ""
-"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"確認報名\"/>"
+msgstr "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"確認按鈕\" title=\"確認報名\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"已出席按鈕\" title=\"確認出席\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-2\"></i>本次活動及所有會議均以<b>英語</b>進行！"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -270,31 +278,31 @@ msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"已確認\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"位置\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"門票類型\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
 "button\" title=\"Previous state\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"前一狀態按鈕\" title=\"前一狀態\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
 "title=\"Previous state\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"前一狀態按鈕\" title=\"前一狀態\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2 o_event_fontsize_09\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2 o_event_fontsize_09\" title=\"結束日期\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -302,6 +310,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-end\">演講者</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -310,6 +319,9 @@ msgid ""
 "                                    Registration statistics\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    報名統計\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -322,6 +334,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
 "                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"state != 'done'\">已出席</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">已取消</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -1251,7 +1265,7 @@ msgstr "將導航選單添加到您的活動網頁，其中包括時間表、追
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "加入一些內部備註（待辦事項清單、聯絡資訊⋯）"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1307,7 +1321,7 @@ msgstr "已公佈"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "套用變更。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1318,7 +1332,7 @@ msgstr "已封存"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "是否已啟動銷售"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1374,12 +1388,12 @@ msgstr "參加日期"
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr "與會者"
+msgstr "參加者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr "與會者姓名"
+msgstr "參加者姓名"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1390,7 +1404,7 @@ msgstr "與會者姓名"
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Attendees"
-msgstr "與會者"
+msgstr "參加者"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__auto_confirm
@@ -1518,7 +1532,7 @@ msgstr "類別"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "類別序列"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1630,7 +1644,7 @@ msgstr "已確認"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Confirmed Attendees"
-msgstr ""
+msgstr "已確認參加者"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1907,7 +1921,7 @@ msgstr "活動組織機構"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "活動舉辦單位"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1920,7 +1934,7 @@ msgstr "活動報名"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "活動負責人"
 
 #. module: event
 #. odoo-python
@@ -1993,25 +2007,25 @@ msgstr "活動標籤類別"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr "活動模板"
+msgstr "活動範本"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "活動模板入場券"
+msgstr "活動範本門票"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "活動模板入場券"
+msgstr "活動範本門票"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr "活動模板"
+msgstr "活動範本"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -2020,18 +2034,21 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"活動範本結合了你經常使用的配置，\n"
+"                並通常基於你舉辦的活動類型（例如工作坊、\n"
+"                路演、線上網路研討會等）。"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
 msgid "Event Ticket"
-msgstr "活動入場券"
+msgstr "活動門票"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr "活動入場券"
+msgstr "活動門票"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -2053,7 +2070,7 @@ msgstr "活動階段用於跟踪活動從起源到結束的進程。"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "Event's Ticket"
-msgstr "活動的入場券"
+msgstr "活動的門票"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -2068,7 +2085,7 @@ msgstr "活動：報名出席證"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "活動：報名確認"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -2120,6 +2137,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"每年我們都會邀請我們的社區、合作夥伴和最終用戶前來與我們會面！這是聚在一起展示新功能、未來版本路線圖、軟件成就、研討會、培訓課程等的理想活動⋯\n"
+"            本次活動也是展示我們合作夥伴案例研究、方法或發展的機會。在那裡，直接從源頭看到新版本的功能！"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2225,7 +2244,7 @@ msgstr "免費"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food!"
-msgstr ""
+msgstr "免費入場，不提供食物！"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2243,17 +2262,17 @@ msgstr "從此儀表板中，您可以報告、分析和檢測有關您的活動
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr "整頁入場券"
+msgstr "整頁門票"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr "整頁入場券示例"
+msgstr "整頁門票示例"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr "活動結束"
+msgstr "已圓滿結束"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2289,17 +2308,17 @@ msgstr "Google 地圖"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Google 地圖 API 密鑰"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "Google 地圖 API 秘密"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "Google 地圖靜態 API"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -2351,7 +2370,7 @@ msgstr "已出席本次會議的參加者應能："
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr ""
+msgstr "這是我們的第 12 屆現場音樂節！"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -2410,7 +2429,7 @@ msgstr "圖示"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "圖示選擇"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2449,12 +2468,14 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
+"如果您對曲棍球一無所知，這是對這項精彩運動的出色介紹，您將能看到一些訓練過程，並且在比賽結束後，\n"
+"                還有一些時間與經驗豐富的球員和教練聊天！"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__now
 msgid "Immediately"
-msgstr "馬上"
+msgstr "立即"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -2521,7 +2542,7 @@ msgstr "是關注人"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "是單日"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
@@ -2541,7 +2562,7 @@ msgstr "陳大文"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "一起參加有史以來最精彩的氣球競賽！"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2638,13 +2659,13 @@ msgstr "讓我們建立您的第一個<b>活動</b>。"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "限制參加人數"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr "設置最少報名數"
+msgstr "限制報名人數"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2701,17 +2722,17 @@ msgstr "根據活動分類的信件調度"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr "已經發送的電子信件"
+msgstr "已經發送的電郵"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "管理及發佈包含音軌的時間表"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr "標註為確認出席"
+msgstr "標記為確認出席"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2877,7 +2898,7 @@ msgstr "動作數量"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "參加者數目"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2887,7 +2908,7 @@ msgstr "預期的與會人員數量"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "報名數目"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2942,7 +2963,7 @@ msgstr "線上購買入場券"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
-msgstr ""
+msgstr "打開日期範圍選擇器。 選擇活動的開始日期"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2968,13 +2989,13 @@ msgstr "OpenWood 在幫助客戶處理樹木、花卉和真菌的同時，為木
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "不支援該操作。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Organizer"
-msgstr "組織者"
+msgstr "舉辦單位"
 
 #. module: event
 #: model:event.event,subtitle:event.event_7
@@ -3010,7 +3031,7 @@ msgstr "當任務或問題處於該階段時，覆蓋為看板選擇的正常狀
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
-msgstr "參與者"
+msgstr "參加者"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3033,12 +3054,12 @@ msgstr "請<b>至少</b>在活動開始前 30 分鐘到達。"
 #: code:addons/event/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "請輸入有效的 base64 秘密"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Previous state"
-msgstr ""
+msgstr "前一狀態"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3130,7 +3151,7 @@ msgstr "報名結束"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr "報名 ID"
+msgstr "報名識別碼"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
@@ -3167,7 +3188,7 @@ msgstr "報名開放"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "報名統計"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -3261,22 +3282,22 @@ msgstr "定期時間"
 #. module: event
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
-msgstr ""
+msgstr "經驗豐富的曲棍球迷和好奇的人們，這場比賽適合你們！"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret"
-msgstr "密鑰"
+msgstr "秘密"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr "在您的網站上銷售入場券"
+msgstr "在你的網站上銷售門票"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr "憑銷售訂單售票"
+msgstr "以銷售訂單售票"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -3287,7 +3308,7 @@ msgstr "發送"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "通過信件發送"
+msgstr "以電郵發送"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_done
@@ -3300,17 +3321,17 @@ msgstr "發送"
 #: model:mail.template,description:event.event_reminder
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
-msgstr ""
+msgstr "如果活動定義了提醒，則會自動發送給參加者"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
-msgstr ""
+msgstr "在某人報名參加活動後自動發送給他們"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "報名參加活動後發送給參加者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sequence
@@ -3362,7 +3383,7 @@ msgstr "來源"
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr "運動 (Sport)"
+msgstr "體育"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -3413,13 +3434,13 @@ msgstr "銷售開始日"
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "靜態地圖網址"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "靜態地圖網址有效"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -3552,7 +3573,7 @@ msgstr "該位置已被預訂"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
-msgstr ""
+msgstr "我們的參加者和飛行員的安全是首要考慮！"
 
 #. module: event
 #. odoo-python
@@ -3561,7 +3582,7 @@ msgstr ""
 msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
-msgstr ""
+msgstr "結束日期不能早於開始日期。 請檢查門票 %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -3569,7 +3590,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
-msgstr ""
+msgstr "引用的範本應來自 %(model_name)s 模型。"
 
 #. module: event
 #. odoo-python
@@ -3577,7 +3598,7 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "沒有足夠座位提供給："
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3612,7 +3633,7 @@ msgstr "這是您的客人在報名時會看到<b>的名字。</b>"
 msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
-msgstr ""
+msgstr "這裡是與家人度過美好一天的理想場所，我們保證您將留下美好而恆久的回憶！"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3638,7 +3659,7 @@ msgstr "該步驟已完成，點選設定為阻止或進行中。"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_attendee_search
 msgid "Ticket"
-msgstr "入場券"
+msgstr "門票"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
@@ -3652,7 +3673,7 @@ msgstr "購票說明"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr "入場券類型"
+msgstr "門票類型"
 
 #. module: event
 #. odoo-javascript
@@ -3670,7 +3691,7 @@ msgstr "入場券類型可讓您區分您的與會者。讓我們<b>建立</b>�
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Tickets"
-msgstr "入場券"
+msgstr "門票"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -3748,7 +3769,7 @@ msgstr "未確認"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "未確認的報名"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
@@ -3830,7 +3851,7 @@ msgstr "場地地點"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "地點（已格式化為一行使用）"
 
 #. module: event
 #. odoo-python
@@ -3893,12 +3914,12 @@ msgstr "活動是否開始"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "是否可以出售這些門票"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "這張門票是否沒有座位。"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -3934,39 +3955,39 @@ msgstr "您在 {{ object.event_id.name }} 的報名"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr ""
+msgstr "例：12 至 16 歲"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr ""
+msgstr "例：年齡類別"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr ""
+msgstr "例如.\"Azure Interior\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "例：宣傳推廣"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr "例如建築師會議"
+msgstr "例：建築師會議"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "例：如何到達你的活動地點、關門時間⋯"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr "例如線上會議"
+msgstr "例：線上會議"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view

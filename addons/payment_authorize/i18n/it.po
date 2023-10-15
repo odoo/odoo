@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,9 @@ msgid ""
 "                    <option value=\"savings\">Personal Savings</option>\n"
 "                    <option value=\"businessChecking\">Business Checking</option>"
 msgstr ""
+"<option value=\"checking\">Conto corrente personale</option>\n"
+"                    <option value=\"savings\">Conto di risparmio</option>\n"
+"                    <option value=\"businessChecking\">Conto corrente aziendale</option>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -144,6 +148,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
+"Non è stato possibile recuperare i dettagli della transazione. (codice "
+"errore: %s; error_details: %s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__authorize_payment_method_type__credit_card
@@ -192,7 +198,7 @@ msgstr "Come essere pagati con Authorize.Net"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -211,7 +217,7 @@ msgstr "Nessuna transazione trovata corrispondente al riferimento %s."
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "È possibile selezionare solo una valuta per l'account Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -285,6 +291,8 @@ msgstr "Codice tecnico del fornitore di pagamenti."
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
+"Lo stato della transazione non permette di effettuare il rimborso. (stato: "
+"%s, dettagli: %s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -316,13 +324,16 @@ msgid ""
 "method type, please disable the provider and duplicate it. Then, change the "
 "payment method type on the duplicated provider."
 msgstr ""
+"CI sono token attivi collegati al fornitore. Per modificare il tipo di "
+"metodo di pagamento, disabilita il fornitore e duplicalo. In seguito, cambia"
+" il tipo di metodo di pagamento per il fornitore duplicato."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "L'azione non può essere eseguita quando il fornitore è disattivato."
 
 #. module: payment_authorize
 #. odoo-javascript
@@ -335,4 +346,4 @@ msgstr "Non siamo in grado di elaborare il tuo pagamento."
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "AA"

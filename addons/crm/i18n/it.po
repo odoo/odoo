@@ -149,7 +149,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -217,7 +217,7 @@ msgstr "<span class=\"o_stat_text\"> Contatti</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2 text-nowrap\"> al </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -231,7 +231,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> %</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2\"> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -246,7 +246,7 @@ msgstr "<span class=\"oe_inline\"> / </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "<span class=\"text-bg-danger\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Perso</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -254,6 +254,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> contatti assegnati questo mese\n"
+"                            su un massimo di </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1399,7 +1401,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Duration: %s"
-msgstr ""
+msgstr "Durata: %s"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -1503,7 +1505,7 @@ msgstr "Data stimata di vincita dell’opportunità."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "Supera assegnamento mensile contatti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1651,7 +1653,7 @@ msgstr "Da %(source_name)s"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "Da %(source_name)s: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1904,7 +1906,7 @@ msgstr "La probabilità è automatica?"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON che associa gli ID di un campo molti a uno ai secondi trascorsi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -2277,6 +2279,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep"
 " track of everything you have to do!</i>"
 msgstr ""
+"Sembra non ci sia nulla di pianificato. :(<br><br><i>Suggerimento: programma"
+" le attività per tenere traccia di tutto ciò che c'è da fare!</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2302,7 +2306,7 @@ msgstr "Numero perse"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "Contatto perso"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2415,7 +2419,7 @@ msgstr "Mezzo:"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "Meeting pianificato alle %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -3570,7 +3574,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Durata stato"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3597,7 +3601,7 @@ msgstr "Indirizzo 2"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Subject: "
-msgstr ""
+msgstr "Oggetto:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -3897,6 +3901,8 @@ msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
 msgstr ""
+"Vero se il numero di contatti assegnati mensilmente è maggiore del limite "
+"massimo, altrimenti è falso."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -4251,18 +4257,18 @@ msgstr "CAP"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"0123456789\""
-msgstr ""
+msgstr "ad es. \"0123456789\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "ad es. \"Mensile\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"email@address.com\""
-msgstr ""
+msgstr "ad es. \"e-mail@indirizzo.com\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form

@@ -3,8 +3,8 @@
 # 	* sale_project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Junko Augias, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,14 +46,14 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)sの販売オーダ項目"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)sの販売オーダ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -65,6 +65,12 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span>販売オーダ \n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            請求可能にする\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -73,6 +79,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            販売オーダ\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -84,7 +93,7 @@ msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -144,7 +153,7 @@ msgstr "コンフィグ設定"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Create Project"
-msgstr ""
+msgstr "プロジェクト作成"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -180,7 +189,7 @@ msgstr "販売オーダを表示"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__display_sales_stat_buttons
 msgid "Display Sales Stat Buttons"
-msgstr ""
+msgstr "販売ステータスボタンを表示"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -428,7 +437,7 @@ msgstr "マイルストン"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "新規販売オーダ項目"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
@@ -445,7 +454,7 @@ msgstr "請求不可"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "未請求"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -466,6 +475,13 @@ msgid ""
 msgstr ""
 "販売オーダの確定時に、このプロダクトはプロジェクトやタスクを生成することができます。 これらから、販売しているサービスを追跡することができます。\n"
 "「販売オーダのプロジェクト」： プロジェクトが定義されている場合、販売オーダの設定されたプロジェクトを使用するか、選択されたテンプレートに基づいて新しいプロジェクトを作成するようにフォールバックします。"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "操作はサポートされていません"
 
 #. module: sale_project
 #. odoo-python
@@ -556,7 +572,7 @@ msgstr "数量"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "数量 (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -571,7 +587,7 @@ msgstr "到達したマイルストン"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_display_name
 msgid "Sale Line Display Name"
-msgstr ""
+msgstr "販売明細ディスプレイ名"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
@@ -581,7 +597,7 @@ msgstr "販売オーダ数"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
 msgid "Sale Order Line Count"
-msgstr ""
+msgstr "販売オーダ明細数"
 
 #. module: sale_project
 #. odoo-javascript
@@ -714,17 +730,17 @@ msgstr "サービス請求方針"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_create_project_button
 msgid "Show Create Project Button"
-msgstr ""
+msgstr "プロジェクト作成ボタンを表示"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_project_button
 msgid "Show Project Button"
-msgstr ""
+msgstr "プロジェクトボタンを表示"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_task_button
 msgid "Show Task Button"
-msgstr ""
+msgstr "タスクボタンを表示"
 
 #. module: sale_project
 #. odoo-javascript
@@ -799,7 +815,7 @@ msgstr "グローバル・プロジェクトでタスクを生成するので、
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr ""
+msgstr "この販売オーダは少なくとも1つのプロダクトタイプ \"サービス\"を含む必要があります。"
 
 #. module: sale_project
 #. odoo-python

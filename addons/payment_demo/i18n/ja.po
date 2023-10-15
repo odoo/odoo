@@ -38,21 +38,35 @@ msgid ""
 "                        </option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                        <option value=\"done\" title=\"Successful payment\">\n"
+"                            成功\n"
+"                        </option>\n"
+"                        <option value=\"pending\" title=\"Payment processing\">\n"
+"                            保留\n"
+"                        </option>\n"
+"                        <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                            取消\n"
+"                        </option>\n"
+"                        <option value=\"error\" title=\"Processing error\">\n"
+"                            エラー\n"
+"                        </option>\n"
+"                    </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Details (test data)</b></small>"
-msgstr ""
+msgstr "<small><b>支払詳細(テストデータ)</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Status</b></small>"
-msgstr ""
+msgstr "<small><b>支払ステータス</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr ""
+msgstr "承認"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -104,7 +118,7 @@ msgstr "デモ"
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "デモプロバイダーは決して有効にしてはいけません。"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -136,26 +150,26 @@ msgstr "決済トランザクション"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "この支払方法での支払は<b>成功</b>します。"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
 "Payments made with this payment method will be automatically "
 "<b>canceled</b>."
-msgstr ""
+msgstr "この支払方法での支払は自動的に<b>取消</b>されます。"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
-msgstr ""
+msgstr "この支払方法での支払は<b>保留</b>のままになります。"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
-msgstr ""
+msgstr "この支払い方法での支払いは、処理<b>エラー</b>をシミュレートします。"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -165,17 +179,17 @@ msgstr "保留"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "エラーに設定"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "シュミレートステータス"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "このトークンから作成された取引のステータスを設定して下さい。"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -192,11 +206,11 @@ msgstr "取引はトークンにリンクしていません。"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "以下のデモ支払ステータスを選択しました: %s"

@@ -5840,12 +5840,12 @@ msgstr "空欄"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_download
 msgid "Enable Download"
-msgstr "ダウンロードできません"
+msgstr "ダウンロードを有効にする"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_send_mail
 msgid "Enable Send Mail"
-msgstr "メールを送信できません"
+msgstr "メール送信を有効にする"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -5856,7 +5856,7 @@ msgstr "取引先に与信限度額を有効にします。"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__by_default
 msgid "Enabled by Default"
-msgstr "デフォルトで使用できません"
+msgstr "デフォルトで有効にする"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__end_date
@@ -8840,7 +8840,7 @@ msgstr "雑費"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "Missing 'active_model' in context."
-msgstr "文脈で'active_model'が欠落。"
+msgstr "文脈で'active_model'がありません。"
 
 #. module: account
 #. odoo-python
@@ -15383,6 +15383,13 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr "ここで、検証後に顧客の請求書に表示されるデフォルト参照を設定できます。これで、顧客が決済する時に請求書を参照できるようになります。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr ""
 
 #. module: account
 #. odoo-python

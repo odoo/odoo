@@ -29,6 +29,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
+"Si è verificato un errore durante l'elaborazione del tuo pagamento (stato "
+"%s). Prova di nuovo."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -55,17 +57,17 @@ msgstr "E-mail cliente Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Chiave pubblica Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Chiave privata Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Chiave privata Webhook Flutterwave"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -99,7 +101,7 @@ msgstr "Chiave pubblica"
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Dati ricevuti privi di riferimento,"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -114,6 +116,8 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"La comunicazione con l'API è fallita. Flutterwave ci ha fornito le seguenti "
+"informazioni sul problema: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
@@ -124,6 +128,8 @@ msgstr "L'indirizzo e-mail del cliente quando è stato creato il token."
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
 msgstr ""
+"La chiave utilizzata esclusivamente per identificare il conto con "
+"Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
@@ -142,9 +148,9 @@ msgstr "La transazione non è legata a un token."
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "Stato pagamento sconosciuto: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Segreto Webhook"
