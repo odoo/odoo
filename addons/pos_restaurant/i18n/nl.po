@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -255,6 +255,13 @@ msgstr "GEANNULEERD"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
+msgid "Cash %s"
+msgstr "Contant %s"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
 msgid "Cash Bar"
 msgstr "Cash Bar"
 
@@ -304,6 +311,14 @@ msgstr "Kleur"
 #: model:ir.model,name:pos_restaurant.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configuratie instellingen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "Couldn't synchronize the orders for the tables because you are offline"
+msgstr ""
+"Kon de bestellingen voor de tafels niet synchroniseren omdat je offline bent"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -405,7 +420,7 @@ msgstr "Ruimtenaam"
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr "Ruimteindeling"
+msgstr "Plattegronden"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1124,6 +1139,15 @@ msgstr "De achtergrondkleur van je restaurant in een HTML-compatibel formaat"
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
 msgstr "Het standaard aantal klanten dat wordt geholpen aan deze tafel."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "The orders for the table could not be loaded because you are offline"
+msgstr ""
+"De bestellingen voor de tafel konden niet worden geladen omdat je offline "
+"bent"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
