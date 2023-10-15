@@ -28,10 +28,14 @@ class ChooseDeliveryPackage(models.TransientModel):
                 float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
                 and not m.result_package_id
             )
+            # Fallback if all moves validated without manually setting qty_done
+            if not move_line_ids:
+                move_line_ids = rec.picking_id.move_line_ids.filtered(lambda m: not m.result_package_id)
+
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = rec.delivery_package_type_id.base_weight or 0.0
             for ml in move_line_ids:
-                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                qty = ml.product_uom_id._compute_quantity(ml.qty_done or ml.reserved_qty, ml.product_id.uom_id)
                 total_weight += qty * ml.product_id.weight
             rec.shipping_weight = total_weight
 
