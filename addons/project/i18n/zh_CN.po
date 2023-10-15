@@ -1535,6 +1535,8 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"任务状态最后一次被修改的日期。\n"
+"根据这些信息，您可以确定停滞的任务，并统计将任务从一个阶段/状态转移到另一个阶段/状态通常需要的时间。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -2855,7 +2857,7 @@ msgstr "下一活动类型"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Customer"
-msgstr ""
+msgstr "无客户"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2865,7 +2867,7 @@ msgstr "没有里程碑"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "无项目"
 
 #. module: project
 #. odoo-python
@@ -3447,7 +3449,7 @@ msgstr "项目标签"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "项目任务阶段删除向导"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3457,7 +3459,7 @@ msgstr "项目任务"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "项目标题"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -4008,7 +4010,7 @@ msgstr "将优先级设置为%s"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "设置状态为..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4053,7 +4055,7 @@ msgstr "分享项目"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Read-only"
-msgstr ""
+msgstr "只读共享"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4646,7 +4648,7 @@ msgstr "本周"
 msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
-msgstr ""
+msgstr "项目与客户共享后预览如下，客户有编辑权限。"
 
 #. module: project
 #. odoo-javascript
@@ -5388,7 +5390,7 @@ msgstr "准备标记为已达到"
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "子任务）"
 
 #. module: project
 #. odoo-python
@@ -5453,3 +5455,5 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ "
 "record.subtask_count.value }}"
 msgstr ""
+"已结束 {{ record.closed_subtask_count.value }} 个子任务，总共有 {{ "
+"record.subtask_count.value }} 个子任务。"

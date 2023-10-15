@@ -1525,7 +1525,6 @@ msgstr "國家"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #, python-format
 msgid "Create"
@@ -1553,6 +1552,13 @@ msgstr "建立  \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "創建 %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr "將 <strong>%s</strong> 建立為新的 %s？"
 
 #. module: web
 #. odoo-javascript
@@ -2198,6 +2204,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "錯誤"
@@ -3448,7 +3455,7 @@ msgstr "否"
 #: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "No Access"
-msgstr "無法訪問"
+msgstr "未能存取"
 
 #. module: web
 #. odoo-javascript
@@ -4024,12 +4031,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr "源自 %s%s"
+msgstr "由 %s%s 驅動"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr "由<span>Odoo</span>提供支援"
+msgstr "由 <span>Odoo</span> 驅動"
 
 #. module: web
 #. odoo-javascript
@@ -5708,6 +5715,7 @@ msgstr "上傳並設定"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -6229,7 +6237,6 @@ msgstr "此更新有效。"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "設為新"
@@ -6558,6 +6565,13 @@ msgstr "毫秒"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6747,13 +6761,6 @@ msgstr "已設定（真）"
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
 #, python-format
 msgid "to discard"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
 msgstr ""
 
 #. module: web

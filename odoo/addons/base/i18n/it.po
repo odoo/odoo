@@ -2184,6 +2184,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    Il SAF-T norvegese è un formato di file standard per esportare varie tipologie di dati contabili commerciali utilizzando il formato XML.\n"
+"    La prima versione di SAF-T Financial è limitata al livello di libro mastro, comprese le operazioni clienti e fornitori.\n"
+"    Sono incluse anche le necessarie anagrafiche.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -4824,6 +4829,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Localizzazione cilena con EDI\n"
+"========================\n"
+"Questo codice consente di generare il documento DTE per la fatturazione cilena.\n"
+"- Formato DTE (documento elettronico imponibile) in XML\n"
+"- Comunicazione diretta con il SII (servizio fiscale interno) per l'invio di fatture e altri documenti legati alle vendite.\n"
+"- Comunicazione con i clienti per l'invio dei DTE di vendita.\n"
+"- Comunicazione con i fornitori (venditori) per accettare i loro DTE.\n"
+"- Comunicazione diretta con il SII per notificare l'accettazione o il rifiuto delle fatture fornitore o di altri DTE.\n"
+"\n"
+" Per visualizzare il codice a barre sulla fattura è necessaria la libreria pdf417gen.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -6014,6 +6032,22 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Norme retributive libro paga indiano\n"
+"====================================\n"
+"\n"
+"    -Configurazione di hr_payroll per la localizzazione indiana\n"
+"    -Tutte le principali norme contributive per la busta paga indiana.\n"
+"    * Nuovo rendiconto per la busta paga\n"
+"    * Contratti dipendente\n"
+"    * Possibilità di configurare la retribuzione base/lorda/netta\n"
+"    * Busta paga dipendente\n"
+"    * Indennità/Detrazioni\n"
+"    * Integrato con gestione permessi\n"
+"    * Indennità medica, indennità di viaggio, assegni familiari...\n"
+"    - Consigli e resoconti sulle buste paga\n"
+"    - Rendiconto retribuzione annua sia per dirigente che per dipendente\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -6997,6 +7031,16 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
+"\n"
+"Rendiconti contabili mongoli\n"
+"===========================================================\n"
+"-Conto economico\n"
+"-Stato patrimoniale\n"
+"-Rendiconto dei flussi di cassa\n"
+"-Relazione sul rimborso dell'IVA\n"
+"-Relazione sull'imposta sul reddito societario\n"
+"\n"
+"Requisiti finanziari forniti da: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_hr_payroll
@@ -10755,7 +10799,7 @@ msgstr "N. regole su record"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "#{alt}"
-msgstr ""
+msgstr "#{alt}"
 
 #. module: base
 #. odoo-python
@@ -11013,6 +11057,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contatto: utilizzalo per organizzare i dettagli di contatto dei dipendenti di una determinata azienda (ad es. CEO, CFO, ...).\n"
+"- Indirizzo fattura: indirizzo preferito per tutte le fatture. Selezionato in maniera predefinita quando fatturi un ordini che appartiene a quest'azienda.\n"
+"- Indirizzo di consegna: indirizzo preferito per tutte le consegne. Selezionato in maniera predefinita quando  consegni un ordine che appartiene a quest'azienda.\n"
+"- Privato: gli indirizzi privati sono visibili solo dagli utenti autorizzati e contengono dati sensibili (indirizzo di casa del dipendente, ecc.).\n"
+"- Indirizzo di follow-up: indirizzo preferito per i rendiconti di follow-up. Selezionati in maniera predefinita quando invii promemoria per fatture in ritardo.\n"
+"- Altro: altro indirizzo per l'azienda (ad es. succursale)"
 
 #. module: base
 #. odoo-python
@@ -11191,7 +11241,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>Command</code>: x2many spazio nome comando"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11199,12 +11249,16 @@ msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
 msgstr ""
+"<code>UserError</code>: classe di eccezione per visualizzare messaggi di "
+"avviso per gli utenti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
 msgstr ""
+"<code>_logger.info(message)</code>: logger per emettere messaggi nei "
+"registri del server"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -11221,7 +11275,7 @@ msgstr "<code>dateutil</code> (Modulo python)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: ambiente nel quale viene attivata l'azione"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11229,6 +11283,8 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
+"<code>float_compare()</code>: funzione \"utility\" per confrontare i "
+"flottanti in base ad una precisione specifica"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11245,6 +11301,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model</code>: modello del record per il quale viene attivata l'azione;"
+" è un insieme di record vuoto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11570,22 +11628,22 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "<span class=\"o_stat_text\">Activate and Translate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Attiva e traduci</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Add to the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aggiungi al menu \"Stampa\"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Qweb Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Viste Qweb</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Remove from the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rimuovi dal menu \"Stampa\"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -11794,7 +11852,7 @@ msgstr "<strong>C</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies:</strong>"
-msgstr ""
+msgstr "<strong>Dipendenze:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -11835,7 +11893,7 @@ msgstr "<strong>Etichetta</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Menu:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -11868,7 +11926,7 @@ msgstr "<strong>R</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports:</strong>"
-msgstr ""
+msgstr "<strong>Resoconti:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -11918,7 +11976,7 @@ msgstr "<strong>U</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View:</strong>"
-msgstr ""
+msgstr "<strong>Vista:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -14023,12 +14081,13 @@ msgstr "In archivio"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts?"
-msgstr ""
+msgstr "Sei sicuro di eseguire la fusione automatica dei tuoi contatti?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the list of automatic merges of your contacts?"
 msgstr ""
+"Sei sicuro di voler eseguire l'elenco delle unioni automatiche dei contatti?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -17223,7 +17282,7 @@ msgstr "Vista personalizzata"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_'!"
-msgstr ""
+msgstr "I Campi personalizzati devono avere un nome che inizia con 'x_'!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name_position
@@ -17584,7 +17643,7 @@ msgstr "Limite Predefinito per la vista elenco"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__default
 msgid "Default paper format?"
-msgstr ""
+msgstr "Formato carta predefinito?"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
@@ -18883,6 +18942,9 @@ msgid ""
 "\n"
 "%(error)s"
 msgstr ""
+"Errore nella convalida della vista:\n"
+"\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python
@@ -25288,7 +25350,7 @@ msgstr "Nessun paese trovato!"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found!"
-msgstr ""
+msgstr "Impossibile trovare una vista predefinita di tipo \"%s\"!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__no_gap
@@ -28690,7 +28752,7 @@ msgstr "Localizzazione Stipendi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -30140,7 +30202,7 @@ msgstr "Rilevata ricorsività."
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Recursion error in modules dependencies!"
-msgstr ""
+msgstr "Errore di ricorsività nelle dipendenze dei moduli!"
 
 #. module: base
 #. odoo-python
@@ -30569,7 +30631,7 @@ msgstr "Definizione regola (filtro dominio)"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
 msgid "Rule must have at least one checked access right!"
-msgstr ""
+msgstr "La regola deve avere almeno un diritto di accesso selezionato!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
@@ -33211,7 +33273,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique!"
-msgstr ""
+msgstr "Il codice URL della lingua deve essere unico!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -33243,17 +33305,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
 msgid "The code of the country must be unique!"
-msgstr ""
+msgstr "Il codice della nazione deve essere univoco!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_code_uniq
 msgid "The code of the language must be unique!"
-msgstr ""
+msgstr "Il codice della lingua deve essere univoco!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_state_name_code_uniq
 msgid "The code of the state must be unique by country!"
-msgstr ""
+msgstr "Il codice stato/provincia deve essere univoco per nazione!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
@@ -33274,7 +33336,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
 msgid "The company name must be unique!"
-msgstr ""
+msgstr "Il nome dell'azienda deve essere univoco!"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -33548,7 +33610,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
 msgid "The name of the country must be unique!"
-msgstr ""
+msgstr "Il nome della nazione deve essere univoco!"
 
 #. module: base
 #. odoo-python
@@ -33566,7 +33628,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_name_uniq
 msgid "The name of the language must be unique!"
-msgstr ""
+msgstr "Il nome della lingua deve essere univoco!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_module_module_name_uniq
@@ -33588,6 +33650,8 @@ msgid ""
 "The new rate is quite far from the previous rate.\n"
 "Incorrect currency rates may cause critical problems, make sure the rate is correct!"
 msgstr ""
+"Il nuovo tasso è molto diverso dal precedente.\n"
+"Tassi di cambio non corretti possono causare problemi seri, assicurati che il tasso sia corretto!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_increment
@@ -35452,6 +35516,8 @@ msgstr ""
 msgid ""
 "Use the SMTP configuration set in the \"Command Line Interface\" arguments."
 msgstr ""
+"Utilizza la configurazione SMTP negli argomenti della \"Interfaccia della "
+"riga di comando\"."
 
 #. module: base
 #. odoo-python
@@ -36567,7 +36633,7 @@ msgstr "Annotare la chiave"
 #: code:addons/models.py:0
 #, python-format
 msgid "Wrong property field value name %r."
-msgstr ""
+msgstr "Il nome del valore del campo proprietà %r non è corretto."
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -37038,7 +37104,7 @@ msgstr "conto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "account_qr_code_emv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active

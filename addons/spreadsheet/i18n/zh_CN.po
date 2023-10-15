@@ -103,6 +103,11 @@ msgid ""
 "      (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
 "      "
 msgstr ""
+"(1) 从第一个项目开始搜索。\n"
+"      (-1) 从最后一项开始搜索。\n"
+"      (2) 执行二进制搜索，依赖于 lookup_array 按升序排序。如果未排序，将返回无效结果。\n"
+"      (-2) 执行二进制搜索，依赖于 lookup_array 按降序排序。如果未排序，将返回无效结果。\n"
+"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -175,7 +180,7 @@ msgstr "2行"
 msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
-msgstr ""
+msgstr "布尔值，表示使用 A1 样式符号（真）还是 R1C1 样式符号（假）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -228,7 +233,7 @@ msgstr "需要最小范围限制值"
 msgid ""
 "A number indicating which numbering system to use to represent weekdays. By "
 "default, counts starting with Sunday = 1."
-msgstr ""
+msgstr "一个数字，表示用于表示工作日的编号系统。默认情况下，从星期天开始计数，星期天=1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -238,7 +243,7 @@ msgstr ""
 msgid ""
 "A number or string representing which days of the week are considered "
 "weekends."
-msgstr ""
+msgstr "一个数字或字符串，表示一周中哪些天被视为周末。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -253,7 +258,7 @@ msgstr "提高一个数的幂。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number representing the day that a week starts on. Sunday = 1."
-msgstr ""
+msgstr "代表一周开始的日期数字。星期日 = 1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -276,7 +281,7 @@ msgstr "介于0和1之间的随机数。"
 msgid ""
 "A range containing the income or payments associated with the investment. "
 "The array should contain bot payments and incomes."
-msgstr ""
+msgstr "包含与投资相关的收入或付款的范围。数组应包含 bot 付款和收入。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -367,6 +372,7 @@ msgid ""
 " number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
+"时间单位的文本缩写。可接受的取值有：\"Y\"（start_date和end_date之间的整年数）、\"M\"（start_date和end_date之间的整月数）、\"D\"（start_date和end_date之间的天数）、\"MD\"（在整月数之后，start_date和end_date之间的天数）、\"YM\"（在整年数之后，start_date和end_date之间的整月数）、\"YD\"（在假设start_date和end_date相差不超过一年的情况下，start_date和end_date之间的天数）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -380,7 +386,7 @@ msgstr "关于"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "AVERAGE"
-msgstr ""
+msgstr "平均"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -431,14 +437,14 @@ msgstr "添加"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add any characters or symbol"
-msgstr ""
+msgstr "添加任何字符或符号"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add new columns to avoid overwriting cells"
-msgstr ""
+msgstr "添加新列，避免覆盖单元格"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -494,7 +500,7 @@ msgid ""
 "Additional ranges over which to evaluate the additional criteria. The "
 "filtered set will be the intersection of the sets produced by each "
 "criterion-range pair."
-msgstr ""
+msgstr "评估附加标准的其他范围。过滤后的集合将是每个标准-范围配对产生的集合的交集。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -597,7 +603,7 @@ msgstr "样本中应包含的附加值或范围。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values to average."
-msgstr ""
+msgstr "平均的附加值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -605,7 +611,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
-msgstr ""
+msgstr "如果相应条件为 TRUE，则返回附加值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -669,14 +675,14 @@ msgstr "包含与投资相关的收入/付款的数组或范围。"
 msgid ""
 "An array or range containing zero or more criteria to filter the database "
 "values by before operating."
-msgstr ""
+msgstr "在进行操作之前，包含零个或多个用于按照条件过滤数据库值的数组或范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An estimate for what the interest rate will be."
-msgstr ""
+msgstr "利率估算。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -684,7 +690,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An estimate for what the internal rate of return will be."
-msgstr ""
+msgstr "内部收益率的估算。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -696,7 +702,7 @@ msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE, or an expression that can"
 " be coerced to a logical value."
-msgstr ""
+msgstr "表达式或对包含表示逻辑值（即TRUE或FALSE）的表达式的单元格的引用，或者可以强制转换为逻辑值的表达式。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -705,7 +711,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE."
-msgstr ""
+msgstr "表达式或对包含表示逻辑值（即TRUE或FALSE）的表达式的单元格的引用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -714,7 +720,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
-msgstr ""
+msgstr "表达式或对单元格的引用，该单元格中的表达式表示某个逻辑值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -735,7 +741,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An indicator of what day count method to use."
-msgstr ""
+msgstr "指示使用哪种计日方法"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -744,7 +750,7 @@ msgstr ""
 msgid ""
 "An indicator of what day count method to use. (0) US NASD method (1) "
 "European method"
-msgstr ""
+msgstr "指示使用哪种计日方法。（0）美国 NASD 方法 （1） 欧洲方法"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -756,6 +762,8 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
+"表示引用是否为行/列绝对引用的指标。1 表示行和列绝对引用（例：$A$1），2 表示行绝对引用、列相对引用（例： A$1），3 "
+"表示行相对引用、列绝对引用（例：$A1），4 表示行和列相对引用（例：A1）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -936,7 +944,7 @@ msgstr "参数必须是对单元格或区域的引用。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Array or range containing the dataset to consider."
-msgstr ""
+msgstr "包含要考虑的数据集的数组或范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1070,7 +1078,7 @@ msgstr "加粗"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Border color"
-msgstr ""
+msgstr "边框颜色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1094,7 +1102,7 @@ msgstr "下边"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "COUNT"
-msgstr ""
+msgstr "计数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1108,7 +1116,7 @@ msgstr "计算实际利率。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates the number of days, months, or years between two dates."
-msgstr ""
+msgstr "计算两个日期之间的天数、月数或年数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1163,14 +1171,14 @@ msgstr "不能排序。要进行排序，只选择具有相同大小的单元格
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot split the selection for an unknown reason"
-msgstr ""
+msgstr "无法分割选区，原因未知"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Capitalizes each word in a specified string."
-msgstr ""
+msgstr "将指定字符串中的每个词大写。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1286,7 +1294,7 @@ msgstr "清除多行 %s - %s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clip"
-msgstr ""
+msgstr "截取"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1448,7 +1456,7 @@ msgstr "将日期字符串转换为日期值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a number to text according to a specified format."
-msgstr ""
+msgstr "按照指定格式将数字转换为文本。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1613,7 +1621,7 @@ msgstr "创建筛选"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Creates a hyperlink in a cell."
-msgstr ""
+msgstr "在单元格中创建超链接。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1705,7 +1713,7 @@ msgstr "自定义货币格式"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom separator"
-msgstr ""
+msgstr "自定义分隔符"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1794,7 +1802,7 @@ msgstr "多个工作日后的日期。"
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 #, python-format
 msgid "Date of the rate."
-msgstr ""
+msgstr "费率日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2059,7 +2067,7 @@ msgstr "Else"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Ending period to calculate depreciation."
-msgstr ""
+msgstr "计算折旧的结束期限"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2150,14 +2158,14 @@ msgstr "字段%s因其类型(%s)而不被支持"
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Field name."
-msgstr ""
+msgstr "字段名称。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_data_source.js:0
 #, python-format
 msgid "Fields of type \"%s\" are not supported"
-msgstr ""
+msgstr "不支持字段类型 \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2206,7 +2214,7 @@ msgstr "查找和替换"
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 #, python-format
 msgid "First currency code."
-msgstr ""
+msgstr "首个货币代码。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2326,14 +2334,14 @@ msgstr "周五"
 #. module: spreadsheet
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Frozen and copied on"
-msgstr ""
+msgstr "冻结并复制"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Frozen version - Anyone can view"
-msgstr ""
+msgstr "冻结版 - 任何人都可查看"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2470,14 +2478,14 @@ msgstr "不同利率的本金的未来价值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Gauge"
-msgstr ""
+msgstr "Gauge"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Generating sharing link"
-msgstr ""
+msgstr "生成共享链接"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2667,7 +2675,7 @@ msgstr "任何实数的双曲正切。"
 #: code:addons/spreadsheet/static/src/list/list_functions.js:0
 #, python-format
 msgid "ID of the list."
-msgstr ""
+msgstr "列表 ID。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2676,7 +2684,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "ID of the pivot."
-msgstr ""
+msgstr "数据透视表ID。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2714,7 +2722,7 @@ msgstr "如果未找到有效的匹配项，则返回此值。"
 msgid ""
 "If number is negative, specifies the rounding direction. If 0 or blank, it "
 "is rounded away from zero. Otherwise, it is rounded towards zero."
-msgstr ""
+msgstr "如果数字为负，则指定舍入方向。如果为0或空，则向远离0的方向舍入。否则，向靠近0的方向舍入。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2723,7 +2731,7 @@ msgstr ""
 msgid ""
 "If number is negative, specifies the rounding direction. If 0 or blank, it "
 "is rounded towards zero. Otherwise, it is rounded away from zero."
-msgstr ""
+msgstr "如果数字为负，则指定舍入方向。如果为0或空，则向靠近0的方向舍入。否则，向远离0的方向舍入。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2755,7 +2763,7 @@ msgid ""
 "Indicates whether the column to be searched (the first column of the "
 "specified range) is sorted, in which case the closest match for search_key "
 "will be returned."
-msgstr ""
+msgstr "指示要搜索的列（指定范围的第一列）是否已排序，如果已排序，则返回与搜索键最接近的匹配项。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2765,7 +2773,7 @@ msgid ""
 "Indicates whether the row to be searched (the first row of the specified "
 "range) is sorted, in which case the closest match for search_key will be "
 "returned."
-msgstr ""
+msgstr "指示要搜索的行（指定范围的第一行）是否已排序，如果已排序，则返回与搜索键最接近的匹配项。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2774,7 +2782,7 @@ msgstr ""
 msgid ""
 "Indicates which column in database contains the values to be extracted and "
 "operated on."
-msgstr ""
+msgstr "表示数据库中哪一列包含要提取和操作的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2911,7 +2919,7 @@ msgstr "下方插入行"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert sheet"
-msgstr ""
+msgstr "插入表格"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2939,7 +2947,7 @@ msgstr "给予定期现金流的内部收益率。"
 #: code:addons/spreadsheet/models/spreadsheet_mixin.py:0
 #, python-format
 msgid "Invalid JSON Data"
-msgstr ""
+msgstr "无效的 JSON 数据"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2985,7 +2993,7 @@ msgstr "无效的公式"
 msgid ""
 "Invalid function name %s. Function names can exclusively contain "
 "alphanumerical values separated by dots (.) or underscore (_)"
-msgstr ""
+msgstr "函数名 %s 无效。函数名只能包含由点（.）或下划线（_）分隔的字母数字值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3360,14 +3368,14 @@ msgstr "行"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line Break"
-msgstr ""
+msgstr "换行符"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Line style"
-msgstr ""
+msgstr "行样式"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3390,7 +3398,7 @@ msgstr "链接网址"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Link label"
-msgstr ""
+msgstr "链接标签"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3418,7 +3426,7 @@ msgstr "正在加载..."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical"
-msgstr ""
+msgstr "逻辑"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3467,14 +3475,14 @@ msgstr "拐点下限必须小于拐点上限"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "MAX"
-msgstr ""
+msgstr "最大值"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "MIN"
-msgstr ""
+msgstr "最小值"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3503,7 +3511,7 @@ msgstr "匹配整个单元格内容"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Math"
-msgstr ""
+msgstr "数学"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3567,7 +3575,7 @@ msgstr "菜单%s未找到。您可能没有访问权限。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Merge cells"
-msgstr ""
+msgstr "合并单元格"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3683,14 +3691,14 @@ msgstr "杂项"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Missing closing parenthesis"
-msgstr ""
+msgstr "缺少右括号。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Missing opening parenthesis"
-msgstr ""
+msgstr "缺少左括号。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3733,14 +3741,14 @@ msgstr "特定日期是一年中的月份"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More expressions that evaluate to logical values."
-msgstr ""
+msgstr "更多评估逻辑值的表达式。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More expressions that represent logical values."
-msgstr ""
+msgstr "更多表示逻辑值的表达式。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3754,7 +3762,7 @@ msgstr "更多格式"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "More numbers or ranges to calculate for the product."
-msgstr ""
+msgstr "计算产品的更多数字或范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3805,7 +3813,7 @@ msgstr "字段名称。"
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Name of the measure."
-msgstr ""
+msgstr "措施名称。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4047,7 +4055,7 @@ msgstr "一个数字除以另一个。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Only a selection from a single column can be split"
-msgstr ""
+msgstr "只能拆分单列中的选区"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4061,7 +4069,7 @@ msgstr "操作员"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Overflow"
-msgstr ""
+msgstr "上溢"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4422,7 +4430,7 @@ msgstr "返回一个电子表格筛选的当前值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns a cell reference as a string. "
-msgstr ""
+msgstr "以字符串形式返回单元格引用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4569,7 +4577,7 @@ msgstr "指定单元格的行号。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "SUM"
-msgstr ""
+msgstr "合计"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4590,7 +4598,7 @@ msgstr "保存"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Scorecard"
-msgstr ""
+msgstr "计分卡"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4634,7 +4642,7 @@ msgstr "以弧度表示的角度的割线。"
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 #, python-format
 msgid "Second currency code."
-msgstr ""
+msgstr "第二个货币代码。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4855,21 +4863,21 @@ msgstr "空格键"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text into columns"
-msgstr ""
+msgstr "将文本分割成列"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text to columns"
-msgstr ""
+msgstr "将文本分割成行"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Splitting will overwrite existing content"
-msgstr ""
+msgstr "分割操作将覆盖现有内容"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_data
@@ -4884,14 +4892,14 @@ msgstr "电子表格文件"
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_spreadsheet_mixin
 msgid "Spreadsheet mixin"
-msgstr ""
+msgstr "电子表格混合"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Spreadsheet published"
-msgstr ""
+msgstr "电子表格发布"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4963,7 +4971,7 @@ msgstr "标准差"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Starting period to calculate depreciation."
-msgstr ""
+msgstr "计算折旧的起始期限。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4977,7 +4985,7 @@ msgstr "以此开始"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Statistical"
-msgstr ""
+msgstr "统计"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5092,35 +5100,35 @@ msgstr "文本颜色"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amortization period, in terms of number of periods."
-msgstr ""
+msgstr "摊销期，以期数计。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount invested (irrespective of face value of each security)."
-msgstr ""
+msgstr "投资金额（与每种证券的面值无关）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount invested in the security."
-msgstr ""
+msgstr "证券投资金额。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount of each payment made."
-msgstr ""
+msgstr "每次付款的金额。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount of initial capital or value to compound against."
-msgstr ""
+msgstr "以复利计算的初始资本或价值量。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5129,14 +5137,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount per period to be paid."
-msgstr ""
+msgstr "每期应支付的金额。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The amount to be received at maturity."
-msgstr ""
+msgstr "到期时应收到的金额。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5150,49 +5158,49 @@ msgstr "锚必须是所提供区域的一部分"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to convert from radians to degrees."
-msgstr ""
+msgstr "将角度单位从弧度转换为度。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the cosecant of, in radians."
-msgstr ""
+msgstr "求余割的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the cosine of, in radians."
-msgstr ""
+msgstr "求余弦值的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the cotangent of, in radians."
-msgstr ""
+msgstr "求余切值的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the secant of, in radians."
-msgstr ""
+msgstr "求正割的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the sine of, in radians."
-msgstr ""
+msgstr "求正弦值的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The angle to find the tangent of, in radians."
-msgstr ""
+msgstr "求正切值的角度（单位为弧度）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5208,7 +5216,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The annualized rate of interest."
-msgstr ""
+msgstr "年利率。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5244,7 +5252,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array or range containing the dataset to consider."
-msgstr ""
+msgstr "包含要考虑的数据集的数组或范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5258,7 +5266,7 @@ msgstr "基数（%s）必须在2和36之间，包括在内。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The base to convert the value from."
-msgstr ""
+msgstr "转换数值的基数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5389,7 +5397,7 @@ msgstr "标准范围包含%s行，它必须至少是2行。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The current value of the annuity."
-msgstr ""
+msgstr "年金的当前价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5447,21 +5455,21 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to begin counting."
-msgstr ""
+msgstr "开始计数的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the end of quarter."
-msgstr ""
+msgstr "用于计算季度结束的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the end of the year."
-msgstr ""
+msgstr "用于计算年末的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5471,21 +5479,21 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the result."
-msgstr ""
+msgstr "开始计算结果的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the start of quarter."
-msgstr ""
+msgstr "计算季度开始的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The date from which to calculate the start of the year."
-msgstr ""
+msgstr "计算年份开始的日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6064,7 +6072,7 @@ msgstr "函数[[FUNCTION_NAME]]的结果必须大于或等于01/01/1900。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The future value of the investment."
-msgstr ""
+msgstr "投资的未来价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6177,14 +6185,14 @@ msgstr "投资（%s）须为正数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The investment's current value."
-msgstr ""
+msgstr "投资现值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The investment's desired future value."
-msgstr ""
+msgstr "投资的预期未来价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6364,7 +6372,7 @@ msgstr "基于一系列定期现金流和贴现率的投资的净现值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The nominal interest rate per year."
-msgstr ""
+msgstr "每年的名义利率。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6594,7 +6602,7 @@ msgstr "要除以的数字。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to convert."
-msgstr ""
+msgstr "要转换的数字。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6667,7 +6675,7 @@ msgstr "要格式化的数字、日期或时间"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number."
-msgstr ""
+msgstr "数值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6696,7 +6704,7 @@ msgstr "occurrenceNumber（%s）必须是正数或空数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The one-dimensional array to be searched."
-msgstr ""
+msgstr "待搜索的一维数组。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6711,7 +6719,7 @@ msgstr "用于设置数字格式的模式，用引号引起来。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to criteria_range."
-msgstr ""
+msgstr "适用于 criteria_range 的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6722,7 +6730,7 @@ msgstr ""
 msgid ""
 "The pattern or test to apply to criteria_range1, such that each cell that "
 "evaluates to TRUE will be included in the filtered set."
-msgstr ""
+msgstr "要应用于 criteria_range1 的模式或测试，每个评估结果为 TRUE 的单元格都将包含在筛选集中。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6731,7 +6739,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to criteria_range1."
-msgstr ""
+msgstr "应用于 criteria_range1 的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6741,7 +6749,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to criteria_range2."
-msgstr ""
+msgstr "应用于 criteria_range2 的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6749,7 +6757,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The pattern or test to apply to range."
-msgstr ""
+msgstr "应用于范围的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6758,7 +6766,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The percentile whose value within data will be calculated and returned."
-msgstr ""
+msgstr "将计算并返回数据中的百分位数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6767,7 +6775,7 @@ msgstr ""
 msgid ""
 "The percentile, exclusive of 0 and 1, whose value within 'data' will be "
 "calculated and returned."
-msgstr ""
+msgstr "百分位数，不包括 0 和 1，\"数据\"中的值将被计算并返回。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6802,7 +6810,7 @@ msgstr "期限（%s）必须是严格的正数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period for which you want to view the interest payment."
-msgstr ""
+msgstr "您要查看的利息支付期。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6837,7 +6845,7 @@ msgstr "当前值（%s）须为正数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The present value of the investment."
-msgstr ""
+msgstr "投资现值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6861,21 +6869,21 @@ msgstr "价格（%s）必须是严格的正数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The price at which the security is bought per 100 face value."
-msgstr ""
+msgstr "每 100 面值购买证券的价格。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The price at which the security is bought."
-msgstr ""
+msgstr "购买证券的价格。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The price quotation given as a decimal value."
-msgstr ""
+msgstr "报价为十进制值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6952,7 +6960,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The range of cells from which the number of unique values will be counted."
-msgstr ""
+msgstr "计算唯一值数量的单元格范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7059,14 +7067,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to sum."
-msgstr ""
+msgstr "求和范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range which is tested against criterion."
-msgstr ""
+msgstr "根据标准进行测试的范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7387,7 +7395,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The start of the date range."
-msgstr ""
+msgstr "日期范围的起始日期。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7423,7 +7431,7 @@ msgstr "starting_at（%s）必须大于或等于1。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The starting_at argument (%s) must be positive greater than one."
-msgstr ""
+msgstr "starting_at 参数（%s）必须是大于 1 的正数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7444,14 +7452,14 @@ msgstr "将从中返回正确部分的字符串。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string representing the date."
-msgstr ""
+msgstr "表示日期的字符串。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The string that holds the time representation."
-msgstr ""
+msgstr "表示时间的字符串。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7714,14 +7722,14 @@ msgstr "该值（%s）必须是严格意义上的正值。"
 msgid ""
 "The value for which to calculate the inverse cosine. Must be between -1 and "
 "1, inclusive."
-msgstr ""
+msgstr "计算反余弦值的数值。必须介于 -1 和 1 之间（含 1）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value for which to calculate the inverse cotangent."
-msgstr ""
+msgstr "用于计算反余切值的数值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7730,7 +7738,7 @@ msgstr ""
 msgid ""
 "The value for which to calculate the inverse hyperbolic cosine. Must be "
 "greater than or equal to 1."
-msgstr ""
+msgstr "计算反双曲余弦值的数值。必须大于或等于 1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7739,14 +7747,14 @@ msgstr ""
 msgid ""
 "The value for which to calculate the inverse hyperbolic cotangent. Must not "
 "be between -1 and 1, inclusive."
-msgstr ""
+msgstr "计算反双曲余切值的数值。不得介于 -1 和 1 之间（含 1）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value for which to calculate the inverse hyperbolic sine."
-msgstr ""
+msgstr "用于计算反双曲正弦的数值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7755,7 +7763,7 @@ msgstr ""
 msgid ""
 "The value for which to calculate the inverse hyperbolic tangent. Must be "
 "between -1 and 1, exclusive."
-msgstr ""
+msgstr "计算反双曲正切值的数值。必须介于 -1 和 1 之间（不含 1）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7764,14 +7772,14 @@ msgstr ""
 msgid ""
 "The value for which to calculate the inverse sine. Must be between -1 and 1,"
 " inclusive."
-msgstr ""
+msgstr "计算反正弦的值。必须介于 -1 和 1 之间（含 1）。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value for which to calculate the inverse tangent."
-msgstr ""
+msgstr "计算反正切值的数值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7790,7 +7798,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value of the asset at the end of depreciation."
-msgstr ""
+msgstr "折旧结束时的资产价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7804,28 +7812,28 @@ msgstr "要使用分隔符追加的一个或多个值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if logical_expression is FALSE."
-msgstr ""
+msgstr "如果 logical_expression 为 FALSE，函数返回的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if logical_expression is TRUE."
-msgstr ""
+msgstr "如果 logical_expression 为 TRUE，函数返回的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if value is an #N/A error."
-msgstr ""
+msgstr "如果数值为 #N/A 错误，函数返回的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if value is an error."
-msgstr ""
+msgstr "如果值为错误，函数返回的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8542,7 +8550,7 @@ msgstr "方差。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Vertical align"
-msgstr ""
+msgstr "垂直对齐"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8740,7 +8748,7 @@ msgstr "要返回的四分位值（不包括 0 和 4）。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrap"
-msgstr ""
+msgstr "包裹"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8902,7 +8910,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "default:"
-msgstr ""
+msgstr "默认："
 
 #. module: spreadsheet
 #. odoo-javascript

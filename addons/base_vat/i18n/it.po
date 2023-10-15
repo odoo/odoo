@@ -39,6 +39,8 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"Connessione al server VIES non riuscita. Non è stato possibile convalidare "
+"il numero di partita IVA %s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -50,6 +52,8 @@ msgstr "Contatto"
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
+"I numeri di partita IVA europei vengono verificati automaticamente nel "
+"database VIES."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -62,18 +66,20 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Se la casella è spuntata, la posizione di bilancio predefinita dipenderà dal"
+" risultato della verifica da parte del servizio europeo VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Intracomunitaria valida"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Esegui convalida VIES"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -108,6 +114,7 @@ msgstr ""
 #, python-format
 msgid "The VAT number %s could not be interpreted by the VIES server."
 msgstr ""
+"Il server VIES non è riuscito a interpretare il numero di partita IVA %s."
 
 #. module: base_vat
 #. odoo-python
@@ -142,7 +149,7 @@ msgstr "Verifica delle partite IVA con il servizio europeo VIES"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "IVA da verificare tramite VIES"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form

@@ -5,9 +5,9 @@
 # Translators:
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Wil Odoo, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -1273,7 +1273,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        從 Odoo 管理您的郵件列表\n"
+"        利用 Odoo 管理你的郵寄清單。\n"
 "    "
 
 #. module: base
@@ -5208,6 +5208,73 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"功能性\n"
+"----------\n"
+"\n"
+"能夠在 Odoo 中建立日記帳以建立電子客戶憑單，然後向 AFIP(通過 Web 服務)報告.\n"
+"可用的選項有:\n"
+"\n"
+"    * 電子發票 - 網路服務\n"
+"    * 出口憑證 - 網路服務\n"
+"    * 電子財政債券 - 網路服務\n"
+"\n"
+"在電子日記帳中，如果您驗證發票，則該發票將在 Odoo 和 AFIP 中進行驗證. 這個驗證是\n"
+"即時製作，我們收到來自 AFIP 的\"已批准/已通過觀察/已拒絕\"狀態. 如果發票有\n"
+"被 AFIP 拒絕將不會在系統中過帳，並且會顯示一條帶有錯誤詳細信息的彈出消息(拒絕原因)\n"
+"我們收到並提示問題可能是什麼.\n"
+"\n"
+"出於審計和故障排除的目的，我們還增加了一個功能表\"在 AFIP 中諮詢發票\"，讓我們可以以前查閱發票\n"
+"發送到 AFIP，最後一個號碼用作支持 Odoo 和 AFIP 之間序列同步的任何可能問題.\n"
+"\n"
+"    注意：從 日記帳 的表單檢視中，我們能夠強制 odoo 序列與\n"
+"    在 AFIP 中註冊的最後一個號碼.\n"
+"\n"
+"從供應商賬單中，我們增加了一個可以在會計設定中設定的功能，以便能夠驗證\n"
+"AFIP 中的供應商賬單以檢查供應商賬單是否真實(更多信息請檢視設定說明).\n"
+"\n"
+"設定:\n"
+"\n"
+"1. 轉到會計設定 > 阿根廷本地化部分\n"
+"\n"
+"    1.1.設定 AFIP Web 服務模式:\n"
+"\n"
+"    * 測試環境，以便使用將用於測試實例的範例證書並進行 NOT\n"
+"      給 AFIP 的真實發票. 只是為了測試. 對於示範實例已經預定義，您無需設定\n"
+"      它(在 AFIP 中通常稱為 Homologation 環境).\n"
+"    * 生產環境，以便為 AFIP 生成真實的證書和合法發票，\n"
+"\n"
+"    1.2.設定您的 AFIP 證書: 如果您在示範實例中，則預設情況下已設定此證書. 如果你\n"
+"         在生產實例中只需要上傳您的 AFIP 證書\n"
+"\n"
+"    1.3.或者，您可以定義是否希望能夠在 AFIP 中驗證供應商賬單.\n"
+"\n"
+"2. 建立銷售日記帳，代表您想在 Odoo 中使用的每一個 AFIP POS(在 AFIP 入口網站中可用).\n"
+"\n"
+"    2.1. 使用文件欄位預設設定請不要更改\n"
+"    2.2.為其中一個電子系統設定 AFIP POS 系統.\n"
+"\n"
+"        * 電子發票 - 網路服務'\n"
+"        * 電子財政債券 - 網路服務'\n"
+"        * 出口憑證 - 網路服務'\n"
+"\n"
+"    2.3.考慮到您在 AFIP 入口網站中設定的內容，設定 AFIP POS 編號和 AFIP POS 地址.\n"
+"\n"
+"    注意：您可以使用日記帳表單中的\"檢查可用 AFIP POS\"按鈕來確認用於建立日記帳.\n"
+"\n"
+"有關阿根廷電子發票的更多信息，請訪問 http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"技術的\n"
+"---------\n"
+"\n"
+"實現的 Web 服務是最常見的：\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\"(電子發票)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\"(電子財政債券)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\"(電子出口發票 - 與出口憑證相同)\n"
+"* wscdc - \"Constatación de Comprobantes\"(發票驗證)\n"
+"\n"
+"有關開發信息，請訪問 http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -5409,34 +5476,6 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
-"\n"
-"Functional\n"
-"----------\n"
-"\n"
-"This module adds accounting features for Ecuadorian localization, which\n"
-"represent the minimum requirements to operate a business in Ecuador in compliance\n"
-"with local regulation bodies such as the ecuadorian tax authority -SRI- and the\n"
-"Superintendency of Companies -Super Intendencia de Compañías-\n"
-"\n"
-"Follow the next configuration steps:\n"
-"1. Go to your company and configure your country as Ecuador\n"
-"2. Install the invoicing or accounting module, everything will be handled automatically\n"
-"\n"
-"Highlights:\n"
-"* Ecuadorian chart of accounts will be automatically installed, based on example provided by Super Intendencia de Compañías\n"
-"* List of taxes (including withholds) will also be installed, you can switch off the ones your company doesn't use\n"
-"* Fiscal position, document types, list of local banks, list of local states, etc, will also be installed\n"
-"\n"
-"Technical\n"
-"---------\n"
-"Master Data:\n"
-"* Chart of Accounts, based on recomendation by Super Cías\n"
-"* Ecuadorian Taxes, Tax Tags, and Tax Groups\n"
-"* Ecuadorian Fiscal Positions\n"
-"* Document types (there are about 41 purchase documents types in Ecuador)\n"
-"* Identification types\n"
-"* Ecuador banks\n"
-"* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -15676,7 +15715,7 @@ msgstr "公司標語"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_type
 #: model:ir.model.fields,field_description:base.field_res_users__company_type
 msgid "Company Type"
-msgstr "公司類別"
+msgstr "公司類型"
 
 #. module: base
 #. odoo-python
@@ -18425,12 +18464,12 @@ msgstr "埃塞俄比亞-會計"
 #. module: base
 #: model:res.country.group,name:base.eurasian_economic_union
 msgid "Eurasian Economic Union"
-msgstr ""
+msgstr "歐亞經濟聯盟"
 
 #. module: base
 #: model:res.country.group,name:base.europe
 msgid "European Union"
-msgstr ""
+msgstr "歐洲聯盟（歐盟）"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__evaluation_type
@@ -19772,6 +19811,8 @@ msgid ""
 "Gemini Furniture brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Gemini Furniture brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -23436,7 +23477,7 @@ msgstr "追蹤管理陸運和船運的費用"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_group
 msgid "Manage your mailing lists"
-msgstr "管理您的郵寄名單"
+msgstr "管理你的郵寄清單"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
@@ -24225,7 +24266,7 @@ msgstr "月"
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__montserrat
 #: model:res.country,name:base.ms
 msgid "Montserrat"
-msgstr "Montserrat"
+msgstr "蒙特塞拉特"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -28452,7 +28493,7 @@ msgstr "優先級"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_privacy_lookup
 msgid "Privacy"
-msgstr "隱私"
+msgstr "私隱"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__private
@@ -32070,7 +32111,7 @@ msgstr "支持批次調撥的品質管控"
 #. module: base
 #: model:res.country,name:base.sr
 msgid "Suriname"
-msgstr "蘇裡南"
+msgstr "蘇里南"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_surveys

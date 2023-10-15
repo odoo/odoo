@@ -129,7 +129,7 @@ msgstr "\"Prodotti finiti - %s\" % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
-msgstr ""
+msgstr "'Panoramica ordine di produzione - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -216,7 +216,7 @@ msgstr "<span class=\"o_stat_text\">Ordini residui</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Panoramica DiBa</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -252,7 +252,7 @@ msgstr "<span class=\"o_stat_text\">Prestazione<br/>Operations</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Panoramica</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -263,7 +263,7 @@ msgstr "<span class=\"o_stat_text\">Rendimento</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Movimenti prodotto</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -279,7 +279,7 @@ msgstr "<span class=\"o_stat_text\">OdP di origine</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tracciabilità</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -474,6 +474,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
+"Una distinta base di tipo Kit non viene prodotta con un ordine di produzione.<br/>\n"
+"                                Al contrario, viene utilizzata per scomporre una distinta base nei diversi componenti quando:"
 
 #. module: mrp
 #. odoo-python
@@ -595,6 +597,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
 msgstr ""
+"Tutte le quantità devono essere maggiori di 0.\n"
+"Le righe con 0 quantità possono essere utilizzate come righe opzionali. \n"
+"È necessario installare il modulo mrp_byproduct se vuoi gestire prodotti aggiuntivi nelle DiBa!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1298,6 +1303,10 @@ msgid ""
 "                                                       Also note that "
 "purchase security lead times will be added when appropriate."
 msgstr ""
+"Calcola i giorni richiesti per rifornire tutti i componenti a partire dalla "
+"distinta base comprando o producendo i componenti e/o le sottounità."
+"                                       Inoltre, se necessario verranno "
+"aggiunti i tempi di consegna per la sicurezza degli acquisti."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1638,6 +1647,8 @@ msgstr "Data per mese"
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"Data prevista per la conclusione della produzione o data in cui hai "
+"terminato la produzione."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1645,6 +1656,8 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Data in cui pianifichi di avviare la produzione o data in cui la produzione "
+"è iniziata."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1964,7 +1977,7 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Guasto attrezzatura"
 
 #. module: mrp
 #. odoo-python
@@ -2186,7 +2199,7 @@ msgstr "Disponibile/In stock"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Disponibile/In stock"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2783,14 +2796,14 @@ msgstr "Residuo OdP"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "MO Cost"
-msgstr ""
+msgstr "Costo ordine di produzione"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "MO Costs"
-msgstr ""
+msgstr "Costi ordine di produzione"
 
 #. module: mrp
 #. odoo-python
@@ -2803,7 +2816,7 @@ msgstr "OdP generato da %s"
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr ""
+msgstr "Panoramica ordine di produzione"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
@@ -3734,7 +3747,7 @@ msgstr "Laminato plastico"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "Configura il primo numero di serie o una sequenza predefinita"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -3842,6 +3855,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Produzione: sposta i componenti direttamente nell'ubicazione di produzione e avvia il processo di produzione.\n"
+"Prelievo/produzione: prima     scarica i componenti dall'ubicazione di giacenza a quella di ingresso, quindi        li trasferisce a quella di produzione."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5173,7 +5188,7 @@ msgstr "La quantità da produrre deve essere positiva!"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr ""
+msgstr "La quantità da non produrre deve essere positiva!"
 
 #. module: mrp
 #. odoo-python
@@ -5252,7 +5267,7 @@ msgstr "Non ci sono componenti da consumare. Sei sicuro di voler continuare?"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "There is no defined calendar on workcenter %s."
-msgstr ""
+msgstr "Non è stato definito nessun calendario per il centro di lavoro %s."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6427,6 +6442,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"È stata consumata una quantità diversa da quella attesa dei seguenti prodotti.\n"
+"                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"                            Conferma che è stato fatto intenzionalmente.\n"
+"                        </b>\n"
+"                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"                            Controlla il consumo dei componenti o chiedere a un supervisore di convalidare \n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">l'ordine di produzione</span>\n"
+"                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">gli ordini di produzione</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #. odoo-python
