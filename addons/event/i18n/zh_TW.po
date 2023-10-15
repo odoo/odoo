@@ -3,7 +3,6 @@
 # 	* event
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Tony Ng, 2023
@@ -112,16 +111,14 @@ msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"結束日\"/>
 msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
-msgstr ""
-"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"確認報名\"/>"
+msgstr "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"確認按鈕\" title=\"確認報名\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
-msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" title=\"確認報名\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"確認按鈕\" title=\"確認報名\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -671,7 +668,7 @@ msgstr "將導航選單添加到您的活動網頁，其中包括時間表、追
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "加入一些內部備註（待辦事項清單、聯絡資訊⋯）"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -924,7 +921,7 @@ msgstr "已確認"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Confirmed Attendees"
-msgstr ""
+msgstr "已確認參加者"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1649,7 +1646,7 @@ msgstr "是關注人"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "是單日"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
@@ -1759,13 +1756,13 @@ msgstr "讓我們建立您的第一個<b>活動</b>。"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "限制參加人數"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr "設置最高報名數"
+msgstr "限制報名人數"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -1961,7 +1958,7 @@ msgstr "還沒有活動資料！"
 msgid ""
 "No more available seats for %s. Raise the limit or remove some other "
 "confirmed registrations first."
-msgstr ""
+msgstr "%s 沒有更多可用座位。 請先提高限制，或刪除其他一些已確認的註冊。"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -1969,7 +1966,7 @@ msgstr ""
 msgid ""
 "No more available seats for the ticket %s (%s). Raise the limit or remove "
 "some other confirmed registrations first."
-msgstr ""
+msgstr "門票 %s (%s) 沒有更多可用座位。 請先提高限制，或刪除其他一些已確認的註冊。"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2018,7 +2015,7 @@ msgstr "動作數量"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "參加人數"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2028,7 +2025,7 @@ msgstr "預期的與會人員數量"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "報名數目"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2520,7 +2517,7 @@ msgstr "結束日期不能早於開始日期。"
 #, python-format
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
-msgstr ""
+msgstr "引用的範本應來自 %(model_name)s 模型。"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2528,7 +2525,7 @@ msgstr ""
 msgid ""
 "There are no more available seats for %s. Raise the limit or remove some "
 "other confirmed registrations first."
-msgstr ""
+msgstr "%s 沒有更多可用座位。 請先提高限制，或刪除其他一些已確認的註冊。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -2650,7 +2647,7 @@ msgstr "未確認"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "未確認的報名"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
@@ -2815,7 +2812,7 @@ msgstr "例如建築師會議"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "例：如何到達你的活動地點、關門時間⋯"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
