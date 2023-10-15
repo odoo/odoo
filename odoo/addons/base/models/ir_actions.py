@@ -534,6 +534,7 @@ class IrActionsServer(models.Model):
         ('set', 'Setting it to'),
         ('clear', 'Clearing it')
     ], string='Many2many Operations', default='add')
+    update_boolean_value = fields.Selection([('true', 'Yes (True)'), ('false', "No (False)")], string='Boolean Value', default='true')
 
     value = fields.Text(help="For Python expressions, this field may hold a Python expression "
                              "that can use the same values as for the code field on the server action,"
@@ -553,6 +554,7 @@ class IrActionsServer(models.Model):
     value_field_to_show = fields.Selection([
         ('value', 'value'),
         ('resource_ref', 'reference'),
+        ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
     ], compute='_compute_value_field_to_show')
     # Webhook
@@ -955,6 +957,8 @@ class IrActionsServer(models.Model):
                 action.value_field_to_show = 'resource_ref'
             elif action.update_field_id.ttype == 'selection':
                 action.value_field_to_show = 'selection_value'
+            elif action.update_field_id.ttype == 'boolean':
+                action.value_field_to_show = 'update_boolean_value'
             else:
                 action.value_field_to_show = 'value'
 
@@ -995,6 +999,8 @@ class IrActionsServer(models.Model):
                     expr = [Command.set([int(action.value)])]
                 elif operation == 'clear':
                     expr = [Command.clear()]
+            elif action.update_field_id.ttype == 'boolean':
+                expr = action.update_boolean_value == 'true'
             elif action.update_field_id.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(action.value)

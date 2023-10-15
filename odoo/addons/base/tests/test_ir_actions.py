@@ -309,6 +309,28 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             })
             self.action.flush_recordset(['update_path', 'update_field_id'])
 
+    def test_39_boolean_update(self):
+        """ Test that boolean fields can be updated """
+        # update the country's name via the partner
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'active',
+            'update_boolean_value': 'false',
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertFalse(self.test_partner.active, 'ir_actions_server: partner should have been deactivated')
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'active',
+            'update_boolean_value': 'true',
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertTrue(self.test_partner.active, 'ir_actions_server: partner should have been reactivated')
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
