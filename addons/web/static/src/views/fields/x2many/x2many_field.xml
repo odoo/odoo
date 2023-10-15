@@ -5,7 +5,7 @@
         <div t-att-class="className">
             <div class="o_x2m_control_panel d-empty-none mb-4">
                 <t t-if="displayControlPanelButtons">
-                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                    <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <t t-foreach="creates" t-as="create" t-key="create_index">
                             <button
                                 t-if="create.type === 'create'"
