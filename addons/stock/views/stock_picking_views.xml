@@ -132,7 +132,6 @@
                 <field name="show_lots_text" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="hide_picking_type" invisible="1"/>
-                <field name="show_operations" invisible="1" readonly="1"/>
                 <field name="show_allocation" invisible="1"/>
                 <field name="show_reserved" invisible="1" readonly="1"/>
                 <field name="move_line_exist" invisible="1"/>
@@ -196,10 +195,19 @@
                             type="object"
                             help="List view of operations"
                             groups="base.group_no_one"
-                            invisible="show_operations and (is_locked or state == 'done') or state == 'done' and is_locked"
+                            invisible="(is_locked or state == 'done') or state == 'done' and is_locked"
                             context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                             <div class="o_form_field o_stat_info">
                                 <span class="o_stat_text">Operations</span>
+                            </div>
+                        </button>
+                        <button name="action_detailed_operations"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            type="object"
+                            help="List view of detailed operations">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Detailed Operations</span>
                             </div>
                         </button>
                     </div>
@@ -258,19 +266,6 @@
                     </group>
                     <field name="picking_properties" columns="2"/>
                     <notebook>
-                        <page string="Detailed Operations"
-                            name="detailed_operations"
-                            invisible="not show_operations">
-                            <field name="move_line_ids_without_package"
-                                   readonly="not show_operations or state == 'cancel' or (state == 'done' and is_locked)"
-                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
-                            <field name="package_level_ids_details"
-                                   context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
-                                   invisible="not picking_type_entire_packs or not show_operations"
-                                   readonly="state == 'done'" />
-                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
-                        </page>
-
                         <page string="Operations" name="operations">
                             <field name="move_ids_without_package" mode="tree,kanban"
                                 widget="stock_move_one2many"
@@ -290,7 +285,6 @@
                                     <field name="picking_code" column_invisible="True"/>
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="show_details_visible" column_invisible="True"/>
-                                    <field name="show_operations" readonly="1" column_invisible="True"/>
                                     <field name="show_reserved" column_invisible="True"/>
                                     <field name="additional" column_invisible="True"/>
                                     <field name="move_lines_count" column_invisible="True"/>
@@ -333,7 +327,7 @@
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
                                             role="img" title="Assign Serial Numbers"
-                                            invisible="not display_assign_serial or not show_operations"/>
+                                            invisible="not display_assign_serial"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
                                         invisible="quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
@@ -341,7 +335,7 @@
                                 </tree>
                             </field>
                             <field name="id" invisible="1"/>
-                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" invisible="not picking_type_entire_packs or show_operations" readonly="state == 'done'" />
+                            <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" invisible="not picking_type_entire_packs" readonly="state == 'done'" />
                             <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
                         </page>
                         <page string="Additional Info" name="extra">
