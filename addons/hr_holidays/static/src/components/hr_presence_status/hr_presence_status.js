@@ -5,12 +5,11 @@ import { patch } from "@web/core/utils/patch";
 import { HrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
 
 patch(HrPresenceStatus.prototype, {
-    get classNames() {
-        const classNames = super.classNames;
+    get icon() {
         if (this.value.startsWith("presence_holiday")) {
-            return `${classNames} fa-plane`;
+            return "fa-plane";
         }
-        return classNames;
+        return super.icon;
     },
 
     get color() {
