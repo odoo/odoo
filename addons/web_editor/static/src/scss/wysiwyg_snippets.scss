@@ -2644,6 +2644,12 @@ we-select.o_grid we-toggler {
     }
 
     &.o_we_grid_preview {
+        @include media-breakpoint-down(lg) {
+            // Hiding the preview in mobile view (-> no grid in mobile view). We
+            // cannot use `display: none` because it would prevent the animation
+            // to be played and so its listener would not remove the preview.
+            height: 0;
+        }
         pointer-events: none;
 
         .o_we_cell {
