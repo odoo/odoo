@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_public_hierarchy_view" model="ir.ui.view">
+        <field name="name">hr.employee.public.hierarchy.view</field>
+        <field name="model">hr.employee.public</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" js_class="hr_employee_hierarchy" icon="fa-users" draggable="0">
+                <field name="name" />
+                <field name="job_id" />
+                <field name="department_color" />
+                <field name="hr_icon_display" />
+                <field name="department_id" />
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
+                             t-att-title="record.department_id.value"
+                        >
+                            <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
+                        </div>
+                        <div class="o_hierarchy_node_body d-flex flex-column text-center">
+                            <div class="w-100 position-relative">
+                                <field class="fw-bold" name="name" />
+                                <field name="hr_icon_display" class="d-flex align-items-end o_employee_availability" widget="hr_presence_status" />
+                            </div>
+                            <field name="job_id" />
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
+    <record id="hr.hr_employee_public_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,tree,form,hierarchy</field>
+    </record>
+</odoo>

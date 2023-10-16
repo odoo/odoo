@@ -12,6 +12,12 @@ class HrEmployeeBase(models.AbstractModel):
         'Indirect Subordinates Count',
         compute='_compute_subordinates', recursive=True, store=False,
         compute_sudo=True)
+    department_color = fields.Integer("Department Color", related="department_id.color")
+    child_count = fields.Integer(
+        'Direct Subordinates Count',
+        compute='_compute_child_count', recursive=True,
+        compute_sudo=True,
+    )
 
     def _get_subordinates(self, parents=None):
         """
@@ -56,3 +62,13 @@ class HrEmployeeBase(models.AbstractModel):
         if not self.env.user.employee_id.subordinate_ids:
             return [('id', operator, self.env.user.employee_id.id)]
         return (['!'] if operator == '!=' else []) + [('id', 'in', self.env.user.employee_id.subordinate_ids.ids)]
+
+    def _compute_child_count(self):
+        employee_read_group = self._read_group(
+            [('parent_id', 'in', self.ids)],
+            ['parent_id'],
+            ['id:count'],
+        )
+        child_count_per_parent_id = dict(employee_read_group)
+        for employee in self:
+            employee.child_count = child_count_per_parent_id.get(employee._origin, 0)

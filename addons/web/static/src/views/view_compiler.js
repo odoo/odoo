@@ -309,9 +309,10 @@ export class ViewCompiler {
         if (tag === "a" && type === "url") {
             tag = "button";
         }
+        const recordExpr = params.recordExpr || "__comp__.props.record";
         const button = createElement("ViewButton", {
             tag: toStringExpression(tag),
-            record: "__comp__.props.record",
+            record: recordExpr,
         });
 
         assignOwlDirectives(button, el);
@@ -368,13 +369,14 @@ export class ViewCompiler {
         const fieldId = el.getAttribute("field_id");
 
         const field = createElement("Field");
+        const recordExpr = params.recordExpr || "__comp__.props.record";
         field.setAttribute("id", `'${fieldId}'`);
         field.setAttribute("name", `'${fieldName}'`);
-        field.setAttribute("record", params.recordExpr || "__comp__.props.record");
+        field.setAttribute("record", recordExpr);
         field.setAttribute("fieldInfo", `__comp__.props.archInfo.fieldNodes['${fieldId}']`);
         field.setAttribute(
             "readonly",
-            `__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew`
+            `__comp__.props.archInfo.activeActions?.edit === false and !${recordExpr}.isNew`
         );
 
         if (el.hasAttribute("widget")) {

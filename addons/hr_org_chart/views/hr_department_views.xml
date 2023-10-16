@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_department_hierarchy_view" model="ir.ui.view">
+        <field name="name">hr.departmnent.view.hierarchy</field>
+        <field name="model">hr.department</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" draggable="1">
+                <field name="name" />
+                <field name="color" />
+                <field name="total_employee" />
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center align-items-center o_hierarchy_node_color_{{ record.color.raw_value }}">
+                            <field name="name" />
+                        </div>
+                        <div class="o_hierarchy_node_body d-flex flex-column">
+                            <field name="manager_id" class="pt-1 ps-1" widget="many2one_avatar" />
+                            <div>
+                                <button class="btn btn-link" name="%(hr.act_employee_from_department)d" type="action">
+                                    <t t-out="record.total_employee.raw_value"/> Employees
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
+    <record id="hr.hr_department_kanban_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,tree,hierarchy,form</field>
+    </record>
+
+    <record id="hr.hr_department_tree_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,hierarchy,form</field>
+    </record>
+
+</odoo>

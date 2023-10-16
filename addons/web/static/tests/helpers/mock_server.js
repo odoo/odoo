@@ -2198,6 +2198,21 @@ export class MockServer {
                         });
                     }
                     criterion = [criterion[0], "in", childIDs];
+                } else if (criterion[1] === "parent_of") {
+                    // 'parent_of' operator is not supported by domain.js, so we replace
+                    // in by the 'in' operator (with the ids of parent and its ancestors)
+                    const childID = criterion[2];
+                    const parentIDs = [];
+                    const recordPerID = {};
+                    for (const record of records) {
+                        recordPerID[record.id] = record;
+                    }
+                    let record = recordPerID[childID];
+                    while (record) {
+                        parentIDs.push(record.id);
+                        record = record.parent_id && recordPerID[record.parent_id];
+                    }
+                    criterion = [criterion[0], "in", parentIDs];
                 }
                 // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
                 const field = model.fields[criterion[0]] || {};
