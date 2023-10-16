@@ -24,9 +24,7 @@ export class PaymentPage extends Component {
 
         onWillStart(async () => {
             const type = this.selfOrder.config.self_ordering_mode;
-            const paymentMethods = this.selfOrder.pos_payment_methods.filter(
-                (p) => !p.is_online_payment
-            );
+            const paymentMethods = this.selfOrder.pos_payment_methods;
 
             if (paymentMethods.length === 0 && type === "kiosk") {
                 await this.selfOrder.sendDraftOrderToServer();
@@ -44,14 +42,14 @@ export class PaymentPage extends Component {
         return this.selfOrder.paymentError || this.state.selection;
     }
 
-    get paymentMethods() {
-        return this.selfOrder.pos_payment_methods.filter((p) => !p.is_online_payment);
-    }
-
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
         this.startPayment();
+    }
+
+    get selectedPaymentMethod() {
+        return this.selfOrder.pos_payment_methods.find((p) => p.id === this.state.paymentMethodId);
     }
 
     async startPayment() {
