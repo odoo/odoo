@@ -7,6 +7,9 @@
             <attribute name="t-att-data-is-member">slide.channel_id.is_member</attribute>
             <attribute name="t-att-data-can-upload">channel.can_upload</attribute>
         </xpath>
+        <xpath expr="//t[@t-set='slide_icon'][last()]" position="before">
+            <t t-set="slide_icon" t-elif="slide.slide_type == 'certification'" t-value="'fa-trophy'"/>
+        </xpath>
     </template>
 
 </data></odoo>

@@ -42,5 +42,11 @@
                 </a>
             </xpath>
         </template>
+
+        <template id="slide_aside_training_category_inherit_survey" inherit_id="website_slides.slide_aside_training_category">
+            <xpath expr="//t[@t-set='slide_icon'][last()]" position="before">
+                <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'certification'" t-value="'fa-trophy'"/>
+            </xpath>
+        </template>
     </data>
 </odoo>
