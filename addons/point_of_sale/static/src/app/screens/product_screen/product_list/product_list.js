@@ -11,7 +11,7 @@ import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_erro
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
-import { Input } from "@point_of_sale/app/generic_components/input/input";
+import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 
 export class ProductsWidget extends Component {
     static components = { ProductCard, CategorySelector, Input };

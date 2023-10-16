@@ -4,9 +4,11 @@ import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaita
 import { useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
+import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numeric_input/numeric_input";
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.MoneyDetailsPopup";
+    static components = { NumericInput };
 
     setup() {
         super.setup();
