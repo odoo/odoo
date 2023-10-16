@@ -171,6 +171,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.partner_ids)
+        self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(composer_form.record_company_id, self.env.company)
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -181,6 +183,32 @@ class TestComposerForm(TestMailComposer):
                       'Check effective content')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertFalse(composer_form.subtype_is_log)
+
+    @users('employee')
+    def test_mail_composer_comment_mc(self):
+        """ Test values specific to multi-company setup, in comment mode, using
+        the Form tool. """
+        # add access to second company to avoid MC rules on ticket model
+        self.env.user.company_ids = [(4, self.company_2.id)]
+        test_record = self.test_record.with_env(self.env)
+        source_company = [
+            self.company_admin,
+            self.company_2,
+            self.env['res.company'],
+        ]
+        expected = [
+            (self.company_admin, self.mail_alias_domain),
+            (self.company_2, self.mail_alias_domain_c2),
+            (self.company_admin, self.mail_alias_domain),  # env company
+        ]
+        for company, (exp_company, exp_alias_domain) in zip(source_company, expected):
+            with self.subTest(cmopany=company):
+                test_record.write({'company_id': company.id})
+                composer_form = Form(self.env['mail.compose.message'].with_context(
+                    self._get_web_context(self.test_record, add_web=True)
+                ))
+                self.assertEqual(composer_form.record_alias_domain_id, exp_alias_domain)
+                self.assertEqual(composer_form.record_company_id, exp_company)
 
     @users('employee')
     def test_mail_composer_comment_attachments(self):
@@ -251,6 +279,8 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertEqual(composer_form.partner_ids[:], self.partner_1)
+        self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(composer_form.record_company_id, self.env.company)
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
@@ -283,6 +313,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -315,6 +347,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -347,6 +381,8 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.partner_ids[:])
+        self.assertFalse(composer_form.record_alias_domain_id)
+        self.assertFalse(composer_form.record_company_id)
         self.assertFalse(composer_form.record_name)
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
@@ -375,6 +411,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -404,6 +442,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -437,6 +477,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -470,6 +512,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -1262,6 +1306,12 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         """ Ensure class initial data to ease understanding """
         self.assertTrue(self.template.auto_delete)
 
+        self.assertEqual(len(self.test_record), 1)
+        self.assertEqual(self.test_record.user_id, self.user_employee_2)
+        self.assertEqual(self.test_record.message_partner_ids, self.partner_employee_2)
+        self.assertEqual(self.test_record[0].customer_id.lang, 'en_US')
+        self.assertEqual(self.test_record.company_id, self.company_admin)
+
         self.assertEqual(len(self.test_records), 2)
         self.assertEqual(self.test_records.user_id, self.user_employee_2)
         self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
@@ -1844,7 +1894,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(test_record.ids))
                     self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 
-
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_mc(self):
@@ -1871,11 +1920,11 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
-        for batch, companies, expected_companies in [
+        for batch, companies, expected_companies, expected_alias_domains in [
+            (False, self.company_admin, self.company_admin, self.mail_alias_domain),
             (
-                False, self.company_admin, self.company_admin
-            ), (
                 True, self.company_admin + self.company_2, self.company_admin + self.company_2,
+                self.mail_alias_domain + self.mail_alias_domain_c2,
             ),
         ]:
             with self.subTest(batch=batch,
@@ -1902,8 +1951,8 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 new_partner = self.env['res.partner'].search([('email_normalized', '=', 'test.to.1@test.example.com')])
                 self.assertEqual(len(new_partner), 1)
                 # check output, company-specific values mainly for this test
-                for record, exp_company in zip(
-                    test_records, expected_companies
+                for record, exp_company, exp_alias_domain in zip(
+                    test_records, expected_companies, expected_alias_domains
                 ):
                     message = record.message_ids[0]
                     for recipient in [self.partner_employee_2, new_partner, record.customer_id]:
@@ -1924,6 +1973,8 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
                                 },
                                 'mail_server_id': self.env['ir.mail_server'],
+                                'record_alias_domain_id': exp_alias_domain,
+                                'record_company_id': exp_company,
                                 'subject': f'TemplateSubject {record.name}',
                             },
                         )

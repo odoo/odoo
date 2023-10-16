@@ -111,6 +111,8 @@ class Message(models.Model):
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
     record_name = fields.Char('Message Record Name') # display_name of the related document
+    record_alias_domain_id = fields.Many2one('mail.alias.domain', 'Alias Domain', ondelete='set null')
+    record_company_id = fields.Many2one('res.company', 'Company', ondelete='set null')
     # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
