@@ -33,6 +33,7 @@ import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
+import { deepCopy } from "@web/core/utils/objects";
 
 const { isDefined } = helpers;
 
@@ -64,6 +65,14 @@ export class PivotCorePlugin extends CorePlugin {
                 break;
             case "INSERT_PIVOT":
                 if (cmd.id !== this.nextId.toString()) {
+                    return CommandResult.InvalidNextId;
+                }
+                break;
+            case "DUPLICATE_PIVOT":
+                if (!(cmd.pivotId in this.pivots)) {
+                    return CommandResult.PivotIdNotFound;
+                }
+                if (cmd.newPivotId !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
                 break;
@@ -111,6 +120,13 @@ export class PivotCorePlugin extends CorePlugin {
                 const pivots = { ...this.pivots };
                 delete pivots[cmd.pivotId];
                 this.history.update("pivots", pivots);
+                break;
+            }
+            case "DUPLICATE_PIVOT": {
+                const { pivotId, newPivotId } = cmd;
+                const definition = deepCopy(this.pivots[pivotId].definition);
+                this._addPivot(newPivotId, definition);
+                this.history.update("nextId", parseInt(newPivotId, 10) + 1);
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {

@@ -19,6 +19,8 @@ import {
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { Model } from "@odoo/o-spreadsheet";
+import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -876,4 +878,49 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.strictEqual(getCellContent(model, "A2"), "");
         }
     );
+
+    QUnit.test("Can duplicate a pivot", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot();
+        const matching = { chain: "product_id", type: "many2one" };
+        const filter = { ...THIS_YEAR_GLOBAL_FILTER, id: "42" };
+        const [pivotId] = model.getters.getPivotIds();
+        await addGlobalFilter(model, filter, {
+            pivot: { [pivotId]: matching },
+        });
+        model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "2" });
+
+        const pivotIds = model.getters.getPivotIds();
+        assert.equal(model.getters.getPivotIds().length, 2);
+
+        const expectedDuplicatedDefinition = {
+            ...model.getters.getPivotDefinition(pivotId),
+            id: "2",
+        };
+        assert.deepEqual(
+            model.getters.getPivotDefinition(pivotIds[1]),
+            expectedDuplicatedDefinition
+        );
+
+        assert.deepEqual(model.getters.getPivotFieldMatching(pivotId, "42"), matching);
+        assert.deepEqual(model.getters.getPivotFieldMatching("2", "42"), matching);
+    });
+
+    QUnit.test("Cannot duplicate unknown pivot", async (assert) => {
+        const model = new Model();
+        const result = model.dispatch("DUPLICATE_PIVOT", {
+            pivotId: "hello",
+            newPivotId: model.getters.getNextPivotId(),
+        });
+        assert.deepEqual(result.reasons, [CommandResult.PivotIdNotFound]);
+    });
+
+    QUnit.test("Cannot duplicate pivot with id different from nextId", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot();
+        const [pivotId] = model.getters.getPivotIds();
+        const result = model.dispatch("DUPLICATE_PIVOT", {
+            pivotId,
+            newPivotId: "66",
+        });
+        assert.deepEqual(result.reasons, [CommandResult.InvalidNextId]);
+    });
 });
