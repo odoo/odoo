@@ -119,9 +119,6 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name = "priority" eval="20" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='hr_icon_display']" position="attributes">
-                <attribute name="invisible">not last_activity or not id</attribute>
-            </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" widget="many2one_avatar_user"/>
             </xpath>
