@@ -712,9 +712,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         initial_product = sale_order.order_line.product_id
 
         picking_form = Form(picking)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 5
-        with picking_form.move_line_ids_without_package.new() as new_move:
+        with picking_form.move_ids_without_package.new() as new_move:
             new_move.product_id = product_inv_on_order
             new_move.quantity = 5
         picking = picking_form.save()
@@ -753,9 +753,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking = sale_order.picking_ids
 
         picking_form = Form(picking)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 5
-        with picking_form.move_line_ids_without_package.new() as new_move:
+        with picking_form.move_ids_without_package.new() as new_move:
             new_move.product_id = product_inv_on_delivered
             new_move.quantity = 5
         picking = picking_form.save()
@@ -803,14 +803,14 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
 
         picking_form = Form(pick)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 10
         pick = picking_form.save()
         pick.move_ids.picked = True
         pick.button_validate()
 
         picking_form = Form(delivery)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 10
         delivery = picking_form.save()
         delivery.move_ids.picked = True
@@ -833,9 +833,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
 
         picking_form = Form(pick)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 10
-        with picking_form.move_line_ids_without_package.new() as new_move:
+        with picking_form.move_ids_without_package.new() as new_move:
             new_move.product_id = product_inv_on_order
             new_move.quantity = 10
         pick = picking_form.save()
@@ -843,9 +843,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         pick.button_validate()
 
         picking_form = Form(delivery)
-        with picking_form.move_line_ids_without_package.edit(0) as move:
+        with picking_form.move_ids_without_package.edit(0) as move:
             move.quantity = 10
-        with picking_form.move_line_ids_without_package.new() as new_move:
+        with picking_form.move_ids_without_package.new() as new_move:
             new_move.product_id = product_inv_on_order
             new_move.quantity = 10
         delivery = picking_form.save()
