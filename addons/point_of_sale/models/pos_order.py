@@ -898,6 +898,50 @@ class PosOrder(models.Model):
 
         return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
 
+<<<<<<< HEAD
+||||||| parent of aa70785982d8 (temp)
+    def _is_the_same_order(self, data, existing_order):
+        received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
+        existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
+
+        if not all(received_payment in existing_payments for received_payment in received_payments):
+            return False
+
+        if len(data['lines']) != len(existing_order.lines):
+            return False
+
+        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+
+        if received_lines != existing_lines:
+            return False
+
+        return True
+
+=======
+    def _is_the_same_order(self, data, existing_order):
+        received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
+        existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
+
+        for amount, payment_method in received_payments:
+            if not any(
+                float_is_zero(amount - ex_amount, precision_rounding=existing_order.currency_id.rounding) and payment_method == ex_payment_method
+                for ex_amount, ex_payment_method in existing_payments
+            ):
+                return False
+
+        if len(data['lines']) != len(existing_order.lines):
+            return False
+
+        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+
+        if received_lines != existing_lines:
+            return False
+
+        return True
+
+>>>>>>> aa70785982d8 (temp)
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
 
