@@ -52,8 +52,6 @@
                     <field name="active" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
-                    <field name="hr_presence_state" invisible="1"/>
-                    <field name="hr_icon_display" invisible="1"/>
                     <field name="image_128" invisible="1" />
                     <field name="company_id" invisible="1"/>
                     <field name="last_activity_time" invisible="1"/>
@@ -81,16 +79,7 @@
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
-                                <div id="hr_presence_status" class="d-flex align-items-end fs-6 o_employee_availability">
-                                    <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_present'" aria-label="Present" title="Present"/>
-                                    <!-- Employee is not present and it is normal according to his work schedule -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_absent'" aria-label="Absent" title="Absent" name="presence_absent"/>
-                                    <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_absent_active'" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
-                                    <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_to_define'" aria-label="To define" title="To define" name="presence_to_define"/>
-                                </div>
+                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <group>
@@ -300,31 +289,8 @@
                                 </div>
                                 <ul>
                                     <li id="last_login"/>
-                                    <li id="presence">
-                                        <t t-if="record.show_hr_icon_display.raw_value">
-                                            <div class="o_employee_availability d-flex flex-row align-items-start">
-                                                <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_present'"
-                                                      class="fa fa-2x fa-circle text-success" name="presence_present" role="img"
-                                                      aria-label="Present" title="Present"
-                                                />
-                                                <!-- Employee is not present/connected and it is normal according to his work schedule -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent'"
-                                                      class="fa fa-2x fa-circle-o text-warning" name="presence_absent" role="img"
-                                                      aria-label="Absent" title="Absent"
-                                                />
-                                                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
-                                                      class="fa fa-2x fa-circle-o text-success" name="presence_absent_active" role="img"
-                                                      aria-label="Present but not active" title="Present but not active"
-                                                />
-                                                <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
-                                                      class="fa fa-2x fa-circle text-muted" name="presence_to_define" role="img"
-                                                      aria-label="To define" title="To define"
-                                                />
-                                            </div>
-                                        </t>
+                                    <li t-if="record.show_hr_icon_display.raw_value">
+                                        <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
                                     </li>
                                     <li t-if="record.work_email.raw_value" class="o_text_overflow">
                                         <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>

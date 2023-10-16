@@ -120,17 +120,19 @@ export class KanbanCompiler extends ViewCompiler {
     compileField(el, params) {
         let compiled;
         let isSpan = false;
+        const recordExpr = params.recordExpr || '__comp__.props.record';
+        const dataPointIdExpr = params.dataPointIdExpr || `${recordExpr}.id`;
         if (!el.hasAttribute("widget")) {
             isSpan = true;
             // fields without a specified widget are rendered as simple spans in kanban records
             const fieldId = el.getAttribute("field_id");
             compiled = createElement("span", {
-                "t-out": `__comp__.getFormattedValue("${fieldId}")`,
+                "t-out": params.formattedValueExpr || `__comp__.getFormattedValue("${fieldId}")`,
             });
         } else {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id");
-            compiled.setAttribute("id", `'${fieldId}_' + __comp__.props.record.id`);
+            compiled.setAttribute("id", `'${fieldId}_' + ${dataPointIdExpr}`);
             // In x2many kanban, records can be edited in a dialog. The same record as the one of
             // the kanban is used for the form view dialog, so its mode is switched to "edit", but
             // we don't want to see it in edition in the background. For that reason, we force its
@@ -140,10 +142,10 @@ export class KanbanCompiler extends ViewCompiler {
             if (readonlyAttr) {
                 compiled.setAttribute(
                     "readonly",
-                    `__comp__.props.record.isInEdition || (${readonlyAttr})`
+                    `${recordExpr}.isInEdition || (${readonlyAttr})`
                 );
             } else {
-                compiled.setAttribute("readonly", `__comp__.props.record.isInEdition`);
+                compiled.setAttribute("readonly", `${recordExpr}.isInEdition`);
             }
         }
 

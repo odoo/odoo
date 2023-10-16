@@ -147,31 +147,8 @@
                                 </div>
                                 <ul>
                                     <li id="last_login"/>
-                                    <li id="presence">
-                                        <t t-if="record.show_hr_icon_display.raw_value">
-                                            <div class="o_employee_availability align-items-center">
-                                                <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_present'"
-                                                      class="fa fa-2x fa-circle text-success" name="presence_present" role="img"
-                                                      aria-label="Present" title="Present"
-                                                />
-                                                <!-- Employee is not present and it is normal according to his work schedule -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent'"
-                                                      class="fa fa-2x fa-circle-o text-warning" name="presence_absent" role="img"
-                                                      aria-label="Absent" title="Absent"
-                                                />
-                                                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
-                                                      class="fa fa-2x fa-circle-o text-success" name="presence_absent_active" role="img"
-                                                      aria-label="Present but not active" title="Present but not active"
-                                                />
-                                                <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
-                                                      class="fa fa-2x fa-circle text-muted" name="presence_to_define" role="img"
-                                                      aria-label="To define" title="To define"
-                                                />
-                                            </div>
-                                        </t>
+                                    <li t-if="record.show_hr_icon_display.raw_value">
+                                        <field name="hr_icon_display" class="o_employee_availability align-items-center" widget="hr_presence_status" />
                                     </li>
                                     <li t-if="record.work_email.raw_value">
                                         <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>

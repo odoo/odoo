@@ -94,21 +94,6 @@
             <xpath expr="//templates" position="before">
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_employee_availability')]" position="inside">
-                <t t-if="record.hr_icon_display.raw_value.startsWith('presence_holiday')">
-                    <!-- Employee is on time off but he is connected -->
-                    <span t-if="record.hr_icon_display.raw_value == 'presence_holiday_present'"
-                          class="fa fa-2x fa-plane text-success me-1" name="presence_absent_active" role="img"
-                          aria-label="Present but on leave"  title="Present but on leave"
-                    />
-                    <!-- Employee is on time off and he is not connected -->
-                    <span t-if="record.hr_icon_display.raw_value == 'presence_holiday_absent'"
-                          class="fa fa-2x fa-plane text-warning me-1" name="presence_absent" role="img"
-                          aria-label="To define" title="On Time Off"
-                    />
-                    <span>On Time Off</span>
-                </t>
-            </xpath>
         </field>
     </record>
 
@@ -124,23 +109,6 @@
                 <field name="leave_date_to"/>
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_employee_availability')]" position="inside">
-                <span class="d-flex" style="font-size: 100%"
-                    t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"
-                    t-att-title="luxon.DateTime.fromISO(record.leave_date_from.raw_value).toFormat('ccc d MMM') + ' - ' + luxon.DateTime.fromISO(record.leave_date_to.raw_value).toFormat('ccc d MMM')">
-                    <!-- Employee is absent, in holiday but he is connected -->
-                    <i t-if="record.hr_icon_display.raw_value == 'presence_holiday_present'"
-                        class="fa fa-2x fa-plane text-success me-1" name="presence_absent_active" role="img"
-                        aria-label="Present but on leave"  title="Present but on leave"
-                    />
-                    <!-- Employee is on holiday, not present and not connected -->
-                    <i t-if="record.hr_icon_display.raw_value == 'presence_holiday_absent'"
-                        class="fa fa-2x fa-plane text-warning me-1" name="presence_absent" role="img"
-                        aria-label="To define" title="On Time Off"
-                    />
-                    <field t-if="record.current_leave_id.raw_value" name="current_leave_id"/>
-                </span>
-            </xpath>
         </field>
     </record>
 
@@ -151,14 +119,8 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name = "priority" eval="20" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='hr_presence_status']" position="attributes">
-                <attribute name="invisible">not last_activity or not user_id or not id</attribute>
-            </xpath>
-            <xpath expr="//div[@id='hr_presence_status']" position="inside">
-                <!-- Employee is absent, in holiday but he is connected -->
-                <div role="img" class="fa fa-fw fa-plane text-success o_button_icon hr_presence" invisible="hr_icon_display != 'presence_holiday_present'" aria-label="Present but on leave" title="Present but on leave" name="presence_absent_active"/>
-                <!-- Employee is on holiday, not present and not connected -->
-                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" invisible="hr_icon_display != 'presence_holiday_absent'"  aria-label="On Time Off" title="On Time Off" name="presence_absent"/>
+            <xpath expr="//field[@name='hr_icon_display']" position="attributes">
+                <attribute name="invisible">not last_activity or not id</attribute>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" widget="many2one_avatar_user"/>
