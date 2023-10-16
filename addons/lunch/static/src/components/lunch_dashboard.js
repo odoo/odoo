@@ -18,7 +18,7 @@ export class LunchCurrency extends Component {
 
 export class LunchOrderLine extends Component {
     static template = "lunch.LunchOrderLine";
-    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine"];
+    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos"];
     static components = {
         LunchCurrency,
     };
@@ -31,6 +31,13 @@ export class LunchOrderLine extends Component {
 
     get line() {
         return this.props.line;
+    }
+
+    get canAdd(){
+        let price = this.line.product[3]
+        this.line.toppings.forEach((line) => price += line[3])
+        const unpaid = parseFloat(this.props.infos.unpaid_subtotal)
+        return this.canEdit && (this.props.infos.wallet - unpaid) > price;
     }
 
     get canEdit() {

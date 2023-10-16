@@ -208,7 +208,7 @@ QUnit.module('LunchKanban', (hooks) => {
     });
 
     QUnit.test("Manager: user change", async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         let userInfos = { ...lunchInfos, is_manager: true };
         let expectedUserId = false; // false as we are requesting for the current user
@@ -247,7 +247,8 @@ QUnit.module('LunchKanban', (hooks) => {
 
         await nextTick();
         const wallet = target.querySelector('.o_lunch_banner .col-8 > .d-flex > span:nth-child(2)');
-        assert.equal(wallet.innerText, '-10000.00€', 'David Elora is poor')
+        assert.equal(wallet.querySelector('span:nth-child(1)').innerText, '-10000.00');
+        assert.equal(wallet.querySelector('span:nth-child(2)').innerText, '€');
 
         click(target, '.lunch_location input');
         await nextTick();
@@ -266,7 +267,7 @@ QUnit.module('LunchKanban', (hooks) => {
             lines: [
                 {
                     id: 1,
-                    product: [1, "Big Plate", "4.95"],
+                    product: [1, "Big Plate", "4.95", 4.95],
                     toppings: [],
                     quantity: 1,
                     price: 4.95,
@@ -317,7 +318,7 @@ QUnit.module('LunchKanban', (hooks) => {
             lines: [
                 {
                     id: 1,
-                    product: [1, "Big Plate", "4.95"],
+                    product: [1, "Big Plate", "4.95", 4.95],
                     toppings: [],
                     quantity: 1,
                     price: 4.95,
@@ -344,7 +345,7 @@ QUnit.module('LunchKanban', (hooks) => {
                         lines: [
                             {
                                 ...userInfos.lines[0],
-                                product: [1, "Big Plate", "9.9"],
+                                product: [1, "Big Plate", "9.9", 4.95],
                                 quantity: 2,
                                 price: 4.95 * 2,
                             }
@@ -358,18 +359,18 @@ QUnit.module('LunchKanban', (hooks) => {
             }
         });
 
-        click(target, 'div.o_lunch_banner > .row > div:nth-child(2) button.fa-plus-circle');
+        click(target, 'div.o_lunch_banner > .row > div:nth-child(2) span.fa-plus-circle');
     });
 
     QUnit.test("Confirm existing order", async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         let userInfos = {
             ...lunchInfos,
             lines: [
                 {
                     id: 1,
-                    product: [1, "Big Plate", "4.95"],
+                    product: [1, "Big Plate", "4.95", 4.95],
                     toppings: [],
                     quantity: 1,
                     price: 4.95,
@@ -409,12 +410,14 @@ QUnit.module('LunchKanban', (hooks) => {
         });
 
         const wallet = target.querySelector('.o_lunch_banner .col-8 > .d-flex > span:nth-child(2)');
-        assert.equal(wallet.innerText, '12.05€');
+        assert.equal(wallet.querySelector('span:nth-child(1)').innerText, '12.05');
+        assert.equal(wallet.querySelector('span:nth-child(2)').innerText, '€');
 
         click(target, 'div.o_lunch_banner > .row > div:nth-child(3) button');
 
         await nextTick();
-        assert.equal(wallet.innerText, '7.10€', 'Wallet should update');
+        assert.equal(wallet.querySelector('span:nth-child(1)').innerText, '7.10', 'Wallet should update');
+        assert.equal(wallet.querySelector('span:nth-child(2)').innerText, '€');
     });
 });
 });

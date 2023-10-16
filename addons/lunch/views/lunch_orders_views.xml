@@ -47,7 +47,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="display_reorder_button" column_invisible="True"/>
                 <field name="notified" column_invisible="True"/>
-                <button name="action_reorder" string="Re-order" type="object" icon="fa-history" invisible="not display_reorder_button" groups="lunch.group_lunch_user"/>
+                <button name="action_reorder" string="Re-order" type="object" icon="fa-history" invisible="not display_reorder_button or not display_add_button" groups="lunch.group_lunch_user"/>
                 <button name="action_confirm" string="Confirm" type="object" icon="fa-check" invisible="state != 'sent'" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times" invisible="state in ['cancelled', 'confirmed']" groups="lunch.group_lunch_manager"/>
                 <button name="action_reset" string="Reset" type="object" icon="fa-undo" invisible="state != 'cancelled'" groups="lunch.group_lunch_manager"/>
@@ -234,7 +234,7 @@
                             <field name="topping_ids_3" invisible="not available_toppings_3" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]" class="o_field_widget o_quick_editable"/>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pb-2">
                         <div class="o_td_label col-3 col-md-2">
                             <label for="product_description" class="o_form_label"/>
                         </div>
@@ -258,9 +258,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" invisible="display_add_button">
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager.
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <footer>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="order_deadline_passed" data-hotkey="w"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="order_deadline_passed or not display_add_button" data-hotkey="w"/>
                     <button string="Discard" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>

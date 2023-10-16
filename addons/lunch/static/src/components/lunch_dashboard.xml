@@ -1,38 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.LunchCurrency">
-        <span>
-            <t t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
-            <t t-esc="amount"/>
-            <t t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
-        </span>
+        <div class="text-end d-flex" >
+            <span class="col-4" t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
+            <span class="col-8" t-esc="amount"/>
+            <span class="col-4" t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
+        </div>
     </t>
 
     <t t-name="lunch.LunchOrderLine">
         <tr>
             <td class="text-center">
-                <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(-1)"/>
-                <span t-esc="line.quantity" class="px-2 py-1"/>
-                <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(1)"/>
+                <span
+                    t-if="canEdit"
+                    type="button"
+                    class="btn btn-sm btn-icon btn-link fa fa-minus-circle px-0"
+                    t-on-click="() => this.updateQuantity(-1)"/>
+                <span
+                    t-else=""
+                    type="button"
+                    class="btn btn-sm btn-icon btn-link disabled fa fa-minus-circle px-0"/>
             </td>
-            <td class="flex-grow-1 ps-2 text-700">
-                <a t-on-click="() => props.openOrderLine(line.product[0], line.id)" t-if="canEdit" role="button" title="Edit order">
-                    <t t-esc="line.product[1]"/>
-                </a>
-                <t t-else="" t-esc="line.product[1]"/>
+            <td t-esc="line.quantity" class="text-center"/>
+            <td class="text-center">
+                <span
+                    t-if="canAdd"
+                    type="button"
+                    class="btn btn-sm btn-icon btn-link fa fa-plus-circle px-0"
+                    t-on-click="() => this.updateQuantity(1)"/>
+                <span
+                    t-else=""
+                    type="button"
+                    class="btn btn-sm btn-icon btn-link disabled fa fa-plus-circle px-0"/>
             </td>
-            <td t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
+            <td
+                t-if="canEdit"
+                t-esc="line.product[1]"
+                t-on-click="() => props.openOrderLine(line.product[0], line.id)"
+                role="button"
+                title="Edit order"/>
+            <td t-else="" t-esc="line.product[1]"/>
+            <td t-esc="line.state" t-attf-class="badge rounded-pill text-bg-#{badgeClass} border-#{badgeClass}"/>
             <td t-esc="line.location"/>
             <td t-esc="line.date" class="mx-4"/>
-            <td><LunchCurrency currency="props.currency" amount="line.product[2]"/></td>
-        </tr>
-        <t t-if="hasToppings" class="ps-4">
-            <tr t-foreach="line.toppings" t-as="topping" t-key="topping">
-                <td> </td>
-                <td class="lunch_topping flex-grow-1 ps-2 text-700" t-esc="topping[0]"/>
+            <td>
+                <LunchCurrency currency="props.currency" amount="line.product[2]"/>
+            </td>
             </tr>
-        </t>
-        <tr t-if="line.note" t-esc="line.note" class="text-muted ps-4"/>
+            <t t-if="hasToppings" t-foreach="line.toppings" t-as="topping" t-key="topping">
+                <tr>
+                    <td/>
+                    <td/>
+                    <td/>
+                    <td class="lunch_topping" t-esc="topping[0]"/>
+                    <td/>
+                    <td/>
+                    <td/>
+                    <td>
+                        <LunchCurrency currency="props.currency" amount="topping[1]"/>
+                    </td>
+                </tr>
+            </t>
+            <tr t-if="line.note">
+                <td/>
+                <td/>
+                <td/>
+                <td t-esc="line.note" class="text-muted"/>
+            </tr>
     </t>
 
     <t t-name="lunch.LunchAlerts">
@@ -100,7 +134,9 @@
 
                             <div class="d-flex pb-1">
                                 <span class="flex-grow-1">Your Account</span>
-                                <LunchCurrency currency="currency" amount="state.infos.wallet"/>
+                                <span class="col-3">
+                                    <LunchCurrency currency="currency" amount="state.infos.wallet"/>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -108,32 +144,41 @@
                 <div class="col-12 col-md-7" t-if="hasLines">
                     <h4 class="">
                         Your Order
-                        <button t-if="state.infos.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
+                        <button
+                            t-if="(['new', 'ordered'].includes(state.infos.raw_state))"
+                            class="btn btn-sm btn-icon btn-link fa fa-trash"
+                            t-on-click.prevent="emptyCart"/>
                     </h4>
                     <table class="o_lunch_widget_lines col-10">
                         <t t-foreach="state.infos.lines" t-as="line" t-key="line.id">
-                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine"/>
+                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine" infos="state.infos"/>
                         </t>
                     </table>
                 </div>
-                <div class="col-6 col-md-2 px-0 d-flex flex-column justify-content-between" t-if="hasLines">
-                    <span class="d-flex flex-row mt-1 text-muted">
+                <div class="col-6 col-md-2 d-flex flex-column justify-content-between" t-if="hasLines">
+                    <span class="d-flex flex-row text-muted">
                         <span class="flex-grow-1">
                             Total
                         </span>
-                        <LunchCurrency currency="currency" amount="state.infos.total"/>
+                        <span class="col-5">
+                            <LunchCurrency currency="currency" amount="state.infos.total"/>
+                        </span>
                     </span>
                     <span class="d-flex flex-row mt-1 text-muted">
                         <span class="flex-grow-1">
                             Already Paid
                         </span>
-                        <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
+                        <span class="col-5">
+                            <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
+                        </span>
                     </span>
                     <h4 class="d-flex flex-row mt-1">
                         <span class="flex-grow-1">
                             To Pay
                         </span>
-                        <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
+                        <span class="col-5">
+                            <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
+                        </span>
                     </h4>
                     <button class="btn btn-primary" t-if="canOrder" t-on-click="orderNow">Order Now</button>
                 </div>
