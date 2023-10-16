@@ -2294,7 +2294,6 @@ class TestSinglePicking(TestStockCommon):
         })
         # Changes config of receipt type to allow to edit move lines directly.
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
-        picking_type.show_operations = True
 
         receipt_form = Form(self.env['stock.picking'].with_context(
             force_detailed_view=True
@@ -2305,9 +2304,9 @@ class TestSinglePicking(TestStockCommon):
         receipt_form.location_dest_id = stock_location
         receipt = receipt_form.save()
 
-        with receipt_form.move_line_ids_without_package.new() as move_line:
-            move_line.product_id = self.productA
-            move_line.quantity = 1.0
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.quantity = 1.0
 
         receipt = receipt_form.save()
         # Checks receipt has still its destination location and checks its move

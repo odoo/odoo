@@ -93,7 +93,6 @@ class ResConfigSettings(models.TransientModel):
                 putaway_rules.active = False
 
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
-        was_operations_showed = self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations()
         super().set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
@@ -127,12 +126,6 @@ class ResConfigSettings(models.TransientModel):
             ):
                 if view:
                     view.active = True
-
-        if not was_operations_showed and self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations():
-            self.env['stock.picking.type'].with_context(active_test=False).sudo().search([
-                ('code', '!=', 'incoming'),
-                ('show_operations', '=', False)
-            ]).show_operations = True
 
         if not self.group_stock_production_lot and previous_group.get('group_stock_production_lot'):
             if self.env['product.product'].search_count([('tracking', '!=', 'none')], limit=1):
