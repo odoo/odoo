@@ -4921,6 +4921,36 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event.o_past_event", 4, "should show 4 past events");
     });
 
+    QUnit.test("calendar sidebar state is saved on session storage", async (assert) => {
+        patchWithCleanup(browser, {
+            sessionStorage: {
+                setItem(key, value) {
+                    if (key === "calendar.showSideBar") {
+                        assert.step(`${key}-${value}`);
+                    }
+                },
+                getItem(key) {
+                    if (key === "calendar.showSideBar") {
+                        assert.step(`${key}-read`);
+                        return false;
+                    }
+                },
+            },
+        });
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" mode="week"/>
+            `,
+        });
+        assert.containsNone(target, ".o_calendar_sidebar");
+        await click(target, ".o_calendar_header .oi-panel-right");
+        assert.containsOnce(target, ".o_calendar_sidebar");
+        assert.verifySteps(["calendar.showSideBar-read", "calendar.showSideBar-true"]);
+    });
+
     QUnit.test("calendar should show date information on header", async (assert) => {
         assert.expect(6);
         patchDate(2015, 11, 26, 9, 0, 0);

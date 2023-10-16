@@ -54,11 +54,11 @@
                                 <t t-esc="dayHeader" />
                             </t>
                         </h5>
-                        <button class="btn btn-light d-none d-lg-block oi oi-panel-right ms-auto collapsed" data-bs-target=".o_calendar_sidebar_container" data-bs-toggle="collapse" aria-expanded="true"/>
+                        <button class="btn btn-light d-none d-lg-block oi oi-panel-right ms-auto collapsed" t-on-click="toggleSideBar"/>
                     </div>
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
                     <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
-                    <div t-if="showSideBar" class="o_calendar_sidebar_container col-auto collapse-horizontal collapse show overflow-x-hidden overflow-y-auto">
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container col-auto overflow-x-hidden overflow-y-auto">
                         <div class="o_calendar_sidebar">
                             <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                             <FilterPanel t-props="filterPanelProps" />
