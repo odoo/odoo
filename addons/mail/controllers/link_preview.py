@@ -18,8 +18,8 @@ class LinkPreviewController(http.Controller):
         if not message.is_current_user_or_guest_author and not guest.env.user._is_admin():
             return
         if clear:
-            guest.env["mail.link.preview"]._clear_link_previews(message.sudo())
-        guest.env["mail.link.preview"].sudo()._create_link_previews(message)
+            message.sudo().link_preview_ids._unlink_and_notify()
+        guest.env["mail.link.preview"].sudo()._create_from_message_and_notify(message)
 
     @http.route("/mail/link_preview/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -30,4 +30,4 @@ class LinkPreviewController(http.Controller):
             return
         if not link_preview_sudo.message_id.is_current_user_or_guest_author and not guest.env.user._is_admin():
             return
-        link_preview_sudo._delete_and_notify()
+        link_preview_sudo._unlink_and_notify()
