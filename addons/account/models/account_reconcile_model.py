@@ -721,7 +721,7 @@ class AccountReconcileModel(models.Model):
 
             # Exact tokens.
             if len(tokens) == 1:
-                exact_tokens.append(tokens[0])
+                exact_tokens.append(text_value)
         return numerical_tokens, exact_tokens, text_tokens
 
     def _get_invoice_matching_amls_candidates(self, st_line, partner):
