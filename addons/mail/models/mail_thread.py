@@ -2123,6 +2123,10 @@ class MailThread(models.AbstractModel):
             'partner_ids': partner_ids,
         })
         # add default-like values afterwards, to avoid useless queries
+        if 'record_alias_domain_id' not in msg_values:
+            msg_values['record_alias_domain_id'] = self.sudo()._mail_get_alias_domains(default_company=self.env.company)[self.id].id
+        if 'record_company_id' not in msg_values:
+            msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id]
 
@@ -2597,6 +2601,11 @@ class MailThread(models.AbstractModel):
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
+        if self:
+            if 'record_alias_domain_id' not in msg_values:
+                msg_values['record_alias_domain_id'] = self._mail_get_alias_domains(default_company=self.env.company)[self.id].id
+            if 'record_company_id' not in msg_values:
+                msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
 
@@ -2689,6 +2698,8 @@ class MailThread(models.AbstractModel):
             'email_from': email_from,
             # document
             'model': self._name,
+            'record_alias_domain_id': False,
+            'record_company_id': False,
             'record_name': False,
             # content
             'attachment_ids': attachment_ids,
@@ -2826,6 +2837,8 @@ class MailThread(models.AbstractModel):
             'model',
             'parent_id',
             'partner_ids',
+            'record_alias_domain_id',
+            'record_company_id',
             'record_name',
             'reply_to',
             'reply_to_force_new',
