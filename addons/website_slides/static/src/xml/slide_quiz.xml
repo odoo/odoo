@@ -3,7 +3,7 @@
     <t t-name="slide.slide.quiz">
         <div class="o_wslides_fs_quiz_container o_wslides_wrap h-100 w-100 overflow-auto pb-5">
             <div class="container">
-                <div t-if="widget.quiz.description_safe" t-esc="widget.quiz.description_safe" class="mt-3" />
+                <div t-if="widget.quiz.description_safe" t-out="widget.quiz.description_safe" class="mt-3" />
                 <div t-foreach="widget.quiz.questions" t-as="question" t-key="question_index"
                      t-attf-class="o_wslides_js_lesson_quiz_question mt-5 mb-4 #{widget.slide.completed ? 'completed-disabled' : ''}"
                      t-att-data-question-id="question.id" t-att-data-title="question.question">
