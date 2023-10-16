@@ -78,3 +78,12 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
         active_channels = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         for active_channel in active_channels:
             active_channel._close_livechat_session()
+
+    def test_update_guest_of_chat_request_if_outdated(self):
+        self.visitor.with_user(self.operator).sudo().action_send_chat_request()
+        chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
+        chat_request.message_post(body="Hello", author_id=self.operator.partner_id.id)
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        self.assertNotEqual(chat_request.channel_member_ids.guest_id, guest)
+        self.env.ref('website.default_website').with_context(guest=guest)._get_livechat_request_session()
+        self.assertEqual(chat_request.channel_member_ids.guest_id, guest)
