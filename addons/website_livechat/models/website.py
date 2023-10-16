@@ -48,15 +48,14 @@ class Website(models.Model):
             if chat_request_channel:
                 if not visitor.partner_id:
                     current_guest = self.env['mail.guest']._get_guest_from_context()
-                    channel_guest = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
-                    if current_guest and current_guest != channel_guest:
+                    channel_guest_member = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id)
+                    if current_guest and current_guest != channel_guest_member.guest_id:
                         # Channel was created with a guest but the visitor was
                         # linked to another guest in the meantime. We need to
                         # update the channel to link it to the current guest.
-                        channel_guest_member = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id == current_guest)
-                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member), Command.create({'guest_id': current_guest.id})]})
+                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member.id), Command.create({'guest_id': current_guest.id})]})
                     if not current_guest:
-                        channel_guest._set_auth_cookie()
+                        channel_guest_member.guest_id._set_auth_cookie()
                 return {
                     "folded": False,
                     "id": chat_request_channel.id,
