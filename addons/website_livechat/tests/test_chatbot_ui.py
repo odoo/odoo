@@ -94,3 +94,6 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
                         ('mail_message_id', '=', conversation_message.id)
                     ], limit=1).user_script_answer_id
                 )
+
+    def test_chatbot_available_after_reload(self):
+        self.start_tour("/", "website_livechat_chatbot_after_reload_tour", step_delay=100)
