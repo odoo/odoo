@@ -61,6 +61,7 @@ export class LinkTools extends Link {
             this.$link = newProps.link ? $(newProps.link) : this.link;
             this._setSelectOptionFromLink();
             this._updateOptionsUI();
+            this._updateLabelInput();
         });
         onMounted(() => {
             this._observer = new MutationObserver(records => {
