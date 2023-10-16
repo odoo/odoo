@@ -29,10 +29,11 @@ patch(X2ManyFieldDialog.prototype, 'chatbot_script_step_sequence', {
             return false;
         }
 
+        this.props.close();
+
         if (saveAndNew) {
             document.querySelector('.o_field_x2many_list_row_add a').click();
         }
-        this.props.close();
 
         return true;
     }
