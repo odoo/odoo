@@ -38,7 +38,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="expiration_date" force_save="1" column_invisible="parent.picking_type_code != 'incoming'" readonly="picking_type_use_existing_lots"/>
+                <field name="expiration_date" force_save="1" column_invisible="context.get('picking_code') != 'incoming'" readonly="picking_type_use_existing_lots"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>

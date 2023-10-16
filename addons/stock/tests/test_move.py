@@ -5991,8 +5991,7 @@ class StockMove(TransactionCase):
 
     def test_SML_location_selection(self):
         """
-        Suppose the setting 'Storage Categories' disabled and the option 'Show Detailed Operations'
-        for operation 'Internal Transfer' enabled.
+        Suppose the setting 'Storage Categories' disabled.
         A user creates an internal transfer from F to T, confirms it then adds a SML and selects
         another destination location L (with L a child of T). When the user completes the field
         `quantity`, the onchange should n't change the destination location L
@@ -6000,7 +5999,6 @@ class StockMove(TransactionCase):
 
         self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_storage_categories').id)]})
         internal_transfer = self.env.ref('stock.picking_type_internal')
-        internal_transfer.show_operations = True
 
         picking = self.env['stock.picking'].create({
             'picking_type_id': internal_transfer.id,
@@ -6020,8 +6018,8 @@ class StockMove(TransactionCase):
 
         picking.action_confirm()
 
-        with Form(picking) as form:
-            with form.move_line_ids_without_package.edit(0) as line:
+        with Form(picking.move_ids_without_package, view='stock.view_stock_move_operations') as form:
+            with form.move_line_ids.edit(0) as line:
                 line.location_dest_id = self.stock_location.child_ids[0]
                 line.quantity = 1
 

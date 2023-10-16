@@ -119,7 +119,7 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
-                <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
+                <field name="description_bom_line" optional="show" column_invisible="not context.get('has_kits')"/>
             </xpath>
         </field>
     </record>
