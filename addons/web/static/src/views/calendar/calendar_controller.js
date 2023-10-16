@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -62,12 +65,15 @@ export class CalendarController extends Component {
             getLocalState: () => this.model.exportedState,
         });
 
+        const sessionShowSidebar = browser.sessionStorage.getItem("calendar.showSideBar");
         this.state = useState({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            showSideBar: !this.env.isSmall,
+            showSideBar:
+                !this.env.isSmall &&
+                Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -99,7 +105,6 @@ export class CalendarController extends Component {
     get date() {
         return this.model.meta.date || DateTime.now();
     }
-
 
     get today() {
         return DateTime.now().toFormat("d");
@@ -192,8 +197,15 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             sideBarShown: this.state.showSideBar,
-            toggleSideBar: () => (this.state.showSideBar = !this.state.showSideBar),
+            toggleSideBar: () => {
+                this.state.showSideBar = !this.state.showSideBar;
+            },
         };
+    }
+
+    toggleSideBar() {
+        this.state.showSideBar = !this.state.showSideBar;
+        browser.sessionStorage.setItem("calendar.showSideBar", this.state.showSideBar);
     }
 
     get showCalendar() {
