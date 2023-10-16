@@ -150,9 +150,18 @@ class SaleOrder(models.Model):
         for order in self:
             if order.invoice_status in ['no', 'invoiced']:
                 continue
-            order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type and x.invoice_status != 'invoiced')
+            order_lines = order._get_lines_impacting_invoice_status()
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
+
+    def _get_lines_impacting_invoice_status(self):
+        return self.order_line.filtered(
+            lambda line:
+                not line.is_delivery
+                and not line.is_downpayment
+                and not line.display_type
+                and line.invoice_status != 'invoiced'
+        )
 
     def _get_estimated_weight(self):
         self.ensure_one()
