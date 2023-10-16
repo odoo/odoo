@@ -77,8 +77,12 @@
                                         <a role="button" class="float-end" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
                                             <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
                                         </a>
-                                        <a role="button" class="me-2" href="#"
-                                             t-attf-onclick="event.stopPropagation(); $('#slideShareModal_#{certificate.slide_id.channel_id.id}').modal('show');">
+                                        <a role="button" class="o_wslides_share me-2"
+                                           t-att-data-id="certificate.slide_id.channel_id.id"
+                                           t-att-data-name="certificate.slide_id.channel_id.name"
+                                           t-att-data-url="certificate.slide_id.channel_id.website_url"
+                                           t-att-data-email-sharing="bool(certificate.slide_id.channel_id.share_channel_template_id)"
+                                           data-is-channel="True">
                                             <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
                                         </a>
                                     </div>
@@ -86,10 +90,6 @@
                             </div>
                         </div>
                     </div>
-                    <t t-call="website_slides.slide_share_modal">
-                        <t t-set="record" t-value="certificate.slide_id.channel_id"/>
-                        <t t-set="email_sharing" t-value="certificate.slide_id.channel_id.share_channel_template_id"/>
-                    </t>
                 </div>
             </div>
         </t>
