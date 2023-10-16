@@ -357,3 +357,14 @@ class TestRemoveAccents(BaseCase):
     def test_non_latin(self):
         self.assertEqual(remove_accents('العربية'), 'العربية')
         self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
+
+
+class TestDictTools(BaseCase):
+    def test_readonly_dict(self):
+        d = misc.ReadonlyDict({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            d['baz'] = 'xyz'
+        with self.assertRaises(AttributeError):
+            d.update({'baz': 'xyz'})
+        with self.assertRaises(TypeError):
+            dict.update(d, {'baz': 'xyz'})

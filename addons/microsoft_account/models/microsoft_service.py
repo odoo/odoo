@@ -16,6 +16,7 @@ TIMEOUT = 20
 
 MICROSOFT_AUTH_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 MICROSOFT_TOKEN_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+MICROSOFT_GRAPH_ENDPOINT = 'https://graph.microsoft.com'
 
 RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
@@ -116,7 +117,7 @@ class MicrosoftService(models.AbstractModel):
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
     @api.model
-    def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://graph.microsoft.com", timeout=TIMEOUT):
+    def _do_request(self, uri, params=None, headers=None, method='POST', preuri=MICROSOFT_GRAPH_ENDPOINT, timeout=TIMEOUT):
         """ Execute the request to Microsoft API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
             :param uri : the url to contact
             :param params : dict or already encoded parameters for the request to make
@@ -128,6 +129,10 @@ class MicrosoftService(models.AbstractModel):
             params = {}
         if headers is None:
             headers = {}
+
+        assert urls.url_parse(preuri + uri).host in [
+            urls.url_parse(url).host for url in (MICROSOFT_TOKEN_ENDPOINT, MICROSOFT_GRAPH_ENDPOINT)
+        ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))
 
