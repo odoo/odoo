@@ -384,12 +384,10 @@
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
-                                        <div class="o_kanban_state_with_padding ms-1 me-2" >
-                                            <field name="kanban_state" widget="state_selection"/>
-                                            <field name="legend_normal" invisible="1"/>
-                                            <field name="legend_blocked" invisible="1"/>
-                                            <field name="legend_done" invisible="1"/>
-                                        </div>
+                                        <field name="kanban_state" widget="state_selection"/>
+                                        <field name="legend_normal" invisible="1"/>
+                                        <field name="legend_blocked" invisible="1"/>
+                                        <field name="legend_done" invisible="1"/>
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
 
