@@ -4,10 +4,11 @@ import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 import {
-    waitForEvent,
+    waitForBusEvent,
     waitForChannels,
     waitNotifications,
     waitUntilSubscribe,
+    waitForWorkerEvent,
 } from "@bus/../tests/helpers/websocket_event_deferred";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
@@ -46,7 +47,7 @@ QUnit.test("notifications not received after stoping the service", async () => {
         [secondTabEnv, "notifType", "beta"]
     );
     secondTabEnv.services["bus_service"].stop();
-    await nextTick();
+    await waitForWorkerEvent("leave");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "epsilon");
     await waitNotifications(
         [firstTabEnv, "notifType", "epsilon"],
@@ -59,12 +60,11 @@ QUnit.test("notifications still received after disconnect/reconnect", async () =
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
     env.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await Promise.all([waitForBusEvent(env, "connect"), waitForChannels(["lambda"])]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications([env, "notifType", "beta"]);
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    // Give websocket worker a tick to try to restart
-    await nextTick();
+    await waitForBusEvent(env, "reconnect");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "gamma");
     await waitNotifications([env, "notifType", "gamma"]);
 });
@@ -102,7 +102,7 @@ QUnit.test("second tab still receives notifications after main pagehide", async 
     await waitNotifications([mainEnv, "notifType", "beta"], [secondEnv, "notifType", "beta"]);
     // simulate unloading main
     window.dispatchEvent(new Event("pagehide"));
-    await nextTick();
+    await waitForWorkerEvent("leave");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "gamma");
     await waitNotifications(
         [mainEnv, "notifType", "gamma", { received: false }],
@@ -165,7 +165,7 @@ QUnit.test("channels subscription after disconnection", async (assert) => {
     env.services["bus_service"].start();
     await waitUntilSubscribe();
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
-    await waitUntilSubscribe();
+    await Promise.all([waitForBusEvent(env, "reconnect"), waitUntilSubscribe()]);
     assert.ok(
         true,
         "No error means waitUntilSubscribe resolves twice thus two subscriptions were triggered as expected"
@@ -197,7 +197,7 @@ QUnit.test("Last notification id is passed to the worker on service start", asyn
         ["lambda", "notifType", "beta"],
         ["lambda", "notifType", "beta"],
     ]);
-    await waitForEvent(env1, "notification");
+    await waitForBusEvent(env1, "notification");
     updateLastNotificationDeferred = makeDeferred();
     const env2 = await makeTestEnv();
     await env2.services["bus_service"].start();
@@ -208,34 +208,36 @@ QUnit.test("Last notification id is passed to the worker on service start", asyn
 
 QUnit.test("Websocket disconnects upon user log out", async () => {
     addBusServicesToRegistry();
+    patchWebsocketWorkerWithCleanup();
     // first tab connects to the worker with user logged.
     patchWithCleanup(session, { user_id: 1 });
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
-    await waitForEvent(firstTabEnv, "connect");
+    await waitForBusEvent(firstTabEnv, "connect");
     // second tab connects to the worker after disconnection: user_id
     // is now false.
     patchWithCleanup(session, { user_id: false });
     const env2 = await makeTestEnv();
     env2.services["bus_service"].start();
-    await waitForEvent(firstTabEnv, "disconnect");
+    await waitForBusEvent(firstTabEnv, "disconnect");
 });
 
 QUnit.test("Websocket reconnects upon user log in", async () => {
     addBusServicesToRegistry();
+    patchWebsocketWorkerWithCleanup();
     // first tab connects to the worker with no user logged.
     patchWithCleanup(session, { user_id: false });
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
-    await waitForEvent(firstTabEnv, "connect");
+    await waitForBusEvent(firstTabEnv, "connect");
     // second tab connects to the worker after connection: user_id
     // is now set.
     patchWithCleanup(session, { user_id: 1 });
     const secondTabEnv = await makeTestEnv();
     secondTabEnv.services["bus_service"].start();
     await Promise.all([
-        waitForEvent(firstTabEnv, "disconnect"),
-        waitForEvent(firstTabEnv, "connect"),
+        waitForBusEvent(firstTabEnv, "disconnect"),
+        waitForBusEvent(firstTabEnv, "connect"),
     ]);
 });
 
@@ -270,11 +272,11 @@ QUnit.test("Disconnect on offline, re-connect on online", async () => {
     patchWebsocketWorkerWithCleanup();
     const env = await makeTestEnv();
     await env.services["bus_service"].start();
-    await waitForEvent(env, "connect");
+    await waitForBusEvent(env, "connect");
     window.dispatchEvent(new Event("offline"));
-    await waitForEvent(env, "disconnect");
+    await waitForBusEvent(env, "disconnect");
     window.dispatchEvent(new Event("online"));
-    await waitForEvent(env, "connect");
+    await waitForBusEvent(env, "connect");
 });
 
 QUnit.test("No disconnect on change offline/online when bus inactive", async () => {
@@ -282,9 +284,9 @@ QUnit.test("No disconnect on change offline/online when bus inactive", async () 
     patchWebsocketWorkerWithCleanup();
     const env = await makeTestEnv();
     window.dispatchEvent(new Event("offline"));
-    await waitForEvent(env, "disconnect", { received: false });
+    await waitForBusEvent(env, "disconnect", { received: false });
     window.dispatchEvent(new Event("online"));
-    await waitForEvent(env, "connect", { received: false });
+    await waitForBusEvent(env, "connect", { received: false });
 });
 
 QUnit.test("Can reconnect after late close event", async (assert) => {
@@ -378,7 +380,7 @@ QUnit.test("Fallback on simple worker when shared worker failed to initialize", 
     });
     const env = await makeTestEnv();
     env.services["bus_service"].start();
-    await waitForEvent(env, "connect");
+    await waitForBusEvent(env, "connect");
     assert.verifySteps([
         "shared-worker creation",
         'Error while loading "bus_service" SharedWorker, fallback on Worker.',

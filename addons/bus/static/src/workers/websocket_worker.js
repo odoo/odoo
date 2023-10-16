@@ -34,8 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = "1.0.6";
-const INITIAL_RECONNECT_DELAY = 1000;
+export const WORKER_VERSION = "1.0.7";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -46,6 +45,9 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
+    INITIAL_RECONNECT_DELAY = 1000;
+    RECONNECT_JITTER = 1000;
+
     constructor() {
         // Timestamp of start of most recent bus service sender
         this.newestStartTs = undefined;
@@ -53,7 +55,7 @@ export class WebsocketWorker {
         this.currentUID = null;
         this.isWaitingForNewUID = true;
         this.channelsByClient = new Map();
-        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
+        this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.debugModeByClient = new Map();
         this.isDebug = false;
@@ -377,7 +379,7 @@ export class WebsocketWorker {
         this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
         this.messageWaitQueue = [];
         this.broadcast(this.isReconnecting ? "reconnect" : "connect");
-        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
+        this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
     }
@@ -388,7 +390,7 @@ export class WebsocketWorker {
      */
     _retryConnectionWithDelay() {
         this.connectRetryDelay =
-            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
+            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + this.RECONNECT_JITTER * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
@@ -442,7 +444,7 @@ export class WebsocketWorker {
      */
     _stop() {
         clearTimeout(this.connectTimeout);
-        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
+        this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
         if (this.websocket) {
