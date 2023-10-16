@@ -4294,15 +4294,16 @@ class AccountMove(models.Model):
 
         return rslt
 
-    def _get_pdf_and_send_invoice_vals(self, template):
+    def _get_pdf_and_send_invoice_vals(self, template, **kwargs):
         return {
             'mail_template_id': template.id,
             'move_ids': self.ids,
             'checkbox_send_mail': True,
             'checkbox_download': False,
+            **kwargs,
         }
 
-    def _generate_pdf_and_send_invoice(self, template, from_cron=True, allow_fallback_pdf=True):
+    def _generate_pdf_and_send_invoice(self, template, from_cron=True, allow_fallback_pdf=True, **kwargs):
         """ Generate the pdf for the current invoices and send them by mail using the send & print wizard.
 
         :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
@@ -4310,11 +4311,11 @@ class AccountMove(models.Model):
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
         """
-        composer_vals = self._get_pdf_and_send_invoice_vals(template)
+        composer_vals = self._get_pdf_and_send_invoice_vals(template, **kwargs)
         composer = self.env['account.move.send'].create(composer_vals)
 
         # from_cron=True to log errors in chatter instead of raise
-        composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+        return composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
     def get_invoice_pdf_report_attachment(self):
         if len(self) < 2 and self.invoice_pdf_report_id:
