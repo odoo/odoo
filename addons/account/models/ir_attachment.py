@@ -10,12 +10,21 @@ except ImportError:
     from PyPDF2.utils import PdfReadError
 import io
 import logging
+import zipfile
 
 _logger = logging.getLogger(__name__)
 
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    def _build_zip_from_attachments(self):
+        """ Return the zip bytes content resulting from compressing the attachments in `self`"""
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
+            for attachment in self:
+                zipfile_obj.writestr(attachment.display_name, attachment.raw)
+        return buffer.getvalue()
 
     # -------------------------------------------------------------------------
     # EDI

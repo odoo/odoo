@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import OrderedDict
+
 from odoo import http, _
 from odoo.osv import expression
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.addons.account.controllers.download_docs import _get_zip_headers
 from odoo.exceptions import AccessError, MissingError
-from collections import OrderedDict
 from odoo.http import request
 
 
@@ -117,7 +119,20 @@ class PortalAccount(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if report_type in ('html', 'pdf', 'text'):
+        if report_type == 'pdf' and download:
+            # Send & Print wizard with only the 'download' checkbox to get the official attachment(s)
+            template = request.env.ref(invoice_sudo._get_mail_template())
+            attachment_ids = invoice_sudo._generate_pdf_and_send_invoice(template, checkbox_send_mail=False, checkbox_download=True)
+            attachments = request.env['ir.attachment'].browse(attachment_ids)
+            if len(attachments) > 1:
+                filename = invoice_sudo._get_invoice_report_filename(extension='zip')
+                zip_content = attachments.sudo()._build_zip_from_attachments()
+                headers = _get_zip_headers(zip_content, filename)
+                return request.make_response(zip_content, headers)
+            headers = self._get_http_headers(invoice_sudo, report_type, attachments.raw, download)
+            return request.make_response(attachments.raw, list(headers.items()))
+
+        elif report_type in ('html', 'pdf', 'text'):
             return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)

@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import io
-import zipfile
 
 from odoo import http, _
 from odoo.http import request, content_disposition
+
+
+def _get_zip_headers(content, filename):
+    return [
+        ('Content-Type', 'zip'),
+        ('X-Content-Type-Options', 'nosniff'),
+        ('Content-Length', len(content)),
+        ('Content-Disposition', content_disposition(filename)),
+    ]
 
 
 class AccountDocumentDownloadController(http.Controller):
@@ -16,18 +23,6 @@ class AccountDocumentDownloadController(http.Controller):
         attachments = request.env['ir.attachment'].browse(ids)
         attachments.check_access_rights('read')
         attachments.check_access_rule('read')
-
-        # Create zip file
-        buffer = io.BytesIO()
-        with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
-            for attachment in attachments:
-                zipfile_obj.writestr(attachment.display_name, attachment.raw)
-        content = buffer.getvalue()
-
-        headers = [
-            ('Content-Type', 'zip'),
-            ('X-Content-Type-Options', 'nosniff'),
-            ('Content-Length', len(content)),
-            ('Content-Disposition', content_disposition(filename)),
-        ]
+        content = attachments._build_zip_from_attachments()
+        headers = _get_zip_headers(content, filename)
         return request.make_response(content, headers)

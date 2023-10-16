@@ -645,7 +645,10 @@ class AccountMoveSend(models.Model):
                 # _get_invoice_extra_attachments retrieves invoice PDF and other possible xml, etc.
                 attachment_ids += self._get_invoice_extra_attachments(move).ids or moves_data.get(move).get('proforma_pdf_attachment').ids
             if attachment_ids:
-                return self._download(attachment_ids)
+                if from_cron:
+                    return attachment_ids
+                else:
+                    return self._download(attachment_ids)
 
         return {'type': 'ir.actions.act_window_close'}
 
