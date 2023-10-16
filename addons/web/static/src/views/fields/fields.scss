@@ -63,7 +63,11 @@
 // Invalid
 .o_field_invalid:not(:focus-within) {
     &.o_input, .o_input, &.o_form_label {
-        color: $danger;
+        color: o-text-color('danger');
+    }
+
+    &:not(.o_form_label) {
+        --o-input-background-color: #{$o-input-invalid-bg};
     }
 }
 
