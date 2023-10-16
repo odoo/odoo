@@ -14,7 +14,7 @@ export class NotificationItem extends Component {
         "body?",
         "counter?",
         "datetime?",
-        "displayName",
+        "displayName?",
         "hasMarkAsReadButton?",
         "iconSrc?",
         "onClick",
@@ -24,6 +24,7 @@ export class NotificationItem extends Component {
     ];
     static defaultProps = {
         counter: 0,
+        displayName: "",
     };
     static template = "mail.NotificationItem";
 

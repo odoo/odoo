@@ -79,8 +79,7 @@ export class MessagingMenu extends Component {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.discuss.notificationGroups.length > 0 &&
-                this.store.discuss.activeTab === "all") ||
+            (this.store.failures.length > 0 && this.store.discuss.activeTab === "all") ||
             (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
     }
@@ -104,7 +103,7 @@ export class MessagingMenu extends Component {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast: this.threads.length === 0 && this.store.discuss.notificationGroups.length === 0,
+            isLast: this.threads.length === 0 && this.store.failures.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
@@ -225,10 +224,7 @@ export class MessagingMenu extends Component {
         this.close();
     }
 
-    /**
-     *
-     * @param {import("models").NotificationGroup} failure
-     */
+    /** @param {import("models").Failure} failure */
     onClickFailure(failure) {
         const originThreadIds = new Set(
             failure.notifications.map(({ message }) => message.originThread.id)
@@ -315,10 +311,7 @@ export class MessagingMenu extends Component {
             Object.values(this.store.Thread.records).filter(
                 (thread) => thread.is_pinned && thread.message_unread_counter > 0
             ).length +
-            this.store.discuss.notificationGroups.reduce(
-                (acc, ng) => acc + parseInt(ng.notifications.length),
-                0
-            );
+            this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;
         }
