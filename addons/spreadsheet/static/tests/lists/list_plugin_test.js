@@ -19,6 +19,7 @@ import {
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
 import { getBasicServerData } from "../utils/data";
+import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -668,5 +669,47 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         });
         assert.deepEqual(getBorders(model, "A5"), { ...leftBorder, ...bottomBorder });
         assert.deepEqual(getBorders(model, "D5"), { ...rightBorder, ...bottomBorder });
+    });
+
+    QUnit.test("Can duplicate a list", async (assert) => {
+        const { model } = await createSpreadsheetWithList();
+        const [listId] = model.getters.getListIds();
+        const filter = { ...THIS_YEAR_GLOBAL_FILTER, id: "42" };
+        const matching = { chain: "product_id", type: "many2one" };
+        await addGlobalFilter(model, filter, {
+            list: { [listId]: matching },
+        });
+        model.dispatch("DUPLICATE_ODOO_LIST", { listId, newListId: "2" });
+
+        const listIds = model.getters.getListIds();
+        assert.equal(model.getters.getListIds().length, 2);
+
+        const expectedDuplicatedDefinition = {
+            ...model.getters.getListDefinition(listId),
+            id: "2",
+        };
+        assert.deepEqual(model.getters.getListDefinition(listIds[1]), expectedDuplicatedDefinition);
+
+        assert.deepEqual(model.getters.getListFieldMatching(listId, "42"), matching);
+        assert.deepEqual(model.getters.getListFieldMatching("2", "42"), matching);
+    });
+
+    QUnit.test("Cannot duplicate unknown list", async (assert) => {
+        const { model } = await createSpreadsheetWithList();
+        const result = model.dispatch("DUPLICATE_ODOO_LIST", {
+            listId: "hello",
+            newListId: model.getters.getNextListId(),
+        });
+        assert.deepEqual(result.reasons, [CommandResult.ListIdNotFound]);
+    });
+
+    QUnit.test("Cannot duplicate list with id different from nextId", async (assert) => {
+        const { model } = await createSpreadsheetWithList();
+        const [listId] = model.getters.getListIds();
+        const result = model.dispatch("DUPLICATE_ODOO_LIST", {
+            listId,
+            newListId: "66",
+        });
+        assert.deepEqual(result.reasons, [CommandResult.InvalidNextId]);
     });
 });

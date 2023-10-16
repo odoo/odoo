@@ -9,6 +9,7 @@ import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
+import { deepCopy } from "@web/core/utils/objects";
 
 /**
  * @typedef {Object} ListDefinition
@@ -58,6 +59,14 @@ export class ListCorePlugin extends CorePlugin {
                     return CommandResult.ListIdDuplicated;
                 }
                 break;
+            case "DUPLICATE_ODOO_LIST":
+                if (!this.lists[cmd.listId]) {
+                    return CommandResult.ListIdNotFound;
+                }
+                if (cmd.newListId !== this.nextId.toString()) {
+                    return CommandResult.InvalidNextId;
+                }
+                break;
             case "RENAME_ODOO_LIST":
                 if (!(cmd.listId in this.lists)) {
                     return CommandResult.ListIdNotFound;
@@ -88,6 +97,12 @@ export class ListCorePlugin extends CorePlugin {
                 this._addList(id, definition);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
                 this.history.update("nextId", parseInt(id, 10) + 1);
+                break;
+            }
+            case "DUPLICATE_ODOO_LIST": {
+                const { listId, newListId } = cmd;
+                this._addList(newListId, deepCopy(this.lists[listId].definition));
+                this.history.update("nextId", parseInt(newListId, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {
