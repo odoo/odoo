@@ -92,13 +92,13 @@ class LunchOrder(models.Model):
         if self.ids:
             # TODO This is not taking into account all the toppings for each individual order, this is usually not a problem
             # since in the interface you usually don't update more than one order at a time but this is a bug nonetheless
-            topping_1 = values.pop('topping_ids_1')[0][2] if topping_1_values else self[:1].topping_ids_1.ids
-            topping_2 = values.pop('topping_ids_2')[0][2] if topping_2_values else self[:1].topping_ids_2.ids
-            topping_3 = values.pop('topping_ids_3')[0][2] if topping_3_values else self[:1].topping_ids_3.ids
+            topping_1 = [values.pop('topping_ids_1')[0][:1]] if topping_1_values else self[:1].topping_ids_1.ids
+            topping_2 = [values.pop('topping_ids_2')[0][:1]] if topping_2_values else self[:1].topping_ids_2.ids
+            topping_3 = [values.pop('topping_ids_3')[0][:1]] if topping_3_values else self[:1].topping_ids_3.ids
         else:
-            topping_1 = values['topping_ids_1'][0][2] if topping_1_values else []
-            topping_2 = values['topping_ids_2'][0][2] if topping_2_values else []
-            topping_3 = values['topping_ids_3'][0][2] if topping_3_values else []
+            topping_1 = [values['topping_ids_1'][0][:1]] if topping_1_values else []
+            topping_2 = [values['topping_ids_2'][0][:1]] if topping_2_values else []
+            topping_3 = [values['topping_ids_3'][0][:1]] if topping_3_values else []
 
         return topping_1 + topping_2 + topping_3
 
@@ -128,7 +128,7 @@ class LunchOrder(models.Model):
                 **vals,
                 'toppings': self._extract_toppings(vals),
             })
-            if lines.filtered(lambda l: l.state not in ['sent', 'confirmed']):
+            if lines.filtered(lambda l: l.state == 'new'):
                 # YTI FIXME This will update multiple lines in the case there are multiple
                 # matching lines which should not happen through the interface
                 lines.update_quantity(1)
@@ -138,26 +138,21 @@ class LunchOrder(models.Model):
         return orders
 
     def write(self, values):
-        merge_needed = 'note' in values or 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values
+        merge_needed = 'note' in values or 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values or 'state' in values
         default_location_id = self.env.user.last_lunch_location_id and self.env.user.last_lunch_location_id.id or False
 
         if merge_needed:
             lines_to_deactivate = self.env['lunch.order']
             for line in self:
-                # Only write on topping_ids_1 because they all share the same table
-                # and we don't want to remove all the records
-                # _extract_toppings will pop topping_ids_1, topping_ids_2 and topping_ids_3 from values
-                # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
-                # could have changed through topping_ids_1 without the cache knowing about it
                 toppings = self._extract_toppings(values)
-                self.invalidate_model(['topping_ids_2', 'topping_ids_3'])
-                values['topping_ids_1'] = [(6, 0, toppings)]
                 matching_lines = self._find_matching_lines({
                     'user_id': values.get('user_id', line.user_id.id),
                     'product_id': values.get('product_id', line.product_id.id),
                     'note': values.get('note', line.note or False),
                     'toppings': toppings,
+                    'id': line.id,
                     'lunch_location_id': values.get('lunch_location_id', default_location_id),
+                    'state': values.get('state'),
                 })
                 if matching_lines:
                     lines_to_deactivate |= line
@@ -172,16 +167,20 @@ class LunchOrder(models.Model):
         domain = [
             ('user_id', '=', values.get('user_id', self.default_get(['user_id'])['user_id'])),
             ('product_id', '=', values.get('product_id', False)),
+            ('id', '!=', values.get('id')),
             ('date', '=', fields.Date.today()),
             ('note', '=', values.get('note', False)),
             ('lunch_location_id', '=', values.get('lunch_location_id', default_location_id)),
         ]
+        if values.get('state'):
+            domain += [('state', '=', values['state'])]
         toppings = values.get('toppings', [])
         return self.search(domain).filtered(lambda line: (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3).ids == toppings)
 
     @api.depends('topping_ids_1', 'topping_ids_2', 'topping_ids_3', 'product_id', 'quantity')
     def _compute_total_price(self):
         for line in self:
+            print(line.product_id.price, (line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3).mapped('price'))
             line.price = line.quantity * (line.product_id.price + sum((line.topping_ids_1 | line.topping_ids_2 | line.topping_ids_3).mapped('price')))
 
     @api.depends('topping_ids_1', 'topping_ids_2', 'topping_ids_3')

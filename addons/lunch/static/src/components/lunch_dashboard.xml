@@ -9,28 +9,36 @@
     </t>
 
     <t t-name="lunch.LunchOrderLine">
-        <div class="d-flex align-items-center pe-3">
-            <div class="btn-group">
+        <div class="d-flex align-items-start py-1">
+            <div class="d-flex align-items-center btn-group">
                 <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(-1)"/>
-                <span t-esc="line.quantity" class="px-2 py-1"/>
+                <button class="btn btn-sm btn-icon btn-link disabled fa fa-minus-circle p-0" t-if="props.line.raw_state =='ordered'"/>
+                <span t-esc="line.quantity" class="px-2"/>
                 <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(1)"/>
+                <button class="btn btn-sm btn-icon btn-link disabled fa fa-plus-circle p-0" t-if="props.line.raw_state =='ordered'"/>
             </div>
-            <span class="flex-grow-1 ps-2 text-700">
-                <a t-on-click="() => props.openOrderLine(line.product[0], line.id)" t-if="canEdit" role="button" title="Edit order">
-                    <t t-esc="line.product[1]"/>
-                </a>
-                <t t-else="" t-esc="line.product[1]"/>
-                <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
+            <span class="flex-grow-1 px-1">
+                <div class="d-flex align-items-center">
+                    <a  t-if="canEdit"
+                    t-esc="line.product[1]"
+                    t-on-click="() => props.openOrderLine(line.product[0], line.id)"
+                    role="button"
+                    title="Edit order"/>
+                    <a t-else="" t-esc="line.product[1]"/>
+                    <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass}"/>
+                    <span  class="flex-grow-1 text-end">
+                        <LunchCurrency currency="props.currency" amount="line.product[2]"/>
+                    </span>
+                </div>
+                <ul t-if="hasToppings" class="list-unstyled p-0">
+                    <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex">
+                        <span class="flex-grow-1 lunch_topping" t-esc="topping[0]"/>
+                        <LunchCurrency currency="props.currency" amount="topping[1]"/>
+                    </li>
+                </ul>
+                <div t-if="line.note" t-esc="line.note" class="text-muted"/>
             </span>
-            <LunchCurrency currency="props.currency" amount="line.product[2]"/>
         </div>
-        <ul t-if="hasToppings" class="list-unstyled ps-4">
-            <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex pe-3">
-                <span class="flex-grow-1 lunch_topping" t-esc="topping[0]"/>
-                <LunchCurrency currency="props.currency" amount="topping[1]"/>
-            </li>
-        </ul>
-        <div t-if="line.note" t-esc="line.note" class="text-muted ps-4"/>
     </t>
 
     <t t-name="lunch.LunchAlerts">
@@ -99,7 +107,7 @@
                 <div class="col-12 col-md-5" t-if="hasLines">
                     <h4 class="mb-0">
                         Your Order
-                        <button t-if="state.infos.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
+                        <button t-if="state.infos.raw_state == 'new' and state.infos.paid_subtotal == 0" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
                     </h4>
                     <ul class="o_lunch_widget_lines overflow-auto list-unstyled">
                         <li t-foreach="state.infos.lines" t-as="line" t-key="line.id">
