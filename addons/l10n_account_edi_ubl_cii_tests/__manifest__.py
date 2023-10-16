@@ -23,7 +23,7 @@ valid ones.
         'l10n_be_account',
         'l10n_de',
         'l10n_nl',
-        'l10n_au',
+        'l10n_au_account',
     ],
     'installable': True,
     'license': 'LGPL-3',

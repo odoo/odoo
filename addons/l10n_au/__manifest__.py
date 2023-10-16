@@ -1,32 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
-    'name': 'Australia - Accounting',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/australia.html',
+    'name': 'Australia - Demo Data',
+    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['au'],
-    'version': '1.1',
-    'category': 'Accounting/Localizations/Account Charts',
+    'category': 'Localization/Demo Data',
     'description': """
-Australian Accounting Module
-============================
-
-Australian accounting basic charts and localizations.
-
-Also:
-    - activates a number of regional currencies.
-    - sets up Australian taxes.
+This is the base module to create demonstration data for the Australian localization in Odoo.
+=============================================================================================
     """,
-    'depends': ['account'],
-    'data': [
-        'data/account_tax_report_data.xml',
-        'data/account_tax_template_data.xml',
-        'data/res_currency_data.xml',
-        'views/menuitems.xml',
-        'views/report_invoice.xml',
-        'views/res_company_views.xml',
-        'views/res_partner_bank_views.xml',
-    ],
+    'depends': ['base'],
     'demo': [
         'demo/demo_company.xml',
     ],
