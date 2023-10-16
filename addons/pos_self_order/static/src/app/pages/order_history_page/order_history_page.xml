@@ -12,8 +12,8 @@
             <div t-else="" class="d-flex flex-column h-100">
                 <div class="overflow-y-auto flex-grow-1 flex-shrink-1">
                     <t t-foreach="orders" t-as="order" t-key="order.access_token">
-                        <div class="o_so_order d-flex flex-column flex-grow-1">
-                            <div class="o_so_order_header p-3 bg-white" t-on-click="() => this.editOrder(order)">
+                        <div class="o_so_order d-flex flex-column flex-grow-1 mb-2 bg-white">
+                            <div class="o_so_order_header p-3" t-on-click="() => this.editOrder(order)">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex flex-column">
                                         <h6 class="m-0" t-esc="order.pos_reference"/>
@@ -30,18 +30,18 @@
                                 <p class="small m-0 fst-italic text-muted"
                                     t-esc="order.date"/>
                             </div>
-                            <div class="o_so_order_body p-3 bg-300">
+                            <div class="o_so_order_body pt-2 border-top">
                                 <div
                                     t-foreach="order.lines"
                                     t-as="line"
                                     t-key="line.uuid"
-                                    t-attf-class="o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
+                                    t-attf-class="o_self_order_item_card position-relative d-flex align-items-start w-100 px-3 overflow-hidden"
                                     t-on-click="() => this.clickOnLine(order, line)"
                                     >
                                     <div class="d-flex w-100 py-1 justify-content-between">
                                         <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} text-900 fw-bold fs-6">
                                             <t t-set="lineName" t-value="getNameAndDescription(line)" />
-                                            <h3 class="mb-0 o_self_product_name" t-esc="lineName.productName" />
+                                            <h4 class="mb-0 o_self_product_name" t-esc="lineName.productName" />
                                             <div t-if="line.qty">
                                                 <span class="text-primary fw-bolder small" t-esc="`${line.qty}x `" />
                                                 <span
@@ -64,21 +64,25 @@
                                                 <span t-esc="line.customer_note" class="customer_note ms-1" />
                                             </div>
                                         </div>
-                                        <span t-attf-class="card-text line_price small"
+                                        <span t-attf-class="card-text line_price"
                                             t-esc="selfOrder.formatMonetary(getPrice(line))"/>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column align-items-center px-3 pt-3 bg-white">
-                                    <div class="d-grid gap-2 w-100 w-100 pb-3">
-                                        <div class="d-flex justify-content-between text-muted">
-                                            Tax:
-                                            <span t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_tax)"/>
-                                            <span t-else="" class="spinner-border o-self-order-spinner-custom-height"></span>
-                                        </div>
-                                        <div class="d-flex justify-content-between fw-bold">
-                                            Total:
-                                            <span t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_total)"/>
-                                        </div>
+                                <div class="d-flex mt-2 px-3">
+                                    <div class="ms-auto border-top">
+                                        <table class="table table-sm table-borderless mb-0 py-3">
+                                            <tbody>
+                                                <tr class="text-end text-muted">
+                                                    <th class="pt-2 pb-0">Tax:</th>
+                                                    <th class="pt-2 pb-0 pe-0" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_tax)"/>
+                                                    <span t-else="" class="spinner-border"/>
+                                                </tr>
+                                                <tr class="text-end">
+                                                    <th class="pt-0">Total:</th>
+                                                    <th class="pt-0 pe-0" t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(order.amount_total)"/>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
