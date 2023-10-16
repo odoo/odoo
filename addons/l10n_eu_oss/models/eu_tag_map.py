@@ -24,9 +24,9 @@ EU_TAG_MAP = {
     },
     # Belgium
     'be': {
-        'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
+        'invoice_base_tag': 'l10n_be_account.tax_report_line_47_tag',
         'invoice_tax_tag': None,
-        'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
+        'refund_base_tag': 'l10n_be_account.tax_report_line_49_tag',
         'refund_tax_tag': None,
     },
     # Bulgaria

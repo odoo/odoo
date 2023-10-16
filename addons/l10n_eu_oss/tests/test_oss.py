@@ -37,8 +37,8 @@ class TestOSSBelgium(OssTemplateTestCase):
         tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
 
         for doc_type, report_expression_xml_id in (
-                ("invoice", "l10n_be.tax_report_line_47_tag"),
-                ("refund", "l10n_be.tax_report_line_49_tag"),
+                ("invoice", "l10n_be_account.tax_report_line_47_tag"),
+                ("refund", "l10n_be_account.tax_report_line_49_tag"),
         ):
             with self.subTest(doc_type=doc_type, report_expression_xml_id=report_expression_xml_id):
                 oss_tag_id = tax_oss[f"{doc_type}_repartition_line_ids"]\
