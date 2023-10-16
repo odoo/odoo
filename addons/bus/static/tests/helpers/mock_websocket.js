@@ -63,29 +63,25 @@ let websocketWorker;
  * websocket behavior.
  */
 export function patchWebsocketWorkerWithCleanup(params = {}) {
-    patchWithCleanup(
-        window,
-        {
-            WebSocket: function () {
-                return new WebSocketMock();
-            },
-        }
-    );
+    patchWithCleanup(window, {
+        WebSocket: function () {
+            return new WebSocketMock();
+        },
+    });
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
-    patchWithCleanup(
-        browser,
-        {
-            SharedWorker: function () {
-                const sharedWorker = new SharedWorkerMock(websocketWorker);
-                registerCleanup(() => {
-                    sharedWorker._messageChannel.port1.close();
-                    sharedWorker._messageChannel.port2.close();
-                });
-                return sharedWorker;
-            },
-        }
-    );
+    websocketWorker.INITIAL_RECONNECT_DELAY = 0;
+    websocketWorker.RECONNECT_JITTER = 0;
+    patchWithCleanup(browser, {
+        SharedWorker: function () {
+            const sharedWorker = new SharedWorkerMock(websocketWorker);
+            registerCleanup(() => {
+                sharedWorker._messageChannel.port1.close();
+                sharedWorker._messageChannel.port2.close();
+            });
+            return sharedWorker;
+        },
+    });
     registerCleanup(() => {
         if (websocketWorker) {
             clearTimeout(websocketWorker.connectTimeout);

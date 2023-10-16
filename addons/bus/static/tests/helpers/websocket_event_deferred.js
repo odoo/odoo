@@ -3,6 +3,8 @@
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeDeferred } from "@web/../tests/helpers/utils";
 
 // should be enough to decide whether or not notifications/channel
@@ -60,17 +62,20 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
         const failMessage = `Waited ${TIMEOUT}ms for ${channels.join(", ")} to be ${
             operation === "add" ? "added" : "deleted"
         }`;
+        unpatch();
         QUnit.assert.ok(false, failMessage);
         successDeferred.resolve();
     }, TIMEOUT);
     const channelsSeen = new Set();
-    patchWebsocketWorkerWithCleanup({
+    const worker = patchWebsocketWorkerWithCleanup();
+    const unpatch = patch(worker, {
         async [operation === "add" ? "_addChannel" : "_deleteChannel"](client, channel) {
             await super[operation === "add" ? "_addChannel" : "_deleteChannel"](client, channel);
             if (channels.includes(channel)) {
                 channelsSeen.add(channel);
             }
             if (channelsSeen.size === channels.length) {
+                unpatch();
                 QUnit.assert.ok(
                     true,
                     `Channel(s) ${channels.join(", ")} ${
@@ -82,6 +87,7 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
             }
         },
     });
+    registerCleanup(unpatch);
     return successDeferred;
 }
 
@@ -146,7 +152,7 @@ export function waitNotifications(...expectedNotifications) {
 
 /**
  * Returns a deferred that resolves when an event matching the given type is
- * received.
+ * received from the bus service.
  *
  * @typedef {"connect"|"disconnect"|"reconnect"|"reconnecting"|"notification"} EventType
  * @param {import("@web/env").OdooEnv} env
@@ -154,7 +160,7 @@ export function waitNotifications(...expectedNotifications) {
  * @param {object} [options={}]
  * @param {boolean} [options.received=true]
  */
-export function waitForEvent(env, eventType, { received = true } = {}) {
+export function waitForBusEvent(env, eventType, { received = true } = {}) {
     const eventReceivedDeferred = makeDeferred();
     const failTimeout = setTimeout(() => {
         env.services["bus_service"].removeEventListener(eventType, callback);
@@ -169,4 +175,36 @@ export function waitForEvent(env, eventType, { received = true } = {}) {
     };
     env.services["bus_service"].addEventListener(eventType, callback);
     return eventReceivedDeferred;
+}
+
+/**
+ * Returns a deferred that resolves when an event matching the given type is
+ * received by the websocket worker.
+ *
+ * @param {import("@web/env").OdooEnv} env
+ * @param {import("@bus/workers/websocket_worker").WorkerAction} targetAction
+ * @param {object} [options={}]
+ * @param {boolean} [options.received=true]
+ */
+export function waitForWorkerEvent(targetAction) {
+    const eventReiceivedDeferred = makeDeferred();
+    const failTimeout = setTimeout(() => {
+        unpatch();
+        QUnit.assert.ok(false, `Waited ${TIMEOUT}ms for ${targetAction} to be received.`);
+        eventReiceivedDeferred.resolve();
+    }, TIMEOUT);
+    const worker = patchWebsocketWorkerWithCleanup();
+    const unpatch = patch(worker, {
+        _onClientMessage(_, { action }) {
+            super._onClientMessage(...arguments);
+            if (targetAction === action) {
+                unpatch();
+                QUnit.assert.ok(true, `Action "${action}" received.`);
+                eventReiceivedDeferred.resolve();
+                clearTimeout(failTimeout);
+            }
+        },
+    });
+    registerCleanup(unpatch);
+    return eventReiceivedDeferred;
 }
