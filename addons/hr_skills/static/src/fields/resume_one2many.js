@@ -39,6 +39,7 @@ ResumeX2ManyField.components = {
 export const resumeX2ManyField = {
     ...skillsX2ManyField,
     component: ResumeX2ManyField,
+    relatedFields: [],
 };
 
 registry.category("fields").add("resume_one2many", resumeX2ManyField);
