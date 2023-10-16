@@ -947,6 +947,25 @@ class Picking(models.Model):
         else:
             picking_to_reset.state = 'draft'
 
+    def action_detailed_operations_view(self):
+        view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
+        return {
+            'name': _('Detailed Operations'),
+            'view_mode': 'tree',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'views': [(view_id, 'tree')],
+            'domain': [('id', 'in', self.move_line_ids.ids)],
+            'context': {
+                'default_picking_id': self.id,
+                'default_location_id': self.location_id.id,
+                'default_location_dest_id': self.location_dest_id.id,
+                'default_company_id': self.company_id.id,
+                'show_lots_text': self.show_lots_text,
+                'picking_code': self.picking_type_code,
+            }
+        }
+
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
         This method makes sure every `stock.move.line` is linked to a `stock.move` by either
