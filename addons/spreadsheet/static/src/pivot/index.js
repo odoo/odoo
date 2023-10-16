@@ -28,6 +28,7 @@ coreTypes.add("RENAME_ODOO_PIVOT");
 coreTypes.add("REMOVE_PIVOT");
 coreTypes.add("RE_INSERT_PIVOT");
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
+coreTypes.add("DUPLICATE_PIVOT");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
