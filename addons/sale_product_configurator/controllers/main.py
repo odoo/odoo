@@ -50,14 +50,17 @@ class ProductConfiguratorController(Controller):
 
         return dict(
             products=[
-                self._get_product_information(
-                    product_template,
-                    combination,
-                    currency_id,
-                    so_date,
-                    quantity=quantity,
-                    product_uom_id=product_uom_id,
-                    pricelist_id=pricelist_id,
+                dict(
+                    **self._get_product_information(
+                        product_template,
+                        combination,
+                        currency_id,
+                        so_date,
+                        quantity=quantity,
+                        product_uom_id=product_uom_id,
+                        pricelist_id=pricelist_id,
+                    ),
+                    parent_product_tmpl_ids=[],
                 )
             ],
             optional_products=[

@@ -182,3 +182,27 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         self.start_tour(
             "/web", 'sale_product_configurator_optional_products_tour', login='salesman'
         )
+
+    def test_07_product_configurator_recursive_optional_products(self):
+        """The goal of this test is to check that the product configurator works correctly with
+        recursive optional products.
+        """
+        # create products with recursive optional products
+        self.product_product_conf_chair_floor_protect.update({
+            'optional_product_ids': [(6, 0, [self.product_product_conf_chair.id])]
+        })
+        self.product_product_conf_chair.optional_product_ids = [
+            (4, self.product_product_conf_chair_floor_protect.id)
+        ]
+        self.product_product_conf_chair_floor_protect.optional_product_ids = [
+            (4, self.product_product_conf_chair.id)
+        ]
+        self.product_product_custo_desk.optional_product_ids = [
+            (4, self.product_product_conf_chair.id)
+        ]
+        self.product_product_conf_chair.optional_product_ids = [
+            (4, self.product_product_custo_desk.id)
+        ]
+        self.start_tour(
+            "/web", 'sale_product_configurator_recursive_optional_products_tour', login='salesman'
+        )
