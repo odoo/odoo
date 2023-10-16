@@ -116,7 +116,7 @@ class PosOrder(models.Model):
     @api.depends('sequence_number', 'session_id')
     def _compute_tracking_number(self):
         for record in self:
-            record.tracking_number = str(record.session_id.id)[-1] + str(record.sequence_number)[-2:]
+            record.tracking_number = str((record.session_id.id % 10) * 100 + record.sequence_number % 100).zfill(3)
 
     @api.model
     def _process_order(self, order, draft, existing_order):

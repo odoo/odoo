@@ -66,7 +66,6 @@ export class ProductCard extends Component {
 
     scaleUpPrice() {
         const priceElement = document.querySelector(".total-price");
-        console.log(priceElement);
 
         if (!priceElement) {
             return;

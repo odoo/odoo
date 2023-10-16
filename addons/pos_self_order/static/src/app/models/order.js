@@ -55,8 +55,8 @@ export class Order extends Reactive {
         if (this.pos_reference) {
             const reference = this.pos_reference;
             const arrRef = reference.split(" ")[1].split("-");
-            const sessionID = parseInt(arrRef[0]).toString();
-            const sequence = parseInt(arrRef[2]).toString();
+            const sessionID = arrRef[0][4];
+            const sequence = arrRef[2].substr(2, 2);
             const trackingNumber = sessionID + sequence;
             return trackingNumber;
         }
