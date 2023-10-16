@@ -362,9 +362,6 @@ export class AddPageDialog extends Component {
         this.userService = useService('user');
 
         this.cssLinkEls = undefined;
-        if (this.props.ready) {
-            onMounted(() => this.props.ready());
-        }
         this.lastTabName = "";
 
         useSubEnv({
@@ -414,10 +411,6 @@ export class AddPageDialog extends Component {
 AddPageDialog.props = {
     close: Function,
     onAddPage: {
-        type: Function,
-        optional: true,
-    },
-    ready: {
         type: Function,
         optional: true,
     },
