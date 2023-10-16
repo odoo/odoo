@@ -1153,9 +1153,7 @@ class Channel(models.Model):
         new_channel = self.create(vals)
         group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
-        notification = (Markup('<div class="o_mail_notification">%s</div>') % _("created %(link)s")) % {
-            'link': Markup('<a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a>') % (new_channel.id, new_channel.name)
-        }
+        notification = Markup('<div class="o_mail_notification">created this channel.</div>')
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel._channel_info()[0]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
