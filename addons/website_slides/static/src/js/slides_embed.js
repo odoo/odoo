@@ -226,17 +226,6 @@ $(function () {
             }
         );
 
-        // embed widget page selector
-        $('.oe_slide_js_embed_code_widget input').on('change', function () {
-            var page = parseInt($(this).val());
-            if (!(page > 0 && page <= embeddedViewer.pdf_viewer.pdf_page_total)) {
-                page = 1;
-            }
-            var actualCode = embeddedViewer.$('.slide_embed_code').val();
-            var newCode = actualCode.replace(/(page=).*?([^\d]+)/, '$1' + page + '$2');
-            embeddedViewer.$('.slide_embed_code').val(newCode);
-        });
-
         // To avoid create a dependancy to openerpframework.js, we use JQuery AJAX to post data instead of ajax.jsonRpc
         $('.oe_slide_js_share_email button').on('click', function () {
             var widget = $('.oe_slide_js_share_email');

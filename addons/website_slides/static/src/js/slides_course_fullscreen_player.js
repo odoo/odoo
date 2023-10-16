@@ -3,16 +3,14 @@
 /* global YT, Vimeo */
 
     import publicWidget from '@web/legacy/js/public/public_widget';
-    import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
     import { session } from "@web/session";
     import { Quiz } from '@website_slides/js/slides_course_quiz';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
     import { unhideConditionalElements } from '@website/js/content/inject_dom';
-    import Dialog from '@web/legacy/js/core/dialog';
+    import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-    import { browser } from '@web/core/browser/browser';
     import { rpc } from "@web/core/network/rpc";
 
     import { markup } from "@odoo/owl";
@@ -367,116 +365,6 @@
         },
     });
 
-    var ShareDialog = Dialog.extend({
-        template: 'website.slide.share.modal',
-        events: {
-            'click .o_wslides_js_share_email button': '_onShareByEmailClick',
-            'click a.o_wslides_js_social_share': '_onSlidesSocialShare',
-            'click .o_clipboard_button': '_onShareLinkCopy',
-            'keypress .o_wslides_js_share_email input': '_onKeypress',
-        },
-
-        init: function (parent, options, slide) {
-            options = Object.assign({
-                title: _t("Share This Content"),
-                buttons: [{text: "Close", close: true}],
-                size: 'medium',
-            }, options || {});
-            this._super(parent, options);
-            this.slide = slide;
-            this.session = session;
-
-            this.notification = this.bindService("notification");
-        },
-
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-
-        /**
-         * Send the email(s) on 'Enter' key
-         *
-         * @private
-         * @param {Event} ev
-         */
-        _onKeypress: function (ev) {
-            if (ev.key === "Enter") {
-                ev.preventDefault();
-                this._onShareByEmailClick();
-            }
-        },
-
-        _onShareByEmailClick: function () {
-            var form = this.$('.o_wslides_js_share_email');
-            var input = form.find('input');
-            if (input.val()) {
-                form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
-                var slideID = form.find('button').data('slide-id');
-                rpc('/slides/slide/send_share_email', {
-                    slide_id: slideID,
-                    emails: input.val(),
-                    fullscreen: true
-                }).then((action) => {
-                    if (action) {
-                        form.find('.alert-info').removeClass('d-none');
-                        form.find('.input-group').addClass('d-none');
-                    } else {
-                        this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
-                        form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
-                        input.focus();
-                    }
-                });
-            } else {
-                this.notification.add(_t('Please enter valid email(s)'), { type: 'danger' });
-                form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
-                input.focus();
-            }
-        },
-
-        _onSlidesSocialShare: function (ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            var popUpURL = $(ev.currentTarget).attr('href');
-            window.open(popUpURL, 'Share Dialog', 'width=626,height=436');
-        },
-
-        _onShareLinkCopy: async function (ev) {
-            ev.preventDefault();
-            var $clipboardBtn = this.$('.o_clipboard_button');
-            $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-            await browser.navigator.clipboard.writeText(this.$('.o_wslides_js_share_link').val() || '');
-            $clipboardBtn.tooltip('show');
-            setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
-        },
-
-    });
-
-    var ShareButton = publicWidget.Widget.extend({
-        events: {
-            "click .o_wslides_fs_share": '_onClickShareSlide'
-        },
-
-        init: function (el, slide) {
-            var result = this._super.apply(this, arguments);
-            this.slide = slide;
-            return result;
-        },
-
-        _openDialog: function() {
-            return new ShareDialog(this, {}, this.slide).open();
-        },
-
-        _onClickShareSlide: function (ev) {
-            ev.preventDefault();
-            this._openDialog();
-        },
-
-        _onChangeSlide: function (currentSlide) {
-            this.slide = currentSlide;
-        }
-
-    });
-
     /**
      * This widget's purpose is to show content of a course, naviguating through contents
      * and correclty display it. It also handle slide completion, course progress, ...
@@ -486,6 +374,7 @@
     var Fullscreen = SlideCoursePage.extend({
         events: Object.assign({}, SlideCoursePage.prototype.events, {
             'click .o_wslides_fs_toggle_sidebar': '_onClickToggleSidebar',
+            'click .o_wslides_fs_share': '_onClickShareSlide',
         }),
         custom_events: Object.assign({}, SlideCoursePage.prototype.custom_events, {
             'change_slide': '_onChangeSlideRequest',
@@ -513,7 +402,6 @@
             this.set('slide', slide);
 
             this.sidebar = new Sidebar(this, this.slides, slide);
-            this.shareButton = new ShareButton(this, slide);
             return result;
         },
         /**
@@ -540,7 +428,6 @@
         attachTo: function (){
             var defs = [this._super.apply(this, arguments)];
             defs.push(this.sidebar.attachTo(this.$('.o_wslides_fs_sidebar')));
-            defs.push(this.shareButton.attachTo(this.$('.o_wslides_slide_fs_header')));
             return $.when.apply($, defs);
         },
         //--------------------------------------------------------------------------
@@ -573,6 +460,11 @@
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
+        },
+        getDocumentMaxPage() {
+            const iframe = document.querySelector("iframe.o_wslides_iframe_viewer");
+            const iframeDocument = iframe.contentWindow.document;
+            return parseInt(iframeDocument.querySelector("#page_count").innerText);
         },
         /**
          * Extend the slide data list to add informations about rendering method, and other
@@ -724,7 +616,6 @@
                 isQuiz: slideData.isQuiz || false,
             });
             this.set('slide', newSlide);
-            this.shareButton._onChangeSlide(newSlide);
         },
         /**
          * After a slide has been marked as completed / uncompleted, update the state
@@ -774,6 +665,21 @@
             ev.preventDefault();
             this._toggleSidebar();
         },
+
+        _onClickShareSlide: function (ev) {
+            const slide = this.get('slide');
+            this.call("dialog", "add", SlideShareDialog, {
+                category: slide.category,
+                documentMaxPage: slide.category == 'document' && this.getDocumentMaxPage(),
+                emailSharing: slide.emailSharing === 'True',
+                embedCode: slide.embedCode || '',
+                id: slide.id,
+                isFullscreen: true,
+                name: slide.name,
+                url: slide.websiteShareUrl,
+            });
+        },
+
         /**
          * Toggles sidebar visibility.
          *

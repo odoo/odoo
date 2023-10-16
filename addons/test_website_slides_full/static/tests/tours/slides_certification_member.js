@@ -108,12 +108,12 @@ var certificationCompletionSteps = [{
 }, { // Sharing the certification
     trigger: 'a:contains("Share your certification")'
 }, {
-    trigger: '.oe_slide_js_share_email input',
+    trigger: '.o_wslides_js_share_email input',
     run: 'text friend@example.com'
 }, {
-    trigger: '.oe_slide_js_share_email button',
+    trigger: '.o_wslides_js_share_email button',
 }, {
-    trigger: '.oe_slide_js_share_email .alert:not(.d-none):contains("Sharing is caring")',
+    trigger: '.o_wslides_js_share_email .alert:not(.d-none):contains("Sharing is caring")',
     run: function () {}  // check email has been sent
 }, {
     trigger: 'button.btn-close',  // close sharing modal
