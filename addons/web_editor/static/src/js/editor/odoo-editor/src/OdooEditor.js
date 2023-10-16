@@ -4462,6 +4462,12 @@ export class OdooEditor extends EventTarget {
             this.document.addEventListener('mouseup', stopResizing);
             this.document.addEventListener('mouseleave', stopResizing);
         }
+
+        // Handle emoji popover
+        const isEmojiPopover = document.querySelector('.o-EmojiPicker');
+        if (isEmojiPopover && ev.target !== isEmojiPopover) {
+            isEmojiPopover.remove();
+        }
     }
 
     _onDocumentKeydown(ev) {
