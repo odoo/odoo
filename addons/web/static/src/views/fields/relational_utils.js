@@ -748,7 +748,32 @@ export function useOpenX2ManyRecord({
             { onClose }
         );
     }
-    return openRecord;
+
+    let recordIsOpen = false;
+    return (params) => {
+        if (recordIsOpen) {
+            return;
+        }
+        recordIsOpen = true;
+
+        const onClose = params.onClose;
+        params = {
+            ...params,
+            onClose: (...args) => {
+                recordIsOpen = false;
+                if (onClose) {
+                    return onClose(...args);
+                }
+            },
+        };
+
+        try {
+            return openRecord(params);
+        } catch (e) {
+            recordIsOpen = false;
+            throw e;
+        }
+    };
 }
 
 export function useX2ManyCrud(getList, isMany2Many) {
@@ -762,7 +787,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
                 resIds = [...currentIds, ...object];
             } else if (object.resId) {
                 if (object.isDirty) {
-                   await object.save();
+                    await object.save();
                 }
                 resIds = [...currentIds, object.resId];
             } else {
