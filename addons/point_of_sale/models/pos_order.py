@@ -1530,6 +1530,8 @@ class ReportSaleDetails(models.AbstractModel):
             'date_start': data.get('date_start'),
             'date_stop': data.get('date_stop')
         })
+        if not data['session_ids'] and docids:
+            data['session_ids'] = docids
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids, data['session_ids']))
         return data
