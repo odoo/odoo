@@ -1084,23 +1084,6 @@ overridden by modules), because:
 
 <!-- Previews for blocks that normally generate part of their content upon drop -->
 <!-- Defined in website so that every theme can benefit from it -->
-<!-- Table of content: define the entries that match the default text -->
-<template id="new_page_template_s_table_of_content" inherit_id="s_table_of_content" primary="True">
-    <xpath expr="//div[hasclass('s_table_of_content_navbar')]" position="attributes">
-        <attribute name="style">top: 76px; max-height: calc(100vh - 96px);</attribute>
-    </xpath>
-    <xpath expr="//div[hasclass('s_table_of_content_navbar')]" position="inside">
-        <a href="#table_of_content_heading_1_1" class="table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 active">Intuitive system</a>
-        <a href="#table_of_content_heading_1_2" class="table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0">Design features</a>
-    </xpath>
-    <xpath expr="//section//section[1]//h2" position="attributes">
-        <attribute name="id">table_of_content_heading_1_1</attribute>
-    </xpath>
-    <xpath expr="//section//section[2]//h2" position="attributes">
-        <attribute name="id">table_of_content_heading_1_2</attribute>
-    </xpath>
-</template>
-
 <!-- Form: define the default set of form fields -->
 <template id="new_page_template_s_website_form" inherit_id="s_website_form" primary="True">
     <xpath expr="//section" position="attributes">
