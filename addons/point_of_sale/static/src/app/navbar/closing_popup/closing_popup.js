@@ -11,7 +11,7 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Input } from "@point_of_sale/app/generic_components/input/input";
+import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
