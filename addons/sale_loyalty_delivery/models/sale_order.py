@@ -25,6 +25,11 @@ class SaleOrder(models.Model):
         return res + self.order_line.filtered(
             lambda line: line.is_delivery or line.reward_id.reward_type == 'shipping')
 
+    def _get_lines_impacting_invoice_status(self):
+        return super()._get_lines_impacting_invoice_status().filtered(
+            lambda line: not line.is_reward_line
+        )
+
     def _get_reward_values_free_shipping(self, reward, coupon, **kwargs):
         delivery_line = self.order_line.filtered(lambda l: l.is_delivery)
         taxes = delivery_line.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
