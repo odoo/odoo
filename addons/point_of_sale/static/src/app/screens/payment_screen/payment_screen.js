@@ -15,7 +15,7 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useState, useRef } from "@odoo/owl";
+import { Component, useState, useRef, onMounted } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero } from "@web/core/utils/numbers";
@@ -46,7 +46,15 @@ export class PaymentScreen extends Component {
         this.payment_interface = null;
         this.error = false;
         this.validateOrder = useAsyncLockedMethod(this.validateOrder);
+        onMounted(this.onMounted);
     }
+
+    onMounted() {
+        if (this.payment_methods_from_config.length == 1) {
+            this.addNewPaymentLine(this.payment_methods_from_config[0]);
+        }
+    }
+
     getNumpadButtons() {
         return [
             { value: "1" },
