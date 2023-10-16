@@ -288,7 +288,7 @@ class Users(models.Model):
         user_activities = {}
         for model_name, activities_by_record in activities_by_record_by_model_name.items():
             domain = [("id", "in", list({r.id for r in activities_by_record.keys()}))]
-            allowed_records = self.env[model_name].search(domain)
+            allowed_records = self.env[model_name].with_context(active_test=False).search(domain)
             if not allowed_records:
                 continue
             module = self.env[model_name]._original_module
