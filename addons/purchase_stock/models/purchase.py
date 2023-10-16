@@ -485,9 +485,8 @@ class PurchaseOrderLine(models.Model):
         price_unit = self._get_stock_move_price_unit()
         qty = self._get_qty_procurement()
 
-        move_dests = self.move_dest_ids
-        if not move_dests:
-            move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
+        move_dests = self.move_dest_ids or self.move_ids.move_dest_ids
+        move_dests = move_dests.filtered(lambda m: m.state != 'cancel' and not m._is_purchase_return())
 
         if not move_dests:
             qty_to_attach = 0
@@ -623,7 +622,7 @@ class PurchaseOrderLine(models.Model):
         incoming_moves = self.env['stock.move']
 
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move.location_dest_id.usage == "supplier" and move.to_refund:
+            if move._is_purchase_return() and move.to_refund:
                 outgoing_moves |= move
             elif move.location_dest_id.usage != "supplier":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
