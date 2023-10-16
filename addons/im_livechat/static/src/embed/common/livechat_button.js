@@ -48,6 +48,11 @@ export class LivechatButton extends Component {
             left: `calc(97% - ${LIVECHAT_BUTTON_SIZE}px)`,
             top: `calc(97% - ${LIVECHAT_BUTTON_SIZE}px)`,
         });
+        this.state = useState({
+            animateNotification: !(
+                this.livechatService.thread || this.livechatService.shouldRestoreSession
+            ),
+        });
         useMovable({
             cursor: "grabbing",
             ref: this.ref,
@@ -60,6 +65,7 @@ export class LivechatButton extends Component {
     }
 
     onClick() {
+        this.state.animateNotification = false;
         this.threadService.openChat();
     }
 
