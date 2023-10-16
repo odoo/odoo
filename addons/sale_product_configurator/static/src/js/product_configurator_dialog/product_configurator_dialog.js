@@ -135,14 +135,16 @@ export class ProductConfiguratorDialog extends Component {
             this.state.products.push(...this.state.optionalProducts.splice(index, 1));
             // Fetch optional product from the server with the parent combination.
             const product = this._findProduct(productTmplId);
-            const newOptionalProducts = await this._getOptionalProducts(product);
+            let newOptionalProducts = await this._getOptionalProducts(product);
             for(const newOptionalProductDict of newOptionalProducts) {
                 // If the optional product is already in the list, add the id of the parent product
                 // template in his list of `parent_product_tmpl_ids` instead of adding a second time
                 // the product.
                 const newProduct = this._findProduct(newOptionalProductDict.product_tmpl_id);
                 if (newProduct) {
-                    newOptionalProducts.pop(newOptionalProductDict);
+                    newOptionalProducts = newOptionalProducts.filter(
+                        (p) => p.product_tmpl_id != newOptionalProductDict.product_tmpl_id
+                    );
                     newProduct.parent_product_tmpl_ids.push(productTmplId);
                 }
             }
@@ -241,8 +243,10 @@ export class ProductConfiguratorDialog extends Component {
      * Check the exclusions of a given product and his child.
      *
      * @param {Object} product - The product for which to check the exclusions.
+     * @param {undefined|Array} checked - The array of products checked for exclusions, used to
+     * avoid infinite check exclusions for recursive optional products.
      */
-    _checkExclusions(product) {
+    _checkExclusions(product, checked=undefined) {
         const combination = this._getCombination(product);
         const exclusions = product.exclusions;
         const parentExclusions = product.parent_exclusions;
@@ -285,8 +289,13 @@ export class ProductConfiguratorDialog extends Component {
                 }
             }
         }
+        const checkedProducts = checked || [];
         for(const optionalProductTmpl of childProducts) {
-            this._checkExclusions(optionalProductTmpl);
+             // if the product is not checked for exclusions
+            if (!checkedProducts.includes(optionalProductTmpl)) {
+                checkedProducts.push(optionalProductTmpl); // remember that this product is checked
+                this._checkExclusions(optionalProductTmpl, checkedProducts);
+            }
         }
     }
 
