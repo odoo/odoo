@@ -63,6 +63,10 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                 this._setupListDataSource(id, linesNumber);
                 break;
             }
+            case "DUPLICATE_ODOO_LIST": {
+                this._setupListDataSource(cmd.newListId, 0);
+                break;
+            }
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;

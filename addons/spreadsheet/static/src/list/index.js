@@ -30,6 +30,7 @@ coreTypes.add("REMOVE_ODOO_LIST");
 coreTypes.add("RE_INSERT_ODOO_LIST");
 coreTypes.add("UPDATE_ODOO_LIST_DOMAIN");
 coreTypes.add("ADD_LIST_DOMAIN");
+coreTypes.add("DUPLICATE_ODOO_LIST");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
 invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
