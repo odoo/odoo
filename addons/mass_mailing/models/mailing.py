@@ -21,6 +21,7 @@ from PIL import Image, UnidentifiedImageError
 from odoo import api, fields, models, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
@@ -617,6 +618,8 @@ class MassMailing(models.Model):
     def action_test(self):
         self.ensure_one()
         ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='medium')
+        if request.session.get('test_mailing_email_to'):
+            ctx.update(default_email_to=request.session['test_mailing_email_to'])
         return {
             'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',

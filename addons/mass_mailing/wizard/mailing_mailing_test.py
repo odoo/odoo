@@ -4,6 +4,7 @@
 from markupsafe import Markup
 
 from odoo import _, fields, models, tools
+from odoo.http import request
 from odoo.tools.misc import file_open
 
 
@@ -30,6 +31,9 @@ class TestMassMailing(models.TransientModel):
                 valid_emails.append(test_email[0])
             else:
                 invalid_candidates.append(candidate)
+
+        if request:
+            request.session['test_mailing_email_to'] = self.email_to
 
         mailing = self.mass_mailing_id
         record = self.env[mailing.mailing_model_real].search([], limit=1)
