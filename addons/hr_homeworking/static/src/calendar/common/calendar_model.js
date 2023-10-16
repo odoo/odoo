@@ -34,7 +34,7 @@ patch(AttendeeCalendarModel.prototype, {
         for (const day of rangeInterval) {
             const startDay = day.s;
             const dayISO = startDay.toISODate();
-            const dayName = startDay.weekdayLong.toLowerCase();
+            const dayName = startDay.setLocale("us").weekdayLong.toLowerCase();
             if (!(dayISO in events)) {
                 events[dayISO] = {};
             }
