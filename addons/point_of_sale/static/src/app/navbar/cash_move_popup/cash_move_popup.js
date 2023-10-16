@@ -10,7 +10,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
-import { Input } from "@point_of_sale/app/generic_components/input/input";
+import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 
 export class CashMovePopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashMovePopup";
