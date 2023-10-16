@@ -101,6 +101,11 @@ class StockPicking(models.Model):
         for picking in self:
             picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
 
+    def action_detailed_operations(self):
+        action = super().action_detailed_operations()
+        action['context']['has_kits'] = self.has_kits
+        return action
+
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)
 

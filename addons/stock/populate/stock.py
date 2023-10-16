@@ -354,11 +354,8 @@ class PickingType(models.Model):
 
                 yield values
 
-        def get_show_operations(values, counter, random):
-            return values['code'] != 'incoming'  # Simulate onchange of form
-
         def get_show_reserved(values, counter, random):
-            return values['show_operations'] and values['code'] != 'incoming'  # Simulate onchange of form
+            return values['code'] != 'incoming'  # Simulate onchange of form
 
         return [
             ('company_id', populate.iterate(company_ids)),
@@ -366,7 +363,6 @@ class PickingType(models.Model):
             ('name', populate.compute(get_name)),
             ('sequence_code', populate.constant("PT{counter}")),
             ('_compute_default_locations', _compute_default_locations),
-            ('show_operations', populate.compute(get_show_operations)),
             ('show_reserved', populate.compute(get_show_reserved)),
         ]
 

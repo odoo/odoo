@@ -77,7 +77,6 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="product_type" column_invisible="True"/>
                     <field name="show_details_visible" column_invisible="True"/>
-                    <field name="show_operations" readonly="1" column_invisible="True"/>
                     <field name="additional" column_invisible="True"/>
                     <field name="move_lines_count" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
@@ -242,24 +241,32 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)">
+                <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1">
+                    <header>
+                        <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
+                    </header>
                     <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="state == 'done' or move_id"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="move_id" column_invisible="True"/>
                     <field name="picking_id" column_invisible="True"/>
+                    <field name="picking_code" column_invisible="True"/>
+                    <field name="picking_location_id" column_invisible="True"/>
+                    <field name="picking_location_dest_id" column_invisible="True"/>
                     <field name="product_uom_category_id" column_invisible="True"/>
-                    <field name="package_id" column_invisible="True"/>
-                    <field name="result_package_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
-                    <field name="lot_id" groups="stock.group_production_lot" column_invisible="parent.show_lots_text" invisible="not lots_visible" context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" optional="show"/>
-                    <field name="lot_name" groups="stock.group_production_lot" column_invisible="not parent.show_lots_text" invisible="not lots_visible" context="{'default_product_id': product_id}"/>
-                    <field name="location_id" options="{'no_create': True}" column_invisible="parent.picking_type_code == 'incoming'" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
-                    <field name="location_dest_id" options="{'no_create': True}" column_invisible="parent.picking_type_code == 'outgoing'" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
-                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                    <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
+                        domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
+                        context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False}"
+                        widget="pick_from"
+                        options="{'no_open': True}"/>
+                    <field name="lot_id" column_invisible="context.get('show_lots_text')" groups="stock.group_production_lot" invisible="not lots_visible" context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" optional="show"/>
+                    <field name="lot_name" column_invisible="not context.get('show_lots_text')"  groups="stock.group_production_lot" invisible="not lots_visible" context="{'default_product_id': product_id}"/>
+                    <field name="location_dest_id" options="{'no_create': True}" column_invisible="context.get('picking_code') == 'outgoing'" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', picking_location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
+                    <field name="package_id" column_invisible="True"/>
                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                     <field name="lots_visible" column_invisible="True"/>
-                    <field name="owner_id" groups="stock.group_tracking_owner" column_invisible="parent.picking_type_code == 'incoming'"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner" column_invisible="context.get('picking_code') == 'incoming'"/>
                     <field name="state" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>

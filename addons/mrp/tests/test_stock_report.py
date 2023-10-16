@@ -122,8 +122,9 @@ class TestMrpStockReports(TestReportsCommon):
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
         pick_form = Form(pick)
-        with pick_form.move_line_ids_without_package.edit(0) as move_line:
-            move_line.quantity = 20
+        with Form(pick.move_ids_without_package, view='stock.view_stock_move_operations') as form:
+            with form.move_line_ids.edit(0) as move_line:
+                move_line.quantity = 20
         pick = pick_form.save()
         pick.button_validate()
         # Produces 3 products then creates a backorder for the remaining product.

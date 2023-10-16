@@ -38,7 +38,6 @@ class Warehouse(models.Model):
                 'sequence': max_sequence + 1,
                 'sequence_code': 'POS',
                 'company_id': self.company_id.id,
-                'show_operations': False,
             }
         })
         return picking_type_create_values, max_sequence + 2
