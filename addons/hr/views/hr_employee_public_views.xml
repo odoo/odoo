@@ -61,6 +61,8 @@
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="show_hr_icon_display" invisible="1" />
+                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <group>
