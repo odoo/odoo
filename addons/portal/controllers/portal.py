@@ -489,14 +489,18 @@ class CustomerPortal(Controller):
 
         method_name = '_render_qweb_%s' % (report_type)
         report = getattr(ReportAction, method_name)(report_ref, list(model.ids), data={'report_type': report_type})[0]
-        reporthttpheaders = [
-            ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
-            ('Content-Length', len(report)),
-        ]
+        headers = self._get_http_headers(model, report_type, report, download)
+        return request.make_response(report, headers=list(headers.items()))
+
+    def _get_http_headers(self, model, report_type, report, download):
+        headers = {
+            'Content-Type': 'application/pdf' if report_type == 'pdf' else 'text/html',
+            'Content-Length': len(report),
+        }
         if report_type == 'pdf' and download:
             filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
-            reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
-        return request.make_response(report, headers=reporthttpheaders)
+            headers['Content-Disposition'] = content_disposition(filename)
+        return headers
 
 def get_error(e, path=''):
     """ Recursively dereferences `path` (a period-separated sequence of dict
