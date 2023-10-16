@@ -104,6 +104,7 @@ export class ChatBotService {
             // Answer was posted but is yet to be processed.
             this._processUserAnswer(this.livechatService.thread.newestMessage);
         }
+        this.shouldRestore = false;
     }
 
     /**
