@@ -7,6 +7,7 @@
       menuClass="'spreadsheet_share_dropdown d-flex flex-column'"
       position="'bottom-end'"
       onOpened.bind="onOpened"
+      disabled="!props.model"
     >
       <t t-set-slot="toggler">
         <i class="fa fa-share-alt"/>

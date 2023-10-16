@@ -17,7 +17,7 @@ export class SpreadsheetShareButton extends Component {
     static template = "spreadsheet.ShareButton";
     static components = { Dropdown, DropdownItem, CopyButton };
     static props = {
-        model: Model,
+        model: { type: Model, optional: true },
         onSpreadsheetShared: Function,
     };
 
