@@ -395,6 +395,57 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
+    QUnit.test(
+        "clicking twice on a record in a one2many will open it once",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                <form>
+                    <field name="turtle_foo"/>
+                </form>`,
+            };
+
+            const def = makeDeferred();
+            let firstRead = true;
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+                async mockRPC(route, { method, model, kwargs }) {
+                    if (method === "read" && model === "turtle") {
+                        assert.step("read turtle");
+                        if (!firstRead) {
+                            await def;
+                        }
+                        firstRead = false;
+                    }
+                },
+            });
+            await click(target, ".o_data_cell");
+            await click(target, ".o_data_cell");
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".modal");
+
+            await click(target, ".modal .btn-close");
+            assert.containsNone(target, ".modal");
+
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, ".modal");
+
+            assert.verifySteps(["read turtle", "read turtle"]);
+        }
+    );
+
     QUnit.test("resequence a x2m in a form view dialog from another x2m", async function (assert) {
         await makeView({
             type: "form",
