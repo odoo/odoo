@@ -8,9 +8,9 @@ class AccountBalance(models.Model):
     def get_all_accounts(self):
         accounts = self.env['account.account'].search([])
 
-        account_ids = [str(account.id) for account in accounts]
+        account_data = [{'id': account.id, 'name': account.name} for account in accounts]
 
-        return account_ids
+        return account_data
 
     @api.model
     def getbalance(self, start_date, end_date, selected_account_id):
