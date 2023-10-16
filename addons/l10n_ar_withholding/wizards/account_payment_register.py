@@ -23,31 +23,41 @@ class AccountPaymentRegister(models.TransientModel):
             rec.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
         (self - supplier_recs).l10n_ar_withholding_ids = False
 
-    def _compute_amount(self):
-        super()._compute_amount()
-        self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id)._compute_amount_from_latam_check()
-
     def _compute_amount_from_latam_check(self):
         for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
             simulated_wizard = self.env['account.payment.register'].with_context(active_model='account.move.line', active_ids=wizard.line_ids.ids).new()
             simulated_wizard.currency_id = wizard.l10n_latam_check_id.currency_id
             simulated_wizard.payment_date = wizard.payment_date
-            factor = simulated_wizard.amount / simulated_wizard.l10n_ar_net_amount
-            manual_withholding_lines = wizard.l10n_ar_withholding_ids.filtered(lambda x: x.tax_id not in simulated_wizard.l10n_ar_withholding_ids.mapped('tax_id'))
             withholding_net_amount = min(wizard.l10n_latam_check_id.amount, simulated_wizard.l10n_ar_net_amount)
-            wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount) + sum(manual_withholding_lines.mapped('amount'))
+            for orignal_line in simulated_wizard.l10n_ar_withholding_ids:
+                line_factor = simulated_wizard.l10n_ar_net_amount / orignal_line.base_amount
+                wizard.l10n_ar_withholding_ids.filtered(lambda x: x.tax_id == orignal_line.tax_id).base_amount = withholding_net_amount / line_factor
+            # Set Temporal amount to recompute withholdings amounts
+            wizard.amount = self.currency_id.round(wizard.l10n_latam_check_id.amount + sum(wizard.l10n_ar_withholding_ids.mapped('amount')))
+            # With new withholdings amounts recompute real total amount
+            wizard.amount = self.currency_id.round(wizard.l10n_latam_check_id.amount + sum(wizard.l10n_ar_withholding_ids.mapped('amount')))
 
-    @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
+    @api.depends('l10n_ar_withholding_ids.amount', 'amount')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
-            if rec.l10n_latam_check_id:
-                rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
-            else:
-                rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
 
-    @api.onchange('l10n_ar_withholding_ids')
-    def _onchange_l10n_ar_withholding_ids(self):
-        self.filtered('l10n_latam_check_id')._compute_amount_from_latam_check()
+    def wizard_recopute_witholding(self):
+        ''' Reopen this account.payment.register wizard to recompute .
+        :return: An action opening the account.payment.register wizard.
+        '''
+        self._compute_amount_from_latam_check()
+        return {
+            'name': _('Register Payment'),
+            'res_model': 'account.payment.register',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'views': [[False, 'form']],
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+
+
 
     def _get_withholding_tax(self):
         self.ensure_one()
