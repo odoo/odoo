@@ -5,7 +5,9 @@ import { _t } from "@web/core/l10n/translation";
 
 patch(CartPage.prototype, {
     async pay() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+        const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
+
+        if (!isOnlinePayment) {
             return super.pay(...arguments);
         }
 
@@ -15,7 +17,6 @@ patch(CartPage.prototype, {
 
         const order = this.selfOrder.currentOrder;
         const mode = this.selfOrder.config.self_ordering_pay_after;
-        const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
         const service = this.selfOrder.config.self_ordering_service_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
 
@@ -24,19 +25,17 @@ patch(CartPage.prototype, {
             return;
         }
 
-        if (mode === "meal" && isOnlinePayment && order.isSavedOnServer) {
+        if (mode === "meal" && order.isSavedOnServer) {
             this.checkAndOpenPaymentPage(order);
-        } else if (mode === "meal" && !isOnlinePayment && order.isSavedOnServer) {
+        } else if (mode === "meal" && !order.isSavedOnServer) {
+            this.sendInProgress = true;
+            await this.selfOrder.sendDraftOrderToServer();
+
             this.router.navigate("confirmation", {
                 orderAccessToken: order.access_token,
-                screenMode: "pay",
+                screenMode: "order",
             });
-            return;
         } else if (mode === "each") {
-            this.sendInProgress = true;
-            const order = await this.selfOrder.sendDraftOrderToServer();
-            this.sendInProgress = false;
-
             this.checkAndOpenPaymentPage(order);
         } else {
             return super.pay(...arguments);
@@ -56,11 +55,19 @@ patch(CartPage.prototype, {
                     return;
                 }
 
-                if (!order.isSavedOnServer) {
+                if (
+                    !order.isSavedOnServer &&
+                    this.selfOrder.config.self_ordering_mode !== "kiosk"
+                ) {
                     await this.selfOrder.sendDraftOrderToServer();
                 }
 
-                this.selfOrder.openOnlinePaymentPage(order);
+                if (this.selfOrder.config.self_ordering_mode === "mobile") {
+                    const onlinePaymentUrl = this.selfOrder.getOnlinePaymentUrl(order, true);
+                    window.open(onlinePaymentUrl, "_self");
+                } else {
+                    this.router.navigate("payment");
+                }
             } else {
                 this.selfOrder.notification.add(
                     _t("The current order cannot be paid (maybe it is already paid)."),

@@ -16,6 +16,7 @@
     'assets': {
         'pos_self_order.assets': [
             'pos_online_payment_self_order/static/src/**/*',
+            'web/static/lib/zxing-library/zxing-library.js',
         ],
     },
     'license': 'LGPL-3',
