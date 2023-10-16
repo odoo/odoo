@@ -33,9 +33,7 @@ export class MailCoreWeb {
                         author: this.store.user,
                     })
                 );
-                this.store.discuss.notificationGroups.sort(
-                    (n1, n2) => n2.lastMessage?.id - n1.lastMessage?.id
-                );
+                this.store.failures.sort((f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id);
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {
                 if (payload.activity_created) {

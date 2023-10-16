@@ -50,8 +50,8 @@ patch(MockServer.prototype, {
                 notification_type: notification.notification_type,
                 notification_status: notification.notification_status,
                 failure_type: notification.failure_type,
-                res_partner_id: partner
-                    ? [partner && partner.id, partner && partner.display_name]
+                persona: partner
+                    ? { id: partner.id, displayName: partner.display_name, type: "partner" }
                     : undefined,
             };
         });

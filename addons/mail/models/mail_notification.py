@@ -133,5 +133,5 @@ class MailNotification(models.Model):
             'notification_type': notif.notification_type,
             'notification_status': notif.notification_status,
             'failure_type': notif.failure_type,
-            'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name] if notif.res_partner_id else False,
+            'persona': {'id': notif.res_partner_id.id, 'displayName': notif.res_partner_id.display_name, 'type': "partner"} if notif.res_partner_id else False,
         } for notif in self]

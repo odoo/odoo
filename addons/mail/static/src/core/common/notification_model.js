@@ -17,34 +17,6 @@ export class Notification extends Record {
         return super.insert(data);
     }
 
-    update(data) {
-        Object.assign(this, {
-            message: data.message,
-            notification_status: data.notification_status,
-            notification_type: data.notification_type,
-            failure_type: data.failure_type,
-            persona: data.res_partner_id
-                ? {
-                      id: data.res_partner_id[0],
-                      displayName: data.res_partner_id[1],
-                      type: "partner",
-                  }
-                : undefined,
-        });
-        if (!this.message?.author?.eq(this._store.self)) {
-            return;
-        }
-        const thread = this.message.originThread;
-        this._store.NotificationGroup.insert({
-            modelName: thread?.modelName,
-            resId: thread?.id,
-            resModel: thread?.model,
-            status: this.notification_status,
-            type: this.notification_type,
-            notifications: [[this.isFailure ? "ADD" : "DELETE", this]],
-        });
-    }
-
     /** @type {number} */
     id;
     message = Record.one("Message");
@@ -52,6 +24,29 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
+    failure = Record.one("Failure", {
+        inverse: "notifications",
+        /** @this {import("models").Notification} */
+        compute() {
+            const thread = this.message?.originThread;
+            if (!this.message?.author?.eq(this._store.self)) {
+                return;
+            }
+            const failure = this._store.failures.find((f) => {
+                return (
+                    f.resModel === thread?.model &&
+                    f.type === this.notification_type &&
+                    (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
+                );
+            });
+            return this.isFailure
+                ? {
+                      id: failure ? failure.id : this._store.Failure.nextId.value++,
+                      resId: thread?.id,
+                  }
+                : false;
+        },
+    });
     /** @type {string} */
     failure_type;
     persona = Record.one("Persona");
