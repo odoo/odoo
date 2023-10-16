@@ -222,7 +222,7 @@ export class SelfOrder extends Reactive {
         try {
             const rpcUrl = this.currentOrder.isAlreadySent
                 ? "/pos-self-order/update-existing-order"
-                : "/pos-self-order/process-new-order/self";
+                : `/pos-self-order/process-new-order/${this.config.self_ordering_mode}`;
 
             const order = await this.rpc(rpcUrl, {
                 order: this.currentOrder,

@@ -39,7 +39,7 @@ export class OrderWidget extends Component {
     get buttonToShow() {
         const currentPage = this.router.activeSlot;
         const payAfter = this.selfOrder.config.self_ordering_pay_after;
-        const kioskPayment = this.selfOrder.pos_payment_methods.find((p) => !p.is_online_payment); // cannot be online payment in kiosk for instance
+        const kioskPayment = this.selfOrder.pos_payment_methods;
         const isNoLine = this.selfOrder.currentOrder.lines.length === 0;
 
         let label = "";
