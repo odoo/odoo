@@ -178,7 +178,6 @@ class Message(models.Model):
     # as the cache value for this inverse one2many is up-to-date.
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
-    canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
     reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
 
     @api.depends('body', 'subject')
