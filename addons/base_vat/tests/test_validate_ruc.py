@@ -10,13 +10,6 @@ try:
 except ImportError:
     from mock import patch
 
-try:
-    import vatnumber
-except ImportError:
-    _logger.warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
-    "Install it to support more countries, for example with `easy_install vatnumber`.")
-    vatnumber = lambda: False
-    vatnumber.check_vies = lambda: False  # dummy method for mock
 
 class TestStructure(common.TransactionCase):
 
