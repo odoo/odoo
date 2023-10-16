@@ -41,14 +41,8 @@ export const PageControllerMixin = (component) => class extends component {
      */
     async createWebsiteContent() {
         if (this.props.resModel === 'website.page') {
-            if (this.isCreatingNewPage) {
-                // Prevent opening the "New page" dialog several times.
-                return;
-            }
-            this.isCreatingNewPage = true;
             return this.dialog.add(AddPageDialog, {
                 websiteId: this.state.activeWebsite.id,
-                ready: () => this.isCreatingNewPage = false,
             });
         }
         const action = this.props.context.create_action;
