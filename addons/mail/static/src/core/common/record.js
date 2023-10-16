@@ -327,7 +327,9 @@ export class RecordList extends Array {
     }
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
-        this.__list__.sort((a, b) => func(this.__store__.get(a), this.__store__.get(b)));
+        const list = this.__list__.slice(); // sort on copy of list so that reactive observers not triggered while sorting
+        list.sort((a, b) => func(this.__store__.get(a), this.__store__.get(b)));
+        this.__list__ = list;
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
@@ -596,6 +598,9 @@ export class Record {
             localId: this.localId(data),
             ...ids,
         });
+        for (const compute of record.__computes__.values()) {
+            compute();
+        }
         Object.assign(record, { _store: this.store });
         this.records[record.localId] = record;
         // return reactive version
@@ -603,8 +608,11 @@ export class Record {
         return record;
     }
     /**
-     * @template {keyof import("model ").Models} M
+     * @template {keyof import("models").Models} M
      * @param {M} targetModel
+     * @param {Function} [compute] if set, the value of this relational field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
      * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
      * @param {(r: M) => void} [onAdd] function that is called when a record is added
      *   in the relation.
@@ -612,12 +620,15 @@ export class Record {
      *   from the relation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel, { inverse, onAdd, onDelete } = {}) {
-        return [ONE_SYM, { targetModel, inverse, onAdd, onDelete }];
+    static one(targetModel, { compute, inverse, onAdd, onDelete } = {}) {
+        return [ONE_SYM, { targetModel, compute, inverse, onAdd, onDelete }];
     }
     /**
-     * @template {keyof import("model").Models} M
+     * @template {keyof import("models").Models} M
      * @param {M} targetModel
+     * @param {Function} [compute] if set, the value of this relational field is declarative and
+     *   is computed automatically. All reactive accesses recalls that function. The context of
+     *   the function is the record. Returned value is new value assigned to this field.
      * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
      * @param {(r: M) => void} [onAdd] function that is called when a record is added
      *   in the relation.
@@ -625,8 +636,8 @@ export class Record {
      *   from the relation.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { inverse, onAdd, onDelete } = {}) {
-        return [MANY_SYM, { targetModel, inverse, onAdd, onDelete }];
+    static many(targetModel, { compute, inverse, onAdd, onDelete } = {}) {
+        return [MANY_SYM, { targetModel, compute, inverse, onAdd, onDelete }];
     }
     /** @returns {Record} */
     static insert(data) {
@@ -644,7 +655,26 @@ export class Record {
     static isCommand(data) {
         return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
     }
+    /**
+     * Map that contains compute functions of computed fields, i.e. fields that have have
+     * a compute method. @see compute param in Record.one and Record.many. Key is field name
+     * and value is function. The function is the one from the definition. It is not bounded
+     * to the record nor its invoke does assign the value on the targeted field. See non-static
+     * __computes__ for bounded function whose call auto re-assign value on the field.
+     *
+     * @type {Map<string, Function>}
+     */
+    static __computes__ = new Map();
 
+    /**
+     * Map that contains bounded compute functions of computed fields. Equivalent to
+     * static `__computes__` but the functions are bounded to the current record, and
+     * invoking the function does automatically re-assign new value on the computed
+     * field.
+     *
+     * @type {Map<string, Function>}
+     */
+    __computes__ = new Map();
     /**
      * Raw relational values of the record, each of which contains object id(s)
      * rather than the record(s). This allows data in store and models being normalized,

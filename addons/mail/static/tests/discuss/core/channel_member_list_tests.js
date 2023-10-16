@@ -5,7 +5,6 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("channel member list");
@@ -176,14 +175,10 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
-    const thread = env.services["mail.store"].Thread.get({
-        model: "discuss.channel",
-        id: channelId,
-    });
-    assert.strictEqual(thread.memberCount, 2);
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMember", { count: 2 });
     await pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
-    await nextTick();
-    assert.strictEqual(thread.memberCount, 1);
+    await contains(".o-discuss-ChannelMember", { count: 1 });
 });

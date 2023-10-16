@@ -30,6 +30,8 @@ export class Store extends Record {
     DiscussApp;
     /** @type {typeof import("@mail/core/common/discuss_app_category_model").DiscussAppCategory} */
     DiscussAppCategory;
+    /** @type {typeof import("@mail/core/common/failure_model").Failure} */
+    Failure;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
@@ -40,8 +42,6 @@ export class Store extends Record {
     MessageReactions;
     /** @type {typeof import("@mail/core/common/notification_model").Notification} */
     Notification;
-    /** @type {typeof import("@mail/core/common/notification_group_model").NotificationGroup} */
-    NotificationGroup;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
     /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
@@ -78,6 +78,7 @@ export class Store extends Record {
     // messaging menu
     menu = { counter: 0 };
     discuss = Record.one("DiscussApp");
+    failures = Record.many("Failure");
     activityCounter = 0;
     isMessagingReady = false;
 
@@ -277,6 +278,21 @@ export const storeService = {
                             this.__invs__ = new RecordInverses();
                             this[name] = newVal;
                         }
+                        for (const [name, fn] of Model.__computes__.entries()) {
+                            let boundFn;
+                            const proxy2 = reactive(proxy, () => boundFn());
+                            boundFn = () => {
+                                if (Record.__atomic__ > 0) {
+                                    Record.__atomics__.set(
+                                        `compute.${this.localId}.${name}`,
+                                        () => (proxy[name] = fn.call(proxy2))
+                                    );
+                                } else {
+                                    proxy[name] = fn.call(proxy2);
+                                }
+                            };
+                            this.__computes__.set(name, boundFn);
+                        }
                         return proxy;
                     }
                 },
@@ -285,6 +301,7 @@ export const storeService = {
                 Class,
                 records: JSON.parse(JSON.stringify(OgClass.records)),
                 __rels__: new Map(),
+                __computes__: new Map(),
             });
             Models[name] = Model;
             res.store[name] = Model;
@@ -296,6 +313,9 @@ export const storeService = {
                     continue;
                 }
                 Model.__rels__.set(name, { [SYM]: true, ...val[1] });
+                if (val[1].compute) {
+                    Model.__computes__.set(name, val[1].compute);
+                }
             }
         }
         // Sync inverse fields
