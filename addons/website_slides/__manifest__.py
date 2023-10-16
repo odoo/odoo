@@ -106,7 +106,6 @@ Featuring
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_upload.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
-            'website_slides/static/src/xml/website_slides_share.xml',
             'website_slides/static/src/xml/slide_management.xml',
             'website_slides/static/src/xml/slide_course_join.xml',
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
