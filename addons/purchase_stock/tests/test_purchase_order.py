@@ -632,10 +632,31 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(quant.quantity, 5)
 
     def test_po_edit_after_receive(self):
-        self.po = self.env['purchase.order'].create(self.po_vals)
-        self.po.button_confirm()
-        self.po.picking_ids.move_ids.quantity_done = 5
-        self.po.picking_ids.button_validate()
-        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
-        self.po.with_context(import_file=True).order_line[0].product_qty = 10
-        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
+        po_1 = self.env['purchase.order'].create(self.po_vals)
+        po_1.button_confirm()
+        po_1.picking_ids.move_ids.quantity_done = 5
+        po_1.picking_ids.button_validate()
+        self.assertEqual(po_1.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
+        po_1.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(po_1.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
+
+        ### Without backorder ###
+        po_2 = self.env['purchase.order'].create(self.po_vals)
+        po_2.button_confirm()
+        self.assertEqual(len(po_2.picking_ids), 1)
+
+        receipt_picking = po_2.picking_ids
+        receipt_picking.move_ids.quantity_done = 2
+        backorder_wizard_dict = receipt_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process_cancel_backorder()
+        self.assertEqual(po_2.order_line.mapped('product_uom_qty'), [5.0, 5.0])
+        self.assertEqual(po_2.order_line.mapped('qty_received'), [2.0, 2.0])
+
+        po_2.write({
+            'order_line': [
+                (1, po_2.order_line[0].id, {'product_qty': 2}),
+                (1, po_2.order_line[1].id, {'product_qty': 2})
+            ]
+        })
+        self.assertEqual(len(po_2.picking_ids), 1)
