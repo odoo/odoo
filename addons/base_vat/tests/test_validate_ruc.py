@@ -11,7 +11,16 @@ except ImportError:
     from mock import patch
 
 
-class TestStructure(common.TransactionCase):
+class TestStructure(common.SingleTransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        def check_vies(vat_number):
+            return {'valid': vat_number == 'BE0477472701'}
+
+        super().setUpClass()
+        cls.env.user.company_id.vat_check_vies = False
+        cls._vies_check_func = check_vies
 
     def test_peru_ruc_format(self):
         """Only values that has the length of 11 will be checked as RUC, that's what we are proving. The second part
@@ -26,7 +35,7 @@ class TestStructure(common.TransactionCase):
     def test_parent_validation(self):
         """Test the validation with company and contact"""
 
-        # disable the verification to set an invalid vat number
+        # set an invalid vat number
         self.env.user.company_id.vat_check_vies = False
         company = self.env["res.partner"].create({
             "name": "World Company",
@@ -40,14 +49,12 @@ class TestStructure(common.TransactionCase):
             "company_type": "person",
         })
 
-        def mock_check_vies(vat_number):
-            """ Fake vatnumber method that will only allow one number """
-            return vat_number == 'BE0987654321'
-
         # reactivate it and correct the vat number
-        with patch.object(vatnumber, 'check_vies', mock_check_vies):
+        with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
             self.env.user.company_id.vat_check_vies = True
-            company.vat = "BE0987654321"
+            with self.assertRaises(ValidationError), self.env.cr.savepoint():
+                company.vat = "BE0987654321"  # VIES refused, don't fallback on other check
+            company.vat = "BE0477472701"
 
     def test_vat_syntactic_validation(self):
         """ Tests VAT validation (both successes and failures), with the different country
