@@ -54,7 +54,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */
-        this.selectedPivotId = undefined;
         this.selection.observe(this, {
             handleEvent: this.handleEvent.bind(this),
         });
@@ -106,9 +105,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "SELECT_PIVOT":
-                this.selectedPivotId = cmd.pivotId;
-                break;
             case "REFRESH_PIVOT":
                 this._refreshOdooPivot(cmd.id);
                 break;
@@ -172,15 +168,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     // ---------------------------------------------------------------------
     // Getters
     // ---------------------------------------------------------------------
-
-    /**
-     * Retrieve the pivotId of the current selected cell
-     *
-     * @returns {string}
-     */
-    getSelectedPivotId() {
-        return this.selectedPivotId;
-    }
 
     /**
      * Get the id of the pivot at the given position. Returns undefined if there
@@ -515,7 +502,6 @@ PivotUIPlugin.getters = [
     "getPivotDataSource",
     "getAsyncPivotDataSource",
     "getFirstPivotFunction",
-    "getSelectedPivotId",
     "getPivotComputedDomain",
     "getDisplayedPivotHeaderValue",
     "getPivotIdFromPosition",
