@@ -112,8 +112,8 @@ class MassMailController(http.Controller):
 
     def _mailing_unsubscribe_from_list(self, mailing, document_id, email, hash_token):
         # Unsubscribe directly + Let the user choose their subscriptions
-        mailing.contact_list_ids._update_subscription_from_email(email, opt_out=True)
 
+        mailing.contact_list_ids._update_subscription_from_email(email, opt_out=True)
         # compute name of unsubscribed list: hide non public lists
         if all(not mlist.is_public for mlist in mailing.contact_list_ids):
             lists_unsubscribed_name = _('You are no longer part of our mailing list(s).')
@@ -175,10 +175,10 @@ class MassMailController(http.Controller):
         contacts = self._fetch_contacts(email)
         lists_optin = contacts.subscription_ids.filtered(
             lambda sub: not sub.opt_out
-        ).list_id
+        ).list_id.filtered('active')
         lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin
-        ).list_id
+        ).list_id.filtered('active')
         lists_public = request.env['mailing.list'].sudo().search(
             [('is_public', '=', True),
              ('id', 'not in', (lists_optin + lists_optout).ids)
@@ -210,7 +210,7 @@ class MassMailController(http.Controller):
             'is_blocklisted': mail_blocklist.active if mail_blocklist else False,
             # mailing lists
             'contacts': contacts,
-            'lists_contacts': contacts.subscription_ids.list_id,
+            'lists_contacts': contacts.subscription_ids.list_id.filtered('active'),
             'lists_optin': lists_optin,
             'lists_optout': lists_optout,
             'lists_public': lists_public,
