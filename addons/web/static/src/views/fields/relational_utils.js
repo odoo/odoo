@@ -716,7 +716,9 @@ export function useOpenX2ManyRecord({
             ...params,
             onClose: (...args) => {
                 recordIsOpen = false;
-                return onClose(...args);
+                if (onClose) {
+                    return onClose(...args);
+                }
             },
         };
 
