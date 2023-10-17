@@ -145,7 +145,7 @@ class ProductProduct(models.Model):
                 "name": self._get_name(),
                 "id": self.id,
                 "description_self_order": self.description_self_order,
-                "pos_categ_ids": self.pos_categ_ids.mapped("name") or ["Other"],
+                "pos_categ_ids": self.pos_categ_ids.read(["id", "name"]) or [{"id": 0, "name": "Uncategorised"}],
                 "pos_combo_ids": self.combo_ids.mapped("id") or False,
                 "is_pos_groupable": self.uom_id.is_pos_groupable,
                 "write_date": self.write_date.timestamp(),

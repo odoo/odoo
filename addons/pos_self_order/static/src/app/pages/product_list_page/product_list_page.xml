@@ -9,7 +9,7 @@
                         t-foreach="Array.from(selfOrder.categoryList)"
                         t-as="category"
                         t-key="category.id"
-                        t-ref="category_{{category.name}}"
+                        t-ref="category_{{category.id}}"
                         t-attf-class="nav-link category-item flex-shrink-0 p-0"
                         t-attf-href="#scrollspy_{{category.id}}">
                         <div t-if="category.has_image" class="ratio ratio-1x1 mb-1">
@@ -61,9 +61,9 @@
                     t-key="category.id"
                     t-attf-id="scrollspy_{{category.id}}"
                     t-attf-categId="{{category.id}}"
-                    t-ref="productsWithCategory_{{category.name}}"
+                    t-ref="productsWithCategory_{{category.id}}"
                     class="product-list-category d-empty-none bg-view py-4 px-3 mb-3">
-                    <t t-set="products" t-value="selfOrder.productsGroupedByCategory[category.name]" />
+                    <t t-set="products" t-value="selfOrder.productsGroupedByCategory[category.id]" />
                     <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
                     <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
                     <t t-if="availableProducts.length > 0">
