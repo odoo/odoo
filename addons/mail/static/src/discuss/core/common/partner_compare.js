@@ -4,8 +4,8 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 
 partnerCompareRegistry.add(
     "discuss.recent-chats",
-    (p1, p2, { env }) => {
-        const recentChatPartnerIds = env.services["mail.persona"].getRecentChatPartnerIds();
+    (p1, p2, { env, context }) => {
+        const recentChatPartnerIds = context.recentChatPartnerIds || env.services["mail.persona"].getRecentChatPartnerIds();
         const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
             (partnerId) => partnerId === p1.id
         );
