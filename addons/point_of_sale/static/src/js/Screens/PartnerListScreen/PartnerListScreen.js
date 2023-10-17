@@ -191,10 +191,10 @@ class PartnerListScreen extends PosComponent {
         let domain = [];
         const limit = 30;
         if(this.state.query) {
+            const search_fields = ["name", "parent_name", "phone_mobile_search", "email"];
             domain = [
-                "|",
-                ["name", "ilike", this.state.query + "%"],
-                ["parent_name", "ilike", this.state.query + "%"],
+                ...Array(search_fields.length - 1).fill('|'),
+                ...search_fields.map(field => [field, "ilike", this.state.query + "%"])
             ];
         }
         const result = await this.env.services.rpc(
