@@ -346,10 +346,10 @@ export class SpreadsheetPivotModel extends PivotModel {
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
         if (this._isDateField(field)) {
-            // TODO include this parsing to the pivot time adapters and extend it to other time periods
-            if (value && aggregateOperator === "day") {
-                return toNumber(value, DEFAULT_LOCALE);
-            }
+            // // TODO include this parsing to the pivot time adapters and extend it to other time periods
+            // if (value && aggregateOperator === "day") {
+            //     return toNumber(value, DEFAULT_LOCALE);
+            // }
             const adapter = pivotTimeAdapter(aggregateOperator);
             return adapter.format(value, locale);
         }
