@@ -1,65 +1,64 @@
 # -*- coding: utf-8 -*-
-import math
 import calendar
+import math
 from datetime import date, datetime, time
+from typing import TypeVar, Tuple, Iterator
+
 import pytz
 from dateutil.relativedelta import relativedelta
 
 from .func import lazy
 from odoo.loglevels import ustr
 
-def get_month(date):
-    ''' Compute the month dates range on which the 'date' parameter belongs to.
+Dateish = TypeVar('Dateish', date, datetime)
 
-    :param date: A datetime.datetime or datetime.date object.
-    :return: A tuple (date_from, date_to) having the same object type as the 'date' parameter.
-    '''
-    date_from = type(date)(date.year, date.month, 1)
-    date_to = type(date)(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+def get_month(date: Dateish) -> Tuple[Dateish, Dateish]:
+    """ Compute the month date(ish) range on which the 'date' parameter belongs to.
+    """
+    date_from = date.replace(day=1)
+    date_to = date.replace(day=calendar.monthrange(date.year, date.month)[1])
     return date_from, date_to
 
 
-def get_quarter_number(date):
-    ''' Get the number of the quarter on which the 'date' parameter belongs to.
+def get_quarter_number(date: date) -> int:
+    """ Get the number of the quarter to which the 'date' parameter belongs.
 
-    :param date: A datetime.datetime or datetime.date object.
-    :return: A [1-4] integer.
-    '''
+    :return: an integer between 1 and 4
+    """
     return math.ceil(date.month / 3)
 
 
-def get_quarter(date):
-    ''' Compute the quarter dates range on which the 'date' parameter belongs to.
-
-    :param date: A datetime.datetime or datetime.date object.
-    :return: A tuple (date_from, date_to) having the same object type as the 'date' parameter.
-    '''
+def get_quarter(date: Dateish) -> Tuple[Dateish, Dateish]:
+    """ Compute the quarter dates range to which the 'date' parameter belongs.
+    """
     quarter_number = get_quarter_number(date)
     month_from = ((quarter_number - 1) * 3) + 1
-    date_from = type(date)(date.year, month_from, 1)
+    date_from = date.replace(month=month_from, day=1)
     date_to = (date_from + relativedelta(months=2))
     date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
     return date_from, date_to
 
 
-def get_fiscal_year(date, day=31, month=12):
-    ''' Compute the fiscal year dates range on which the 'date' parameter belongs to.
-    A fiscal year is the period used by governments for accounting purposes and vary between countries.
+def get_fiscal_year(date: Dateish, day: int = 31, month: int = 12) -> Tuple[Dateish, Dateish]:
+    """ Compute the fiscal year dates range to which the 'date' parameter belongs.
 
-    By default, calling this method with only one parameter gives the calendar year because the ending date of the
-    fiscal year is set to the YYYY-12-31.
+    A fiscal year is the period used by governments for accounting purposes and
+    vary between countries. This variability can be provided through the ``day``
+    and ``month`` parameters.
 
-    :param date:    A datetime.datetime or datetime.date object.
-    :param day:     The day of month the fiscal year ends.
-    :param month:   The month of year the fiscal year ends.
-    :return: A tuple (date_from, date_to) having the same object type as the 'date' parameter.
-    '''
+    By default, calling this method with only one parameter gives the calendar
+    year because the ending date of the fiscal year is set to the YYYY-12-31.
+
+    :param date: reference date for the fiscal year.
+    :param day: The day of month the fiscal year ends.
+    :param month: The month of year the fiscal year ends.
+    """
     max_day = calendar.monthrange(date.year, month)[1]
-    date_to = type(date)(date.year, month, min(day, max_day))
+    date_to = date.replace(month=month, day=min(day, max_day))
 
     # Force at 29 February instead of 28 in case of leap year.
     if date_to.month == 2 and date_to.day == 28 and max_day == 29:
-        date_to = type(date)(date.year, 2, 29)
+        date_to = date.replace(month=2, day=29)
 
     if date <= date_to:
         date_from = date_to - relativedelta(years=1)
@@ -67,13 +66,13 @@ def get_fiscal_year(date, day=31, month=12):
 
         # Force at 29 February instead of 28 in case of leap year.
         if date_from.month == 2 and date_from.day == 28 and max_day == 29:
-            date_from = type(date)(date_from.year, 2, 29)
+            date_from = date.replace(month=2, day=29)
 
         date_from += relativedelta(days=1)
     else:
         date_from = date_to + relativedelta(days=1)
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
-        date_to = type(date)(date.year + 1, month, min(day, max_day))
+        date_to = date.replace(year=date.year + 1, month=month, day=min(day, max_day))
 
         # Force at 29 February instead of 28 in case of leap year.
         if date_to.month == 2 and date_to.day == 28 and max_day == 29:
@@ -81,12 +80,12 @@ def get_fiscal_year(date, day=31, month=12):
     return date_from, date_to
 
 
-def get_timedelta(qty, granularity):
-    """
-        Helper to get a `relativedelta` object for the given quantity and interval unit.
-        :param qty: the number of unit to apply on the timedelta to return
-        :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+# typing.Literal requires 3.8+
+def get_timedelta(qty: int, granularity: str) -> relativedelta:
+    """ Helper to get a `relativedelta` object for the given quantity and interval unit.
 
+    :param qty: the number of unit to apply on the delta to return.
+    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
     """
     switch = {
         'hour': relativedelta(hours=qty),
@@ -98,13 +97,11 @@ def get_timedelta(qty, granularity):
     return switch[granularity]
 
 
-def start_of(value, granularity):
-    """
-    Get start of a time period from a date or a datetime.
+def start_of(value: Dateish, granularity: str) -> Dateish:
+    """Get start of a time period from a date or a datetime.
 
-    :param value: initial date or datetime.
-    :param granularity: type of period in string, can be year, quarter, month, week, day or hour.
-    :return: a date/datetime object corresponding to the start of the specified period.
+    :param value: the reference date
+    :param granularity: type of period in string, can be year, quarter, month, week, day or hour (for datetimes only).
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
@@ -137,13 +134,11 @@ def start_of(value, granularity):
     return datetime.combine(result, time.min) if is_datetime else result
 
 
-def end_of(value, granularity):
-    """
-    Get end of a time period from a date or a datetime.
+def end_of(value: Dateish, granularity: str) -> Dateish:
+    """ Get end of a time period from a date or a datetime.
 
-    :param value: initial date or datetime.
-    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
-    :return: A date/datetime object corresponding to the start of the specified period.
+    :param value: reference date
+    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour (for datetimes only).
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
@@ -176,26 +171,22 @@ def end_of(value, granularity):
     return datetime.combine(result, time.max) if is_datetime else result
 
 
-def add(value, *args, **kwargs):
-    """
-    Return the sum of ``value`` and a :class:`relativedelta`.
+def add(value: Dateish, *args, **kwargs) -> Dateish:
+    """ Convenience to get the offset of ``value`` by a :class:`relativedelta`.
 
-    :param value: initial date or datetime.
+    :param value: the reference date
     :param args: positional args to pass directly to :class:`relativedelta`.
     :param kwargs: keyword args to pass directly to :class:`relativedelta`.
-    :return: the resulting date/datetime.
     """
     return value + relativedelta(*args, **kwargs)
 
 
-def subtract(value, *args, **kwargs):
-    """
-    Return the difference between ``value`` and a :class:`relativedelta`.
+def subtract(value: Dateish, *args, **kwargs) -> Dateish:
+    """ Convenience to get the negative offset of a ``value`` by a :class:`relativedelta`.
 
-    :param value: initial date or datetime.
+    :param value: the reference date
     :param args: positional args to pass directly to :class:`relativedelta`.
     :param kwargs: keyword args to pass directly to :class:`relativedelta`.
-    :return: the resulting date/datetime.
     """
     return value - relativedelta(*args, **kwargs)
 
@@ -213,14 +204,13 @@ def json_default(obj):
     return ustr(obj)
 
 
-def date_range(start, end, step=relativedelta(months=1)):
+def date_range(start: Dateish, end: Dateish, step: relativedelta = relativedelta(months=1)) -> Iterator[Dateish]:
     """Date range generator with a step interval.
 
-    :param date | datetime start: beginning date of the range.
-    :param date | datetime end: ending date of the range.
-    :param relativedelta step: interval of the range.
+    :param start: beginning date of the range.
+    :param end: ending date of the range.
+    :param step: interval of the range.
     :return: a range of datetime from start to end.
-    :rtype: Iterator[datetime]
     """
     if isinstance(start, datetime) and isinstance(end, datetime):
         are_naive = start.tzinfo is None and end.tzinfo is None
@@ -250,7 +240,7 @@ def date_range(start, end, step=relativedelta(months=1)):
         raise ValueError("start > end, start date must be before end")
 
     if start == start + step:
-        raise ValueError("Looks like step is null")
+        raise ValueError(f"the range step must be non-zero (got {step})")
 
     while dt <= end_dt:
         yield post_process(dt)
