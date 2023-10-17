@@ -2546,6 +2546,9 @@ we-button:hover .o_we_shape_animated_label > span {
 }
 
 .o_we_ui_loading {
+    &.prevent-spinner {
+        display: none !important;
+    }
     @include o-position-absolute(0, 0, 0, 0);
     z-index: $o-we-zindex;
     background-color: $o-we-sidebar-content-backdrop-bg;

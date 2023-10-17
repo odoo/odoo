@@ -3606,6 +3606,9 @@ var SnippetsMenu = Widget.extend({
         ];
         loaderContainer.classList.add(...loaderContainerClassList);
         loader.setAttribute('src', '/web/static/img/spin.svg');
+        if (document.querySelector("body").classList.contains("modal-open")) {
+            loaderContainer.classList.add("prevent-spinner");
+        }
         loaderContainer.appendChild(loader);
         return loaderContainer;
     },

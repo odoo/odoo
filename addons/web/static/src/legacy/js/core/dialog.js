@@ -238,6 +238,13 @@ var Dialog = Widget.extend({
      *   `on_close` handler.
      */
     destroy: function (options) {
+        // If there are more than one modal shown do not remove the
+        // 'prevent-spinner' class
+        const numberOfModalShown = document.querySelectorAll(".modal_shown").length;
+        const spinnerEl = document.querySelector(".o_we_ui_loading");
+        if (spinnerEl && numberOfModalShown === 1) {
+            spinnerEl.classList.remove("prevent-spinner");
+        }
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
