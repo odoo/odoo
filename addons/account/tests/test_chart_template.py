@@ -462,3 +462,27 @@ class TestChartTemplate(TransactionCase):
         for model in TEMPLATE_MODELS + sub_models:
             data_after = self.env[model].search(get_domain(model))
             self.assertEqual(data_before[model], data_after)
+
+    def test_unknown_company_fields(self):
+        """ Tests that if a key is not known in the company template data when the
+        context value 'l10n_check_fields_complete' is set, an error is raised. If a
+        key is not known in the company template data but the context value is not
+        set, that key is skipped and no error is raised."""
+
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            data['res.company'][company.id]['unknown_company_key'] = 'unknown_company_value'
+            return data
+
+        company = self.company_1
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            # hard fail the loading if the context key is set to ensure `test_all_l10n` works as expected
+            with (
+                self.assertRaisesRegex(ValueError, 'unknown_company_key'),
+                self.env.cr.savepoint(),
+            ):
+                self.env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading('test', company=company, install_demo=False)
+
+            # silently ignore if the field doesn't exist (yet)
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
