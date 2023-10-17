@@ -71,10 +71,31 @@ export class PivotDataSource extends OdooViewsDataSource {
      */
     computeOdooPivotHeaderValue(domainArgs) {
         this._assertDataIsLoaded();
+        if (domainArgs.length === 0) {
+            return _t("Total");
+        }
+        if (domainArgs.at(-2) === "measure") {
+            return this.getMeasureDisplayName(domainArgs.at(-1));
+        }
         return this._model.getGroupByDisplayLabel(
             domainArgs.at(-2),
             this._model.getLastPivotGroupValue(domainArgs)
         );
+    }
+
+    /**
+     * @param {string} measure
+     * @returns {string}
+     */
+    getMeasureDisplayName(measure) {
+        if (measure === "__count") {
+            return _t("Count");
+        }
+        const field = this.getField(measure);
+        if (field === undefined) {
+            throw new Error(_t("Field %s does not exist", measure));
+        }
+        return field.string;
     }
 
     /**
