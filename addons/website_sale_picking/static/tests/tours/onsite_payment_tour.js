@@ -13,6 +13,10 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wTourUtils.clickOnElement('Proceed to checkout', 'a:contains(Process Checkout)'),
         ...wsTourUtils.fillAdressForm(),
         wTourUtils.clickOnElement('Example shipping On Site', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
+        wTourUtils.clickOnElement(
+            '"Pay in store when picking the product"',
+            'input[name="o_payment_radio"][data-is-onsite="1"]',
+        ),
         wTourUtils.clickOnElement('pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
         {
             content: "Check if the payment is successful",
@@ -26,6 +30,10 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wTourUtils.clickOnElement('Go to payment page', 'a:contains("Process Checkout")'),
         ...wsTourUtils.fillAdressForm(),
         wTourUtils.clickOnElement('"Pay in store when picking the product"', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
+        wTourUtils.clickOnElement(
+            '"Pay in store when picking the product"',
+            'input[name="o_payment_radio"][data-is-onsite="1"]',
+        ),
         wTourUtils.clickOnElement('Pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
         {
             content: "Check if the payment is successful",
