@@ -38,7 +38,6 @@ overridden by modules), because:
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_text_block</attribute>
         <attribute name="class" add="pt40 pb40 o_colored_level" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
 </template>
 
@@ -78,7 +77,6 @@ overridden by modules), because:
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_text_block</attribute>
         <attribute name="class" add="pb0" remove="pb40" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('container')]|//div[hasclass('o_container_small')]" position="replace">
         <div class="container s_allow_columns">
@@ -148,7 +146,6 @@ overridden by modules), because:
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_text_block</attribute>
         <attribute name="class" add="pb0" remove="pb40" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('container')]|//div[hasclass('o_container_small')]" position="replace">
         <div class="container s_allow_columns">
@@ -248,12 +245,7 @@ overridden by modules), because:
 
 <!-- s_image_text -->
 
-<template id="new_page_template_s_image_text" inherit_id="website.s_image_text" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-        <attribute name="data-oe-shape-data"/> 
-    </xpath>
-</template>
+<template id="new_page_template_s_image_text" inherit_id="website.s_image_text" primary="True"/>
 
 <template id="new_page_template_about_s_image_text" inherit_id="website.new_page_template_s_image_text" primary="True"/>
 
@@ -352,7 +344,6 @@ overridden by modules), because:
 <template id="new_page_template_about_full_s_text_image" inherit_id="website.new_page_template_about_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Our Goals</h2>
@@ -365,7 +356,6 @@ overridden by modules), because:
 <template id="new_page_template_landing_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Our Approach</h2>
@@ -378,7 +368,6 @@ overridden by modules), because:
 <template id="new_page_template_services_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Transform Your Brand</h2>
@@ -391,7 +380,6 @@ overridden by modules), because:
 <template id="new_page_template_team_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Mich Stark, COO</h2>
@@ -447,11 +435,7 @@ overridden by modules), because:
 
 <!-- s_text_cover -->
 
-<template id="new_page_template_s_text_cover" inherit_id="website.s_text_cover" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
-</template>
+<template id="new_page_template_s_text_cover" inherit_id="website.s_text_cover" primary="True"/>
 
 <template id="new_page_template_basic_s_text_cover" inherit_id="website.new_page_template_s_text_cover" primary="True">
     <xpath expr="//section" position="attributes">
@@ -495,11 +479,7 @@ overridden by modules), because:
 
 <!-- s_features -->
 
-<template id="new_page_template_s_features" inherit_id="website.s_features" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
-</template>
+<template id="new_page_template_s_features" inherit_id="website.s_features" primary="True"/>
 
 <template id="new_page_template_about_s_features" inherit_id="website.new_page_template_s_features" primary="True">
     <xpath expr="//div[hasclass('row')]" position="before">
@@ -553,11 +533,7 @@ overridden by modules), because:
 
 <template id="new_page_template_s_numbers" inherit_id="website.s_numbers" primary="True"/>
 
-<template id="new_page_template_about_s_numbers" inherit_id="website.new_page_template_s_numbers" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
-</template>
+<template id="new_page_template_about_s_numbers" inherit_id="website.new_page_template_s_numbers" primary="True"/>
 
 <template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
     <xpath expr="//section" position="attributes">
@@ -587,7 +563,6 @@ overridden by modules), because:
 <template id="new_page_template_about_s_company_team" inherit_id="website.new_page_template_s_company_team" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level" remove="pt48" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
 </template>
 
@@ -610,7 +585,6 @@ overridden by modules), because:
 <template id="new_page_template_s_references" inherit_id="website.s_references" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
 </template>
 
@@ -698,9 +672,6 @@ overridden by modules), because:
 <!-- s_carousel -->
 
 <template id="new_page_template_s_carousel" inherit_id="website.s_carousel" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
     <xpath expr="//h1|//h2" position="replace">
         <h2>Happy Hour</h2>
     </xpath>
@@ -864,9 +835,6 @@ overridden by modules), because:
 <template id="new_page_template_s_color_blocks_2" inherit_id="website.s_color_blocks_2" primary="True"/>
 
 <template id="new_page_template_landing_s_color_blocks_2" inherit_id="website.new_page_template_s_color_blocks_2" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
     <xpath expr="//h2" position="replace">
         <h2>Crystal Clear Sound</h2>
     </xpath>
@@ -877,9 +845,6 @@ overridden by modules), because:
 <template id="new_page_template_s_showcase" inherit_id="website.s_showcase" primary="True"/>
 
 <template id="new_page_template_landing_s_showcase" inherit_id="website.new_page_template_s_showcase" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
     <xpath expr="//h3|//h4" position="replace">
         <h3>Intuitive Touch Controls</h3>
     </xpath>
@@ -913,9 +878,6 @@ overridden by modules), because:
 <template id="new_page_template_landing_s_call_to_action" inherit_id="new_page_template_s_call_to_action" primary="True"/>
 
 <template id="new_page_template_landing_2_s_call_to_action" inherit_id="new_page_template_landing_s_call_to_action" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
     <xpath expr="//h2|//h3|//h4" position="replace">
         <h3>Ready to Embrace Your Fitness Journey?</h3>
     </xpath>
@@ -925,9 +887,6 @@ overridden by modules), because:
 </template>
 
 <template id="new_page_template_landing_3_s_call_to_action" inherit_id="new_page_template_landing_s_call_to_action" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="style" remove="background-image: none;" separator=" "/>
-    </xpath>
     <xpath expr="//h2|//h3|//h4" position="replace">
         <h3>Elevate Your Audio Journey Today</h3>
     </xpath>
@@ -941,7 +900,6 @@ overridden by modules), because:
 <template id="s_call_to_action_about" inherit_id="website.s_call_to_action" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_call_to_action</attribute>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3|//h4" position="replace">
         <h3>Ready to bring your digital vision to life?</h3>
@@ -956,7 +914,6 @@ overridden by modules), because:
 <template id="s_call_to_action_digital" inherit_id="website.s_call_to_action" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_call_to_action</attribute>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3|//h4" position="replace">
         <h3>Ready to embark on a journey of digital transformation?</h3>
@@ -971,7 +928,6 @@ overridden by modules), because:
 <template id="s_call_to_action_menu" inherit_id="website.s_call_to_action" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_call_to_action</attribute>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3|//h4" position="replace">
         <h3>Book your table today</h3>
@@ -988,7 +944,6 @@ overridden by modules), because:
 <template id="new_page_template_services_s_parallax" inherit_id="website.new_page_template_s_parallax" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="pb168 pt256" remove="o_half_screen_height" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//span[hasclass('s_parallax_bg')]" position="attributes">
         <attribute name="style" add="background-position: 0% 44.4099%;" separator=" "/>
@@ -1088,7 +1043,6 @@ overridden by modules), because:
 <template id="new_page_template_s_website_form" inherit_id="s_website_form" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level" separator=" "/>
-        <attribute name="style" remove="background-image: none;" separator=" "/>
     </xpath>
     <xpath expr="//form" position="attributes">
         <attribute name="data-success-mode">redirect</attribute>
