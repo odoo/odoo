@@ -205,7 +205,7 @@ class WebsiteVisitor(models.Model):
         """
         create_values = {
             'access_token': access_token,
-            'lang_id': request.lang.id,
+            'lang_id': request.lang['id'],
             # Note that it's possible for the GEOIP database to return a country
             # code which is unknown in Odoo
             'country_code': request.geoip.get('country_code'),

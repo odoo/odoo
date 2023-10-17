@@ -21,6 +21,11 @@ class Lang(models.Model):
             return self.env['website'].get_current_website().language_ids.get_sorted()
         return super().get_available()
 
+    def _routing_default_lang(self):
+        website = self.env['website'].sudo().get_current_website()
+        lang = self.env['res.lang'].browse([website._get_cached('default_lang_id')])
+        return lang.read(list(self._routing_fields()))[0]
+
     def action_activate_langs(self):
         """
         Open wizard to install language(s), so user can select the website(s)

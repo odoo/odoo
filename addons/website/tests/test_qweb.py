@@ -100,7 +100,7 @@ class TestQwebProcessAtt(TransactionCase):
 
     def test_process_att_url_crap(self):
         with MockRequest(self.env, website=self.website):
-            match = http.root.get_db_router.return_value.bind.return_value.match
+            #match = http.root.get_db_router.return_value.bind.return_value.match
             # #{fragment} is stripped from URL when testing route
             self._test_att('/x#y?z', {'href': '/x#y?z'})
             match.assert_called_with('/x', method='POST', query_args=None)

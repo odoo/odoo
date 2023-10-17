@@ -70,12 +70,12 @@ def MockRequest(
     # 'routing' attribute (routing=True) or to raise a NotFound
     # exception (routing=False).
     #
-    #   router = odoo.http.root.get_db_router()
+    #   router = request.routing_map
     #   rule, args = router.bind(...).match(path)
     #   # arg routing is True => rule.endpoint.routing == {...}
     #   # arg routing is False => NotFound exception
-    router = MagicMock()
-    match = router.return_value.bind.return_value.match
+    request.routing_map =  MagicMock()
+    match = request.routing_map.return_value.bind.return_value.match
     if routing:
         match.return_value[0].routing = {
             'type': 'http',
@@ -90,12 +90,11 @@ def MockRequest(
 
     request.update_context = update_context
 
-    with contextlib.ExitStack() as s:
-        odoo.http._request_stack.push(request)
-        s.callback(odoo.http._request_stack.pop)
-        s.enter_context(patch('odoo.http.root.get_db_router', router))
-
+    odoo.http._request_stack.push(request)
+    try:
         yield request
+    finally:
+        odoo.http._request_stack.pop()
 
 # Fuzzy matching tools
 

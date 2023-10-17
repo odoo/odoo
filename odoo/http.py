@@ -34,15 +34,8 @@ Here be dragons:
 
         else:
             Request._serve_db
-                Request._transactioning
-                    model.retrying
-                        env['ir.http']._match
-
-                if not match:
-                    Request._transactioning
-                        model.retrying
-                            env['ir.http']._serve_fallback
-                else:
+                env['ir.http']._match
+                if match:
                     Request._transactioning
                         model.retrying
                             env['ir.http']._authenticate
@@ -52,11 +45,14 @@ Here be dragons:
                                 env['ir.http']._dispatch
                                     route_wrapper
                                         endpoint
-
-                Request._transactioning
-                    model.retrying
-                        env['ir.http']._post_dispatch
-                            Dispatcher.post_dispatch
+                            env['ir.http']._post_dispatch
+                                Dispatcher.post_dispatch
+                if not match:
+                    Request._transactioning
+                        model.retrying
+                            env['ir.http']._serve_fallback
+                            env['ir.http']._post_dispatch
+                                Dispatcher.post_dispatch
 
 Application.__call__
   WSGI entry point, it sanitizes the request, it wraps it in a werkzeug
@@ -116,9 +112,11 @@ ir.http._post_dispatch/Dispatcher.post_dispatch
   inject various headers such as Content-Security-Policy.
 
 ir.http._handle_error
-  Not present in the call-graph, is called for un-managed exceptions (SE
-  or RO) that occured inside of ``Request._transactioning``. It returns
-  a http response that wraps the error that occured.
+  Not present in the above call-graph, is called upon exceptions (with
+  the exception of SerializationError and ReadOnlySqlTransaction which
+  are managed and retrying/transactioning) that occured inside of
+  ``Request._serve_db``. It returns a http response that wraps the error
+  that occured.
 
 route_wrapper, closure of the http.route decorator
   Sanitize the request parameters, call the route endpoint and
@@ -147,7 +145,6 @@ import threading
 import time
 import traceback
 import warnings
-import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from io import BytesIO
@@ -197,10 +194,9 @@ from .exceptions import UserError, AccessError, AccessDenied
 from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
-from .tools import (config, consteq, date_utils, file_path, parse_version,
-                    profiler, submap, unique, ustr,)
+from .tools import (config, consteq, date_utils, file_path, frozendict,
+                    parse_version, profiler, submap, unique, ustr,)
 from .tools.func import filter_kwargs, lazy_property
-from .tools.mimetypes import guess_mimetype
 from .tools.misc import pickle
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
@@ -411,6 +407,14 @@ def dispatch_rpc(service_name, method, params):
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
+
+def is_werkzeug_exception_abort(exception):
+    # controllers use werkzeug.exceptions.abort(response) to shortcut
+    # the default http-stack and immediately send a http response. It is
+    # usually used with redirections. While they are using the exception
+    # mechanism of werkzeug, they should not be treated as such. They
+    # should be considered as regular response.
+    return isinstance(exception, HTTPException) and exception.code is None
 
 def serialize_exception(exception):
     name = type(exception).__name__
@@ -1386,6 +1390,25 @@ class Request:
         session.is_dirty = False
         return session, dbname
 
+    def _try_open_registry(self):
+        try:
+            self.registry = Registry(self.db).check_signaling()
+            return True
+        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+            # psycopg2 error or attribute error while constructing
+            # the registry. That means either
+            #  - the database probably does not exists anymore, or
+            #  - the database is corrupted, or
+            #  - the database version doesn't match the server version.
+            # So remove the database from the cookie
+            self.db = None
+            self.session.db = None
+            root.session_store.save(self.session)
+            if request.httprequest.path == '/web':
+                # Internal Server Error
+                raise
+            return False
+
     # =====================================================
     # Getters and setters
     # =====================================================
@@ -1453,9 +1476,65 @@ class Request:
         except (ValueError, KeyError):
             return None
 
+    @lazy_property
+    def routing_map(self):
+        if not self.registry:
+            return root.nodb_routing_map
+
+        key = self.registry['ir.http']._routing_key(self.httprequest.host)
+        routing_map = self.registry._routing_maps.get(key)
+        if not routing_map:
+            with self.registry._routing_lock:
+                if key not in self.registry._routing_maps:
+                    _logger.info("Generating routing map for key %s", str(key))
+                    with self.registry.cursor('read-only') as cr:
+                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        routing_map = env['ir.http']._build_routing_map()
+                        self.registry._routing_maps[key] = routing_map
+        return routing_map
+
+    @lazy_property
+    def routing_data(self):
+        routing_data = self.registry._routing_data
+        if not routing_data:
+            with self.registry._routing_lock:
+                if self.registry._routing_data is None:
+                    _logger.info("Generating routing data")
+                    with self.registry.cursor('read-only') as cr:
+                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        routing_data = {}
+                        env['ir.http']._populate_routing_data(routing_data)
+                        routing_data = frozendict(routing_data)
+                        self.registry._routing_data = routing_data
+        return routing_data
+
     # =====================================================
     # Helpers
     # =====================================================
+    def _attach_error_response(self, exc):
+        if is_werkzeug_exception_abort(exc):
+            return
+        if hasattr(exc, 'error_response'):
+            return
+
+        if not self.db:
+            exc.error_response = self.dispatcher.handle_error(exc)
+            return
+
+        if not self.env:
+            cursor = self.registry.cursor('read-only')
+            self.env = odoo.api.Environment(cursor, self.session.uid, self.session.context)
+            threading.current_thread().uid = self.env.uid
+        elif self.env.cr.closed:
+            cursor = self.registry.cursor('read-only')
+            self.env = self.env(cr=cursor)  # reuse user and context
+        else:
+            # a cursor exists and is managed elsewhere
+            cursor = contextlib.nullcontext()
+
+        with cursor:
+            exc.error_response = self.registry['ir.http']._handle_error(exc)
+
     def csrf_token(self, time_limit=None):
         """
         Generates and returns a CSRF token for the current session
@@ -1728,7 +1807,7 @@ class Request:
         Dispatch the request to its matching controller in a
         database-free environment.
         """
-        router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
+        router = self.routing_map.bind_to_environ(self.httprequest.environ)
         rule, args = router.match(return_rule=True)
         self._set_request_dispatcher(rule)
         self.dispatcher.pre_dispatch(rule, args)
@@ -1736,44 +1815,25 @@ class Request:
         self.dispatcher.post_dispatch(response)
         return response
 
-    def _serve_db(self, *, force_readwrite=False):
-        """
-        Prepare the user session and load the ORM before forwarding the
-        request to ``_serve_ir_http``.
-        """
+    def _serve_db(self):
         try:
-            self.registry = Registry(self.db).check_signaling()
-        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-            # psycopg2 error or attribute error while constructing
-            # the registry. That means either
-            #  - the database probably does not exists anymore, or
-            #  - the database is corrupted, or
-            #  - the database version doesn't match the server version.
-            # So remove the database from the cookie
-            self.db = None
-            self.session.db = None
-            root.session_store.save(self.session)
-            if request.httprequest.path == '/web':
-                # Internal Server Error
+            try:
+                rule, args = self.registry['ir.http']._match(self.httprequest.path)
+            except NotFound:
+                self.params = self.get_http_params()
+                response = self._transactioning(self.registry['ir.http']._serve_fallback, mode='read-only')
+                if response:
+                    self.dispatcher.post_dispatch(response)
+                    return response
                 raise
-            else:
-                return self._serve_nodb()
-
-        ir_http = self.registry['ir.http']
-        try:
-            rule, args = ir_http._match(self.httprequest.path)
-        except NotFound:
-            self.params = self.get_http_params()
-            response = self._transactioning(ir_http._serve_fallback, mode='read-only')
-            if not response:
-                raise
+        except Exception as exc:
+            self._attach_error_response(exc)
+            raise
         else:
             response = self._transactioning(self._serve_ir_http, rule, args, mode=(
-               'read/write' if force_readwrite
-                else 'read-only' if rule.endpoint.routing['readonly']
-                else 'read/write'
+                'read-only' if rule.endpoint.routing['readonly'] else 'read/write'
             ))
-        return response
+            return response
 
     def _transactioning(self, func, *args, mode):
         for mode in (mode, 'read/write'):
@@ -1782,18 +1842,14 @@ class Request:
                     self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
                     threading.current_thread().uid = self.env.uid
                 else:
-                    self.env = self.env(cr=cr)
+                    self.env = self.env(cr=cr)  # reuse user and context
                 try:
                     return service_model.retrying(functools.partial(func, *args), env=self.env)
                 except psycopg2.errors.ReadOnlySqlTransaction as exc:
                     _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip())
                     continue
                 except Exception as exc:
-                    if isinstance(exc, HTTPException) and exc.code is None:
-                        raise  # bubble up to odoo.http.Application.__call__
-                    if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
-                        raise  # bubble up to werkzeug.debug.DebuggedApplication
-                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    self._attach_error_response(exc)
                     raise
 
     def _serve_ir_http(self, rule, args):
@@ -2115,11 +2171,6 @@ class Application:
         _logger.debug('HTTP sessions stored in: %s', path)
         return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
 
-    def get_db_router(self, db):
-        if not db:
-            return self.nodb_routing_map
-        return request.env['ir.http'].routing_map()
-
     @lazy_property
     def geoip_city_db(self):
         try:
@@ -2194,7 +2245,7 @@ class Application:
         try:
             if self.get_static_file(httprequest.path):
                 response = request._serve_static()
-            elif request.db:
+            elif request.db and request._try_open_registry():
                 with request._get_profiler_context_manager():
                     response = request._serve_db()
             else:
@@ -2203,7 +2254,7 @@ class Application:
 
         except Exception as exc:
             # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
-            if isinstance(exc, HTTPException) and exc.code is None:
+            if is_werkzeug_exception_abort(exc):
                 response = exc.get_response()
                 HttpDispatcher(request).post_dispatch(response)
                 return response(environ, start_response)
@@ -2222,7 +2273,7 @@ class Application:
 
             # Ensure there is always a WSGI handler attached to the exception.
             if not hasattr(exc, 'error_response'):
-                exc.error_response = request.dispatcher.handle_error(exc)
+                request._attach_error_response(exc)
 
             return exc.error_response(environ, start_response)
 

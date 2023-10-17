@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 import functools
+import itertools
 import logging
 from lxml import etree
 import os
 import unittest
+from urllib.parse import urlsplit
 
 import pytz
 import werkzeug
@@ -61,10 +63,39 @@ def get_request_website():
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
-    def routing_map(self, key=None):
-        if not key and request:
-            key = request.website_routing
-        return super().routing_map(key=key)
+    @classmethod
+    def _routing_key(cls, http_host):
+        websites = request.routing_data['website']
+        if not websites:
+            return super()._routing_key()
+
+        if force_website_id := request.session.get('force_website_id'):
+            if any((website['id'] == force_website_id for website in websites)):
+                return force_website_id
+            del request.session['force_website_id']
+
+        # using urllib to safely handle domain/ipv4/ipv6 with/without port,
+        # netloc is (hostname + port)
+        http_host_url = urlsplit(f'http://{http_host}')
+        website_same_netloc = (
+            website
+            for website in websites
+            if urlsplit(website['domain']).netloc == http_host_url.netloc
+        )
+        website_same_hostname = (
+            website
+            for website in websites
+            if urlsplit(website['domain']).hostname == http_host_url.hostname
+        )
+        return next(itertools.chain(
+            website_same_netloc,
+            website_same_hostname,
+            websites,
+        ))['id']
+
+    def _populate_routing_data(self, routing_data):
+        super()._populate_routing_data(routing_data)
+        routing_data['website'] = self.env['website']._routing_data()
 
     @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
@@ -87,7 +118,7 @@ class Http(models.AbstractModel):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-        website_id = request.website_routing
+        website_id = self._routing_key(request.httprequest.host)
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.cache.add_value(self, website_id, cache_value=len(rewrites))
@@ -166,14 +197,6 @@ class Http(models.AbstractModel):
         return False
 
     @classmethod
-    def _match(cls, path):
-        if not hasattr(request, 'website_routing'):
-            website = request.env['website'].get_current_website()
-            request.website_routing = website.id
-
-        return super()._match(path)
-
-    @classmethod
     def _pre_dispatch(cls, rule, arguments):
         super()._pre_dispatch(rule, arguments)
 
@@ -192,7 +215,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_web_editor_context(cls):
         ctx = super()._get_web_editor_context()
-        if request.is_frontend_multilang and request.lang == cls._get_default_lang():
+        if request.is_frontend_multilang and request.lang == request.routing_data['default_lang']:
             ctx['edit_translations'] = False
         return ctx
 
@@ -242,18 +265,19 @@ class Http(models.AbstractModel):
         # route, hence the default True. Elsewhere, request.is_frontend
         # is set.
         if getattr(request, 'is_frontend', True):
-            website_id = request.env.get('website_id', request.website_routing)
-            res_lang = request.env['res.lang'].with_context(website_id=website_id)
-            return [code for code, *_ in res_lang.get_available()]
+            key = request.registry['ir.http']._routing_key(request.httprequest.host)
+            lang_ids = next((
+                set(website['language_ids'])
+                for website in request.routing_data['website']
+                if website['id'] == key
+            ))
+            return [
+                lang['code']
+                for lang in request.routing_data['res.lang']
+                if lang['id'] in lang_ids
+            ]
         else:
             return super()._get_frontend_langs()
-
-    @classmethod
-    def _get_default_lang(cls):
-        if getattr(request, 'is_frontend', True):
-            website = request.env['website'].sudo().get_current_website()
-            return request.env['res.lang'].browse([website._get_cached('default_lang_id')])
-        return super()._get_default_lang()
 
     @classmethod
     def _get_translation_frontend_modules_name(cls):
@@ -283,8 +307,8 @@ class Http(models.AbstractModel):
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
-            if request.lang != cls._get_default_lang():
-                path = '/' + request.lang.url_code + path
+            if request.lang != request.routing_data['default_lang']:
+                path = '/' + request.lang['url_code'] + path
             if request.httprequest.query_string:
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
@@ -390,7 +414,7 @@ class Http(models.AbstractModel):
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
-            'lang_url_code': request.lang._get_cached('url_code'),
+            'lang_url_code': request.lang['url_code'],
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({

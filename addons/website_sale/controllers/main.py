@@ -1156,7 +1156,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
             new_values['user_id'] = request.website.salesperson_id.id
 
-        lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
+        lang = request.lang['code'] if request.lang['code'] in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
         if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
@@ -1408,7 +1408,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if request.website.specific_user_account:
             sanitized_values['website_id'] = request.website.id
 
-        lang = request.lang.code if request.lang.code in request.website.mapped(
+        lang = request.lang['code'] if request.lang['code'] in request.website.mapped(
             'language_ids.code'
         ) else None
         if lang:

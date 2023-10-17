@@ -2,6 +2,7 @@
 
 import base64
 import fnmatch
+import functools
 import hashlib
 import inspect
 import json
@@ -15,7 +16,7 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools, http, release, registry
+from odoo import api, fields, models, tools, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
@@ -209,6 +210,8 @@ class Website(models.Model):
             groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
             groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
 
+        self.env.cr.postcommit.add(
+            functools.partial(self.env.registry.clear_cache, 'routing'))
         return websites
 
     def write(self, values):
@@ -254,6 +257,10 @@ class Website(models.Model):
                         'view_id': specific_cook_view.id,
                     })
 
+        if not self._routing_fields().isdisjoint(values):
+            self.env.cr.postcommit.add(
+                functools.partial(self.env.registry.clear_cache, 'routing'))
+
         return result
 
     @api.model
@@ -298,6 +305,9 @@ class Website(models.Model):
         companies = self.company_id
         res = super().unlink()
         companies._compute_website_id()
+
+        self.env.cr.postcommit.add(
+            functools.partial(self.env.registry.clear_cache, 'routing'))
         return res
 
     def _remove_attachments_on_website_unlink(self):
@@ -1095,6 +1105,12 @@ class Website(models.Model):
 
         return websites[0].id
 
+    def _routing_fields(self):
+        return {'id', 'domain', 'language_ids'}
+
+    def _routing_data(self):
+        return self.search_read([], list(self._routing_fields()), load=False)
+
     def _force(self):
         self._force_website(self.id)
 
@@ -1387,6 +1403,8 @@ class Website(models.Model):
         `url_quote_plus` is applied on the returned path.
         """
         self.ensure_one()
+        if isinstance(lang, models.BaseModel):
+            lang = lang.read(self.env['res.lang']._routing_fields())[0]
         try:
             # Re-match the controller where the request path routes.
             rule, args = self.env['ir.http']._match(request.httprequest.path)
@@ -1394,25 +1412,25 @@ class Website(models.Model):
                 if isinstance(val, models.BaseModel):
                     if isinstance(val._uid, RequestUID):
                         args[key] = val = val.with_user(request.uid)
-                    if val.env.context.get('lang') != lang.code:
-                        args[key] = val = val.with_context(lang=lang.code)
+                    if val.env.context.get('lang') != lang['code']:
+                        args[key] = val = val.with_context(lang=lang['code'])
                     if self.env.context.get('prefetch_langs'):
                         args[key] = val = val.with_context(prefetch_langs=True)
 
-            router = http.root.get_db_router(request.db).bind('')
+            router = request.routing_map.bind('')
             path = router.build(rule.endpoint, args)
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
-        if lang != self.default_lang_id:
-            path = f'/{lang.url_code}{path if path != "/" else ""}'
+        if lang != request.routing_data['default_lang']:
+            path = f'/{lang["url_code"]}{path if path != "/" else ""}'
         canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
         return self.get_base_url() + path + canonical_query_string
 
     def _get_canonical_url(self, canonical_params):
         """Returns the canonical URL for the current request."""
         self.ensure_one()
-        lang = getattr(request, 'lang', self.env['ir.http']._get_default_lang())
+        lang = getattr(request, 'lang', request.routing_data['default_lang'])
         return self._get_canonical_url_localized(lang=lang, canonical_params=canonical_params)
 
     def _is_canonical_url(self, canonical_params):

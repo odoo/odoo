@@ -164,6 +164,11 @@ class Registry(Mapping):
         self._field_trigger_trees = {}
         self._is_modifying_relations = {}
 
+        # cache of routing maps
+        self._routing_lock = threading.RLock()
+        self._routing_maps = {}  # indexed by website.id or None
+        self._routing_data = None
+
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
@@ -722,6 +727,9 @@ class Registry(Mapping):
         cache_names = cache_names or ('default',)
         assert not any('.' in cache_name for cache_name in cache_names)
         for cache_name in cache_names:
+            if cache_name == 'routing':
+                with self._routing_lock:
+                    self._routing_data = None
             for cache in self.__caches_by_prefix[cache_name]:
                 cache.clear()
             self.cache_invalidated.add(cache_name)
