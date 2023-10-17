@@ -42,7 +42,7 @@
                                                 <div class="flex-grow-1">
                                                     <t t-set="program" t-value="reward.program_id"/>
                                                     <t t-set="points" t-value="website_sale_order._get_real_points_for_coupon(coupon)"/>
-                                                    <t t-if="program.program_type != 'ewallet' and (program.trigger == 'with_code' or (program.trigger == 'auto' and program.applies_on == 'future'))">
+                                                    <t t-if="program.program_type not in ['ewallet', 'promo_code'] and (program.trigger == 'with_code' or (program.trigger == 'auto' and program.applies_on == 'future'))">
                                                         <t t-if="program.program_type == 'gift_card'">
                                                             <strong t-esc="reward.description"/>
                                                             <strong> - </strong>
@@ -66,6 +66,9 @@
                                                             </t>
                                                         </div>
                                                     </t>
+                                                    <t t-elif="program.program_type == 'promo_code'">
+                                                        <strong t-esc="reward.description"/>
+                                                    </t>
                                                     <t t-else="">
                                                         <strong t-esc="reward.description"/>
                                                         <div t-if="program.portal_visible">
@@ -88,7 +91,7 @@
                                                         <t t-if="reward.program_id.program_type == 'ewallet'">
                                                             Pay with eWallet
                                                         </t>
-                                                        <t t-elif="reward.program_id.trigger == 'with_code' or (reward.program_id.trigger == 'auto' and reward.program_id.applies_on == 'future')">
+                                                        <t t-elif="(reward.program_id.trigger == 'with_code' and reward.program_id.program_type != 'promo_code') or (reward.program_id.trigger == 'auto' and reward.program_id.applies_on == 'future')">
                                                             Use
                                                         </t>
                                                         <t t-else="">Claim</t>
