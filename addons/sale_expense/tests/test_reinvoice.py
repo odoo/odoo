@@ -130,9 +130,9 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'order_line': [Command.create({
-                'name': self.company_data['product_order_sales_price'].name,
-                'product_id': self.company_data['product_order_sales_price'].id,
-                'product_uom_qty': 2.0,
+                'name': self.company_data['product_delivery_sales_price'].name,
+                'product_id': self.company_data['product_delivery_sales_price'].id,
+                'product_uom_qty': 1.0,
                 'price_unit': 1000.0,
             })],
         })
@@ -147,7 +147,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.company_data['product_order_sales_price'].id,
+                    'product_id': self.company_data['product_delivery_sales_price'].id,
                     'quantity': 2,
                     'analytic_distribution': {self.analytic_account_1.id: 50, self.analytic_account_2.id: 50},
                     'employee_id': self.expense_employee.id,
@@ -163,12 +163,48 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             # Original SO line:
             {
                 'qty_delivered': 0.0,
-                'product_uom_qty': 2.0,
+                'product_uom_qty': 1.0,
                 'is_expense': False,
             },
             # Expense lines:
             {
                 'qty_delivered': 2.0,
+                'product_uom_qty': 2.0,
+                'is_expense': True,
+            },
+        ])
+
+        new_expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Second Expense for employee',
+            'employee_id': self.expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.company_data['product_delivery_sales_price'].id,
+                    'quantity': 3,
+                    'analytic_distribution': {self.analytic_account_1.id: 50, self.analytic_account_2.id: 50},
+                    'employee_id': self.expense_employee.id,
+                    'sale_order_id': sale_order.id,
+                }),
+            ],
+        })
+
+        new_expense_sheet.approve_expense_sheets()
+        new_expense_sheet.action_sheet_move_create()
+
+        self.assertRecordValues(sale_order.order_line, [
+            # Original SO line:
+            {
+                'qty_delivered': 0.0,
+                'product_uom_qty': 1.0,
+                'is_expense': False,
+            },
+            # Expense lines:
+            {
+                'qty_delivered': 5.0,
                 'product_uom_qty': 2.0,
                 'is_expense': True,
             },

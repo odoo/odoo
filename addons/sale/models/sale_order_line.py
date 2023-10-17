@@ -740,9 +740,9 @@ class SaleOrderLine(models.Model):
             so_line = lines_map[so_line_id]
             result.setdefault(so_line_id, 0.0)
             uom = product_uom_map.get(item['product_uom_id'][0])
-            # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
-            if item['move_line_id'] == 1 and item['__count'] > 1:
-                qty = item['unit_amount'] / item['__count']
+            # avoid counting unit_amount several times when dealing with multiple analytic lines on the same move line
+            if item['move_line_id'] >= 1 and item['__count'] > 1:
+                qty = item['unit_amount'] / (item['__count'] / item['move_line_id'])
             else:
                 qty = item['unit_amount']
             if so_line.product_uom.category_id == uom.category_id:
