@@ -295,19 +295,18 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     }
 
     /**
-     * Get the value of a pivot header
+     * High level method computing the result of ODOO.PIVOT.HEADER functions.
      *
      * @param {string} pivotId Id of a pivot
-     * @param {Array<string>} domain Domain
+     * @param {(string | number)[]} domainArgs arguments of the function (except the first one which is the pivot id)
      */
-    getDisplayedPivotHeaderValue(pivotId, domain) {
+    computeOdooPivotHeaderValue(pivotId, domainArgs) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
-        dataSource.markAsHeaderUsed(domain);
-        const len = domain.length;
-        if (len === 0) {
+        dataSource.markAsHeaderUsed(domainArgs);
+        if (domainArgs.length === 0) {
             return _t("Total");
         }
-        return dataSource.getDisplayedPivotHeaderValue(domain);
+        return dataSource.computeOdooPivotHeaderValue(domainArgs);
     }
 
     /**
@@ -365,7 +364,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
-                let value = dataSource.getPivotHeaderValue(domainArgs.slice(-2));
+                let value = dataSource.getLastPivotGroupValue(domainArgs.slice(-2));
                 if (value === NO_RECORD_AT_THIS_POSITION) {
                     continue;
                 }
@@ -535,7 +534,7 @@ PivotUIPlugin.getters = [
     "getAsyncPivotDataSource",
     "getFirstPivotFunction",
     "getPivotComputedDomain",
-    "getDisplayedPivotHeaderValue",
+    "computeOdooPivotHeaderValue",
     "getPivotIdFromPosition",
     "getPivotCellValue",
     "getPivotGroupByValues",
