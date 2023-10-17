@@ -127,16 +127,16 @@ class Task(models.Model):
         return False
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
+    def _read_group_stage_ids(self, stages, domain):
         search_domain = [('id', 'in', stages.ids)]
         if 'default_project_id' in self.env.context and not self._context.get('subtask_action'):
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
-        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search(search_domain, order=stages._order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
     @api.model
-    def _read_group_personal_stage_type_ids(self, stages, domain, order):
+    def _read_group_personal_stage_type_ids(self, stages, domain):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True)
@@ -1275,7 +1275,7 @@ class Task(models.Model):
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
-    def _search_on_comodel(self, domain, field, comodel, order=None, additional_domain=None):
+    def _search_on_comodel(self, domain, field, comodel, additional_domain=None):
 
         def _change_operator(domain):
             new_domain = []
@@ -1309,7 +1309,7 @@ class Task(models.Model):
         filtered_domain = _change_operator(filtered_domain)
         if additional_domain:
             filtered_domain = expression.AND([filtered_domain, additional_domain])
-        return self.env[comodel].search(filtered_domain, order=order) if filtered_domain else False
+        return self.env[comodel].search(filtered_domain) if filtered_domain else False
 
     # ---------------------------------------------------
     # Subtasks

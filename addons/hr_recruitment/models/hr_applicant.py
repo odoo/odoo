@@ -288,7 +288,7 @@ class Applicant(models.Model):
             record.attachment_number = attach_data.get(record.id, 0)
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
+    def _read_group_stage_ids(self, stages, domain):
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
         search_domain = [('job_ids', '=', False)]
@@ -297,7 +297,7 @@ class Applicant(models.Model):
         if stages:
             search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
-        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search(search_domain, order=stages._order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
     @api.depends('job_id', 'department_id')

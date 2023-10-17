@@ -32,10 +32,10 @@ class ProductTemplate(models.Model):
     def _get_default_uom_po_id(self):
         return self.default_get(['uom_id']).get('uom_id') or self._get_default_uom_id()
 
-    def _read_group_categ_id(self, categories, domain, order):
+    def _read_group_categ_id(self, categories, domain):
         category_ids = self.env.context.get('default_categ_id')
         if not category_ids and self.env.context.get('group_expand'):
-            category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
+            category_ids = categories._search([], order=categories._order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
     name = fields.Char('Name', index='trigram', required=True, translate=True)

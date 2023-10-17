@@ -29,8 +29,8 @@ class test_model(models.Model):
     # `group_expand`; test this feature here...
 
     @api.model
-    def _gbf_m2o(self, subs, domain, order):
-        sub_ids = subs._search([], order=order, access_rights_uid=SUPERUSER_ID)
+    def _gbf_m2o(self, subs, domain):
+        sub_ids = subs._search([], order=subs._order, access_rights_uid=SUPERUSER_ID)
         return subs.browse(sub_ids)
 
 

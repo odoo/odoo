@@ -26,7 +26,7 @@ class StockLot(models.Model):
     _check_company_auto = True
     _order = 'name, id'
 
-    def _read_group_location_id(self, locations, domain, order):
+    def _read_group_location_id(self, locations, domain):
         partner_locations = locations.search([('usage', 'in', ('customer', 'supplier'))])
         return partner_locations + locations.warehouse_id.search([]).lot_stock_id
 

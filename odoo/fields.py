@@ -2848,7 +2848,7 @@ class Selection(Field):
         else:
             return selection
 
-    def _default_group_expand(self, records, groups, domain, order):
+    def _default_group_expand(self, records, groups, domain):
         # return a group per selection option, in definition order
         return self.get_values(records.env)
 
