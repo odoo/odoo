@@ -91,7 +91,7 @@ class WebsiteSale(main.WebsiteSale):
             if reward_sudo in rewards:
                 coupon = coupon_
                 if code == coupon.code and (
-                    program_sudo.trigger == 'with_code'
+                    (program_sudo.trigger == 'with_code' and program_sudo.program_type != 'promo_code')
                     or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
                 ):
                     return self.pricelist(code)

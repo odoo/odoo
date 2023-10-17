@@ -170,7 +170,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCoupon(TransactionCase):
+class TestWebsiteSaleCoupon(HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -259,3 +259,39 @@ class TestWebsiteSaleCoupon(TransactionCase):
         order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
+
+    def test_02_apply_discount_code_program_multi_rewards(self):
+        """
+            Check the triggering of a promotion program based on a promo code with multiple rewards
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        chair = self.env['product.product'].create({
+            'name': 'Super Chair', 'list_price': 1000, 'website_published': True
+        })
+        self.discount_code_program_multi_rewards = self.env['loyalty.program'].create({
+            'name': 'Discount code program',
+            'program_type': 'promo_code',
+            'applies_on': 'current',
+            'trigger': 'with_code',
+            'rule_ids': [(0, 0, {
+                'code': '12345',
+                'reward_point_amount': 1,
+                'reward_point_mode': 'order',
+            })],
+            'reward_ids': [
+                (0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_applicability': 'specific',
+                    'required_points': 1,
+                    'discount_product_ids': chair,
+                }),
+                (0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 50,
+                    'discount_applicability': 'order',
+                    'required_points': 1,
+                }),
+            ],
+        })
+        self.start_tour('/', 'apply_discount_code_program_multi_rewards', login='admin')
