@@ -57,18 +57,13 @@ class AccountBalance(models.Model):
         return results
 
     @api.model
-    def ledger_debit_credit(self, target_date_start, target_date_end, selected_account_id):
+    def general_ledger_report(self, target_date_start, target_date_end):
         # Initialize a list to store the results as dictionaries
         results = []
 
-        # Retrieve the selected account based on the provided account ID
-        selected_account_id = int(selected_account_id)
-        selected_account = self.env['account.account'].browse(selected_account_id)
+        query_params = [target_date_end]
 
-        if selected_account:
-            query_params = [selected_account.id, target_date_end]
-
-            query = """
+        query = """
                         SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
                                l.date AS date, 
                                COALESCE(SUM(debit), 0) AS debit, 
@@ -76,18 +71,21 @@ class AccountBalance(models.Model):
                                COALESCE(SUM(debit - credit), 0) AS balance
                         FROM account_move_line AS l
                         LEFT JOIN account_account AS a ON l.account_id = a.id
-                        WHERE l.account_id = %s AND l.date <= %s
+                        WHERE l.date <= %s
                         """
 
-            # Check if start_date is provided and not an empty string
-            if target_date_start and target_date_start.strip():
-                query += " AND l.date >= %s"
-                query_params.append(target_date_start)
+        # Check if target_date_start is provided and not an empty string
+        if target_date_start and target_date_start.strip():
+            query += " AND l.date >= %s"
+            query_params.append(target_date_start)
 
-            query += " GROUP BY a.id, a.name, a.root_id, l.date"
+        query += " GROUP BY a.id, a.name, a.root_id, l.date"
 
-            self.env.cr.execute(query, query_params)
-            results += self.env.cr.dictfetchall()
+        # Add ORDER BY clause to arrange records by date in ascending order
+        query += " ORDER BY l.date ASC"
+
+        self.env.cr.execute(query, query_params)
+        results += self.env.cr.dictfetchall()
 
         return results
 
