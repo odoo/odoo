@@ -10,12 +10,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
-            run() {
-                // Make chatbot faster
-                odoo.__WOWL_DEBUG__.root.env.services[
-                    "im_livechat.chatbot"
-                ].MULTILINE_STEP_DEBOUNCE_DELAY = 500;
-            },
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
@@ -129,6 +123,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("Ok bye!"),
+            timeout: 15000, // multiline step, so we need to wait a bit longer
             run: () => {}, // last step is displayed
         },
         {
@@ -203,6 +198,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             // wait for chatbot script to finish.
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
+            timeout: 15000, // multiline step, so we need to wait a bit longer
             run() {},
         },
     ],
