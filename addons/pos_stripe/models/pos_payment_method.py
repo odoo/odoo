@@ -86,7 +86,11 @@ class PosPaymentMethod(models.Model):
             ("capture_method", "manual"),
         ]
 
-        if currency.name == 'CAD' and self.company_id.country_code == 'CA':
+        if currency.name == 'AUD' and self.company_id.country_code == 'AU':
+            # See https://stripe.com/docs/terminal/payments/regional?integration-country=AU
+            # This parameter overrides "capture_method": "manual" above.
+            params.append(("payment_method_options[card_present][capture_method]", "manual_preferred"))
+        elif currency.name == 'CAD' and self.company_id.country_code == 'CA':
             params.append(("payment_method_types[]", "interac_present"))
 
         try:
