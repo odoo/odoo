@@ -398,6 +398,13 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
+        # Remove data of unknown fields present in the company template
+        company_data = data.get('res.company')
+        if company_data and not self.env.context.get('l10n_check_fields_complete'):
+            for fname in list(company_data.get(company.id)):
+                if fname not in company._fields:
+                    del data['res.company'][company.id][fname]
+
         return data
 
     def _load_data(self, data):
