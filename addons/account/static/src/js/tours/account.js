@@ -82,16 +82,24 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Send the invoice to the customer and check what he'll receive."),
         position: "bottom",
     }, {
+        trigger: "button[name=action_open_partners_without_email]",
+        extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
+        content: _t("Complete the partner data with email"),
+    }, {
         trigger: ".o_field_widget[name=email] input, input[name=email]",
-        extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: 'text customer@example.com',
         auto: true,
+    },
+    ...stepUtils.saveForm(),
+    {
+        trigger: '.breadcrumb .o_back_button',
+        content: _t('Go back'),
+        position: 'bottom',
     }, {
-        trigger: ".modal-content button.btn-primary",
-        extra_trigger: "[name=move_type] [raw-value=out_invoice]",
-        content: _t("Validate."),
-        auto: true,
+        trigger: "button[name=action_invoice_sent]",
+        extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
+        content: _t("Send the invoice and check what the customer will receive."),
     }, {
         trigger: "button[name=action_send_and_print]",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",

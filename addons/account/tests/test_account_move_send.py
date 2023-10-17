@@ -695,7 +695,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.partner_a.email = None
         self.partner_b.email = None
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertTrue(wizard.send_mail_warning_message)
         self.assertRecordValues(wizard, [{
             'send_mail_readonly': True,
             'checkbox_send_mail': False,

@@ -160,5 +160,16 @@
             <field name="code">action = records.action_share()</field>
         </record>
 
+        <!-- Share Button in action menu -->
+        <record id="action_open_partners_without_email" model="ir.actions.server">
+            <field name="name">Open partners without email</field>
+            <field name="model_id" ref="account.model_account_move_send"/>
+            <field name="binding_model_id" ref="account.model_account_move_send"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = env['account.move.send'].action_open_partners_without_email()
+            </field>
+        </record>
     </data>
 </odoo>
