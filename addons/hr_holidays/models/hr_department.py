@@ -5,6 +5,8 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.osv import expression
+import ast
 
 
 class Department(models.Model):
@@ -46,3 +48,22 @@ class Department(models.Model):
             department.leave_to_approve_count = res_leave.get(department.id, 0)
             department.allocation_to_approve_count = res_allocation.get(department.id, 0)
             department.absence_of_today = res_absence.get(department.id, 0)
+
+    def action_open_leave_department(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
+        action['context'] = {
+            'searchpanel_default_department_id': self.id,
+            'default_department_id': self.id,
+            **ast.literal_eval(action['context'])
+        }
+        return action
+
+    def action_open_allocation_department(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_approve_department")
+        action['context'] = {
+            'searchpanel_default_department_id': self.id,
+            'default_department_id': self.id,
+            **ast.literal_eval(action['context'])
+        }
+        action['domain'] = expression.AND([ast.literal_eval(action['domain']), [('state', '=', 'confirm')]])
+        return action
