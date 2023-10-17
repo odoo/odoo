@@ -315,18 +315,18 @@
     </record>
 
     <record id="mail_plan_rule_group_project_manager_task" model="ir.rule">
-        <field name="name">Manager can manage task plans</field>
+        <field name="name">Manager can manage project/task plans</field>
         <field name="groups" eval="[(4, ref('group_project_manager'))]"/>
         <field name="model_id" ref="mail.model_mail_activity_plan"/>
-        <field name="domain_force">[('res_model', '=', 'project.task')]</field>
+        <field name="domain_force">[('res_model', 'in', ('project.project', 'project.task'))]</field>
         <field name="perm_read" eval="False"/>
     </record>
 
     <record id="mail_plan_templates_rule_group_project_manager_task" model="ir.rule">
-        <field name="name">Manager can manage task plan templates</field>
+        <field name="name">Manager can manage project/task plan templates</field>
         <field name="groups" eval="[(4, ref('group_project_manager'))]"/>
         <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
-        <field name="domain_force">[('plan_id.res_model', '=', 'project.task')]</field>
+        <field name="domain_force">[('plan_id.res_model', 'in', ('project.project', 'project.task'))]</field>
         <field name="perm_read" eval="False"/>
     </record>
 

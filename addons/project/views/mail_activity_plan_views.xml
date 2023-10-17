@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="mail_activity_plan_view_form_project_and_task" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.project.and.task</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='res_model']" position="attributes">
+                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="options">{'whitelisted_values': ['project.project', 'project.task']}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='template_ids']/tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_action_config_project_task_plan" model="ir.actions.act_window">
+            <field name="name">Activity Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+            <field name="context">{'default_res_model': 'project.task'}</field>
+            <field name="domain">[('res_model', 'in', ('project.project', 'project.task'))]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_action_project_task_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="act_window_id" ref="project.mail_activity_plan_action_config_project_task_plan"/>
+        </record>
+
+        <!-- Force the project view that allows to modify the target models of the plan to project or task. -->
+        <record id="mail_activity_plan_action_project_task_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project.mail_activity_plan_view_form_project_and_task"/>
+            <field name="act_window_id" ref="project.mail_activity_plan_action_config_project_task_plan"/>
+        </record>
+
         <record id="mail_activity_plan_action_config_task_plan" model="ir.actions.act_window">
             <field name="name">Task Plans</field>
             <field name="res_model">mail.activity.plan</field>
