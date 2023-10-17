@@ -264,6 +264,7 @@
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id"  readonly="state != 'draft'"/>
                 <field name="date_order"/>
+                <field name="config_id" />
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
                 <field string="Cashier" name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
@@ -383,6 +384,7 @@
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
+                <field name="config_id"/>
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
                 <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
@@ -391,6 +393,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Session" name="session" domain="[]" context="{'group_by': 'session_id'}"/>
                     <filter string="User" name="user_id" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Point of Sale" name="config_id" domain="[]" context="{'group_by': 'config_id'}"/>
                     <filter string="Customer" name="customer" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
