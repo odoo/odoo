@@ -186,11 +186,11 @@ class MaintenanceEquipment(models.Model):
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.model
-    def _read_group_category_ids(self, categories, domain, order):
+    def _read_group_category_ids(self, categories, domain):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
         """
-        category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        category_ids = categories._search([], order=categories._order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
 
@@ -373,11 +373,11 @@ class MaintenanceRequest(models.Model):
             request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
+    def _read_group_stage_ids(self, stages, domain):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search([], order=stages._order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
 

@@ -50,9 +50,9 @@ class UtmCampaign(models.Model):
         return super().create(vals_list)
 
     @api.model
-    def _group_expand_stage_ids(self, stages, domain, order):
+    def _group_expand_stage_ids(self, stages, domain):
         """Read group customization in order to display all the stages in the
         Kanban view, even if they are empty.
         """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search([], order=stages._order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
