@@ -14,11 +14,11 @@ import { debounce } from "@web/core/utils/timing";
 const MESSAGE_DELAY = 1500;
 // Time between two messages coming from the bot.
 const STEP_DELAY = 500;
+// Time to wait without user input before considering a multi line
+// step as completed.
+const MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
 export class ChatBotService {
-    // Time to wait without user input before considering a multi line
-    // step as completed.
-    MULTILINE_STEP_DEBOUNCE_DELAY = 10_000;
     /** @type {import("@im_livechat/embed/chatbot/chatbot_model").Chatbot} */
     chatbot;
     /** @type {import("@im_livechat/embed/chatbot/chatbot_step_model").ChatbotStep} */
@@ -54,7 +54,7 @@ export class ChatBotService {
 
         this.debouncedProcessUserAnswer = debounce(
             this._processUserAnswer.bind(this),
-            this.MULTILINE_STEP_DEBOUNCE_DELAY
+            MULTILINE_STEP_DEBOUNCE_DELAY
         );
         if (this.livechatService.options.isTestChatbot) {
             this.livechatService.rule.chatbot = {
