@@ -6,9 +6,9 @@
     import { session } from "@web/session";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
-    import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
     import { rpc } from "@web/core/network/rpc";
+    import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
 
     import { _t } from "@web/core/l10n/translation";
 
@@ -32,7 +32,6 @@
         events: {
             "click .o_wslides_quiz_answer": '_onAnswerClick',
             "click .o_wslides_js_lesson_quiz_submit": '_submitQuiz',
-            "click .o_wslides_quiz_modal_btn": '_onClickNext',
             "click .o_wslides_quiz_continue": '_onClickNext',
             "click .o_wslides_js_lesson_quiz_reset": '_onClickReset',
             'click .o_wslides_js_quiz_add': '_onCreateQuizClick',
@@ -382,19 +381,22 @@
             }
             Object.assign(this.quiz, data);
             const {rankProgress, completed, channel_completion: completion} = this.quiz;
-            // two of the rankProgress properties are HTML messages, mark if set
+            // three of the rankProgress properties are HTML messages, mark if set
             if ('description' in rankProgress) {
                 rankProgress['description'] = markup(rankProgress['description'] || '');
                 rankProgress['previous_rank']['motivational'] =
                     markup(rankProgress['previous_rank']['motivational'] || '');
+                rankProgress['new_rank']['motivational'] =
+                    markup(rankProgress['new_rank']['motivational'] || '');
             }
             if (completed) {
                 this._disableAnswers();
-                new SlideQuizFinishModal(this, {
+                this.call("dialog", "add", SlideQuizFinishDialog, {
                     quiz: this.quiz,
                     hasNext: this.slide.hasNext,
-                    userId: this.userId
-                }).open();
+                    onClickNext: (ev) => this._onClickNext(ev),
+                    userId: this.userId,
+                });
                 this.slide.completed = true;
                 this.trigger_up('slide_completed', {
                     slideId: this.slide.id,

@@ -100,7 +100,6 @@ Featuring
             'website_slides/static/src/js/slides_course_prerequisite.js',
             'website_slides/static/src/js/slides_course_quiz.js',
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
-            'website_slides/static/src/js/slides_course_quiz_finish.js',
             'website_slides/static/src/js/slides_course_tag_add.js',
             'website_slides/static/src/js/slides_course_unsubscribe.js',
             'website_slides/static/src/js/portal_chatter.js',
