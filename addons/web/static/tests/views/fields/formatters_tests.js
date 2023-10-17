@@ -237,6 +237,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("formatMany2one", function (assert) {
         assert.strictEqual(formatMany2one(false), "");
         assert.strictEqual(formatMany2one([false, "M2O value"]), "M2O value");
+        assert.strictEqual(formatMany2one([1, false]), "Unnamed");
         assert.strictEqual(formatMany2one([1, "M2O value"]), "M2O value");
         assert.strictEqual(formatMany2one([1, "M2O value"], { escape: true }), "M2O%20value");
     });
