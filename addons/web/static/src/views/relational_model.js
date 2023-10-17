@@ -452,7 +452,7 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
                 const list = this._cache[fieldName];
-                evalContext[fieldName] = list.currentIds;
+                evalContext[fieldName] = list && list.currentIds;
                 // ---> implied to initialize (resIds, commands) currentIds before loading static list
             } else if (value && this.fields[fieldName].type === "date") {
                 evalContext[fieldName] = serializeDate(value);
@@ -3587,21 +3587,15 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * Reloads a given record and all related records (those sharing the same resId).
-     * A "record-updated" event containing the given and related records is then
-     * triggered on the model.
+     * Reloads all records.
      *
-     * @param {Record} record
      */
     async reloadRecords(record) {
         const records = this.rootType === "record" ? [this.root] : this.root.records;
-        const relatedRecords = records.filter(
-            (r) => r.id !== record.id && r.resId === record.resId
-        );
 
-        await Promise.all([record, ...relatedRecords].map((r) => r.load()));
+        await this.load();
 
-        this.trigger("record-updated", { record, relatedRecords });
+        this.trigger("record-updated", { record, relatedRecords: records });
         this.notify();
     }
 }
