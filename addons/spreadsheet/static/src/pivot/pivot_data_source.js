@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 export class PivotDataSource extends OdooViewsDataSource {
     /**
@@ -71,10 +72,31 @@ export class PivotDataSource extends OdooViewsDataSource {
      */
     computeOdooPivotHeaderValue(domainArgs) {
         this._assertDataIsLoaded();
+        if (domainArgs.length === 0) {
+            return _t("Total");
+        }
+        if (domainArgs.at(-2) === "measure") {
+            return this.getMeasureDisplayName(domainArgs.at(-1));
+        }
         return this._model.getGroupByDisplayLabel(
             domainArgs.at(-2),
             this._model.getLastPivotGroupValue(domainArgs)
         );
+    }
+
+    /**
+     * @param {string} measure
+     * @returns {string}
+     */
+    getMeasureDisplayName(measure) {
+        if (measure === "__count") {
+            return _t("Count");
+        }
+        const field = this.getField(measure);
+        if (field === undefined) {
+            throw new EvaluationError(_t("Field %s does not exist", measure));
+        }
+        return field.string;
     }
 
     /**
