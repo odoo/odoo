@@ -71,7 +71,7 @@ class ResConfigSettings(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "pos_self_order.custom_link",
             "views": [[False, "tree"]],
-            "domain": [['pos_config_ids', 'in', self.pos_config_id.id]],
+            "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 
     def generate_qr_codes_page(self):
