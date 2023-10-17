@@ -122,28 +122,28 @@ export class SelfOrder extends Reactive {
         });
 
         this.productsGroupedByCategory = this.products.reduce((acc, product) => {
-            product.pos_categ_ids.map((pos_categ_ids) => {
-                acc[pos_categ_ids] = acc[pos_categ_ids] || [];
-                acc[pos_categ_ids].push(product);
+            product.pos_categ_ids.map((categ) => {
+                acc[categ.id] = acc[categ.id] || [];
+                acc[categ.id].push(product);
             });
             return acc;
         }, {});
 
+        if (this.productsGroupedByCategory[0]) {
+            this.pos_category.push({
+                has_image: false,
+                id: 0,
+                name: _t("Uncategorised"),
+                sequence: 9999,
+            });
+        }
+
         this.categoryList = new Set(
             this.pos_category
                 .sort((a, b) => a.sequence - b.sequence)
-                .filter((c) => this.productsGroupedByCategory[c.name])
+                .filter((c) => this.productsGroupedByCategory[c.id])
                 .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id))
         );
-
-        if (this.categoryList.size === 0) {
-            this.categoryList.add({
-                has_image: false,
-                id: 0,
-                name: _t("Other"),
-                sequence: -1,
-            });
-        }
 
         this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
     }
@@ -392,17 +392,17 @@ export class SelfOrder extends Reactive {
     handleProductChanges(payload) {
         const product = new Product(payload.product, this.show_prices_with_tax_included);
         this.productByIds[payload.product.id] = product;
-        for (const categ_name of payload.product.pos_categ_ids) {
-            if (!this.pos_category.map((c) => c.name).includes(categ_name)) {
+        for (const categ of payload.product.pos_categ_ids) {
+            if (!this.pos_category.map((c) => c.id).includes(categ.id)) {
                 continue;
             }
-            const index = this.productsGroupedByCategory[categ_name].findIndex(
+            const index = this.productsGroupedByCategory[categ.id].findIndex(
                 (p) => p.id === product.id
             );
             if (index >= 0) {
-                this.productsGroupedByCategory[categ_name][index] = product;
+                this.productsGroupedByCategory[categ.id][index] = product;
             } else {
-                this.productsGroupedByCategory[categ_name].push(product);
+                this.productsGroupedByCategory[categ.id].push(product);
             }
         }
     }

@@ -26,7 +26,7 @@ export class ProductListPage extends Component {
         });
         this.categoryButton = Object.fromEntries(
             Array.from(this.selfOrder.categoryList).map((category) => {
-                return [category.name, useRef(`category_${category.name}`)];
+                return [category.id, useRef(`category_${category.id}`)];
             })
         );
 
@@ -75,12 +75,6 @@ export class ProductListPage extends Component {
             },
             () => [this.selfOrder.currentCategory]
         );
-    }
-
-    get productCategory() {
-        const productByCat = this.selfOrder.productsGroupedByCategory;
-        const currentCategory = this.selfOrder.currentCategory;
-        return productByCat[currentCategory] ? productByCat[currentCategory] : [];
     }
 
     focusSearch() {
