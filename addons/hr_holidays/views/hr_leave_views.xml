@@ -689,8 +689,7 @@
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
             'hide_employee_name': 1,
-            'holiday_status_name_get': False}
-        </field>
+            'holiday_status_name_get': False}</field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
                                     '&amp;', ('multi_employee', '=', True),
                                     '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
