@@ -1789,9 +1789,40 @@ var SnippetsMenu = Widget.extend({
 
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
+
+        this._toolbarWrapperEl = document.createElement('div');
+        this._toolbarWrapperEl.classList.add('o_we_toolbar_wrapper');
+        class WebsiteToolbar extends Component {
+            static components = { Toolbar, LinkTools };
+            static template = xml`
+                <Toolbar t-props="props.wysiwygState.toolbarProps">
+                    <t t-if="props.wysiwygState.linkToolProps">
+                        <LinkTools t-props="props.wysiwygState.linkToolProps" />
+                    </t>
+                </Toolbar>
+            `;
+            static props = {
+                wysiwygState: Object,
+            };
+        }
+        const toolbarWrapper = new ComponentWrapper(this, WebsiteToolbar, {
+            wysiwygState: this.options.wysiwyg.state,
+        });
+        // Add the toolbarWrapperEl to the dom for owl to properly mount the
+        // Toolbar.
+        document.body.append(this._toolbarWrapperEl);
+        this._toolbarWrapperEl.style.display = 'none';
+        await toolbarWrapper.mount(this._toolbarWrapperEl);
+        this._toolbarWrapperEl.style.display = 'contents';
+
+        const toolbarEl = this._toolbarWrapperEl.firstChild;
+        toolbarEl.classList.remove('oe-floating');
+        this.options.wysiwyg.toolbarEl.style.display = 'none';
+        this.options.wysiwyg.setupToolbar(toolbarEl);
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+
         this.invisibleDOMPanelEl = document.createElement('div');
         this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
         this.invisibleDOMPanelEl.appendChild(
@@ -4222,7 +4253,7 @@ var SnippetsMenu = Widget.extend({
     async _onUpdateInvisibleDom() {
         await this._updateInvisibleDOM();
     },
-    async _addToolbar(toolbarMode = "text") {
+    _addToolbar(toolbarMode = "text") {
         if (this.folded) {
             return;
         }
@@ -4238,39 +4269,6 @@ var SnippetsMenu = Widget.extend({
                 titleText = _t("Icon Formatting");
                 break;
         }
-
-        if (!this._toolbarWrapperEl) {
-            this._toolbarWrapperEl = document.createElement('div');
-            this._toolbarWrapperEl.classList.add('o_we_toolbar_wrapper');
-            class WebsiteToolbar extends Component {
-                static components = { Toolbar, LinkTools };
-                static template = xml`
-                    <Toolbar t-props="props.wysiwygState.toolbarProps">
-                        <t t-if="props.wysiwygState.linkToolProps">
-                            <LinkTools t-props="props.wysiwygState.linkToolProps" />
-                        </t>
-                    </Toolbar>
-                `;
-                static props = {
-                    wysiwygState: Object,
-                };
-            }
-            const toolbarWrapper = new ComponentWrapper(this, WebsiteToolbar, {
-                wysiwygState: this.options.wysiwyg.state,
-            });
-            // Add the toolbarWrapperEl to the dom for owl to properly mount the
-            // Toolbar.
-            document.body.append(this._toolbarWrapperEl);
-            this._toolbarWrapperEl.style.display = 'none';
-            await toolbarWrapper.mount(this._toolbarWrapperEl);
-            this._toolbarWrapperEl.style.display = 'contents';
-
-            const toolbarEl = this._toolbarWrapperEl.firstChild;
-            toolbarEl.classList.remove('oe-floating');
-            this.options.wysiwyg.toolbarEl.style.display = 'none';
-            this.options.wysiwyg.setupToolbar(toolbarEl);
-        }
-
         // Create toolbar custom container.
         this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
