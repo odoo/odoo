@@ -16,7 +16,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */
-        this.selectedListId = undefined;
         this.env = config.custom.env;
 
         this.dataSources = config.custom.dataSources;
@@ -67,9 +66,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
                 this._setupListDataSource(cmd.newListId, 0);
                 break;
             }
-            case "SELECT_ODOO_LIST":
-                this._selectList(cmd.listId);
-                break;
             case "REFRESH_ODOO_LIST":
                 this._refreshOdooList(cmd.listId);
                 break;
@@ -193,15 +189,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         }
     }
 
-    /**
-     * Select the given list id. If the id is undefined, it unselect the list.
-     * @param {number|undefined} listId Id of the list, or undefined to remove
-     *                                  the selected list
-     */
-    _selectList(listId) {
-        this.selectedListId = listId;
-    }
-
     _getListDataSourceId(listId) {
         return `list-${listId}`;
     }
@@ -294,14 +281,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
     }
 
     /**
-     * Get the currently selected list id
-     * @returns {number|undefined} Id of the list, undefined if no one is selected
-     */
-    getSelectedListId() {
-        return this.selectedListId;
-    }
-
-    /**
      * @param {string} id
      * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
      */
@@ -336,7 +315,6 @@ ListUIPlugin.getters = [
     "getListHeaderValue",
     "getListIdFromPosition",
     "getListCellValue",
-    "getSelectedListId",
     "getListDataSource",
     "getAsyncListDataSource",
 ];
