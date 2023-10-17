@@ -66,7 +66,7 @@ class FleetVehicle(models.Model):
     first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
     color = fields.Char(help='Color of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
-        default=_get_default_state, group_expand='_read_group_stage_ids',
+        default=_get_default_state, group_expand='_read_group_expand_full',
         tracking=True,
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
@@ -356,10 +356,6 @@ class FleetVehicle(models.Model):
                 vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
-
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        return self.env['fleet.vehicle.state'].search([], order=order)
 
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """
