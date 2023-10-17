@@ -1225,7 +1225,7 @@ class AccountMoveLine(models.Model):
             account = line.account_id
             journal = line.move_id.journal_id
 
-            if account.deprecated:
+            if account.deprecated and not self.env.context.get('skip_account_deprecation_check'):
                 raise UserError(_('The account %s (%s) is deprecated.', account.name, account.code))
 
             account_currency = account.currency_id
