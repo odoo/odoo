@@ -172,10 +172,16 @@ function sanitizeNode(node, root) {
         node.parentElement.nodeName === 'LI'
     ) {
         // Remove empty paragraphs in <li>.
+        const classes = node.classList;
         const parent = node.parentElement;
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         if (isEmptyBlock(node)) {
             node.remove();
+        } else if (classes.length) {
+            const spanEl = document.createElement('span');
+            spanEl.setAttribute('class', classes);
+            spanEl.append(...node.childNodes);
+            node.replaceWith(spanEl);
         } else {
             unwrapContents(node);
         }
