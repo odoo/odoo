@@ -387,6 +387,11 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
+        if (!newName) {
+            return this.popup.add(ErrorPopup, {
+                title: this.env._t("Floor Name Required"),
+            });
+        }
         const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
             newName,
             "#ACADAD",
