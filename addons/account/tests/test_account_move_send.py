@@ -884,8 +884,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(results['type'], 'ir.actions.act_url')
         self.assertRecordValues(wizard, [{'mode': 'done'}])
 
-        # The PDF is generated even in case of error.
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        # The PDF is generated even in case of error, but invoice_pdf_report_id is not set
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.message_main_attachment_id)
 
     def test_with_unlink_invoices(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
