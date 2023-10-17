@@ -81,6 +81,9 @@ export default {
                 }
             });
             // Display tokenization-specific inputs when the tokenization checkbox is checked.
+            this.stripeElements.update({
+                setupFutureUsage: tokenizationCheckbox.checked ? 'off_session' : null,
+            }); // Force sync the states of the API and the checkbox in case they were inconsistent.
             tokenizationCheckbox.addEventListener('input', () => {
                 this.stripeElements.update({
                     setupFutureUsage: tokenizationCheckbox.checked ? 'off_session' : null,
