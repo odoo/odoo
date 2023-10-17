@@ -3022,6 +3022,9 @@ var SnippetsMenu = Widget.extend({
             'fa-4x',
         ];
         loaderContainer.classList.add(...loaderContainerClassList);
+        if (document.querySelector("body").classList.contains("modal-open")) {
+            loaderContainer.classList.add("prevent-spinner");
+        }
         loader.classList.add(...loaderClassList);
         loaderContainer.appendChild(loader);
         return loaderContainer;
