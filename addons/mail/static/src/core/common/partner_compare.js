@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
  * Registry of functions to sort partner suggestions.
  * The expected value is a function with the following
  * signature:
- *     (partner1: Partner, partner2: Partner, { env: OdooEnv, searchTerm: string, thread?: Thread }) => number|undefined
+ *     (partner1: Partner, partner2: Partner, { env: OdooEnv, searchTerm: string, thread?: Thread , context?: Object}) => number|undefined
  */
 export const partnerCompareRegistry = registry.category("mail.partner_compare");
 

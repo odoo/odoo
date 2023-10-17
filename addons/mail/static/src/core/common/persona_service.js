@@ -84,16 +84,17 @@ export class PersonaService {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.type === "chat")
             .sort((a, b) => {
-                if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
+                const [a_dt , b_dt] = [a.lastInterestDateTime, b.lastInterestDateTime]
+                if (!a_dt && !b_dt) {
                     return 0;
                 }
-                if (a.lastInterestDateTime && !b.lastInterestDateTime) {
+                if (a_dt && !b_dt) {
                     return -1;
                 }
-                if (!a.lastInterestDateTime && b.lastInterestDateTime) {
+                if (!a_dt && b_dt) {
                     return 1;
                 }
-                return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
+                return b_dt.ts - a_dt.ts;
             })
             .map((thread) => thread.chatPartner?.id);
     }
