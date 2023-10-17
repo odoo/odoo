@@ -48,7 +48,7 @@ class GroupOnSelection(models.Model):
     no_expand = fields.Selection(SELECTION)
     value = fields.Integer()
 
-    def _expand_states(self, states, domain, order):
+    def _expand_states(self, states, domain):
         # return all possible states, in order
         return [key for key, val in self._fields['state'].selection]
 

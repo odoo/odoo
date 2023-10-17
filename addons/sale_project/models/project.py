@@ -772,12 +772,12 @@ class ProjectTask(models.Model):
         return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
     @api.model
-    def _group_expand_sales_order(self, sales_orders, domain, order):
+    def _group_expand_sales_order(self, sales_orders, domain):
         start_date = self._context.get('gantt_start_date')
         scale = self._context.get('gantt_scale')
         if not (start_date and scale):
             return sales_orders
-        search_on_comodel = self._search_on_comodel(domain, "sale_order_id", "sale.order", order)
+        search_on_comodel = self._search_on_comodel(domain, "sale_order_id", "sale.order")
         if search_on_comodel:
             return search_on_comodel
         return sales_orders

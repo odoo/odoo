@@ -16,10 +16,10 @@ class MrpWorkorder(models.Model):
     _description = 'Work Order'
     _order = 'leave_id, date_start, id'
 
-    def _read_group_workcenter_id(self, workcenters, domain, order):
+    def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
         if not workcenter_ids:
-            workcenter_ids = workcenters._search([], order=order, access_rights_uid=SUPERUSER_ID)
+            workcenter_ids = workcenters._search([], order=workcenters._order, access_rights_uid=SUPERUSER_ID)
         return workcenters.browse(workcenter_ids)
 
     name = fields.Char(

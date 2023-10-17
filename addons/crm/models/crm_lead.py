@@ -927,7 +927,7 @@ class Lead(models.Model):
         return super(Lead, self).unlink()
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
+    def _read_group_stage_ids(self, stages, domain):
         # retrieve team_id from the context and write the domain
         # - ('id', 'in', stages.ids): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
@@ -939,7 +939,7 @@ class Lead(models.Model):
             search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
 
         # perform search
-        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        stage_ids = stages._search(search_domain, order=stages._order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
     def _stage_find(self, team_id=False, domain=None, order='sequence, id', limit=1):

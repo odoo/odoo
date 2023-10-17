@@ -2178,9 +2178,9 @@ class BaseModel(metaclass=MetaModel):
         return ((value if value is not None else empty_value) for value in raw_values)
 
     @api.model
-    def _read_group_expand_full(self, groups, domain, order):
+    def _read_group_expand_full(self, groups, domain):
         """Extend the group to include all target records by default."""
-        return groups.search([], order=order)
+        return groups.search([])
 
     @api.model
     def _read_group_fill_results(self, domain, groupby, annoted_aggregates, read_group_result, read_group_order=None):
@@ -2207,16 +2207,14 @@ class BaseModel(metaclass=MetaModel):
         if field.relational:
             # groups is a recordset; determine order on groups's model
             groups = self.env[field.comodel_name].browse([value.id for value in values])
-            order = groups._order
+            values = group_expand(self, groups, domain).sudo()
             if read_group_order == groupby + ' desc':
-                order = tools.reverse_order(order)
-            groups = group_expand(self, groups, domain, order)
-            values = groups.sudo()
+                values.browse(reversed(values._ids))
             value2key = lambda value: value and value.id
 
         else:
             # groups is a list of values
-            values = group_expand(self, values, domain, None)
+            values = group_expand(self, values, domain)
             if read_group_order == groupby + ' desc':
                 values.reverse()
             value2key = lambda value: value
