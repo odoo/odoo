@@ -289,24 +289,36 @@
                     <field name="employee_id"/>
                     <field name="activity_state"/>
                     <field name="state"/>
+                    <field name="user_id"/>
+                    <field name="active"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                     <t t-name="kanban-menu" groups="hr_contract.group_hr_contract_manager">
-                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Contract</a></t>
-                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Configure</a></t>
+                        <t t-if="record.active.raw_value"><a role="menuitem" name="archive_contract" type="object" class="dropdown-item">Archive</a></t>
+                        <t t-else=""><a role="menuitem" name="unarchive_contract" type="object" class="dropdown-item">Unarchive</a></t>
                     </t>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_header">
+                                <span class="float-end mr4 p-1">
+                                    <field name="kanban_state" widget="state_selection"/>
+                                </span>
+                            </div>
                             <div class="oe_kanban_content">
                                 <div class="o_hr_contract_state">
                                     <strong class="o_kanban_record_title">
                                         <field name="name"/>
                                     </strong>
                                 </div>
+                                <div>
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="employee_id" class="align-top p-1"/>
+                                </div>
                                 <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_job_id">
                                     <field name="job_id"/>
                                 </div>
-                                                                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_department_id">
+                                    <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_department_id">
                                     <field name="department_id"/>
                                 </div>
                                 <div class="text-muted o_kanban_record_subtitle" name="div_date_id">
@@ -326,15 +338,12 @@
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <span class="float-end">
-                                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <span class="float-end mr4 p-1">
+                                        <field name="activity_ids" widget="kanban_activity"/>
                                     </span>
                                     <span class="float-end mr4">
-                                        <field name="kanban_state" widget="state_selection"/>
+                                        <field name="user_id" widget="many2one_avatar_employee"/>
                                     </span>
-                                </div>
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -383,7 +392,7 @@
             name="Contracts"
             parent="hr.menu_human_resources_configuration"
             sequence="25"/>
-        
+
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
         </record>

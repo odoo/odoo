@@ -25,6 +25,7 @@ class Contract(models.Model):
     active = fields.Boolean(default=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    user_id = fields.Many2one(related='employee_id.user_id', string='Related User')
     department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
     job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
@@ -329,6 +330,12 @@ class Contract(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
+
+    def archive_contract(self):
+        self.write({'active': False})
+
+    def unarchive_contract(self):
+        self.write({'active': True})
 
     def action_open_contract_form(self):
         self.ensure_one()
