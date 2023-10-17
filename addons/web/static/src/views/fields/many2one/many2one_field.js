@@ -194,7 +194,7 @@ export class Many2OneField extends Component {
         }
     }
     get extraLines() {
-        return this.value
+        return this.value && this.value[1]
             ? this.value[1]
                   .split("\n")
                   .map((line) => line.trim())
