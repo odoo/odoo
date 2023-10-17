@@ -26,7 +26,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
-    QUnit.test("can select a Pivot from cell formula", async function (assert) {
+    QUnit.test("can get a pivotId from cell formula", async function (assert) {
         const { model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `
                 <pivot>
@@ -37,13 +37,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         const sheetId = model.getters.getActiveSheetId();
         const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-        model.dispatch("SELECT_PIVOT", { pivotId });
-        const selectedPivotId = model.getters.getSelectedPivotId();
-        assert.strictEqual(selectedPivotId, "1");
+        assert.strictEqual(pivotId, "1");
     });
 
     QUnit.test(
-        "can select a Pivot from cell formula with '-' before the formula",
+        "can get a pivotId from cell formula with '-' before the formula",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
                 arch: /* xml */ `
@@ -59,14 +57,12 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             });
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-            model.dispatch("SELECT_PIVOT", { pivotId });
-            const selectedPivotId = model.getters.getSelectedPivotId();
-            assert.strictEqual(selectedPivotId, "1");
+            assert.strictEqual(pivotId, "1");
         }
     );
 
     QUnit.test(
-        "can select a Pivot from cell formula with other numerical values",
+        "can get a pivotId from cell formula with other numerical values",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
                 arch: /* xml */ `
@@ -82,14 +78,12 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             });
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-            model.dispatch("SELECT_PIVOT", { pivotId });
-            const selectedPivotId = model.getters.getSelectedPivotId();
-            assert.strictEqual(selectedPivotId, "1");
+            assert.strictEqual(pivotId, "1");
         }
     );
 
     QUnit.test(
-        "can select a Pivot from cell formula where pivot is in a function call",
+        "can get a pivotId from cell formula where pivot is in a function call",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
                 arch: /* xml */ `
@@ -105,28 +99,24 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             });
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-            model.dispatch("SELECT_PIVOT", { pivotId });
-            const selectedPivotId = model.getters.getSelectedPivotId();
-            assert.strictEqual(selectedPivotId, "1");
+            assert.strictEqual(pivotId, "1");
         }
     );
 
     QUnit.test(
-        "can select a Pivot from cell formula where the id is a reference",
+        "can get a pivotId from cell formula where the id is a reference",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot();
             setCellContent(model, "C3", `=ODOO.PIVOT(G10,"probability","bar","false","foo","2")+2`);
             setCellContent(model, "G10", "1");
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-            model.dispatch("SELECT_PIVOT", { pivotId });
-            const selectedPivotId = model.getters.getSelectedPivotId();
-            assert.strictEqual(selectedPivotId, "1");
+            assert.strictEqual(pivotId, "1");
         }
     );
 
     QUnit.test(
-        "can select a Pivot from cell formula (Mix of test scenarios above)",
+        "can get a pivotId from cell formula (Mix of test scenarios above)",
         async function (assert) {
             const { model } = await createSpreadsheetWithPivot({
                 arch: /*xml*/ `
@@ -142,9 +132,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             });
             const sheetId = model.getters.getActiveSheetId();
             const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
-            model.dispatch("SELECT_PIVOT", { pivotId });
-            const selectedPivotId = model.getters.getSelectedPivotId();
-            assert.strictEqual(selectedPivotId, "1");
+            assert.strictEqual(pivotId, "1");
         }
     );
 
