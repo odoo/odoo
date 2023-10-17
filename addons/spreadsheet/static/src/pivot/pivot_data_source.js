@@ -61,19 +61,28 @@ export class PivotDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string[]} domain
+     * High level method computing the result of ODOO.PIVOT.HEADER functions.
+     * - regular function 'ODOO.PIVOT.HEADER(1,"stage_id",2,"user_id",6)'
+     * - measure header 'ODOO.PIVOT.HEADER(1,"stage_id",2,"user_id",6,"measure","expected_revenue")
+     * - positional header 'ODOO.PIVOT.HEADER(1,"#stage_id",1,"#user_id",1)'
+     *
+     * @param {(string | number)[]} domainArgs arguments of the function (except the first one which is the pivot id)
+     * @returns {string | number}
      */
-    getDisplayedPivotHeaderValue(domain) {
+    computeOdooPivotHeaderValue(domainArgs) {
         this._assertDataIsLoaded();
-        return this._model.getDisplayedPivotHeaderValue(domain);
+        return this._model.getGroupByDisplayLabel(
+            domainArgs.at(-2),
+            this._model.getLastPivotGroupValue(domainArgs)
+        );
     }
 
     /**
-     * @param {string[]} domain
+     * @param {(string | number)[]} domainArgs
      */
-    getPivotHeaderValue(domain) {
+    getLastPivotGroupValue(domainArgs) {
         this._assertDataIsLoaded();
-        return this._model.getPivotHeaderValue(domain);
+        return this._model.getLastPivotGroupValue(domainArgs);
     }
 
     /**
