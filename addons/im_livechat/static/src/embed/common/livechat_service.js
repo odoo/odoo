@@ -12,7 +12,7 @@ import { session } from "@web/session";
 
 /**
  * @typedef LivechatRule
- * @property {"auto_popup"|undefined} [action]
+ * @property {"auto_popup"|"display_button_and_text"|undefined} [action]
  * @property {number?} [auto_popup_timer]
  * @property {import("@im_livechat/embed/common/chatbot/chatbot_model").IChatbot} [chatbot]
  */
