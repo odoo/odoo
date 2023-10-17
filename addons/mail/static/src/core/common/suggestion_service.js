@@ -166,12 +166,14 @@ export class SuggestionService {
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
+        const context = { recentChatPartnerIds: this.personaService.getRecentChatPartnerIds() };
         return partners.sort((p1, p2) => {
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,
                     searchTerms: cleanedSearchTerm,
                     thread,
+                    context,
                 });
                 if (result !== undefined) {
                     return result;
