@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.Call">
-        <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
+        <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }" t-ref="call">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
