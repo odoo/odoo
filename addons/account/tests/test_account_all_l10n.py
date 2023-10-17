@@ -2,6 +2,8 @@
 import logging
 
 from odoo.tests import standalone
+from odoo.addons.account.models.chart_template import AccountChartTemplate
+from unittest.mock import patch
 
 
 _logger = logging.getLogger(__name__)
@@ -13,6 +15,14 @@ def test_all_l10n(env):
     As the module install is not yet fully transactional, the modules will
     remain installed after the test.
     """
+
+    try_loading = type(env['account.chart.template']).try_loading
+
+    def try_loading_patch(self, template_code, company, install_demo=True):
+        self = self.with_context(l10n_check_fields_complete=True)
+        return try_loading(self, template_code, company, install_demo)
+
+
     # Ensure the presence of demo data, to see if they can be correctly installed
     assert env.ref('base.module_account').demo, "Need the demo to test with data"
 
@@ -21,7 +31,17 @@ def test_all_l10n(env):
         ('name', '=like', 'l10n%'),
         ('state', '=', 'uninstalled'),
     ])
-    l10n_mods.button_immediate_install()
+    with patch.object(AccountChartTemplate, 'try_loading', try_loading_patch):
+        l10n_mods.button_immediate_install()
+
+    # In all_l10n tests we need to verify demo data
+    demo_failures = env['ir.demo_failure'].search([])
+    if demo_failures:
+        _logger.warning("Error while testing demo data for all_l10n tests.")
+        for failure in demo_failures:
+            _logger.warning("Demo data of module %s has failed: %s",
+                failure.module_id.name, failure.error)
+
     env.reset()     # clear the set of environments
     env = env()     # get an environment that refers to the new registry
 
@@ -47,6 +67,6 @@ def test_all_l10n(env):
         _logger.info('Testing COA: %s (company: %s)', template_code, company.name)
         try:
             with env.cr.savepoint():
-                env['account.chart.template'].try_loading(template_code, company, install_demo=True)
+                env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading(template_code, company, install_demo=True)
         except Exception:
             _logger.error("Error when creating COA %s", template_code, exc_info=True)
