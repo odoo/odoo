@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class TaxOffice(models.Model):
@@ -14,9 +14,7 @@ class TaxOffice(models.Model):
         ('code_company_uniq', 'unique (code)', 'The code of the tax office must be unique !')
     ]
 
-    def name_get(self):
-        result = []
+    @api.depends('name', 'code')
+    def _compute_display_name(self):
         for tax_office in self:
-            name = tax_office.code + ' ' + tax_office.name
-            result.append((tax_office.id, name))
-        return result
+            tax_office.display_name = f'{tax_office.code} {tax_office.name}'
