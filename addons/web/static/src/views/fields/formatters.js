@@ -211,8 +211,10 @@ export function formatInteger(value, options = {}) {
 export function formatMany2one(value, options) {
     if (!value) {
         value = "";
+    } else if (value[1]) {
+        value = value[1];
     } else {
-        value = value[1] || "";
+        value = _t("Unnamed");
     }
     if (options && options.escape) {
         value = encodeURIComponent(value);
