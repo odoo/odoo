@@ -19,7 +19,7 @@
             <h3 t-if="selfOrder.table.name || confirmedOrder.table_stand_number" class="text-muted mb-3">
                 Service at table
                 <t t-if="selfOrder.config.self_ordering_mode === 'mobile'" t-esc="selfOrder.table.name + ' (' + selfOrder.table.floor_name + ')'" />
-                <t t-else="" t-esc="selfOrder.tablePadNumber" />
+                <t t-else="" t-esc="confirmedOrder.table_stand_number" />
             </h3>
             <h3 t-else="">Order to pick-up at the counter</h3>
         </div>
