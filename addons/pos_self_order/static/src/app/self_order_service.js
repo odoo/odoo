@@ -9,7 +9,7 @@ import { session } from "@web/session";
 import { getColor } from "@web/core/colors/colors";
 import { categorySorter, attributeFormatter } from "@pos_self_order/app/utils";
 import { Order } from "@pos_self_order/app/models/order";
-import { batched } from "@web/core/utils/timing";
+import { batched, debounce } from "@web/core/utils/timing";
 import { useState, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -25,6 +25,9 @@ export class SelfOrder extends Reactive {
     }
 
     async setup(env, { rpc, notification, router, printer }) {
+        // debounce to avoid too many requests
+        this.getPricesFromServer = debounce(this._getPricesFromServer.bind(this), 0);
+
         // services
         this.notification = notification;
         this.router = router;
@@ -338,7 +341,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    async getPricesFromServer() {
+    async _getPricesFromServer() {
         try {
             if (!this.currentOrder) {
                 return;

@@ -152,7 +152,7 @@ export class CartPage extends Component {
         await this.selfOrder.getPricesFromServer();
     }
 
-    async changeQuantity(line, increase) {
+    async _changeQuantity(line, increase) {
         if (!increase && !this.canChangeQuantity(line)) {
             return;
         }
@@ -164,11 +164,14 @@ export class CartPage extends Component {
         increase ? line.qty++ : line.qty--;
         for (const cline of this.selfOrder.currentOrder.lines) {
             if (cline.combo_parent_uuid === line.uuid) {
-                this.changeQuantity(cline, increase);
+                this._changeQuantity(cline, increase);
             }
         }
+    }
+
+    async changeQuantity(line, increase) {
+        await this._changeQuantity(line, increase);
         await this.selfOrder.getPricesFromServer();
-        return;
     }
 
     clickOnLine(line) {
