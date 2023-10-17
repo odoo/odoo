@@ -708,8 +708,7 @@
             'search_default_waiting_for_me': 1,
             'search_default_waiting_for_me_manager': 2,
             'hide_employee_name': 1,
-            'holiday_status_display_name': False}
-        </field>
+            'holiday_status_display_name': False}</field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
                                     '&amp;', ('multi_employee', '=', True),
                                     '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
