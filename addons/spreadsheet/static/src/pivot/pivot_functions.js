@@ -67,11 +67,11 @@ const ODOO_PIVOT = {
     compute: function (pivotId, measureName, ...domain) {
         pivotId = toString(pivotId);
         const measure = toString(measureName);
-        const args = domain.map(toString);
+        const domainArgs = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
         assertMeasureExist(pivotId, measure, this.getters);
-        assertDomainLength(args);
-        const value = this.getters.getPivotCellValue(pivotId, measure, args);
+        assertDomainLength(domainArgs);
+        const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
         const field = this.getters.getPivotDataSource(pivotId).getField(measure);
         let format = undefined;
         if (field) {
@@ -102,13 +102,13 @@ const ODOO_PIVOT_HEADER = {
     category: "Odoo",
     compute: function (pivotId, ...domain) {
         pivotId = toString(pivotId);
-        const args = domain.map(toString);
+        const domainArgs = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
-        assertDomainLength(args);
+        assertDomainLength(domainArgs);
         const pivot = this.getters.getPivotDataSource(pivotId);
         return {
-            value: this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale),
-            format: odooPivotHeaderFormat(pivot, args, this.locale),
+            value: this.getters.computeOdooPivotHeaderValue(pivotId, domainArgs, this.locale),
+            format: odooPivotHeaderFormat(pivot, domainArgs, this.locale),
         };
     },
     returns: ["NUMBER", "STRING"],
