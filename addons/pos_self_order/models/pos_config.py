@@ -348,6 +348,7 @@ class PosConfig(models.Model):
             "custom_links": self._get_self_order_custom_links(),
             "currency_id": self.currency_id.id,
             "pos_payment_methods": payment_methods if self.self_ordering_mode == "kiosk" else [],
+            "currency_decimals": self.currency_id.decimal_places,
             "pos_category": self._get_available_categories().read(["name", "sequence", "has_image"]),
             "products": self._get_available_products()._get_self_order_data(self),
             "combos": self._get_combos_data(),

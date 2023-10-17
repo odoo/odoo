@@ -2064,12 +2064,13 @@ export class Order extends PosModel {
 
         // Finally, take into account the combo price for each combo line.
         for (const comboLine of options.comboLines) {
-            if (this.env.utils.floatIsZero(comboLine.combo_price)) {
-                continue;
-            }
             const presentLine = childLines.find((l) => l.product.id === comboLine.product_id[0]);
             if (presentLine) {
-                presentLine.set_unit_price(presentLine.get_unit_price() + comboLine.combo_price);
+                const attributesPriceExtra = (presentLine.attribute_value_ids ?? [])
+                    .map((id) => this.pos.db.attribute_value_by_id[id]?.price_extra || 0)
+                    .reduce((acc, price) => acc + price, 0);
+                const totalPriceExtra = attributesPriceExtra + comboLine.combo_price;
+                presentLine.set_unit_price(presentLine.get_unit_price() + totalPriceExtra);
             }
         }
     }

@@ -200,10 +200,12 @@ class PosSelfOrderController(http.Controller):
         appended_uuid = []
         newLines = []
         pricelist = pos_config.pricelist_id
-        sale_price_digits = request.env['decimal.precision'].precision_get('Product Price')
+        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
 
         combo_line_ids = [line['combo_line_id'] for line in lines if line.get('combo_line_id')]
-        combo_lines = request.env['pos.combo.line'].search([('id', 'in', combo_line_ids)])
+        combo_lines = pos_config.env['pos.combo.line'].search([('id', 'in', combo_line_ids)])
+        attribute_value_ids = sum([line.get('attribute_value_ids', []) for line in lines], [])
+        fetched_attributes = pos_config.env['product.template.attribute.value'].search([('id', 'in', attribute_value_ids)])
 
         if take_away and pos_config.self_ordering_mode == 'kiosk':
             fiscal_pos = pos_config.self_ordering_alternative_fp_id
@@ -215,8 +217,12 @@ class PosSelfOrderController(http.Controller):
                 continue
 
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
-            # todo take into account the price extra
-            lst_price = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
+            line_attributes = fetched_attributes.browse(line.get('attribute_value_ids') or [])
+            total_price_extra = sum([attr.price_extra for attr in line_attributes])
+            lst_price = (
+                pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
+                + total_price_extra
+            )
 
             # parent_product_taxe_ids = None
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
@@ -272,7 +278,9 @@ class PosSelfOrderController(http.Controller):
                     pos_combo_line = info['pos_combo_line']
 
                     is_last_child = i == len(children) - 1
-                    price_unit = info['prorated_price'] + pos_combo_line.combo_price + (diff_unit if is_last_child else 0)
+                    selected_attributes = fetched_attributes.browse(child.get('attribute_value_ids', []))
+                    total_extra_price = pos_combo_line.combo_price + sum([attr.price_extra for attr in selected_attributes])
+                    price_unit = info['prorated_price'] + total_extra_price + (diff_unit if is_last_child else 0)
                     price_unit_fp = product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
                     taxes = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
                     pdetails = taxes.compute_all(price_unit_fp, pos_config.currency_id, 1, product)
