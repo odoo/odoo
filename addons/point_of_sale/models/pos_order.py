@@ -291,7 +291,7 @@ class PosOrder(models.Model):
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]")
-    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
+    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
