@@ -39,7 +39,7 @@ class Track(models.Model):
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
-        group_expand='_read_group_stage_ids',
+        group_expand='_read_group_expand_full',  # Always display all stages
         required=True, tracking=True)
     legend_blocked = fields.Char(related='stage_id.legend_blocked',
         string='Kanban Blocked Explanation', readonly=True)
@@ -425,11 +425,6 @@ class Track(models.Model):
             self._synchronize_with_stage(stage)
         res = super(Track, self).write(vals)
         return res
-
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        """ Always display all stages """
-        return stages.search([], order=order)
 
     def _synchronize_with_stage(self, stage):
         if stage.is_fully_accessible:
