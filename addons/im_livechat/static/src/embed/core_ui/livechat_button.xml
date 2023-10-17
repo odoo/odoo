@@ -7,9 +7,10 @@
         t-if="isShown"
         class="btn o-livechat-LivechatButton d-print-none position-fixed bottom-0 end-0 me-5 py-2 px-3 fw-bold rounded-top-2 rounded-bottom-0"
         t-attf-style="color: {{livechatService.options.button_text_color}}; background-color: {{livechatService.options.button_background_color}};"
-        t-esc="text"
         t-on-click="onClick"
-    />
+    >
+        <t t-esc="text"/>
+    </button>
 </t>
 
 </templates>

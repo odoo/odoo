@@ -2,8 +2,14 @@
 <templates xml:space="preserve">
     <t t-inherit="im_livechat.LivechatButton" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('o-livechat-LivechatButton')]" position="attributes">
-            <attribute name="class" remove="rounded-top-2 rounded-bottom-0 pt-3 pb-2 px-3" add="d-flex justify-content-center align-items-center shadow rounded-circle mb-5 fa fa-commenting" separator=" "/>
-            <attribute name="t-attf-style" add="font-size: 24px; width: 56px; height: 56px; min-width: 56px;"  separator=" "/>
+            <attribute name="class" remove="rounded-top-2 rounded-bottom-0 pt-3 pb-2 px-3" add="d-flex justify-content-center align-items-center shadow rounded-circle mb-5" separator=" "/>
+            <attribute name="t-attf-style" add="width: 56px; height: 56px; min-width: 56px;"  separator=" "/>
+        </xpath>
+        <xpath expr="//button[hasclass('o-livechat-LivechatButton')]" position="inside">
+            <i class="fa fa-commenting" style="font-size: 24px;"/>
+            <div t-if="livechatService.rule?.action === 'display_button_and_text'" class="o-livechat-LivechatButton-notification text-nowrap position-absolute bg-100 py-2 px-3 rounded" style="max-width: 75vw;">
+                <p class="m-0 text-dark text-truncate" t-esc="livechatService.options.button_text"/>
+            </div>
         </xpath>
     </t>
 </templates>
