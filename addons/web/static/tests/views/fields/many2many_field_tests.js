@@ -1817,8 +1817,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many list add *many* records, remove, re-add", async function (assert) {
-        assert.expect(5);
-
         serverData.models.partner.fields.timmy.domain = [["color", "=", 2]];
         serverData.models.partner.fields.timmy.onChange = true;
         serverData.models.partner_type.fields.product_ids = {
@@ -1827,8 +1825,8 @@ QUnit.module("Fields", (hooks) => {
             relation: "product",
         };
 
-        for (var i = 0; i < 50; i++) {
-            var new_record_partner_type = { id: 100 + i, display_name: "batch" + i, color: 2 };
+        for (let i = 0; i < 50; i++) {
+            const new_record_partner_type = { id: 100 + i, display_name: "batch" + i, color: 2 };
             serverData.models.partner_type.records.push(new_record_partner_type);
         }
 
@@ -1866,7 +1864,7 @@ QUnit.module("Fields", (hooks) => {
         // First round: add 51 records in batch
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
 
-        var $modal = $(".modal-lg");
+        let $modal = $(".modal-lg");
 
         assert.equal($modal.length, 1, "There should be one modal");
 
@@ -1881,26 +1879,43 @@ QUnit.module("Fields", (hooks) => {
             "We should have added all the records present in the search view to the m2m field"
         ); // the 50 in batch + 'gold'
 
+        assert.containsNone(
+            target,
+            ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_cp_pager",
+            "pager should not be displayed"
+        );
+
         await clickSave(target);
 
+        assert.containsOnce(
+            target,
+            ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_cp_pager",
+            "pager should not be displayed"
+        );
+
+        const pagerValue = target.querySelector(
+            ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_pager_value"
+        );
+        assert.strictEqual(pagerValue.textContent, "1-40", "The pager should be updated.");
+
         // Secound round: remove one record
-        var trash_buttons = $(target).find(
+        const trash_buttons = $(target).find(
             ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_list_record_remove"
         );
 
         await click(trash_buttons.first()[0]);
 
-        var pager_limit = $(target).find(
+        const pager_limit = $(target).find(
             ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_pager_limit"
         );
-        assert.equal(pager_limit.text(), "50", "We should have 50 records in the m2m field");
+        assert.strictEqual(pager_limit.text(), "50", "We should have 50 records in the m2m field");
 
         // Third round: re-add 1 records
         await click($(target).find(".o_field_x2many_list_row_add a")[0]);
 
         $modal = $(".modal-lg");
 
-        assert.equal($modal.length, 1, "There should be one modal");
+        assert.strictEqual($modal.length, 1, "There should be one modal");
 
         await click($modal.find("thead input[type=checkbox]")[0]);
         await nextTick();

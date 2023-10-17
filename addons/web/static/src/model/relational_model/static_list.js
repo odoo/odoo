@@ -843,6 +843,11 @@ export class StaticList extends DataPoint {
         this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
         this._currentIds = [...ids];
         this.count = this._currentIds.length;
+        if (this._currentIds.length > this.limit) {
+            this._tmpIncreaseLimit = this._currentIds.length - this.limit;
+            const nextLimit = this.limit + this._tmpIncreaseLimit;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
     }
 
     async _resequence(movedId, targetId) {
