@@ -1717,55 +1717,6 @@ options.registry.menu_data = options.Class.extend({
     },
 });
 
-options.registry.company_data = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.rpc = this.bindService("rpc");
-        this.orm = this.bindService("orm");
-    },
-
-    /**
-     * Fetches data to determine the URL where the user can edit its company
-     * data. Saves the info in the prototype to do this only once.
-     *
-     * @override
-     */
-    start: function () {
-        var proto = options.registry.company_data.prototype;
-        var prom;
-        var self = this;
-        if (proto.__link === undefined) {
-            prom = this.rpc('/web/session/get_session_info').then(function (session) {
-                return self.orm.read("res.users", [session.uid], ["company_id"]);
-            }).then(function (res) {
-                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
-            });
-        }
-        return Promise.all([this._super.apply(this, arguments), prom]);
-    },
-    /**
-     * When the users selects company data, opens a dialog to ask him if he
-     * wants to be redirected to the company form view to edit it.
-     *
-     * @override
-     */
-    onFocus: function () {
-        var self = this;
-        var proto = options.registry.company_data.prototype;
-
-        Dialog.confirm(this, _t("Do you want to edit the company data?"), {
-            confirm_callback: function () {
-                self.trigger_up('request_save', {
-                    reload: false,
-                    onSuccess: function () {
-                        window.location.href = proto.__link;
-                    },
-                });
-            },
-        });
-    },
-});
-
 options.registry.Carousel = options.registry.CarouselHandler.extend({
     /**
      * @override
