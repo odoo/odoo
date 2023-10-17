@@ -13,7 +13,7 @@
             <h1 t-else="" class="mb-4">We're preparing your order!</h1>
             <h3 t-if="state.payment" class="mt-3 text-muted">Pay at the cashier <t t-esc="selfOrder.formatMonetary(confirmedOrder.amount_total)" /></h3>
             <div class="d-inline-flex flex-column border rounded py-4 px-5 bg-view mb-3">
-                <span class="fs-2 text-muted">Your tracking number</span>
+                <span class="fs-2 text-muted">Your short order number</span>
                 <span class="number lh-1" t-esc="confirmedOrder.trackingNumber" />
             </div>
             <h3 t-if="selfOrder.table.name || confirmedOrder.table_stand_number" class="text-muted mb-3">
