@@ -224,7 +224,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.googleLocalFonts.length) {
             const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
             googleLocalFontsEls.forEach((el, index) => {
-                $(el).append(renderToElement('website.delete_google_font_btn', {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
                     local: true,
                 }));
@@ -234,7 +234,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.googleFonts.length) {
             const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
-                $(el).append(renderToElement('website.delete_google_font_btn', {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
