@@ -346,5 +346,8 @@ const dynamicSnippetOptions = options.Class.extend({
 });
 
 options.registry.dynamic_snippet = dynamicSnippetOptions;
+options.registry.DynamicSnippetTitle = options.Class.extend({
+    forceNoDeleteButton: true,
+});
 
 export default dynamicSnippetOptions;
