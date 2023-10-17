@@ -11,20 +11,22 @@
                 <field name="company_id" invisible="1"/>
                 <field name="move_ids" invisible="1"/>
                 <field name="mode" invisible="1"/>
-
                 <field name="enable_download" invisible="1"/>
                 <field name="enable_send_mail" invisible="1"/>
                 <field name="send_mail_readonly" invisible="1"/>
+                <field name="send_mail_warning_message" invisible="1"/>
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
-                <field name="mail_partner_ids" widget="many2many_tags_email" class="d-none" context="{'force_email': True}"/>
 
                 <!-- Warnings -->
                 <div name="warnings">
                     <div class="alert alert-warning"
                         role="alert"
                         invisible="not send_mail_warning_message">
-                        <field name="send_mail_warning_message"/>
+                        Please specify an email address on the
+                        <button name="action_open_partners_without_email"
+                            type="object"
+                            class="btn btn-link p-0 align-baseline fst-italic">following partners.</button>
                     </div>
                 </div>
 
