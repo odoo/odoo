@@ -2540,14 +2540,14 @@ const Wysiwyg = Widget.extend({
                             const remoteClient = { id: fromClientId, startTime: remoteStartTime };
                             if (isClientFirst(localClient, remoteClient)) {
                                 this._historySyncAtLeastOnce = true;
+                                this._historySyncFinished = true;
                             } else {
                                 this._resetCollabRequests();
                                 const response = await this._resetFromClient(fromClientId, this._lastCollaborationResetId);
-                                if (response !== REQUEST_ERROR) {
+                                if (response === REQUEST_ERROR) {
                                     return;
                                 }
                             }
-                            this._historySyncFinished = true;
                         } else {
                             // Make both send their last step to each other to
                             // ensure they are in sync.
@@ -2555,17 +2555,21 @@ const Wysiwyg = Widget.extend({
                             this._setCollaborativeSelection(fromClientId);
                         }
 
-                        this.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
+                        const getClientNamePromise = this.requestClient(
+                            fromClientId, 'get_client_name', undefined, { transport: 'rtc' }
+                        ).then((clientName) => {
                             if (clientName === REQUEST_ERROR) return;
                             this.ptp.clientsInfos[fromClientId].clientName = clientName;
                             this.odooEditor.multiselectionRefresh();
                         });
-                        this.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
+                        const getClientAvatar = this.requestClient(
+                            fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }
+                        ).then(clientAvatarUrl => {
                             if (clientAvatarUrl === REQUEST_ERROR) return;
                             this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
                             this.odooEditor.multiselectionRefresh();
                         });
-
+                        await Promise.all([getClientAvatar, getClientNamePromise]);
                         break;
                     }
                     case 'oe_history_step':

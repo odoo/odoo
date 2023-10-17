@@ -11098,8 +11098,7 @@ QUnit.module("Views", (hooks) => {
 
             await click(target.querySelector(".o_form_view .o_content button.btn-primary"));
             assert.verifySteps(["doActionButton"]);
-            await click(target.querySelector(".o_form_view button.mybutton"));
-            assert.verifySteps([]);
+            assert.ok(target.querySelector(".o_form_view button.mybutton").disabled);
         }
     );
 

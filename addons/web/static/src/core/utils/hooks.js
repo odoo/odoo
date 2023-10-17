@@ -24,7 +24,7 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
 // -----------------------------------------------------------------------------
 
 /**
- * Focus an element referenced by a t-ref="autofocus" in the current component
+ * Focus an element referenced by a t-ref="autofocus" in the active component
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
  * @param {Object} [params]
@@ -35,6 +35,8 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
 export function useAutofocus({ refName, selectAll } = {}) {
     const comp = useComponent();
     const ref = useRef(refName || "autofocus");
+    const uiService = useService("ui");
+
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return ref;
@@ -46,7 +48,7 @@ export function useAutofocus({ refName, selectAll } = {}) {
     // LEGACY
     useEffect(
         (el) => {
-            if (el) {
+            if (el && (!uiService.activeElement || uiService.activeElement.contains(el))) {
                 el.focus();
                 if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
                     el.selectionEnd = el.value.length;
