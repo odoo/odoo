@@ -70,10 +70,6 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        return self.env['project.project.stage'].search([], order=order)
-
     name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True,
@@ -163,7 +159,7 @@ class Project(models.Model):
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
-        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
+        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
 
     update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)

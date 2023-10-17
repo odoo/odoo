@@ -145,7 +145,7 @@ class EventEvent(models.Model):
         store=True, tracking=True)
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
-        group_expand='_read_group_stage_ids', tracking=True, copy=False)
+        group_expand='_read_group_expand_full', tracking=True, copy=False)
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
@@ -569,10 +569,6 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
-
-    @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        return self.env['event.stage'].search([])
 
     @api.model_create_multi
     def create(self, vals_list):
