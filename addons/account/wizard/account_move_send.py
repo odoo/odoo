@@ -535,7 +535,7 @@ class AccountMoveSend(models.Model):
         }
         for invoice, invoice_data in invoices_data_pdf.items():
             form = invoice_data['_form']
-            if form._need_invoice_document(invoice):
+            if form._need_invoice_document(invoice) and not invoice_data.get('error'):
                 form._prepare_invoice_pdf_report(invoice, invoice_data)
                 form._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
@@ -548,8 +548,6 @@ class AccountMoveSend(models.Model):
             }
             if invoices_data_pdf_error:
                 self._hook_if_errors(invoices_data_pdf_error, allow_fallback_pdf=allow_fallback_pdf)
-            for invoice_data in invoices_data_pdf_error.values():
-                invoice_data.pop('error')
 
         # Web-service after the PDF generation.
         invoices_data_web_service = {
