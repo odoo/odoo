@@ -2545,6 +2545,21 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("many2one field rendering with many2one widget", async function (assert) {
+        serverData.models.bar.records[0].display_name = false
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="m2o" widget="many2one"/></tree>',
+        });
+
+        assert.ok(
+            $(target).find("td:contains(Unnamed)").length,
+            "should have a Unnamed as fallback of many2one display_name"
+        );
+    });
+
     QUnit.test("grouped list view, with 1 open group", async function (assert) {
         await makeView({
             type: "list",
