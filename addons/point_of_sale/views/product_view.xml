@@ -87,7 +87,7 @@
                 </page>
             </xpath>
             <xpath expr="//page[@name='purchase']" position="attributes">
-                <attribute name="invisible">detailed_type == "combo"</attribute>
+                <attribute name="invisible" separator=" or " add="detailed_type == 'combo'"></attribute>
             </xpath>
             <xpath expr="//page[@name='inventory']" position="attributes">
                 <attribute name="invisible">type in ['combo', 'service']</attribute>
