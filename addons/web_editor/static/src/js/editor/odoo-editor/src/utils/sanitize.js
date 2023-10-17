@@ -228,10 +228,16 @@ class Sanitize {
                 node.nodeName === 'P' &&
                 node.parentElement.tagName === 'LI'
             ) {
+                const classes = node.classList;
                 const parent = node.parentElement;
                 const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 if (isEmptyBlock(node)) {
                     node.remove();
+                } else if (classes.length) {
+                    const spanEl = document.createElement('span');
+                    spanEl.setAttribute('class', classes);
+                    spanEl.append(...node.childNodes);
+                    node.replaceWith(spanEl);
                 } else {
                     unwrapContents(node);
                 }
