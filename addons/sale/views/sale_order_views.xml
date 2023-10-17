@@ -694,14 +694,17 @@
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="require_signature"
                                        readonly="state in ['cancel', 'sale']"/>
-                                <field name="require_payment"
-                                       readonly="state in ['cancel', 'sale']"/>
-                                <field name="prepayment_percent"
-                                       readonly="state in ['cancel', 'sale']"
-                                       invisible="not require_payment"
-                                       widget="percentage"
-                                       string="Prepayment amount"
-                                       style="width: 3rem"/>
+                                <label for="require_payment"/>
+                                <div id="require_payment">
+                                    <field name="require_payment"
+                                        readonly="state in ['cancel', 'sale']"/>
+                                    <span class="mx-3" invisible="not require_payment">of</span>
+                                    <field name="prepayment_percent"
+                                        readonly="state in ['cancel', 'sale']"
+                                        invisible="not require_payment"
+                                        widget="percentage"
+                                        style="width: 3rem"/>
+                                </div>
                                 <field name="reference" readonly="1" invisible="not reference"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>

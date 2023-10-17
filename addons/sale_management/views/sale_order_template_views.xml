@@ -31,21 +31,26 @@
                     <group>
                         <group name="sale_info">
                             <field name="active" invisible="1"/>
-                            <label for="number_of_days" string="Quotation expires after"/>
+                            <label for="number_of_days" string="Quotation Validity"/>
                             <div id="number_of_days">
                                 <field name="number_of_days" style="width: 3rem;"/>
                                 <div class="d-inline-block">days</div>
                             </div>
-                            <field name="require_signature"/>
-                            <field name="require_payment"/>
-                            <field name="prepayment_percent"
-                                   invisible="not require_payment"
-                                   widget="percentage"
-                                   string="Prepayment amount"
-                                   style="width: 3rem"/>
                             <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="journal_id"/>
+                        </group>
+                        <group name="so_confirmation">
+                            <field name="require_signature"/>
+                            <label for="require_payment"/>
+                            <div id="require_payment" class="o_row">
+                                <field name="require_payment" class="oe_inline"/>
+                                <span invisible="not require_payment">of</span>
+                                <field name="prepayment_percent"
+                                       invisible="not require_payment"
+                                       widget="percentage"
+                                       class="oe_inline"/>
+                            </div>
                         </group>
                     </group>
                     <notebook name="main_book">
