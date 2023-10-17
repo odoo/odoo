@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
@@ -292,9 +291,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     computeOdooPivotHeaderValue(pivotId, domainArgs) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
         dataSource.markAsHeaderUsed(domainArgs);
-        if (domainArgs.length === 0) {
-            return _t("Total");
-        }
         return dataSource.computeOdooPivotHeaderValue(domainArgs);
     }
 

@@ -303,13 +303,6 @@ export class SpreadsheetPivotModel extends PivotModel {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
             return "";
         }
-        if (groupFieldString === "measure") {
-            if (groupValueString === "__count") {
-                return _t("Count");
-            }
-            // the value is actually the measure field name
-            return this.parseGroupField(groupValueString).field.string;
-        }
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
