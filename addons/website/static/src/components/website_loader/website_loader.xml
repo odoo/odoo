@@ -18,13 +18,13 @@
                 <br/>pointer to build the perfect page in 7 steps.
             </t>
         </p>
-        <div t-if="featuresInstallInfo.total > 0"
-            class="o_website_loader_progress progress rounded-pill mt-3">
-            <div role="progressbar" aria-label="Installing your features"
-                class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill"
-                t-att-aria-valuemax="featuresInstallInfo.total"
-                t-att-aria-valuenow="featuresInstallInfo.nbInstalled"
-                t-attf-style="width: #{featuresInstallInfo.nbInstalled * 100 / featuresInstallInfo.total}%"/>
+        <div class="o_website_loader_progress progress rounded-pill mt-3">
+            <div role="progressbar"
+                 aria-label="Installing your features"
+                 class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill"
+                 t-att-aria-valuemax="100"
+                 t-att-aria-valuenow="state.progressPercentage"
+                 t-attf-style="width: #{state.progressPercentage}%"/>
         </div>
     </div>
 </t>

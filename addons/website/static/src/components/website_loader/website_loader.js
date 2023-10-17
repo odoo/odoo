@@ -15,6 +15,7 @@ export class WebsiteLoader extends Component {
             showTips: false,
             selectedFeatures: [],
             showWaitingMessages: false,
+            progressPercentage: 0,
         };
         const defaultMessage = {
             title: _t("Building your website."),
@@ -27,7 +28,7 @@ export class WebsiteLoader extends Component {
         });
         this.waitingMessages = useState([ defaultMessage ]);
         this.currentWaitingMessage = useState({ ...defaultMessage });
-        this.featuresInstallInfo = useState({ nbInstalled: 0, total: undefined });
+        this.featuresInstallInfo = { nbInstalled: 0, total: undefined };
 
         useEffect(
             (selectedFeatures) => {
@@ -40,7 +41,10 @@ export class WebsiteLoader extends Component {
                     // and already installed
                     this.trackModules(selectedFeatures).catch(console.error);
 
-                    return () => clearTimeout(this.trackModulesTimeout);
+                    return () => {
+                        clearTimeout(this.trackModulesTimeout);
+                        clearInterval(this.updateProgressInterval);
+                    };
                 }
             },
             () => [this.state.selectedFeatures]
@@ -71,11 +75,21 @@ export class WebsiteLoader extends Component {
             (isVisible) => {
                 if (isVisible) {
                     window.addEventListener("beforeunload", this.showRefreshConfirmation);
+                    if (!this.state.selectedFeatures || this.state.selectedFeatures.length === 0) {
+                        // If there is no feature selected, we fake the progress
+                        // for theme installation and configurator_apply. If
+                        // there is at least 1 feature selected, the progress
+                        // bar will be initialized in trackModules().
+                        this.initProgressBar();
+                    }
                 } else {
                     window.removeEventListener("beforeunload", this.showRefreshConfirmation);
                 }
 
-                return () => window.removeEventListener("beforeunload", this.showRefreshConfirmation);
+                return () => {
+                    window.removeEventListener("beforeunload", this.showRefreshConfirmation);
+                    clearInterval(this.updateProgressInterval);
+                };
             },
             () => [this.state.isVisible]
         );
@@ -94,6 +108,7 @@ export class WebsiteLoader extends Component {
             }
             clearInterval(messagesInterval);
             clearTimeout(this.trackModulesTimeout);
+            clearInterval(this.updateProgressInterval);
         });
         // Action needed if the app automatically refreshes or redirects the
         // page without hiding/removing the WebsiteLoader. This should be
@@ -103,6 +118,46 @@ export class WebsiteLoader extends Component {
         });
     }
 
+    /**
+     * Initializes the progress bar.
+     */
+    initProgressBar() {
+        if (this.updateProgressInterval) {
+            return;
+        }
+        // The progress speed decreases as it approaches its limit. This way,
+        // users have the feeling that the website creation progressing is fast
+        // and we prevent them from leaving the page too early (because they
+        // already did XX% of the process).
+        // If there is no module to install, we fake the progress from 0 to 100.
+        // If there is at least 1 module to install, we take 70% of the progress
+        // bar that we divide by the number of modules to install. We fake the
+        // progress of each module individually and when all modules are
+        // installed, we fake the progress of the remaining 30%.
+        const nbModulesToInstall = this.featuresInstallInfo.total || 0;
+        const isSomethingToInstall = nbModulesToInstall > 0;
+        let currentProgress = 0;
+        // This controls the speed of the progress bar.
+        const progressStep = isSomethingToInstall ? 0.04 : 0.02;
+        let progressForAfterModules = isSomethingToInstall ? 30 : 100;
+        let progressForAllModules = 100 - progressForAfterModules;
+        let lastTotalInstalled = 0;
+        let progressPerModule = isSomethingToInstall ?
+            progressForAllModules / nbModulesToInstall : 0;
+
+        this.updateProgressInterval = setInterval(() => {
+            if (this.featuresInstallInfo.nbInstalled !== lastTotalInstalled) {
+                // A module just finished its install.
+                currentProgress = 0;
+                lastTotalInstalled = this.featuresInstallInfo.nbInstalled;
+            }
+            currentProgress += progressStep;
+            const limit = this.featuresInstallInfo.nbInstalled === nbModulesToInstall ?
+                progressForAfterModules : progressPerModule;
+            this.state.progressPercentage = (lastTotalInstalled * progressPerModule) +
+                Math.atan(currentProgress) / (Math.PI / 2) * limit;
+        }, 100);
+    }
     /**
      * Makes a RPC call to track the features and dependencies being installed
      * and, as long as the number of features installed is different from the
@@ -121,8 +176,9 @@ export class WebsiteLoader extends Component {
         );
         if (!this.featuresInstallInfo.total
             || this.featuresInstallInfo.nbInstalled !== installInfo.nbInstalled) {
-            Object.assign(this.featuresInstallInfo, installInfo);
+            this.featuresInstallInfo = installInfo;
         }
+        this.initProgressBar();
         if (this.featuresInstallInfo.nbInstalled !== this.featuresInstallInfo.total) {
             this.trackModulesTimeout = setTimeout(() => this.trackModules(selectedFeatures), 1000);
         }
