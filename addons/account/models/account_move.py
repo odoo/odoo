@@ -3985,9 +3985,9 @@ class AccountMove(models.Model):
             exchange_move_ids = set([row[0] for row in self._cr.fetchall()])
 
         for move in self:
-            if move.id in exchange_move_ids:
+            if not self._context.get("force_draft_in_fx_and_caba_entries") and move.id in exchange_move_ids:
                 raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
-            if move.tax_cash_basis_rec_id or move.tax_cash_basis_origin_move_id:
+            if not self._context.get("force_draft_in_fx_and_caba_entries") and (move.tax_cash_basis_rec_id or move.tax_cash_basis_origin_move_id):
                 # If the reconciliation was undone, move.tax_cash_basis_rec_id will be empty;
                 # but we still don't want to allow setting the caba entry to draft
                 # (it'll have been reversed automatically, so no manual intervention is required),
