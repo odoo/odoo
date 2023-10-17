@@ -336,30 +336,25 @@ export class SpreadsheetPivotModel extends PivotModel {
     }
 
     /**
-     * Get the label of the last group by of the domain
+     * Get the value of the last group by of the function arguments
+     * e.g. in `ODOO.PIVOT.HEADER(1, "stage_id", "42", "status", "won")`
+     *      the last group value is "won".
      *
-     * @param {string[]} domain Domain of the formula
+     * It can also handle positional arguments.
+     * e.g. in `ODOO.PIVOT.HEADER(1, "#stage_id", 1, "#user_id", 1)`
+     *      the last group value is the id of the first user of the first stage.
+     *
+     * @param {(string | number)[]} domainArgs ODOO.PIVOT.HEADER arguments
      */
-    getPivotHeaderValue(domain) {
-        const groupFieldString = domain[domain.length - 2];
+    getLastPivotGroupValue(domainArgs) {
+        const groupFieldString = domainArgs.at(-2);
         if (groupFieldString.startsWith("#")) {
             const { field } = this.parseGroupField(groupFieldString);
-            const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
-            return this._isCol(field) ? cols[cols.length - 1] : rows[rows.length - 1];
+            const { cols, rows } = this._getColsRowsValuesFromDomain(domainArgs);
+            return this._isCol(field) ? cols.at(-1) : rows.at(-1);
         }
-        const groupValueString = domain[domain.length - 1];
+        const groupValueString = domainArgs.at(-1);
         return groupValueString;
-    }
-
-    /**
-     * Get the displayed label of the last group by of the domain
-     *
-     * @param {string[]} domain Domain of the formula
-     * @returns {string}
-     */
-    getDisplayedPivotHeaderValue(domain) {
-        const groupFieldString = domain[domain.length - 2];
-        return this.getGroupByDisplayLabel(groupFieldString, this.getPivotHeaderValue(domain));
     }
 
     //--------------------------------------------------------------------------

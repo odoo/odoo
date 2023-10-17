@@ -101,10 +101,10 @@ const ODOO_PIVOT_HEADER = {
     category: "Odoo",
     compute: function (pivotId, ...domain) {
         pivotId = toString(pivotId);
-        const args = domain.map(toString);
+        const domainArgs = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
-        assertDomainLength(args);
-        return this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale);
+        assertDomainLength(domainArgs);
+        return this.getters.computeOdooPivotHeaderValue(pivotId, domainArgs);
     },
     computeFormat: function (pivotId, ...domain) {
         pivotId = toString(pivotId.value);
