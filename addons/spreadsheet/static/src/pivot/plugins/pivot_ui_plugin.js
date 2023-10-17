@@ -231,7 +231,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         if (len === 0) {
             return _t("Total");
         }
-        return dataSource.sqdqsf(domain);
+        return dataSource.getPivotHeaderValue(domain);
     }
 
     /**

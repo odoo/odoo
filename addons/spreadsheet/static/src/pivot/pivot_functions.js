@@ -102,7 +102,7 @@ const ODOO_PIVOT_HEADER = {
         const args = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
         assertDomainLength(args);
-        return this.getters.getPivotHeaderValue(pivotId, args, this.locale);
+        return this.getters.getPivotHeaderValue(pivotId, args.at(-1), this.locale);
     },
     computeFormat: function (pivotId, ...domain) {
         pivotId = toString(pivotId.value);
