@@ -39,4 +39,4 @@ class Partner(models.Model):
             return
         for partner in self:
             if partner.website_id:
-                partner.display_name += f' [{self.website_id.name}]'
+                partner.display_name += f' [{partner.website_id.name}]'
