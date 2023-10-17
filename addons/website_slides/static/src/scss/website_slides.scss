@@ -665,10 +665,13 @@ li.o_wslides_fs_sidebar_list_item.active {
 
 .o_wslides_quiz_modal {
     @include media-breakpoint-up (sm) {
+        height: 461px;
+
         .modal-body {
             overflow: visible!important;
 
             .o_wslides_quiz_modal_close_btn {
+                top: 5px;
                 right: 5px;
             }
 
@@ -677,14 +680,10 @@ li.o_wslides_fs_sidebar_list_item.active {
             }
         }
 
-        .modal-content {
-            height: 461px;
-
-            .o_wslides_quiz_modal_hero {
-                margin-left: -30px;
-                position: absolute;
-                margin-top: -45px;
-            }
+        .o_wslides_quiz_modal_hero {
+            margin-left: -30px;
+            position: absolute;
+            margin-top: -45px;
         }
     }
 
@@ -695,28 +694,45 @@ li.o_wslides_fs_sidebar_list_item.active {
 
         .progress-bar {
             transition: width 0.8s ease;
-
-            &.no-transition {
+            &.level-up {
                 transition: none;
+                animation: 0.8s ease 0s progress-bar-level-complete, 0.9s ease 0.8s progress-bar-level-up
             }
+        }
+        @keyframes progress-bar-level-complete {
+            to {width: 100%;}
+        }
+        @keyframes progress-bar-level-up {
+            0% {width: 0%;}
+            11% {transition: width;}
         }
     }
 
-    .tooltip > .tooltip-inner {
-        background-color: #875A7B;
-        padding:5px 15px;
-        font-weight:bold;
-        @include font-size(13px);
-    }
-
-    .tooltip > .arrow {
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid #875A7B;
-    }
-
-    .tooltip > .arrow::before {
-        display: none;
+    .tooltip.bs-tooltip-top {
+        transform: translate(-50%, -100%);
+        transition: left 0.8s ease;
+        &.level-up {
+            transition: none;
+            animation: 0.8s ease 0s tooltip-level-complete, 0.9s ease 0.8s tooltip-level-up
+        }
+        .tooltip-inner {
+            background-color: #875A7B;
+            padding:5px 15px;
+            font-weight:bold;
+            @include font-size(13px);
+        }
+        .tooltip-arrow {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0px);
+        }
+        @keyframes tooltip-level-complete {
+            to {left: 100%;}
+        }
+        @keyframes tooltip-level-up {
+            0% {left: 0%;}
+            11% {transition: left;}
+        }
     }
 }
 
