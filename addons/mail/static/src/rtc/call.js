@@ -27,6 +27,7 @@ export class Call extends Component {
 
     setup() {
         this.grid = useRef("grid");
+        this.call = useRef("call");
         this.messaging = useMessaging();
         this.notification = useService("notification");
         this.rtc = useRtc();
@@ -219,7 +220,7 @@ export class Call extends Component {
     }
 
     async enterFullScreen() {
-        const el = document.body;
+        const el = this.call.el;
         try {
             if (el.requestFullscreen) {
                 await el.requestFullscreen();
