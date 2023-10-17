@@ -144,7 +144,7 @@ class SaleOrder(models.Model):
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [{
-            'name': _("Free Product - %(product)s", product=product.name),
+            'name': _("Free Product - %(product)s", product=product.with_context(display_default_code=False).display_name),
             'product_id': product.id,
             'discount': 100,
             'product_uom_qty': reward.reward_product_qty * claimable_count,
