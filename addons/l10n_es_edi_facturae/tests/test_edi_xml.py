@@ -9,7 +9,7 @@ import lxml
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -17,10 +17,10 @@ from odoo.tools import file_open
 _logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestEdiFacturaeXmls(AccountEdiTestCommon):
+class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     @classmethod
-    def setUpClass(cls, chart_template_ref='es_full', edi_format_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls, chart_template_ref='es_full'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         cls.frozen_today = datetime(year=2023, month=1, day=1, hour=0, minute=0, second=0)
 
         # ==== Companies ====
