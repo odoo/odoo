@@ -65,7 +65,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales']" position="attributes">
-                <attribute name="invisible">0</attribute>
+                <attribute name="invisible" remove="1" separator=" or "></attribute>
             </xpath>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group name="pos" string="Point of Sale" invisible="not sale_ok">
