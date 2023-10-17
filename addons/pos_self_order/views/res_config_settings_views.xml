@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='payment_methods_new']" position="before">
                 <div class="o_notification_alert alert alert-warning" role="alert" invisible="not is_kiosk_mode">
-                    <span>Please note that the kiosk only works with Adyen terminals</span>
+                    <span>Please note that the kiosk only works with Adyen &amp; Stripe terminals</span>
                 </div>
             </xpath>
             <block id="restaurant_section" position="after">
