@@ -145,7 +145,8 @@ class AccountMoveSend(models.Model):
             return
 
         # Read pdf content.
-        reader_buffer = io.BytesIO(invoice_data['pdf_attachment_values']['raw'])
+        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
         # Post-process.
@@ -175,7 +176,7 @@ class AccountMoveSend(models.Model):
         # Replace the current content.
         writer_buffer = io.BytesIO()
         writer.write(writer_buffer)
-        invoice_data['pdf_attachment_values']['raw'] = writer_buffer.getvalue()
+        pdf_values['raw'] = writer_buffer.getvalue()
         reader_buffer.close()
         writer_buffer.close()
 
@@ -186,8 +187,9 @@ class AccountMoveSend(models.Model):
         if not anchor_elements:
             return
 
-        filename = invoice_data['pdf_attachment_values']['name']
-        content = invoice_data['pdf_attachment_values']['raw']
+        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        filename = pdf_values['name']
+        content = pdf_values['raw']
 
         doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
