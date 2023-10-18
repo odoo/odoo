@@ -133,3 +133,15 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         po = po_form.save()
         self.assertEqual(po.order_line.account_analytic_id.id, analytic_account.id, 'The analytic account defined in the purchase requisition line must be the same as the one from the purchase order line.')
         self.assertEqual(po.order_line.analytic_tag_ids.id, analytic_tag.id, 'The analytic account tag defined in the purchase requisition line must be the same as the one from the purchase order line.')
+
+    def test_08_purchase_requisition_sequence(self):
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        self.env['ir.sequence'].create({
+            'code': 'purchase.requisition.purchase.tender',
+            'prefix': 'REQ_',
+            'name': 'Call for Tender sequence',
+            'company_id': new_company.id,
+        })
+        self.requisition1.company_id = new_company
+        self.requisition1.action_in_progress()
+        self.assertTrue(self.requisition1.name.startswith("REQ_"))
