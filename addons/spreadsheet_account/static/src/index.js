@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import AccountingPlugin from "./plugins/accounting_plugin";
+import { AccountingPlugin } from "./plugins/accounting_plugin";
 import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils";
 import { parseAccountingDate } from "./accounting_functions";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";

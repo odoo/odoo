@@ -215,7 +215,7 @@ export class ServerData {
 /**
  * Collect multiple requests into a single batch.
  */
-export default class BatchEndpoint {
+export class BatchEndpoint {
     /**
      * @param {object} orm
      * @param {string} resModel

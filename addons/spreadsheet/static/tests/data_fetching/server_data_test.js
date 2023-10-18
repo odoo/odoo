@@ -2,7 +2,7 @@
 
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
-import BatchEndpoint, { Request, ServerData } from "@spreadsheet/data_sources/server_data";
+import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";
 
 QUnit.module("spreadsheet server data", {}, () => {
     QUnit.test("simple synchronous get", async (assert) => {

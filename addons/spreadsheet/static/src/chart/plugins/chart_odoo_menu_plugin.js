@@ -3,7 +3,7 @@
 import { coreTypes, CorePlugin } from "@odoo/o-spreadsheet";
 
 /** Plugin that link charts with Odoo menus. It can contain either the Id of the odoo menu, or its xml id. */
-export default class ChartOdooMenuPlugin extends CorePlugin {
+export class ChartOdooMenuPlugin extends CorePlugin {
     constructor(config) {
         super(config);
         this.odooMenuReference = {};
