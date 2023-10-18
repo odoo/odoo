@@ -259,7 +259,7 @@
                         <t t-call="portal.portal_docs_entry">
                             <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
                             <t t-set="title">Addresses</t>
-                            <t t-set="text">Modify your addresses</t>
+                            <t t-set="text">Add or Modify your addresses</t>
                             <t t-set="url" t-value="'/my/addresses'"/>
                             <t t-set="config_card" t-value="True"/>
                         </t>
@@ -536,12 +536,21 @@
                 </t>
             </select>
         </div>
+        <div t-attf-class="mb-3 col-xl-6">
+            <label class="col-form-label label-optional" for="type">Use this address for</label>
+            <select name="type" t-attf-class="form-select">
+                <option value="other" t-att-selected="partner.type == 'other'"></option>
+                <option value="delivery" t-att-selected="partner.type == 'delivery'">Delivery</option>
+                <option value="invoice" t-att-selected="partner.type == 'invoice'">Invoice</option>
+                <option value="contact" t-att-selected="partner.type == 'contact'">Contact</option>
+            </select>
+        </div>
     </template>
 
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
-            <form action="/my/account" method="post">
+            <form t-attf-action="/my/account?address={{partner.id}}" method="post">
                 <div class="row o_portal_details">
                     <div class="col-lg-8">
                         <div class="row">
@@ -828,6 +837,7 @@
                     <t t-call="portal.address_card"/>
                 </t>
             </ul>
+            <a href="/my/addresses/new" class="btn btn-primary justify-content-start gap-3 align-items-center h-100 p-3">Add an address</a>
         </t>
     </template>
 
@@ -842,10 +852,10 @@
 
                 <span>
                     <t t-if="partner.email" t-out="partner.email"/>
-                <div>
-                    <t t-out="partner.zip + ' '"/><t t-out="partner.city"/>
-                </div>
-                <t t-if="partner.state_id" t-out="partner.state_id.name + ' '"/><t t-out="partner.country_id.name"/>
+                    <div>
+                        <t t-if="partner.zip" t-out="partner.zip + ' '"/><t t-out="partner.city"/>
+                    </div>
+                    <t t-if="partner.state_id" t-out="partner.state_id.name + ' '"/><t t-out="partner.country_id.name"/>
                 </span>
             </div>
         </a>
