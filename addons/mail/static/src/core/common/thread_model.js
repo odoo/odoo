@@ -149,6 +149,10 @@ export class Thread extends Record {
 
     setup() {}
 
+    get chatPartner() {
+        return this._store.personas[createLocalId("partner", this.chatPartnerId)];
+    }
+
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
             return false;
@@ -224,10 +228,7 @@ export class Thread extends Record {
 
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
-            return (
-                this.customName ||
-                this._store.personas[createLocalId("partner", this.chatPartnerId)].nameOrDisplayName
-            );
+            return this.customName || this.chatPartner.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(

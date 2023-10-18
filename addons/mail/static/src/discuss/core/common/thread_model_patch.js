@@ -15,7 +15,10 @@ patch(Thread.prototype, "discuss/core/common", {
             );
         }
         if (this.type === "chat") {
-            return `/web/image/res.partner/${this.chatPartnerId}/avatar_128`;
+            return url(
+                `/web/image/res.partner/${this.chatPartnerId}/avatar_128`,
+                assignDefined({}, { unique: this.chatPartner.write_date })
+            );
         }
         return this._super();
     },
