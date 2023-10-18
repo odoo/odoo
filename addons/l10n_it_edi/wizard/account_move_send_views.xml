@@ -6,7 +6,9 @@
             <field name="inherit_id" ref="account.account_move_send_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='warnings']" position="inside">
-                    <field name="l10n_it_edi_readonly" invisible="1"/>
+                    <field name="l10n_it_edi_readonly_xml_export" invisible="1"/>
+                    <field name="l10n_it_edi_enable_xml_export" invisible="1"/>
+                    <field name="l10n_it_edi_readonly_send" invisible="1"/>
                     <field name="l10n_it_edi_enable_send" invisible="1"/>
                     <span invisible="not l10n_it_edi_warning_message">
                         <b>Tax Agency (Italy)</b>
@@ -16,9 +18,15 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@name='option_send_mail']" position='after'>
-                    <div name="option_l10n_it_edi" invisible="not l10n_it_edi_enable_send">
-                        <field name="l10n_it_edi_checkbox_send" readonly="l10n_it_edi_readonly"/>
-                        <b><label for="l10n_it_edi_checkbox_send"/></b>
+                    <div name="option_l10n_it_edi">
+                        <div name="option_l10n_it_edi_xml_export" invisible="not l10n_it_edi_enable_xml_export">
+                            <field name="l10n_it_edi_checkbox_xml_export" readonly="l10n_it_edi_readonly_xml_export"/>
+                            <b><label for="l10n_it_edi_checkbox_xml_export"/></b>
+                        </div>
+                        <div name="option_l10n_it_edi_send" invisible="not l10n_it_edi_enable_send">
+                            <field name="l10n_it_edi_checkbox_send" readonly="l10n_it_edi_readonly_send"/>
+                            <b><label for="l10n_it_edi_checkbox_send"/></b>
+                        </div>
                     </div>
                 </xpath>
             </field>
