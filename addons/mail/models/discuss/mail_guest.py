@@ -3,6 +3,7 @@
 import pytz
 import uuid
 
+import odoo
 from odoo.tools import consteq
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
@@ -126,7 +127,7 @@ class MailGuest(models.Model):
 
     def _guest_format(self, fields=None):
         if not fields:
-            fields = {'id': True, 'name': True, 'im_status': True}
+            fields = {'id': True, 'name': True, 'im_status': True, "write_date": True}
         guests_formatted_data = {}
         for guest in self:
             data = {}
@@ -136,5 +137,7 @@ class MailGuest(models.Model):
                 data['name'] = guest.name
             if 'im_status' in fields:
                 data['im_status'] = guest.im_status
+            if "write_date" in fields:
+                data["write_date"] = odoo.fields.Datetime.to_string(guest.write_date)
             guests_formatted_data[guest] = data
         return guests_formatted_data

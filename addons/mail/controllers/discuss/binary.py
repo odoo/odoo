@@ -13,49 +13,51 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
-    def discuss_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
+    def discuss_channel_partner_avatar_128(self, channel_id, partner_id, unique=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request(
             request=request, channel_id=channel_id
         )
         partner_sudo = channel_member_sudo.env["res.partner"].browse(partner_id).exists()
         placeholder = partner_sudo._avatar_get_placeholder_path()
         domain = [("channel_id", "=", channel_id), ("partner_id", "=", partner_id)]
+        immutable = bool(unique)
         if channel_member_sudo and channel_member_sudo.env["discuss.channel.member"].search(domain, limit=1):
             return (
                 request.env["ir.binary"]
                 ._get_image_stream_from(partner_sudo, field_name="avatar_128", placeholder=placeholder)
-                .get_response()
+                .get_response(immutable=immutable)
             )
         if request.env.user.share:
-            return request.env["ir.binary"]._get_placeholder_stream(placeholder).get_response()
+            return request.env["ir.binary"]._get_placeholder_stream(placeholder).get_response(immutable=immutable)
         return (
             request.env["ir.binary"]
             ._get_image_stream_from(partner_sudo.sudo(False), field_name="avatar_128", placeholder=placeholder)
-            .get_response()
+            .get_response(immutable=immutable)
         )
 
     @http.route(
         "/discuss/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128", methods=["GET"], type="http", auth="public"
     )
-    def discuss_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
+    def discuss_channel_guest_avatar_128(self, channel_id, guest_id, unique=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request(
             request=request, channel_id=channel_id
         )
         guest_sudo = channel_member_sudo.env["mail.guest"].browse(guest_id).exists()
         placeholder = guest_sudo._avatar_get_placeholder_path()
         domain = [("channel_id", "=", channel_id), ("guest_id", "=", guest_id)]
+        immutable = bool(unique)
         if channel_member_sudo and channel_member_sudo.env["discuss.channel.member"].search(domain, limit=1):
             return (
                 request.env["ir.binary"]
                 ._get_image_stream_from(guest_sudo, field_name="avatar_128", placeholder=placeholder)
-                .get_response()
+                .get_response(immutable=immutable)
             )
         if request.env.user.share:
-            return request.env["ir.binary"]._get_placeholder_stream(placeholder).get_response()
+            return request.env["ir.binary"]._get_placeholder_stream(placeholder).get_response(immutable=immutable)
         return (
             request.env["ir.binary"]
             ._get_image_stream_from(guest_sudo.sudo(False), field_name="avatar_128", placeholder=placeholder)
-            .get_response()
+            .get_response(immutable=immutable)
         )
 
     @http.route(
@@ -81,7 +83,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
-    def discuss_channel_avatar_128(self, channel_id, **kwargs):
+    def discuss_channel_avatar_128(self, channel_id, unique=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
             request=request, channel_id=channel_id
         )
@@ -92,7 +94,7 @@ class BinaryController(http.Controller):
         return (
             request.env["ir.binary"]
             ._get_image_stream_from(channel_sudo, field_name="avatar_128")
-            .get_response()
+            .get_response(immutable=bool(unique))
         )
 
     @http.route(
