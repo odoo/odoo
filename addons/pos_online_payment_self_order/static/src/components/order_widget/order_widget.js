@@ -29,10 +29,17 @@ patch(OrderWidget.prototype, {
                 if (isOnlinePayment) {
                     return { label: buttonName, disabled: false };
                 } else {
-                    return {
-                        label: _t("Pay at cashier"),
-                        disabled: false,
-                    };
+                    if (this.router.activeSlot === "product_list") {
+                        return {
+                            label: _t("Order"),
+                            disabled: true,
+                        };
+                    } else {
+                        return {
+                            label: _t("Pay at cashier"),
+                            disabled: false,
+                        };
+                    }
                 }
             }
         } else {

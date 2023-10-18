@@ -42,6 +42,7 @@ export class OrderWidget extends Component {
         const kioskPayment = this.selfOrder.pos_payment_methods;
         const isNoLine = this.selfOrder.currentOrder.lines.length === 0;
         const hasNotAllLinesSent = this.selfOrder.currentOrder.hasNotAllLinesSent();
+        const isMobilePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_mobile_payment);
 
         let label = "";
         let disabled = false;
@@ -53,8 +54,8 @@ export class OrderWidget extends Component {
             label = _t("Order");
             disabled = isNoLine;
         } else {
-            label = kioskPayment ? _t("Pay") : _t("Pay at cashier");
-            disabled = false;
+            label = kioskPayment ? _t("Pay") : _t("Order");
+            disabled = !kioskPayment && !isMobilePayment;
         }
 
         return { label, disabled };
