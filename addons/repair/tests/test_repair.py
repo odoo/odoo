@@ -281,17 +281,12 @@ class TestRepair(common.TransactionCase):
                 # move_ids with quantity (LOWER or HIGHER than) product_uom_qty MUST NOT be splitted
         # Any line with quantity < product_uom_qty => Warning
         repair.move_ids.picked = True
-        end_action = repair.action_repair_end()
-        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
-        warn_uncomplete_wizard = Form(
-            self.env['repair.warn.uncomplete.move']
-            .with_context(**end_action['context'])
-            ).save()
+        self.assertTrue(repair.has_uncomplete_moves)
         # LineB : no serial => ValidationError
         lot = lineB.move_line_ids.lot_id
         with self.assertRaises(UserError) as err:
             lineB.move_line_ids.lot_id = False
-            warn_uncomplete_wizard.action_validate()
+            repair.action_repair_done()
 
         # LineB with lots
         lineB.move_line_ids.lot_id = lot
@@ -304,13 +299,8 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(lineD.state, 'assigned')
         num_of_lines = len(repair.move_ids)
         self.assertFalse(repair.move_id)
-        end_action = repair.action_repair_end()
-        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
-        warn_uncomplete_wizard = Form(
-            self.env['repair.warn.uncomplete.move']
-            .with_context(**end_action['context'])
-            ).save()
-        warn_uncomplete_wizard.action_validate()
+        self.assertTrue(repair.has_uncomplete_moves)
+        repair.action_repair_end()
         self.assertFalse((repair.move_id | repair.move_ids).picking_id, "No picking for repair moves")
         self.assertEqual(repair.state, "done")
         done_moves = repair.move_ids - lineD
