@@ -4,7 +4,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import users, tagged, TransactionCase, warmup
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -134,6 +134,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
+                                    'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                     'user': {
                                         'id': self.users[0].id,
                                         'isInternalUser': True,
@@ -185,6 +186,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
+                                    'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                     'user': {
                                         'id': self.users[0].id,
                                         'isInternalUser': True,
@@ -236,6 +238,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
+                                    'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                     'user': {
                                         'id': self.users[0].id,
                                         'isInternalUser': True,
@@ -287,6 +290,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
+                                    'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                     'user': {
                                         'id': self.users[0].id,
                                         'isInternalUser': True,
@@ -338,6 +342,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
+                                    'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                     'user': {
                                         'id': self.users[0].id,
                                         'isInternalUser': True,
@@ -390,6 +395,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[0].id,
                                             'isInternalUser': True,
@@ -411,6 +417,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'test12',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[12].id,
                                             'isInternalUser': True,
@@ -478,6 +485,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[0].id,
                                             'isInternalUser': True,
@@ -499,6 +507,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'test14',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[14].id,
                                             'isInternalUser': True,
@@ -566,6 +575,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[0].id,
                                             'isInternalUser': True,
@@ -587,6 +597,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'test15',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[15].id,
                                             'isInternalUser': True,
@@ -654,6 +665,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[0].id,
                                             'isInternalUser': True,
@@ -675,6 +687,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'test2',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[2].id,
                                             'isInternalUser': True,
@@ -742,6 +755,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[0].id,
                                             'isInternalUser': True,
@@ -763,6 +777,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'is_company': False,
                                         'name': 'test3',
                                         'out_of_office_date_end': False,
+                                        'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                                         'user': {
                                             'id': self.users[3].id,
                                             'isInternalUser': True,
@@ -994,6 +1009,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'name': 'OdooBot',
                 'out_of_office_date_end': False,
                 'user': [('clear',)],
+                'write_date': fields.Datetime.to_string(self.user_root.partner_id.write_date),
             },
             'currentGuest': False,
             'current_partner': {
@@ -1008,6 +1024,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'id': self.users[0].id,
                     'isInternalUser': True,
                 },
+                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
             },
             'current_user_id': self.users[0].id,
             'current_user_settings': {
