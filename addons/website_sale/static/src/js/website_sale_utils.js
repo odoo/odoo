@@ -108,6 +108,11 @@ function updateCartNavBar(data) {
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
     $("#cart_total").replaceWith(data['website_sale.total']);
+    if (data.cart_ready) {
+        document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
+    } else {
+        document.querySelector("a[name='website_sale_main_button']")?.classList.add('disabled');
+    }
 }
 
 function showCartNotification(callService, props, options = {}) {
