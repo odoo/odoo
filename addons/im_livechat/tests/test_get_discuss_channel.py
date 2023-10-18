@@ -48,6 +48,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             'name': 'Visitor',
             'im_status': 'offline',
             'type': "guest",
+            'write_date': fields.Datetime.to_string(self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.write_date),
         }, {
             'active': True,
             'country': False,
