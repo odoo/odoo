@@ -79,6 +79,8 @@ class ResPartner(models.Model):
             ('0213', "0213 - Finnish Organization Value Add Tax Identifier"),
             ('0215', "0215 - Net service ID"),
             ('0216', "0216 - OVTcode"),
+            ('0221', "0221 - The registered number of the qualified invoice issuer (Japan)"),
+            ('0230', "0230 - National e-Invoicing Framework (Malaysia)"),
             ('9901', "9901 - Danish Ministry of the Interior and Health"),
             ('9910', "9910 - Hungary VAT number"),
             ('9913', "9913 - Business Registers Network"),
