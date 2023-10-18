@@ -2,7 +2,7 @@
 
 import { attachComponent } from "@web/legacy/utils";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
-import Dialog from "@web/legacy/js/core/dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import dom from "@web/legacy/js/core/dom";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
@@ -3228,6 +3228,8 @@ const SnippetOptionWidget = Widget.extend({
 
         this._userValueWidgets = [];
         this._actionQueues = new Map();
+
+        this.dialog = this.bindService("dialog");
     },
     /**
      * @override
@@ -4303,9 +4305,10 @@ const SnippetOptionWidget = Widget.extend({
             const warnMessage = await this._checkIfWidgetsUpdateNeedWarning(widgets);
             if (warnMessage) {
                 const okWarning = await new Promise(resolve => {
-                    Dialog.confirm(this, warnMessage, {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
+                    this.dialog.add(ConfirmationDialog, {
+                        body: warnMessage,
+                        confirm: () => resolve(true),
+                        cancel: () => resolve(false),
                     });
                 });
                 if (!okWarning) {
@@ -8750,65 +8753,56 @@ registry.SnippetSave = SnippetOptionWidget.extend({
      */
     saveSnippet: function (previewMode, widgetValue, params) {
         return new Promise(resolve => {
-            Dialog.confirm(this, _t("To save a snippet, we need to save all your previous modifications and reload the page."), {
-                cancel_callback: () => resolve(false),
-                buttons: [
-                    {
-                        text: _t("Save and Reload"),
-                        classes: 'btn-primary',
-                        close: true,
-                        click: () => {
-                            const isButton = this.$target[0].matches("a.btn");
-                            const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
-                            let thumbnailURL;
-                            this.trigger_up('snippet_thumbnail_url_request', {
-                                key: snippetKey,
-                                onSuccess: url => thumbnailURL = url,
-                            });
-                            let context;
-                            this.trigger_up('context_get', {
-                                callback: ctx => context = ctx,
-                            });
-                            this.trigger_up('request_save', {
-                                reloadEditor: true,
-                                invalidateSnippetCache: true,
-                                onSuccess: async () => {
-                                    const defaultSnippetName = !isButton
-                                        ? _t("Custom %s", this.data.snippetName)
-                                        : _t("Custom Button");
-                                    const targetCopyEl = this.$target[0].cloneNode(true);
-                                    delete targetCopyEl.dataset.name;
-                                    if (isButton) {
-                                        targetCopyEl.classList.remove("mb-2");
-                                        targetCopyEl.classList.add("o_snippet_drop_in_only", "s_custom_button");
-                                    }
-                                    // By the time onSuccess is called after request_save, the
-                                    // current widget has been destroyed and is orphaned, so this._rpc
-                                    // will not work as it can't trigger_up. For this reason, we need
-                                    // to bypass the service provider and use the global RPC directly
-                                    await jsonrpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
-                                        model: "ir.ui.view",
-                                        method: "save_snippet",
-                                        args: [],
-                                        kwargs: {
-                                            'name': defaultSnippetName,
-                                            'arch': targetCopyEl.outerHTML,
-                                            'template_key': this.options.snippets,
-                                            'snippet_key': snippetKey,
-                                            'thumbnail_url': thumbnailURL,
-                                            'context': context,
-                                        },
-                                    });
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("To save a snippet, we need to save all your previous modifications and reload the page."),
+                cancel: () => resolve(false),
+                confirmLabel: _t("Save and Reload"),
+                confirm: () => {
+                    const isButton = this.$target[0].matches("a.btn");
+                    const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
+                    let thumbnailURL;
+                    this.trigger_up('snippet_thumbnail_url_request', {
+                        key: snippetKey,
+                        onSuccess: url => thumbnailURL = url,
+                    });
+                    let context;
+                    this.trigger_up('context_get', {
+                        callback: ctx => context = ctx,
+                    });
+                    this.trigger_up('request_save', {
+                        reloadEditor: true,
+                        invalidateSnippetCache: true,
+                        onSuccess: async () => {
+                            const defaultSnippetName = !isButton
+                                ? _t("Custom %s", this.data.snippetName)
+                                : _t("Custom Button");
+                            const targetCopyEl = this.$target[0].cloneNode(true);
+                            delete targetCopyEl.dataset.name;
+                            if (isButton) {
+                                targetCopyEl.classList.remove("mb-2");
+                                targetCopyEl.classList.add("o_snippet_drop_in_only", "s_custom_button");
+                            }
+                            // By the time onSuccess is called after request_save, the
+                            // current widget has been destroyed and is orphaned, so this._rpc
+                            // will not work as it can't trigger_up. For this reason, we need
+                            // to bypass the service provider and use the global RPC directly
+                            await jsonrpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
+                                model: "ir.ui.view",
+                                method: "save_snippet",
+                                args: [],
+                                kwargs: {
+                                    'name': defaultSnippetName,
+                                    'arch': targetCopyEl.outerHTML,
+                                    'template_key': this.options.snippets,
+                                    'snippet_key': snippetKey,
+                                    'thumbnail_url': thumbnailURL,
+                                    'context': context,
                                 },
                             });
-                            resolve(true);
-                        }
-                    }, {
-                        text: _t("Cancel"),
-                        close: true,
-                        click: () => resolve(false),
-                    }
-                ]
+                        },
+                    });
+                    resolve(true);
+                },
             });
         });
     },

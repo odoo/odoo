@@ -2,7 +2,7 @@
 
 import { Mutex } from "@web/core/utils/concurrency";
 import { clamp } from "@web/core/utils/numbers";
-import Dialog from "@web/legacy/js/core/dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
@@ -1826,6 +1826,7 @@ var SnippetsMenu = Widget.extend({
 
         this.orm = this.bindService("orm");
         this.notification = this.bindService("notification");
+        this.dialog = this.bindService("dialog");
     },
     /**
      * @override
@@ -3923,54 +3924,38 @@ var SnippetsMenu = Widget.extend({
      * @param {Event} ev
      */
     _onInstallBtnClick: function (ev) {
-        var self = this;
         var $snippet = $(ev.currentTarget).closest('[data-module-id]');
         var moduleID = $snippet.data('moduleId');
         var name = $snippet.attr('name');
-        new Dialog(this, {
+        const bodyText = _t("Do you want to install %s App?", name);
+        const linkText = _t("More info about this app.");
+        const linkUrl = '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree';
+        this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", name),
-            size: 'medium',
-            $content: $('<div/>', {text: _t("Do you want to install the %s App?", name)}).append(
-                $('<a/>', {
-                    target: '_blank',
-                    href: '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
-                    text: _t("More info about this app."),
-                    class: 'ml4',
-                })
-            ),
-            buttons: [{
-                text: _t("Save and Install"),
-                classes: 'btn-primary',
-                click: function () {
-                    this.$footer.find('.btn').toggleClass('o_hidden');
-                    this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]).then(() => {
-                        self.trigger_up('request_save', {
-                            invalidateSnippetCache: true,
-                            _toMutex: true,
-                            reloadWebClient: true,
-                        });
-                    }).catch(reason => {
-                        if (reason instanceof RPCError) {
-                            this.close();
-                            const message = markup(_t("Could not install module <strong>%s</strong>", escape(name)));
-                            self.notification.add(message, {
-                                type: 'danger',
-                                sticky: true,
-                            });
-                        } else {
-                            return Promise.reject(reason);
-                        }
+            body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
+            confirm: async () => {
+                try {
+                    await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
+                    this.trigger_up('request_save', {
+                        invalidateSnippetCache: true,
+                        _toMutex: true,
+                        reloadWebClient: true,
                     });
-                },
-            }, {
-                text: _t("Install in progress"),
-                icon: 'fa-spin fa-circle-o-notch fa-spin mr8',
-                classes: 'btn-primary disabled o_hidden',
-            }, {
-                text: _t("Cancel"),
-                close: true,
-            }],
-        }).open();
+                } catch (e) {
+                    if (e instanceof RPCError) {
+                        const message = escape(_t("Could not install module %s", name));
+                        this.notification.add(message, {
+                            type: "danger",
+                            sticky: true,
+                        });
+                    } else {
+                        throw e;
+                    }
+                }
+            },
+            confirmLabel: _t("Save and Install"),
+            cancel: () => {},
+        });
     },
     /**
      * @private
@@ -4012,26 +3997,20 @@ var SnippetsMenu = Widget.extend({
         const $snippet = $(ev.target).closest('.oe_snippet');
         const snippetId = parseInt(ev.currentTarget.dataset.snippetId);
         ev.stopPropagation();
-        new Dialog(this, {
-            size: 'medium',
-            title: _t('Confirmation'),
-            $content: $('<div><p>' + _t("Are you sure you want to delete the snippet: %s?", $snippet.attr('name')) + '</p></div>'),
-            buttons: [{
-                text: _t("Yes"),
-                close: true,
-                classes: 'btn-primary',
-                click: async () => {
-                    await this.orm.call("ir.ui.view", "delete_snippet", [], {
-                        'view_id': snippetId,
-                        'template_key': this.options.snippets,
-                    });
-                    await this._loadSnippetsTemplates(true);
-                },
-            }, {
-                text: _t("No"),
-                close: true,
-            }],
-        }).open();
+        const message = _t("Are you sure you want to delete the snippet %s?", $snippet[0].getAttribute("name"));
+        this.dialog.add(ConfirmationDialog, {
+            body: message,
+            confirm: async () => {
+                await this.orm.call("ir.ui.view", "delete_snippet", [], {
+                    'view_id': snippetId,
+                    'template_key': this.options.snippets,
+                });
+                await this._loadSnippetsTemplates(true);
+            },
+            cancel: () => null,
+            confirmLabel: _t("Yes"),
+            cancelLabel: _t("No"),
+        });
     },
     /**
      * @private
