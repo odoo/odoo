@@ -27,6 +27,7 @@ export class Record extends DataPoint {
      * @param {Object} [options={}]
      * @param {boolean} [options.manuallyAdded]
      * @param {Function} [options.onUpdate]
+     * @param {Function} [options.onSave]
      * @param {Record} [options.parentRecord]
      * @param {string} [options.virtualId]
      */

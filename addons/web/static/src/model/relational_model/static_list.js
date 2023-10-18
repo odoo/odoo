@@ -367,6 +367,17 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
     }
 
+    async update(toLink, toUnlink) {
+        return this.model.mutex.exec(async () => {
+            const commands = [
+                ...toLink.map((id) => [x2ManyCommands.LINK, id]),
+                ...toUnlink.map((id) => [x2ManyCommands.UNLINK, id]),
+            ];
+            await this._applyCommands(commands, true);
+            await this._onUpdate();
+        });
+    }
+
     async replaceWith(ids, { reload = false } = {}) {
         return this.model.mutex.exec(async () => {
             await this._replaceWith(ids, { reload });
@@ -476,9 +487,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    _applyCommands(commands) {
+    async _applyCommands(commands, replaceWith = false) {
         const isOnLastPage = this.limit + this.offset >= this.count;
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
+
+        const recordsToLoad = [];
         for (const command of commands) {
             switch (command[0]) {
                 case CREATE: {
@@ -574,8 +587,14 @@ export class StaticList extends DataPoint {
                     break;
                 }
                 case LINK: {
-                    const record = this._createRecordDatapoint({ ...command[2], id: command[1] });
-                    if (!this.limit || this.records.length < this.limit) {
+                    let record;
+                    if (command[1] in this._cache) {
+                        record = this._cache[command[1]];
+                    } else {
+                        record = this._createRecordDatapoint({ ...command[2], id: command[1] });
+                        recordsToLoad.push(record);
+                    }
+                    if (!this.limit || this.records.length < this.limit || replaceWith) {
                         this.records.push(record);
                     }
                     this._currentIds.push(record.resId);
@@ -585,15 +604,15 @@ export class StaticList extends DataPoint {
                 }
             }
         }
-        // if we aren't on the last page, and *n* records of the current page have been removed
-        // removed, the first *n* records of the next page become the last *n* ones of the current
+        // if we aren't on the last page, and *n* records of the current page have been removed,
+        // the first *n* records of the next page become the last *n* ones of the current
         // page, so we need to add (and maybe load) them.
         const nbMissingRecords = this.limit - this.records.length;
         if (!isOnLastPage && nbMissingRecords > 0) {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
-            const recordsToLoad = [];
+            // const recordsToLoad = [];
             for (const id of nextRecordIds) {
                 if (this._cache[id]) {
                     this.records.push(this._cache[id]);
@@ -604,18 +623,19 @@ export class StaticList extends DataPoint {
                     recordsToLoad.push(record);
                 }
             }
+        }
+        if (recordsToLoad.length) {
             const resIds = recordsToLoad.map((r) => r.resId);
-            this.model._loadRecords({ ...this.config, resIds }).then((recordValues) => {
-                for (let i = 0; i < recordsToLoad.length; i++) {
-                    const record = recordsToLoad[i];
-                    record._applyValues(recordValues[i]);
-                    const commands = this._unknownRecordCommands[record.resId];
-                    if (commands) {
-                        delete this._unknownRecordCommands[record.resId];
-                        this._applyCommands(commands);
-                    }
+            const recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            for (let i = 0; i < recordsToLoad.length; i++) {
+                const record = recordsToLoad[i];
+                record._applyValues(recordValues[i]);
+                const commands = this._unknownRecordCommands[record.resId];
+                if (commands) {
+                    delete this._unknownRecordCommands[record.resId];
+                    this._applyCommands(commands);
                 }
-            });
+            }
         }
     }
 
