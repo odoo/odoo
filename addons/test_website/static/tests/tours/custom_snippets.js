@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "confirm reload",
-        trigger: ".modal-dialog button span:contains('Save and Reload')",
+        trigger: ".modal-dialog button:contains('Save and Reload')",
     },
     {
         content: "ensure custom snippet appeared",
@@ -87,7 +87,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "confirm delete",
-        trigger: ".modal-dialog button:has(span:contains('Yes'))",
+        trigger: ".modal-dialog button:contains('Yes')",
     },
     {
         content: "ensure custom snippet disappeared",

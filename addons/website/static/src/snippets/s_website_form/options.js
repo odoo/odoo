@@ -2,8 +2,7 @@
 
 import FormEditorRegistry from "@website/js/form_editor_registry";
 import options from "@web_editor/js/editor/snippets.options";
-import Dialog from "@web/legacy/js/core/dialog";
-import dom from "@web/legacy/js/core/dom";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";
 import { unique } from "@web/core/utils/arrays";
@@ -365,6 +364,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     init() {
         this._super(...arguments);
         this.notification = this.bindService("notification");
+        this.dialog = this.bindService("dialog");
     },
     /**
      * @override
@@ -509,42 +509,25 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     promptSaveRedirect: function (name, value, widgetValue) {
         return new Promise((resolve, reject) => {
             const message = _t("Would you like to save before being redirected? Unsaved changes will be discarded.");
-            Dialog.confirm(this, message, {
-                cancel_callback: () => resolve(),
-                buttons: [
-                    {
-                        text: _t("Save"),
-                        classes: 'btn-primary',
-                        click: (ev) => {
-                            const restore = dom.addButtonLoadingEffect(ev.currentTarget);
-                            this.trigger_up('request_save', {
-                                reload: false,
-                                onSuccess: () => {
-                                    this._redirectToAction(value);
-                                },
-                                onFailure: () => {
-                                    restore();
-                                    this.notification.add(_t("Something went wrong."), {
-                                        type: 'danger',
-                                        sticky: true,
-                                    });
-                                    reject();
-                                },
-                            });
-                            resolve();
-                        },
-                    }, {
-                        text: _t("Discard"),
-                        click: (ev) => {
-                            dom.addButtonLoadingEffect(ev.currentTarget);
+            this.dialog.add(ConfirmationDialog, {
+                body: message,
+                confirmLabel: _t("Save"),
+                confirm: () => {
+                   this.trigger_up('request_save', {
+                        reload: false,
+                        onSuccess: () => {
                             this._redirectToAction(value);
                         },
-                    }, {
-                        text: _t("Cancel"),
-                        close: true,
-                        click: () => resolve(),
-                    },
-                ],
+                        onFailure: () => {
+                            this.notification.add(_t("Something went wrong."), {
+                                type: 'danger',
+                                sticky: true,
+                            });
+                            reject();
+                        },
+                    });
+                },
+                cancel: () => resolve(),
             });
         });
     },
@@ -1135,7 +1118,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 this._setVisibilityDependency(firstValue);
                 return;
             }
-            Dialog.confirm(this, _t("There is no field available for this option."));
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("There is no field available for this option."),
+            });
         }
         this._deleteConditionalVisibility(this.$target[0]);
     },

@@ -2,8 +2,8 @@
 
 import options from "@web_editor/js/editor/snippets.options";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import Dialog from "@web/legacy/js/core/dialog";
 import "@website/js/editor/snippets.options";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -186,9 +186,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     async deleteRibbon(previewMode, widgetValue, params) {
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t('Are you sure you want to delete this badge?'), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
+            this.dialog.add(ConfirmationDialog, {
+                body: _t('Are you sure you want to delete this badge?'),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
             });
         });
         if (!save) {

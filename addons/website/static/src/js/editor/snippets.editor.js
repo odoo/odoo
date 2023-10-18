@@ -1,12 +1,13 @@
 /** @odoo-modules **/
 
 import { _t } from "@web/core/l10n/translation";
-import Dialog from "@web/legacy/js/core/dialog";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useChildRef } from "@web/core/utils/hooks";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
 import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { renderToElement } from "@web/core/utils/render";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import {
     applyTextHighlight,
@@ -14,7 +15,6 @@ import {
     switchTextHighlight,
     getCurrentTextHighlight
 } from "@website/js/text_processing";
-
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -52,6 +52,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     init() {
         this._super(...arguments);
         this.notification = this.bindService("notification");
+        this.dialog = this.bindService("dialog");
     },
     /**
      * @override
@@ -192,43 +193,53 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             $apiKeyHelp.empty().text(message);
         }
 
-        const $content = $(renderToElement('website.s_google_map_modal', {
-            apiKey: apiKey,
-        }));
-        if (!apiKeyValidation.isValid && apiKeyValidation.message) {
-            applyError.call($content, apiKeyValidation.message);
-        }
+        const GoogleMapAPIKeyDialog = class extends Component {
+            static template = "website.s_google_map_modal";
+            static components = { Dialog };
+            static props = {
+                onMounted: Function,
+                close: Function,
+                confirm: Function
+            };
+            setup() {
+                this.modalRef = useChildRef();
+                this.state = useState({ apiKey: apiKey });
+                this.apiKeyInput = useRef("apiKeyInput");
+                onMounted(() => this.props.onMounted(this.modalRef));
+            }
+            onClickSave() {
+                this.props.confirm(this.modalRef, this.state.apiKey);
+            }
+        };
 
         return new Promise(resolve => {
             let invalidated = false;
-            const dialog = new Dialog(this, {
-                size: 'medium',
-                title: _t("Google Map API Key"),
-                buttons: [
-                    {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
-                        const valueAPIKey = dialog.$('#api_key_input').val();
-                        if (!valueAPIKey) {
-                            applyError.call(dialog.$el, _t("Enter an API Key"));
-                            return;
-                        }
-                        const $button = $(ev.currentTarget);
-                        $button.prop('disabled', true);
-                        const res = await this._validateGMapAPIKey(valueAPIKey);
-                        if (res.isValid) {
-                            await this.orm.write("website", [websiteId], { google_maps_api_key: valueAPIKey });
-                            invalidated = true;
-                            dialog.close();
-                        } else {
-                            applyError.call(dialog.$el, res.message);
-                        }
-                        $button.prop("disabled", false);
-                    }},
-                    {text: _t("Cancel"), close: true}
-                ],
-                $content: $content,
+            this.dialog.add(GoogleMapAPIKeyDialog, {
+                onMounted: (modalRef) => {
+                    if (!apiKeyValidation.isValid && apiKeyValidation.message) {
+                        applyError.call($(modalRef.el), apiKeyValidation.message);
+                    }
+                },
+                confirm: async (modalRef, valueAPIKey) => {
+                    if (!valueAPIKey) {
+                        applyError.call($(modalRef.el), _t("Enter an API Key"));
+                        return;
+                    }
+                    const $button = $(modalRef.el).find("button");
+                    $button.prop('disabled', true);
+                    const res = await this._validateGMapAPIKey(valueAPIKey);
+                    if (res.isValid) {
+                        await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
+                        invalidated = true;
+                        return true;
+                    } else {
+                        applyError.call($(modalRef.el), res.message);
+                    }
+                    $button.prop("disabled", false);
+                }
+            }, {
+                onClose: () => resolve(invalidated),
             });
-            dialog.on('closed', this, () => resolve(invalidated));
-            dialog.open();
         });
     },
     /**
