@@ -19,7 +19,7 @@ threadActionsRegistry.add("open-hr-profile", {
         component.actionService.doAction({
             type: "ir.actions.act_window",
             res_id: component.thread.correspondent.employeeId,
-            res_model: "hr.employee",
+            res_model: "hr.employee.public",
             views: [[false, "form"]],
         });
     },
