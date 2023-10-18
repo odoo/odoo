@@ -286,15 +286,8 @@ function removeUnwantedAttrsFromTemplates(attrs) {
 }
 
 function patchAssets() {
-    const { getBundle, loadJS, loadCSS } = assets;
+    const { loadJS, loadCSS } = assets;
     patch(assets, {
-        getBundle: memoize(async function (xmlID) {
-            console.log(
-                "%c[assets] fetch libs from xmlID: " + xmlID,
-                "color: #66e; font-weight: bold;"
-            );
-            return getBundle(xmlID);
-        }),
         loadJS: memoize(async function (ressource) {
             if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
                 console.log(

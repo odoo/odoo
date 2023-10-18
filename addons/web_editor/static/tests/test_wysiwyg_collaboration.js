@@ -10,7 +10,7 @@ import {
 import { Wysiwyg, stripHistoryIds } from '@web_editor/js/wysiwyg/wysiwyg';
 import { Mutex } from '@web/core/utils/concurrency';
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeHTTPService, makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { mount, getFixture } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -180,6 +180,9 @@ async function createPeers(peers) {
         registry.category("services").add("popover", { start: () => ({  }) }, {
             force: true,
         });
+        registry.category("services").add("http", makeFakeHTTPService(), {
+            force: true,
+        })
         const env = await makeTestEnv({
             mockRPC(route) {
                 if (route === "/web/dataset/call_kw/res.users/read") {

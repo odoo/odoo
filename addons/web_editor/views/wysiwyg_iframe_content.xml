@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_editor.wysiwyg_iframe_content">
+        <html>
+            <head>
+                <meta charset="utf-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <t t-foreach="jsLibs" t-as="item">
+                    <script type="text/javascript" t-att-src="item['src']"></script>
+                </t>
+                <t t-foreach="cssLibs" t-as="item">
+                    <link type="text/css" rel="stylesheet" t-att-href="item['href']"></link>
+                </t>
+                <t t-if="not readonly">
+                    <script type="text/javascript">
+                        odoo.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
+                            'use strict';
+                            var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
+                            var widget = new Widget();
+                            widget.appendTo(document.body);
+                            return widget;
+                        });
+                    </script>
+                </t>
+            </head>
+            <body 
+                t-att-class="readonly and 'o_in_iframe o_readonly' or 'o_in_iframe'" 
+                t-att-style="readonly and 'overflow: hidden;' or ''">
+                <div id="iframe_target">
+                    <t t-if="readonly" t-esc="content"></t>
+                </div>
+                <script type="text/javascript">
+                    odoo.define('web_editor.wysiwyg.iniframe', [], function (require) {
+                        'use strict';
+                        <t t-esc="windowTop"/>
+                    });
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>

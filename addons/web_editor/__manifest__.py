@@ -15,6 +15,7 @@ Odoo Web Editor widget.
         'data/editor_assets.xml',
         'views/editor.xml',
         'views/snippets.xml',
+        'views/wysiwyg_iframe_content.xml',
     ],
     'assets': {
 

@@ -17,7 +17,7 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from '@web_editor/js/backend/convert_inline';
-import { getBundle, loadBundle } from '@web/core/assets';
+import { loadBundle } from '@web/core/assets';
 import {
     Component,
     useRef,
@@ -70,6 +70,7 @@ export class HtmlField extends Component {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
         this.rpc = useService("rpc");
+        this.http = useService("http");
 
         this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
 
@@ -91,9 +92,6 @@ export class HtmlField extends Component {
         this._onUpdateIframeId = "onLoad_" + uniqueId("FieldHtml");
 
         onWillStart(async () => {
-            if (this.props.cssReadonlyAssetId) {
-                this.cssReadonlyAsset = await getBundle(this.props.cssReadonlyAssetId);
-            }
             await this._lazyloadWysiwyg();
         });
         this._lastRecordInfo = {
@@ -459,50 +457,21 @@ export class HtmlField extends Component {
                     return;
                 }
                 if (!this.sandboxedPreview) {
-                    cwindow.document
-                        .open("text/html", "replace")
-                        .write(
-                            '<!DOCTYPE html><html>' +
-                            '<head>' +
-                                '<meta charset="utf-8"/>' +
-                                '<meta http-equiv="X-UA-Compatible" content="IE=edge"/>\n' +
-                                '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>\n' +
-                            '</head>\n' +
-                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
-                                '<div id="iframe_target"></div>\n' +
-                            '</body>' +
-                            '</html>');
-                }
-                if (this.props.cssReadonlyAssetId) {
-                    for (const cssLib of this.cssReadonlyAsset.cssLibs) {
-                        const link = cwindow.document.createElement('link');
-                        link.setAttribute('type', 'text/css');
-                        link.setAttribute('rel', 'stylesheet');
-                        link.setAttribute('href', cssLib);
-                        cwindow.document.head.append(link);
-                    }
-                    for (const cssContent of this.cssReadonlyAsset.cssContents) {
-                        const style = cwindow.document.createElement('style');
-                        style.setAttribute('type', 'text/css');
-                        const textNode = cwindow.document.createTextNode(cssContent);
-                        style.append(textNode);
-                        cwindow.document.head.append(style);
-                    }
-                }
-
-                if (!this.sandboxedPreview) {
-                    const iframeTarget = cwindow.document.querySelector('#iframe_target');
-                    iframeTarget.innerHTML = value;
-
-                    const script = cwindow.document.createElement('script');
-                    script.setAttribute('type', 'text/javascript');
-                    const scriptTextNode = document.createTextNode(
-                        `if (window.top.${this._onUpdateIframeId}) {` +
-                            `window.top.${this._onUpdateIframeId}(${_avoidDoubleLoad})` +
-                        `}`
+                    const iframeContent = await this.http.post(
+                        `/web_editor/wysiwyg_iframe`,
+                        {
+                            readonly: 1,
+                            content: value,
+                            bundleNames: this.props.cssReadonlyAssetId,
+                            avoidDoubleLoad: _avoidDoubleLoad,
+                            onUpdateIframeId: this._onUpdateIframeId,
+                            csrf_token: odoo.csrf_token,
+                        },
+                        "text"
                     );
-                    script.append(scriptTextNode);
-                    cwindow.document.body.append(script);
+                    cwindow.document.documentElement.innerHTML = iframeContent;
+                    this.state.iframeVisible = true;
+                    this.onIframeUpdated();
                 } else {
                     cwindow.document.documentElement.innerHTML = value;
                 }

@@ -11,6 +11,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import { assets } from "@web/core/assets";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
+import { registry } from "@web/core/registry";
+import { makeFakeHTTPService } from "@web/../tests/helpers/mock_services";
 
 let serverData;
 let fixture;
@@ -45,6 +47,7 @@ QUnit.module('field html', (hooks) => {
         });
         serverData = { models };
         setupViewRegistries();
+        registry.category("services").add("http", makeFakeHTTPService());
 
         patchWithCleanup(Wysiwyg.prototype, {
             async _getColorpickerTemplate() {

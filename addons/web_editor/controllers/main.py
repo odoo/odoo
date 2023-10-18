@@ -762,3 +762,22 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
+
+    @http.route("/web_editor/wysiwyg_iframe", type='http', auth='none')
+    def get_wysiwyg_iframe_content(self, bundleNames, onUpdateIframeId, avoidDoubleLoad, content="", readonly=0):
+        bundles = bundleNames.split(",")
+        files = []
+        for bundle in bundles:
+            files += request.env["ir.qweb"]._get_asset_nodes(bundle, js=True, css=True, debug=request.session.debug)
+        jsLibs = [file[1] for file in files if file[0] == "script"]
+        cssLibs = [file[1] for file in files if file[0] == "link"]
+        return request.render(
+            "web_editor.wysiwyg_iframe_content",
+            {
+                'readonly':readonly,
+                'content':content,
+                'jsLibs':jsLibs,
+                'cssLibs':cssLibs,
+                'windowTop':"window.top." + onUpdateIframeId + "?.(" + avoidDoubleLoad + ");"
+            },
+        )

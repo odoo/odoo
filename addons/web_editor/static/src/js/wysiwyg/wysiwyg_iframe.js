@@ -2,10 +2,10 @@
 
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 import { patch } from "@web/core/utils/patch";
-import { getBundle } from "@web/core/assets";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useService } from '@web/core/utils/hooks';
 
-var promiseJsAssets;
+let jsAssets;
 
 /**
  * Add option (inIframe) to load Wysiwyg in an iframe.
@@ -26,13 +26,18 @@ patch(Wysiwyg.prototype, {
     },
     /**
      * @override
+     */
+    setup() {
+        super.setup();
+        this.http = useService("http");
+    },
+    /**
+     * @override
      **/
     async startEdition() {
         if (!this.options.inIframe) {
             return super.startEdition();
         } else {
-            this.defAsset = this._getAssets();
-            await this.defAsset;
             await this._loadIframe();
             return super.startEdition();
         }
@@ -128,17 +133,11 @@ patch(Wysiwyg.prototype, {
 
         this.$iframe.on('load', function onLoad (ev) {
             var _avoidDoubleLoad = ++avoidDoubleLoad;
-            self.defAsset.then(function (assets) {
+            self._getIframeContent(_avoidDoubleLoad).then(function (iframeContent) {
                 if (_avoidDoubleLoad !== avoidDoubleLoad) {
                     console.warn('Wysiwyg immediate iframe double load detected');
                     return;
                 }
-
-                const iframeContent = getWysiwygIframeContent({
-                    assets: assets,
-                    updateIframeId: self._onUpdateIframeId,
-                    avoidDoubleLoad: _avoidDoubleLoad
-                });
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
                     .write(`<!DOCTYPE html><html${
@@ -168,13 +167,22 @@ patch(Wysiwyg.prototype, {
      * @private
      * @returns {Promise}
      */
-    async _getAssets() {
-        promiseJsAssets = promiseJsAssets || await getBundle('web_editor.wysiwyg_iframe_editor_assets');
-        const assetsPromises = [promiseJsAssets];
+    async _getIframeContent(avoidDoubleLoad) {
+        jsAssets = jsAssets || "web_editor.wysiwyg_iframe_editor_assets";
+        const bundleNames = [jsAssets];
         if (this.options.iframeCssAssets) {
-            assetsPromises.push(getBundle(this.options.iframeCssAssets));
+            bundleNames.push(this.options.iframeCssAssets);
         }
-        return Promise.all(assetsPromises);
+        return this.http.post(
+            `/web_editor/wysiwyg_iframe`,
+            {
+                avoidDoubleLoad,
+                bundleNames: bundleNames.join(","),
+                onUpdateIframeId: this._onUpdateIframeId,
+                csrf_token: odoo.csrf_token,
+            },
+            "text"
+        );
     },
 
     /**
@@ -227,58 +235,3 @@ patch(Wysiwyg.prototype, {
         }
     },
 });
-
-function getWysiwygIframeContent(params) {
-    const assets = {
-        cssLibs: [],
-        cssContents: [],
-        jsLibs: [],
-        jsContents: [],
-    };
-    for (const asset of params.assets) {
-        for (const cssLib of asset.cssLibs) {
-            assets.cssLibs.push(`<link type="text/css" rel="stylesheet" href="${cssLib}"/>`);
-        }
-        for (const cssContent of asset.cssContents) {
-            assets.cssContents.push(`<style type="text/css">${cssContent}</style>`);
-        }
-        for (const jsLib of asset.jsLibs) {
-            assets.jsLibs.push(`<script type="text/javascript" src="${jsLib}"/>`);
-        }
-        for (const jsContent of asset.jsContents) {
-            if (jsContent.indexOf('inline asset') !== -1) {
-                assets.jsContents.push(`<script type="text/javascript">${jsContent}</script>`);
-            }
-        }
-    }
-    return `
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-        ${assets.cssLibs.join('\n')}
-        ${assets.cssContents.join('\n')}
-        ${assets.jsLibs.join('\n')}
-        ${assets.jsContents.join('\n')}
-
-        <script type="text/javascript">
-            odoo.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
-                'use strict';
-                var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
-                var widget = new Widget();
-                widget.appendTo(document.body);
-                return widget;
-            });
-        </script>
-    </head>
-    <body class="o_in_iframe">
-        <div id="iframe_target"/>
-        <script type="text/javascript">
-            odoo.define('web_editor.wysiwyg.iniframe', [], function (require) {
-                'use strict';
-                if (window.top.${params.updateIframeId}) {
-                    window.top.${params.updateIframeId}(${params.avoidDoubleLoad});
-                }
-            });
-        </script>
-    </body>`;
-}

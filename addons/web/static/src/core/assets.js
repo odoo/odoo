@@ -207,9 +207,6 @@ export const loadJS = function (url) {
 export const loadCSS = function (url) {
     return assets.loadCSS(url);
 };
-export const getBundle = function (bundleName) {
-    return assets.getBundle(bundleName);
-};
 export const loadBundle = function (desc) {
     return assets.loadBundle(desc);
 };

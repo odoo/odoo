@@ -10,6 +10,8 @@ import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
+import { registry } from "@web/core/registry";
+import { makeFakeHTTPService } from "@web/../tests/helpers/mock_services";
 
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
@@ -38,7 +40,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             },
         };
         target = getFixture();
-
+        registry.category("services").add("http", makeFakeHTTPService());
         setupViewRegistries();
     });
 
