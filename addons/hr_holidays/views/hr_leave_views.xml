@@ -461,6 +461,7 @@
                 <field name="multi_employee" invisible="1" force_save="1"/>
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or state != 'validate' or not employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
                 <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or (state == 'validate' and employee_id)" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'employee' and state in ('draft', 'cancel', 'refuse')" widget="many2many_avatar_user"/>
+                <field name="company_id" invisible="multi_employee" groups="base.group_multi_company"/>
             </xpath>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
@@ -520,6 +521,7 @@
                     icon="fa-thumbs-up"
                     invisible="state != 'confirm'"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
+                <field name="company_id" optional="hidden" groups="base.group_multi_company"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     invisible="state != 'validate1'"
