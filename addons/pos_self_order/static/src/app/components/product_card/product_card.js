@@ -78,7 +78,7 @@ export class ProductCard extends Component {
         }, 600);
     }
 
-    async selectProduct() {
+    async selectProduct(qty = 1) {
         const product = this.props.product;
 
         if (!this.selfOrder.ordering || !product.self_order_available) {
@@ -97,13 +97,13 @@ export class ProductCard extends Component {
             );
 
             if (isProductInCart) {
-                isProductInCart.qty++;
+                isProductInCart.qty += qty;
             } else {
                 const lines = this.selfOrder.currentOrder.lines;
                 const line = new Line({
                     id: null,
                     uuid: null,
-                    qty: 1,
+                    qty: qty,
                     product_id: product.id,
                 });
                 line.full_product_name = constructFullProductName(
@@ -121,8 +121,8 @@ export class ProductCard extends Component {
         this.dialog.add(ProductInfoPopup, {
             product: this.props.product,
             title: this.props.product.name,
-            addToCart: () => {
-                this.selectProduct();
+            addToCart: (qty) => {
+                this.selectProduct(qty);
             },
         });
     }
