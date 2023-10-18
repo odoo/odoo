@@ -82,7 +82,7 @@
                             <field name="label_tasks" string="Name of the Tasks" placeholder="e.g. Tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
