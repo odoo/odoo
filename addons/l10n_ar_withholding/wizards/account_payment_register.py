@@ -14,6 +14,15 @@ class AccountPaymentRegister(models.TransientModel):
         'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute='_compute_withholdings', readonly=False, store=True)
     l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True,  help="Net amount after withholdings")
+    l10n_ar_require_recompute_witholding = fields.Boolean(compute="_compute_require_recompute_witholding")
+
+    @api.depends('l10n_latam_check_id', 'amount', 'l10n_ar_net_amount')
+    def _compute_require_recompute_witholding(self):
+        for rec in self:
+            if rec.l10n_latam_check_id and rec.l10n_ar_net_amount != rec.l10n_latam_check_id.amount:
+                rec.l10n_ar_require_recompute_witholding = True
+            else:
+                rec.l10n_ar_require_recompute_witholding = False
 
     @api.depends('line_ids', 'can_group_payments', 'group_payment')
     def _compute_withholdings(self):
@@ -31,7 +40,7 @@ class AccountPaymentRegister(models.TransientModel):
             withholding_net_amount = min(wizard.l10n_latam_check_id.amount, simulated_wizard.l10n_ar_net_amount)
             for orignal_line in simulated_wizard.l10n_ar_withholding_ids:
                 line_factor = simulated_wizard.l10n_ar_net_amount / orignal_line.base_amount
-                wizard.l10n_ar_withholding_ids.filtered(lambda x: x.tax_id == orignal_line.tax_id).base_amount = withholding_net_amount / line_factor
+                wizard.l10n_ar_withholding_ids.filtered(lambda x: x.tax_id == orignal_line.tax_id and not x.manual_wth).base_amount = withholding_net_amount / line_factor
             # Set Temporal amount to recompute withholdings amounts
             wizard.amount = self.currency_id.round(wizard.l10n_latam_check_id.amount + sum(wizard.l10n_ar_withholding_ids.mapped('amount')))
             # With new withholdings amounts recompute real total amount
@@ -42,7 +51,7 @@ class AccountPaymentRegister(models.TransientModel):
         for rec in self:
             rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
 
-    def wizard_recopute_witholding(self):
+    def wizard_recompute_witholding(self):
         ''' Reopen this account.payment.register wizard to recompute .
         :return: An action opening the account.payment.register wizard.
         '''

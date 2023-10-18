@@ -18,6 +18,7 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
     withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
+    manual_wth = fields.Boolean()
 
     @api.depends('tax_id', 'payment_register_id.line_ids', 'payment_register_id.amount', 'payment_register_id.currency_id')
     def _compute_base_amount(self):
@@ -29,10 +30,14 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
                 rec.base_amount = 0.0
                 continue
             base_amount = rec._get_base_amount(base_lines, factor)
-            if base_amount:
+            if base_amount and not rec.manual_wth:
                 rec.base_amount = base_amount
         # Only supplier compute base tax
         (self - supplier_recs).base_amount = 0.0
+
+    @api.onchange('base_amount')
+    def _onchange_base_amount(self):
+        self.manual_wth = True
 
     def _get_base_amount(self, base_lines, factor):
         conversion_rate = self.payment_register_id._get_conversion_rate()
