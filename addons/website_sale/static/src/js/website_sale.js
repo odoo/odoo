@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -12,6 +11,7 @@ import { ProductImageViewer } from "@website_sale/js/components/website_sale_ima
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { Component } from "@odoo/owl";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -209,7 +209,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             product_id: parseInt($input.data('product-id'), 10),
             set_qty: value,
             display: true,
-        }).then(function (data) {
+        }).then((data) => {
             $input.data('update_change', false);
             var check_value = parseInt($input.val() || 0, 10);
             if (isNaN(check_value)) {
@@ -228,7 +228,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.warning);
             // Propagating the change to the express checkout forms
-            core.bus.trigger('cart_amount_changed', data.amount, data.minor_amount);
+            Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
         });
     },
     /**

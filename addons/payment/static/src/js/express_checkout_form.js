@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import core from '@web/legacy/js/services/core';
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { Component } from '@odoo/owl';
 
 publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     selector: 'form[name="o_payment_express_checkout_form"]',
@@ -19,7 +19,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
             await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
         }
         // Monitor updates of the amount on eCommerce's cart pages.
-        core.bus.on('cart_amount_changed', this, this._updateAmount.bind(this));
+        Component.env.bus.addEventListener('cart_amount_changed', (ev) => this._updateAmount(...ev.detail));
     },
 
     //--------------------------------------------------------------------------
