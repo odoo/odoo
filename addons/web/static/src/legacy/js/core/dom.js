@@ -11,7 +11,6 @@
 
 import { uniqueId } from "@web/core/utils/functions";
 import { delay } from "@web/core/utils/concurrency";
-import core from "@web/legacy/js/services/core";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -27,7 +26,6 @@ function _notify(content, callbacks) {
             c.widget.on_attach_callback(c.callback_args);
         }
     });
-    core.bus.trigger('DOM_updated', content);
 }
 
 var dom = {
@@ -139,12 +137,6 @@ var dom = {
         $textarea.data("auto_resize", true);
 
         $textarea.on('input focus change', resize);
-        if (options.parent) {
-            core.bus.on('DOM_updated', options.parent, function () {
-                resize();
-                removeVerticalResize();
-            });
-        }
     },
     /**
      * @return {HTMLElement|null}

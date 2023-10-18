@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { debounce } from "@web/core/utils/timing";
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { Component } from "@odoo/owl";
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     selector: '.o_wetrack_js_reminder',
@@ -60,11 +60,14 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                     type: 'info',
                 });
                 if (self.reminderOn) {
-                    core.bus.trigger('open_notification_request', 'add_track_to_favorite', {
-                        title: _t('Allow push notifications?'),
-                        body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
-                        delay: 0
-                    });
+                    Component.env.bus.trigger('open_notification_request', [
+                        'add_track_to_favorite',
+                        {
+                            title: _t('Allow push notifications?'),
+                            body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
+                            delay: 0
+                        },
+                    ]);
                 }
             }
         });

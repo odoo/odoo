@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import LegacyBus from "@web/legacy/js/core/bus";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -201,19 +200,6 @@ function patchBodyAddEventListener() {
     });
 }
 
-function patchLegacyBus() {
-    // patch core.bus.on to automatically remove listners bound on the legacy bus
-    // during a test (e.g. during the deployment of a service)
-    patchWithCleanup(LegacyBus.prototype, {
-        on() {
-            super.on(...arguments);
-            registerCleanup(() => {
-                this.off(...arguments);
-            });
-        },
-    });
-}
-
 function patchOdoo() {
     patchWithCleanup(odoo, {
         debug: "",
@@ -367,7 +353,6 @@ export async function setupTests() {
         patchCookie();
         patchBodyAddEventListener();
         patchEventBus();
-        patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
         patchOwlApp();
