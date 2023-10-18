@@ -13,7 +13,7 @@ import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/co
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
@@ -40,7 +40,11 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
+        this.state = useState({
+            showProductReminder: false,
+        });
         onMounted(this.onMounted);
+        useExternalListener(window, "click", this.clickEvent.bind(this));
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -64,6 +68,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     onMounted() {
         this.pos.openCashControl();
     }
+
     getNumpadButtons() {
         return [
             { value: "1" },
@@ -102,6 +107,32 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.reset();
         this.currentOrder.select_orderline(orderline);
     }
+
+    clickEvent(e) {
+        if (!this.ui.isSmall) {
+            return;
+        }
+
+        const isProductCard = (() => {
+            let element = e.target;
+            // 3 because product DOM dept is 3
+            for (let i = 0; i < 3; i++) {
+                if (element.classList.contains("product")) {
+                    return true;
+                } else {
+                    element = element.parentElement;
+                }
+            }
+            return false;
+        })();
+
+        this.state.showProductReminder =
+            this.currentOrder &&
+            this.currentOrder.get_selected_orderline() &&
+            this.selectedOrderlineQuantity &&
+            isProductCard;
+    }
+
     /**
      * To be overridden by modules that checks availability of
      * connected scale.
@@ -374,10 +405,12 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             this.selectedOrderlineTotal,
         ].join(",");
     }
+
     get showProductReminder() {
         return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
     }
-    get primaryPayButton() {
+
+    primaryPayButton() {
         return !this.currentOrder.is_empty();
     }
     // FIXME POSREF this is dead code, check if we need the business logic that's left in here
