@@ -808,18 +808,15 @@ export function useX2ManyCrud(getList, isMany2Many) {
     if (isMany2Many) {
         saveRecord = async (object) => {
             const list = getList();
-            const currentIds = list.currentIds;
-            let resIds;
             if (Array.isArray(object)) {
-                resIds = [...currentIds, ...object];
+                return list.addAndRemove({ add: object });
             } else {
                 // object instanceof Record
                 if (!object.resId || object.isDirty) {
                     await object.save();
                 }
-                resIds = [...currentIds, object.resId];
+                return list.linkTo(object.resId);
             }
-            return list.replaceWith(resIds);
         };
     } else {
         saveRecord = async (record) => {

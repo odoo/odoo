@@ -44,16 +44,13 @@ export class Many2ManyCheckboxesField extends Component {
         if (this.idsToAdd.size === 0 && this.idsToRemove.size === 0) {
             return;
         }
-        const ids = new Set(this.props.record.data[this.props.name].currentIds);
-        for (const el of this.idsToAdd) {
-            ids.add(el);
-        }
-        for (const el of this.idsToRemove) {
-            ids.delete(el);
-        }
+        const result = this.props.record.data[this.props.name].addAndRemove({
+            add: [...this.idsToAdd],
+            remove: [...this.idsToRemove],
+        });
         this.idsToAdd.clear();
         this.idsToRemove.clear();
-        return this.props.record.data[this.props.name].replaceWith([...ids]);
+        return result;
     }
 
     onChange(resId, checked) {
