@@ -516,6 +516,33 @@
                 padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2.5);
             }
 
+            .dropdown-menu {
+                border-color: $o-we-sidebar-content-field-dropdown-border-color;
+                padding: 0;
+
+                > li ~ li {
+                    border-top: $o-we-sidebar-content-field-dropdown-item-spacing solid transparent;
+                }
+            }
+
+            .dropdown-item {
+                @include we-icon-button('', $align: left); // Always a padding on the left
+                background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                color: $o-we-sidebar-content-field-dropdown-item-color;
+                border-radius: 0;
+                padding-top: 5px;
+                padding-bottom: 5px;
+
+                &:hover, &:focus {
+                    background: $o-we-dropdown-item-bg-hover;
+                    color: $o-we-dropdown-item-hover-color;
+                }
+            }
+
+            .o_we_font_size_badge {
+                opacity: 0.6;
+            }
+
             #font-size > button {
                 &:focus-within {
                     @extend %we-generic-text-input;
