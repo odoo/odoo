@@ -35,10 +35,8 @@ class Base(models.AbstractModel):
                 )
             }
         result = records.read(fields)
-        if children_ids_per_record_id or focus_record:
+        if children_ids_per_record_id:
             for record_data in result:
                 if record_data['id'] in children_ids_per_record_id:
                     record_data['__child_ids__'] = children_ids_per_record_id[record_data['id']]
-                if record_data['id'] == focus_record.id:
-                    record_data['__focus__'] = True
         return result

@@ -81,15 +81,6 @@ export class HierarchyNode {
     }
 
     /**
-     * Is the current node focused?
-     *
-     * @returns {Boolean}
-     */
-    get isFocused() {
-        return Boolean(this.data.__focus__);
-    }
-
-    /**
      * Get parent field name
      *
      * @returns {String}
@@ -680,11 +671,7 @@ export class HierarchyModel extends Model {
         const resultStringified = JSON.stringify(result);
         const recordsPerParentId = {};
         const recordPerId = {};
-        let focusedRecord = null;
         for (const record of result) {
-            if (record.__focus__) {
-                focusedRecord = record;
-            }
             recordPerId[record.id] = record;
             const parentId = getIdOfMany2oneField(record[this.parentFieldName]);
             if (!(parentId.toString() in recordsPerParentId)) {
@@ -693,8 +680,6 @@ export class HierarchyModel extends Model {
             recordsPerParentId[parentId].push(record);
         }
         const data = [];
-        const parentId = focusedRecord ? getIdOfMany2oneField(focusedRecord[this.parentFieldName]) : false;
-        const parentFocusedRecord = parentId && parentId in recordPerId ? recordPerId[parentId.toString()] : { id: false };
         const recordIds = []; // to check if we have only one arborescence to display otherwise we display the result as the kanban view
         for (const [parentId, records] of Object.entries(recordsPerParentId)) {
             if (!parentId || !(parentId in recordPerId)) {
@@ -712,12 +697,7 @@ export class HierarchyModel extends Model {
             }
         }
         if (!data.length && result?.length) {
-            if (focusedRecord) {
-                let record = parentFocusedRecord || focusedRecord;
-                data.push(record);
-            } else {
-                data.push(recordPerId[Object.keys(recordsPerParentId)[0]])
-            }
+            data.push(recordPerId[Object.keys(recordsPerParentId)[0]]);
         }
         return data;
     }

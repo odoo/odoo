@@ -89,7 +89,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_hierarchy_line_right");
         assert.containsN(target, ".o_hierarchy_node_container", 3);
         assert.containsN(target, ".o_hierarchy_node", 3);
-        assert.containsNone(target, ".o_hierarchy_node_highlighted");
         assert.containsN(target, ".o_hierarchy_node_button", 2);
         assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary");
         assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-primary").textContent.trim(), "Unfold 1");
@@ -251,8 +250,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
         assert.containsN(target, ".o_hierarchy_separator", 1);
-        assert.containsOnce(target, ".o_hierarchy_node_highlighted");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_highlighted").textContent.trim(), "LouisJosephine");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["JosephineAlbert", "LouisJosephine"],
+        );
     });
 
     QUnit.test("search record in hierarchy view with child field name defined in the arch", async function (assert) {
@@ -267,8 +268,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
         assert.containsN(target, ".o_hierarchy_separator", 1);
-        assert.containsOnce(target, ".o_hierarchy_node_highlighted");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_highlighted").textContent.trim(), "LouisJosephine");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["JosephineAlbert", "LouisJosephine"],
+        );
     });
 
     QUnit.test("fetch parent record", async function (assert) {
@@ -282,8 +285,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_row", 2);
         assert.containsN(target, ".o_hierarchy_node", 2);
         assert.containsN(target, ".o_hierarchy_separator", 1);
-        assert.containsOnce(target, ".o_hierarchy_node_highlighted");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_highlighted").textContent.trim(), "LouisJosephine");
         let rows = target.querySelectorAll(".o_hierarchy_row");
         let row = rows[0];
         assert.containsOnce(row, ".o_hierarchy_node");
@@ -300,8 +301,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_row", 3);
         assert.containsN(target, ".o_hierarchy_node", 4);
         assert.containsN(target, ".o_hierarchy_separator", 2);
-        assert.containsOnce(target, ".o_hierarchy_node_highlighted");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_highlighted").textContent.trim(), "LouisJosephine");
         rows = target.querySelectorAll(".o_hierarchy_row");
         row = rows[0];
         assert.containsOnce(row, ".o_hierarchy_node");
@@ -682,8 +681,5 @@ QUnit.module("Views", (hooks) => {
             ["JosephineAlbert", "LisaJosephine", "LouisJosephine"]
         );
         assert.containsOnce(target, ".o_hierarchy_node_container button[name=hierarchy_search_parent_node]");
-        assert.containsOnce(target, ".o_hierarchy_node_highlighted");
-        assert.containsOnce(target, ".o_hierarchy_node.o_hierarchy_node_highlighted");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_highlighted .o_hierarchy_node_content").textContent, "LisaJosephine");
     });
 });
