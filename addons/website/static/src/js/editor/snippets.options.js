@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { loadCSS } from "@web/core/assets";
-import Dialog from "@web/legacy/js/core/dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -26,7 +28,7 @@ import {
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
 
-import { markup } from "@odoo/owl";
+import { Component, markup, useRef, useState } from "@odoo/owl";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -162,6 +164,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     /**
      * @override
      */
+    init() {
+        this.dialog = this.bindService("dialog");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     start: async function () {
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
@@ -284,81 +293,92 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onAddGoogleFontClick: function (ev) {
+        const addGoogleFontDialog = class extends Component {
+            static template = "website.dialog.addGoogleFont";
+            static components = { Dialog };
+            static props = { close: Function, title: String, onClickSave: Function };
+            title = _t("Add a Google Font");
+            state = useState({ valid: true, loading: false, googleServe: true });
+            fontInput = useRef("fontInput");
+            async onClickSave() {
+                if (this.state.loading) {
+                    return;
+                }
+                this.state.loading = true;
+                const shouldClose = await this.props.onClickSave(this.state, this.fontInput.el);
+                if (shouldClose) {
+                    this.props.close();
+                    return;
+                }
+                this.state.loading = false;
+            }
+            onClickCancel() {
+                this.props.close();
+            }
+        };
         const variable = $(ev.currentTarget).data('variable');
-        const dialog = new Dialog(this, {
+        this.dialog.add(addGoogleFontDialog, {
             title: _t("Add a Google Font"),
-            $content: $(renderToElement('website.dialog.addGoogleFont')),
-            buttons: [
-                {
-                    text: _t("Save & Reload"),
-                    classes: 'btn-primary',
-                    click: async () => {
-                        const inputEl = dialog.el.querySelector('.o_input_google_font');
-                        // if font page link (what is expected)
-                        let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
-                        if (!m) {
-                            // if embed code (so that it works anyway if the user put the embed code instead of the page link)
-                            m = inputEl.value.match(/\bfamily=([\w+]+)/);
-                            if (!m) {
-                                inputEl.classList.add('is-invalid');
-                                return;
-                            }
-                        }
+            onClickSave: async (state, inputEl) => {
+                // if font page link (what is expected)
+                let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
+                if (!m) {
+                    // if embed code (so that it works anyway if the user put the embed code instead of the page link)
+                    m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                    if (!m) {
+                        inputEl.classList.add('is-invalid');
+                        return;
+                    }
+                }
 
-                        let isValidFamily = false;
+                let isValidFamily = false;
 
-                        try {
-                            // Font family is an encoded query parameter:
-                            // "Open+Sans" needs to remain "Open+Sans".
-                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
-                            // Google fonts server returns a 400 status code if family is not valid.
-                            if (result.ok) {
-                                isValidFamily = true;
-                            }
-                        } catch (error) {
-                            console.error(error);
-                        }
+                try {
+                    // Font family is an encoded query parameter:
+                    // "Open+Sans" needs to remain "Open+Sans".
+                    const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                    // Google fonts server returns a 400 status code if family is not valid.
+                    if (result.ok) {
+                        isValidFamily = true;
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
 
-                        if (!isValidFamily) {
-                            inputEl.classList.add('is-invalid');
-                            return;
-                        }
+                if (!isValidFamily) {
+                    inputEl.classList.add('is-invalid');
+                    return;
+                }
 
-                        const font = m[1].replace(/\+/g, ' ');
-                        const googleFontServe = dialog.el.querySelector('#google_font_serve').checked;
-                        const fontName = `'${font}'`;
-                        // If the font already exists, it will only be added if
-                        // the user chooses to add it locally when it is already
-                        // imported from the Google Fonts server.
-                        const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
-                        const fontExistsOnServer = this.allFonts.includes(fontName);
-                        const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
-                        if (preventFontAddition) {
-                            inputEl.classList.add('is-invalid');
-                            // Show custom validity error message.
-                            inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
-                            inputEl.reportValidity();
-                            return;
-                        }
-                        if (googleFontServe) {
-                            this.googleFonts.push(font);
-                        } else {
-                            this.googleLocalFonts.push(`'${font}': ''`);
-                        }
-                        this.trigger_up('google_fonts_custo_request', {
-                            values: {[variable]: `'${font}'`},
-                            googleFonts: this.googleFonts,
-                            googleLocalFonts: this.googleLocalFonts,
-                        });
-                    },
-                },
-                {
-                    text: _t("Discard"),
-                    close: true,
-                },
-            ],
+                const font = m[1].replace(/\+/g, ' ');
+                const googleFontServe = state.googleServe;
+                const fontName = `'${font}'`;
+                // If the font already exists, it will only be added if
+                // the user chooses to add it locally when it is already
+                // imported from the Google Fonts server.
+                const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                const fontExistsOnServer = this.allFonts.includes(fontName);
+                const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
+                if (preventFontAddition) {
+                    inputEl.classList.add('is-invalid');
+                    // Show custom validity error message.
+                    inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
+                    inputEl.reportValidity();
+                    return;
+                }
+                if (googleFontServe) {
+                    this.googleFonts.push(font);
+                } else {
+                    this.googleLocalFonts.push(`'${font}': ''`);
+                }
+                this.trigger_up('google_fonts_custo_request', {
+                    values: {[variable]: `'${font}'`},
+                    googleFonts: this.googleFonts,
+                    googleLocalFonts: this.googleLocalFonts,
+                });
+                return true;
+            },
         });
-        dialog.open();
     },
     /**
      * @private
@@ -369,9 +389,10 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const values = {};
 
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
             });
         });
         if (!save) {
@@ -1411,9 +1432,10 @@ options.registry.OptionsTab = options.Class.extend({
      */
     async switchTheme(previewMode, widgetValue, params) {
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
             });
         });
         if (!save) {
@@ -1432,14 +1454,11 @@ options.registry.OptionsTab = options.Class.extend({
         // the dialog box 'action_view_base_language_install'
         const websiteId = this.options.context.website_id;
         const save = await new Promise((resolve) => {
-            Dialog.confirm(
-                this,
-                _t("Adding a language requires to leave the editor. This will save all your changes, are you sure you want to proceed?"),
-                {
-                    confirm_callback: () => resolve(true),
-                    cancel_callback: () => resolve(false),
-                }
-            );
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("Adding a language requires to leave the editor. This will save all your changes, are you sure you want to proceed?"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
         });
         if (!save) {
             return;
@@ -2699,51 +2718,54 @@ options.registry.anchor = options.Class.extend({
      * @param {Element} buttonEl
      */
     _openAnchorDialog(buttonEl) {
-        var self = this;
-        var buttons = [{
-            text: _t("Save & copy"),
-            classes: 'btn-primary',
-            click: function () {
-                var $input = this.$('.o_input_anchor_name');
-                var anchorName = self._text2Anchor($input.val());
-                if (self.$target[0].id === anchorName) {
+        const anchorDialog = class extends Component {
+            static template = "website.dialog.anchorName";
+            static props = { close: Function, confirm: Function, delete: Function, currentAnchor: String };
+            static components = { Dialog };
+            title = _t("Link Anchor");
+            modalRef = useChildRef();
+            onClickConfirm() {
+                const shouldClose = this.props.confirm(this.modalRef);
+                if (shouldClose) {
+                    this.props.close();
+                }
+            }
+            onClickDelete() {
+                this.props.delete();
+                this.props.close();
+            }
+            onClickDiscard() {
+                this.props.close();
+            }
+        };
+        const props = {
+            confirm: (modalRef) => {
+                const inputEl = modalRef.el.querySelector(".o_input_anchor_name");
+                const anchorName = this._text2Anchor(inputEl.value);
+                if (this.$target[0].id === anchorName) {
                     // If the chosen anchor name is already the one used by the
                     // element, close the dialog and do nothing else
                     this.close();
                     return;
                 }
 
-                const alreadyExists = !!document.getElementById(anchorName);
-                this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
-                $input.toggleClass('is-invalid', alreadyExists);
+                const alreadyExists = !!this.$target[0].ownerDocument.getElementById(anchorName);
+                modalRef.el.querySelector('.o_anchor_already_exists').classList.toggle('d-none', !alreadyExists);
+                inputEl.classList.toggle('is-invalid', alreadyExists);
                 if (!alreadyExists) {
-                    self._setAnchorName(anchorName);
-                    this.close();
+                    this._setAnchorName(anchorName);
                     buttonEl.click();
+                    return true;
                 }
             },
-        }, {
-            text: _t("Discard"),
-            close: true,
-        }];
+            currentAnchor: decodeURIComponent(this.$target.attr('id')),
+        };
         if (this.$target.attr('id')) {
-            buttons.push({
-                text: _t("Remove"),
-                classes: 'btn-link ms-auto',
-                icon: 'fa-trash',
-                close: true,
-                click: function () {
-                    self._setAnchorName();
-                },
-            });
+            props["delete"] = () => {
+                this._setAnchorName();
+            };
         }
-        new Dialog(this, {
-            title: _t("Link Anchor"),
-            $content: $(renderToElement('website.dialog.anchorName', {
-                currentAnchor: decodeURIComponent(this.$target.attr('id')),
-            })),
-            buttons: buttons,
-        }).open();
+        this.dialog.add(anchorDialog, props);
     },
     /**
      * @private
