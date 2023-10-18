@@ -369,9 +369,13 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
     }
 
-    async replaceWith(ids, { reload = false } = {}) {
+    async addAndRemove({ add, remove, reload } = {}) {
         return this.model.mutex.exec(async () => {
-            await this._replaceWith(ids, { reload });
+            const commands = [
+                ...(add || []).map((id) => [x2ManyCommands.LINK, id]),
+                ...(remove || []).map((id) => [x2ManyCommands.UNLINK, id]),
+            ];
+            await this._applyCommands(commands, { canAddOverLimit: true, reload });
             await this._onUpdate();
         });
     }
@@ -478,9 +482,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    _applyCommands(commands) {
+    _applyCommands(commands, { canAddOverLimit, reload } = {}) {
         const isOnLastPage = this.limit + this.offset >= this.count;
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
+
+        const recordsToLoad = [];
         for (const command of commands) {
             switch (command[0]) {
                 case CREATE: {
@@ -576,9 +582,26 @@ export class StaticList extends DataPoint {
                     break;
                 }
                 case LINK: {
-                    const record = this._createRecordDatapoint({ ...command[2], id: command[1] });
-                    if (!this.limit || this.records.length < this.limit) {
+                    let record;
+                    if (command[1] in this._cache) {
+                        record = this._cache[command[1]];
+                    } else {
+                        record = this._createRecordDatapoint({ ...command[2], id: command[1] });
+                    }
+                    if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
+                        if (!command[2]) {
+                            recordsToLoad.push(record);
+                        }
                         this.records.push(record);
+                        if (this.records.length > this.limit) {
+                            this._tmpIncreaseLimit = this.records.length - this.limit;
+                            const nextLimit = this.limit + this._tmpIncreaseLimit;
+                            this.model._updateConfig(
+                                this.config,
+                                { limit: nextLimit },
+                                { reload: false }
+                            );
+                        }
                     }
                     this._currentIds.push(record.resId);
                     this._commands.push([command[0], command[1]]);
@@ -587,15 +610,14 @@ export class StaticList extends DataPoint {
                 }
             }
         }
-        // if we aren't on the last page, and *n* records of the current page have been removed
-        // removed, the first *n* records of the next page become the last *n* ones of the current
+        // if we aren't on the last page, and *n* records of the current page have been removed,
+        // the first *n* records of the next page become the last *n* ones of the current
         // page, so we need to add (and maybe load) them.
         const nbMissingRecords = this.limit - this.records.length;
         if (!isOnLastPage && nbMissingRecords > 0) {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
-            const recordsToLoad = [];
             for (const id of nextRecordIds) {
                 if (this._cache[id]) {
                     this.records.push(this._cache[id]);
@@ -606,8 +628,19 @@ export class StaticList extends DataPoint {
                     recordsToLoad.push(record);
                 }
             }
-            const resIds = recordsToLoad.map((r) => r.resId);
-            this.model._loadRecords({ ...this.config, resIds }).then((recordValues) => {
+        }
+        if (recordsToLoad.length || reload) {
+            const resIds = reload
+                ? this.records.map((r) => r.resId)
+                : recordsToLoad.map((r) => r.resId);
+            return this.model._loadRecords({ ...this.config, resIds }).then((recordValues) => {
+                if (reload) {
+                    for (const record of recordValues) {
+                        this._createRecordDatapoint(record);
+                    }
+                    this.records = resIds.map((id) => this._cache[id]);
+                    return;
+                }
                 for (let i = 0; i < recordsToLoad.length; i++) {
                     const record = recordsToLoad[i];
                     record._applyValues(recordValues[i]);
@@ -735,6 +768,11 @@ export class StaticList extends DataPoint {
         return record;
     }
 
+    _clearCommands() {
+        this._commands = [];
+        this._unknownRecordCommands = {};
+    }
+
     _discard() {
         for (const id in this._cache) {
             this._cache[id]._discard();
@@ -749,7 +787,7 @@ export class StaticList extends DataPoint {
             this._currentIds = [...this.resIds];
             this.count = this.resIds.length;
         }
-        this._unknownRecordCommands = [];
+        this._unknownRecordCommands = {};
         const limit = this.limit - this._tmpIncreaseLimit;
         this._tmpIncreaseLimit = 0;
         this.model._updateConfig(this.config, { limit }, { reload: false });
