@@ -1451,6 +1451,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.trackingNumber = json.tracking_number || "";
     }
     export_as_JSON() {
         var orderLines, paymentLines;

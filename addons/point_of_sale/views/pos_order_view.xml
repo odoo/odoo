@@ -148,6 +148,7 @@
                             </group>
                             <group string="Other Information">
                                 <field name="pos_reference"/>
+                                <field name="tracking_number"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
                             </group>
@@ -266,6 +267,7 @@
                 <field name="date_order"/>
                 <field name="config_id" />
                 <field name="pos_reference"/>
+                <field name="tracking_number" optional="hide"/>
                 <field name="partner_id"/>
                 <field string="Cashier" name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
@@ -381,6 +383,7 @@
                 <field name="name"/>
                 <field name="pos_reference"/>
                 <field name="date_order"/>
+                <field name="tracking_number"/>
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
