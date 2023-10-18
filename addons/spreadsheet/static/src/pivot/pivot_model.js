@@ -376,10 +376,18 @@ export class SpreadsheetPivotModel extends PivotModel {
         return domains ? domains[0] : Domain.FALSE.toList();
     }
 
+    getTableStructure() {
+        if (this._tableStructure === undefined) {
+            // lazy build the structure
+            this._tableStructure = this._buildTableStructure();
+        }
+        return this._tableStructure;
+    }
+
     /**
      * @returns {SpreadsheetPivotTable}
      */
-    getTableStructure() {
+    _buildTableStructure() {
         const cols = this._getSpreadsheetCols();
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
