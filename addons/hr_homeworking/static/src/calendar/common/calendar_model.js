@@ -34,7 +34,7 @@ patch(AttendeeCalendarModel.prototype, {
         for (const day of rangeInterval) {
             const startDay = day.s;
             const dayISO = startDay.toISODate();
-            const dayName = startDay.setLocale("us").weekdayLong.toLowerCase();
+            const dayName = startDay.setLocale("en").weekdayLong.toLowerCase();
             if (!(dayISO in events)) {
                 events[dayISO] = {};
             }
@@ -50,7 +50,11 @@ patch(AttendeeCalendarModel.prototype, {
                         }
                     }
                     else {
-                        const {location_type} = res[employeeId][`${dayName}_location_id`];
+                        const locationKeyName = `${dayName}_location_id`;
+                        if (!(locationKeyName in res[employeeId])) {
+                            continue;
+                        }
+                        const {location_type} = res[employeeId][locationKeyName];
                         if (location_type in events[dayISO]) {
                             events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][`${dayName}_location_id`]));
                         } else {
