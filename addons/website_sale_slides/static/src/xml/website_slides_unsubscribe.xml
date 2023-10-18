@@ -4,10 +4,12 @@
     <t t-inherit="website_slides.SlideUnsubscribeDialog" t-inherit-mode="extension">
         <xpath expr="//t[@t-if=&quot;state.mode === 'leave'&quot;] //p[last()]" position="after">
             <t t-if="props.enroll === 'payment'">
-                <p class="alert alert-warning">
-                    <i class="fa fa-exclamation-triangle fa-3x float-start me-3"></i>
-                    This course is paid.<br/>
-                    Leaving the course and re-enrolling afterwards means that you'll be charged again.
+                <p class="d-flex align-items-center gap-3 alert alert-warning mb-0">
+                    <i class="fa fa-exclamation-triangle fa-3x"></i>
+                    <div>
+                        This course is paid.<br/>
+                        Leaving the course and re-enrolling afterwards means that you'll be charged again.
+                    </div>
                 </p>
             </t>
         </xpath>
