@@ -164,6 +164,7 @@ class Repair(models.Model):
     picking_product_ids = fields.One2many('product.product', compute='compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
     # UI Fields
+    has_uncomplete_moves = fields.Boolean(compute='_compute_has_uncomplete_moves')
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     unreserve_visible = fields.Boolean(
@@ -250,6 +251,11 @@ class Repair(models.Model):
         self.is_returned = False
         returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
         returned.is_returned = True
+
+    @api.depends('move_ids.quantity_done', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
+    def _compute_has_uncomplete_moves(self):
+        self.ensure_one()
+        self.has_uncomplete_moves = any(float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids)
 
     @api.depends('state',
                  'move_ids.reserved_availability',
@@ -454,19 +460,6 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        if any(float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids):
-            ctx = dict(self.env.context or {})
-            ctx['default_repair_ids'] = self.ids
-            return {
-                'name': _('Uncomplete Move(s)'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'res_model': 'repair.warn.uncomplete.move',
-                'target': 'new',
-                'context': ctx,
-            }
-
         return self.action_repair_done()
 
     def action_repair_start(self):

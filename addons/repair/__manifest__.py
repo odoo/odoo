@@ -25,7 +25,6 @@ The following topics are covered by this module:
         'security/ir.model.access.csv',
         'security/repair_security.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
-        'wizard/repair_warn_uncomplete_move.xml',
         'views/product_views.xml',
         'views/stock_move_views.xml',
         'views/repair_views.xml',
