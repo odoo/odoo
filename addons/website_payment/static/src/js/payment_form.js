@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core from '@web/legacy/js/services/core';
 import { _t } from '@web/core/l10n/translation';
+import { Component } from '@odoo/owl';
 
 import PaymentForm from '@payment/js/payment_form';
 
@@ -16,7 +16,7 @@ PaymentForm.include({
      * @override
      */
     async start() {
-        core.bus.on('update_shipping_cost', this, this._updateShippingCost);
+        Component.env.bus.addEventListener('update_shipping_cost', (ev) => this._updateShippingCost(ev.detail));
         return await this._super.apply(this, arguments);
     },
 

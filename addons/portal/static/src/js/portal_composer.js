@@ -2,10 +2,10 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
-import core from "@web/legacy/js/services/core";
 import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { post } from "@web/core/network/http_service";
+import { Component } from "@odoo/owl";
 
 /**
  * Widget PortalComposer
@@ -197,7 +197,7 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _chatterPostMessage: async function (route) {
         const result = await this.rpc(route, this._prepareMessageData());
-        core.bus.trigger('reload_chatter_content', result);
+        Component.env.bus.trigger('reload_chatter_content', result);
         return result;
     },
 });

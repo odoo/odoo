@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
     import {barcodeService} from "@barcodes/barcode_service";
-    import {barcodeRemapperService} from "@barcodes/js/barcode_events";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { registry } from "@web/core/registry";
     import testUtils from "@web/../tests/legacy/helpers/test_utils";
@@ -30,8 +29,6 @@
             barcodeService.maxTimeBetweenKeysInMs = 0;
             barcodeService.isMobileChrome = true;
             registry.category("services").add("barcode", barcodeService, { force: true});
-            // remove this one later
-            registry.category("services").add("barcode_remapper", barcodeRemapperService);
             this.env = makeTestEnv();
         },
         after() {

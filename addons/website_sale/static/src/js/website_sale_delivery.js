@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { Component } from "@odoo/owl";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -119,7 +119,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {float} amount : The new total amount of to be paid
      */
     _updateShippingCost: function(amount) {
-        core.bus.trigger('update_shipping_cost', amount);
+        Component.env.bus.trigger('update_shipping_cost', amount);
     },
      /**
      * Get the rate shipment of a carrier
@@ -249,7 +249,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (!this._isPayable(status)) {
             return;
         }
-        core.bus.trigger('enableButton');
+        Component.env.bus.trigger('enableButton');
     },
     /**
      * @private

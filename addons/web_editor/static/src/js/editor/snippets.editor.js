@@ -2,7 +2,6 @@
 
 import { Mutex } from "@web/core/utils/concurrency";
 import { clamp } from "@web/core/utils/numbers";
-import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
@@ -1968,8 +1967,6 @@ var SnippetsMenu = Widget.extend({
         // Needed as bootstrap stop the propagation of click events for dropdowns
         this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', this._onClick);
 
-        core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
-
         // Adapt overlay covering when the window is resized / content changes
         this.debouncedCoverUpdate = throttleForAnimation(() => {
             this.updateCurrentSnippetEditorOverlay();
@@ -2108,7 +2105,6 @@ var SnippetsMenu = Widget.extend({
         if (this.debouncedCoverUpdate) {
             this.debouncedCoverUpdate.cancel();
         }
-        core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         $(document.body).off('click', this._checkEditorToolbarVisibilityCallback);
         this.el.ownerDocument.body.classList.remove('editor_has_snippets');
         // Dispose BS tooltips.

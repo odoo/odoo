@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { _t } from "@web/core/l10n/translation";
@@ -100,8 +99,6 @@ var Dialog = Widget.extend({
         this.renderHeader = options.renderHeader;
         this.renderFooter = options.renderFooter;
         this.onForceClose = options.onForceClose;
-
-        core.bus.on('close_dialogs', this, this.destroy.bind(this));
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -211,9 +208,6 @@ var Dialog = Widget.extend({
             if (options && options.shouldFocusButtons) {
                 self._onFocusControlButton();
             }
-
-            // Notifies new webclient to adjust UI active element
-            core.bus.trigger("legacy_dialog_opened", self);
         });
 
         return self;
@@ -243,11 +237,6 @@ var Dialog = Widget.extend({
 
         if (this.isDestroyed()) {
             return;
-        }
-
-        if (this.el) {
-            // Notifies new webclient to adjust UI active element
-            core.bus.trigger("legacy_dialog_destroyed", this);
         }
 
         // Triggers the onForceClose event if the callback is defined
