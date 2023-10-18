@@ -32,17 +32,6 @@ patch(Order.prototype, {
             this.customerCount = json.customer_count;
         }
     },
-    //@override
-    export_for_printing() {
-        const json = super.export_for_printing(...arguments);
-        if (this.pos.config.module_pos_restaurant) {
-            if (this.getTable()) {
-                json.table = this.getTable().name;
-            }
-            json.customer_count = this.getCustomerCount();
-        }
-        return json;
-    },
     getCustomerCount() {
         return this.customerCount;
     },

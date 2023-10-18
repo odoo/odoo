@@ -3,7 +3,7 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Component } from "@odoo/owl";
-import { renderToElement } from "@web/core/utils/render";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
@@ -12,7 +12,7 @@ export class PrintBillButton extends Component {
 
     setup() {
         this.pos = usePos();
-        this.hardwareProxy = useService("hardware_proxy");
+        this.printer = useService("printer");
         this.click = useAsyncLockedMethod(this.click);
     }
 
@@ -25,20 +25,11 @@ export class PrintBillButton extends Component {
     }
 
     async click() {
-        if (this.hardwareProxy.printer) {
-            const orderReceipt = renderToElement("point_of_sale.OrderReceipt", {
-                receiptData: {
-                    ...this.pos.get_order().getOrderReceiptEnv(),
-                },
-                pos: this.pos,
-                env: this.env,
-            });
-
-            // Need to await to have the result in case of automatic skip screen.
-            await this.hardwareProxy.printer.printReceipt(orderReceipt);
-        } else {
-            this.pos.showTempScreen("BillScreen");
-        }
+        // Need to await to have the result in case of automatic skip screen.
+        (await this.printer.print(OrderReceipt, {
+            data: this.pos.get_order().export_for_printing(),
+            formatCurrency: this.env.utils.formatCurrency,
+        })) || this.pos.showTempScreen("BillScreen");
     }
 }
 

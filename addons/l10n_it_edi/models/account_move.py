@@ -189,9 +189,24 @@ class AccountMove(models.Model):
             raise UserError(_("This move is not waiting for updates from the SdI."))
         self._l10n_it_edi_update_send_state()
 
+    def button_draft(self):
+        # EXTENDS 'account'
+        for move in self:
+            move.l10n_it_edi_state = False
+        return super().button_draft()
+
     # -------------------------------------------------------------------------
     # Helpers
     # -------------------------------------------------------------------------
+
+    def _l10n_it_edi_ready_for_xml_export(self):
+        self.ensure_one()
+        return (
+            self.state == 'posted'
+            and self.company_id.account_fiscal_country_id.code == 'IT'
+            and self.journal_id.type == 'sale'
+            and self.l10n_it_edi_state in (False, 'rejected')
+        )
 
     def _l10n_it_edi_get_line_values(self, reverse_charge_refund=False, is_downpayment=False, convert_to_euros=True):
         """ Returns a list of dictionaries passed to the template for the invoice lines (DettaglioLinee)

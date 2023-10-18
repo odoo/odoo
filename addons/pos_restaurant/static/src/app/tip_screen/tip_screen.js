@@ -2,13 +2,13 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
-import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
+import { TipReceipt } from "@pos_restaurant/app/tip_receipt/tip_receipt";
 
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
@@ -17,12 +17,12 @@ export class TipScreen extends Component {
         this.posReceiptContainer = useRef("pos-receipt-container");
         this.popup = useService("popup");
         this.orm = useService("orm");
-        this.hardwareProxy = useService("hardware_proxy");
+        this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.get_total_with_tax();
 
-        onMounted(() => {
-            this.printTipReceipt();
+        onMounted(async () => {
+            await this.printTipReceipt();
         });
     }
     get overallAmountStr() {
@@ -110,46 +110,16 @@ export class TipScreen extends Component {
             this.currentOrder.selected_paymentline.ticket,
             this.currentOrder.selected_paymentline.cashier_receipt,
         ];
-
         for (let i = 0; i < receipts.length; i++) {
-            const data = receipts[i];
-            var receipt = renderToElement("pos_restaurant.TipReceipt", {
-                receipt: this.currentOrder.getOrderReceiptEnv().receipt,
-                data: data,
-                total: this.env.utils.formatCurrency(this.totalAmount),
-            });
-
-            if (this.hardwareProxy.printer) {
-                await this._printIoT(receipt);
-            } else {
-                await this._printWeb(receipt);
-            }
-        }
-    }
-
-    async _printIoT(receipt) {
-        const printResult = await this.hardwareProxy.printer.printReceipt(receipt);
-        if (!printResult.successful) {
-            await this.popup.add(ErrorPopup, {
-                title: printResult.message.title,
-                body: printResult.message.body,
-            });
-        }
-    }
-
-    async _printWeb(receipt) {
-        try {
-            this.posReceiptContainer.el.textContent = "";
-            this.posReceiptContainer.el.appendChild(receipt);
-            window.print();
-        } catch {
-            await this.popup.add(ErrorPopup, {
-                title: _t("Printing is not supported on some browsers"),
-                body: _t(
-                    "Printing is not supported on some browsers due to no default printing protocol " +
-                        "is available. It is possible to print your tickets by making use of an IoT Box."
-                ),
-            });
+            await this.printer.print(
+                TipReceipt,
+                {
+                    headerData: this.pos.getReceiptHeaderData(),
+                    data: receipts[i],
+                    total: this.env.utils.formatCurrency(this.totalAmount),
+                },
+                { webPrintFallback: true }
+            );
         }
     }
 }

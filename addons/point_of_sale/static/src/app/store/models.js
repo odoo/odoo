@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { uuidv4, constructFullProductName } from "@point_of_sale/utils";
+import { random5Chars, uuidv4, qrCodeSrc, constructFullProductName } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import {
@@ -23,6 +23,7 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
+import { omit } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -792,68 +793,7 @@ export class Orderline extends PosModel {
             combo_parent_id: this.comboParent?.id || this.comboParent?.cid,
         };
     }
-    //used to create a json of the ticket, to be sent to the printer
-    export_for_printing() {
-        return {
-            id: this.id,
-            quantity: this.get_quantity(),
-            unit_name: this.get_unit().name,
-            is_in_unit: this.get_unit().id == this.pos.uom_unit_id,
-            price: this.get_unit_display_price(),
-            discount: this.get_discount(),
-            product_name: this.get_product().display_name,
-            product_name_wrapped: this.generate_wrapped_product_name(),
-            price_lst: this.get_taxed_lst_unit_price(),
-            fixed_lst_price: this.get_fixed_lst_price(),
-            price_type: this.price_type,
-            display_discount_policy: this.display_discount_policy(),
-            price_display_one: this.get_display_price_one(),
-            price_display: this.get_display_price(),
-            price_with_tax: this.get_price_with_tax(),
-            price_without_tax: this.get_price_without_tax(),
-            price_with_tax_before_discount: this.get_price_with_tax_before_discount(),
-            tax: this.get_tax(),
-            tax_details: this.get_tax_details(),
-            product_description: this.get_product().description,
-            product_description_sale: this.get_product().description_sale,
-            pack_lot_lines: this.get_lot_lines(),
-            customer_note: this.get_customer_note(),
-            taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
-            isPartOfCombo: this.isPartOfCombo(),
-            custom_attribute_value_ids: this.custom_attribute_value_ids,
-            unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
-        };
-    }
-    generate_wrapped_product_name() {
-        var MAX_LENGTH = 24; // 40 * line ratio of .6
-        var wrapped = [];
-        var name = this.get_full_product_name();
-        var current_line = "";
 
-        while (name.length > 0) {
-            var space_index = name.indexOf(" ");
-
-            if (space_index === -1) {
-                space_index = name.length;
-            }
-
-            if (current_line.length + space_index > MAX_LENGTH) {
-                if (current_line.length) {
-                    wrapped.push(current_line);
-                }
-                current_line = "";
-            }
-
-            current_line += name.slice(0, space_index + 1);
-            name = name.slice(space_index + 1);
-        }
-
-        if (current_line.length) {
-            wrapped.push(current_line);
-        }
-
-        return wrapped;
-    }
     // changes the base price of the product for this orderline
     set_unit_price(price) {
         this.order.assert_editable();
@@ -1296,7 +1236,6 @@ export class Payment extends PosModel {
     //exports as JSON for receipt printing
     export_for_printing() {
         return {
-            cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
             ticket: this.ticket,
@@ -1556,93 +1495,42 @@ export class Order extends PosModel {
         }
         return json;
     }
-    _exportShippingDateForPrinting() {
-        const shippingDate = DateTime.fromJSDate(new Date(this.shippingDate));
-        return formatDate(shippingDate);
-    }
     export_for_printing() {
-        var orderlines = [];
-
-        this.orderlines.forEach(function (orderline) {
-            orderlines.push(orderline.export_for_printing());
-        });
-
         // If order is locked (paid), the 'change' is saved as negative payment,
         // and is flagged with is_change = true. A receipt that is printed first
         // time doesn't show this negative payment so we filter it out.
-        var paymentlines = this.paymentlines
-            .filter(function (paymentline) {
-                return !paymentline.is_change;
-            })
-            .map(function (paymentline) {
-                return paymentline.export_for_printing();
-            });
-        const partner = this.partner;
-        const cashier = this.cashier;
-        const company = this.pos.company;
-        const date = new Date();
-
-        var receipt = {
-            orderlines: orderlines,
-            paymentlines: paymentlines,
-            subtotal: this.get_subtotal(),
-            total_with_tax: this.get_total_with_tax(),
-            total_rounded: this.get_total_with_tax() + this.get_rounding_applied(),
+        const paymentlines = this.paymentlines
+            .filter((p) => !p.is_change)
+            .map((p) => p.export_for_printing());
+        this.receiptDate ||= formatDateTime(luxon.DateTime.now());
+        return {
+            orderlines: this.orderlines.map((l) => omit(l.getDisplayData(), "internalNote")),
+            paymentlines,
+            amount_total: this.get_total_with_tax(),
             total_without_tax: this.get_total_without_tax(),
-            total_tax: this.get_total_tax(),
+            amount_tax: this.get_total_tax(),
             total_paid: this.get_total_paid(),
             total_discount: this.get_total_discount(),
             rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
             change: this.locked ? this.amount_return : this.get_change(),
             name: this.get_name(),
-            partner: partner ? partner : null,
             invoice_id: null, //TODO
-            cashier: cashier ? cashier.name : null,
-            precision: {
-                price: 2,
-                money: 2,
-                quantity: 3,
-            },
-            date: {
-                year: date.getFullYear(),
-                month: date.getMonth(),
-                date: date.getDate(), // day of the month
-                day: date.getDay(), // day of the week
-                hour: date.getHours(),
-                minute: date.getMinutes(),
-                isostring: date.toISOString(),
-                localestring: formatDateTime(luxon.DateTime.now()),
-                date_order: this.date_order,
-            },
-            company: {
-                email: company.email,
-                website: company.website,
-                company_registry: company.company_registry,
-                contact_address: company.partner_id[1],
-                vat: company.vat,
-                vat_label: (company.country && company.country.vat_label) || _t("Tax ID"),
-                name: company.name,
-                phone: company.phone,
-                logo: this.pos.company_logo_base64,
-            },
-            currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code
-                ? this.ticketCode
-                : false,
+            cashier: this.cashier?.name,
+            date: this.receiptDate,
+            pos_qr_code:
+                this.pos.company.point_of_sale_use_ticket_qr_code &&
+                qrCodeSrc(
+                    `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
+                ),
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code && this.ticketCode,
             base_url: this.pos.base_url,
+            footer: this.pos.config.receipt_footer,
+            // FIXME: isn't there a better way to handle this date?
+            shippingDate:
+                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+            headerData: this.pos.getReceiptHeaderData(),
         };
-
-        const isHeaderOrFooter = this.pos.config.is_header_or_footer;
-        receipt.header = (isHeaderOrFooter && this.pos.config.receipt_header) || "";
-        receipt.footer = (isHeaderOrFooter && this.pos.config.receipt_footer) || "";
-
-        if (!receipt.date.localestring && (!this.state || this.state == "draft")) {
-            receipt.date.localestring = formatDateTime(DateTime.local());
-        }
-
-        return receipt;
     }
     // This function send order change to printer
     // For sending changes to preparation display see sendChanges function.
@@ -2747,23 +2635,6 @@ export class Order extends PosModel {
     wait_for_push_order() {
         return false;
     }
-    /**
-     * @returns {Object} object to use as props for instantiating OrderReceipt.
-     */
-    getOrderReceiptEnv() {
-        // Formerly get_receipt_render_env defined in ScreenWidget.
-        const receipt = this.export_for_printing();
-        const getOrderlineTaxes = (line) =>
-            Object.keys(line.tax_details).map((taxId) => this.pos.taxes_by_id[taxId]);
-        return {
-            getOrderlineTaxes: getOrderlineTaxes,
-            order: this,
-            receipt: receipt,
-            orderlines: this.get_orderlines(),
-            paymentlines: this.get_paymentlines(),
-            shippingDate: this.shippingDate ? this._exportShippingDateForPrinting() : false,
-        };
-    }
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.pos.fiscal_positions.find(
@@ -2812,30 +2683,7 @@ export class Order extends PosModel {
             return true;
         }
     }
-    _get_qr_code_data() {
-        if (this.pos.company.point_of_sale_use_ticket_qr_code) {
-            // Use the unique access token to ensure the authenticity of the request. Use the order reference as a second check just in case.
-            return this._make_qr_code_data(
-                `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
-            );
-        } else {
-            return false;
-        }
-    }
-    _make_qr_code_data(url) {
-        const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-        const qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(url, 150, 150));
-        return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
-    }
-    /**
-     * Returns a random 5 digits alphanumeric code
-     * @returns {string}
-     */
     _generateTicketCode() {
-        let code = "";
-        while (code.length != 5) {
-            code = Math.random().toString(36).slice(2, 7);
-        }
-        return code;
+        return random5Chars();
     }
 }

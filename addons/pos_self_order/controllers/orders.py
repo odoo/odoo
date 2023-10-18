@@ -46,6 +46,7 @@ class PosSelfOrderController(http.Controller):
                 'amount_paid': 0,
                 'amount_return': 0,
                 'table_stand_number': order.get('table_stand_number'),
+                'ticket_code': order.get('ticket_code'),
             },
             'to_invoice': False,
             'session_id': pos_session.id,

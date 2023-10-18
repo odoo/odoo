@@ -1,146 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-name="point_of_sale.OrderReceipt">
         <div class="pos-receipt">
-            <t t-if="receiptData.receipt.company.logo">
-                <img class="pos-receipt-logo" t-att-src="receiptData.receipt.company.logo" alt="Logo"/>
-                <br/>
-            </t>
-            <t t-if="!receiptData.receipt.company.logo">
-                <h2 class="pos-receipt-center-align">
-                    <t t-esc="receiptData.receipt.company.name" />
-                </h2>
-                <br/>
-            </t>
-            <div class="pos-receipt-contact">
-                <t t-if="receiptData.receipt.company.contact_address">
-                    <div><t t-esc="receiptData.receipt.company.contact_address" /></div>
-                </t>
-                <t t-if="receiptData.receipt.company.phone">
-                    <div>Tel:<t t-esc="receiptData.receipt.company.phone" /></div>
-                </t>
-                <t t-if="receiptData.receipt.company.vat">
-                    <div><t t-esc="receiptData.receipt.company.vat_label"/>:<t t-esc="receiptData.receipt.company.vat" /></div>
-                </t>
-                <t t-if="receiptData.receipt.company.email">
-                    <div><t t-esc="receiptData.receipt.company.email" /></div>
-                </t>
-                <t t-if="receiptData.receipt.company.website">
-                    <div><t t-esc="receiptData.receipt.company.website" /></div>
-                </t>
-                <t t-if="receiptData.receipt.header">
-                    <div style="white-space:pre-line"><t t-esc="receiptData.receipt.header" /></div>
-                </t>
-                <t t-if="receiptData.receipt.cashier">
-                    <div class="cashier">
-                        <div>--------------------------------</div>
-                        <div>Served by <t t-esc="receiptData.receipt.cashier" /></div>
-                    </div>
-                </t>
-            </div>
-            <br /><br />
-
-            <!-- Orderlines -->
-            <div class="orderlines">
-                <t t-call="point_of_sale.OrderLinesReceipt"/>
-            </div>
+            <ReceiptHeader data="props.data.headerData" />
+            <OrderWidget lines="props.data.orderlines" t-slot-scope="scope">
+                <t t-set="line" t-value="scope.line"/>
+                <Orderline line="omit(scope.line, 'customerNote')">
+                    <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
+                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                        <t t-esc="line.customerNote" />
+                    </li>
+                    <ul t-if="line.pack_lot_lines">
+                        <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+                            SN <t t-esc="lot.lot_name"/>
+                        </li>
+                    </ul>
+                </Orderline>
+            </OrderWidget>
 
             <!-- Total -->
             <div class="pos-receipt-right-align">--------</div>
             <br/>
             <div class="pos-receipt-amount">
                 TOTAL
-                <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_with_tax)" class="pos-receipt-right-align"/>
+                <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
             </div>
-            <t t-if="receiptData.receipt.total_rounded != receiptData.receipt.total_with_tax">
+            <t t-if="props.data.rounding_applied">
                 <div class="pos-receipt-amount">
                   Rounding
-                <span t-esc='env.utils.formatCurrency(receiptData.receipt.rounding_applied)' class="pos-receipt-right-align"/>
+                <span t-esc='props.formatCurrency(props.data.rounding_applied)' class="pos-receipt-right-align"/>
                 </div>
                 <div class="pos-receipt-amount">
                   To Pay
-                 <span t-esc='env.utils.formatCurrency(receiptData.receipt.total_rounded)' class="pos-receipt-right-align"/>
+                 <span t-esc='props.formatCurrency(props.data.amount_total + props.data.rounding_applied)' class="pos-receipt-right-align"/>
               </div>
             </t>
             <br/><br/>
 
             <!-- Payment Lines -->
 
-            <t t-foreach="receiptData.receipt.paymentlines" t-as="line" t-key="line.cid">
-                <div>
-                    <t t-esc="line.name" />
-                    <span t-esc="env.utils.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>
-                </div>
-            </t>
-            <br/>
-
-            <div class="pos-receipt-amount receipt-change">
-                CHANGE
-                <span t-esc="env.utils.formatCurrency(receiptData.receipt.change)" class="pos-receipt-right-align"/>
+            <div class="paymentlines" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
+                <t t-esc="line.name" />
+                <span t-esc="props.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>
             </div>
-            <br/>
+
+            <div class="pos-receipt-amount receipt-change mt-2">
+                CHANGE
+                <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
+            </div>
 
             <!-- Extra Payment Info -->
 
-            <t t-if="receiptData.receipt.total_discount">
+            <t t-if="props.data.total_discount">
                 <div>
                     Discounts
-                    <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_discount)" class="pos-receipt-right-align"/>
+                    <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
-            <div t-if="receiptData.receipt.tax_details.length > 0" class="pos-receipt-taxes">
+            <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
                 <span />
                 <span>VAT%</span>
                 <span>VAT</span>
                 <span>ExVAT</span>
                 <span>Total</span>
-                <t t-foreach="receiptData.receipt.tax_details" t-as="tax" t-key="tax.tax.id">
+                <t t-foreach="props.data.tax_details" t-as="tax" t-key="tax.tax.id">
                     <span />
                     <span><t t-esc="tax.tax.amount"/> %</span>
-                    <span t-esc="env.utils.formatCurrency(tax.amount, false)" />
-                    <span t-esc="env.utils.formatCurrency(tax.base, false)" />
-                    <span t-esc="env.utils.formatCurrency(tax.amount + tax.base, false)" />
+                    <span t-esc="props.formatCurrency(tax.amount, false)" />
+                    <span t-esc="props.formatCurrency(tax.base, false)" />
+                    <span t-esc="props.formatCurrency(tax.amount + tax.base, false)" />
                 </t>
-                <t t-if="receiptData.receipt.tax_details.length > 1">
+                <t t-if="props.data.tax_details.length > 1">
                     <span />
                     <span />
-                    <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_tax, false)" />
-                    <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_without_tax, false)" />
-                    <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_with_tax, false)" />
+                    <span t-esc="props.formatCurrency(props.data.amount_tax, false)" />
+                    <span t-esc="props.formatCurrency(props.data.total_without_tax, false)" />
+                    <span t-esc="props.formatCurrency(props.data.amount_total, false)" />
                 </t>
             </div>
 
             <div class="before-footer" />
 
-            <div t-if="receiptData.receipt.pos_qr_code">
+            <div t-if="props.data.pos_qr_code">
                 <br /><br />
-                <div class="pos-receipt-order-data">
+                <div class="pos-receipt-order-data mb-2">
                     Scan me to request an invoice for your purchase.
                 </div>
-                <img id="posqrcode" t-att-src="receiptData.receipt.pos_qr_code" class="pos-receipt-logo"/>
+                <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-logo"/>
             </div>
 
-            <div t-if="receiptData.receipt.ticket_code">
+            <div t-if="props.data.ticket_code">
                 <br /><br />
                 <div class="pos-receipt-order-data">
-                    You can go to <t t-out="receiptData.receipt.base_url"/>/pos/ticket and use the code below to request an invoice online
+                    You can go to <t t-out="props.data.base_url"/>/pos/ticket and use the code below to request an invoice online
                 </div>
                 <div class="pos-receipt-order-data">
-                    Unique Code: <t t-out="receiptData.receipt.ticket_code"/>
+                    Unique Code: <t t-out="props.data.ticket_code"/>
                 </div>
             </div>
 
             <!-- Footer -->
-            <div t-if="receiptData.receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
-                <br/>
-                <t t-esc="receiptData.receipt.footer" />
+           <div t-if="props.data.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
+               <br/>
+               <t t-esc="props.data.footer" />
                 <br/>
                 <br/>
             </div>
 
             <div class="after-footer">
-                <t t-foreach="receiptData.receipt.paymentlines" t-as="line" t-key="line_index">
+                <t t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
                     <t t-if="line.ticket">
                         <br />
                         <div class="pos-payment-terminal-receipt">
@@ -151,81 +119,18 @@
             </div>
 
             <br/>
-            <t t-if="receiptData.shippingDate">
+            <t t-if="props.shippingDate">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="receiptData.shippingDate" /></div>
+                    <div><t t-esc="props.shippingDate" /></div>
                 </div>
             </t>
 
             <br/>
             <div class="pos-receipt-order-data">
-                <div><t t-esc="receiptData.receipt.name" /></div>
-                <t t-if="receiptData.receipt.date.localestring">
-                    <div><t t-esc="receiptData.receipt.date.localestring" /></div>
-                </t>
-                <t t-else="">
-                    <div><t t-esc="receiptData.receipt.date.validation_date" /></div>
-                </t>
+                <div t-esc="props.data.name" />
+                <div t-esc="props.data.date" />
             </div>
-        </div>
-    </t>
-    <t t-name="point_of_sale.OrderLinesReceipt">
-        <div id="receipt-orderline" t-foreach="receiptData.receipt.orderlines" t-as="line" t-key="line.id" t-att-class="{'border-start border-3 ps-1': line.isPartOfCombo }">
-            <div t-esc="line.product_name_wrapped[0]" />
-            <span>
-                <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line" t-key="wrapped_line_index">
-                    <t t-esc="wrapped_line"/>
-                </t>
-            </span>
-            <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
-                <div class="pos-receipt-left-padding">
-                    <t t-esc="env.utils.formatCurrency(line.price_lst, false)" />
-                    ->
-                    <t t-esc="env.utils.formatCurrency(line.price, false)" />
-                </div>
-            </t>
-            <t t-elif="line.discount !== 0">
-                <div class="pos-receipt-left-padding">
-                    <t t-if="pos.config.iface_tax_included === 'total'">
-                        <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
-                    </t>
-                    <t t-else="">
-                        <t t-esc="env.utils.formatCurrency(line.unitDisplayPriceBeforeDiscount, false)"/>
-                    </t>
-                </div>
-            </t>
-            <t t-if="line.discount !== 0">
-                <div class="pos-receipt-left-padding">
-                    Discount: <t t-esc="line.discount" />%
-                </div>
-            </t>
-            <div class="pos-receipt-left-padding">
-                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
-                <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
-                x
-                <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
-                <div class="price_display pos-receipt-right-align">
-                    <span t-esc="env.utils.formatCurrency(line.price_display, false)" />
-                    <span class="tax-letter" />
-                </div>
-            </div>
-            <t t-if="line.customer_note">
-                <div class="pos-receipt-left-padding pos-receipt-customer-note">
-                    <t t-esc="line.customer_note"/>
-                </div>
-            </t>
-            <t t-if="line.pack_lot_lines">
-                <div class="pos-receipt-left-padding">
-                    <ul>
-                        <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
-                            <li>
-                                SN <t t-esc="lot.lot_name"/>
-                            </li>
-                        </t>
-                    </ul>
-                </div>
-            </t>
         </div>
     </t>
 </templates>

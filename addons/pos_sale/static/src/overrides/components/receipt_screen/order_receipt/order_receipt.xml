@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="pos_sale.OrderReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension">
-        <xpath expr="//t[@t-foreach]" position="inside">
+    <t t-name="pos_sale.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
             <div class="pos-receipt-left-padding" t-if="line.so_reference">From <t t-esc="line.so_reference"/></div>
             <div class="pos-receipt-left-padding" t-if="line.down_payment_details">
                 <table class="sale-order-info ms-2 text-truncate">
