@@ -61,7 +61,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" />
                 <field name="user_id" />
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="calendar_id" optional="show" />
                 <field name="tz" optional="hide" />
                 <field name="resource_type" optional="show" />
