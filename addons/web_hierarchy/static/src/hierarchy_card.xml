@@ -12,11 +12,9 @@
                     <i class="fa fa-chevron-up"/>
                 </button>
             </div>
-            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between"
+            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between border"
                 t-att-class="{
-                    o_hierarchy_node_highlighted: props.node.isFocused,
-                    border: !props.node.isFocused,
-                    'border-bottom-0': !props.node.isFocused and (props.node.nodes.length or props.node.canShowChildNodes),
+                    'border-bottom-0': props.node.nodes.length or props.node.canShowChildNodes,
                 }"
                 t-att-data-node-id="props.node.id"
                 t-on-click.synthetic="onGlobalClick"

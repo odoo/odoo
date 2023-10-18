@@ -88,8 +88,6 @@ class TestEmployee(TestHrCommon):
         self.assertEqual(len(result), 3)
         for emp in employees:
             emp_dict = {'id': emp.id, 'parent_id': emp.parent_id.id and (emp.parent_id.id, emp.parent_id.display_name)}
-            if emp == self.employee_georges:
-                emp_dict['__focus__'] = True
             self.assertIn(emp_dict, result)
 
         self.employee_pierre.parent_id = self.employee_georges
@@ -97,14 +95,12 @@ class TestEmployee(TestHrCommon):
         self.assertEqual(len(result), 3)
         for emp in employees:
             emp_dict = {'id': emp.id, 'parent_id': emp.parent_id.id and (emp.parent_id.id, emp.parent_id.display_name)}
-            if emp == self.employee_georges:
-                emp_dict['__focus__'] = True
             self.assertIn(emp_dict, result)
 
         result = HrEmployee.hierarchy_read([('id', '=', self.employee_pierre.id)], ['id'], 'parent_id')
         self.assertEqual(len(result), 2)
         self.assertIn(
-            {'id': self.employee_pierre.id, 'parent_id': (self.employee_georges.id, self.employee_georges.name), '__focus__': True},
+            {'id': self.employee_pierre.id, 'parent_id': (self.employee_georges.id, self.employee_georges.name)},
             result
         )
         self.assertIn(
