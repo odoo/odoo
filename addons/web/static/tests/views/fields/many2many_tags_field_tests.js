@@ -200,13 +200,13 @@ QUnit.module("Fields", (hooks) => {
             mockRPC: (route, { args, method, model, kwargs }) => {
                 if (route === "/web/dataset/call_kw/partner/web_save") {
                     var commands = args[1].timmy;
-                    assert.strictEqual(commands.length, 1, "should have generated one command");
-                    assert.strictEqual(
-                        commands[0][0],
-                        6,
-                        "generated command should be REPLACE WITH"
+                    assert.strictEqual(commands.length, 2, "should have generated two commands");
+                    assert.strictEqual(commands.map((cmd) => cmd[0]).join("-"), "4-3");
+                    assert.deepEqual(
+                        commands.map((cmd) => cmd[1]),
+                        [13, 14],
+                        "Should add 13, remove 14"
                     );
-                    assert.deepEqual(commands[0][2], [12, 13], "new value should be [12, 13]");
                 }
                 if ((method === "web_read" || method === "web_save") && model === "partner_type") {
                     assert.deepEqual(
@@ -588,15 +588,8 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/web_save") {
                     const commands = args[1].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
-                    assert.strictEqual(
-                        commands[0][0],
-                        6,
-                        "generated command should be REPLACE WITH"
-                    );
-                    assert.ok(
-                        JSON.stringify(commands[0][2]) === JSON.stringify([12]),
-                        "new value should be [12]"
-                    );
+                    assert.strictEqual(commands[0][0], 4, "generated command should be LINK TO");
+                    assert.strictEqual(commands[0][1], 12, "new value should be 12");
                 }
             },
         });
@@ -1783,7 +1776,12 @@ QUnit.module("Fields", (hooks) => {
         def = makeDeferred();
         await clickDropdown(target, "timmy");
         await clickOpenedDropdownItem(target, "timmy", "gold");
-        assert.containsNone(target, ".o_tag");
+        assert.containsOnce(target, ".o_tag");
+        assert.strictEqual(
+            target.querySelector(".o_tag").textContent,
+            "",
+            "The tag is displayed, but the web read is not finished yet"
+        );
 
         assert.verifySteps(["name_search", "web_read"]);
 
@@ -1794,6 +1792,7 @@ QUnit.module("Fields", (hooks) => {
 
         def.resolve();
         await nextTick();
+        assert.strictEqual(target.querySelector(".o_tag").textContent, "gold");
 
         assert.verifySteps(["web_save"]);
     });

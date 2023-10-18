@@ -592,7 +592,9 @@ export class StaticList extends DataPoint {
                         record = this._cache[command[1]];
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
-                        recordsToLoad.push(record);
+                        if (!command[2]) {
+                            recordsToLoad.push(record);
+                        }
                     }
                     if (!this.limit || this.records.length < this.limit || replaceWith) {
                         this.records.push(record);
@@ -751,6 +753,10 @@ export class StaticList extends DataPoint {
             }
         }
         return record;
+    }
+
+    _clearCommands() {
+        this._commands = [];
     }
 
     _discard() {

@@ -1712,7 +1712,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
         // commands than the limit of the dataPoint (40 for x2many kanban)
-        assert.expect(21);
+        assert.expect(20);
 
         // create a lot of partner_types that will be linked by the onchange
         const commands = [];
@@ -1761,7 +1761,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "web_read"]);
 
         await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange");
-        assert.verifySteps(["onchange", "web_read"]);
+        assert.verifySteps(["onchange"]);
         assert.strictEqual(
             $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "1-40 / 45",
