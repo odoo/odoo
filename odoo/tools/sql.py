@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # pylint: disable=sql-injection
+from __future__ import annotations
 
 import enum
 import json
@@ -8,7 +9,7 @@ import logging
 import re
 from binascii import crc32
 from collections import defaultdict
-from typing import Iterable, Optional, Union
+from typing import Iterable, Union
 
 import psycopg2
 
@@ -56,7 +57,7 @@ class SQL:
     __slots__ = ('__code', '__args')
 
     # pylint: disable=keyword-arg-before-vararg
-    def __new__(cls, code: Union[str, "SQL"] = "", /, *args):
+    def __new__(cls, code: (str | SQL) = "", /, *args):
         if isinstance(code, SQL):
             return code
         # validate the format of code
@@ -105,7 +106,7 @@ class SQL:
         yield self.code
         yield self.params
 
-    def join(self, args: Iterable) -> "SQL":
+    def join(self, args: Iterable) -> SQL:
         """ Join SQL objects or parameters with ``self`` as a separator. """
         args = list(args)
         # optimizations for special cases
@@ -122,7 +123,7 @@ class SQL:
         return SQL("%s" * len(items), *items)
 
     @classmethod
-    def identifier(cls, name: str, subname: Optional[str] = None) -> "SQL":
+    def identifier(cls, name: str, subname: (str | None) = None) -> SQL:
         """ Return an SQL object that represents an identifier. """
         assert IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
         if subname is None:
