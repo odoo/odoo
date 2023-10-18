@@ -11,7 +11,7 @@
                 <DatiIVA>
                     <Imposta t-out="format_monetary(line.price_total - line.price_subtotal, currency)"/>
                 </DatiIVA>
-                <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-out="line.tax_ids.l10n_it_kind_exoneration"/>
+                <Natura t-if="line.tax_ids.l10n_it_exempt_reason" t-out="line.tax_ids.l10n_it_exempt_reason"/>
             </DatiBeniServizi>
         </template>
 
