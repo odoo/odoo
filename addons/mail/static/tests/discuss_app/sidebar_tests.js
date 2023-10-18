@@ -1000,7 +1000,7 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
     openDiscuss();
 
     await contains(".o-mail-DiscussSidebarChannel img");
-    await contains(`img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`);
+    await contains(`img[data-src$='/web/image/res.partner/${partnerId}/avatar_128']`);
 });
 
 QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => {

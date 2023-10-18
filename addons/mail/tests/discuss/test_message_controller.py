@@ -5,6 +5,8 @@ import json
 import odoo
 from odoo.tools import mute_logger, date_utils
 from odoo.tests import HttpCase
+from odoo.http import STATIC_CACHE_LONG
+from odoo import Command
 
 
 @odoo.tests.tagged("-at_install", "post_install")
@@ -342,3 +344,44 @@ class TestMessageController(HttpCase):
             self.env["res.partner"].search_count([('email', '=', "john2@test.be")]),
             "'mail/message/post' does not create another user if there's already a user with matching email",
         )
+
+    def test_mail_cache_control_header(self):
+        testuser = self.env['res.users'].create({
+            'email': 'testuser@testuser.com',
+            'groups_id': [Command.set([self.ref('base.group_portal')])],
+            'name': 'Test User',
+            'login': 'testuser',
+            'password': 'testuser',
+        })
+        test_user = self.authenticate("testuser", "testuser")
+        partner = self.env["res.users"].browse(test_user.uid).partner_id
+        self.channel.add_members(testuser.partner_id.ids)
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/avatar_128?unique={self.channel._get_avatar_cache_key()}"
+        )
+        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/avatar_128"
+        )
+        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128?unique={partner.write_date.isoformat()}"
+        )
+        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/partner/{partner.id}/avatar_128"
+        )
+        self.assertEqual(res.headers["Cache-Control"], "no-cache")
+
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128?unique={self.guest.write_date.isoformat()}"
+        )
+        self.assertEqual(res.headers["Cache-Control"], f"public, max-age={STATIC_CACHE_LONG}")
+
+        res = self.url_open(
+            url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128"
+        )
+        self.assertEqual(res.headers["Cache-Control"], "no-cache")
