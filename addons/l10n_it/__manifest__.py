@@ -21,6 +21,7 @@ Italian accounting chart and localization.
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
         'data/report_invoice.xml',
+        'views/account_tax_views.xml'
     ],
     'demo': [
         'demo/demo_company.xml',

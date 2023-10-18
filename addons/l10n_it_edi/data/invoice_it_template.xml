@@ -25,7 +25,7 @@
                     <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
                     <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
-                    <Natura t-if="vat_tax.l10n_it_has_exoneration" t-out="vat_tax.l10n_it_kind_exoneration"/>
+                    <Natura t-if="vat_tax.l10n_it_exempt_reason" t-out="vat_tax.l10n_it_exempt_reason"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato>Currency</TipoDato>
                         <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
@@ -173,11 +173,10 @@
             </t>
             <t t-foreach="tax_lines" t-as="tax_line">
                 <t t-set="tax" t-value="tax_line['tax']"/>
-                <t t-set="has_exoneration" t-value="tax.l10n_it_has_exoneration"/>
-                <t t-set="kind_exoneration" t-value="tax.l10n_it_kind_exoneration"/>
+                <t t-set="exempt_reason" t-value="tax.l10n_it_exempt_reason"/>
                 <DatiRiepilogo>
                     <AliquotaIVA t-out="format_numbers(tax.amount)"/>
-                    <Natura t-if="has_exoneration" t-out="kind_exoneration"/>
+                    <Natura t-if="exempt_reason" t-out="exempt_reason"/>
                     <Arrotondamento t-if="tax_line.get('rounding')" t-out="format_numbers(-tax_line['rounding'])"/>
                     <t t-if="rc_refund">
                         <ImponibileImporto t-out="format_monetary(balance_multiplicator * tax_line['base_amount'], currency)"/>

@@ -237,12 +237,16 @@ class TestItEdiExport(TestItEdi):
             'name': 'all of nothing',
             'amount': 0.0,
             'amount_type': 'percent',
+            'l10n_it_exempt_reason': 'N1',
+            'l10n_it_law_reference': 'test',
         })
 
         tax_zero_percent_zero_percent_repartition = self.env['account.tax'].with_company(self.company).create({
             'name': 'none of nothing',
             'amount': 0,
             'amount_type': 'percent',
+            'l10n_it_exempt_reason': 'N1',
+            'l10n_it_law_reference': 'test',
             'invoice_repartition_line_ids': [
                 Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
                 Command.create({'factor_percent': 0, 'repartition_type': 'tax'}),

@@ -98,6 +98,9 @@ class TestItEdiReverseCharge(TestItEdi):
             **tax_data,
             'type_tax_use': 'sale',
             'amount': 0,
+            'amount_type': 'percent',
+            'l10n_it_exempt_reason': 'N1',
+            'l10n_it_law_reference': 'test',
         })
 
     def test_invoice_reverse_charge(self):

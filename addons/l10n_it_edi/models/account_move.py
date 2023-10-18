@@ -943,9 +943,8 @@ class AccountMove(models.Model):
 
         move_line.tax_ids = []
         if percentage is not None:
-            conditions = [('l10n_it_has_exoneration', '=', False)]
-            if l10n_it_kind_exoneration := get_text(element, './/Natura'):
-                conditions = [('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)]
+            l10n_it_exempt_reason = get_text(element, './/Natura') or False
+            conditions = [('l10n_it_exempt_reason', '=', l10n_it_exempt_reason)]
             if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, conditions):
                 move_line.tax_ids += tax
             else:
@@ -1054,7 +1053,7 @@ class AccountMove(models.Model):
             errors.append(_("Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."))
 
         for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
+            if not tax_line.tax_line_id.l10n_it_exempt_reason and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
         if self.l10n_it_partner_pa:
@@ -1097,7 +1096,7 @@ class AccountMove(models.Model):
             errors.append(_("%s must have a city.", buyer.display_name))
 
         for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
+            if not tax_line.tax_line_id.l10n_it_exempt_reason and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
         return errors

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
@@ -7,16 +6,7 @@ from odoo.exceptions import ValidationError, UserError
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    l10n_it_vat_due_date = fields.Selection(
-        selection=[
-            ("I", "[I] IVA ad esigibilità immediata"),
-            ("D", "[D] IVA ad esigibilità differita"),
-            ("S", "[S] Scissione dei pagamenti")],
-        default="I",
-        string="VAT due date",
-    )
-    l10n_it_has_exoneration = fields.Boolean(string="Has exoneration of tax (Italy)", help="Tax has a tax exoneration.")
-    l10n_it_kind_exoneration = fields.Selection(
+    l10n_it_exempt_reason = fields.Selection(
         selection=[
             ("N1", "[N1] Escluse ex art. 15"),
             ("N2", "[N2] Non soggette"),
@@ -45,22 +35,20 @@ class AccountTax(models.Model):
         ],
         string="Exoneration",
         help="Exoneration type",
-        default="N1",
     )
     l10n_it_law_reference = fields.Char(string="Law Reference", size=100)
 
-    @api.constrains('l10n_it_has_exoneration',
-                    'l10n_it_kind_exoneration',
+    @api.constrains('l10n_it_exempt_reason',
                     'l10n_it_law_reference',
                     'amount',
                     'invoice_repartition_line_ids',
                     'refund_repartition_line_ids')
     def _l10n_it_edi_check_exoneration_with_no_tax(self):
         for tax in self:
-            if tax.l10n_it_has_exoneration:
-                if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
-                    raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
-                if tax.l10n_it_kind_exoneration == 'N6' and tax._l10n_it_is_split_payment():
+            if tax.country_id.code == 'IT':
+                if tax.amount_type == 'percent' and tax.amount == 0 and not (tax.l10n_it_exempt_reason and tax.l10n_it_law_reference):
+                    raise ValidationError(_("If the tax amount is 0%, you must enter the exoneration code and the related law reference."))
+                if tax.l10n_it_exempt_reason == 'N6' and tax._l10n_it_is_split_payment():
                     raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
 
     def _l10n_it_filter_kind(self, kind):
