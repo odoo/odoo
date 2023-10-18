@@ -39,9 +39,9 @@ class LivechatBinaryController(BinaryController):
         auth="public",
         cors="*",
     )
-    def livechat_channel_partner_avatar_128(self, guest_token, channel_id, partner_id, **kwargs):
+    def livechat_channel_partner_avatar_128(self, guest_token, channel_id, partner_id, unique=False):
         force_guest_env(guest_token)
-        return self.discuss_channel_partner_avatar_128(channel_id, partner_id, **kwargs)
+        return self.discuss_channel_partner_avatar_128(channel_id, partner_id, unique=unique)
 
     @route(
         "/im_livechat/cors/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128",
@@ -50,6 +50,6 @@ class LivechatBinaryController(BinaryController):
         auth="public",
         cors="*",
     )
-    def livechat_channel_guest_avatar_128(self, guest_token, channel_id, guest_id, **kwargs):
+    def livechat_channel_guest_avatar_128(self, guest_token, channel_id, guest_id, unique=False):
         force_guest_env(guest_token)
-        return self.discuss_channel_guest_avatar_128(channel_id, guest_id, **kwargs)
+        return self.discuss_channel_guest_avatar_128(channel_id, guest_id, unique=unique)

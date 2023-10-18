@@ -61,6 +61,8 @@ export class Persona extends Record {
     /** @type {ImStatus} */
     im_status;
     isAdmin = false;
+    /** @type {string} */
+    write_date;
 
     /**
      * @returns {boolean}

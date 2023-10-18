@@ -16,29 +16,29 @@ class BinaryController(Binary):
         auth="public",
     )
     @add_guest_to_context
-    def discuss_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
+    def discuss_channel_partner_avatar_128(self, channel_id, partner_id, unique=False):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         partner = request.env["res.partner"].browse(partner_id).exists()
         domain = [("channel_id", "=", channel_id), ("partner_id", "=", partner_id)]
         if channel and partner and request.env["discuss.channel.member"].search(domain):
             # sudo: res.partner - the partner is in the same channel as the current user, so they can see their avatar
             return (
-                request.env["ir.binary"]._get_image_stream_from(partner.sudo(), field_name="avatar_128").get_response()
+                request.env["ir.binary"]._get_image_stream_from(partner.sudo(), field_name="avatar_128").get_response(immutable=True if unique else False)
             )
-        return self.content_image(model="res.partner", id=partner_id, field="avatar_128")
+        return self.content_image(model="res.partner", id=partner_id, field="avatar_128", unique=unique)
 
     @http.route(
         "/discuss/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128", methods=["GET"], type="http", auth="public"
     )
     @add_guest_to_context
-    def discuss_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
+    def discuss_channel_guest_avatar_128(self, channel_id, guest_id, unique=False):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         guest = request.env["mail.guest"].browse(guest_id).exists()
         domain = [("channel_id", "=", channel_id), ("guest_id", "=", guest_id)]
         if channel and guest and request.env["discuss.channel.member"].search(domain):
             # sudo: mail.guest - the guest is in the same channel as the current user, so they can see their avatar
-            return request.env["ir.binary"]._get_image_stream_from(guest.sudo(), field_name="avatar_128").get_response()
-        return self.content_image(model="mail.guest", id=guest_id, field="avatar_128")
+            return request.env["ir.binary"]._get_image_stream_from(guest.sudo(), field_name="avatar_128").get_response(immutable=True if unique else False)
+        return self.content_image(model="mail.guest", id=guest_id, field="avatar_128", unique=unique)
 
     @http.route(
         "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>", methods=["GET"], type="http", auth="public"
@@ -61,8 +61,8 @@ class BinaryController(Binary):
 
     @http.route("/discuss/channel/<int:channel_id>/avatar_128", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
-    def discuss_channel_avatar_128(self, channel_id, **kwargs):
-        return self.content_image(model="discuss.channel", id=channel_id, field="avatar_128")
+    def discuss_channel_avatar_128(self, channel_id, unique=False):
+        return self.content_image(model="discuss.channel", id=channel_id, field="avatar_128", unique=unique)
 
     @http.route(
         [
