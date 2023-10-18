@@ -1,12 +1,31 @@
 /** @odoo-module **/
-
-import Dialog from '@web/legacy/js/core/dialog';
+import { Dialog } from "@web/core/dialog/dialog";
+import { CodeEditor } from "@web/core/code_editor/code_editor";
 import options from '@web_editor/js/editor/snippets.options';
-import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
+
+import { Component, useState } from "@odoo/owl";
+
+class CodeEditorDialog extends Component {
+    static template = "website.s_embed_code_dialog";
+    static components = { Dialog, CodeEditor };
+    setup() {
+        this.state = useState({ value: this.props.value });
+    }
+    onCodeChange(newValue) {
+        this.state.value = newValue;
+    }
+    onConfirm() {
+        this.props.confirm(this.state.value);
+        this.props.close();
+    }
+}
 
 options.registry.EmbedCode = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.dialog = this.bindService("dialog");
+    },
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -15,65 +34,18 @@ options.registry.EmbedCode = options.Class.extend({
         const $container = this.$target.find('.s_embed_code_embedded');
         const code = $container.html().trim();
 
-        await loadBundle("web.ace_lib");
-
         await new Promise(resolve => {
-            const $content = $(renderToElement('website.custom_code_dialog_content'));
-            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], code || '');
-            const dialog = new Dialog(this, {
+            this.dialog.add(CodeEditorDialog, {
                 title: _t("Edit embedded code"),
-                $content,
-                buttons: [
-                    {
-                        text: _t("Save"),
-                        classes: 'btn-primary',
-                        click: async () => {
-                            $container[0].innerHTML = aceEditor.getValue();
-                        },
-                        close: true,
-                    },
-                    {
-                        text: _t("Discard"),
-                        close: true,
-                    },
-                ],
+                value: code,
+                mode: "xml",
+                confirm: (newValue) => {
+                   $container[0].innerHTML = newValue;
+                }
+            }, {
+                onClose: resolve,
             });
-            dialog.on('closed', this, resolve);
-            dialog.open();
         });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {DOMElement} node
-     * @param {String} content text of the editor
-     * @returns {Object}
-     */
-    _renderAceEditor(node, content) {
-        const aceEditor = window.ace.edit(node);
-        aceEditor.setTheme('ace/theme/monokai');
-        aceEditor.setValue(content, 1);
-        aceEditor.setOptions({
-            minLines: 20,
-            maxLines: Infinity,
-            showPrintMargin: false,
-        });
-        aceEditor.renderer.setOptions({
-            highlightGutterLine: true,
-            showInvisibles: true,
-            fontSize: 14,
-        });
-
-        const aceSession = aceEditor.getSession();
-        aceSession.setOptions({
-            mode: "ace/mode/xml",
-            useWorker: false,
-        });
-        return aceEditor;
     },
 });
 
