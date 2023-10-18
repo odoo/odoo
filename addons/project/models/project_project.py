@@ -64,7 +64,7 @@ class Project(models.Model):
 
     name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
-    active = fields.Boolean(default=True,
+    active = fields.Boolean(default=True, copy=False,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
@@ -407,6 +407,8 @@ class Project(models.Model):
                 new_project.milestone_ids = self.milestone_ids.copy().ids
             if 'tasks' not in default:
                 old_project.map_tasks(new_project.id)
+            if not self.active:
+                new_project.with_context(active_test=False).tasks.active = True
         return new_projects
 
     @api.model

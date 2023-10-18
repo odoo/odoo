@@ -445,3 +445,31 @@ class TestProjectBase(TestProjectCommon):
         } for i in range(2)]).copy()
         self.assertEqual(task_0.name, 'task 0 (copy)')
         self.assertEqual(task_1.name, 'task 1 (copy)')
+
+    def test_duplicate_project_with_tasks(self):
+        """ Test to check duplication of projects tasks active state. """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': project.id,
+        })
+
+        # Duplicate active project with active task
+        project_dup = project.copy()
+        self.assertTrue(project_dup.active, "Active project should remain active when duplicating an active project")
+        self.assertEqual(project_dup.task_count, 1, "Duplicated project should have as many tasks as orginial project")
+        self.assertTrue(project_dup.tasks.active, "Active task should remain active when duplicating an active project")
+
+        # Duplicate active project with archived task
+        task.active = False
+        project_dup = project.copy()
+        self.assertTrue(project_dup.active, "Active project should remain active when duplicating an active project")
+        self.assertFalse(project_dup.tasks.active, "Archived task should remain archived when duplicating an active project")
+
+        # Duplicate archived project with archived task
+        project.active = False
+        project_dup = project.copy()
+        self.assertTrue(project_dup.active, "The new project should be active by default")
+        self.assertTrue(project_dup.tasks.active, "Archived task should be active when duplicating an archived project")

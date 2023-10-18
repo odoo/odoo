@@ -745,3 +745,40 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         reported_sale_order_lines = self.env['sale.order.line'].search(project.action_view_sols()['domain'])
         self.assertEqual(project.sale_order_line_count, 2)
         self.assertEqual(relevant_sale_order_lines, reported_sale_order_lines)
+
+    def test_project_tasks_active_on_so_confirm(self):
+        """ Test if project and task are well unarchived when a SO with a service product using a project template
+            is confirmed.
+        """
+        # Create archived Project template with one task
+        self.archived_project_template = self.env['project.project'].create({
+            'name': 'Archived project template',
+            'allow_billable': True,
+        })
+        self.archived_project_template_task = self.env['project.task'].create({
+            'name': 'Task 1',
+            'project_id': self.archived_project_template.id,
+        })
+        self.archived_project_template.active = False
+
+        # Create service product using the project template
+        service_with_project_template = self.env['product.product'].create({
+            'name': 'Service with archived project template',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'service_tracking': 'task_in_project',
+            'project_template_id': self.archived_project_template.id,
+        })
+
+        # Create SO with the service product
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].create({
+            'product_id': service_with_project_template.id,
+            'order_id': sale_order.id,
+        })
+
+        self.assertFalse(len(sale_order.project_ids), "The SO should not have linked project before it is confirmed.")
+        sale_order.action_confirm()
+        self.assertEqual(len(sale_order.project_ids), 1, "The SO should have created project after it is confirmed.")
+        self.assertTrue(sale_order.project_ids.active, "The project should be active when SO is confirmed.")
+        self.assertTrue(all(sale_order.project_ids.with_context(active_test=False).tasks.mapped('active')), "All tasks should be unarchived for the project created when SO is confirmed.")
