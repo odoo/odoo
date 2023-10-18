@@ -981,7 +981,7 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
     await openDiscuss();
 
     assert.containsOnce($, ".o-mail-DiscussCategoryItem img");
-    assert.containsOnce($, `img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`);
+    assert.containsOnce($, `img[data-src$='/web/image/res.partner/${partnerId}/avatar_128']`);
 });
 
 QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async (assert) => {

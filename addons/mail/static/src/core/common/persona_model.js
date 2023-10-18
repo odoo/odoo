@@ -34,6 +34,8 @@ export class Persona extends Record {
     /** @type {ImStatus} */
     im_status;
     isAdmin = false;
+    /** @type {string} */
+    write_date;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
 
