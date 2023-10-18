@@ -8,6 +8,7 @@ import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../util
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { session } from "@web/session";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -216,6 +217,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
 
     QUnit.test("can import (export) contextual domain", async function (assert) {
         const chartId = "1";
+        const uid = session.user_context.uid;
         const spreadsheetData = {
             sheets: [
                 {
@@ -251,7 +253,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             spreadsheetData,
             mockRPC: function (route, args) {
                 if (args.method === "web_read_group") {
-                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", uid]]);
                     assert.step("web_read_group");
                 }
             },

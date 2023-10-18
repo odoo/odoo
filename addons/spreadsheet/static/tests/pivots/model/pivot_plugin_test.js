@@ -537,6 +537,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     });
 
     QUnit.test("can import (export) contextual domain", async (assert) => {
+        const uid = session.user_context.uid;
         const spreadsheetData = {
             pivots: {
                 1: {
@@ -554,7 +555,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             spreadsheetData,
             mockRPC: function (route, args) {
                 if (args.method === "read_group") {
-                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", uid]]);
                     assert.step("read_group");
                 }
             },
