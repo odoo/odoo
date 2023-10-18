@@ -163,7 +163,7 @@ class Check {
     checkStatus(orderName, status) {
         return [
             {
-                trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(6):contains(${status})`,
+                trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
                 run: () => {},
                 mobile: false,
             },
