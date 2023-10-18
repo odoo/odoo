@@ -2373,7 +2373,6 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
             "/web/dataset/call_kw/foo/web_search_read",
-            "/web/dataset/call_kw/bar/read",
         ]);
     });
 
