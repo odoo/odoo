@@ -13,7 +13,7 @@ import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/co
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
 import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
@@ -39,7 +39,11 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
+        this.state = useState({
+            showProductReminder: false,
+        });
         onMounted(this.onMounted);
+        useExternalListener(window, "click", this.clickEvent.bind(this));
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -62,6 +66,30 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     }
     onMounted() {
         this.pos.openCashControl();
+    }
+    clickEvent(e) {
+        if (!this.ui.isSmall) {
+            return;
+        }
+
+        const isProductCard = (() => {
+            let element = e.target;
+            // 3 because product DOM dept is 3
+            for (let i = 0; i < 3; i++) {
+                if (element.classList.contains("product")) {
+                    return true;
+                } else {
+                    element = element.parentElement;
+                }
+            }
+            return false;
+        })();
+
+        this.state.showProductReminder =
+            this.currentOrder &&
+            this.currentOrder.get_selected_orderline() &&
+            this.selectedOrderlineQuantity &&
+            isProductCard;
     }
     /**
      * To be overridden by modules that checks availability of
@@ -156,7 +184,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const { product_id = [], packaging = [] } = await this.orm.silent.call(
                 "pos.session",
                 "find_product_by_barcode",
-                [odoo.pos_session_id, code.base_code],
+                [odoo.pos_session_id, code.base_code]
             );
             if (product_id.length) {
                 await this.pos._addProducts(product_id, false);
@@ -208,7 +236,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         if (!partner) {
             // find the partner in the backend by the barcode
             const foundPartnerIds = await this.orm.search("res.partner", [
-                ["barcode", "=", code.code]
+                ["barcode", "=", code.code],
             ]);
             if (foundPartnerIds.length) {
                 await this.pos._loadPartners(foundPartnerIds);
@@ -318,9 +346,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             this.selectedOrderlineDisplayName,
             this.selectedOrderlineTotal,
         ].join(",");
-    }
-    get showProductReminder() {
-        return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
     }
     primaryPayButton() {
         return !this.currentOrder.is_empty();
