@@ -22,10 +22,8 @@ export class ComboSelection extends Component {
         this.props.comboState.selectedProduct = productSelected;
         if (productSelected.attributes.length === 0) {
             this.props.next();
+            return;
         }
-    }
-
-    toggleQtyBtn(bool) {
-        this.props.comboState.showQtyButtons = bool;
+        this.props.comboState.showQtyButtons = true;
     }
 }
