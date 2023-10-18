@@ -27,7 +27,6 @@ export class ProductPage extends Component {
         this.state = useState({
             qty: 1,
             customer_note: "",
-            showQtyButtons: this.attributes.length === 0,
             product: this.props.product,
         });
 
@@ -53,10 +52,6 @@ export class ProductPage extends Component {
             this.selfOrder.editedLine.uuid &&
             order.lastChangesSent[this.selfOrder.editedLine.uuid]
         );
-    }
-
-    toggleQtyBtn(bool) {
-        this.state.showQtyButtons = bool;
     }
 
     initState() {
@@ -151,6 +146,6 @@ export class ProductPage extends Component {
     }
 
     get showQtyButtons() {
-        return this.state.showQtyButtons && this.props.product.self_order_available;
+        return this.props.product.self_order_available;
     }
 }

@@ -7,7 +7,7 @@ import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils"
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["toggleQtyBtn", "product"];
+    static props = ["product"];
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -15,16 +15,11 @@ export class AttributeSelection extends Component {
         this.currentAttribute = 0;
 
         this.state = useState({
-            showResume: false,
             showNext: false,
             showCustomInput: false,
         });
 
         this.selectedValues = useState(this.env.selectedValues);
-
-        if (!this.env.editable) {
-            this.toggleResume();
-        }
 
         this.initAttribute();
     }
@@ -88,11 +83,6 @@ export class AttributeSelection extends Component {
                 }
             }
         }
-    }
-
-    toggleResume() {
-        this.state.showResume = !this.state.showResume;
-        this.props.toggleQtyBtn(this.state.showResume);
     }
 
     isChecked(attribute, value) {
