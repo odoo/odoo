@@ -1,8 +1,11 @@
 /** @odoo-module */
 
+import { ChatBotService } from "@im_livechat/embed/chatbot/chatbot_service";
 import { registry } from "@web/core/registry";
 
 const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
+
+ChatBotService.MULTILINE_STEP_DEBOUNCE_DELAY = 500; // make bot faster for this tour
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     test: true,
@@ -123,7 +126,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("Ok bye!"),
-            timeout: 15000, // multiline step, so we need to wait a bit longer
             run: () => {}, // last step is displayed
         },
         {
@@ -198,7 +200,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             // wait for chatbot script to finish.
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
-            timeout: 15000, // multiline step, so we need to wait a bit longer
             run() {},
         },
     ],
