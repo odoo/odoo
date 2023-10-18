@@ -45,6 +45,11 @@ class ProductTemplate(models.Model):
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo') % combo_name)
 
+    @api.onchange('detailed_type')
+    def _onchange_detailed_type(self):
+        if self.detailed_type == 'combo':
+            self.write({'taxes_id': False})
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
