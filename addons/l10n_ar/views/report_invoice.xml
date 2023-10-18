@@ -52,7 +52,6 @@
                         <!-- (7) Numero punto venta - (8) numero de documento -->
                         <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-esc="report_number"/>
                     </t>
-                    <br/>
 
                     <!-- (9) Fecha -->
                     <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-esc="report_date" t-options='{"widget": "date"}'/>
