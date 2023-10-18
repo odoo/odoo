@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import random
 
 from odoo import models
 from odoo.tools import populate
@@ -55,7 +54,7 @@ class HolidaysRequest(models.Model):
                 + relativedelta(days=int(3 * int(counter)))
             return date_from
 
-        def compute_date_to(counter, **kwargs):
+        def compute_date_to(counter, random=None, **kwargs):
             date_to = datetime.datetime.now().replace(hour=23, minute=59, second=59)\
                 + relativedelta(days=int(3 * int(counter))  + random.randint(0, 2))
             return date_to

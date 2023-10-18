@@ -5,6 +5,7 @@ from functools import partial
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
+from unittest.mock import patch
 
 import odoo
 from odoo.sql_db import db_connect, TestCursor
@@ -37,6 +38,19 @@ class TestRealCursor(BaseCase):
             cr.close()
             with self.assertRaises(psycopg2.InterfaceError):
                 cr.execute("SELECT 1")
+
+    def test_not_using_cursor(self):
+        origin_borrow = odoo.sql_db._Pool.borrow
+
+        with patch.object(odoo.sql_db._Pool, 'borrow', side_effect=origin_borrow) as p:
+            with registry().cursor() as cr:
+                pass
+            p.assert_not_called()
+
+            with registry().cursor() as cr:
+                cr.execute('SELECT 1')
+                pass
+            p.assert_called_once() # mainly to check that assert_not_called tested what we want
 
     def test_multiple_close_call_cursor(self):
         cr = registry().cursor()
