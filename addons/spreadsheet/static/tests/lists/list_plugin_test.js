@@ -583,6 +583,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     );
 
     QUnit.test("can import (export) contextual domain", async function (assert) {
+        const uid = session.user_context.uid;
         const spreadsheetData = {
             lists: {
                 1: {
@@ -598,7 +599,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             spreadsheetData,
             mockRPC: function (route, args) {
                 if (args.method === "search_read") {
-                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", uid]]);
                     assert.step("search_read");
                 }
             },
