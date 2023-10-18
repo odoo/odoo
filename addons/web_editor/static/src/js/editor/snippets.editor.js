@@ -515,7 +515,7 @@ var SnippetEditor = Widget.extend({
         // Actually remove the snippet and its option UI.
         var $parent = this.$target.parent();
         this.$target.find('*').addBack().tooltip('dispose');
-        this.$target.remove();
+        this.$target.detach();
         this.$el.remove();
 
         var node = $parent[0];
