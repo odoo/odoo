@@ -885,6 +885,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not display:
             return values
 
+        values['cart_ready'] = order._is_cart_ready()
         values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
             "website_sale.cart_lines", {
                 'website_sale_order': order,
