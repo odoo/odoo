@@ -194,6 +194,8 @@ export const storeService = {
                                                         l1.add(item);
                                                     } else if (cmd === "ADD.noinv") {
                                                         l1.__addNoinv(item);
+                                                    } else if (cmd === "DELETE.noinv") {
+                                                        l1.__deleteNoinv(item);
                                                     } else {
                                                         l1.delete(item);
                                                     }
@@ -203,6 +205,8 @@ export const storeService = {
                                                     l1.add(cmdData);
                                                 } else if (cmd === "ADD.noinv") {
                                                     l1.__addNoinv(cmdData);
+                                                } else if (cmd === "DELETE.noinv") {
+                                                    l1.__deleteNoinv(cmdData);
                                                 } else {
                                                     l1.delete(cmdData);
                                                 }
@@ -226,22 +230,25 @@ export const storeService = {
                                     l1.clear();
                                     l1.push(...collection);
                                 } else {
-                                    let isAddNoinv = false;
                                     // [Record.one] =
                                     if (Record.isCommand(val)) {
                                         const [cmd, cmdData] = val.at(-1);
-                                        isAddNoinv = cmd === "ADD.noinv";
-                                        val = ["ADD", "ADD.noinv"].includes(cmd) ? cmdData : null;
+                                        if (cmd === "ADD") {
+                                            l1.add(cmdData);
+                                        } else if (cmd === "ADD.noinv") {
+                                            l1.__addNoinv(cmdData);
+                                        } else if (cmd === "DELETE.noinv") {
+                                            l1.__deleteNoinv(cmdData);
+                                        } else {
+                                            l1.delete(cmdData);
+                                        }
+                                        return true;
                                     }
                                     if ([null, false, undefined].includes(val)) {
                                         delete receiver[name];
                                         return true;
                                     }
-                                    if (isAddNoinv) {
-                                        l1.__addNoinv(val);
-                                    } else {
-                                        l1.add(val);
-                                    }
+                                    l1.add(val);
                                 }
                                 return true;
                             },
@@ -262,7 +269,7 @@ export const storeService = {
                                 newVal.__store__ = res.store;
                             }
                             newVal.name = name;
-                            newVal.owner = this;
+                            newVal.owner = proxy;
                             this.__rels__.set(name, newVal);
                             this.__invs__ = new RecordInverses();
                             this[name] = newVal;
