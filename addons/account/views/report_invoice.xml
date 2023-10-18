@@ -146,6 +146,7 @@
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
+                                            <t t-set="current_total" t-value="0"/>
                                         </t>
                                         <t t-if="line.display_type == 'line_note'">
                                             <td colspan="99">
@@ -156,12 +157,18 @@
 
                                     <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
                                         <tr class="is-subtotal text-end">
-                                            <td colspan="99">
+                                            <td colspan="4">
                                                 <strong class="mr16">Subtotal</strong>
-                                                <span
-                                                    t-out="current_subtotal"
-                                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                />
+                                                <td>
+                                                    <span t-out="current_subtotal"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                    />
+                                                </td>
+                                                <td t-if="o.tax_calculation_rounding_method == 'round_per_line'">
+                                                    <span t-out="current_total"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                    />
+                                                </td>
                                             </td>
                                         </tr>
                                     </t>
