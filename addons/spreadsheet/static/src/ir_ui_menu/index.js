@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
-import IrMenuPlugin from "./ir_ui_menu_plugin";
+import { IrMenuPlugin } from "./ir_ui_menu_plugin";
 
 import {
     isMarkdownIrMenuIdUrl,

@@ -3,7 +3,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";
-import ListDataSource from "../list_data_source";
+import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 
 const { astToFormula } = spreadsheet;
@@ -12,7 +12,7 @@ const { astToFormula } = spreadsheet;
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
-export default class ListUIPlugin extends spreadsheet.UIPlugin {
+export class ListUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */

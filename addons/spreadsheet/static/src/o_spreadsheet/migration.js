@@ -237,7 +237,7 @@ function migrate5to6(data) {
     return data;
 }
 
-export default class OdooVersion extends CorePlugin {
+export class OdooVersion extends CorePlugin {
     export(data) {
         data.odooVersion = ODOO_VERSION;
     }

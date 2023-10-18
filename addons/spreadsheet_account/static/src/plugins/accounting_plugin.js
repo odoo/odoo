@@ -8,7 +8,7 @@ const DATA_SOURCE_ID = "ACCOUNTING_AGGREGATES";
  * @typedef {import("../accounting_functions").DateRange} DateRange
  */
 
-export default class AccountingPlugin extends spreadsheet.UIPlugin {
+export class AccountingPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         this.dataSources = config.custom.dataSources;

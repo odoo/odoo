@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-export default {
+export const CommandResult = {
     Success: "Success", // should be imported from o-spreadsheet instead of redefined here
     FilterNotFound: "FilterNotFound",
     InvalidFilterMove: "InvalidFilterMove",

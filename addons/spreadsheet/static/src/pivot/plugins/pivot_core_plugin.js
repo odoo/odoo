@@ -27,7 +27,7 @@ import { CorePlugin, helpers } from "@odoo/o-spreadsheet";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
-import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
@@ -36,7 +36,7 @@ import { Domain } from "@web/core/domain";
 
 const { isDefined } = helpers;
 
-export default class PivotCorePlugin extends CorePlugin {
+export class PivotCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
 

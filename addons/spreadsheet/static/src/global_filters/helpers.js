@@ -3,7 +3,7 @@
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
 
-import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 
 /**

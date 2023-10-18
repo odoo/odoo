@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { AbstractChart, CommandResult } from "@odoo/o-spreadsheet";
-import ChartDataSource from "../data_source/chart_data_source";
+import { ChartDataSource } from "../data_source/chart_data_source";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams

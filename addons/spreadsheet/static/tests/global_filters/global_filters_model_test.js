@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
-import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { Model, DispatchResult } from "@odoo/o-spreadsheet";
 import {
     createModelWithDataSource,
@@ -41,7 +41,7 @@ import {
     assertDateDomainEqual,
     getDateDomainDurationInDays,
 } from "@spreadsheet/../tests/utils/date_domain";
-import GlobalFiltersUIPlugin from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
+import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 const { DateTime } = luxon;
 
@@ -233,11 +233,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     );
     QUnit.test("Can save a value to an existing global filter", async function (assert) {
         const { model } = await createSpreadsheetWithPivotAndList();
-        await addGlobalFilter(
-            model,
-            LAST_YEAR_GLOBAL_FILTER,
-            { pivot: DEFAULT_FIELD_MATCHINGS, list: DEFAULT_FIELD_MATCHINGS }
-        );
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {
+            pivot: DEFAULT_FIELD_MATCHINGS,
+            list: DEFAULT_FIELD_MATCHINGS,
+        });
         const gf = model.getters.getGlobalFilters()[0];
         let result = await setGlobalFilterValue(model, {
             id: gf.id,
@@ -1392,7 +1391,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     type: "date",
                     label: "date filter 1",
                     rangeType: "fixedPeriod",
-                    defaultValue: "this_month"
+                    defaultValue: "this_month",
                 },
                 {
                     pivot: { 1: { chain: "date", type: "date" } },

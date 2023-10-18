@@ -10,7 +10,7 @@ import {
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
-import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
     createModelWithDataSource,

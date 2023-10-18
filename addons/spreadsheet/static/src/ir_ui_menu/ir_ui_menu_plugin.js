@@ -2,7 +2,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { CorePlugin } = spreadsheet;
 
-export default class IrMenuPlugin extends CorePlugin {
+export class IrMenuPlugin extends CorePlugin {
     constructor(config) {
         super(config);
         this.env = config.custom.env;

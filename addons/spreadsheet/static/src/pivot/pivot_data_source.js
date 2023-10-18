@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
 
-export default class PivotDataSource extends OdooViewsDataSource {
+export class PivotDataSource extends OdooViewsDataSource {
     /**
      *
      * @override
