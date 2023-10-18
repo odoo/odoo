@@ -1325,7 +1325,7 @@ export class Record extends DataPoint {
             activeField &&
             !this._isInvisible(fieldName) &&
             value &&
-            (!value[1] || (activeField.options || {}).always_reload)
+            (value[1] === undefined || (activeField.options || {}).always_reload)
         ) {
             const context = this._getFieldContext(fieldName);
             const result = await this.model.orm.nameGet(relation, [value[0]], { context });
