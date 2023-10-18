@@ -308,7 +308,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 if (route === "/web/dataset/call_kw/instrument/web_save") {
                     assert.deepEqual(
                         args.args[1],
-                        { badassery: [[6, false, [1]]], name: "ABC" },
+                        { badassery: [[4, 1]], name: "ABC" },
                         "The method create should have been called with the right arguments"
                     );
                     return [{ id: 90 }];

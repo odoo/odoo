@@ -50,7 +50,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("Many2ManyCheckBoxesField", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
-        const commands = [[[6, false, [12, 14]]], [[6, false, [14]]]];
+        const commands = [[[4, 14]], [[3, 12]]];
         await makeView({
             type: "form",
             resModel: "partner",
@@ -273,9 +273,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, { args, method }) {
                 if (method === "web_save") {
-                    const expectedIds = records.map((r) => r.id);
-                    expectedIds.pop();
-                    assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
+                    assert.deepEqual(args[1].timmy, [[3, records[records.length - 1].id]]);
                 }
             },
         });
@@ -328,9 +326,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             async mockRPC(route, { args, method }) {
                 if (method === "web_save") {
-                    const expectedIds = records.map((r) => r.id);
-                    expectedIds.shift();
-                    assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
+                    assert.deepEqual(args[1].timmy, [[3, records[0].id]]);
                     assert.step("web_save");
                 }
                 if (method === "name_search") {
@@ -381,7 +377,18 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "web_save") {
                     assert.deepEqual(args.args[1], {
-                        p: [[1, 1, { timmy: [[6, false, [15, 12]]] }]],
+                        p: [
+                            [
+                                1,
+                                1,
+                                {
+                                    timmy: [
+                                        [4, 12],
+                                        [3, 14],
+                                    ],
+                                },
+                            ],
+                        ],
                     });
                 }
             },
@@ -421,7 +428,7 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].timmy,
-                        [[6, false, [12]]],
+                        [[4, 12]],
                         "correct values should have been sent to create"
                     );
                 }

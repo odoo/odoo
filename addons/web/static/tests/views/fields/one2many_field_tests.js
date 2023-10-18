@@ -5969,7 +5969,7 @@ QUnit.module("Fields", (hooks) => {
                 </search>`,
         };
 
-        let expectedIds;
+        let expectedCommand;
         await makeView({
             type: "form",
             resModel: "partner",
@@ -6002,8 +6002,8 @@ QUnit.module("Fields", (hooks) => {
                     assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
                     assert.deepEqual(
                         args.args[1].turtles,
-                        [[6, false, expectedIds]],
-                        "should send only a 'replace with' command"
+                        expectedCommand,
+                        "should send only a 'LINK TO' command"
                     );
                 }
             },
@@ -6021,7 +6021,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal .o_data_row .o_list_record_selector input"));
         await nextTick(); // additional render due to the change of selection (done in owl, not pure js)
         await click(target.querySelector(".modal .o_select_button"));
-        expectedIds = [2, 1];
+        expectedCommand = [[4, 1]];
         await clickSave(target);
 
         await addRow(target);
@@ -6047,7 +6047,7 @@ QUnit.module("Fields", (hooks) => {
             "should display the record values in one2many list"
         );
 
-        expectedIds = [2, 1, 4];
+        expectedCommand = [[4, 4]];
         await clickSave(target);
     });
 
@@ -6108,8 +6108,8 @@ QUnit.module("Fields", (hooks) => {
                     assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
                     assert.strictEqual(
                         args.args[1].turtles[0][0],
-                        6,
-                        "should send only a 'replace with' command"
+                        4,
+                        "should send only a 'link to' command"
                     );
                 }
             },
@@ -6545,12 +6545,15 @@ QUnit.module("Fields", (hooks) => {
                                 1,
                                 2,
                                 {
-                                    partner_ids: [[6, false, [2, 1]]],
+                                    partner_ids: [
+                                        [3, 4],
+                                        [4, 1],
+                                    ],
                                     product_id: 41,
                                 },
                             ],
                         ],
-                        "generated command should be correct"
+                        "generated commands should be correct"
                     );
                 }
             },
@@ -6937,7 +6940,7 @@ QUnit.module("Fields", (hooks) => {
                             1,
                             2,
                             {
-                                partner_ids: [[6, false, [2, 4, 1]]],
+                                partner_ids: [[4, 1]],
                             },
                         ],
                     ]);
@@ -6986,11 +6989,7 @@ QUnit.module("Fields", (hooks) => {
                     return Promise.resolve(false);
                 }
                 if (args.method === "web_save") {
-                    assert.deepEqual(
-                        args.args[1].timmy,
-                        [[6, false, [12]]],
-                        "should properly write ids"
-                    );
+                    assert.deepEqual(args.args[1].timmy, [[4, 12]], "should properly add id");
                 }
             },
         });
