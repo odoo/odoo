@@ -12,8 +12,7 @@
             <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap" t-on-click="onClickleftButton" t-esc="leftButton.name" />
             <div class="d-flex align-items-center flex-grow-1 w-100 w-md-auto">
                 <div class="to-order">
-                    <span t-if="!this.selfOrder.currentOrder.isSavedOnServer">To Order</span>
-                    <span t-else="">To Pay</span>
+                    <span>To Order</span>
                     <div class="d-flex align-items-center">
                         <span class="o-so-tabular-nums badge text-bg-secondary rounded" t-esc="lineNotSend.count"/>
                         <span class="o-so-tabular-nums mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />

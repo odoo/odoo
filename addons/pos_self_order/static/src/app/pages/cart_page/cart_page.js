@@ -52,6 +52,7 @@ export class CartPage extends Component {
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
         const mode = this.selfOrder.config.self_ordering_pay_after;
+        const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
         const order = this.selfOrder.currentOrder;
         const isPaymentMethod = this.selfOrder.pos_payment_methods.length > 0;
 
