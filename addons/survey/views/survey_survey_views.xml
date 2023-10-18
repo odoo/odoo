@@ -99,7 +99,7 @@
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
                                     <label for="is_attempts_limited" string="Limit Attempts"
-                                           attrs="{'ienvisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                           attrs="{'invisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
                                     <div class="o_checkbox_optional_field"
                                         attrs="{'invisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
                                         <field name="is_attempts_limited" nolabel="1"/>
