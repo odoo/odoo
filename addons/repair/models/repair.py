@@ -193,8 +193,14 @@ class Repair(models.Model):
 
     @api.depends('picking_type_id')
     def _compute_location_ids(self):
-        for repair_location_field, picking_location_field in MAP_REPAIR_TO_PICKING_LOCATIONS.items():
-            self[repair_location_field] = self.picking_type_id[picking_location_field]
+        # N.B. Locations may not be assigned in the operation type, such that we want to fallback on default locations
+        picking_repair = self.grouped('picking_type_id')
+        for picking_type, repairs in picking_repair.items():
+            location_id = picking_type.default_location_src_id or (picking_type.warehouse_id or self.env['stock.warehouse'].search([('company_id', '=', picking_type.company_id.id)], limit=1)).lot_stock_id
+            repairs.location_id = location_id
+            repairs.location_dest_id = picking_type.default_location_dest_id or self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
+            repairs.parts_location_id = picking_type.default_remove_location_dest_id or self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.company_id.id, False])], limit=1)
+            repairs.recycle_location_id = picking_type.default_recycle_location_dest_id or location_id
 
     @api.depends('state', 'schedule_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_parts_availability(self):
