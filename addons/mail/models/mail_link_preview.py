@@ -7,7 +7,7 @@ from lxml import html
 from urllib.parse import urlparse
 import requests
 
-from odoo import api, models, fields
+from odoo import api, models, fields, tools
 from odoo.addons.mail.tools import link_preview
 
 
@@ -27,48 +27,38 @@ class LinkPreview(models.Model):
     create_date = fields.Datetime(index=True)
 
     @api.model
-    def _clear_link_previews(self, message):
-        message.link_preview_ids._delete_and_notify()
-
-    @api.model
-    def _create_link_previews(self, message):
-        if not message.body:
-            return
-        tree = html.fromstring(message.body)
-        urls = tree.xpath('//a[not(@data-oe-model)]/@href')
+    def _create_from_message_and_notify(self, message):
+        if tools.is_html_empty(message.body):
+            return self
+        urls = set(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         # Some websites are blocking non browser user agent.
         requests_session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
         })
-        for url in set(urls):
-            if len(link_previews) >= 5:
+        link_preview_values = []
+        for url in list(urls):
+            if preview := link_preview.get_link_preview_from_url(url, requests_session):
+                preview['message_id'] = message.id
+                link_preview_values.append(preview)
+            if len(link_preview_values) > 5:
                 break
-            link_previews |= self.env['mail.link.preview']._create_link_preview(url, message.id, requests_session)
-        if not link_previews:
-            return
-        self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
-            'LinkPreview': link_previews._link_preview_format()
-        })
+        if link_preview_values:
+            link_previews = self.env['mail.link.preview'].create(link_preview_values)
+            self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
+                'LinkPreview': link_previews._link_preview_format()
+            })
 
-    @api.model
-    def _create_link_preview(self, url, message_id, request_session):
-        if self._is_domain_throttled(url):
-            return self.env['mail.link.preview']
-        link_preview_data = link_preview.get_link_preview_from_url(url, request_session)
-        if link_preview_data:
-            link_preview_data['message_id'] = message_id
-            return self.create(link_preview_data)
-        return self.env['mail.link.preview']
-
-    def _delete_and_notify(self):
-        notifications = []
-        for link_preview in self:
-            notifications.append((link_preview.message_id._bus_notification_target(), 'mail.link.preview/delete', {
-                'id': link_preview.id,
-                'message_id': link_preview.message_id.id,
-            }))
+    def _unlink_and_notify(self):
+        if not self:
+            return True
+        notifications = [
+            (
+                link_preview.message_id._bus_notification_target(),
+                'mail.link.preview/delete', {'id': link_preview.id, 'message_id': link_preview.message_id.id}
+            ) for link_preview in self
+        ]
         self.env['bus.bus']._sendmany(notifications)
         self.unlink()
 
