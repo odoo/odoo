@@ -742,7 +742,6 @@ export const editorCommands = {
         const newRow = document.createElement('tr');
         newRow.style.height = referenceRowHeight + 'px';
         const cells = referenceRow.querySelectorAll('td');
-        const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
         newRow.append(...Array.from(Array(cells.length)).map(() => {
             const td = document.createElement('td');
             const p = document.createElement('p');
@@ -752,11 +751,10 @@ export const editorCommands = {
         }));
         referenceRow[beforeOrAfter](newRow);
         newRow.style.height = referenceRowHeight + 'px';
-        // Preserve the width of the columns (applied only on the first row).
         if (getRowIndex(newRow) === 0) {
             let columnIndex = 0;
-            for (const column of newRow.children) {
-                column.style.width = referenceRowWidths[columnIndex];
+            for (const newColumn of newRow.children) {
+                newColumn.style.width = cells[columnIndex].style.width;
                 cells[columnIndex].style.width = '';
                 columnIndex++;
             }
