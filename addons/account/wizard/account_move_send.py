@@ -613,7 +613,8 @@ class AccountMoveSend(models.Model):
             moves_data[self.move_ids]['_form'] = self
         else:
             for move in self.move_ids:
-                moves_data[move]['_form'] = self.new(self._get_available_field_values_in_multi(move))
+                vals = self._get_available_field_values_in_multi(move)
+                moves_data[move]['_form'] = self.create(vals)
 
         if self.mode == 'invoice_multi' and not from_cron and not download:
             self.env.ref('account.ir_cron_account_move_send')._trigger()
