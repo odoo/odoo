@@ -560,9 +560,11 @@ export class TicketScreen extends Component {
                 orderPartnerId,
                 tax_ids: orderline.get_taxes().map((tax) => tax.id),
                 discount: orderline.discount,
-                pack_lot_lines: orderline.pack_lot_lines ? orderline.pack_lot_lines.map(lot => {
-                    return { lot_name: lot.lot_name };
-                }) : false,
+                pack_lot_lines: orderline.pack_lot_lines
+                    ? orderline.pack_lot_lines.map((lot) => {
+                          return { lot_name: lot.lot_name };
+                      })
+                    : false,
             },
             destinationOrderUid: false,
         };
@@ -595,7 +597,9 @@ export class TicketScreen extends Component {
      */
     _prepareRefundOrderlineOptions(toRefundDetail) {
         const { qty, orderline } = toRefundDetail;
-        const draftPackLotLines = orderline.pack_lot_lines ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines} : false;
+        const draftPackLotLines = orderline.pack_lot_lines
+            ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines }
+            : false;
         return {
             quantity: -qty,
             price: orderline.price,
@@ -604,7 +608,7 @@ export class TicketScreen extends Component {
             refunded_orderline_id: orderline.id,
             tax_ids: orderline.tax_ids,
             discount: orderline.discount,
-            draftPackLotLines: draftPackLotLines
+            draftPackLotLines: draftPackLotLines,
         };
     }
     _setOrder(order) {
@@ -627,6 +631,11 @@ export class TicketScreen extends Component {
      */
     _getSearchFields() {
         const fields = {
+            TRACKING_NUMBER: {
+                repr: (order) => order.trackingNumber,
+                displayName: _t("Order Number"),
+                modelField: "tracking_number",
+            },
             RECEIPT_NUMBER: {
                 repr: (order) => order.name,
                 displayName: _t("Receipt Number"),

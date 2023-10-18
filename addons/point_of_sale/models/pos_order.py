@@ -328,7 +328,19 @@ class PosOrder(models.Model):
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
-    tracking_number = fields.Char(string="Short order number", compute='_compute_tracking_number')
+    tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
+
+    def _search_tracking_number(self, operator, value):
+        #search is made over the pos_reference field
+        #The pos_reference field is like 'Order 00001-001-0001'
+        if operator in ['ilike', '='] and isinstance(value, str):
+            if value[0] == '%' and value[-1] == '%':
+                value = value[1:-1]
+            value = value.zfill(3)
+            search = '% ____' + value[0] + '-___-__' + value[1:]
+            return [('pos_reference', operator, search or '')]
+        else:
+            raise NotImplementedError(_("Unsupported search operation"))
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):

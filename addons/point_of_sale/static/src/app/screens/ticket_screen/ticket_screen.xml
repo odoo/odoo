@@ -51,6 +51,7 @@
                             <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
                                 <div class="col wide p-2">Date</div>
                                 <div class="col wide p-2">Receipt Number</div>
+                                <div class="col wide p-2">Order number</div>
                                 <div class="col p-2">Customer</div>
                                 <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
                                 <div class="col p-2">Cashier</div>
@@ -66,6 +67,9 @@
                                     </div>
                                     <div class="col wide p-2">
                                         <div><t t-esc="order.name"></t></div>
+                                    </div>
+                                    <div class="col wide p-2">
+                                        <div><t t-esc="order.trackingNumber"></t></div>
                                     </div>
                                     <div class="col p-2">
                                         <div><t t-esc="getPartner(order)"></t></div>
@@ -92,7 +96,7 @@
                                 <div class="mobileOrderList order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
-                                        <div><t t-esc="order.name"></t></div>
+                                        <div><t t-esc="order.name"></t> / <t t-esc="order.trackingNumber"></t></div>
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
