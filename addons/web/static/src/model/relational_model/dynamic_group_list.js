@@ -252,6 +252,15 @@ export class DynamicGroupList extends DynamicList {
             for (const group of groups) {
                 delete configGroups[group.value];
             }
+            const currentGroupIds = [];
+            for (const group of this.groups) {
+                currentGroupIds.push(group.value);
+            }
+            for (const key in configGroups) {
+                if (!(key in currentGroupIds)) {
+                    delete configGroups[key];
+                }
+            }
             await this.model._updateConfig(
                 this.config,
                 { groups: configGroups },
