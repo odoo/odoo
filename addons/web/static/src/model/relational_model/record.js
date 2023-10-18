@@ -1030,6 +1030,12 @@ export class Record extends DataPoint {
             if ("id" in this.activeFields) {
                 this._values.id = records[0].id;
             }
+            for (const fieldName in this.activeFields) {
+                const field = this.fields[fieldName];
+                if (["one2many", "many2many"].includes(field.type) && !field.relatedPropertyField) {
+                    this._changes[fieldName]?._clearCommands();
+                }
+            }
             this._changes = markRaw({});
             this.data = { ...this._values };
             this.dirty = false;

@@ -7632,7 +7632,7 @@ QUnit.module("Views", (hooks) => {
                                 0,
                                 command[0][1],
                                 {
-                                    timmy: [[6, false, [12]]],
+                                    timmy: [[4, 12]],
                                 },
                             ],
                         ],
@@ -13021,7 +13021,7 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
-            clearTimeout: () => { },
+            clearTimeout: () => {},
         });
 
         await makeView({
