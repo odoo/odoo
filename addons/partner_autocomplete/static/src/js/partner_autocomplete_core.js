@@ -36,11 +36,29 @@ export function usePartnerAutocomplete() {
         return checkVATNumber(sanitizeVAT(value));
     }
 
+    async function checkGSTNumber(value) {
+        // Lazyload jsvat only if the component is being used.
+        // Check if the input is a valid GST number.
+        let isGST = false;
+        if (value && value.length === 15) {
+            const allGSTinRe = [
+                /\d{2}[a-zA-Z]{5}\d{4}[a-zA-Z][1-9A-Za-z][Zz1-9A-Ja-j][0-9a-zA-Z]/, // Normal, Composite, Casual GSTIN
+                /\d{4}[A-Z]{3}\d{5}[UO]N[A-Z0-9]/, // UN/ON Body GSTIN
+                /\d{4}[a-zA-Z]{3}\d{5}NR[0-9a-zA-Z]/, // NRI GSTIN
+                /\d{2}[a-zA-Z]{4}[a-zA-Z0-9]\d{4}[a-zA-Z][1-9A-Za-z][DK][0-9a-zA-Z]/, // TDS GSTIN
+                /\d{2}[a-zA-Z]{5}\d{4}[a-zA-Z][1-9A-Za-z]C[0-9a-zA-Z]/ // TCS GSTIN
+            ];
+
+            isGST = allGSTinRe.some((re) => re.test(value));
+        }
+
+        return isGST;
+    }
+
     async function autocomplete(value) {
         value = value.trim();
 
-        const isVAT = await isVATNumber(value);
-
+        const isVAT = await isVATNumber(value) || await checkGSTNumber(value);
         let odooSuggestions = [];
         let clearbitSuggestions = [];
         return new Promise((resolve, reject) => {
