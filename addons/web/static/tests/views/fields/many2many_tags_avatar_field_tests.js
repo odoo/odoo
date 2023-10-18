@@ -480,7 +480,8 @@ QUnit.module("Fields", (hooks) => {
                 </kanban>`,
                 async mockRPC(route, { method, args }) {
                     if (method === "web_save") {
-                        assert.step(`web_save: ${args[1].partner_ids[0][2]}`);
+                        const command = args[1].partner_ids[0];
+                        assert.step(`web_save: ${command[0]}-${command[1]}`);
                     }
                 },
             });
@@ -488,7 +489,7 @@ QUnit.module("Fields", (hooks) => {
             // add and directly remove an item
             await click(target, ".o_popover .o-autocomplete--dropdown-item:first-child");
             await click(target, ".o_popover .o_tag .o_delete");
-            assert.verifySteps(["web_save: 1", "web_save: "]);
+            assert.verifySteps(["web_save: 4-1", "web_save: 3-1"]);
         }
     );
 

@@ -16,6 +16,7 @@ import { editSearch, validateSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { companyService } from "@web/webclient/company_service";
@@ -287,7 +288,12 @@ QUnit.module("Fields", (hooks) => {
                     const createdType = serverData.models.partner_type.records.find((record) => {
                         return record.display_name === "A new type";
                     });
-                    assert.deepEqual(commands, [[6, false, [12, 15, 18, createdType.id]]]);
+                    assert.deepEqual(commands, [
+                        [4, 15],
+                        [4, 18],
+                        [4, createdType.id],
+                        [3, 14],
+                    ]);
                 }
             },
         });
@@ -1060,7 +1066,7 @@ QUnit.module("Fields", (hooks) => {
                     route === "/web/dataset/call_kw/partner/web_save" &&
                     args.args[0].length === 0
                 ) {
-                    assert.deepEqual(args.args[1], { timmy: [[6, false, [12]]] });
+                    assert.deepEqual(args.args[1], { timmy: [[4, 12]] });
                 }
                 if (
                     route === "/web/dataset/call_kw/partner/web_save" &&
@@ -1595,6 +1601,57 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test("many2many concurrency edition", async function (assert) {
+        serverData.models.partner.fields.turtles.type = "many2many";
+        serverData.models.partner.onchanges.turtles = function () {};
+        serverData.models.turtle.records.push({
+            id: 4,
+            display_name: "Bloop",
+            turtle_bar: true,
+            turtle_foo: "Bloop",
+            partner_ids: [],
+        });
+        serverData.models.partner.records[0].turtles = [1, 2, 3, 4];
+        serverData.views = {
+            "turtle,false,list": '<tree><field name="display_name"/></tree>',
+            "turtle,false,search": '<search><field name="display_name" string="Name"/></search>',
+        };
+
+        const def = new Deferred();
+        let firstOnChange = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC: async (route, args) => {
+                if (args.method === "onchange") {
+                    if (!firstOnChange) {
+                        firstOnChange = true;
+                        await def;
+                    }
+                }
+            },
+        });
+        assert.containsN(target, ".o_data_row", 4);
+        await click(target.querySelector(".o_data_row .o_list_record_remove"));
+        await click(target.querySelector(".o_data_row .o_list_record_remove"));
+        await click(target, ".o_field_x2many_list_row_add a");
+        await click(target.querySelectorAll(".modal .o_data_row td.o_data_cell")[0]);
+        def.resolve();
+        await nextTick();
+        assert.containsN(target, ".o_data_row", 3);
+    });
+
     QUnit.test(
         "many2many widget: creates a new record with a context containing the parentID",
         async function (assert) {
@@ -1705,7 +1762,6 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "web_read"]);
 
         await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange");
-
         assert.verifySteps(["onchange"]);
         assert.strictEqual(
             $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
@@ -1717,7 +1773,6 @@ QUnit.module("Fields", (hooks) => {
             40,
             "there should be 40 records displayed on page 1"
         );
-
         await click($(target).find(".o_field_widget[name=timmy] .o_pager_next")[0]);
         assert.verifySteps([]);
         assert.strictEqual(
@@ -1924,8 +1979,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             $(target).find(".o_data_row").length,
-            51,
-            "We should have 51 records in the m2m field"
+            41,
+            "We should have 41 records in the m2m field"
         );
     });
 
