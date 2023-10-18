@@ -186,15 +186,29 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
      */
     getPivotIdFromPosition(position) {
         const cell = this.getters.getCell(position);
-        const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
-            const pivotFunction = getFirstPivotFunction(cell.content);
+            const pivotFunction = this.getters.getFirstPivotFunction(cell.content);
             if (pivotFunction) {
-                const content = astToFormula(pivotFunction.args[0]);
-                return this.getters.evaluateFormula(sheetId, content).toString();
+                return pivotFunction.args[0].toString();
             }
         }
         return undefined;
+    }
+
+    getFirstPivotFunction(formula) {
+        const pivotFunction = getFirstPivotFunction(formula);
+        if (!pivotFunction) {
+            return undefined;
+        }
+        const { functionName, args } = pivotFunction;
+        const evaluatedArgs = args.map((argAst) => {
+            if (argAst.type == "EMPTY") {
+                return undefined;
+            }
+            const argsString = astToFormula(argAst);
+            return this.getters.evaluateFormula(this.getters.getActiveSheetId(), argsString);
+        });
+        return { functionName, args: evaluatedArgs };
     }
 
     /**
@@ -256,20 +270,16 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
      * @returns {Array<Object>}
      */
     getFiltersMatchingPivot(formula) {
-        const functionDescription = getFirstPivotFunction(formula);
+        const functionDescription = this.getters.getFirstPivotFunction(formula);
         if (!functionDescription) {
             return [];
         }
-        const sheetId = this.getters.getActiveSheetId();
         const { args } = functionDescription;
-        const evaluatedArgs = args
-            .map(astToFormula)
-            .map((arg) => this.getters.evaluateFormula(sheetId, arg));
-        if (evaluatedArgs.length <= 2) {
+        if (args.length <= 2) {
             return [];
         }
-        const pivotId = evaluatedArgs[0];
-        const argField = evaluatedArgs[evaluatedArgs.length - 2];
+        const pivotId = args[0];
+        const argField = args.at(-2);
         if (argField === "measure") {
             return [];
         }
@@ -281,7 +291,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
-                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(-2));
+                let value = dataSource.getPivotHeaderValue(args.slice(-2));
                 if (value === NO_RECORD_AT_THIS_POSITION) {
                     continue;
                 }
@@ -423,6 +433,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
 PivotUIPlugin.getters = [
     "getPivotDataSource",
     "getAsyncPivotDataSource",
+    "getFirstPivotFunction",
     "getSelectedPivotId",
     "getPivotComputedDomain",
     "getDisplayedPivotHeaderValue",
