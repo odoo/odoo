@@ -5,7 +5,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import users, tagged, HttpCase, warmup
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -157,6 +157,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
                             },
+                            'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                         },
                     }], key=lambda member_data: member_data['id']))],
                     'custom_channel_name': False,
@@ -208,6 +209,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
                             },
+                            'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                         },
                     }], key=lambda member_data: member_data['id']))],
                     'custom_channel_name': False,
@@ -259,6 +261,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
                             },
+                            'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                         },
                     }], key=lambda member_data: member_data['id']))],
                     'custom_channel_name': False,
@@ -310,6 +313,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
                             },
+                            'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                         },
                     }], key=lambda member_data: member_data['id']))],
                     'custom_channel_name': False,
@@ -361,6 +365,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
                             },
+                            'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                         },
                     }], key=lambda member_data: member_data['id']))],
                     'custom_channel_name': False,
@@ -413,6 +418,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                         {
@@ -434,6 +440,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[12].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                     ], key=lambda member_data: member_data['id']))],
@@ -501,6 +508,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                         {
@@ -522,6 +530,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[14].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                     ], key=lambda member_data: member_data['id']))],
@@ -589,6 +598,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                         {
@@ -610,6 +620,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[15].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                     ], key=lambda member_data: member_data['id']))],
@@ -677,6 +688,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                         {
@@ -698,6 +710,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[2].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                     ], key=lambda member_data: member_data['id']))],
@@ -765,6 +778,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
                             },
                         },
                         {
@@ -786,6 +800,7 @@ class TestDiscussFullPerformance(HttpCase):
                                     'id': self.users[3].id,
                                     'isInternalUser': True,
                                 },
+                                'write_date': fields.Datetime.to_string(self.users[3].partner_id.write_date),
                             },
                         },
                     ], key=lambda member_data: member_data['id']))],
@@ -952,6 +967,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'im_status': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.im_status,
                                 'name': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.name,
                                 'type': "guest",
+                                'write_date': fields.Datetime.to_string(self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.write_date),
                             },
                         },
                     ])],
@@ -1014,6 +1030,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'out_of_office_date_end': False,
                 'type': "partner",
                 'user': False,
+                'write_date': fields.Datetime.to_string(self.user_root.partner_id.write_date),
             },
             'currentGuest': False,
             'current_partner': {
@@ -1029,6 +1046,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'id': self.users[0].id,
                     'isInternalUser': True,
                 },
+                'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
             },
             'current_user_id': self.users[0].id,
             'current_user_settings': {
