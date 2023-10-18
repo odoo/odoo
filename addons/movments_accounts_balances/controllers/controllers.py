@@ -27,24 +27,24 @@ class AccountBalance(models.Model):
                 query_params = [selected_account_id, end_date]
 
                 query = """
-                          SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
-                                 l.date AS date, COALESCE(SUM(debit - credit), 0) AS balance
-                          FROM account_move_line AS l
-                          LEFT JOIN account_account AS a ON l.account_id = a.id
-                          WHERE l.account_id = %s AND l.date <= %s
-                      """
+                            SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
+                                   l.date AS date, COALESCE(SUM(debit - credit), 0) AS balance
+                            FROM account_move_line AS l
+                            LEFT JOIN account_account AS a ON l.account_id = a.id
+                            WHERE l.account_id = %s AND l.date <= %s
+                            """
 
                 # Check if start_date is not provided or is an empty string
-                if not start_date or start_date == "":
-                    pass  # Start date is not provided; no need to add it to the query
-                else:
+                if start_date and start_date != "":
                     query += " AND l.date >= %s"
                     query_params.append(start_date)
 
                 query += " GROUP BY a.id, a.name, a.root_id, l.date"
+                query += " ORDER BY l.date DESC"  # Order results by date in descending order
 
                 self.env.cr.execute(query, query_params)
                 results = self.env.cr.dictfetchall()
+
         except ValueError as e:
             # Handle conversion error
             error_message = "Error converting selected_account_id to an integer: " + str(e)
@@ -57,37 +57,52 @@ class AccountBalance(models.Model):
         return results
 
     @api.model
-    def general_ledger_report(self, target_date_start, target_date_end):
-        # Initialize a list to store the results as dictionaries
-        results = []
+    def general_ledger_report(self, account_id, start_date, end_date):
+        # Define search criteria to filter account move lines
+        domain = [
+            ('account_id', '=', account_id),
+        ]
 
-        query_params = [target_date_end]
+        if start_date and end_date:
+            domain.extend([
+                ('date', '>=', start_date),
+                ('date', '<=', end_date)
+            ])
+        # else:
+        # domain.append(('date', '<=', end_date))
 
-        query = """
-                        SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
-                               l.date AS date, 
-                               COALESCE(SUM(debit), 0) AS debit, 
-                               COALESCE(SUM(credit), 0) AS credit, 
-                               COALESCE(SUM(debit - credit), 0) AS balance
-                        FROM account_move_line AS l
-                        LEFT JOIN account_account AS a ON l.account_id = a.id
-                        WHERE l.date <= %s
-                        """
+        # Retrieve account move lines based on the criteria
+        move_lines = self.env['account.move.line'].search(domain)
 
-        # Check if target_date_start is provided and not an empty string
-        if target_date_start and target_date_start.strip():
-            query += " AND l.date >= %s"
-            query_params.append(target_date_start)
+        # Prepare a list to store ledger data
+        ledger_data = []
 
-        query += " GROUP BY a.id, a.name, a.root_id, l.date"
+        # Iterate through the retrieved move lines and assemble ledger data
+        for line in move_lines:
+            ledger_data.append({
+                'date': line.date,
+                'debit': line.debit,
+                'credit': line.credit,
+                'balance': line.balance,
+                'account_root_id': line.account_root_id.id
 
-        # Add ORDER BY clause to arrange records by date in ascending order
-        query += " ORDER BY l.date ASC"
+            })
 
-        self.env.cr.execute(query, query_params)
-        results += self.env.cr.dictfetchall()
+        # Retrieve account information for the specified account_id
+        account_info = self.env['account.account'].browse(account_id)
 
-        return results
+        # Create a dictionary to combine account information and ledger data
+        general_ledger = {
+            'account_info': {
+                'id': account_info.id,
+                'name': account_info.name,
+                # You can add more account details here as needed
+            },
+            'ledger_data': ledger_data,
+        }
+
+        # Return the general ledger data
+        return general_ledger
 
 
 
