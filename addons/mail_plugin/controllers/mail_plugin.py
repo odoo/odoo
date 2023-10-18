@@ -153,6 +153,18 @@ class MailPluginController(http.Controller):
         if not normalized_email:
             return {'error': _('Bad Email.')}
 
+        notification_emails = request.env['mail.alias.domain'].sudo().search([]).mapped('default_from_email')
+        if normalized_email in notification_emails:
+            return {
+                'partner': {
+                    'name': _('Notification'),
+                    'email': normalized_email,
+                    'enrichment_info': {
+                        'type': 'odoo_custom_error', 'info': _('This is your notification address. Search the Contact manually to link this email to a record.'),
+                    },
+                },
+            }
+
         # Search for the partner based on the email.
         # If multiple are found, take the first one.
         partner = request.env['res.partner'].search(['|', ('email', 'in', [normalized_email, email]),
@@ -215,6 +227,9 @@ class MailPluginController(http.Controller):
         params name: name of the new partner
         params company: parent company id of the new partner
         """
+        notification_emails = request.env['mail.alias.domain'].sudo().search([]).mapped('default_from_email')
+        if tools.email_normalize(email) in notification_emails:
+            raise Forbidden()
         # old route name "/mail_client_extension/partner/create is deprecated as of saas-14.3,it is not needed for newer
         # versions of the mail plugin but necessary for supporting older versions
         # TODO search the company again instead of relying on the one provided here?
