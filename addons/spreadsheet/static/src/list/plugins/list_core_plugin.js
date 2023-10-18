@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
@@ -31,7 +31,7 @@ import { Domain } from "@web/core/domain";
 
 const { CorePlugin } = spreadsheet;
 
-export default class ListCorePlugin extends CorePlugin {
+export class ListCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
 

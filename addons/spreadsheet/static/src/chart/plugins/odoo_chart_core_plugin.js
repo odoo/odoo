@@ -2,7 +2,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
-import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { Domain } from "@web/core/domain";
 
 const { CorePlugin } = spreadsheet;
@@ -14,7 +14,7 @@ const { CorePlugin } = spreadsheet;
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
-export default class OdooChartCorePlugin extends CorePlugin {
+export class OdooChartCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
 

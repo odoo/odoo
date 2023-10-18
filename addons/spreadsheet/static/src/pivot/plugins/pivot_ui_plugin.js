@@ -7,7 +7,7 @@ import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/c
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
-import PivotDataSource from "../pivot_data_source";
+import { PivotDataSource } from "../pivot_data_source";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -49,7 +49,7 @@ function pivotPeriodToFilterValue(timeRange, value) {
     }
 }
 
-export default class PivotUIPlugin extends spreadsheet.UIPlugin {
+export class PivotUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */

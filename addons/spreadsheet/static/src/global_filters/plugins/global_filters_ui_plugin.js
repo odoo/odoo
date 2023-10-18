@@ -13,7 +13,7 @@ import { Domain } from "@web/core/domain";
 import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
@@ -43,7 +43,7 @@ const MONTHS = {
 const { UuidGenerator, createEmptyExcelSheet } = spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
-export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
+export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;

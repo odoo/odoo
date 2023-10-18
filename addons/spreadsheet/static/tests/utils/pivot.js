@@ -3,7 +3,7 @@
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import PivotDataSource from "@spreadsheet/pivot/pivot_data_source";
+import { PivotDataSource } from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 

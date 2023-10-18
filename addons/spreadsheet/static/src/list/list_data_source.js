@@ -31,7 +31,7 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
  * @property {Object} context
  */
 
-export default class ListDataSource extends OdooViewsDataSource {
+export class ListDataSource extends OdooViewsDataSource {
     /**
      * @override
      * @param {Object} services Services (see DataSource)

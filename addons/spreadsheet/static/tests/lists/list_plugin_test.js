@@ -4,7 +4,7 @@ import { session } from "@web/session";
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 
-import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
 import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
 import {
