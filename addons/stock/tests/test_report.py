@@ -337,6 +337,45 @@ class TestReports(TestReportsCommon):
             ['product_qty'], [], lazy=False)
         self.assertEqual(sum([r['product_qty'] for r in report_records]), 10.0)
 
+    def test_report_quantity_4(self):
+        product_form = Form(self.env['product.product'])
+        product_form.detailed_type = 'product'
+        product_form.name = 'Product'
+        product = product_form.save()
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        stock = self.env['stock.location'].create({
+            'name': 'New Stock',
+            'usage': 'internal',
+            'location_id': warehouse.view_location_id.id,
+        })
+
+        move_in = self.env['stock.move'].create({
+            'name': 'Move In 10',
+            'date': datetime.now() + timedelta(days=60),
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': stock.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 10.0,
+        })
+        move_in._action_confirm()
+
+        move_out = self.env['stock.move'].create({
+            'name': 'Move Out 20',
+            'date': datetime.now() - timedelta(days=30),
+            'location_id': stock.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 20.0,
+        })
+        move_out._action_confirm()
+
+        report_records = self.env['report.stock.quantity'].search([('product_id', "=", product.id)])
+
+        self.assertGreater(len(report_records), 90)
+
     def test_report_forecast_1(self):
         """ Checks report data for product is empty. Then creates and process
         some operations and checks the report data accords rigthly these operations.

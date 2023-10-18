@@ -161,6 +161,25 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
+        m.product_qty != 0
+    UNION ALL
+    SELECT
+        m.id,
+        m.product_id,
+        m.tmpl_id as product_tmpl_id,
+        'forecast' as state,
+        GENERATE_SERIES(
+            (now() at time zone 'utc')::date - interval '3month',
+            (now() at time zone 'utc')::date + interval '3month', '1 day'::interval)::date date,
+        0 AS product_qty,
+        m.company_id,
+        CASE
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.whd_id
+        END AS warehouse_id
+    FROM
+        all_sm m
+    WHERE
         m.product_qty != 0) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
