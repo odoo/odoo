@@ -384,7 +384,7 @@ class Project(models.Model):
             self.date = False
 
     @api.model
-    def _map_tasks_default_valeus(self, task, project):
+    def _map_tasks_default_values(self, task, project):
         """ get the default value for the copied task on project duplication """
         return {
             'stage_id': task.stage_id.id,
@@ -404,7 +404,7 @@ class Project(models.Model):
             self = self.with_context(task_mapping=dict())
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
-            defaults = self._map_tasks_default_valeus(task, project)
+            defaults = self._map_tasks_default_values(task, project)
             new_tasks |= task.copy(defaults)
         all_subtasks = new_tasks._get_all_subtasks()
         subtasks_not_displayed = all_subtasks.filtered(

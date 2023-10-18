@@ -35,8 +35,8 @@ class Project(models.Model):
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons')
 
     @api.model
-    def _map_tasks_default_valeus(self, task, project):
-        defaults = super()._map_tasks_default_valeus(task, project)
+    def _map_tasks_default_values(self, task, project):
+        defaults = super()._map_tasks_default_values(task, project)
         defaults['sale_line_id'] = False
         return defaults
 
