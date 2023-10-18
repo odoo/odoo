@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Integration of a conditional "Manage payment methods" link in /my -->
-    <template id="payment.pay_meth_link" inherit_id="portal.portal_layout">
-        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
-            <t t-set="partner" t-value="request.env.user.partner_id"/>
-            <t t-set="providers_allowing_tokenization"
-               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
-            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
-            <!-- Only show the link if a token can be created or if one already exists -->
-            <div t-if="providers_allowing_tokenization or existing_tokens"
-                 class='manage_payment_method mt16'>
-                <a href="/my/payment_method">Manage payment methods</a>
-            </div>
-        </xpath>
-    </template>
-
     <!-- Display of /payment/pay -->
     <template id="payment.pay">
         <!-- Parameters description:
@@ -323,7 +308,11 @@
             <t t-set="portal_client_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_client_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
+            <t t-set="partner" t-value="request.env.user.partner_id"/>
+            <t t-set="providers_allowing_tokenization"
+               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
+            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
+            <t t-if="providers_allowing_tokenization or existing_tokens" t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/payment/static/img/payment-methods.svg'"/>
                 <t t-set="title">Payment method</t>
                 <t t-set="text">Add, remove or modify your payment methods</t>
