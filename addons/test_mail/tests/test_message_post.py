@@ -499,7 +499,6 @@ class TestMessageNotify(TestMessagePostCommon):
 
         for parameters in [
             {'message_type': 'comment'},
-            {'canned_response_ids': []},
             {'child_ids': []},
             {'mail_ids': []},
             {'notification_ids': []},
