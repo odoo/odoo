@@ -18,31 +18,6 @@ export function OR(...args) {
     return [OR_SYM, ...args];
 }
 
-/**
- * @param {R|any} val
- * @param {Record} record
- * @param {string} fname
- * @param {(R) => void} fn
- * @returns {R}
- */
-export function preinsert(val, record, fname, fn) {
-    /** @type {R} */
-    let r3;
-    if (!Record.isRecord(val)) {
-        const { targetModel } = record.Model.__rels__.get(fname);
-        r3 = record.Model.store[targetModel].preinsert(val);
-    } else {
-        r3 = val;
-    }
-    fn(r3);
-    if (!Record.isRecord(val)) {
-        // was preinserted, fully insert now
-        const { targetModel } = record.Model.__rels__.get(fname);
-        record.Model.store[targetModel].insert(val);
-    }
-    return r3;
-}
-
 export class RecordInverses {
     /**
      * Track the inverse of a record. Each record contains this map.
@@ -136,7 +111,7 @@ export class RecordList extends Array {
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index] = r3" syntax
                     const index = parseInt(name);
-                    receiver._preinsert(val, (r3) => {
+                    receiver._insert(val, (r3) => {
                         const r2 = receiver[index];
                         if (r2 && r2.notEq(r3)) {
                             receiver.__deleteInverse__(r2);
@@ -175,15 +150,38 @@ export class RecordList extends Array {
     }
     /**
      * @param {R|any} val
-     * @param {(R) => void} fn
+     * @param {(R) => void} fn function that is called in-between preinsert and
+     *   insert. Preinsert only inserted what's needed to make record, while
+     *   insert finalize with all remaining data.
+     * @param {boolean} [inv=true] whether the inverse should be added or not.
+     *   It is always added except when during an insert on a relational field,
+     *   in order to avoid infinite loop.
+     * @param {"ADD"|"DELETE} [mode="ADD"] the mode of insert on the relation.
+     *   Important to match the inverse. Most of the time it's "ADD", that is when
+     *   inserting the relation the inverse should be added. Exception when the insert
+     *   comes from deletion, we want to "DELETE".
      */
-    _preinsert(val, fn) {
+    _insert(val, fn, { inv = true, mode = "ADD" } = {}) {
         const { inverse } = this.owner.Model.__rels__.get(this.name);
-        if (inverse) {
-            // special command to call __addNoinv, to prevent infinite loop
-            val[inverse] = [["ADD.noinv", this.owner]];
+        if (inverse && inv) {
+            // special command to call __addNoinv/__deleteNoInv, to prevent infinite loop
+            val[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
         }
-        return preinsert(val, this.owner, this.name, fn);
+        /** @type {R} */
+        let r3;
+        if (!Record.isRecord(val)) {
+            const { targetModel } = this.owner.Model.__rels__.get(this.name);
+            r3 = this.owner.Model.store[targetModel].preinsert(val);
+        } else {
+            r3 = val;
+        }
+        fn(r3);
+        if (!Record.isRecord(val)) {
+            // was preinserted, fully insert now
+            const { targetModel } = this.owner.Model.__rels__.get(this.name);
+            this.owner.Model.store[targetModel].insert(val);
+        }
+        return r3;
     }
     /**
      * @param {number} index
@@ -195,7 +193,7 @@ export class RecordList extends Array {
     /** @param {R[]} records */
     push(...records) {
         for (const val of records) {
-            const r = this._preinsert(val, (r3) => {
+            const r = this._insert(val, (r3) => {
                 this.__list__.push(r3.localId);
                 this.__addInverse__(r3);
             });
@@ -209,14 +207,9 @@ export class RecordList extends Array {
     }
     /** @returns {R} */
     pop() {
-        const r2 = this.__store__.get(this.__list__.pop());
+        const r2 = this.at(-1);
         if (r2) {
-            this.__deleteInverse__(r2);
-        }
-        const { inverse, onDelete } = this.owner.Model.__rels__.get(this.name);
-        onDelete?.call(this.owner, r2);
-        if (inverse) {
-            r2.__rels__.get(inverse).delete(this.owner);
+            this.splice(this.length - 1, 1);
         }
         return r2;
     }
@@ -227,16 +220,18 @@ export class RecordList extends Array {
             this.__deleteInverse__(r2);
         }
         const { inverse, onDelete } = this.owner.Model.__rels__.get(this.name);
-        onDelete?.call(this.owner, r2);
-        if (inverse) {
-            r2.__rels__.get(inverse).delete(this.owner);
+        if (r2) {
+            onDelete?.call(this.owner, r2);
+            if (inverse) {
+                r2.__rels__.get(inverse).delete(this.owner);
+            }
         }
         return r2;
     }
     /** @param {R[]} records */
     unshift(...records) {
         for (const val of records) {
-            const r = this._preinsert(val, (r3) => {
+            const r = this._insert(val, (r3) => {
                 this.__list__.unshift(r3.localId);
                 this.__addInverse__(r3);
             });
@@ -347,9 +342,10 @@ export class RecordList extends Array {
             if (Record.isRecord(last) && last.in(this)) {
                 return;
             }
-            this._preinsert(last, (r) => {
+            this._insert(last, (r) => {
                 if (r.notEq(this[0])) {
-                    this.splice(0, 1, r);
+                    this.pop();
+                    this.push(r);
                 }
             });
             return;
@@ -358,7 +354,7 @@ export class RecordList extends Array {
             if (Record.isRecord(val) && val.in(this)) {
                 continue;
             }
-            this._preinsert(val, (r) => {
+            this._insert(val, (r) => {
                 if (this.indexOf(r) === -1) {
                     this.push(r);
                 }
@@ -367,8 +363,8 @@ export class RecordList extends Array {
     }
     /**
      * Version of add() that does not update the inverse.
-     * This is internally call when assigning on relational field with inverse,
-     * to prevent infinite loops.
+     * This is internally called when inserting (with intent to add)
+     * on relational field with inverse, to prevent infinite loops.
      *
      * @param {...R}
      */
@@ -378,36 +374,73 @@ export class RecordList extends Array {
             if (Record.isRecord(last) && last.in(this)) {
                 return;
             }
-            this._preinsert(last, (r) => {
-                if (r.notEq(this[0])) {
-                    this.splice(0, 1);
-                    this.__list__.push(r.localId);
-                    this.__addInverse__(r);
-                }
-            });
+            this._insert(
+                last,
+                (r) => {
+                    if (r.notEq(this[0])) {
+                        const old = this.__list__.pop();
+                        if (old) {
+                            this.__deleteInverse__(old);
+                        }
+                        this.__list__.push(r.localId);
+                        this.__addInverse__(r);
+                    }
+                },
+                { inv: false }
+            );
             return;
         }
         for (const val of records) {
             if (Record.isRecord(val) && val.in(this)) {
                 continue;
             }
-            this._preinsert(val, (r) => {
-                if (this.indexOf(r) === -1) {
-                    this.__list__.push(r.localId);
-                    this.__addInverse__(r);
-                }
-            });
+            this._insert(
+                val,
+                (r) => {
+                    if (this.indexOf(r) === -1) {
+                        this.__list__.push(r.localId);
+                        this.__addInverse__(r);
+                    }
+                },
+                { inv: false }
+            );
         }
     }
     /** @param {...R}  */
     delete(...records) {
         for (const val of records) {
-            this._preinsert(val, (r) => {
-                const index = this.indexOf(r);
-                if (index !== -1) {
-                    this.splice(index, 1);
-                }
-            });
+            this._insert(
+                val,
+                (r) => {
+                    const index = this.indexOf(r);
+                    if (index !== -1) {
+                        this.splice(index, 1);
+                    }
+                },
+                { mode: "DELETE" }
+            );
+        }
+    }
+    /**
+     * Version of delete() that does not update the inverse.
+     * This is internally called when inserting (with intent to delete)
+     * on relational field with inverse, to prevent infinite loops.
+     *
+     * @param {...R}
+     */
+    __deleteNoinv(...records) {
+        for (const val of records) {
+            this._insert(
+                val,
+                (r) => {
+                    const index = this.indexOf(r);
+                    if (index !== -1) {
+                        this.__list__.splice(index, 1);
+                        this.__deleteInverse__(r);
+                    }
+                },
+                { inv: false }
+            );
         }
     }
     clear() {
@@ -493,13 +526,16 @@ export class Record {
                 if (Record.isCommand(data[expr2])) {
                     // Note: only Record.one() is supported
                     const [cmd, data2] = data[expr2].at(-1);
-                    if (cmd === "DELETE") {
-                        return Object.assign(res, { [expr2]: undefined });
-                    } else if (cmd === "ADD.noinv") {
-                        return Object.assign(res, { [expr2]: [["ADD.noinv", data2]] });
-                    } else {
-                        return Object.assign(res, { [expr2]: data2 });
-                    }
+                    return Object.assign(res, {
+                        [expr2]:
+                            cmd === "DELETE"
+                                ? undefined
+                                : cmd === "DELETE.noinv"
+                                ? [["DELETE.noinv", data2]]
+                                : cmd === "ADD.noinv"
+                                ? [["ADD.noinv", data2]]
+                                : data2,
+                    });
                 }
                 return Object.assign(res, { [expr2]: data[expr2] });
             }
@@ -606,7 +642,7 @@ export class Record {
         return this.get(data) ?? this.new(data);
     }
     static isCommand(data) {
-        return ["ADD", "DELETE", "ADD.noinv"].includes(data?.[0]?.[0]);
+        return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
     }
 
     /**
