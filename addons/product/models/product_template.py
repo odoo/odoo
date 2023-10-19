@@ -156,6 +156,7 @@ class ProductTemplate(models.Model):
         comodel_name='product.tag',
         relation='product_tag_product_template_rel',
     )
+    custom_properties = fields.Properties('Custom Parameters', definition='categ_id.custom_properties_definition', copy=True)
 
     def _compute_item_count(self):
         for template in self:
@@ -454,7 +455,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids', 'custom_properties']
 
     @api.model_create_multi
     def create(self, vals_list):
