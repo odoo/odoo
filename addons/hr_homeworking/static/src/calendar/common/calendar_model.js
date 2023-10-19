@@ -2,6 +2,7 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { getColor } from "@web/views/calendar/colors";
 import { patch } from "@web/core/utils/patch";
 
 const { Interval } = luxon;
@@ -113,10 +114,11 @@ patch(AttendeeCalendarModel.prototype, {
     get worklocations() {
         return this.data.worklocations;
     },
+
     mapPartnersToColor(data) {
         return data.filterSections.partner_ids.filters
             .filter(filter => filter.type !== "all" && filter.value)
-            .reduce((map, partner) => ({ ...map, [partner.value]: partner.colorIndex}), {})
+            .reduce((map, partner) => ({ ...map, [partner.value]: getColor(partner.colorIndex)}), {})
     },
 
     /**
