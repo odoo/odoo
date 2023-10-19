@@ -402,7 +402,7 @@ QUnit.module(
                 await nextTick();
                 editor.document.getSelection().collapseToEnd();
                 insertText(editor, "E");
-                triggerEvent(node, "keydown", { key: "Enter", shiftKey: true });
+                triggerEvent(node, "input", { inputType: "insertLineBreak" });
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
@@ -433,7 +433,7 @@ QUnit.module(
                 await nextTick();
                 editor.document.getSelection().collapseToEnd();
                 insertText(editor, "E");
-                triggerEvent(node, "keydown", { key: "Enter", shiftKey: true });
+                triggerEvent(node, "input", { inputType: "insertLineBreak" });
                 insertText(editor, "D");
                 editor.clean();
                 assert.strictEqual(
