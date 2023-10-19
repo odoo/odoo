@@ -10,12 +10,12 @@
                 <span class="px-1"/><!-- Spacer -->
             </button>
             <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap" t-on-click="onClickleftButton" t-esc="leftButton.name" />
-            <div class="d-flex align-items-center flex-grow-1 w-100 w-md-auto">
+            <div class="d-flex align-items-center justify-content-end flex-grow-1 w-100 w-md-auto">
                 <div class="to-order">
-                    <span>To Order</span>
+                    <span>Your Order</span>
                     <div class="d-flex align-items-center">
                         <span class="o-so-tabular-nums badge text-bg-secondary rounded" t-esc="lineNotSend.count"/>
-                        <span class="o-so-tabular-nums mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
+                        <span class="o-so-tabular-nums mx-2" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
                     </div>
                 </div>
             </div>
