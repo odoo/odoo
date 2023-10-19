@@ -93,6 +93,45 @@ class ProductProduct(models.Model):
                 )
         return attributes
 
+    def _get_price_unit_after_fp(self, lst_price, currency, fiscal_position):
+        self.ensure_one()
+
+        taxes = self.taxes_id
+
+        mapped_included_taxes = self.env['account.tax']
+        new_included_taxes = self.env['account.tax']
+
+        for tax in taxes:
+            mapped_taxes = fiscal_position.map_tax(tax)
+            if mapped_taxes and any(mapped_taxes.mapped('price_include')):
+                new_included_taxes |= mapped_taxes
+            if tax.price_include and not (tax in mapped_taxes):
+                mapped_included_taxes |= tax
+
+        if mapped_included_taxes:
+            if new_included_taxes:
+                price_untaxed = mapped_included_taxes.compute_all(
+                    lst_price,
+                    currency,
+                    1,
+                    handle_price_include=True,
+                )['total_excluded']
+                return new_included_taxes.compute_all(
+                    price_untaxed,
+                    currency,
+                    1,
+                    handle_price_include=False,
+                )['total_included']
+            else:
+                return mapped_included_taxes.compute_all(
+                    lst_price,
+                    currency,
+                    1,
+                    handle_price_include=True,
+                )['total_excluded']
+        else:
+            return lst_price
+
     # FIXME: this method should be verified about price computation (pricelist taxes....)
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
@@ -113,11 +152,18 @@ class ProductProduct(models.Model):
         taxes_default = pos_config.default_fiscal_position_id.map_tax(self.taxes_id)
         taxes_alternative = pos_config.self_ordering_alternative_fp_id.map_tax(self.taxes_id)
 
+        price_unit_default = self._get_price_unit_after_fp(
+            price, pos_config.currency_id, pos_config.default_fiscal_position_id
+        )
+        price_unit_alternative = self._get_price_unit_after_fp(
+            price, pos_config.currency_id, pos_config.self_ordering_alternative_fp_id
+        )
+
         all_prices_default = taxes_default.compute_all(
-            price, pos_config.currency_id, qty, product=self
+            price_unit_default, pos_config.currency_id, qty, product=self
         )
         all_prices_alternative = taxes_alternative.compute_all(
-            price, pos_config.currency_id, qty, product=self
+            price_unit_alternative, pos_config.currency_id, qty, product=self
         )
 
         if self.combo_ids:
