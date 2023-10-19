@@ -311,16 +311,13 @@ class ProductProduct(models.Model):
         # * the attributes are a subset of the attributes of the line.
         return len(self.product_template_attribute_value_ids & product_template_attribute_value_ids) == len(product_template_attribute_value_ids.attribute_id)
 
-    def _count_returned_sn_products(self, sn_lot):
-        res = self.env['stock.move.line'].search_count([
-            ('lot_id', '=', sn_lot.id),
-            ('quantity', '=', 1),
-            ('state', '=', 'done'),
+    def _count_returned_sn_products_domain(self, sn_lot, or_domains):
+        or_domains.append([
             ('production_id', '=', False),
             ('location_id.usage', '=', 'production'),
             ('move_id.unbuild_id', '!=', False),
         ])
-        return super()._count_returned_sn_products(sn_lot) + res
+        return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         '''extending the method in stock.product to take into account kits'''

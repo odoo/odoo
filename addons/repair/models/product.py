@@ -7,15 +7,12 @@ from odoo import fields, models
 class Product(models.Model):
     _inherit = "product.product"
 
-    def _count_returned_sn_products(self, sn_lot):
-        res = self.env['stock.move'].search_count([
-            ('repair_line_type', 'in', ['remove', 'recycle']),
-            ('product_uom_qty', '=', 1),
-            ('move_line_ids.lot_id', '=', sn_lot.id),
-            ('state', '=', 'done'),
-            ('location_dest_usage', '=', 'internal'),
+    def _count_returned_sn_products_domain(self, sn_lot, or_domains):
+        or_domains.append([
+                ('move_id.repair_line_type', 'in', ['remove', 'recycle']),
+                ('location_dest_usage', '=', 'internal'),
         ])
-        return super()._count_returned_sn_products(sn_lot) + res
+        return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
 
 class ProductTemplate(models.Model):
