@@ -380,7 +380,8 @@ export class RecordList extends Array {
                 last,
                 (r) => {
                     if (r.notEq(this[0])) {
-                        const old = this.__list__.pop();
+                        const old = this.at(-1);
+                        this.__list__.pop();
                         if (old) {
                             this.__deleteInverse__(old);
                         }
