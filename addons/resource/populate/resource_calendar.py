@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import random
-
 from odoo import models
 from odoo.tools import populate
 
@@ -25,6 +23,7 @@ class ResourceCalendar(models.Model):
 
     def _populate(self, size):
         records = super()._populate(size)
+        random = populate.Random('calendar')
 
         # Randomly remove 1 half day from schedule
         a_lot = records.filtered_domain([("name", "like", "A lot")])
