@@ -958,6 +958,45 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
+        "edit domain button is available even while loading records count",
+        async function (assert) {
+            serverData.models.partner.fields.display_name.default = "[]";
+            patchWithCleanup(odoo, {
+                debug: true,
+            });
+            const searchCountDeffered = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                </form>`,
+                mockRPC: async (route) => {
+                    if (route === "/web/dataset/call_kw/partner/search_count") {
+                        await searchCountDeffered;
+                    }
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
+            });
+            assert.containsNone(target, ".modal");
+            assert.containsOnce(target, ".o_field_domain_dialog_button");
+            await click(target, ".o_field_domain_dialog_button");
+            searchCountDeffered.resolve();
+            assert.containsOnce(target, ".modal");
+            await click(target, ".modal-footer .btn-primary");
+            assert.containsNone(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".o_domain_show_selection_button").textContent,
+                "5 record(s) "
+            );
+        }
+    );
+
+    QUnit.test(
         "quick check on save if domain has been edited via the  debug input",
         async function (assert) {
             patchWithCleanup(odoo, { debug: true });
