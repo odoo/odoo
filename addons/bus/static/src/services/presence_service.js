@@ -2,16 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import core from "web.core";
 
 export const presenceService = {
     start(env) {
         const LOCAL_STORAGE_PREFIX = "presence";
-
-        // map window_focus event from the wowlBus to the legacy one.
-        env.bus.addEventListener("window_focus", (isOdooFocused) => {
-            core.bus.trigger("window_focus", isOdooFocused);
-        });
 
         let isOdooFocused = true;
         let lastPresenceTime =
