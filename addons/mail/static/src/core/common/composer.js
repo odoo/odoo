@@ -140,10 +140,16 @@ export class Composer extends Component {
             inComposer: true,
         });
         if (!this.ui.isSmall) {
-            useEmojiPicker(useRef("emoji-button"), {
-                onSelect: (str) => this.addEmoji(str),
-                onClose: () => this.state.autofocus++,
-            });
+            useEmojiPicker(
+                useRef("emoji-button"),
+                {
+                    onSelect: (str) => this.addEmoji(str),
+                    onClose: () => this.state.autofocus++,
+                },
+                {
+                    position: this.props.mode === "extended" ? "bottom-start" : "top-end",
+                }
+            );
         }
         useExternalListener(
             browser,

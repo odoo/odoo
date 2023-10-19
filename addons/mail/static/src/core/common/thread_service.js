@@ -24,7 +24,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import session from "web.session";
 
 const FETCH_LIMIT = 30;
 
@@ -52,6 +51,8 @@ export class ThreadService {
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
+        /** @type {ReturnType<typeof import("@web/core/user_service").userService.start>} */
+        this.user = services["user"];
         // this prevents cyclic dependencies between mail.thread and other services
         this.env.bus.addEventListener("mail.thread/insert", ({ detail }) => {
             const model = detail.model;
@@ -865,7 +866,7 @@ export class ThreadService {
             thread,
         });
         const tmpId = this.messageService.getNextTemporaryId();
-        params.context = { ...params.context, temporary_id: tmpId, ...session.user_context };
+        params.context = { ...params.context, temporary_id: tmpId, ...this.user.context };
         if (parentId) {
             params.post_data.parent_id = parentId;
         }
@@ -1143,6 +1144,7 @@ export const threadService = {
         "mail.persona",
         "mail.message",
         "ui",
+        "user",
     ],
     start(env, services) {
         return new ThreadService(env, services);
