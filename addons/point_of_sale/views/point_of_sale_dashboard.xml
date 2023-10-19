@@ -139,7 +139,7 @@
 
                                         <div t-if="record.last_session_closing_date.value" class="row">
                                             <div class="col-6">
-                                                <span>Last Closing Date</span>
+                                                <span>Closing</span>
                                             </div>
                                             <div class="col-6">
                                                 <span><t t-esc="record.last_session_closing_date.value"/></span>
@@ -148,7 +148,7 @@
 
                                         <div t-if="record.last_session_closing_date.value" invisible="not cash_control" class="row">
                                             <div class="col-6">
-                                                <span>Last Closing Cash Balance</span>
+                                                <span>Balance</span>
                                             </div>
                                             <div class="col-6">
                                                 <span><field name="last_session_closing_cash" widget="monetary"/></span>
