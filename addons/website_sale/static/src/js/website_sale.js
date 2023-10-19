@@ -412,6 +412,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             $images.after($newImages);
             $images.remove();
             $images = $newImages;
+            // Update the sharable image (only work for Pinterest).
+            const shareImageSrc = $images[0].querySelector('img').src;
+            document.querySelector('meta[property="og:image"]')
+                .setAttribute('content', shareImageSrc);
+
             if ($images.attr('id') === 'o-carousel-product') {
                 $images.carousel(0);
             }
