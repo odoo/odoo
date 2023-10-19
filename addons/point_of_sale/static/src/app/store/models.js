@@ -2027,49 +2027,44 @@ export class Order extends PosModel {
         }
     }
     async addComboLines(comboParent, options) {
-        const originalPrices = {};
-
-        let originalTotal = 0;
-        for (const comboLine of options.comboLines) {
-            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
+        const parentLstPrice = comboParent.product.lst_price;
+        const originalTotal = options.comboLines.reduce((acc, comboLine) => {
             const originalPrice = this.pos.db.combo_by_id[comboLine.combo_id[0]].base_price;
-            originalTotal += product.get_display_price({ price: originalPrice });
+            return acc + originalPrice;
+        }, 0);
 
-            // Keep track of the original price of each product for the subsequent for loop.
-            originalPrices[product.id] = originalPrice;
-        }
+        let remainingTotal = parentLstPrice;
 
-        const targetPrice = comboParent.product.lst_price;
-        const childPriceFactor = targetPrice / originalTotal;
-        for (const comboLine of options.comboLines) {
+        for (let i = 0; i < options.comboLines.length; i++) {
+            const comboLine = options.comboLines[i];
             const product = this.pos.db.product_by_id[comboLine.product_id[0]];
-            const childUnitPrice = originalPrices[product.id] * childPriceFactor;
+            const combo = this.pos.db.combo_by_id[comboLine.combo_id[0]];
+            let priceUnit = round_di(
+                (combo.base_price * parentLstPrice) / originalTotal,
+                this.pos.dp["Product Price"]
+            );
+            remainingTotal -= priceUnit;
+            if (i == options.comboLines.length - 1) {
+                priceUnit += remainingTotal;
+            }
             await this.pos.addProductToCurrentOrder(product, {
-                price: childUnitPrice,
+                price: priceUnit,
                 comboParent,
             });
         }
 
-        // Adjust the price of the last combo line to make sure the total price of the combo
-        // is the same as the target price.
+        // Take into account the extra prices.
         const childLines = this.get_orderlines().filter(
             (l) => l.comboParent?.uuid === comboParent.uuid
         );
-        const totalComboPrice = childLines.reduce((acc, l) => acc + l.get_display_price(), 0);
-        const diff = targetPrice - totalComboPrice;
-        if (!this.env.utils.floatIsZero(diff)) {
-            const lastLine = childLines[childLines.length - 1];
-            lastLine.set_unit_price(lastLine.get_unit_price() + diff);
-        }
-
-        // Finally, take into account the combo price for each combo line.
         for (const comboLine of options.comboLines) {
-            if (this.env.utils.floatIsZero(comboLine.combo_price)) {
-                continue;
-            }
             const presentLine = childLines.find((l) => l.product.id === comboLine.product_id[0]);
             if (presentLine) {
-                presentLine.set_unit_price(presentLine.get_unit_price() + comboLine.combo_price);
+                const attributesPriceExtra = (presentLine.attribute_value_ids ?? [])
+                    .map((id) => this.pos.db.attribute_value_by_id[id]?.price_extra || 0)
+                    .reduce((acc, price) => acc + price, 0);
+                const totalPriceExtra = attributesPriceExtra + comboLine.combo_price;
+                presentLine.set_unit_price(presentLine.get_unit_price() + totalPriceExtra);
             }
         }
     }

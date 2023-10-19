@@ -17,7 +17,14 @@ export class ComboPage extends Component {
         this.selfOrder = useSelfOrder();
         this.selfOrder.lastEditedProductId = this.props.product.id;
         this.router = useService("router");
-        useSubEnv({ selectedValues: {}, customValues: {}, editable: this.editableProductLine });
+        useSubEnv({
+            selectedValues: {},
+            customValues: {},
+            editable: this.editableProductLine,
+            currentComboLineId: {
+                value: null,
+            },
+        });
 
         if (!this.props.product) {
             this.router.navigate("productList");
@@ -79,28 +86,21 @@ export class ComboPage extends Component {
     next() {
         const combo = this.currentCombo;
         const index = this.state.selectedCombos.findIndex((c) => c.id === combo.id);
+        const selectedCombo = {
+            id: combo.id,
+            name: combo.name,
+            combo_line_id: this.env.currentComboLineId.value,
+            product: {
+                id: this.state.selectedProduct.id,
+                name: this.state.selectedProduct.name,
+                variants: { ...this.env.selectedValues },
+                customValues: { ...this.env.customValues },
+            },
+        };
         if (index !== -1) {
-            this.state.selectedCombos[index] = {
-                id: combo.id,
-                name: combo.name,
-                product: {
-                    id: this.state.selectedProduct.id,
-                    name: this.state.selectedProduct.name,
-                    variants: { ...this.env.selectedValues },
-                    customValues: { ...this.env.customValues },
-                },
-            };
+            this.state.selectedCombos[index] = selectedCombo;
         } else {
-            this.state.selectedCombos.push({
-                id: combo.id,
-                name: combo.name,
-                product: {
-                    id: this.state.selectedProduct.id,
-                    name: this.state.selectedProduct.name,
-                    variants: { ...this.env.selectedValues },
-                    customValues: { ...this.env.customValues },
-                },
-            });
+            this.state.selectedCombos.push(selectedCombo);
         }
         this.resetState();
         if (this.state.editMode) {
@@ -156,6 +156,7 @@ export class ComboPage extends Component {
                 custom_attribute_value_ids: Object.values(combo.product.customValues),
                 combo_parent_uuid: parent_line.uuid,
                 combo_id: combo.id,
+                combo_line_id: combo.combo_line_id,
             });
             child_line.full_product_name = constructFullProductName(
                 child_line,

@@ -18,6 +18,7 @@ export class Line extends Reactive {
         custom_attribute_value_ids,
         combo_parent_uuid,
         combo_id,
+        combo_line_id,
         child_lines,
     }) {
         super();
@@ -39,6 +40,7 @@ export class Line extends Reactive {
         this.custom_attribute_value_ids = line.custom_attribute_value_ids || [];
         this.combo_parent_uuid = line.combo_parent_uuid || null;
         this.combo_id = line.combo_id || null;
+        this.combo_line_id = line.combo_line_id || null;
         this.child_lines = line.child_lines || [];
 
         this.initCustomAttribute();
