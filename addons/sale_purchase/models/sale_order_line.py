@@ -284,7 +284,7 @@ class SaleOrderLine(models.Model):
         sale_line_purchase_map = {}
         for line in self:
             # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
+            if line.product_id.service_to_purchase and not line.purchase_line_count and not self._context.get('skip_purchase_generation'):
                 result = line._purchase_service_create()
                 sale_line_purchase_map.update(result)
         return sale_line_purchase_map
