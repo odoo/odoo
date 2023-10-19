@@ -1310,7 +1310,7 @@ class Task(models.Model):
             domain = expression.distribute_not(domain)
         return domain
 
-    @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
+    @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
         for task in self:
             dependent_open_tasks = []
@@ -1322,13 +1322,8 @@ class Task(models.Model):
                 if task.state not in CLOSED_STATES:
                     task.state = '04_waiting_normal'
             # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
-            elif task.state == '04_waiting_normal':
+            elif task.state not in CLOSED_STATES:
                 task.state = '01_in_progress'
-
-    @api.onchange('stage_id')
-    def _onchange_stage_id(self):
-        if self.state != '04_waiting_normal' and self.state not in CLOSED_STATES:
-            self.state = '01_in_progress'
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -2014,6 +2009,8 @@ class Task(models.Model):
 
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
+        if 'project_id' in vals:
+            self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
         task_ids_without_user_set = set()
         if 'user_ids' in vals and 'date_assign' not in vals:
             # prepare update of date_assign after super call
