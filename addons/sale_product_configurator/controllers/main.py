@@ -139,7 +139,7 @@ class ProductConfiguratorController(Controller):
             product or product_template,
             pricelist,
             combination,
-            quantity=quantity,
+            quantity=quantity or 0.0,
             uom=product_uom,
             currency=currency,
             date=datetime.fromisoformat(so_date),
