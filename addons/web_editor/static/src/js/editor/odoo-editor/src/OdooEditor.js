@@ -3408,12 +3408,23 @@ export class OdooEditor extends EventTarget {
                 ev.preventDefault();
                 this._applyCommand('oDeleteForward');
             } else if (
-                (ev.inputType === 'insertParagraph' || isChromeInsertParagraph)
+                (['insertParagraph', 'insertLineBreak'].includes(ev.inputType) || isChromeInsertParagraph)
             ) {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
-                if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
+                getDeepRange(this.editable, { select: true, correctTripleClick: true });
+                // To remove only the anchor cell's content when multiple table cells are selected on Enter,
+                // we need to change the selection to focus only on the anchor cell. This can't be done in `oEnter`
+                // because `deleteRange` responsible for removing content, execute before `oEnter` in `_applyRawCommand`.
+                // Therefore, the anchor cell selection should be adjusted before `_applyRawCommand` is called.
+                const anchorTD = closestElement(newSelection.anchorNode, '.o_selected_td');
+                const focusTD = closestElement(newSelection.focusNode, '.o_selected_td');
+                if (anchorTD && focusTD && closestElement(anchorTD, 'table') === closestElement(focusTD, 'table')) {
+                    this.deselectTable();
+                    setSelection(anchorTD.firstChild, 0, anchorTD.lastChild, nodeSize(anchorTD.lastChild));
+                }
+                if (ev.inputType === 'insertLineBreak' || this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     this._applyCommand('oShiftEnter');
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
@@ -3785,9 +3796,6 @@ export class OdooEditor extends EventTarget {
             }
             ev.preventDefault();
             ev.stopPropagation();
-        } else if (ev.shiftKey && ev.key === "Enter") {
-            ev.preventDefault();
-            this._applyCommand('oShiftEnter');
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
             ev.preventDefault();
