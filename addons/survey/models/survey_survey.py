@@ -9,7 +9,7 @@ from collections import defaultdict
 import werkzeug
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
@@ -119,8 +119,9 @@ class Survey(models.Model):
     # scoring
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
+        ('scoring_with_answers_after_page', 'Scoring with answers after each page'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
-        ('scoring_without_answers', 'Scoring without answers at the end')],
+        ('scoring_without_answers', 'Scoring without answers')],
         string='Scoring', required=True, store=True, readonly=False, compute='_compute_scoring_type', precompute=True)
     scoring_success_min = fields.Float('Required Score (%)', default=80.0)
     scoring_max_obtainable = fields.Float('Maximum obtainable score', compute='_compute_scoring_max_obtainable')
@@ -348,7 +349,8 @@ class Survey(models.Model):
     @api.depends('certification')
     def _compute_scoring_type(self):
         for survey in self:
-            if survey.certification and survey.scoring_type not in ['scoring_without_answers', 'scoring_with_answers']:
+            if survey.certification and \
+                survey.scoring_type not in ['scoring_without_answers', 'scoring_with_answers', 'scoring_with_answers_after_page']:
                 survey.scoring_type = 'scoring_without_answers'
             elif not survey.scoring_type:
                 survey.scoring_type = 'no_scoring'
@@ -377,6 +379,15 @@ class Survey(models.Model):
                 'access_mode': 'token',
                 'scoring_type': 'scoring_with_answers',
             })
+
+    @api.constrains('scoring_type', 'users_can_go_back')
+    def _check_scoring_after_page_availability(self):
+        failing = self.filtered(lambda survey: survey.scoring_type == 'scoring_with_answers_after_page' and survey.users_can_go_back)
+        if failing:
+            raise ValidationError(
+                _('Combining roaming and "Scoring with answers after each page" is not possible; please update the following surveys:\n- %(survey_names)s',
+                survey_names="\n- ".join(failing.mapped('title')))
+            )
 
     # ------------------------------------------------------------
     # CRUD
@@ -498,9 +509,9 @@ class Survey(models.Model):
                 lambda q: q.question_type == 'char_box' and (q.save_as_email or q.save_as_nickname)):
             for user_input in user_inputs:
                 if question.save_as_email and user_input.email:
-                    user_input.save_lines(question, user_input.email)
+                    user_input._save_lines(question, user_input.email)
                 if question.save_as_nickname and user_input.nickname:
-                    user_input.save_lines(question, user_input.nickname)
+                    user_input._save_lines(question, user_input.nickname)
 
         return user_inputs
 
