@@ -148,7 +148,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids', 'blocked_by_workorder_ids.state')
+    @api.depends('production_id.reservation_state', 'blocked_by_workorder_ids', 'blocked_by_workorder_ids.state')
     def _compute_state(self):
         # Force the flush of the production_availability, the wo state is modify in the _compute_reservation_state
         # It is a trick to force that the state of workorder is computed as the end of the

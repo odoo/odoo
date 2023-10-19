@@ -3606,3 +3606,54 @@ class TestMrpOrder(TestMrpCommon):
         # Force the warning
         consumption_warning.action_confirm()
         self.assertEqual(mo.state, 'done')
+
+    def test_workorder_compute_state(self):
+        """
+        Check that the workorder state is computed correctly when the component is assigned
+        Final product with BoM:
+            - Product B
+        Create a Mo to produce one unit of final_product. However, since Product B is
+        not in stock, the component is not assigned, and the work order remains in
+        the 'Waiting' state.
+        - produce one unit of product B
+        The component is assigned and the workorder state is updated to Ready
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': product_b.id,
+                'product_qty': 1.0,
+            })],
+            'operation_ids': [Command.create({
+                'name': 'OP1',
+                'workcenter_id': self.workcenter_1.id,
+            })]
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product_a.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(mo.workorder_ids.state, 'waiting')
+        self.assertEqual(mo.move_raw_ids.state, 'confirmed')
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': product_b.id,
+            'product_qty': 1.0,
+        })
+        mo_2.action_confirm()
+        self.assertEqual(mo_2.state, 'confirmed')
+        mo_2.button_mark_done()
+        self.assertEqual(mo_2.state, 'done')
+        self.assertEqual(mo.workorder_ids.state, 'ready')
+        self.assertEqual(mo.move_raw_ids.state, 'assigned')
