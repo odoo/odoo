@@ -17,7 +17,7 @@
             &.o_first {
                 @include border-end-radius($border-radius);
                 padding-right: $o-horizontal-padding; // Compensate container padding
-                overflow-x: hidden; // to prevent horizontal scroll due to last arrow
+                overflow: hidden; // to prevent scroll due to last arrow
             }
 
             &.o_last {
@@ -25,7 +25,8 @@
                 padding-left: $o-horizontal-padding;
             }
 
-            &:not(.o_first) {
+            &:not(.o_first),
+            &:not(.o_last) {
                 &:before, &:after {
                     @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
                     display: block;
