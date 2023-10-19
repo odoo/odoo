@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.StatusBarField.Dropdown" owl="1">
-        <t t-esc="label" />
         <Dropdown toggler="'parent'">
             <t t-foreach="items" t-as="item" t-key="item.value">
                 <DropdownItem
@@ -12,6 +11,8 @@
                 </DropdownItem>
             </t>
         </Dropdown>
+        <!-- Must be below the dropdown menu to align with the caret (if any) -->
+        <t t-esc="label" />
     </t>
 
     <t t-name="web.StatusBarField" owl="1">
