@@ -145,6 +145,7 @@ export class CalendarYearRenderer extends Component {
     onEventRender(info) {
         const { el, event } = info;
         el.dataset.eventId = event.id;
+        el.classList.add("o_event");
         const record = this.props.model.records[event.id];
         if (record) {
             const color = getColor(record.colorIndex);
