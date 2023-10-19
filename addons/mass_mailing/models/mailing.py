@@ -1034,10 +1034,12 @@ class MassMailing(models.Model):
             if not res_ids:
                 raise UserError(_('There are no recipients selected.'))
 
+            body_html_default = f"""<p><br><p>"""
+
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or body_html_default, mailing.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
