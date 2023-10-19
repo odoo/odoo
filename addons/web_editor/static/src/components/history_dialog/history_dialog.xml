@@ -9,7 +9,7 @@
                     </t>
 
                     <t t-foreach="state.revisionsData" t-as="rev"
-                       t-key="rev.index">
+                       t-key="rev.revision_id">
                         <a type="object" href="#" role="button"
                            t-attf-class="btn btn-outline-primary #{state.revisionId === rev.revision_id ? 'active' : ''}"
                            t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
