@@ -54,4 +54,4 @@ class PosCombo(models.Model):
     def _compute_base_price(self):
         for rec in self:
             # Use the lowest price of the combo lines as the base price
-            rec.base_price = min(rec.combo_line_ids.mapped("product_id.lst_price"))
+            rec.base_price = min(rec.combo_line_ids.mapped("product_id.lst_price")) if rec.combo_line_ids else 0
