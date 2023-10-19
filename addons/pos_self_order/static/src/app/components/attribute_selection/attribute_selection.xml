@@ -16,8 +16,8 @@
                                             t-ref="value_{{attribute.id}}_{{value.id}}">
                                         <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 p-4 text-center">
                                             <span t-out="value.name"/>
-                                            <span t-if="value.price_extra.list_price">
-                                                + <t t-out="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                            <span t-if="shouldShowPriceExtra(value)">
+                                                + <t t-out="getfPriceExtra(value)" />
                                             </span>
                                         </div>
                                     </label>
