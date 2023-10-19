@@ -90,7 +90,7 @@
                     <i class="fa fa-navicon"/>
                 </button>
             </div>
-            <div t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
+            <div t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
                     <span t-if="tag"><i class="fa fa-tag me-1 text-muted"/><t t-out="tag.name"></t></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ slug(forum) }?#{ keep_query('search', 'sorting', 'my') }"
@@ -179,9 +179,9 @@
                         data-bs-toggle="popover"
                         t-att-data-bs-title="popover_title"
                         t-att-data-bs-content="popover_content">
-                        <a class="o_wforum_ask_btn disabled btn btn-primary mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
+                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
                     </div>
-                    <a t-elif="uid" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
+                    <a t-elif="uid" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary w-100 w-md-auto #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
                         t-att-data-karma="forum.karma_ask" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </t>
                 <button t-if="website_forum_action and not queue_type == 'close' and posts_ids" type="button" class="o_wforum_btn_filter_tool btn btn-secondary"
