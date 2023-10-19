@@ -314,9 +314,9 @@ class TestProjectMilestone(TestProjectCommon):
                          "The child milestone should be updated if the parent task's project is changed only if dislay_on_project is set to False for the subtask.")
 
         # J. Same case as F but subtask is closed -> no update of its milestone
-        task_2.state = '1_done'
         self.task_1.project_id = task_2.project_id = self.project_pigs
         self.task_1.milestone_id = task_2.milestone_id = self.milestone_pigs
+        task_2.state = '1_done'
         self.assertEqual(task_2.milestone_id, self.milestone_pigs)
         self.assertEqual(self.task_1.milestone_id, self.milestone_pigs)
 
