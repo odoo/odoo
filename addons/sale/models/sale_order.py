@@ -159,7 +159,6 @@ class SaleOrder(models.Model):
         string="Payment Terms",
         compute='_compute_payment_term_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
-        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
