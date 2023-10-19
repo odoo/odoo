@@ -25,7 +25,7 @@ import { doAction, getActionManagerServerData } from "@web/../tests/webclient/he
 // load emoji data and lamejs once, when the test suite starts.
 QUnit.begin(loadEmoji);
 QUnit.begin(loadLamejs);
-registryNamesToCloneWithCleanup.push("mock_server_callbacks");
+registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 //------------------------------------------------------------------------------
 // Public: test lifecycle
