@@ -1,3 +1,6 @@
+from odoo import _
+from odoo.exceptions import ValidationError
+
 from odoo.addons.payment import utils as payment_utils
 
 
@@ -47,12 +50,17 @@ def format_partner_address(partner):
     :rtype: dict
     """
     street_data = partner._get_street_split()
-    return {
+    address = {
         'city': partner.city,
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code,
+        'stateOrProvince': partner.state_id.code or '', # The state is not always required.
         'postalCode': partner.zip,
         # Fill in the address fields if the format is supported, or fallback to the raw address.
         'street': street_data.get('street_name', partner.street),
         'houseNumberOrName': street_data.get('street_number'),
     }
+    for key, value in address.items():
+        if key == 'stateOrProvince' and partner.country_id.code not in ['CA', 'US', 'GB']:
+            continue
+        if not value:
+            raise ValidationError(_("Please complete your address details."))
