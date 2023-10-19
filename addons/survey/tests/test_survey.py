@@ -330,7 +330,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         for question in questions:
             answer = '' if question.question_type in ['char_box', 'text_box'] else None
-            survey_user.save_lines(question, answer)
+            survey_user._save_lines(question, answer)
 
         for question in questions:
             self._assert_skipped_question(question, survey_user)
@@ -563,6 +563,20 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         # Now it will also be always visible
         self.assertFalse(bool(not_veggie_question.triggering_answer_ids))
+
+    def test_get_correct_answers(self):
+        questions = self._create_one_question_per_type_with_scoring()
+        qtype_mapping = {q.question_type: q for q in questions}
+        expected_correct_answer = {
+            qtype_mapping['numerical_box'].id: 5,
+            qtype_mapping['date'].id: '10/16/2023',
+            qtype_mapping['datetime'].id: '11/17/2023 08:00:00',
+            qtype_mapping['simple_choice'].id:
+                qtype_mapping['simple_choice'].suggested_answer_ids.filtered_domain([('value', '=', 'SChoice0')]).ids,
+            qtype_mapping['multiple_choice'].id:
+                qtype_mapping['multiple_choice'].suggested_answer_ids.filtered_domain([('value', 'in', ['MChoice0', 'MChoice1'])]).ids,
+        }
+        self.assertEqual(questions._get_correct_answers(), expected_correct_answer)
 
     def test_get_pages_and_questions_to_show(self):
         """
