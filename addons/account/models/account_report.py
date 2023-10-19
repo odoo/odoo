@@ -143,7 +143,7 @@ class AccountReport(models.Model):
     @api.constrains('line_ids')
     def _validate_parent_sequence(self):
         previous_lines = self.env['account.report.line']
-        for line in self.line_ids:
+        for line in self.line_ids.sorted('sequence'):
             if line.parent_id and line.parent_id not in previous_lines:
                 raise ValidationError(
                     _('Line "%s" defines line "%s" as its parent, but appears before it in the report. '
@@ -295,6 +295,10 @@ class AccountReportLine(models.Model):
         for report_line in self:
             if report_line.parent_id.groupby:
                 raise ValidationError(_("A line cannot have both children and a groupby value (line '%s').", report_line.parent_id.name))
+
+    @api.constrains('parent_id', 'sequence', 'report_id')
+    def _validate_parent_sequence(self):
+        self.report_id._validate_parent_sequence()
 
     @api.constrains('expression_ids', 'groupby')
     def _validate_formula(self):
