@@ -33,17 +33,23 @@ export class ProductCard extends Component {
             return;
         }
 
-        const pic = this.selfRef.el.querySelector(".o_self_order_item_card_image");
+        let pic = this.selfRef.el.querySelector(".o_self_order_item_card_image");
         if (!pic) {
-            return;
+            pic = this.selfRef.el.querySelector(".o_self_order_item_card_no_image");
         }
 
         const picRect = pic.getBoundingClientRect();
         const clonedPic = pic.cloneNode(true);
         const toOrderRect = toOrder.getBoundingClientRect();
 
-        clonedPic.classList.remove('w-100', 'h-100');
-        clonedPic.classList.add('position-fixed', 'border', 'border-white', 'border-4', 'z-index-1');
+        clonedPic.classList.remove("w-100", "h-100");
+        clonedPic.classList.add(
+            "position-fixed",
+            "border",
+            "border-white",
+            "border-4",
+            "z-index-1"
+        );
         clonedPic.style.top = `${picRect.top}px`;
         clonedPic.style.left = `${picRect.left}px`;
         clonedPic.style.width = `${picRect.width}px`;
@@ -53,9 +59,10 @@ export class ProductCard extends Component {
         document.body.appendChild(clonedPic);
 
         requestAnimationFrame(() => {
-            let offsetTop = (toOrderRect.top - picRect.top) - picRect.height * 0.5;
-            let offsetLeft = (toOrderRect.left - picRect.left) - picRect.width * 0.25;
-            clonedPic.style.transform = 'translateY(' + offsetTop +'px) translateX(' + offsetLeft +'px) scale(0.5)';
+            const offsetTop = toOrderRect.top - picRect.top - picRect.height * 0.5;
+            const offsetLeft = toOrderRect.left - picRect.left - picRect.width * 0.25;
+            clonedPic.style.transform =
+                "translateY(" + offsetTop + "px) translateX(" + offsetLeft + "px) scale(0.5)";
             clonedPic.style.opacity = "0"; // Fading out the card
         });
 

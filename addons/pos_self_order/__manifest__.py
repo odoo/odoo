@@ -16,6 +16,7 @@
         "views/pos_config_view.xml",
         "views/pos_session_view.xml",
         "views/custom_link_views.xml",
+        "views/pos_restaurant_views.xml",
         "views/product_views.xml",
         "data/init_access.xml",
         "data/custom_link_data.xml",

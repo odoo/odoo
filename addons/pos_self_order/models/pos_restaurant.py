@@ -14,7 +14,6 @@ class RestaurantTable(models.Model):
         "Security Token",
         copy=False,
         required=True,
-        readonly=True,
         default=lambda self: self._get_identifier(),
     )
 

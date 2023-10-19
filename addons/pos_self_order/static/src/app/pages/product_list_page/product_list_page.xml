@@ -11,6 +11,9 @@
                         t-key="category.id"
                         t-ref="category_{{category.id}}"
                         t-attf-class="nav-link category-item flex-shrink-0 p-0"
+                        t-att-class="{
+                            'active-no-image border border-sm rounded p-1 d-flex align-items-center': !category.has_image
+                        }"
                         t-attf-href="#scrollspy_{{category.id}}">
                         <div t-if="category.has_image" class="ratio ratio-1x1 mb-1">
                             <div class="placeholder-glow">

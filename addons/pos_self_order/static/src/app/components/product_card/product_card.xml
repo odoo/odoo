@@ -12,12 +12,15 @@
             <div
                 class="ratio ratio-1x1 w-25 w-sm-50 w-md-100"
                 t-att-class="{
-                    'd-none d-md-block': !props.product.has_image
+                    'd-md-block': !props.product.has_image
                 }">
-                <div class="placeholder-glow">
-                    <div class="placeholder w-100 h-100 bg-300 rounded"/>
+                <div class="placeholder-glow o_self_order_item_card_no_image">
+                    <div t-attf-class="{{ props.product.has_image ? 'placeholder' : 'd-flex align-items-center justify-content-center h-100' }} bg-200 w-100 h-100 rounded">
+                        <span t-if="!props.product.has_image" t-esc="props.product.name" class="text-center text-white fs-2 fw-bold mb-1 mb-sm-2"/>
+                    </div>
                 </div>
                 <img
+                    t-if="props.product.has_image"
                     class="o_self_order_item_card_image w-100 rounded"
                     t-attf-src="/menu/get-image/{{ props.product.id }}/512?unique={{props.product.write_date}}"
                     alt="Product image"

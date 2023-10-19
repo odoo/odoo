@@ -1,4 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- codingimport base64
+import qrcode
+import base64
+import zipfile
+from io import BytesIO
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
@@ -72,6 +76,68 @@ class ResConfigSettings(models.TransientModel):
             "res_model": "pos_self_order.custom_link",
             "views": [[False, "tree"]],
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
+        }
+
+    def _generate_single_qr_code(self, url):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(url)
+        qr.make(fit=True)
+        return qr.make_image(fill_color="black", back_color="white")
+
+    def generate_qr_codes_zip(self):
+        if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
+            raise ValidationError(_("QR codes can only be generated in mobile or consultation mode."))
+
+        qr_images = []
+
+        if self.pos_module_pos_restaurant:
+            table_ids = self.pos_config_id.floor_ids.table_ids
+
+            if not table_ids:
+                raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
+
+            for table in table_ids:
+                qr_images.append({
+                    'image': self._generate_single_qr_code(self.pos_config_id._get_self_order_url(table.id)),
+                    'name': f"{table.floor_id.name} - {table.name}",
+                })
+        else:
+            qr_images.append({
+                'image': self._generate_single_qr_code(self.pos_config_id._get_self_order_url()),
+                'name': "generic",
+            })
+
+        # Create a zip with all images in qr_images
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
+            for index, qr_image in enumerate(qr_images):
+                with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
+                    qr_image['image'].save(buf, format="PNG")
+        zip_buffer.seek(0)
+
+        # Delete previous attachments
+        self.env["ir.attachment"].search([
+            ("name", "=", "self_order_qr_code.zip"),
+        ]).unlink()
+
+        # Create an attachment with the zip
+        attachment_id = self.env["ir.attachment"].create({
+            "name": "self_order_qr_code.zip",
+            "type": "binary",
+            "raw": zip_buffer.read(),
+            "res_model": self._name,
+            "res_id": self.id,
+        })
+
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/web/content/{attachment_id.id}",
+            "target": "new",
         }
 
     def generate_qr_codes_page(self):

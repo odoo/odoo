@@ -97,10 +97,10 @@ export class CartPage extends Component {
         if (table) {
             this.selfOrder.table = table;
             this.router.addTableIdentifier(table);
+            this.pay();
         }
 
         this.state.selectTable = false;
-        this.pay();
     }
 
     getChildLines(line) {
