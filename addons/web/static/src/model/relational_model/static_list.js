@@ -617,6 +617,12 @@ export class StaticList extends DataPoint {
                     }
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         this.records.push(record);
+                        this._tmpIncreaseLimit++;
+                        this.model._updateConfig(
+                            this.config,
+                            { limit: this.limit + this._tmpIncreaseLimit },
+                            { reload: false }
+                        );
                     }
                     this._currentIds.push(record.resId);
                     this._commands.push([command[0], command[1]]);
