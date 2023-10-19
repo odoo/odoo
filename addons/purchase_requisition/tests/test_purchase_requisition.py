@@ -472,3 +472,15 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_wizard.action_create_alternative()
         po_alt = po_orig.alternative_po_ids - po_orig
         self.assertEqual(po_alt.order_line.price_unit, 4)
+
+    def test_08_purchase_requisition_sequence(self):
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        self.env['ir.sequence'].create({
+            'code': 'purchase.requisition.blanket.order',
+            'prefix': 'REQ_',
+            'name': 'Blanket Order sequence',
+            'company_id': new_company.id,
+        })
+        self.bo_requisition.company_id = new_company
+        self.bo_requisition.action_in_progress()
+        self.assertTrue(self.bo_requisition.name.startswith("REQ_"))
