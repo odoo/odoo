@@ -623,7 +623,22 @@ class Product(models.Model):
 
     @api.model
     def _count_returned_sn_products(self, sn_lot):
-        return 0
+        domain = self._count_returned_sn_products_domain(sn_lot, or_domains=[])
+        if not domain:
+            return 0
+        return self.env['stock.move.line'].search_count(domain)
+
+    @api.model
+    def _count_returned_sn_products_domain(self, sn_lot, or_domains):
+        if not or_domains:
+            return None
+        base_domain = [
+            ('lot_id', '=', sn_lot.id),
+            ('quantity', '=', 1),
+            ('state', '=', 'done'),
+        ]
+        or_domains = expression.OR(or_domains)
+        return expression.AND([base_domain, or_domains])
 
 
 class ProductTemplate(models.Model):
