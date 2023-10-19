@@ -56,7 +56,7 @@
             if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
                 this._displayError(
                     _t("Incorrect Payment Details"),
-                    _t("Please verify your payment details.")
+                    error.message.data.message
                 );
             }
             else {
