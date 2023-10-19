@@ -15,5 +15,7 @@
                 <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
             </table>
         </xpath>
+        <!-- hide subsection subtotals, because they don't include tax -->
+        <xpath expr="//span[@t-out='current_subtotal']/.." position="replace"/>
     </template>
 </odoo>
