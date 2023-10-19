@@ -4,6 +4,7 @@ import { Component, useState } from "@odoo/owl";
 import { ProductCustomAttribute } from "@point_of_sale/app/store/models/product_custom_attribute";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
@@ -89,5 +90,23 @@ export class AttributeSelection extends Component {
         return attribute.display_type === "multi"
             ? this.selectedValues[attribute.id][value.id]
             : parseInt(this.selectedValues[attribute.id]) === value.id;
+    }
+
+    _getPriceExtra(value) {
+        const isTakeAway = this.selfOrder.take_away;
+        const priceExtra = isTakeAway
+            ? value.price_extra.display_price_default
+            : value.price_extra.display_price_alternative;
+        return priceExtra;
+    }
+
+    shouldShowPriceExtra(value) {
+        const priceExtra = this._getPriceExtra(value);
+        return !floatIsZero(priceExtra, this.selfOrder.config.currency_decimals);
+    }
+
+    getfPriceExtra(value) {
+        const priceExtra = this._getPriceExtra(value);
+        return this.selfOrder.formatMonetary(priceExtra);
     }
 }

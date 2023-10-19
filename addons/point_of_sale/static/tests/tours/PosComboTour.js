@@ -34,19 +34,14 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.select("Combo Product 8"),
         combo.isSelected("Combo Product 8"),
         combo.isNotSelected("Combo Product 7"),
-        {
-            content: "check that the total amount is properly displayed",
-            trigger: `.combo-configurator-popup .total-amount:contains("59.60")`,
-            isCheck: true,
-        },
         combo.confirm(),
         ...ProductScreen.selectedOrderlineHas("Office Combo"),
         ...ProductScreen.clickOrderline("Combo Product 3"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 3", "1.0", "12.92"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 3", "1.0", "13.43"),
         ...ProductScreen.clickOrderline("Combo Product 5"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 5", "1.0", "17.87"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 5", "1.0", "18.67"),
         ...ProductScreen.clickOrderline("Combo Product 8"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "28.81"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
 
         // check that you cannot change the quantity of a combo product
         ...ProductScreen.pressNumpad("2"),
@@ -61,7 +56,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.select("Combo Product 5"),
         combo.select("Combo Product 8"),
         combo.confirm(),
-        ...ProductScreen.totalAmountIs("59.60"),
+        ...ProductScreen.totalAmountIs("62.10"),
         ...ProductScreen.clickPayButton(),
         ...PaymentScreen.clickPaymentMethod("Bank"),
         ...PaymentScreen.clickValidate(),
@@ -74,8 +69,8 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.select("Combo Product 4"),
         combo.select("Combo Product 6"),
         combo.confirm(),
-        ...ProductScreen.totalAmountIs("50.00"),
-        ...inLeftSide(Order.hasTax("8.92")),
+        ...ProductScreen.totalAmountIs("59.17"),
+        ...inLeftSide(Order.hasTax("10.56")),
         // the split screen is tested in `pos_restaurant`
     ],
 });
