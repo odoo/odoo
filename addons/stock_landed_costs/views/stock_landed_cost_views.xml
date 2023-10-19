@@ -78,10 +78,10 @@
                                         <field name="currency_id" column_invisible="True"/>
                                     </tree>
                                 </field>
-                                <group class="oe_subtotal_footer oe_right">
+                                <group class="oe_subtotal_footer">
                                     <field name="currency_id" invisible="1"/>
                                     <field name="amount_total"/>
-                                    <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="oe_right btn-secondary" invisible="state != 'draft'"/>
+                                    <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="float-end btn-secondary" invisible="state != 'draft'"/>
                                 </group>
                             </page>
                             <page string="Valuation Adjustments" name="valuation_adjustments">

@@ -51,7 +51,7 @@
                     <attribute name="column_invisible">parent.product_id</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
-                    <button name="action_archive" class="oe_right" type="object" string="Archive Operation" invisible="context.get('parent_production_id')"/>
+                    <button name="action_archive" class="float-end" type="object" string="Archive Operation" invisible="context.get('parent_production_id')"/>
                 </xpath>
                 <xpath expr="//field[@name='blocked_by_operation_ids']" position="replace">
                 </xpath>
