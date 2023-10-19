@@ -148,10 +148,10 @@ class Repair(models.Model):
     sale_order_line_id = fields.Many2one(
         'sale.order.line', check_company=True, readonly=True,
         copy=False, help="Sale Order Line from which the Repair Order comes from.")
-    repair_request = fields.Char(
-        related='sale_order_line_id.product_id.display_name',
+    repair_request = fields.Text(
+        related='sale_order_line_id.name',
         string='Repair Request',
-        help="Product from which the Repair Order was created.")
+        help="Sale Order Line Description.")
 
     # Return Binding
     picking_id = fields.Many2one(
@@ -431,8 +431,12 @@ class Repair(models.Model):
             })
 
         product_moves = self.env['stock.move'].create(product_move_vals)
-        self.move_id = product_moves.id
-
+        repair_move = {m.repair_id.id: m for m in product_moves}
+        for repair in self:
+            move_id = repair_move.get(repair.id, False)
+            if move_id:
+                repair.move_id = move_id
+        self.sale_order_line_id.move_ids.picked = True
         all_moves = self.move_ids + product_moves
         all_moves._action_done()
 
