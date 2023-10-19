@@ -227,8 +227,11 @@ export const storeService = {
                                     for (const r2 of oldRecords) {
                                         r2.__invs__.delete(r1.localId, name);
                                     }
+                                    // l1 and collection could be same record list,
+                                    // save before clear to not push mutated recordlist that is empty
+                                    const col = [...collection];
                                     l1.clear();
-                                    l1.push(...collection);
+                                    l1.push(...col);
                                 } else {
                                     // [Record.one] =
                                     if (Record.isCommand(val)) {
