@@ -7,7 +7,7 @@
             </div>
             <div class="order-content flex-grow-1 overflow-auto pb-4">
                 <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">
-                    <div t-if="!line.combo_parent_uuid" class="gap-3 py-3 py-lg-4 px-3 bg-view border-bottom">
+                    <div t-if="!line.combo_parent_uuid" class="py-2 py-lg-4 px-3 bg-view border-bottom">
                         <t t-set="childLines" t-value="getChildLines(line)"/>
                         <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id]"/>
 
@@ -54,7 +54,7 @@
                             </div>
                         </div>
 
-                        <div class="product-controllers d-flex flex-wrap flex-grow-1 align-items-center justify-content-between mt-3">
+                        <div class="product-controllers d-flex flex-wrap flex-grow-1 align-items-center justify-content-between mt-2">
                             <div>
                                 <div t-if="!selfOrder.currentOrder.isSavedOnServer" class="btn-group">
                                     <button
@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="order-price d-flex-column flex-grow-0">
-            <div class="absolute-content-price d-flex flex-column flex-grow-0 justify-content-center p-3 border-top bg-view text-end lh-sm">
+            <div class="absolute-content-price d-flex flex-column flex-grow-0 justify-content-center py-2 py-lg-3 px-3 border-bottom border-top bg-view text-end lh-sm">
                 <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_total)" /></p>
                 <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_tax)" /></p>
             </div>
