@@ -2632,21 +2632,29 @@ export class OdooEditor extends EventTarget {
                     (!this.commandBar._active ||
                         this.commandBar._currentOpenOptions.closeOnSpace !== true)
                 ) {
-                    const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
-                    const textNodeSplitted = textSliced.split(/\s/);
-
-                    // Remove added space
-                    textNodeSplitted.pop();
-                    const potentialUrl = textNodeSplitted.pop();
-                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
-
-                    if (lastWordMatch) {
-                        const matches = getUrlsInfosInString(textSliced);
-                        const match = matches[matches.length - 1];
+                    let node = selection.anchorNode;
+                    const textBeforeInsertedSpace = node.textContent.slice(0, selection.anchorOffset - 1);
+                    // Backwards search for another space.
+                    let space = [...textBeforeInsertedSpace.matchAll(/\s/g)].pop();
+                    // Include adjacent previous text nodes in the search if no
+                    // space was found.
+                    while (
+                        !space &&
+                        node.previousSibling &&
+                        node.previousSibling.nodeType === Node.TEXT_NODE
+                    ) {
+                        node = node.previousSibling;
+                        space = [...node.textContent.matchAll(/\s/g)].pop();
+                    }
+                    const range = this.document.createRange();
+                    // Use beginning of the last searched text node as word
+                    // boundary if no space was found.
+                    range.setStart(node, (space && space.index + 1) || 0);
+                    range.setEnd(selection.anchorNode, selection.anchorOffset - 1);
+                    const potentialUrl = range.toString();
+                    const match = getUrlsInfosInString(potentialUrl).pop();
+                    if (match && match.label === potentialUrl) {
                         const cloneRange = selection.getRangeAt(0).cloneRange();
-                        const range = this.document.createRange();
-                        range.setStart(selection.anchorNode, match.index);
-                        range.setEnd(selection.anchorNode, match.index + match.length);
                         const link = this._createLink(range.extractContents().textContent, match.url);
                         range.insertNode(link);
                         // Inserting an element into a range clears the selection in Safari
