@@ -928,7 +928,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             popoverDescription.children[2].textContent,
-            "(2 days)",
+            "2 days",
             "The popover description should indicate 2 days"
         );
         await click(target, ".o_cw_popover_close");
@@ -1185,15 +1185,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Sun 11",
+            "Sun",
             "The first day of the week should be Sunday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sat 17",
+            "Sat",
             "The last day of the week should be Saturday"
         );
     });
@@ -1226,15 +1226,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Mon 12",
+            "Mon",
             "The first day of the week should be Monday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sun 18",
+            "Sun",
             "The last day of the week should be Sunday"
         );
     });
@@ -1293,7 +1293,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "popover should have a close button"
         );
         assert.strictEqual(
-            target.querySelector(".o_cw_popover .list-group-item b.text-capitalize").textContent,
+            target.querySelector(".o_cw_popover .list-group-item span.fw-bold").textContent,
             "December 14, 2016",
             "should display date 'December 14, 2016'"
         );
@@ -1309,8 +1309,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.containsOnce(groups[0], ".o_field_char", "should apply char widget");
         assert.strictEqual(
-            groups[0].querySelector("strong").textContent,
-            "Custom Name: ",
+            groups[0].querySelector("span.fw-bold").textContent,
+            "Custom Name",
             "label should be a 'Custom Name'"
         );
         assert.strictEqual(
@@ -1320,8 +1320,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.containsOnce(groups[1], ".o_form_uri", "should apply m20 widget");
         assert.strictEqual(
-            groups[1].querySelector("strong").textContent,
-            "user: ",
+            groups[1].querySelector("span.fw-bold").textContent,
+            "user",
             "label should be a 'user'"
         );
         assert.strictEqual(
@@ -1666,15 +1666,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const headers = target.querySelectorAll(".fc-day-header");
+        const headers = target.querySelectorAll(".fc-day-header .o_cw_day_number");
         assert.strictEqual(
             headers[0].textContent,
-            "Sun 11",
+            "11",
             "The calendar start date should be 2016-12-11"
         );
         assert.strictEqual(
             headers[headers.length - 1].textContent,
-            "Sat 17",
+            "17",
             "The calendar start date should be 2016-12-17"
         );
     });
@@ -3467,7 +3467,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "December 14, 2016 (All day)"
+            "December 14, 2016 "
         );
     });
 
@@ -3963,13 +3963,18 @@ QUnit.module("Views", ({ beforeEach }) => {
             arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
         });
         assert.deepEqual(
-            [...target.querySelectorAll(".fc-day-header")].map((el) => el.textContent),
+            [...target.querySelectorAll(".fc-day-header")].map((el) =>
+                [
+                    el.querySelector(".o_cw_day_name").textContent,
+                    el.querySelector(".o_cw_day_number").textContent,
+                ].join(" ")
+            ),
             ["dim. 11", "lun. 12", "mar. 13", "mer. 14", "jeu. 15", "ven. 16", "sam. 17"]
         );
     });
 
     QUnit.test(`initial_date given in the context`, async (assert) => {
-        assert.expect(2);
+        assert.expect(3);
         serverData.views = {
             "event,1,calendar": `<calendar date_start="start" date_stop="stop" mode="day"/>`,
             "event,false,search": `<search />`,
@@ -3993,8 +3998,14 @@ QUnit.module("Views", ({ beforeEach }) => {
             "should display name passed in the context"
         );
         assert.strictEqual(
-            target.querySelector(".o_calendar_renderer .fc-day-header").textContent,
-            "Sat 30",
+            target.querySelector(".o_calendar_renderer .fc-day-header .o_cw_day_name").textContent,
+            "Saturday",
+            "should display day passed in the context"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_calendar_renderer .fc-day-header .o_cw_day_number")
+                .textContent,
+            "30",
             "should display day passed in the context"
         );
     });
@@ -4027,15 +4038,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Sun 1",
+            "Sun",
             "The first day of the week should be Sunday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sat 7",
+            "Sat",
             "The last day of the week should be Saturday"
         );
 
@@ -4082,15 +4093,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Mon 26",
+            "Mon",
             "The first day of the week should be Monday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sun 1",
+            "Sun",
             "The last day of the week should be Sunday"
         );
 
@@ -4137,14 +4148,17 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
         assert.strictEqual(
-            dayHeaders[0].textContent,
+            `${dayNameHeaders[0].textContent} ${dayNumberHeaders[0].textContent}`,
             "Mon 9",
             "The first day of the week should be Monday the 9th"
         );
         assert.strictEqual(
-            dayHeaders[dayHeaders.length - 1].textContent,
+            `${dayNameHeaders[dayNameHeaders.length - 1].textContent} ${
+                dayNumberHeaders[dayNumberHeaders.length - 1].textContent
+            }`,
             "Sun 15",
             "The last day of the week should be Sunday the 15th"
         );
@@ -4179,14 +4193,17 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header");
+        const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
         assert.strictEqual(
-            dayHeaders[0].textContent,
+            `${dayNameHeaders[0].textContent} ${dayNumberHeaders[0].textContent}`,
             "Sat 7",
             "The first day of the week should be Saturday the 7th"
         );
         assert.strictEqual(
-            dayHeaders[dayHeaders.length - 1].textContent,
+            `${dayNameHeaders[dayNameHeaders.length - 1].textContent} ${
+                dayNumberHeaders[dayNumberHeaders.length - 1].textContent
+            }`,
             "Fri 13",
             "The last day of the week should be Friday the 13th"
         );
@@ -4398,7 +4415,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-month", 12);
         assert.strictEqual(
             target.querySelector(".fc-month .fc-header-toolbar").textContent,
-            "Jan 2016"
+            "January 2016"
         );
         assert.containsN(
             target,
@@ -4445,7 +4462,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             .querySelector(".o_popover")
             .textContent.replace(/\s{2,}/g, " ")
             .trim();
-        assert.strictEqual(popoverText, "December 12, 201611:55 event 216:55 event 3");
+        assert.strictEqual(popoverText, "December 12, 201611:55event 216:55event 3");
         await click(target, ".o_cw_popover_close");
         assert.containsNone(target, ".o_popover");
 
@@ -4577,7 +4594,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.strictEqual(
             target.querySelector(".o_cw_popover .o_cw_popover_fields_secondary").textContent,
-            "user: name: event 4"
+            "usernameevent 4"
         );
     });
 

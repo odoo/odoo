@@ -95,7 +95,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o_calendar_container .o_other_calendar_panel");
         assert.isVisible(
             target.querySelector(
-                ".o_calendar_container .o_calendar_sidebar_container button.o_calendar_button_today"
+                ".o_calendar_container .o_calendar_header button.o_calendar_button_today"
             ),
             "today button should be visible"
         );
@@ -103,45 +103,41 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Test all views
         // displays month mode by default
         assert.equal(
-            target.querySelector(
-                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
-            ).textContent,
+            target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
+                .textContent,
             "Week",
             "should display the current week"
         );
 
         // switch to day mode
-        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
-        await click(target, ".o_calendar_sidebar_container .o_scale_button_day");
+        await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
+        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_day");
         await nextTick();
         assert.equal(
-            target.querySelector(
-                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
-            ).textContent,
+            target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
+                .textContent,
             "Day",
             "should display the current day"
         );
 
         // switch to month mode
-        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
-        await click(target, ".o_calendar_sidebar_container .o_scale_button_month");
+        await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
+        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_month");
         await nextTick();
         assert.equal(
-            target.querySelector(
-                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
-            ).textContent,
+            target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
+                .textContent,
             "Month",
             "should display the current month"
         );
 
         // switch to year mode
-        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
-        await click(target, ".o_calendar_sidebar_container .o_scale_button_year");
+        await click(target, ".o_calendar_container .o_calendar_header .dropdown-toggle");
+        await click(target, ".o_calendar_container .o_calendar_header .o_scale_button_year");
         await nextTick();
         assert.equal(
-            target.querySelector(
-                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
-            ).textContent,
+            target.querySelector(".o_calendar_container .o_calendar_header .dropdown-toggle")
+                .textContent,
             "Year",
             "should display the current year"
         );
@@ -200,18 +196,21 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>`,
         });
 
+        assert.containsOnce(target, ".o_calendar_renderer");
         assert.containsOnce(target, ".o_other_calendar_panel");
+        await click(target, ".o_other_calendar_panel");
+        assert.containsOnce(
+            target,
+            ".o_calendar_filter_items_checkall",
+            "should contain one filter to check all"
+        );
         assert.containsN(
             target,
-            ".o_other_calendar_panel .o_filter > *",
-            3,
-            "should contains 3 child nodes -> 1 label (USER) + 2 resources (user 1/2)"
+            ".o_calendar_filter_item",
+            2,
+            "should contain 2 child nodes -> 2 resources"
         );
-        assert.containsNone(target, ".o_calendar_sidebar");
-        assert.containsOnce(target, ".o_calendar_renderer");
 
-        // Toggle the other calendar panel should hide the calendar view and show the sidebar
-        await click(target, ".o_other_calendar_panel");
         assert.containsOnce(target, ".o_calendar_sidebar");
         assert.containsNone(target, ".o_calendar_renderer");
         assert.containsOnce(target, ".o_calendar_filter");
@@ -222,8 +221,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".o_other_calendar_panel .o_filter > *",
-            1,
-            "should contains 1 child node -> 1 label (USER)"
+            0,
+            "should contain 0 child nodes -> no filters selected"
         );
 
         // Toggle again the other calendar panel should hide the sidebar and show the calendar view
@@ -368,11 +367,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-05");
 
         // Change scale to month
-        await click(target, ".o_calendar_container .o_other_calendar_panel");
         await changeScale(target, "month");
-        assert.containsOnce(target, ".currentDate");
-        assert.strictEqual(document.querySelector(".currentDate").textContent, " - February 2016");
-        await click(target, ".o_calendar_container .o_other_calendar_panel");
+        assert.containsOnce(target, ".o_calendar_container .o_calendar_header h5");
+        assert.strictEqual(
+            document.querySelector(".o_calendar_container .o_calendar_header h5").textContent,
+            "February 2016"
+        );
         assert.containsNone(target, ".fc-timeGridDay-view");
         assert.containsOnce(target, ".fc-dayGridMonth-view");
 
@@ -380,7 +380,10 @@ QUnit.module("Views", ({ beforeEach }) => {
         await tap(target, ".fc-day-top[data-date='2016-02-10']");
         await nextTick(); // await reload & render
         await nextTick(); // await breadcrumb update
-        assert.strictEqual(document.querySelector(".currentDate").textContent, "");
+        assert.strictEqual(
+            document.querySelector(".o_calendar_container .o_calendar_header h5").textContent,
+            "10 February 2016"
+        );
         assert.containsNone(target, ".fc-dayGridMonth-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");

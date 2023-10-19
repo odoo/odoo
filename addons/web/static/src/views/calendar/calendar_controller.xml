@@ -18,7 +18,7 @@
                 </t>
                 <div class="o_calendar_container d-flex d-lg-grid flex-column h-100 bg-view">
                     <div class="o_calendar_header d-flex align-items-center gap-1 p-2 border-bottom">
-                        <div class="o_calendar_navigation_buttons btn-group">
+                        <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group">
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
                                 title="Previous"
