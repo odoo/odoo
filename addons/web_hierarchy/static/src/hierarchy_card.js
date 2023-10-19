@@ -3,7 +3,7 @@
 import { Component } from "@odoo/owl";
 
 import { Field } from "@web/views/fields/field";
-import { Record } from "@web/views/record";
+import { Record } from "@web/model/record";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 
