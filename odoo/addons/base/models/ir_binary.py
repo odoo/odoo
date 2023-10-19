@@ -219,8 +219,8 @@ class IrBinary(models.AbstractModel):
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
-
-        stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
+        if stream.etag:
+            stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
 
         if isinstance(stream.last_modified, (int, float)):
             stream.last_modified = datetime.utcfromtimestamp(stream.last_modified)
