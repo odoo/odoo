@@ -1410,6 +1410,59 @@ class Field(MetaField('DummyField', (object,), {})):
                 env.remove_to_compute(field, records)
 
         with records.env.protecting(fields, records):
+            # --test-tags .test_access_sales_person
+            # Infinite loop in `_compute_field_value` of `base_automation`
+            # Computation of a stored field lands in `base_automation.py` `_compute_field_value`
+            # -> Tries to read old values with `for old_vals in (records.read([f.name for f in stored_fields]))`
+            # -> User doesn't have access (this is the point of the test): Raise an access error and go in `_make_access_error`
+            # -> `_make_access_error` calls `records.invalidate_recordset()` to empty the cache of the unauthorized record
+            # -> `invalidate_recordset` flushes using `flush_recordset` (because invalidate_recordset calls without `flush=False`)
+            # -> `flush_recordset` triggers the recomputation of the field, because it was added back in the tocompute
+            # -> lands back in `_compute_field_value` of `base_automation`, and the loop goes on.
+            # It could actually happen before the changes brought by this revision
+            # if the field was manually set to `compute_sudo=False`
+            # It wasn't happenning only because computed stored field where `compute_sudo=True` by default,
+            # and therefore the read of old values in the `_compute_field_value` of `base_automation` was always working.
+            # I see two solutions:
+            # - Either we do not put back the field in the `tocompute` queue.
+            #   I think it was added in the past to handle the recomputation of single record when the batch recomputation failed,
+            #   in `def recompute`:
+            #   try:
+            #       apply_except_missing(self.compute_value, recs)
+            #   except AccessError:
+            #       self.compute_value(record)
+            # but it seems no longer used nowadays, and runbot got green with this removal
+            # - Either we do not flush when invalidating the record in the `_make_access_error`:
+            #   `records.invalidate_recordset(flush=False)`
+            # Traceback:
+            #   File "/home/odoo/src/odoo/master/addons/base_automation/models/base_automation.py", line 630, in _compute_field_value
+            #     for old_vals in (records.read([f.name for f in stored_fields]))
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3495, in read
+            #     self._origin.fetch(fields)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3785, in fetch
+            #     raise self.env['ir.rule']._make_access_error('read', forbidden)
+            #   File "/home/odoo/src/odoo/master/odoo/addons/base/models/ir_rule.py", line 210, in _make_access_error
+            #     records.invalidate_recordset(flush=False)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6583, in invalidate_recordset
+            #     self.flush_recordset(fnames)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6233, in flush_recordset
+            #     self._recompute_recordset(fnames)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6765, in _recompute_recordset
+            #     self._recompute_field(field, self._ids)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6779, in _recompute_field
+            #     field.recompute(records)
+            #   File "/home/odoo/src/odoo/master/odoo/fields.py", line 1395, in recompute
+            #     self.compute_value(record)
+            #   File "/home/odoo/src/odoo/master/odoo/fields.py", line 1415, in compute_value
+            #     records._compute_field_value(self)
+            #   File "/home/odoo/src/odoo/master/addons/base_automation/models/base_automation.py", line 630, in _compute_field_value
+            #     for old_vals in (records.read([f.name for f in stored_fields]))
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3495, in read
+            #     self._origin.fetch(fields)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3785, in fetch
+            #     raise self.env['ir.rule']._make_access_error('read', forbidden)
+            #   File "/home/odoo/src/odoo/master/odoo/addons/base/models/ir_rule.py", line 210, in _make_access_error
+            #     records.invalidate_recordset(flush=False)
             records._compute_field_value(self)
 
     def determine_inverse(self, records):

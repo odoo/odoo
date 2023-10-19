@@ -160,6 +160,7 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
+        # --test-tags .test_mail_composer_w_template
         compute='_compute_partner_ids', compute_sudo=True, readonly=False, store=True)
     # sending
     auto_delete = fields.Boolean(

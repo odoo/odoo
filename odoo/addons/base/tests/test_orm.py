@@ -240,6 +240,9 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
+            # base.group_user required to be able to read user attributes, e.g. user.signature
+            # could be also base.group_portal, base.group_public, as long as the user can read itself
+            # but `base.group_partner_manager` alone is not enough.
             'groups_id': [Command.set([self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
