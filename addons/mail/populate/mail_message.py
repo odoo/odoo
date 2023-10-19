@@ -20,6 +20,7 @@ class Message(models.Model):
         ]
 
     def _populate(self, size):
+        res = super()._populate(size)
         partner = self.env.ref("base.user_admin").partner_id
         # create 100 in the chatter of the res.partner admin
         messages = []
@@ -33,5 +34,4 @@ class Message(models.Model):
                     "author_id": partner.id,
                 }
             )
-        self.env["mail.message"].create(messages)
-        return super()._populate(size)
+        return res + self.env["mail.message"].create(messages)
