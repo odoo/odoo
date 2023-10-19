@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
 
 const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
 
@@ -10,6 +11,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
+            run: () => {
+                // make chat bot faster for this tour
+                const chatbotService = odoo.__WOWL_DEBUG__.root.env.services["im_livechat.chatbot"];
+                chatbotService.debouncedProcessUserAnswer = debounce(
+                    chatbotService._processUserAnswer.bind(chatbotService),
+                    500
+                );
+            },
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
@@ -123,7 +132,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("Ok bye!"),
-            timeout: 15000, // multiline step, so we need to wait a bit longer
             run: () => {}, // last step is displayed
         },
         {
@@ -198,7 +206,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             // wait for chatbot script to finish.
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
-            timeout: 15000, // multiline step, so we need to wait a bit longer
             run() {},
         },
     ],
