@@ -144,8 +144,7 @@ class Lead(models.Model):
         'Assignment Date', compute='_compute_date_open', readonly=True, store=True)
     day_open = fields.Float('Days to Assign', compute='_compute_day_open', store=True)
     day_close = fields.Float('Days to Close', compute='_compute_day_close', store=True)
-    date_last_stage_update = fields.Datetime(
-        'Last Stage Update', compute='_compute_date_last_stage_update', index=True, readonly=True, store=True)
+    date_last_stage_update = fields.Datetime('Last Stage Update', index=True, readonly=True)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
@@ -268,11 +267,6 @@ class Lead(models.Model):
     def _compute_date_open(self):
         for lead in self:
             lead.date_open = fields.Datetime.now() if lead.user_id else False
-
-    @api.depends('stage_id')
-    def _compute_date_last_stage_update(self):
-        for lead in self:
-            lead.date_last_stage_update = fields.Datetime.now()
 
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
@@ -587,6 +581,7 @@ class Lead(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            vals['date_last_stage_update'] = fields.Datetime.now()
             if vals.get('website'):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super(Lead, self).create(vals_list)
@@ -604,6 +599,7 @@ class Lead(models.Model):
         stage_updated, stage_is_won = vals.get('stage_id'), False
         # stage change: update date_last_stage_update
         if stage_updated:
+            vals['date_last_stage_update'] = fields.Datetime.now()
             stage = self.env['crm.stage'].browse(vals['stage_id'])
             if stage.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})

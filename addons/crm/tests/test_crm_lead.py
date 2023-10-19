@@ -489,6 +489,24 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(self.contact_company_1.phone, 'alsobroken')
 
     @users('user_sales_manager')
+    def test_crm_last_stage_update_time(self):
+        """ Test date_last_stage_update update only when stage will change not user_id """
+        now = datetime(2023, 11, 6, 0, 0, 0)
+        with freeze_time(now):
+            lead = self.env['crm.lead'].create({
+                'name': 'Lead_1',
+                'type': 'lead',
+                'email_from': 'test@company2.com',
+            })
+
+        updated_time = datetime(2023, 11, 23, 0, 0, 0)
+        with freeze_time(updated_time):
+            lead.write({"user_id": self.user_sales_salesman.id})
+            self.assertEqual(lead.date_last_stage_update, now)
+            lead.action_set_won()
+            self.assertEqual(lead.date_last_stage_update, updated_time)
+
+    @users('user_sales_manager')
     def test_crm_team_alias(self):
         new_team = self.env['crm.team'].create({
             'name': 'TestAlias',
