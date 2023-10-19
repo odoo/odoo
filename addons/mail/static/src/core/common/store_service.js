@@ -275,16 +275,7 @@ export function makeStore(env) {
                     for (const [name, fn] of Model.__computes__.entries()) {
                         let boundFn;
                         const proxy2 = reactive(proxy, () => boundFn());
-                        boundFn = () => {
-                            if (Record.__atomic__ > 0) {
-                                Record.__atomics__.set(
-                                    `compute.${this.localId}.${name}`,
-                                    () => (proxy[name] = fn.call(proxy2))
-                                );
-                            } else {
-                                proxy[name] = fn.call(proxy2);
-                            }
-                        };
+                        boundFn = () => (proxy[name] = fn.call(proxy2));
                         this.__computes__.set(name, boundFn);
                     }
                     return proxy;
