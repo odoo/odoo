@@ -46,7 +46,7 @@ export const websiteService = {
 
         const context = reactive({
             showNewContentModal: false,
-            showAceEditor: false,
+            showResourceEditor: false,
             edition: false,
             isPublicRootReady: false,
             snippetsLoaded: false,

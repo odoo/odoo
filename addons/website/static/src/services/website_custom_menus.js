@@ -90,7 +90,7 @@ registry.category('website_custom_menus').add('website.menu_optimize_seo', {
         && !!env.services.website.currentWebsite.metadata.canOptimizeSeo,
 });
 registry.category('website_custom_menus').add('website.menu_ace_editor', {
-    openWidget: (services) => services.website.context.showAceEditor = true,
+    openWidget: (services) => services.website.context.showResourceEditor = true,
     isDisplayed: (env) => env.services.website.currentWebsite
         && env.services.website.currentWebsite.metadata.viewXmlid
         && !env.services.ui.isSmall,

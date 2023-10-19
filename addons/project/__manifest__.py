@@ -191,7 +191,6 @@
             'web_editor/static/src/js/common/**/*',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
             'web_editor/static/src/js/wysiwyg/fonts.js',
-            'web_editor/static/src/xml/ace.xml',
 
             'web_editor/static/src/components/**/*',
             'web_editor/static/src/scss/web_editor.common.scss',

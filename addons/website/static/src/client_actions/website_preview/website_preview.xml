@@ -37,7 +37,9 @@
         <WebsiteTranslator t-if="websiteContext.translation"
             reloadIframe.bind="this.reloadIframe"
             removeWelcomeMessage.bind="this.removeWelcomeMessage"/>
-        <AceEditorWrapper t-if="websiteContext.showAceEditor"/>
+        <ResizablePanel t-if="websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper position-fixed'" onResize.bind="_onResourceEditorResize" initialWidth="aceEditorWidth">
+            <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
+        </ResizablePanel>
     </div>
 </t>
 

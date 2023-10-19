@@ -6,12 +6,11 @@ import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
 /**
- * Represents the warning overlay that appears when the user opens the Ace
- * editor. It provides options to hide the warning, inject code, and not show
- * the warning again.
+ * Represents the warning overlay that appears when the user opens the ResourceEditor
+ * It provides options to hide the warning, inject code, and not show the warning again.
  */
-export class AceEditorWarningOverlay extends Component {
-    static template = "website.AceEditorWarningOverlay";
+export class ResourceEditorWarningOverlay extends Component {
+    static template = "website.ResourceEditorWarningOverlay";
 
     /**
      * Initializes the component by setting up the necessary services and state.
@@ -30,7 +29,7 @@ export class AceEditorWarningOverlay extends Component {
      * Closes the Ace editor and updates the website context to hide it.
      */
     onCloseEditor() {
-        this.website.context.showAceEditor = false;
+        this.website.context.showResourceEditor = false;
     }
 
     /**
