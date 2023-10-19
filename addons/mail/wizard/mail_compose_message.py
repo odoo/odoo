@@ -160,7 +160,7 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
-        compute='_compute_partner_ids', readonly=False, store=True)
+        compute='_compute_partner_ids', compute_sudo=True, readonly=False, store=True)
     # sending
     auto_delete = fields.Boolean(
         'Delete Emails',

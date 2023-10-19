@@ -6707,7 +6707,9 @@ class BaseModel(metaclass=MetaModel):
             if field.compute and field.store:
                 if field.recursive:
                     recursively_marked = self.env.not_to_compute(field, records)
-                self.env.add_to_compute(field, records)
+                # Reset the original env, to remove `.sudo().with_context(active_test=False)`
+                # added above when computing `to_compute` and calling `_modified_triggers`
+                self.env.add_to_compute(field, records.with_env(self.env))
             else:
                 # Don't force the recomputation of compute fields which are
                 # not stored as this is not really necessary.

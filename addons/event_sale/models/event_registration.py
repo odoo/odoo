@@ -16,7 +16,8 @@ class EventRegistration(models.Model):
             ('sold', 'Sold'),
             ('free', 'Free'),
         ], compute="_compute_registration_status", compute_sudo=True, store=True)
-    state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False)
+    state = fields.Selection(default=None, compute="_compute_registration_status", compute_sudo=True,
+        store=True, readonly=False)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,

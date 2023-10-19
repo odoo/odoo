@@ -1399,7 +1399,7 @@ class QuantPackage(models.Model):
         index=True, readonly=True, store=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_owner_id', search='_search_owner',
-        readonly=True, compute_sudo=True)
+        readonly=True)
     package_use = fields.Selection([
         ('disposable', 'Disposable Box'),
         ('reusable', 'Reusable Box'),

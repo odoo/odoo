@@ -51,7 +51,7 @@ class Event(models.Model):
                         for attribute_name in self.env['event.type.booth']._get_event_booth_fields_whitelist()
                     }) for line in event.event_type_id.event_type_booth_ids
                 ]
-            event.event_booth_ids = command
+            event.sudo().event_booth_ids = command
 
     def _get_booth_stat_count(self):
         elements = self.env['event.booth'].sudo()._read_group(

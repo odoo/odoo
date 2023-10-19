@@ -117,13 +117,14 @@ class Lead(models.Model):
         help='UX: Limit to lead company or all if no company')
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
-        compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True)
+        compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True, compute_sudo=True)
     lead_properties = fields.Properties(
         'Properties', definition='team_id.lead_properties_definition',
+        compute_sudo=True,
         copy=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
-        compute='_compute_company_id', readonly=False, store=True)
+        compute='_compute_company_id', readonly=False, store=True, compute_sudo=True)
     referred = fields.Char('Referred By')
     description = fields.Html('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
@@ -228,8 +229,8 @@ class Lead(models.Model):
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', group_operator="avg", copy=False,
-        compute='_compute_probabilities', readonly=False, store=True)
-    automated_probability = fields.Float('Automated Probability', compute='_compute_probabilities', readonly=True, store=True)
+        compute='_compute_probabilities', readonly=False, store=True, compute_sudo=True)
+    automated_probability = fields.Float('Automated Probability', compute='_compute_probabilities', readonly=True, store=True, compute_sudo=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     # Won/Lost
     lost_reason_id = fields.Many2one(

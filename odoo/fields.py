@@ -445,7 +445,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # mode if stored, not copied (unless stored and explicitly not
             # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
-            attrs['compute_sudo'] = attrs.get('compute_sudo', store)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', False)
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
@@ -1350,12 +1350,22 @@ class Field(MetaField('DummyField', (object,), {})):
                 for f in records.pool.field_computed[self]:
                     records.env.remove_to_compute(f, missing)
 
+        def apply_compute_env(records, env):
+            context = dict(records.env.context)
+            if 'allowed_company_ids' in env.context:
+                context['allowed_company_ids'] = env.context['allowed_company_ids']
+            else:
+                context.pop('allowed_company_ids', None)
+            records = records.with_env(records.env(user=env.uid, su=env.su, context=context))
+            return records
+
         if self.recursive:
             # recursive computed fields are computed record by record, in order
             # to recursively handle dependencies inside records
             def recursive_compute(records):
                 for record in records:
                     if record.id in to_compute_ids:
+                        record = apply_compute_env(record, to_compute_ids[record.id])
                         self.compute_value(record)
 
             apply_except_missing(recursive_compute, records)
@@ -1363,7 +1373,20 @@ class Field(MetaField('DummyField', (object,), {})):
 
         for record in records:
             if record.id in to_compute_ids:
-                ids = expand_ids(record.id, to_compute_ids)
+                record = apply_compute_env(record, to_compute_ids[record.id])
+                ids = expand_ids(record.id, (
+                    id_
+                    for id_, env in to_compute_ids.items()
+                    if (
+                        env.uid,
+                        env.su,
+                        env.context.get('allowed_company_ids'),
+                    ) == (
+                        record.env.uid,
+                        record.env.su,
+                        record.env.context.get('allowed_company_ids'),
+                    )
+                ))
                 recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
                 try:
                     apply_except_missing(self.compute_value, recs)
@@ -1386,14 +1409,8 @@ class Field(MetaField('DummyField', (object,), {})):
             if field.store:
                 env.remove_to_compute(field, records)
 
-        try:
-            with records.env.protecting(fields, records):
-                records._compute_field_value(self)
-        except Exception:
-            for field in fields:
-                if field.store:
-                    env.add_to_compute(field, records)
-            raise
+        with records.env.protecting(fields, records):
+            records._compute_field_value(self)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """

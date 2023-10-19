@@ -122,26 +122,26 @@ class TestFields(TransactionCaseWithUserDemo):
 
         field = self.env['test_new_api.message']._fields['name']
         self.assertTrue(field.store)
-        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.compute_sudo)
         self.assertTrue(field.readonly)
         self.assertFalse(field.copy)
 
         # stored editable computed fields are copied according to their type
         field = self.env['test_new_api.compute.onchange']._fields['baz']
         self.assertTrue(field.store)
-        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.compute_sudo)
         self.assertFalse(field.readonly)
         self.assertTrue(field.copy)
 
         field = self.env['test_new_api.compute.onchange']._fields['line_ids']
         self.assertTrue(field.store)
-        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.compute_sudo)
         self.assertFalse(field.readonly)
         self.assertFalse(field.copy)  # like a regular one2many field
 
         field = self.env['test_new_api.compute.onchange']._fields['tag_ids']
         self.assertTrue(field.store)
-        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.compute_sudo)
         self.assertFalse(field.readonly)
         self.assertTrue(field.copy)  # like a regular many2many field
 
@@ -349,6 +349,57 @@ class TestFields(TransactionCaseWithUserDemo):
             ],
         })
         check_stored(discussion3)
+
+    def test_11_stored_env(self):
+        def assertComputeEnv(user, su, company_ids):
+            with self.assertLogs('precompute_setter') as logs:
+                # We flush on purpose with an env forced to the admin, as sudo, and with the main company.
+                # Despite the flush happens as admin,
+                # as the fields must be recomputed following a change of another user (e.g. demo),
+                # they must be recomputed
+                # - using the user who triggered the change
+                # - using the same sudo flag as when the change was triggered
+                # - using the same allowed companies as when the change was triggered
+                self.env['test_new_api.compute.store'].with_user(
+                    self.env.ref('base.user_admin')
+                ).sudo().with_company(
+                    self.env.ref('base.main_company')
+                ).flush_model()
+            self.assertIn(f"stored, uid: {user.id}, su: {su}, companies: {company_ids}", logs.output[0])
+            self.assertIn(f"stored sudo, uid: {user.id}, su: True, companies: {company_ids}", logs.output[1])
+
+        main_company = self.env.company
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.user_demo
+
+        record = self.env['test_new_api.compute.store'].create({})
+        assertComputeEnv(self.env.user, self.env.su, [main_company.id])
+
+        # .with_user(...)
+        record.with_user(user_demo).name = 'foo'
+        assertComputeEnv(self.user_demo, False, [main_company.id])
+
+        # .with_user(...).sudo()
+        record.with_user(user_demo).sudo().name = 'foo'
+        assertComputeEnv(user_demo, True, [main_company.id])
+
+        # .with_user(...).sudo().with_company(...)
+        company_a = self.env['res.company'].create({'name': 'A'})
+        record.with_user(user_demo).sudo().with_company(company_a).name = 'foo'
+        assertComputeEnv(user_demo, True, [company_a.id])
+
+        # .with_user(...).sudo().with_context(allowed_company_ids=...)
+        company_b = self.env['res.company'].create({'name': 'B'})
+        record.with_user(user_demo).sudo().with_context(
+            allowed_company_ids=[company_a.id, company_b.id],
+        ).name = 'foo'
+        assertComputeEnv(user_demo, True, [company_a.id, company_b.id])
+
+        # .with_user(user_a).name =
+        # .with_user(user_b).name =
+        record.with_user(user_demo).name = 'foo'
+        record.with_user(user_admin).name = 'foo'
+        assertComputeEnv(user_admin, False, [main_company.id])
 
     def test_11_stored_protected(self):
         """ test protection against recomputation """

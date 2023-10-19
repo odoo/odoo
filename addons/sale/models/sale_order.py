@@ -223,6 +223,7 @@ class SaleOrder(models.Model):
         selection=INVOICE_STATUS,
         string="Invoice Status",
         compute='_compute_invoice_status',
+        compute_sudo=True,
         store=True)
 
     # Payment fields

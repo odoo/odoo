@@ -74,8 +74,8 @@ class Applicant(models.Model):
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
-    day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
-    day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
+    day_open = fields.Float(compute='_compute_day', string="Days to Open")
+    day_close = fields.Float(compute='_compute_day', string="Days to Close")
     delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)

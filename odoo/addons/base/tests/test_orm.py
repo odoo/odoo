@@ -240,7 +240,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
-            'groups_id': [Command.set([self.ref('base.group_partner_manager')])],
+            'groups_id': [Command.set([self.ref('base.group_user'), self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
         self.env['ir.property'].with_user(user)._set_multi("ref", "res.partner", {p1.id: "Nain poilu"})

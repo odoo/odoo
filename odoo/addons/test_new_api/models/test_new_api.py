@@ -504,7 +504,7 @@ class Move(models.Model):
     _description = 'Move'
 
     line_ids = fields.One2many('test_new_api.move_line', 'move_id', domain=[('visible', '=', True)])
-    quantity = fields.Integer(compute='_compute_quantity', store=True)
+    quantity = fields.Integer(compute='_compute_quantity', store=True, compute_sudo=True)
     tag_id = fields.Many2one('test_new_api.multi.tag')
     tag_name = fields.Char(related='tag_id.name')
     tag_repeat = fields.Integer()
@@ -836,6 +836,27 @@ class ComputeOne2manyLine(models.Model):
     name = fields.Char()
     count = fields.Integer(default=1)
     container_id = fields.Many2one('test_new_api.one2many', required=True)
+
+
+class ComputeStore(models.Model):
+    _name = 'test_new_api.compute.store'
+    _description = "A model with computed stored fields"
+
+    name = fields.Char()
+    computed_stored = fields.Char(compute='_compute_computed_stored', store=True)
+    computed_stored_sudo = fields.Char(compute='_compute_computed_stored_sudo', store=True, compute_sudo=True)
+
+    @api.depends('name')
+    def _compute_computed_stored(self):
+        _logger.info("stored, uid: %s, su: %s, companies: %s", self.env.uid, self.env.su, self.env.companies.ids)
+        for record in self:
+            record.computed_stored = record.name
+
+    @api.depends('name')
+    def _compute_computed_stored_sudo(self):
+        _logger.info("stored sudo, uid: %s, su: %s, companies: %s", self.env.uid, self.env.su, self.env.companies.ids)
+        for record in self:
+            record.computed_stored = record.name
 
 
 class ModelBinary(models.Model):

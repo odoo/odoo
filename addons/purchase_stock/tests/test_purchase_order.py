@@ -169,7 +169,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         procurement quantities.
         """
         # Change the code of the picking type delivery
-        self.env['stock.picking.type'].search([('code', '=', 'outgoing')]).write({'code': 'internal'})
+        self.env['stock.picking.type'].search([('company_id', '=', self.env.company.id), ('code', '=', 'outgoing')]).write({'code': 'internal'})
 
         # Sell and deliver 10 units
         item1 = self.product_id_1

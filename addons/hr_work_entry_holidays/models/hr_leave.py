@@ -29,7 +29,7 @@ class HrLeave(models.Model):
             # contract start- and end-dates are just dates (and not datetimes)
             # these dates are comparable.
             if leave.employee_id:
-                contracts = self.env['hr.contract'].search([
+                contracts = self.env['hr.contract'].sudo().search([
                     '|', ('state', 'in', ['open', 'close']),
                          '&', ('state', '=', 'draft'),
                               ('kanban_state', '=', 'done'),
