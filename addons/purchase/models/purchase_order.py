@@ -363,7 +363,7 @@ class PurchaseOrder(models.Model):
                     {'url': self.get_update_url(), 'title': _('Update Dates')},
                 ])
             else:
-                access_opt['title'] = _('Confirm')
+                access_opt['title'] = _('View Quotation') if self.state in ('draft', 'sent') else _('View Order')
                 access_opt['url'] = self.get_confirm_url(confirm_type='reception')
 
         return groups
