@@ -2,8 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="spreadsheet.PublicReadonlySpreadsheet">
-        <div t-if="showFilterButton" t-on-click="toggleGlobalFilters" class="o-public-spreadsheet-filter-button position-absolute bg-white fw-bold my-0 mx-3 p-2 fs-6 rounded">
-            <i class="fa fa-fw fa-filter me-1"/>Show Filters
+        <div t-if="showFilterButton"
+            t-on-click="toggleGlobalFilters"
+            class="o-public-spreadsheet-filter-button position-absolute bg-white fw-bold my-0 mx-3 p-2 fs-6 rounded">
+            <t t-call="o-spreadsheet-Icon.GLOBAL_FILTERS"/>
+            <span class="ps-1">Show Filters</span>
         </div>
         <div class="o-public-spreadsheet-filters d-flex flex-column flex-nowrap overflow-y-scroll p-3" t-if="state.isFilterShown">
             <div class="o-public-spreadsheet-filters-title d-flex justify-content-between align-items-center">
