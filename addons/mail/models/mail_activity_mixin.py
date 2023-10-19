@@ -62,7 +62,7 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id', readonly=False,
+        compute='_compute_activity_user_id', readonly=True,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
@@ -110,6 +110,11 @@ class MailActivityMixin(models.AbstractModel):
                     exception_activity_type_id = activity_type_id
             record.activity_exception_decoration = exception_activity_type_id and exception_activity_type_id.decoration_type
             record.activity_exception_icon = exception_activity_type_id and exception_activity_type_id.icon
+
+    @api.depends('activity_ids.user_id')
+    def _compute_activity_user_id(self):
+        for record in self:
+            record.activity_user_id = record.activity_ids[0].user_id if record.activity_ids else False
 
     def _search_activity_exception_decoration(self, operator, operand):
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
@@ -204,7 +209,7 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
-        return [('activity_ids.user_id', operator, operand)]
+        return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
     def _search_activity_type_id(self, operator, operand):

@@ -19,6 +19,7 @@ class Project(models.Model):
     _inherit = ['portal.mixin', 'mail.alias.mixin', 'rating.parent.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
+    _systray_view = 'activity'
 
     def _compute_attached_docs_count(self):
         self.env.cr.execute(

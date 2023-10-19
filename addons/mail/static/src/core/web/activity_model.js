@@ -13,6 +13,7 @@ import { assignDefined } from "@mail/utils/common/misc";
  * @property {string} create_date
  * @property {[number, string]} create_uid
  * @property {string} date_deadline
+ * @property {string} date_done
  * @property {string} display_name
  * @property {boolean} has_recommended_activities
  * @property {string} icon
@@ -66,12 +67,16 @@ export class Activity extends Record {
         return activity;
     }
 
+    /** @type {boolean} */
+    active;
     /** @type {string} */
     activity_category;
     /** @type {[number, string]} */
     activity_type_id;
     /** @type {string|false} */
     activity_decoration;
+    /** @type {Object[]} */
+    attachment_ids;
     /** @type {boolean} */
     can_write;
     /** @type {'suggest'|'trigger'} */
@@ -82,6 +87,8 @@ export class Activity extends Record {
     create_uid;
     /** @type {string} */
     date_deadline;
+    /** @type {string} */
+    date_done;
     /** @type {string} */
     display_name;
     /** @type {boolean} */

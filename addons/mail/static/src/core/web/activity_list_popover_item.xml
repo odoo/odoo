@@ -33,8 +33,17 @@
                         <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
                         <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
                     </t>
-                    <small t-if="props.activity.state !== 'today'" class="fw-bold" t-att-title="props.activity.dateDeadline" t-esc="delayLabel"/>
+                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="dateDeadlineFormatted" t-esc="delayLabel"/>
+                    <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="dateDoneFormatted"/>
                 </div>
+            </div>
+            <div t-if="props.activity.attachment_ids?.length" class="mx-5">
+                <t t-foreach="props.activity.attachment_ids" t-as="attachment" t-key="attachment.id">
+                    <a t-attf-href="/web/content/#{attachment.id}?download=true"
+                       t-on-click.stop="" t-out="attachment.name"
+                       class="d-inline-block text-truncate" style="max-width: 120px;"/>
+                    <br t-if="!attachment_last"/>
+                </t>
             </div>
             <ActivityMarkAsDone t-if="state.hasMarkDoneView" activity="props.activity" close="closeMarkAsDone" onClickDoneAndScheduleNext="props.onClickDoneAndScheduleNext" reload="props.onActivityChanged"/>
             <div t-if="props.activity.mail_template_ids.length > 0" class="mx-3 mt-2">

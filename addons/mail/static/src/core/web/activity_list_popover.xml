@@ -28,6 +28,14 @@
                     </div>
                     <ActivityListPopoverItem t-foreach="plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged" onClickEditActivityButton="props.close" onClickDoneAndScheduleNext="props.close"/>
                 </t>
+                <t t-if="doneActivities.length > 0">
+                    <div class="o-mail-ActivityListPopover-done d-flex bg-100 py-2 border-bottom">
+                        <span class="fw-bold mx-3">Done</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-secondary mx-3 align-self-center" t-esc="doneActivities.length"/>
+                    </div>
+                    <ActivityListPopoverItem t-foreach="doneActivities" t-as="activity" t-key="activity.id" activity="activity"/>
+                </t>
             </div>
             <button class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
                 <t t-if="props.resIds"><i class="fa fa-plus fa-fw"/><strong>Schedule an activity on selected records</strong></t>

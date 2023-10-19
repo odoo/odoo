@@ -4183,7 +4183,7 @@ class MailThread(models.AbstractModel):
         except AccessError:
             pass
         if 'activities' in request_list:
-            res['activities'] = self.activity_ids.activity_format()
+            res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
         if 'followers' in request_list:
