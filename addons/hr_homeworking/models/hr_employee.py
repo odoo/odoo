@@ -77,10 +77,12 @@ class HrEmployeeBase(models.AbstractModel):
     def _get_worklocation(self, start_date, end_date):
         work_locations_by_employee = defaultdict(dict)
         for employee in self:
-            work_locations_by_employee[employee.id]["user_id"] = employee.user_id.id
-            work_locations_by_employee[employee.id]["employee_id"] = employee.id
-            work_locations_by_employee[employee.id]["partner_id"] = employee.user_partner_id.id
-            work_locations_by_employee[employee.id]["employee_name"] = employee.name
+            work_locations_by_employee[employee.id].update({
+                "user_id": employee.user_id.id,
+                "employee_id": employee.id,
+                "partner_id": employee.user_partner_id.id or employee.work_contact_id.id,
+                "employee_name": employee.name
+            })
 
             for day in DAYS:
                 work_locations_by_employee[employee.id][day] = {
