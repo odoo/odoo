@@ -4673,16 +4673,25 @@ export class OdooEditor extends EventTarget {
             !closestElement(selection.anchorNode).closest('a') &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
-            const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
-            const textNodeSplitted = textSliced.split(/\s/);
-            const potentialUrl = textNodeSplitted.pop();
+            let node = selection.anchorNode;
+            const textBeforeCursor = node.textContent.slice(0, selection.anchorOffset);
+            // Backwards search for space.
+            let space = [...textBeforeCursor.matchAll(/\s/g)].pop();
+            // Include adjacent previous text nodes in the search if no
+            // space was found.
+            while (!space && node.previousSibling?.nodeType === Node.TEXT_NODE) {
+                node = node.previousSibling;
+                space = [...node.textContent.matchAll(/\s/g)].pop();
+            }
+            const range = this.document.createRange();
+            // Use beginning of the last searched text node as word
+            // boundary if no space was found.
+            range.setStart(node, (space && space.index + 1) || 0);
+            range.setEnd(selection.anchorNode, selection.anchorOffset);
+            const potentialUrl = range.toString();
             const match = potentialUrl.match(URL_REGEX);
-
             if (match && match[0] === potentialUrl && !EMAIL_REGEX.test(potentialUrl)) {
                 const url = match[2] ? match[0] : 'http://' + match[0];
-                const range = this.document.createRange();
-                range.setStart(selection.anchorNode, selection.anchorOffset - match[0].length);
-                range.setEnd(selection.anchorNode, selection.anchorOffset);
                 const link = this._createLink(range.extractContents().textContent, url);
                 range.insertNode(link);
                 const container = link.parentElement;
