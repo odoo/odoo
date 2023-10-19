@@ -4,6 +4,7 @@ import uuid
 from datetime import timedelta
 from odoo import http, fields
 from odoo.http import request
+from odoo.tools import float_round
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 
 class PosSelfOrderController(http.Controller):
@@ -202,57 +203,57 @@ class PosSelfOrderController(http.Controller):
         appended_uuid = []
         newLines = []
         pricelist = pos_config.pricelist_id
-        if take_away and pos_config.self_ordering_mode == 'kiosk':
-            config_fiscal_pos = pos_config.self_ordering_alternative_fp_id
-        else:
-            config_fiscal_pos = pos_config.default_fiscal_position_id
+        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
+
+        combo_line_ids = [line['combo_line_id'] for line in lines if line.get('combo_line_id')]
+        combo_lines = pos_config.env['pos.combo.line'].search([('id', 'in', combo_line_ids)])
+        attribute_value_ids = sum([line.get('attribute_value_ids', []) for line in lines], [])
+        fetched_attributes = pos_config.env['product.template.attribute.value'].search([('id', 'in', attribute_value_ids)])
+
+        fiscal_pos = pos_config.default_fiscal_position_id
+
+        if take_away and pos_config.self_ordering_alternative_fp_id:
+            fiscal_pos = pos_config.self_ordering_alternative_fp_id
 
         for line in lines:
             if line.get('uuid') in appended_uuid or not line.get('product_id'):
                 continue
 
+            line_qty = line.get('qty')
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
-            # todo take into account the price extra
-            price_unit = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
-            selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
+            lst_price = pricelist._get_product_price(product, quantity=line_qty) if pricelist else product.lst_price
 
-            # parent_product_taxe_ids = None
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
+            pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
+
             if len(children) > 0:
-                total_price = 0
-                unit_price_by_id = {}
-                for child in children:
-                    product = pos_config.env['product.product'].browse(int(child.get('product_id')))
-                    child_selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
-                    tax_results = child_selected_account_tax.compute_all(
-                        pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price,
-                        pos_config.currency_id,
-                        child.get('qty'),
-                        product,
-                    )
-                    unit_price_by_id[child['uuid']] = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
-                    total_price += tax_results.get('total_included') if pos_config.iface_tax_included == 'total' else tax_results.get('total_excluded')
-                ratio = (price_unit * line.get('qty') / total_price)
-                for child in children:
-                    child_line_combo = pos_config.env['pos.combo'].browse(int(child.get('combo_id')))
-                    child_line_combo_line = child_line_combo.combo_line_ids.filtered(lambda l: l.product_id.id == child.get('product_id'))[0]
-                    child_product = pos_config.env["product.product"].browse(int(child.get('product_id')))
-                    child_price_unit = ratio * unit_price_by_id[child['uuid']] + child_line_combo_line.combo_price
-                    child_selected_account_tax = config_fiscal_pos.map_tax(child_product.taxes_id) if config_fiscal_pos else child_product.taxes_id
-                    child_tax_results = child_selected_account_tax.compute_all(
-                        child_price_unit,
-                        pos_config.currency_id,
-                        child.get('qty'),
-                        child_product,
-                    )
+                original_total = sum(pos_combo_lines.mapped("combo_id.base_price"))
+                remaining_total = lst_price
+                factor = lst_price / original_total
+
+                for i, child in enumerate(children):
+                    child_product = pos_config.env['product.product'].browse(int(child.get('product_id')))
+                    pos_combo_line = pos_combo_lines.browse(child.get('combo_line_id'))
+                    price_unit = float_round(pos_combo_line.combo_id.base_price * factor, precision_digits=sale_price_digits)
+                    remaining_total -= price_unit
+                    if i == len(children) - 1:
+                        price_unit += remaining_total
+
+                    selected_attributes = fetched_attributes.browse(child.get('attribute_value_ids', []))
+                    price_unit += pos_combo_line.combo_price + sum([attr.price_extra for attr in selected_attributes])
+
+                    price_unit_fp = child_product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
+                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
+                    pdetails = taxes.compute_all(price_unit_fp, pos_config.currency_id, line_qty, child_product)
+
                     newLines.append({
-                        'price_unit': child_price_unit,
-                        'price_subtotal': child_tax_results.get('total_excluded'),
-                        'price_subtotal_incl': child_tax_results.get('total_included'),
+                        'price_unit': price_unit_fp,
+                        'price_subtotal': pdetails.get('total_excluded'),
+                        'price_subtotal_incl': pdetails.get('total_included'),
                         'custom_attribute_value_ids': [[0, 0, cAttr] for cAttr in child.get('custom_attribute_value_ids')] if child.get('custom_attribute_value_ids') else [],
                         'id': child.get('id'),
                         'order_id': pos_order_id,
-                        'tax_ids': product.taxes_id,
+                        'tax_ids': child_product.taxes_id,
                         'uuid': child.get('uuid'),
                         'product_id': child.get('product_id'),
                         'qty': child.get('qty'),
@@ -263,25 +264,23 @@ class PosSelfOrderController(http.Controller):
                         'combo_id': child.get('combo_id'),
                     })
                     appended_uuid.append(child.get('uuid'))
-                price_unit = 0
 
-            tax_results = selected_account_tax.compute_all(
-                price_unit,
-                pos_config.currency_id,
-                line.get('qty'),
-                product,
-            )
+                lst_price = 0
+
+            price_unit_fp = product._get_price_unit_after_fp(lst_price, pos_config.currency_id, fiscal_pos)
+            taxes_after_fp = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
+            pdetails = taxes_after_fp.compute_all(price_unit_fp, pos_config.currency_id, line_qty, product)
 
             newLines.append({
-                'price_unit': price_unit,
-                'price_subtotal': tax_results.get('total_excluded'),
-                'price_subtotal_incl': tax_results.get('total_included'),
+                'price_unit': price_unit_fp,
+                'price_subtotal': pdetails.get('total_excluded'),
+                'price_subtotal_incl': pdetails.get('total_included'),
                 'id': line.get('id'),
                 'order_id': pos_order_id,
                 'tax_ids': product.taxes_id,
                 'uuid': line.get('uuid'),
                 'product_id': line.get('product_id'),
-                'qty': line.get('qty'),
+                'qty': line_qty,
                 'customer_note': line.get('customer_note'),
                 'attribute_value_ids': line.get('attribute_value_ids') or [],
                 'custom_attribute_value_ids': [[0, 0, cAttr] for cAttr in line.get('custom_attribute_value_ids')] if line.get('custom_attribute_value_ids') else [],

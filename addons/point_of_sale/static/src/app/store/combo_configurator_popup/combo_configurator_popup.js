@@ -17,15 +17,6 @@ export class ComboConfiguratorPopup extends AbstractAwaitablePopup {
         });
     }
 
-    getTotalPrice() {
-        const selectedComponents = this.getPayload();
-        const extraPrice = selectedComponents.reduce((acc, x) => {
-            const product = this.pos.db.product_by_id[x.product_id[0]];
-            return acc + product.get_display_price({ price: x.combo_price });
-        }, 0);
-        return this.props.product.lst_price + extraPrice;
-    }
-
     areAllCombosSelected() {
         return Object.values(this.state.combo).every((x) => Boolean(x));
     }

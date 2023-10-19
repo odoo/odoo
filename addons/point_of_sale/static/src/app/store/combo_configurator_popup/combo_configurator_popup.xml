@@ -34,16 +34,20 @@
                 </div>
             </main>
             <footer class="footer footer-flex modal-footer">
+                <t t-set="_allSelected" t-value="areAllCombosSelected()" />
                 <button class="button highlight confirm btn btn-lg btn-primary"
-                    t-att-disabled="!areAllCombosSelected()"
+                    t-att-disabled="!_allSelected"
                     t-on-click="confirm">
                         Add to order
                 </button>
                 <button class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
                         Discard
                 </button>
-                <div class="ms-auto total-amount">
-                    Total <t t-esc="env.utils.formatCurrency(getTotalPrice())"/>
+                <div class="ms-auto">
+                    <!-- TODO: Restore the feature the shows the price of the selection. -->
+                    <t t-if="!_allSelected">
+                        Complete the selection to proceed
+                    </t>
                 </div>
             </footer>
         </div>
