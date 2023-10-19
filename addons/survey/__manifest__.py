@@ -80,7 +80,6 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/xml/survey_breadcrumb_templates.xml',
         ],
         'survey.survey_user_input_session_assets': [
-            'survey/static/src/js/libs/chartjs-plugin-datalabels.js',
             'survey/static/src/js/survey_session_colors.js',
             'survey/static/src/js/survey_session_chart.js',
             'survey/static/src/js/survey_session_text_answers.js',

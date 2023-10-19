@@ -1,5 +1,7 @@
 /** @odoo-module **/
+/* global ChartDataLabels */
 
+import { loadJS } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
 
@@ -20,6 +22,10 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self._setupChart();
         });
+    },
+
+    willStart: async function () {
+        await loadJS("/survey/static/src/js/libs/chartjs-plugin-datalabels.js");
     },
 
     //--------------------------------------------------------------------------
@@ -167,7 +173,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     }
                 }
             },
-            plugins: [{
+            plugins: [ChartDataLabels, {
                 /**
                  * The way it works is each label is an array of words.
                  * eg.: if we have a chart label: "this is an example of a label"
