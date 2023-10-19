@@ -8,7 +8,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -272,16 +272,19 @@ class SurveyUserInput(models.Model):
     # CREATE / UPDATE LINES FROM SURVEY FRONTEND INPUT
     # ------------------------------------------------------------
 
-    def save_lines(self, question, answer, comment=None):
-        """ Save answers to questions, depending on question type
+    def _save_lines(self, question, answer, comment=None, overwrite_existing=True):
+        """ Save answers to questions, depending on question type.
 
-            If an answer already exists for question and user_input_id, it will be
-            overwritten (or deleted for 'choice' questions) (in order to maintain data consistency).
+        :param bool overwrite_existing: if an answer already exists for question and user_input_id
+        it will be overwritten (or deleted for 'choice' questions) in order to maintain data consistency.
+        :raises UserError: if line exists and overwrite_existing is False
         """
         old_answers = self.env['survey.user_input.line'].search([
             ('user_input_id', '=', self.id),
             ('question_id', '=', question.id)
         ])
+        if old_answers and not overwrite_existing:
+            raise UserError(_("This answer cannot be overwritten."))
 
         if question.question_type in ['char_box', 'text_box', 'numerical_box', 'date', 'datetime']:
             self._save_line_simple_answer(question, old_answers, answer)

@@ -103,6 +103,7 @@
                     if survey.background_image_url else False"/>
         <form role="form" method="post" t-att-name="survey.id"
                 class="d-flex flex-grow-1 align-items-center"
+                t-att-data-scoring-type="survey.scoring_type"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
                 t-att-data-users-can-go-back="survey.users_can_go_back and not answer.is_session_answer"
@@ -191,6 +192,7 @@
             </t>
 
             <div class="text-center mt16 mb256">
+                <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
                 <button type="submit" value="finish" class="btn btn-secondary disabled">Submit</button>
                     <span class="fw-bold text-muted ms-2 d-none d-md-inline">
                         <span id="enter-tooltip">or press Enter</span>
@@ -211,6 +213,7 @@
                 <div class="col-12 text-center mt16">
                     <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else 'next_skipped'
                         if answer.survey_first_submitted and skipped_questions.page_id and page in skipped_questions.page_id else 'next'"/>
+                    <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
                     <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                         <t t-if="submit_value == 'finish'">Submit</t>
                         <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
@@ -250,6 +253,7 @@
                     <div class="col-12 text-center mt16">
                         <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else
                             'next_skipped' if answer.survey_first_submitted and skipped_questions and question in skipped_questions else 'next'"/>
+                        <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
                         <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                             <t t-if="submit_value == 'finish'">Submit</t>
                             <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
@@ -377,16 +381,18 @@
     </template>
 
     <template id="question_numerical_box" name="Question: numerical box">
-        <input type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent text-dark rounded-0 p-0"
-               t-att-name="question.id" t-att-placeholder="question.question_placeholder"
-               t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
-               t-att-data-question-type="question.question_type"
-               t-att-data-validation-float-min="question.validation_min_float_value if question.validation_required else False"
-               t-att-data-validation-float-max="question.validation_max_float_value if question.validation_required else False"/>
+        <div class="o_survey_answer_wrapper p-1 rounded">
+            <input type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent text-dark rounded-0 p-0"
+                t-att-name="question.id" t-att-placeholder="question.question_placeholder"
+                t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
+                t-att-data-question-type="question.question_type"
+                t-att-data-validation-float-min="question.validation_min_float_value if question.validation_required else False"
+                t-att-data-validation-float-max="question.validation_max_float_value if question.validation_required else False"/>
+        </div>
     </template>
 
     <template id="question_date" name="Question: date box">
-        <div class="input-group o_survey_form_date">
+        <div class="input-group o_survey_form_date o_survey_answer_wrapper p-1 rounded">
             <input type="text" class="form-control datetimepicker-input o_survey_question_date bg-transparent text-dark rounded-0 p-0"
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_date(answer_lines[0].value_date) if answer_lines else None"
@@ -399,7 +405,7 @@
     </template>
 
     <template id="question_datetime" name="Question: datetime box">
-        <div class="input-group o_survey_form_date">
+        <div class="input-group o_survey_form_date o_survey_answer_wrapper p-1 rounded">
             <input type="text" class="form-control datetimepicker-input o_survey_question_datetime bg-transparent text-dark rounded-0 p-0"
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_datetime(answer_lines[0].value_datetime) if answer_lines else None"
@@ -427,7 +433,7 @@
     <template id="question_simple_choice" name="Question: simple choice">
         <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id)"/>
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <div class="row g-2 o_survey_form_choice"
+        <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
              t-att-data-name="question.id"
              t-att-data-is-skipped-question="is_skipped_question or None"
              data-question-type="simple_choice_radio">
@@ -496,7 +502,7 @@
 
     <template id="question_multiple_choice" name="Question: multiple choice">
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
-        <div class="row g-2 o_survey_form_choice o_survey_question_multiple_choice"
+        <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice o_survey_question_multiple_choice"
              t-att-data-name="question.id"
              t-att-data-question-type="question.question_type">
             <t t-set="item_idx" t-value="0"/>

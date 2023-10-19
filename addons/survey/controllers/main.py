@@ -460,17 +460,18 @@ class Survey(http.Controller):
 
     @http.route('/survey/begin/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_begin(self, survey_token, answer_token, **post):
-        """ Route used to start the survey user input and display the first survey page. """
+        """ Route used to start the survey user input and display the first survey page.
+        Returns an empty dict for the correct answers and the first page html. """
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return {'error': access_data['validity_code']}
+            return {}, {'error': access_data['validity_code']}
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         if answer_sudo.state != "new":
-            return {'error': _("The survey has already started.")}
+            return {}, {'error': _("The survey has already started.")}
 
         answer_sudo._mark_in_progress()
-        return self._prepare_question_html(survey_sudo, answer_sudo, **post)
+        return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
     @http.route('/survey/next_question/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_next_question(self, survey_token, answer_token, **post):
@@ -491,15 +492,16 @@ class Survey(http.Controller):
         """ Submit a page from the survey.
         This will take into account the validation errors and store the answers to the questions.
         If the time limit is reached, errors will be skipped, answers will be ignored and
-        survey state will be forced to 'done'"""
+        survey state will be forced to 'done'.
+        Also returns the correct answers if the scoring type is 'scoring_with_answers_after_page'."""
         # Survey Validation
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return {'error': access_data['validity_code']}
+            return {}, {'error': access_data['validity_code']}
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         if answer_sudo.state == 'done':
-            return {'error': 'unauthorized'}
+            return {}, {'error': 'unauthorized'}
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),
@@ -507,7 +509,7 @@ class Survey(http.Controller):
 
         if not answer_sudo.test_entry and not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
-            return {'error': 'unauthorized'}
+            return {}, {'error': 'unauthorized'}
 
         if answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached:
             if answer_sudo.question_time_limit_reached:
@@ -520,7 +522,7 @@ class Survey(http.Controller):
                 time_limit += timedelta(seconds=10)
             if fields.Datetime.now() > time_limit:
                 # prevent cheating with users blocking the JS timer and taking all their time to answer
-                return {'error': 'unauthorized'}
+                return {}, {'error': 'unauthorized'}
 
         errors = {}
         # Prepare answers / comment by question, validate and save answers
@@ -531,13 +533,19 @@ class Survey(http.Controller):
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
             errors.update(question.validate_question(answer, comment))
             if not errors.get(question.id):
-                answer_sudo.save_lines(question, answer, comment)
+                answer_sudo._save_lines(question, answer, comment, overwrite_existing=survey_sudo.users_can_go_back)
 
         if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
-            return {'error': 'validation', 'fields': errors}
+            return {}, {'error': 'validation', 'fields': errors}
 
         if not answer_sudo.is_session_answer:
             answer_sudo._clear_inactive_conditional_answers()
+
+        # Get the page questions correct answers if scoring type is scoring after page
+        correct_answers = {}
+        if survey_sudo.scoring_type == 'scoring_with_answers_after_page':
+            scorable_questions = (questions - answer_sudo._get_inactive_conditional_questions()).filtered('is_scored_question')
+            correct_answers = scorable_questions._get_correct_answers()
 
         if answer_sudo.survey_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -545,10 +553,10 @@ class Survey(http.Controller):
             # when going back, save the last displayed to reload the survey where the user left it.
             answer_sudo.last_displayed_page_id = post['previous_page_id']
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
-            return self._prepare_question_html(survey_sudo, answer_sudo, **post)
+            return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, **post)
         elif 'next_skipped_page_or_question' in post:
             answer_sudo.last_displayed_page_id = page_or_question_id
-            return self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
+            return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
         else:
             if not answer_sudo.is_session_answer:
                 page_or_question = request.env['survey.question'].sudo().browse(page_or_question_id)
@@ -563,13 +571,13 @@ class Survey(http.Controller):
                             'last_displayed_page_id': page_or_question_id,
                             'survey_first_submitted': True,
                         })
-                        return self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
+                        return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
                     else:
                         answer_sudo._mark_done()
 
             answer_sudo.last_displayed_page_id = page_or_question_id
 
-        return self._prepare_question_html(survey_sudo, answer_sudo)
+        return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
 
     def _extract_comment_from_answers(self, question, answers):
         """ Answers is a custom structure depending of the question type
@@ -637,11 +645,11 @@ class Survey(http.Controller):
             'survey': survey_sudo,
             'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'questions_to_display': answer_sudo._get_print_questions(),
-            'scoring_display_correction': survey_sudo.scoring_type == 'scoring_with_answers' and answer_sudo,
+            'scoring_display_correction': survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date),
             'graph_data': json.dumps(answer_sudo._prepare_statistics()[answer_sudo])
-                              if answer_sudo and survey_sudo.scoring_type == 'scoring_with_answers' else False,
+                              if answer_sudo and survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] else False,
         })
 
     @http.route('/survey/<model("survey.survey"):survey>/certification_preview', type="http", auth="user", website=True)

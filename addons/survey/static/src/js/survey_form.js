@@ -71,7 +71,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self._focusOnFirstInput();
             // Init event listener
             if (!self.readonly) {
-                $(document).on('keydown', self._onKeyDown.bind(self));
+                self.documentKeydownListener = self._onKeyDown.bind(self);
+                $(document).on('keydown', self.documentKeydownListener);
             }
             if (self.options.sessionInProgress &&
                 (self.options.isStartScreen || self.options.hasAnswered || self.options.isPageDescription)) {
@@ -363,8 +364,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     * @param {Boolean} [options.isFinish] fades out breadcrumb and timer
     * @private
     */
-    _submitForm: function (options) {
-        var self = this;
+    _submitForm: async function (options) {
         var params = {};
         if (options.previousPageId) {
             params.previous_page_id = options.previousPageId;
@@ -404,10 +404,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.readonly = true;
         }
 
-        var submitPromise = self.rpc(
-            `${route}/${self.options.surveyToken}/${self.options.answerToken}`,
+        const submitPromise = this.rpc(
+            `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
             params
         );
+
+        if (!this.options.isStartScreen && this.options.scoringType == 'scoring_with_answers_after_page') {
+            const [correctAnswers] = await submitPromise;
+            if (Object.keys(correctAnswers).length && document.querySelector('.js_question-wrapper')) {
+                this._showCorrectAnswers(correctAnswers, submitPromise, options);
+                return;
+            }
+        }
         this._nextScreen(submitPromise, options);
     },
 
@@ -417,18 +425,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * @param {Promise} nextScreenPromise
      * @param {Object} options see '_submitForm' for details
      */
-    _nextScreen: function (nextScreenPromise, options) {
-        var self = this;
-
+    _nextScreen: async function (nextScreenPromise, options) {
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
 
         var selectorsToFadeout = ['.o_survey_form_content'];
-        if (options.isFinish && !this.nextScreenResult.has_skipped_questions) {
+        if (options.isFinish && !this.nextScreenResult?.has_skipped_questions) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
-            cookie.delete('survey_' + self.options.surveyToken);
+            cookie.delete('survey_' + this.options.surveyToken);
         }
-        self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
+        this.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
         });
         // Background management - Fade in / out on each transition
@@ -436,20 +442,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             $('div.o_survey_background').addClass('o_survey_background_transition');
         }
 
-        var nextScreenWithBackgroundPromise = nextScreenPromise.then(function (result) {
-            self.nextScreenResult = result;
+        const nextScreenWithBackgroundPromise = (async () => {
+            const [,result] = await nextScreenPromise;
+            this.nextScreenResult = result;
             // once we have the next question, wait for the preload of the background
-            if (self.options.refreshBackground && result.background_image_url) {
-                return self._preloadBackground(result.background_image_url);
+            if (this.options.refreshBackground && result.background_image_url) {
+                return this._preloadBackground(result.background_image_url);
             } else {
                 return Promise.resolve();
             }
-        });
+        })();
 
         // Wait for the fade out and the preload of the next background. The next question have already been fetched.
-        Promise.all([fadeOutPromise, nextScreenWithBackgroundPromise]).then(function () {
-            return self._onNextScreenDone(options);
-        });
+        await Promise.all([fadeOutPromise, nextScreenWithBackgroundPromise]);
+        return this._onNextScreenDone(options);
     },
 
     /**
@@ -1125,6 +1131,77 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             }
         }
         return inactiveQuestionIds;
+    },
+
+    // ANSWERS TOOLS
+    // -------------------------------------------------------------------------
+
+    _showCorrectAnswers: function(correctAnswers, submitPromise, options) {
+        // Display the correct answers
+        Object.keys(correctAnswers).forEach(questionId => this._showQuestionAnswer(correctAnswers, questionId));
+        // Make the form completely readonly
+        const form = document.querySelector('form');
+        form.querySelectorAll('input, textarea, label, td')?.forEach(node => {
+            node.classList.add("pe-none");
+        });
+        // Replace the Submit button by a Next button
+        form.querySelector('button[type="submit"]').classList.add('d-none');
+        const nextPageBtn = form.querySelector('button[id="next_page"]');
+        nextPageBtn.classList.remove('d-none');
+        nextPageBtn.addEventListener('click', () => {
+            this._nextScreen(submitPromise, options);
+        });
+        // Replacing the original onKeyDown listener to block everything except for the
+        // enter or arrow right key down events trigerring the next page display
+        const nextPageKeydownListener = (event) => {
+            if (event.code === 'Enter' || event.code === 'ArrowRight') {
+                // Restore original keydown listener
+                document.removeEventListener('keydown', nextPageKeydownListener);
+                document.addEventListener('keydown', this.documentKeydownListener);
+                this._nextScreen(submitPromise, options);
+            }
+        }
+        document.removeEventListener('keydown', this.documentKeydownListener);
+        document.addEventListener('keydown', nextPageKeydownListener);
+    },
+
+    _showQuestionAnswer: function(correctAnswers, questionId) {
+        const correctAnswer = correctAnswers[questionId];
+        const questionWrapper = document.querySelector(`.js_question-wrapper[id="${questionId}"]`);
+        const answerWrapper = questionWrapper.querySelector('.o_survey_answer_wrapper');
+        const questionType = questionWrapper.querySelector('[data-question-type]').dataset.questionType;
+
+        if (['numerical_box', 'date', 'datetime'].includes(questionType)) {
+            const input = answerWrapper.querySelector('input');
+            let isCorrect;
+            if (questionType == 'numerical_box') {
+                isCorrect = input.valueAsNumber === correctAnswer;
+            } else if (questionType == 'datetime') {
+                const datetime = parseDateTime(input.value);
+                const value = datetime ? datetime.setZone("utc").toFormat("MM/dd/yyyy HH:mm:ss", { numberingSystem: "latn" }) : '';
+                isCorrect = value === correctAnswer;
+            } else {
+                isCorrect = input.value === correctAnswer;
+            }
+            answerWrapper.classList.add(`bg-${isCorrect ? 'success' : 'danger'}`);
+        }
+        else if (['simple_choice_radio', 'multiple_choice'].includes(questionType)) {
+            answerWrapper.querySelectorAll('.o_survey_choice_btn').forEach((button) => {
+                const answerId = button.querySelector('input').value;
+                const isCorrect = correctAnswer.includes(parseInt(answerId));
+                button.classList.add(`bg-${isCorrect ? 'success' : 'danger'}`, 'text-white');
+                // For the user incorrect answers, replace the empty check icon by a crossed check icon
+                if (!isCorrect && button.classList.contains('o_survey_selected')) {
+                    let fromIcon = 'fa-check-circle';
+                    let toIcon = 'fa-times-circle';
+                    if (questionType == 'multiple_choice') {
+                        fromIcon = 'fa-check-square';
+                        toIcon = 'fa-times-rectangle'; // fa-times-square doesn't exist in fontawesome 4.7
+                    }
+                    button.querySelector(`i.${fromIcon}`)?.classList.replace(fromIcon, toIcon);
+                }
+            });
+        }
     },
 
     // ERRORS TOOLS
