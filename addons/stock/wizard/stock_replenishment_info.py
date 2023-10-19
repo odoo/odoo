@@ -91,6 +91,18 @@ class StockReplenishmentInfo(models.TransientModel):
                 'replenishment_history': replenishment_history
             })
 
+    def action_reopen_replenish_wizard(self):
+        if self._context.get('replenish_id'):
+            replenish = self.env['product.replenish'].browse(self._context.get('replenish_id'))
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Replenish',
+                'res_model': 'product.replenish',
+                'res_id': replenish.id,
+                'target': 'new',
+                'view_mode': 'form',
+            }
+        return {'type': 'ir.actions.act_window_close'}
 
 class StockReplenishmentOption(models.TransientModel):
     _name = 'stock.replenishment.option'

@@ -59,10 +59,13 @@ class ProductReplenish(models.TransientModel):
         self.ensure_one()
         orderpoint = self.env["stock.warehouse.orderpoint"].search([("product_id", "=", self.product_id.id), ("warehouse_id", "=", self.warehouse_id.id)], limit=1)
         if not orderpoint:
-            orderpoint = self.env["stock.warehouse.orderpoint"].create({
+            orderpoint_vals = {
                 "product_id": self.product_id.id,
                 "warehouse_id": self.warehouse_id.id,
-            })
+            }
+            if 'buy' in self.route_id.rule_ids.mapped('action'):
+                orderpoint_vals["supplier_id"] = self.supplier_id.id
+            orderpoint = self.env["stock.warehouse.orderpoint"].create(orderpoint_vals)
         action = orderpoint.action_stock_replenishment_info()
 
         action["context"] = {
