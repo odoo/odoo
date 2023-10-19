@@ -38,7 +38,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
-import { Record } from "@web/views/record";
+import { Record } from "@web/model/record";
 
 const serviceRegistry = registry.category("services");
 

@@ -4,8 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { Field } from "@web/views/fields/field";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Record } from "@web/views/record";
-
+import { Record } from "@web/model/record";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
     click,
