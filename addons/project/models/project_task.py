@@ -1138,6 +1138,10 @@ class Task(models.Model):
                     if isinstance(value, str) or (isinstance(value, list) and not all(isinstance(val, str) for val in value)):
                         new_domain.append(("name", op, value))
                     if isinstance(value, int):
+                        if op == "=":
+                            op = "in"
+                        if op == "!=":
+                            op = "not in"
                         new_domain.append(("id", op, [value]))
                 else:
                     new_domain.append(dom)
