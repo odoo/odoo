@@ -245,19 +245,15 @@
                                                readonly="state in ('sending', 'done')"/>
                                     </div>
                                     <field name="mailing_filter_count" invisible="1"/>
-                                    <div name="mass_mailing_domain" invisible="mailing_model_name == 'mailing.list'"
-                                        class="col-md-6 d-block">
-                                        <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}" readonly="state in ('sending', 'done')"/>
-                                    </div>
                                 </div>
 
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_on_mailing_list" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <div invisible="mailing_on_mailing_list">
-                                    <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real', 'foldable': true}"
+                                <field name="mailing_domain" widget="domain"
+                                    options="{'model': 'mailing_model_real', 'foldable': true}"
+                                    invisible="mailing_on_mailing_list"
                                     readonly="state in ('sending', 'done')"/>
-                                </div>
                             </div>
                         </group>
                         <notebook>
@@ -482,9 +478,6 @@
                             </div>
                         </div>
                     </page>
-                </xpath>
-                <xpath expr="//div[@name='mass_mailing_domain']" position="attributes">
-                    <attribute name="class">col-md-7</attribute>
                 </xpath>
             </field>
         </record>
