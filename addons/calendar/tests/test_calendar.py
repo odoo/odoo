@@ -316,15 +316,14 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
         ]
         partner_ids = [(6, False, [p.id for p in partners]),]
-        now = fields.Datetime.context_timestamp(partners[0], fields.Datetime.now())
         m = self.CalendarEvent.create({
             'name': "mailTest1",
             'allday': False,
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=5',
             'recurrency': True,
             'partner_ids': partner_ids,
-            'start': fields.Datetime.to_string(now + timedelta(days=10)),
-            'stop': fields.Datetime.to_string(now + timedelta(days=15)),
+            'start': "2023-10-29 08:00:00",
+            'stop': "2023-11-03 08:00:00",
             })
 
         # every partner should have 1 mail sent
@@ -351,8 +350,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'allday': False,
             'recurrency': False,
             'partner_ids': partner_ids,
-            'start': fields.Datetime.to_string(now - timedelta(days=10)),
-            'stop': fields.Datetime.to_string(now - timedelta(days=9)),
+            'start': "2023-10-09 08:00:00",
+            'stop': "2023-10-10 08:00:00",
         })
 
         # no more email should be sent
