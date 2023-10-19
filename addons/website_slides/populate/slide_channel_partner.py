@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import random
 from collections import defaultdict
 
 from odoo import models
@@ -14,6 +13,7 @@ class SlideChannelPartner(models.Model):
     _populate_sizes = {'small': 150, 'medium': 3_000, 'large': 150_000}
 
     def _populate_factories(self):
+        random = populate.Random('slidechannelpartners')
         partner_ids = self.env.registry.populated_models['res.partner']
         partner_not_company_ids = (
             self.env['res.partner'].search([('id', 'in', partner_ids), ('is_company', '=', False)]).ids
