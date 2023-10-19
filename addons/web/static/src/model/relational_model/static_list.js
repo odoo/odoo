@@ -382,32 +382,6 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._resequence(movedId, targetId));
     }
 
-    async _replaceWith(ids, { reload = false } = {}) {
-        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
-        if (resIds.length) {
-            const records = await this.model._loadRecords({
-                ...this.config,
-                resIds,
-                context: this.context,
-            });
-            for (const record of records) {
-                this._createRecordDatapoint(record);
-            }
-        }
-        this.records = ids.map((id) => this._cache[id]);
-        const updateCommandsToKeep = this._commands.filter(
-            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
-        );
-        this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
-        this._currentIds = [...ids];
-        this.count = this._currentIds.length;
-        if (this._currentIds.length > this.limit) {
-            this._tmpIncreaseLimit = this._currentIds.length - this.limit;
-            const nextLimit = this.limit + this._tmpIncreaseLimit;
-            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
-    }
-
     /**
      * This method is meant to be called when a record, which has previously been extended to be
      * displayed in a form view dialog (see @extendRecord) is saved. In this case, we may need to
@@ -617,12 +591,15 @@ export class StaticList extends DataPoint {
                     }
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         this.records.push(record);
-                        this._tmpIncreaseLimit++;
-                        this.model._updateConfig(
-                            this.config,
-                            { limit: this.limit + this._tmpIncreaseLimit },
-                            { reload: false }
-                        );
+                        if (this.records.length > this.limit) {
+                            this._tmpIncreaseLimit = this.records.length - this.limit;
+                            const nextLimit = this.limit + this._tmpIncreaseLimit;
+                            this.model._updateConfig(
+                                this.config,
+                                { limit: nextLimit },
+                                { reload: false }
+                            );
+                        }
                     }
                     this._currentIds.push(record.resId);
                     this._commands.push([command[0], command[1]]);
@@ -872,6 +849,32 @@ export class StaticList extends DataPoint {
         this.records = currentIds.map((id) => this._cache[id]);
         this._currentIds = nextCurrentIds;
         await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
+    }
+
+    async _replaceWith(ids, { reload = false } = {}) {
+        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
+        if (resIds.length) {
+            const records = await this.model._loadRecords({
+                ...this.config,
+                resIds,
+                context: this.context,
+            });
+            for (const record of records) {
+                this._createRecordDatapoint(record);
+            }
+        }
+        this.records = ids.map((id) => this._cache[id]);
+        const updateCommandsToKeep = this._commands.filter(
+            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
+        );
+        this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
+        this._currentIds = [...ids];
+        this.count = this._currentIds.length;
+        if (this._currentIds.length > this.limit) {
+            this._tmpIncreaseLimit = this._currentIds.length - this.limit;
+            const nextLimit = this.limit + this._tmpIncreaseLimit;
+            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
+        }
     }
 
     async _resequence(movedId, targetId) {
