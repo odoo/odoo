@@ -444,6 +444,8 @@ class PurchaseOrderLine(models.Model):
             move.date_deadline = new_date
 
     def _create_or_update_picking(self):
+        if self._context.get("skip_picking_generation"):
+            return True
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
