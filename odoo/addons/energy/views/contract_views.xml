@@ -56,10 +56,6 @@
                                 </group>
                                 <group>
                                     <field name="excel_file" string="Select Loadshape file"/>
-                                    <div class="oe_button_group">
-                                        <button name="action_import_excel" string="Import " type="object" class="oe_highlight" />
-                                        <button name="action_delete_detail" string="Delete Details" type="object" class="oe_highlight"/>
-                                    </div>
                                </group>
                                 </group>
                                 <field name="loadshape_details_ids" string="Loadshape Details"/>
@@ -105,6 +101,23 @@
             <field name="res_model">contract</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+        <record model="ir.actions.server" id="action_import_excel">
+            <field name="name">Import Loadshape</field>
+            <field name="model_id" ref="model_contract"/>
+            <field name="binding_model_id" ref="model_contract"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_import_excel()
+            </field>
+        </record>
+         <record model="ir.actions.server" id="action_delete_detail">
+            <field name="name">Delete Loadshape</field>
+            <field name="model_id" ref="model_contract"/>
+            <field name="binding_model_id" ref="model_contract"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_delete_detail()
+            </field>
+        </record>
     </data>
 </odoo>
