@@ -3,8 +3,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
+import { ResizablePanel } from '@web/core/resizable_panel/resizable_panel';
 import { useService, useBus } from '@web/core/utils/hooks';
-import { AceEditorWrapper } from '../../components/ace_editor/ace_editor';
+import { ResourceEditor } from '../../components/resource_editor/resource_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
@@ -119,7 +120,7 @@ export class WebsitePreview extends Component {
         }, () => [this.props.action.context.params]);
 
         useEffect(() => {
-            this.websiteContext.showAceEditor = false;
+            this.websiteContext.showResourceEditor = false;
         }, () => [
             this.websiteContext.showNewContentModal,
             this.websiteContext.edition,
@@ -136,7 +137,7 @@ export class WebsitePreview extends Component {
         });
 
         onWillUnmount(() => {
-            this.websiteService.context.showAceEditor = false;
+            this.websiteService.context.showResourceEditor = false;
             const { pathname, search, hash } = this.iframe.el.contentWindow.location;
             this.websiteService.lastUrl = `${pathname}${search}${hash}`;
             this.websiteService.currentWebsiteId = null;
@@ -262,6 +263,11 @@ export class WebsitePreview extends Component {
         return false;
     }
 
+    get aceEditorWidth() {
+        const storedWidth = browser.localStorage.getItem("ace_editor_width");
+        return storedWidth ? parseInt(storedWidth) : 720;
+    }
+
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
             this.websiteService.websiteRootInstance = undefined;
@@ -350,7 +356,7 @@ export class WebsitePreview extends Component {
     _onPageLoaded() {
         if (this.lastHiddenPageURL !== this.iframe.el.contentWindow.location.href) {
             // Hide Ace Editor when moving to another page.
-            this.websiteService.context.showAceEditor = false;
+            this.websiteService.context.showResourceEditor = false;
             this.lastHiddenPageURL = undefined;
         }
         if (this.props.action.context.params?.with_loader) {
@@ -470,6 +476,10 @@ export class WebsitePreview extends Component {
         }
     }
 
+    _onResourceEditorResize(width) {
+        browser.localStorage.setItem("ace_editor_width", width);
+    }
+
     _onPageUnload() {
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
@@ -519,7 +529,8 @@ WebsitePreview.components = {
     WebsiteEditorComponent,
     BlockPreview,
     WebsiteTranslator,
-    AceEditorWrapper,
+    ResourceEditor,
+    ResizablePanel,
 };
 
 registry.category('actions').add('website_preview', WebsitePreview);

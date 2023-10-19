@@ -39,13 +39,13 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("placeholder")',
             run: function () {
-                ace.edit('ace-view-editor').getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
             },
         },
         {
             content: "save the html editor",
             extra_trigger: '.ace_content:contains("not.exist")',
-            trigger: ".o_ace_view_editor button[data-action=save]",
+            trigger: ".o_resource_editor button:contains(Save)",
         },
         BROKEN_STEP
     ]
@@ -77,22 +77,22 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         },
         {
             content: "select oe_structure view",
-            trigger: '#s2id_ace-view-list',  // use select2 version
-            run: function () {
-                var viewId = $('#ace-view-list option:contains("oe_structure_test_website_page")').val();
-                $('#ace-view-list').val(viewId).trigger('change');
-            },
+            trigger: '.o_resource_editor_title .o_select_menu_toggler',
+        },
+        {
+            content: "select oe_structure view",
+            trigger: '.o_resource_editor_title .o_select_menu_item:contains(Test Page View)',
         },
         {
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("oe_structure_test_website_page")',
             run: function () {
-                ace.edit('ace-view-editor').getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
             },
         },
         {
             content: "save the html editor",
-            trigger: ".o_ace_view_editor button[data-action=save]",
+            trigger: ".o_resource_editor button:contains(Save)",
         },
         BROKEN_STEP
     ]
