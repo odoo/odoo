@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ProfileDetails Form View -->
+        <record id="view_profile_details_form" model="ir.ui.view">
+            <field name="name">profile_details.form</field>
+            <field name="model">profile_details</field>
+            <field name="arch" type="xml">
+                <form string="Profile Details">
+                    <group>
+                        <field name="profile_id" string="Profile"/>
+                        <field name="days" string="Day"/>
+                        <field name="start" string="Start"/>
+                        <field name="end" string="End"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- ProfileDetails Tree View -->
+        <record id="view_profile_details_tree" model="ir.ui.view">
+            <field name="name">profile_details.tree</field>
+            <field name="model">profile_details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="days" string="Day"/>
+                    <field name="start"/>
+                    <field name="end"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ProfileDetails Action -->
+        <record id="action_profile_details" model="ir.actions.act_window">
+            <field name="name">Profile Details</field>
+            <field name="res_model">profile_details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

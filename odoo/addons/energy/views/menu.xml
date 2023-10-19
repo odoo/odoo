@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Define a Parent Menu for your module -->
+        <menuitem id="menu_energy_trading" name="Energy Trading" sequence="5"/>
+
+        <!-- Create a Submenu under the Parent Menu -->
+        <menuitem id="menu_contract" sequence="2" name="Contracts" parent="menu_energy_trading" action="action_contract"/>
+        <menuitem id="menu_master_contract" sequence="1" name="Master Contracts" parent="menu_energy_trading" action="action_master_contract"/>
+        <menuitem id="menu_company" sequence="4" name="Companies" parent="menu_energy_trading" action="action_company"/>
+        <menuitem id="menu_loadshape_details" sequence="5" name="LoadShape" parent="menu_energy_trading" action="action_loadshape_details"/>
+
+        <!-- Create a Submenu under the Parent "Settings" Menu -->
+        <menuitem id="menu_settings" sequence="6" name="Settings" parent="menu_energy_trading"/>
+        <menuitem id="menu_period" sequence="7" name="Period" parent="menu_settings" action="action_period"/>
+        <menuitem id="menu_profile" sequence="8" name="Profile" parent="menu_settings" action="action_profile"/>
+        <menuitem id="menu_price" sequence="9" name="Price Components" parent="menu_settings" action="action_price_components_tree"/>
+        <menuitem id="menu_border" sequence="10" name="Borders" parent="menu_settings" action="action_border"/>
+        <menuitem id="menu_voltage" sequence="11" name="Voltage Level" parent="menu_settings" action="action_voltage"/>
+
+
+    </data>
+</odoo>

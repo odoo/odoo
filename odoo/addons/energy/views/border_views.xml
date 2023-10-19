@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Border Form View -->
+        <record id="view_border_form" model="ir.ui.view">
+            <field name="name">border.form</field>
+            <field name="model">border</field>
+            <field name="arch" type="xml">
+                <form string="Border">
+                    <group>
+                        <field name="name" string="Name"/>
+                        <field name="directions" string="Directions"/>
+                        <field name="out_area" string="Out Area"/>
+                        <field name="in_area" string="In Area"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Border Tree View -->
+        <record id="view_border_tree" model="ir.ui.view">
+            <field name="name">border.tree</field>
+            <field name="model">border</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="directions"/>
+                    <field name="out_area"/>
+                    <field name="in_area"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Border Search View -->
+        <record id="view_border_search" model="ir.ui.view">
+            <field name="name">border.search</field>
+            <field name="model">border</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name"/>
+                    <field name="directions" string="Directions"/>
+                    <field name="out_area" string="Out Area"/>
+                    <field name="in_area" string="In Area"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Border Action -->
+        <record id="action_border" model="ir.actions.act_window">
+            <field name="name">Borders</field>
+            <field name="res_model">border</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

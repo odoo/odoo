@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- profile Form View -->
+        <record id="view_profile_form" model="ir.ui.view">
+            <field name="name">profile.form</field>
+            <field name="model">profile</field>
+            <field name="arch" type="xml">
+                <form string="Profile">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Name"/>
+                            <field name="days_of_delivery" string="Days of delivery"/>
+                            <field name="no_hours" string="No Hours"/>
+                            <field name="details_ids" string="Details"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- profile Tree View -->
+        <record id="view_profile_tree" model="ir.ui.view">
+            <field name="name">profile.tree</field>
+            <field name="model">profile</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Name"/>
+                    <field name="days_of_delivery" string="Days of delivery"/>
+                    <field name="no_hours" string="No Hours"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- profile Search View -->
+        <record id="view_profile_search" model="ir.ui.view">
+            <field name="name">profile.search</field>
+            <field name="model">profile</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="profile Level"/>
+                </search>
+            </field>
+        </record>
+        <!-- profile Action -->
+        <record id="action_profile" model="ir.actions.act_window">
+            <field name="name">profiles</field>
+            <field name="res_model">profile</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

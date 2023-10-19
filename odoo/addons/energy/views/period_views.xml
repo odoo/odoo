@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- period Form View -->
+        <record id="view_period_form" model="ir.ui.view">
+            <field name="name">period.form</field>
+            <field name="model">period</field>
+            <field name="arch" type="xml">
+                <form string="Period">
+                    <sheet>
+                    <group>
+                    <field name="name" string="Name"/>
+                    <field name="start_month" string="Start Month"/>
+                    <field name="start_day" string="Start Day"/>
+                    <field name="start_hour" string="Start Hour"/>
+                    <field name="end_month" string="End Month"/>
+                    <field name="end_day" string="End Day"/>
+                    <field name="end_hour" string="End Hour"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- period Tree View -->
+        <record id="view_period_tree" model="ir.ui.view">
+            <field name="name">period.tree</field>
+            <field name="model">period</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Name"/>
+                    <field name="start_month" string="Start Month"/>
+                    <field name="start_day" string="Start Day"/>
+                    <field name="start_hour" string="Start Hour"/>
+                    <field name="end_month" string="End Month"/>
+                    <field name="end_day" string="End Day"/>
+                    <field name="end_hour" string="End Hour"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- period Search View -->
+        <record id="view_period_search" model="ir.ui.view">
+            <field name="name">period.search</field>
+            <field name="model">period</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="period Level"/>
+                </search>
+            </field>
+        </record>
+        <!-- period Action -->
+        <record id="action_period" model="ir.actions.act_window">
+            <field name="name">periods</field>
+            <field name="res_model">period</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

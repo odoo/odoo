@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- loadshape Form View -->
+        <record id="view_loadshape_details_form" model="ir.ui.view">
+            <field name="name">loadshape_details.form</field>
+            <field name="model">loadshape_details</field>
+            <field name="arch" type="xml">
+                <form string="Loadshape Details">
+                    <sheet>
+                        <group>
+                            <field name="powerdate" string="Date"/>
+                            <field name="powerhour" string="Hour" />
+                            <field name="power" string="Power" />
+                            <field name="powerprice" string="Price" />
+                            <field name="powerunit" string="Unit" />
+                            <field name="powerfinalprice" string="Final Price" />
+                            <field name="powerfinal" string="Final Power" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <!-- Tree view for LoadShapeDetails model -->
+        <record id="view_loadshape_details_tree" model="ir.ui.view">
+            <field name="name">loadshape_details.tree</field>
+            <field name="model">loadshape_details</field>
+            <field name="arch" type="xml">
+                <tree string="LoadShapeDetails" default_order="powerdate desc" >
+                    <!-- Define the columns to display in the tree view -->
+                    <field name="contract_id"/>
+                    <field name="powerdate" string="Date"/>
+                    <field name="powerhour" string="Hour" />
+                    <field name="power" string="Power" />
+                    <field name="powerprice" string="Price" />
+                    <field name="powerunit" string="Unit" />
+                    <field name="powerfinalprice" string="Final Price" />
+                    <field name="powerfinal" string="Final Power" />               
+                </tree>
+            </field>
+        </record>
+
+        <!-- loadshape Search View -->
+        <record id="view_loadshape_search" model="ir.ui.view">
+            <field name="name">loadshape_details.search</field>
+            <field name="model">loadshape_details</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="loadshape_details Level"/>
+                </search>
+            </field>
+        </record>
+        <!-- loadshape Action -->
+        <record id="action_loadshape_details" model="ir.actions.act_window">
+            <field name="name">LoadShapesDetails</field>
+            <field name="res_model">loadshape_details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

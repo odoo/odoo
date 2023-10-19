@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Company Form View -->
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">company.form</field>
+            <field name="model">company</field>
+            <field name="arch" type="xml">
+                <form string="Partner Companies">
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="eic_code"/>
+                                <field name="name"/>
+                                <field name="address"/>
+                                <field name="country"/>
+                                <field name="email"/>
+                                <field name="representative"/>
+                                <field name="voltage_id"/>
+                            </group>
+                            <group>
+                                <field name="nav_code"/>
+                                <field name="vat"/>
+                                <field name="role"/>
+                                <field name="meter_sn"/>
+                                <field name="delivery_point"/>
+                                 <field name="comp_function"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Company Tree View -->
+        <record id="view_company_tree" model="ir.ui.view">
+            <field name="name">company.tree</field>
+            <field name="model">company</field>
+            <field name="arch" type="xml">
+                <tree>
+                  <field name="name"/>
+                  <field name="vat"/>
+                  <field name="role"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Company Search View -->
+        <record id="view_company_search" model="ir.ui.view">
+            <field name="name">company.search</field>
+            <field name="model">company</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Company Name"/>
+                </search>
+            </field>
+        </record>
+        <!-- Company Action -->
+        <record id="action_company" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="res_model">company</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Master Contract Form View -->
+        <record id="view_master_contract_form" model="ir.ui.view">
+            <field name="name">master_contract.form</field>
+            <field name="model">master_contract</field>
+            <field name="arch" type="xml">
+                <form string="Master Contract">
+                <sheet>
+                    <group>
+                        <field name="name" string="Name"/>
+                        <field name="category" string="Category"/>
+                        <field name="type" string="Type"/>
+                        <field name="status" string="Status"/>
+                        <field name="company_id" string="Company"/>
+                        <field name="start_date" string="Start Date"/>
+                        <field name="end_date" string="End Date"/>
+                    </group>
+                    <group>
+                        <field name="contract_ids" mode="tree">
+                            <tree>
+                                <field name="name" string="Contract Name"/>
+                                <field name="start_date" string="Start Date"/>
+                                <field name="end_date" string="End Date"/>
+                                <field name="position" string="Position"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Master Contract Tree View -->
+        <record id="view_master_contract_tree" model="ir.ui.view">
+            <field name="name">master_contract.tree</field>
+            <field name="model">master_contract</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="type"/>
+                    <field name="status"/>
+                    <field name="company_id"/>
+                    <field name="start_date" string="Start Date"/>
+                    <field name="end_date" string="End Date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Master Contract Search View -->
+        <record id="view_master_contract_search" model="ir.ui.view">
+            <field name="name">master_contract.search</field>
+            <field name="model">master_contract</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name"/>
+                    <field name="category" string="Category"/>
+                    <field name="type" string="Type"/>
+                    <field name="status" string="Status"/>
+                    <field name="company_id" string="Company"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Master Contract Action -->
+        <record id="action_master_contract" model="ir.actions.act_window">
+            <field name="name">Master Contracts</field>
+            <field name="res_model">master_contract</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

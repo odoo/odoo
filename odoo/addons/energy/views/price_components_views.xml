@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form view for PriceComponents model -->
+        <record id="view_price_components_form" model="ir.ui.view">
+            <field name="name">price_components.form</field>
+            <field name="model">price_components</field>
+            <field name="arch" type="xml">
+                <form string="Price Components Form">
+                    <sheet>
+                        <!-- Define the fields to display on the form -->
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="group"/>
+                            <field name="type"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action to open the form view -->
+        <record id="action_price_components_form" model="ir.actions.act_window">
+            <field name="name">Price Components</field>
+            <field name="res_model">price_components</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_price_components_form"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click the "Create" button to add a new price component.
+                </p>
+            </field>
+        </record>
+
+        <!-- Tree view for PriceComponents model -->
+        <record id="view_price_components_tree" model="ir.ui.view">
+            <field name="name">price_components.tree</field>
+            <field name="model">price_components</field>
+            <field name="arch" type="xml">
+                <tree string="Price Components">
+                    <!-- Define the columns to display in the tree view -->
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="group"/>
+                    <field name="type"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action to open the tree view -->
+        <record id="action_price_components_tree" model="ir.actions.act_window">
+            <field name="name">Price Components</field>
+            <field name="res_model">price_components</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_price_components_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click the "Create" button to add a new price component.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
+

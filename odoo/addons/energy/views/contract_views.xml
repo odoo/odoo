@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Contract Form View -->
+        <record id="view_contract_form" model="ir.ui.view">
+            <field name="name">contract.form</field>
+            <field name="model">contract</field>
+            <field name="arch" type="xml">
+                <form string="Energy Trading Contract">
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="initial,executing,finished"/>
+                </header>
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="category"/>
+                                <field name="type"/>
+                                <field name="position"/>
+                                <field name="master_contract_id"/>
+                            </group>
+                            <group>
+                                <field name="name"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Power">
+                                <group>
+                                   <field name="power" string="Power"/>
+                                    <field name="powerUnit" string="Power Unit"/>
+                                    <field name="timeUnit" string="Time Unit"/>
+                                </group>
+                            </page>
+                            <page string="Delivery">
+                                <group>
+                                    <field name="delivery_point_id" string="Delivery Point"/>
+                                    <field name="transit_border_ids" string="Transit border"   widget="many2many_checkboxes"/>
+                                    <field name="other_border_ids" string="Other border"   widget="many2many_checkboxes" />
+                                </group>
+                            </page>
+                            <page string="Price">
+                                <field name="contract_price_ids" string="Price Components"  >
+                                <tree editable="bottom">
+                                <field name="priceComponents_id"/>
+                                <field name="unit"/>
+                                <field name="value"/>
+                                </tree>
+                                </field>
+                            </page>
+                            <page string="LoadShape">
+                                <group col="2">
+                                 <group>
+                                    <field name="profile_id" string="Profile"/>
+                                    <field name="period_id" string="Period"/>
+                                </group>
+                                <group>
+                                    <field name="excel_file" string="Select Loadshape file"/>
+                                    <div class="oe_button_group">
+                                        <button name="action_import_excel" string="Import " type="object" class="oe_highlight" />
+                                        <button name="action_delete_detail" string="Delete Details" type="object" class="oe_highlight"/>
+                                    </div>
+                               </group>
+                                </group>
+                                <field name="loadshape_details_ids" string="Loadshape Details"/>
+                            </page>
+                            <page string="Payment Terms">
+                                <group>
+                                   
+                                </group>
+                            </page>
+                            
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Contract Tree View -->
+        <record id="view_contract_tree" model="ir.ui.view">
+            <field name="name">contract.tree</field>
+            <field name="model">contract</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Contract Search View -->
+        <record id="view_contract_search" model="ir.ui.view">
+            <field name="name">contract.search</field>
+            <field name="model">contract</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Contract Name"/>
+                </search>
+            </field>
+        </record>
+        <!-- Contract Action -->
+        <record id="action_contract" model="ir.actions.act_window">
+            <field name="name">Energy Trading Contracts</field>
+            <field name="res_model">contract</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+    </data>
+</odoo>

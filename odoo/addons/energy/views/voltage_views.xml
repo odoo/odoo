@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Voltage Form View -->
+        <record id="view_voltage_form" model="ir.ui.view">
+            <field name="name">voltage.form</field>
+            <field name="model">voltage</field>
+            <field name="arch" type="xml">
+                <form string="Voltage Level">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Voltage" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Voltage Tree View -->
+        <record id="view_voltage_tree" model="ir.ui.view">
+            <field name="name">voltage.tree</field>
+            <field name="model">voltage</field>
+            <field name="arch" type="xml">
+                <tree>
+                      <field name="name" string="Voltage Level"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Voltage Search View -->
+        <record id="view_voltage_search" model="ir.ui.view">
+            <field name="name">voltage.search</field>
+            <field name="model">voltage</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Voltage Level"/>
+                </search>
+            </field>
+        </record>
+        <!-- Voltage Action -->
+        <record id="action_voltage" model="ir.actions.act_window">
+            <field name="name">Voltage Levels</field>
+            <field name="res_model">voltage</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

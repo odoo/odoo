@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Contract Prices Form View -->
+        <record id="view_contract_prices_form" model="ir.ui.view">
+            <field name="name">contract_prices.form</field>
+            <field name="model">contract_prices</field>
+            <field name="arch" type="xml">
+                <form string="Contract Price">
+                
+                    <group>
+                        <field name="value" string="Value"/>
+                        <field name="unit" string="Unit"/>
+                        <field name="contract_id" string="Contract"/>
+                        <field name="priceComponents_id" string="Price Components"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Contract Prices Tree View -->
+        <record id="view_contract_prices_tree" model="ir.ui.view">
+            <field name="name">contract_prices.tree</field>
+            <field name="model">contract_prices</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="value"/>
+                    <field name="unit"/>
+                    <field name="contract_id"/>
+                    <field name="priceComponents_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Contract Prices Action -->
+        <record id="action_contract_prices" model="ir.actions.act_window">
+            <field name="name">Contract Prices</field>
+            <field name="res_model">contract_prices</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
