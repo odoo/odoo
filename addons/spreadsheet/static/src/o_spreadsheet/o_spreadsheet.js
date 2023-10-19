@@ -4430,6 +4430,9 @@
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
+    function isMatrix(x) {
+        return Array.isArray(x) && Array.isArray(x[0]);
+    }
     var DIRECTION;
     (function (DIRECTION) {
         DIRECTION["UP"] = "up";
@@ -15355,6 +15358,35 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // INDEX
+    // -----------------------------------------------------------------------------
+    const INDEX = {
+        description: _lt(`Returns the content of a cell, specified by row and column offset.`),
+        args: [
+            arg("reference (any, range)", _lt("The range of cells from which the values are returned.")),
+            arg("row (number)", _lt("The index of the row to be returned from within the reference range of cells.")),
+            arg("column (number)", _lt("The index of the column to be returned from within the reference range of cells.")),
+        ],
+        returns: ["ANY"],
+        computeFormat: (reference, row, column) => {
+            const _row = toNumber(row.value);
+            const _column = toNumber(column.value);
+            return reference[_column - 1][_row - 1]?.format;
+        },
+        compute: function (reference, row, column) {
+            const _reference = isMatrix(reference) ? reference : [[reference]];
+            const _row = toNumber(row);
+            const _column = toNumber(column);
+            assert(() => _column >= 0 &&
+                _column - 1 < _reference.length &&
+                _row >= 0 &&
+                _row - 1 < _reference[0].length, _lt("Index out of range."));
+            assert(() => row !== 0 && column !== 0, _lt("This function can only return a single cell value, not an array. Provide valid row and column indices."));
+            return _reference[_column - 1][_row - 1];
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // LOOKUP
     // -----------------------------------------------------------------------------
     const LOOKUP = {
@@ -15549,6 +15581,7 @@
         COLUMN: COLUMN,
         COLUMNS: COLUMNS,
         HLOOKUP: HLOOKUP,
+        INDEX: INDEX,
         LOOKUP: LOOKUP,
         MATCH: MATCH,
         ROW: ROW,
@@ -26986,12 +27019,15 @@
         };
     }
     function xmlEscape(str) {
-        return String(str)
+        return (String(str)
             .replace(/\&/g, "&amp;")
             .replace(/\</g, "&lt;")
             .replace(/\>/g, "&gt;")
             .replace(/\"/g, "&quot;")
-            .replace(/\'/g, "&apos;");
+            .replace(/\'/g, "&apos;")
+            // Delete all ASCII control characters except for TAB (\x09), LF (\x0A) and CR (\x0D)
+            // They are not valid at all in XML 1.0 (even escaped)
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""));
     }
     function formatAttributes(attrs) {
         return new XMLString(attrs.map(([key, val]) => `${key}="${xmlEscape(val)}"`).join(" "));
@@ -34081,6 +34117,10 @@
             }
             currentRanges = currentRanges.concat(toAdd);
             const newRangesXC = recomputeZones(currentRanges, toRemove);
+            if (newRangesXC.length === 0) {
+                this.dispatch("REMOVE_CONDITIONAL_FORMAT", { id: cf.id, sheetId });
+                return;
+            }
             this.dispatch("ADD_CONDITIONAL_FORMAT", {
                 cf: {
                     id: cf.id,
@@ -47745,9 +47785,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.13';
-    __info__.date = '2023-10-10T07:48:51.843Z';
-    __info__.hash = '67b6363';
+    __info__.version = '16.3.14';
+    __info__.date = '2023-10-19T15:27:20.911Z';
+    __info__.hash = '7b90b3d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
