@@ -35,7 +35,6 @@ You need to configure your certificate and the tax agency.
         'security/ir.model.access.csv',
         'security/l10n_es_edi_certificate.xml',
 
-        'views/account_tax_views.xml',
         'views/l10n_es_edi_certificate_views.xml',
         'views/res_config_settings_views.xml',
         'views/account_move_views.xml',
