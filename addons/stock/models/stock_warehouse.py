@@ -725,7 +725,7 @@ class Warehouse(models.Model):
                 self.lot_stock_id if delivery_steps == 'ship_only' else self.wh_output_stock_loc_id)
 
     def _get_transit_locations(self):
-        return self.company_id.internal_transit_location_id, self.env.ref('stock.stock_location_inter_wh', raise_if_not_found=False) or self.env['stock.location']
+        return self.company_id.internal_transit_location_id, self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False) or self.env['stock.location']
 
     @api.model
     def _get_partner_locations(self):

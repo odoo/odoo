@@ -193,6 +193,12 @@ class Location(models.Model):
             if record.scrap_location and self.env['stock.picking.type'].search([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)]):
                 raise ValidationError(_("You cannot set a location as a scrap location when it assigned as a destination location for a manufacturing type operation."))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        inter_company_location = self.env.ref('stock.stock_location_inter_company')
+        if inter_company_location in self:
+            raise ValidationError(_('The %s location is required by the Inventory app and cannot be deleted, but you can archive it.', inter_company_location.name))
+
     def write(self, values):
         if 'company_id' in values:
             for location in self:

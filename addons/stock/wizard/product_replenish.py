@@ -178,11 +178,11 @@ class ProductReplenish(models.TransientModel):
 
     # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
     def _get_allowed_route_domain(self):
-        stock_location_inter_wh_id = self.env.ref('stock.stock_location_inter_wh').id
+        stock_location_inter_company_id = self.env.ref('stock.stock_location_inter_company').id
         return [
             ('product_selectable', '=', True),
-            ('rule_ids.location_src_id', '!=', stock_location_inter_wh_id),
-            ('rule_ids.location_dest_id', '!=', stock_location_inter_wh_id)
+            ('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
+            ('rule_ids.location_dest_id', '!=', stock_location_inter_company_id)
         ]
 
     def _get_route_domain(self, product_tmpl_id):

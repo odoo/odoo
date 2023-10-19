@@ -1785,7 +1785,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_1.in_type_id
-            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_company')
             rule.procure_method = 'make_to_order'
         route_a = f.save()
         warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
@@ -1796,7 +1796,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 2'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_2.out_type_id
-            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_company')
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
@@ -1849,7 +1849,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_1.in_type_id
-            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_company')
             rule.procure_method = 'make_to_order'
         route_a = f.save()
 
@@ -1861,7 +1861,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 2'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_2.out_type_id
-            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_company')
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
@@ -1877,7 +1877,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 3'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_3.out_type_id
-            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_company')
             rule.procure_method = 'make_to_stock'
         route_c = f.save()
 
