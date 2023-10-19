@@ -262,20 +262,32 @@ class Cursor(BaseCursor):
         self._closed = True
 
         self.__pool = pool
+        self.__dsn = dsn
         self.dbname = dbname
-
-        self._cnx = pool.borrow(dsn)
-        self._obj = self._cnx.cursor()
+        self._real_cnx = None
+        self._real_obj = None
         if _logger.isEnabledFor(logging.DEBUG):
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
             self.__caller = False
         self._closed = False   # real initialization value
         # See the docstring of this class.
-        self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
 
         self.cache = {}
         self._now = None
+
+    @property
+    def _cnx(self):
+        if not self._real_cnx:
+            self._real_cnx = self.__pool.borrow(self.__dsn)
+        return self._real_cnx
+
+    @property
+    def _obj(self):
+        if not self._real_obj:
+            self._real_obj = self._cnx.cursor()
+            self._real_obj.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
+        return self._real_obj
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -291,7 +303,7 @@ class Cursor(BaseCursor):
         return [self.__build_dict(row) for row in self._obj.fetchall()]
 
     def __del__(self):
-        if not self._closed and not self._cnx.closed:
+        if not self._closed and self._real_cnx and not self._real_cnx.closed:
             # Oops. 'self' has not been closed explicitly.
             # The cursor will be deleted by the garbage collector,
             # but the database connection is not put back into the connection
@@ -438,39 +450,41 @@ class Cursor(BaseCursor):
             return self._close(False)
 
     def _close(self, leak=False):
-        if not self._obj:
-            return
-
         del self.cache
 
         # advanced stats only at logging.DEBUG level
         self.print_log()
 
-        self._obj.close()
+        if self._real_obj is not None:
+            self._real_obj.close()
+        self.rollback()
 
         # This force the cursor to be freed, and thus, available again. It is
         # important because otherwise we can overload the server very easily
         # because of a cursor shortage (because cursors are not garbage
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
-        del self._obj
+        del self._real_obj
 
         # Clean the underlying connection, and run rollback hooks.
-        self.rollback()
 
         self._closed = True
 
+        if self._real_cnx is None:
+            return
         if leak:
-            self._cnx.leaked = True
+            self._real_cnx.leaked = True
         else:
             chosen_template = tools.config['db_template']
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
-            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self.__pool.give_back(self._real_cnx, keep_in_pool=keep_in_pool)
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
-        result = self._cnx.commit()
+        result = None
+        if self._real_cnx:
+            result = self._real_cnx.commit()
         self.clear()
         self._now = None
         self.prerollback.clear()
@@ -483,19 +497,21 @@ class Cursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        result = self._cnx.rollback()
+        result = None
+        if self._real_cnx is not None:
+            result = self._real_cnx.rollback()
         self._now = None
         self.postrollback.run()
         return result
 
     def __getattr__(self, name):
-        if self._closed and name == '_obj':
+        if self._closed and name == '_real_obj':
             raise psycopg2.InterfaceError("Cursor already closed")
         return getattr(self._obj, name)
 
     @property
     def closed(self):
-        return self._closed or self._cnx.closed
+        return self._closed or self._real_cnx and self._real_cnx.closed
 
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
