@@ -292,7 +292,7 @@ class Task(models.Model):
         for task in self:
             task.analytic_account_id = task.project_id.analytic_account_id
 
-    @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
+    @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
         for task in self:
             dependent_open_tasks = []
@@ -304,13 +304,8 @@ class Task(models.Model):
                 if task.state not in CLOSED_STATES:
                     task.state = '04_waiting_normal'
             # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
-            elif task.state == '04_waiting_normal':
+            elif task.state not in CLOSED_STATES:
                 task.state = '01_in_progress'
-
-    @api.onchange('stage_id')
-    def _onchange_stage_id(self):
-        if self.state != '04_waiting_normal' and self.state not in CLOSED_STATES:
-            self.state = '01_in_progress'
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -1106,6 +1101,8 @@ class Task(models.Model):
                     if task.is_blocked_by_dependences() and vals['state'] not in CLOSED_STATES and vals['state'] != '04_waiting_normal':
                         task.state = '04_waiting_normal'
                 task.date_last_stage_update = now
+        elif 'project_id' in vals:
+            self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
