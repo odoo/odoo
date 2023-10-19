@@ -77,10 +77,9 @@
                                     t-on-click="() => this.checkProps()"
                                 />
                             </t>
-
-                            <t t-if="props.editInDialog and !props.readonly">
-                                <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
-                            </t>
+                        </t>
+                        <t t-if="props.editInDialog and !props.readonly">
+                            <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
                         </t>
                     </div>
                 </t>
