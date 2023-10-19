@@ -4,7 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillRender, useState } from "@odoo/owl";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -34,6 +34,7 @@ export class MessagingMenu extends Component {
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
+        onWillRender(() => (this.threads = this.getThreads()));
     }
 
     beforeOpen() {
@@ -103,14 +104,13 @@ export class MessagingMenu extends Component {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast: this.threads.length === 0 && this.store.failures.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
     }
 
-    get threads() {
-        /** @type {import("models").Thread[]} */
+    getThreads() {
+        /** @type {import("@mail/core/common/thread_model").Thread[]} */
         let threads = Object.values(this.store.Thread.records).filter(
             (thread) =>
                 thread.is_pinned ||
