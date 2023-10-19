@@ -1150,7 +1150,8 @@ class Meeting(models.Model):
             deactivate the detached events except for the updated event and apply recurrence values.
         """
         self.ensure_one()
-        update_dict = self._get_time_update_dict(self, time_values)
+        base_event = self
+        update_dict = self._get_time_update_dict(base_event, time_values)
         time_values.update(update_dict)
         # Get base values from the previous recurrence and update the start date weekday field.
         start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
@@ -1183,7 +1184,7 @@ class Meeting(models.Model):
     def _rewrite_recurrence(self, values, time_values, recurrence_values):
         """ Delete the current recurrence, reactivate base event and apply updated recurrence values. """
         self.ensure_one()
-        base_event = self.recurrence_id.base_event_id
+        base_event = self.recurrence_id.base_event_id or self.recurrence_id._get_first_event(include_outliers=False)
         update_dict = self._get_time_update_dict(base_event, time_values)
         time_values.update(update_dict)
 
