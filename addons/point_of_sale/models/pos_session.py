@@ -1198,7 +1198,20 @@ class PosSession(models.Model):
         # may arise in 'Round Globally'.
         check_refund = lambda x: x.qty * x.price_unit < 0
         is_refund = check_refund(order_line)
-        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund, fixed_multiplicator=sign)
+        abs_qty = abs(order_line.qty)
+        if order_line.combo_parent_id:
+            # for combo lines, price is computed based on qty=1
+            # TODO JCB: Explain this
+            tax_data_unit = tax_ids.compute_all(price_unit=price, quantity=1, currency=self.currency_id, is_refund=is_refund, fixed_multiplicator=sign)
+            tax_data = {
+                'base_tags': tax_data_unit['base_tags'],
+                'taxes': [{**txs, 'amount': txs['amount']*abs_qty, 'base': txs['base']*abs_qty} for txs in tax_data_unit['taxes']],
+                'total_excluded': tax_data_unit['total_excluded'] * abs_qty,
+                'total_included': tax_data_unit['total_included'] * abs_qty,
+                'total_void': tax_data_unit['total_void'] * abs_qty,
+            }
+        else:
+            tax_data = tax_ids.compute_all(price_unit=price, quantity=abs_qty, currency=self.currency_id, is_refund=is_refund, fixed_multiplicator=sign)
         taxes = tax_data['taxes']
         # For Cash based taxes, use the account from the repartition line immediately as it has been paid already
         for tax in taxes:
