@@ -84,6 +84,10 @@ class TestStructure(SavepointCase):
         test_partner = self.env['res.partner'].create({'name': "Turlututu", 'country_id': self.env.ref('base.fr').id})
         test_partner.write({'vat': "EU528003646", 'country_id': None})
 
+    def test_vat_be_update(self):
+        """ Test that belgium VAT numbers can now begin with BE1xxx.xxx.xxx """
+        test_partner = self.env['res.partner'].create({'name': "My BE company", 'country_id': self.env.ref('base.be').id})
+        test_partner.write({'vat': "BE1234558590"})
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
