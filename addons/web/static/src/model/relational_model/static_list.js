@@ -367,13 +367,13 @@ export class StaticList extends DataPoint {
         return this.model.mutex.exec(() => this._sortBy(fieldName));
     }
 
-    async update(toLink, toUnlink) {
+    async update(toLink, toUnlink, { reload } = {}) {
         return this.model.mutex.exec(async () => {
             const commands = [
                 ...toLink.map((id) => [x2ManyCommands.LINK, id]),
                 ...toUnlink.map((id) => [x2ManyCommands.UNLINK, id]),
             ];
-            await this._applyCommands(commands, { canAddOverLimit: true });
+            await this._applyCommands(commands, { canAddOverLimit: true, reload });
             await this._onUpdate();
         });
     }
@@ -480,7 +480,7 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async _applyCommands(commands, { canAddOverLimit } = { canAddOverLimit: false }) {
+    async _applyCommands(commands, { canAddOverLimit, reload } = {}) {
         const isOnLastPage = this.limit + this.offset >= this.count;
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
 
@@ -627,9 +627,18 @@ export class StaticList extends DataPoint {
                 }
             }
         }
-        if (recordsToLoad.length) {
-            const resIds = recordsToLoad.map((r) => r.resId);
+        if (recordsToLoad.length || reload) {
+            const resIds = reload
+                ? this.records.map((r) => r.resId)
+                : recordsToLoad.map((r) => r.resId);
             const recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            if (reload) {
+                for (const record of recordValues) {
+                    this._createRecordDatapoint(record);
+                }
+                this.records = resIds.map((id) => this._cache[id]);
+                return;
+            }
             for (let i = 0; i < recordsToLoad.length; i++) {
                 const record = recordsToLoad[i];
                 record._applyValues(recordValues[i]);

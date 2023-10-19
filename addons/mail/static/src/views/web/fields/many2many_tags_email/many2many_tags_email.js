@@ -75,7 +75,11 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         }
 
         const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
-        await list.update(this.recordsIdsToAdd, invalidRecordIds);
+        await list.update(
+            [],
+            invalidRecordIds.filter((id) => !this.recordsIdsToAdd.includes(id)),
+            { reload: true }
+        );
         this.recordsIdsToAdd = [];
     }
 
