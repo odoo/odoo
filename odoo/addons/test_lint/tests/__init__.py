@@ -10,5 +10,6 @@ from . import test_markers
 from . import test_onchange_domains
 from . import test_override_signatures
 from . import test_pofile
+from . import test_populate
 from . import test_pylint
 from . import test_routes
