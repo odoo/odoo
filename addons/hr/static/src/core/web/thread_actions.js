@@ -26,7 +26,6 @@ threadActionsRegistry.add("open-hr-profile", {
     async setup(action) {
         const component = useComponent();
         const orm = useService("orm");
-        const store = useService("mail.store");
         let employeeId;
         if (!component.thread?.correspondent?.employeeId && component.thread?.chatPartner) {
             const employees = await orm.silent.searchRead(
@@ -35,12 +34,9 @@ threadActionsRegistry.add("open-hr-profile", {
                 ["id"]
             );
             employeeId = employees[0]?.id;
-        }
-        if (employeeId) {
-            store.Persona.insert({
-                ...component.thread.correspondent,
-                employeeId,
-            });
+            if (employeeId) {
+                component.thread.chatPartner.employeeId = employeeId;
+            }
         }
     },
     sequence: 16,
