@@ -373,14 +373,7 @@ export class StaticList extends DataPoint {
                 ...toLink.map((id) => [x2ManyCommands.LINK, id]),
                 ...toUnlink.map((id) => [x2ManyCommands.UNLINK, id]),
             ];
-            await this._applyCommands(commands, true);
-            await this._onUpdate();
-        });
-    }
-
-    async replaceWith(ids, { reload = false } = {}) {
-        return this.model.mutex.exec(async () => {
-            await this._replaceWith(ids, { reload });
+            await this._applyCommands(commands, { canAddOverLimit: true });
             await this._onUpdate();
         });
     }
@@ -487,7 +480,7 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async _applyCommands(commands, replaceWith = false) {
+    async _applyCommands(commands, { canAddOverLimit } = { canAddOverLimit: false }) {
         const isOnLastPage = this.limit + this.offset >= this.count;
         const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
 
@@ -596,7 +589,7 @@ export class StaticList extends DataPoint {
                             recordsToLoad.push(record);
                         }
                     }
-                    if (!this.limit || this.records.length < this.limit || replaceWith) {
+                    if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
                         this.records.push(record);
                     }
                     this._currentIds.push(record.resId);
@@ -614,7 +607,6 @@ export class StaticList extends DataPoint {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
-            // const recordsToLoad = [];
             for (const id of nextRecordIds) {
                 if (this._cache[id]) {
                     this.records.push(this._cache[id]);
@@ -848,32 +840,6 @@ export class StaticList extends DataPoint {
         this.records = currentIds.map((id) => this._cache[id]);
         this._currentIds = nextCurrentIds;
         await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
-    }
-
-    async _replaceWith(ids, { reload = false } = {}) {
-        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
-        if (resIds.length) {
-            const records = await this.model._loadRecords({
-                ...this.config,
-                resIds,
-                context: this.context,
-            });
-            for (const record of records) {
-                this._createRecordDatapoint(record);
-            }
-        }
-        this.records = ids.map((id) => this._cache[id]);
-        const updateCommandsToKeep = this._commands.filter(
-            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
-        );
-        this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
-        this._currentIds = [...ids];
-        this.count = this._currentIds.length;
-        if (this._currentIds.length > this.limit) {
-            this._tmpIncreaseLimit = this._currentIds.length - this.limit;
-            const nextLimit = this.limit + this._tmpIncreaseLimit;
-            this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
-        }
     }
 
     async _resequence(movedId, targetId) {

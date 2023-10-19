@@ -1979,7 +1979,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             $(target).find(".o_data_row").length,
             41,
-            "We should have 51 records in the m2m field"
+            "We should have 41 records in the m2m field"
         );
     });
 

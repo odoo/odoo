@@ -27,7 +27,6 @@ export class Record extends DataPoint {
      * @param {Object} [options={}]
      * @param {boolean} [options.manuallyAdded]
      * @param {Function} [options.onUpdate]
-     * @param {Function} [options.onSave]
      * @param {Record} [options.parentRecord]
      * @param {string} [options.virtualId]
      */
@@ -1038,7 +1037,7 @@ export class Record extends DataPoint {
             for (const fieldName in this.activeFields) {
                 const field = this.fields[fieldName];
                 if (["one2many", "many2many"].includes(field.type) && !field.relatedPropertyField) {
-                    this._changes[fieldName]._clearCommands();
+                    this._changes[fieldName]?._clearCommands();
                 }
             }
             this._changes = markRaw({});
