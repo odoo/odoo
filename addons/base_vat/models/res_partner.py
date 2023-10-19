@@ -48,7 +48,7 @@ _ref_vat = {
     'fr': 'FR23334175221',
     'gb': 'GB123456782 or XI123456782',
     'gr': 'GR12345670',
-    'hu': 'HU12345676',
+    'hu': 'HU12345676 or 12345678-1-11 or 8071592153',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'in': "12AAAAA1234AAZA",
@@ -290,6 +290,27 @@ class ResPartner(models.Model):
         if len(number) == 10 and self.__check_vat_al_re.match(number):
             return True
         return False
+
+    __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
+    __check_tin_hu_companies_re = re.compile(r'^\d{8}-[1-5]-\d{2}$')
+
+    def check_vat_hu(self, vat):
+        """
+            Check Hungary VAT number that can be for example 'HU12345676 or 'xxxxxxxx-y-zz' or '8xxxxxxxxy'
+            - For xxxxxxxx-y-zz, 'x' can be any number, 'y' is a number between 1 and 5 depending on the person and the 'zz'
+              is used for region code.
+            - 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
+        """
+        companies = self.__check_tin_hu_companies_re.match(vat)
+        if companies:
+            return True
+        individual = self.__check_tin_hu_individual_re.match(vat)
+        if individual:
+            return True
+        # Check the vat number
+        check_func = stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
+        if check_func is not None:
+            return check_func(vat)
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
