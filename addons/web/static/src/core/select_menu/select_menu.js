@@ -24,6 +24,7 @@ export class SelectMenu extends Component {
         onSelect: () => {},
         required: false,
         searchable: true,
+        autoSort: true,
         searchPlaceholder: _t("Search..."),
         choices: [],
         groups: [],
@@ -65,6 +66,7 @@ export class SelectMenu extends Component {
         togglerClass: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
+        autoSort: { type: Boolean, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
@@ -246,9 +248,11 @@ export class SelectMenu extends Component {
                 );
             } else {
                 filteredOptions = group.choices;
-                filteredOptions.sort((optionA, optionB) =>
-                    optionA.label.localeCompare(optionB.label)
-                );
+                if (this.props.autoSort) {
+                    filteredOptions.sort((optionA, optionB) =>
+                        optionA.label.localeCompare(optionB.label)
+                    );
+                }
             }
 
             if (filteredOptions.length === 0) {
@@ -262,23 +266,6 @@ export class SelectMenu extends Component {
         }
 
         this.sliceDisplayedOptions();
-    }
-
-    /**
-     * Sorts the choices while keeping the groups separation
-     * @param {[]} choices
-     */
-    sortGroups(choices) {
-        const groupsIndex = this.getGroupsIndex(choices);
-        for (let i = 0; i < groupsIndex.length; i++) {
-            const startIndex = choices[groupsIndex[i]].isGroup
-                ? groupsIndex[i] + 1
-                : groupsIndex[i];
-            const lastIndex = i === groupsIndex.length - 1 ? choices.length : groupsIndex[i + 1];
-            const groupSlice = choices.slice(startIndex, lastIndex);
-            groupSlice.sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
-            choices.splice(startIndex, lastIndex - startIndex, ...groupSlice);
-        }
     }
 
     /**

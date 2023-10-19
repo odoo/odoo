@@ -315,7 +315,7 @@ QUnit.module("Web Components", (hooks) => {
         }
     );
 
-    QUnit.test("Items are sorted based on their label", async (assert) => {
+    QUnit.test("Items are sorted based on their label by default", async (assert) => {
         class Parent extends Component {
             setup() {
                 this.choices = [
@@ -340,6 +340,30 @@ QUnit.module("Web Components", (hooks) => {
         assert.deepEqual(
             choices.map((el) => el.textContent),
             ["Bar", "Foo", "Hello", "World"]
+        );
+    });
+
+    QUnit.test("autoSort props set to false", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.choices = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                    { label: "Foo", value: "foo" },
+                    { label: "Bar", value: "bar" },
+                ];
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`<SelectMenu choices="choices" autoSort="false"/>`;
+
+        await mount(Parent, target, { env });
+        await open();
+
+        const choices = [...target.querySelectorAll(".o_select_menu_item_label")];
+        assert.deepEqual(
+            choices.map((el) => el.textContent),
+            ["Hello", "World", "Foo", "Bar"]
         );
     });
 
