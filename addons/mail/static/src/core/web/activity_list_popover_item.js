@@ -24,9 +24,9 @@ export class ActivityListPopoverItem extends Component {
     static components = { ActivityMailTemplate, ActivityMarkAsDone, FileUploader };
     static props = [
         "activity",
-        "onActivityChanged",
+        "onActivityChanged?",
         "onClickDoneAndScheduleNext?",
-        "onClickEditActivityButton",
+        "onClickEditActivityButton?",
     ];
     static template = "mail.ActivityListPopoverItem";
 
@@ -64,15 +64,19 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get hasEditButton() {
-        return this.props.activity.chaining_type === "suggest" && this.props.activity.can_write;
+        const activity = this.props.activity;
+        return (
+            activity.state !== "done" && activity.chaining_type === "suggest" && activity.can_write
+        );
     }
 
     get hasFileUploader() {
-        return this.props.activity.activity_category === "upload_file";
+        const activity = this.props.activity;
+        return activity.state !== "done" && activity.activity_category === "upload_file";
     }
 
     get hasMarkDoneButton() {
-        return !this.hasFileUploader;
+        return this.props.activity.state !== "done" && !this.hasFileUploader;
     }
 
     onClickEditActivityButton() {
@@ -98,5 +102,17 @@ export class ActivityListPopoverItem extends Component {
             id: this.props.activity.user_id[0],
             model: "res.users",
         });
+    }
+
+    get dateDeadlineFormatted() {
+        return luxon.DateTime.fromISO(this.props.activity.date_deadline).toLocaleString(
+            luxon.DateTime.DATE_SHORT
+        );
+    }
+
+    get dateDoneFormatted() {
+        return luxon.DateTime.fromISO(this.props.activity.dateDone).toLocaleString(
+            luxon.DateTime.DATE_SHORT
+        );
     }
 }

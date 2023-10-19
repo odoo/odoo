@@ -68,6 +68,7 @@ class AccountMove(models.Model):
     _check_company_auto = True
     _sequence_index = "journal_id"
     _rec_names_search = ['name', 'partner_id.name', 'ref']
+    _systray_view = 'activity'
 
     @property
     def _sequence_monthly_regex(self):

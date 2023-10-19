@@ -5,14 +5,47 @@
         }
     }
     .o_activity_summary_cell {
+        .o-mail-ActivityCell-counter {
+            color: map-get($theme-colors, 'dark');
+        }
         &.planned {
             background-color: map-get($theme-colors, 'success');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.overdue {
             background-color: map-get($theme-colors, 'danger');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.today {
             background-color: map-get($theme-colors, 'warning');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.done {
+            background-color: map-get($theme-colors, 'secondary');
+            a {
+                color: map-get($theme-colors, 'dark');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.o_activity_empty_cell {
             > i {
@@ -57,20 +90,12 @@
             font-size: large;
         }
 
-        > div {
-            max-width: 200px;
-
-            .o_text_block {
-                @include o-text-overflow;
-                display: block;
-            }
-        }
-
         .o_text_bold {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
 
         .o_text_block {
+            @include o-text-overflow($max-width: 15rem);
             display: block;
         }
     }

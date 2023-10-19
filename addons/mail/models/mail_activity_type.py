@@ -71,6 +71,7 @@ class MailActivityType(models.Model):
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
     default_user_id = fields.Many2one("res.users", string="Default User")
     default_note = fields.Html(string="Default Note", translate=True)
+    keep_done = fields.Boolean(string="Keep Done", help='Keep activities marked as done in the activity view')
 
     #Fields for display purpose only
     initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,

@@ -282,10 +282,11 @@ class Users(models.Model):
         user_activities = {}
         for model_name, activities_by_record in activities_by_record_by_model_name.items():
             domain = [("id", "in", list({r.id for r in activities_by_record.keys()}))]
-            allowed_records = self.env[model_name].search(domain)
+            Model = self.env[model_name]
+            allowed_records = Model.search(domain)
             if not allowed_records:
                 continue
-            module = self.env[model_name]._original_module
+            module = Model._original_module
             icon = module and modules.module.get_module_icon(module)
             model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
             user_activities[model_name] = {
@@ -298,12 +299,7 @@ class Users(models.Model):
                 "today_count": 0,
                 "overdue_count": 0,
                 "planned_count": 0,
-                "actions": [
-                    {
-                        "icon": "fa-clock-o",
-                        "name": "Summary",
-                    }
-                ],
+                "view_type": getattr(Model, '_systray_view', 'list'),
             }
             for record, activities in activities_by_record.items():
                 if record not in allowed_records:

@@ -17,6 +17,7 @@ class Users(models.Model):
             doing a new query to split them by mailing_type.
         """
         activities = super(Users, self).systray_get_activities()
+        view_type = self.env['mailing.mailing']._systray_view
         for activity in activities:
             if activity.get('model') == 'mailing.mailing':
                 activities.remove(activity)
@@ -56,6 +57,7 @@ class Users(models.Model):
                             'icon': icon,
                             'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                             'res_ids': res_ids,
+                            "view_type": view_type,
                         }
                     user_activities[act['mailing_type']]['res_ids'].add(act['res_id'])
                     user_activities[act['mailing_type']]['%s_count' % act['states']] += act['count']
@@ -64,7 +66,6 @@ class Users(models.Model):
 
                 for mailing_type in user_activities.keys():
                     user_activities[mailing_type].update({
-                        'actions': [{'icon': 'fa-clock-o', 'name': 'Summary',}],
                         'domain': json.dumps([['activity_ids.res_id', 'in', list(user_activities[mailing_type]['res_ids'])]])
                     })
                 activities.extend(list(user_activities.values()))

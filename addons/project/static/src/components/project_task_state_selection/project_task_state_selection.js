@@ -131,14 +131,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     }
 
     getDropdownPosition() {
-        if (this.isView(['kanban', 'list', 'calendar']) || this.env.isSmall) {
+        if (this.isView(['activity', 'kanban', 'list', 'calendar']) || this.env.isSmall) {
             return '';
         }
         return 'bottom-end';
     }
 
     getTogglerClass(currentValue) {
-        if (this.isView(['kanban', 'list', 'calendar']) || this.env.isSmall) {
+        if (this.isView(['activity', 'kanban', 'list', 'calendar']) || this.env.isSmall) {
             return 'btn btn-link d-flex p-0';
         }
         return 'o_state_button btn rounded-pill ' + this.colorButton[currentValue];

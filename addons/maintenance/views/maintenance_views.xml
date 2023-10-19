@@ -52,6 +52,27 @@
         </field>
     </record>
 
+    <record id="maintenance_request_view_activity" model="ir.ui.view">
+        <field name="name">maintenance.request.view.activity</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <activity string="Maintenance Request">
+                <field name="user_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <div class="flex-grow-1 d-block">
+                            <div class="d-flex justify-content-between">
+                                <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            </div>
+                            <field name="equipment_id" muted="1" display="full" class="o_text_block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="hr_equipment_request_view_form" model="ir.ui.view">
         <field name="name">equipment.request.form</field>
         <field name="model">maintenance.request</field>
@@ -264,7 +285,7 @@
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
             'search_default_active': True,
@@ -282,7 +303,7 @@
     <record id="hr_equipment_request_action_link" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="search_view_id" ref="hr_equipment_request_view_search"/>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
@@ -303,7 +324,7 @@
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
         <field name="binding_model_id" ref="maintenance.model_maintenance_equipment"/>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="context">{
             'search_default_active': True,
             'default_equipment_id': active_id,
@@ -321,7 +342,7 @@
     <record id="hr_equipment_todo_request_action_from_dashboard" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="context">{
             'search_default_active': True,
             'search_default_maintenance_team_id': active_id,
@@ -340,7 +361,7 @@
     <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">calendar,kanban,tree,form,pivot,graph</field>
+        <field name="view_mode">calendar,kanban,tree,form,pivot,graph,activity</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
         <field name="context">{
             'search_default_active': True,
@@ -358,7 +379,7 @@
     <record id="maintenance_request_action_reports" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
+        <field name="view_mode">graph,pivot,kanban,tree,form,calendar,activity</field>
         <field name="context">{
             'search_default_active': True,
         }</field>

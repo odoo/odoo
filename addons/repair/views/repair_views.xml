@@ -3,6 +3,25 @@
 
     <data>
 
+    <record id="repair_order_view_activity" model="ir.ui.view">
+        <field name="name">repair.order.view.activity</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <activity string="Activity view">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <div>
+                            <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            <field name="product_id" class="o_text_block"/>
+                            <field name="schedule_date" widget="date" class="d-block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="view_repair_order_tree" model="ir.ui.view">
         <field name="name">repair.tree</field>
         <field name="model">repair.order</field>
@@ -298,7 +317,7 @@
          <record id="action_repair_order_tree" model="ir.actions.act_window">
             <field name="name">Repair Orders</field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,graph,pivot,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,form,activity</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

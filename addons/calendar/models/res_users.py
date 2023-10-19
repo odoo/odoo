@@ -40,7 +40,8 @@ class Users(models.Model):
     def systray_get_activities(self):
         res = super(Users, self).systray_get_activities()
 
-        meetings_lines = self.env['calendar.event'].search_read(
+        EventModel = self.env['calendar.event']
+        meetings_lines = EventModel.search_read(
             self._systray_get_calendar_event_domain(),
             ['id', 'start', 'name', 'allday'],
             order='start')
@@ -51,8 +52,9 @@ class Users(models.Model):
                 'type': 'meeting',
                 'name': meeting_label,
                 'model': 'calendar.event',
-                'icon': modules.module.get_module_icon(self.env['calendar.event']._original_module),
+                'icon': modules.module.get_module_icon(EventModel._original_module),
                 'meetings': meetings_lines,
+                "view_type": EventModel._systray_view,
             }
             res.insert(0, meetings_systray)
 
