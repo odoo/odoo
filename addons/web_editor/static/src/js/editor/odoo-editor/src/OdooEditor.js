@@ -49,7 +49,6 @@ import {
     isEmptyBlock,
     getUrlsInfosInString,
     URL_REGEX,
-    URL_REGEX_WITH_INFOS,
     isSelectionFormat,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
@@ -4549,17 +4548,24 @@ export class OdooEditor extends EventTarget {
             !closestElement(selection.anchorNode).closest('a') &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
-            const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
-            const textNodeSplitted = textSliced.split(/\s/);
-            let potentialUrl = textNodeSplitted.pop();
-            const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
-
-            if (lastWordMatch) {
-                const matches = getUrlsInfosInString(textSliced);
-                const match = matches[matches.length - 1];
-                const range = this.document.createRange();
-                range.setStart(selection.anchorNode, match.index);
-                range.setEnd(selection.anchorNode, match.index + match.length);
+            let node = selection.anchorNode;
+            const textBeforeCursor = node.textContent.slice(0, selection.anchorOffset);
+            // Backwards search for space.
+            let space = [...textBeforeCursor.matchAll(/\s/g)].pop();
+            // Include adjacent previous text nodes in the search if no
+            // space was found.
+            while (!space && node.previousSibling?.nodeType === Node.TEXT_NODE) {
+                node = node.previousSibling;
+                space = [...node.textContent.matchAll(/\s/g)].pop();
+            }
+            const range = this.document.createRange();
+            // Use beginning of the last searched text node as word
+            // boundary if no space was found.
+            range.setStart(node, (space && space.index + 1) || 0);
+            range.setEnd(selection.anchorNode, selection.anchorOffset);
+            const potentialUrl = range.toString();
+            const match = getUrlsInfosInString(potentialUrl).pop();
+            if (match && match.label === potentialUrl && !EMAIL_REGEX.test(potentialUrl)) {
                 const link = this._createLink(range.extractContents().textContent, match.url);
                 range.insertNode(link);
                 const container = link.parentElement;
