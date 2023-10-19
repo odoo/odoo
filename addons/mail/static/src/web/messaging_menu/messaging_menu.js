@@ -7,7 +7,7 @@ import { NotificationItem } from "@mail/web/messaging_menu/notification_item";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { createLocalId } from "@mail/utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillRender, useState } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
@@ -39,6 +39,7 @@ export class MessagingMenu extends Component {
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
+        onWillRender(() => this.threads = this.getThreads());
     }
 
     beforeOpen() {
@@ -95,13 +96,12 @@ export class MessagingMenu extends Component {
             displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast: this.threads.length === 0 && this.store.notificationGroups.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
     }
 
-    get threads() {
+    getThreads() {
         /** @type {import("@mail/core/thread_model").Thread[]} **/
         let threads = Object.values(this.store.threads).filter(
             (thread) =>
