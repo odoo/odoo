@@ -101,6 +101,13 @@ class SaleOrderLine(models.Model):
                 'sale_order_line_id': line.id,
                 'picking_type_id': order.warehouse_id.repair_type_id.id,
             })
+            if line.product_template_id.type in ('consu', 'product'):
+                new_repair_vals[-1].update({
+                    'product_id': line.product_id.id,
+                    'product_qty': line.product_uom_qty,
+                    'product_uom': line.product_uom.id,
+                })
+
         if new_repair_vals:
             self.env['repair.order'].sudo().create(new_repair_vals)
 
