@@ -1,7 +1,7 @@
 import re
 
 from odoo import _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -53,15 +53,20 @@ def format_partner_address(partner):
     """
     STREET_FORMAT = '%(street_number)s/%(street_number2)s %(street_name)s'
     street_data = split_street_with_params(partner.street, STREET_FORMAT)
-    return {
+    address = {
         'city': partner.city,
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code,
+        'stateOrProvince': partner.state_id.code or '', # The state is not always required.
         'postalCode': partner.zip,
         # Fill in the address fields if the format is supported, or fallback to the raw address.
         'street': street_data.get('street_name', partner.street),
         'houseNumberOrName': street_data.get('street_number'),
     }
+    for key, value in address.items():
+        if key == 'stateOrProvince' and partner.country_id.code not in ['CA', 'US', 'GB']:
+            continue
+        if not value:
+            raise ValidationError(_("Please complete your address details."))
 
 
 # The method is copy-pasted from `base_address_extended` with small modifications.
