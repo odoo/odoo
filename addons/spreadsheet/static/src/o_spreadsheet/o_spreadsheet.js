@@ -25523,12 +25523,15 @@
         };
     }
     function xmlEscape(str) {
-        return String(str)
+        return (String(str)
             .replace(/\&/g, "&amp;")
             .replace(/\</g, "&lt;")
             .replace(/\>/g, "&gt;")
             .replace(/\"/g, "&quot;")
-            .replace(/\'/g, "&apos;");
+            .replace(/\'/g, "&apos;")
+            // Delete all ASCII control characters except for TAB (\x09), LF (\x0A) and CR (\x0D)
+            // They are not valid at all in XML 1.0 (even escaped)
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""));
     }
     function formatAttributes(attrs) {
         return new XMLString(attrs.map(([key, val]) => `${key}="${xmlEscape(val)}"`).join(" "));
@@ -32591,6 +32594,10 @@
             }
             currentRanges = currentRanges.concat(toAdd);
             const newRangesXC = recomputeZones(currentRanges, toRemove);
+            if (newRangesXC.length === 0) {
+                this.dispatch("REMOVE_CONDITIONAL_FORMAT", { id: cf.id, sheetId });
+                return;
+            }
             this.dispatch("ADD_CONDITIONAL_FORMAT", {
                 cf: {
                     id: cf.id,
@@ -45484,9 +45491,19 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
+<<<<<<< HEAD
     __info__.version = '16.2.18';
     __info__.date = '2023-10-10T07:48:01.528Z';
     __info__.hash = '451fa09';
+||||||| parent of aaf2f361b43 (temp)
+    __info__.version = '16.1.23';
+    __info__.date = '2023-10-10T07:47:07.748Z';
+    __info__.hash = '13bfa8f';
+=======
+    __info__.version = '16.1.24';
+    __info__.date = '2023-10-19T15:25:38.108Z';
+    __info__.hash = '1b9e9d0';
+>>>>>>> aaf2f361b43 (temp)
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
