@@ -8,8 +8,7 @@
             t-foreach="figures" t-as="figure"
             t-component="getFigureComponent(figure)"
             onFigureDeleted="() => {}"
-            figure="figure"
+            figureId="figure.id"
             t-key="figure.id"/>
     </t>
 </templates>
-
