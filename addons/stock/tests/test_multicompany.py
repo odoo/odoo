@@ -108,6 +108,17 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             shared_partner.with_user(self.user_b).property_stock_customer = self.stock_location_a
 
+    def test_partner_2(self):
+        """On the partners of companies A and B:
+        - As a user of Company A, the customer/vendor location of Company B should be the inter-company location
+        - As a user of Company B, the customer/vendor location of Company A should be the inter-company location
+        """
+        inter_company_loc = self.env.ref('stock.stock_location_inter_company')
+        self.assertEqual(self.company_a.partner_id.with_user(self.user_b).property_stock_customer, inter_company_loc)
+        self.assertEqual(self.company_a.partner_id.with_user(self.user_b).property_stock_supplier, inter_company_loc)
+        self.assertEqual(self.company_b.partner_id.with_user(self.user_a).property_stock_customer, inter_company_loc)
+        self.assertEqual(self.company_b.partner_id.with_user(self.user_a).property_stock_supplier, inter_company_loc)
+
     def test_inventory_1(self):
         """Create a quant (inventory adjustment) in Company A for a product limited to Company A and
         as a user of company B, apply the inventory adjustment and set its counted quantity to 10
@@ -415,7 +426,7 @@ class TestMultiCompany(TransactionCase):
         with previous move, and no product are reserved from inter-company
         transit. """
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
         intercom_location.write({'active': True})
 
         self.user_a.company_ids = [(6, 0, [self.company_a.id])]
@@ -523,7 +534,7 @@ class TestMultiCompany(TransactionCase):
         inter-company transit location."""
         customer_location = self.env.ref('stock.stock_location_customers')
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        intercom_location = self.env.ref('stock.stock_location_inter_wh')
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
         intercom_location.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'Deco Addict'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
