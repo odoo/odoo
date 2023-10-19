@@ -404,7 +404,7 @@ QUnit.module(
                 editor.document.querySelector(".o_dialog footer button.btn-primary").click();
                 await nextTick();
                 insertText(editor, "E");
-                triggerEvent(node, "keydown", { key: "Enter", shiftKey: true });
+                triggerEvent(node, "input", { inputType: "insertLineBreak" });
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
@@ -434,7 +434,7 @@ QUnit.module(
                 editor.document.querySelector(".o_dialog footer button.btn-primary").click();
                 await nextTick();
                 insertText(editor, "E");
-                triggerEvent(node, "keydown", { key: "Enter", shiftKey: true });
+                triggerEvent(node, "input", { inputType: "insertLineBreak" });
                 insertText(editor, "D");
                 editor.clean();
                 assert.strictEqual(
