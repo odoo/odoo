@@ -58,17 +58,17 @@
                         Continue
                     </button>
                 </div>
-                <div t-else="" class="switchpane d-flex">
-                    <div class="btn-switchpane validation-button btn btn-primary flex-fill py-3 rounded-0 fw-bolder" t-att-class="{ highlight: !locked }"
+                <div t-else="" class="switchpane d-flex h-12">
+                    <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }"
                         t-if="!splittedOrder"
                         t-on-click="orderDone" name="done">
                         New Order
                     </div>
-                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill py-3 rounded-0 fw-bolder" t-att-class="{ highlight: !locked }"
+                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }"
                         t-on-click="resumeOrder" name="resume">
                         Resume Order
                     </div>
-                    <div t-if="splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill py-3 rounded-0 fw-bolder" t-att-class="{ highlight: !locked }"
+                    <div t-if="splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }"
                         t-on-click="continueSplitting" name="resume">
                         Continue
                     </div>

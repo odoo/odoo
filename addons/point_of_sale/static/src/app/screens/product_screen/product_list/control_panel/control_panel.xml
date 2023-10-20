@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductsWidgetControlPanel">
-        <div class="products-widget-control d-flex bg-view shadow-sm" t-att-class="{'h-12': categoriesHasImages}" t-ref="products-widget-control">
+        <div class="products-widget-control d-flex bg-view shadow-sm" t-att-class="{'h-8 min-h-50': categoriesHasImages}" t-ref="products-widget-control">
             <CategorySelector
                 categories="getCategories()"
                 onClick="(id) => this.pos.setSelectedCategoryId(id)"
