@@ -70,7 +70,8 @@ export function pivotTimeAdapter(groupAggregate) {
  * @property {(groupBy: string, field: string, readGroupResult: object) => string} normalizeServerValue
  * @property {(value: string) => string} normalizeFunctionValue
  * @property {(normalizedValue: string, step: number) => string} increment
- * @property {(normalizedValue: string, locale: Object) => string} format
+ * @property {(normalizedValue: string, locale: Object) => string} formatValue
+ * @property {(locale: Object) => string} getFormat
  */
 
 /**
@@ -95,9 +96,12 @@ const dayAdapter = {
         const date = DateTime.fromFormat(normalizedValue, "MM/dd/yyyy");
         return date.plus({ days: step }).toFormat("MM/dd/yyyy");
     },
-    format(normalizedValue, locale) {
+    getFormat(locale) {
+        return locale.dateFormat;
+    },
+    formatValue(normalizedValue, locale) {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
-        return formatValue(value, { locale, format: locale.dateFormat });
+        return formatValue(value, { locale, format: this.getFormat(locale) });
     },
 };
 
@@ -123,7 +127,10 @@ const weekAdapter = {
         const nextWeek = date.plus({ weeks: step });
         return `${nextWeek.weekNumber}/${nextWeek.weekYear}`;
     },
-    format(normalizedValue, locale) {
+    getFormat(locale) {
+        return undefined;
+    },
+    formatValue(normalizedValue, locale) {
         const [week, year] = normalizedValue.split("/");
         return sprintf(_t("W%(week)s %(year)s"), { week, year });
     },
@@ -149,9 +156,12 @@ const monthAdapter = {
             .plus({ months: step })
             .toFormat("MM/yyyy");
     },
-    format(normalizedValue, locale) {
+    getFormat(locale) {
+        return "mmmm yyyy";
+    },
+    formatValue(normalizedValue, locale) {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
-        return formatValue(value, { locale, format: "mmmm yyyy" });
+        return formatValue(value, { locale, format: this.getFormat(locale) });
     },
 };
 
@@ -176,7 +186,10 @@ const quarterAdapter = {
         const nextQuarter = date.plus({ quarters: step });
         return `${nextQuarter.quarter}/${nextQuarter.year}`;
     },
-    format(normalizedValue, locale) {
+    getFormat(locale) {
+        return undefined;
+    },
+    formatValue(normalizedValue, locale) {
         const [quarter, year] = normalizedValue.split("/");
         return sprintf(_t("Q%(quarter)s %(year)s"), { quarter, year });
     },
@@ -194,7 +207,10 @@ const yearAdapter = {
     increment(normalizedValue, step) {
         return normalizedValue + step;
     },
-    format(normalizedValue, locale) {
+    getFormat(locale) {
+        return "0";
+    },
+    formatValue(normalizedValue, locale) {
         return formatValue(normalizedValue, { locale, format: "0" });
     },
 };
@@ -202,6 +218,7 @@ const yearAdapter = {
 /**
  * Decorate adapter functions to handle the empty value "false"
  * @param {PivotTimeAdapter} adapter
+ * @returns {PivotTimeAdapter}
  */
 function falseHandlerDecorator(adapter) {
     return {
@@ -223,11 +240,12 @@ function falseHandlerDecorator(adapter) {
             }
             return adapter.increment(normalizedValue, step);
         },
-        format(normalizedValue, locale) {
+        getFormat: adapter.getFormat.bind(adapter),
+        formatValue(normalizedValue, locale) {
             if (normalizedValue === false) {
                 return _t("None");
             }
-            return adapter.format(normalizedValue, locale);
+            return adapter.formatValue(normalizedValue, locale);
         },
     };
 }
