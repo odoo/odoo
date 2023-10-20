@@ -708,6 +708,27 @@ QUnit.test("treeFromExpression", function (assert) {
             },
         },
         {
+            expression: `set(foo_ids).intersect([2,4])`,
+            result: {
+                type: "complex_condition",
+                value: "set(foo_ids).intersect([2, 4])",
+            },
+        },
+        {
+            expression: `set(foo_ids).difference([2,4])`,
+            result: {
+                type: "complex_condition",
+                value: "set(foo_ids).difference([2, 4])",
+            },
+        },
+        {
+            expression: `not set(foo_ids).difference([2,4])`,
+            result: {
+                type: "complex_condition",
+                value: "not set(foo_ids).difference([2, 4])",
+            },
+        },
+        {
             expression: `not any(id not in [2,4] for id in foo_ids)`,
             result: {
                 type: "complex_condition",
@@ -805,6 +826,18 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         {
             expression: `any(id for id in foo_ids if (id in [2,4]))`,
             result: `foo_ids in [2, 4]`,
+        },
+        {
+            expression: `set(foo_ids).intersect([2, 4])`,
+            result: `set(foo_ids).intersect([2, 4])`,
+        },
+        {
+            expression: `set(foo_ids).difference([2, 4])`,
+            result: `set(foo_ids).difference([2, 4])`,
+        },
+        {
+            expression: `not set(foo_ids).difference([2, 4])`,
+            result: `not set(foo_ids).difference([2, 4])`,
         },
         {
             expression: `all(id in [2,4] for id in foo_ids)`,
