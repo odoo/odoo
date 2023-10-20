@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
-class AccountMoveSend(models.Model):
+class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     checkbox_send_peppol = fields.Boolean(
@@ -22,6 +22,12 @@ class AccountMoveSend(models.Model):
         compute="_compute_peppol_warning",
     )
     account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')
+
+    def _get_wizard_values(self, move):
+        # EXTENDS 'account'
+        values = super()._get_wizard_values(move)
+        values['send_peppol'] = self.checkbox_send_peppol
+        return values
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -96,67 +102,55 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def action_send_and_print(self, from_cron=False, allow_fallback_pdf=False):
+    def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
         # Extends 'account' to force ubl xml checkbox if sending via peppol
         self.ensure_one()
 
         if all([self.checkbox_send_peppol, self.enable_peppol, self.enable_ubl_cii_xml, not self.checkbox_ubl_cii_xml]):
             self.checkbox_ubl_cii_xml = True
 
-        return super().action_send_and_print(from_cron, allow_fallback_pdf)
-
-    def _get_available_field_values_in_multi(self, move):
-        # Extends 'account' to force ubl xml checkbox if sending via peppol
-        # if there are many invoices to be sent
-        values = super()._get_available_field_values_in_multi(move)
-        if self.enable_peppol and self.checkbox_send_peppol:
-            values['checkbox_ubl_cii_xml'] = True
-
-        return values
+        return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # Overrides 'account'
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
 
-        if not self.checkbox_send_peppol:
-            return
-
         params = {'documents': []}
-
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
-            if invoice_data.get('ubl_cii_xml_attachment_values'):
-                xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
-                filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-            elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
-                xml_file = invoice.ubl_cii_xml_id.raw
-                filename = invoice.ubl_cii_xml_id.name
-            else:
-                continue
+            if invoice_data.get('send_peppol'):
+                if invoice_data.get('ubl_cii_xml_attachment_values'):
+                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
+                    xml_file = invoice.ubl_cii_xml_id.raw
+                    filename = invoice.ubl_cii_xml_id.name
+                else:
+                    continue
 
-            if not invoice.partner_id.peppol_eas or not invoice.partner_id.peppol_endpoint:
-                # should never happen but in case it does, we need to handle it
-                invoice.peppol_move_state = 'error'
-                invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
-                continue
+                if not invoice.partner_id.peppol_eas or not invoice.partner_id.peppol_endpoint:
+                    # should never happen but in case it does, we need to handle it
+                    invoice.peppol_move_state = 'error'
+                    invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
+                    continue
 
-            if not invoice.partner_id.account_peppol_is_endpoint_valid:
-                invoice.peppol_move_state = 'error'
-                invoice_data['error'] = _('Please verify partner configuration in partner settings.')
-                continue
+                if not invoice.partner_id.account_peppol_is_endpoint_valid:
+                    invoice.peppol_move_state = 'error'
+                    invoice_data['error'] = _('Please verify partner configuration in partner settings.')
+                    continue
 
-            receiver_identification = f"{invoice.partner_id.peppol_eas}:{invoice.partner_id.peppol_endpoint}"
-            params['documents'].append({
-                'filename': filename,
-                'receiver': receiver_identification,
-                'ubl': b64encode(xml_file).decode(),
-            })
-            invoices_data_peppol[invoice] = invoice_data
+                receiver_identification = f"{invoice.partner_id.peppol_eas}:{invoice.partner_id.peppol_endpoint}"
+                params['documents'].append({
+                    'filename': filename,
+                    'receiver': receiver_identification,
+                    'ubl': b64encode(xml_file).decode(),
+                })
+                invoices_data_peppol[invoice] = invoice_data
 
         if not params['documents']:
             return
 
-        edi_user = self.company_id.account_edi_proxy_client_ids.filtered(
+        edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
             lambda u: u.proxy_type == 'peppol')
 
         try:

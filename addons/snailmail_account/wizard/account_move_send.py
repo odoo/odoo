@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 
 
-class AccountMoveSend(models.Model):
+class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     enable_send_by_post = fields.Boolean(compute='_compute_enable_send_by_post')
@@ -17,10 +17,10 @@ class AccountMoveSend(models.Model):
     send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_extra_fields')
     send_by_post_readonly = fields.Boolean(compute='_compute_send_by_post_extra_fields')
 
-    def _get_available_field_values_in_multi(self, move):
+    def _get_wizard_values(self, move=None):
         # EXTENDS 'account'
-        values = super()._get_available_field_values_in_multi(move)
-        values['checkbox_send_by_post'] = self.checkbox_send_by_post
+        values = super()._get_wizard_values(move)
+        values['send_by_post'] = self.checkbox_send_by_post
         return values
 
     # -------------------------------------------------------------------------
@@ -71,18 +71,15 @@ class AccountMoveSend(models.Model):
             'attachment_id': move.invoice_pdf_report_id.id,
         }
 
+    @api.model
     def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
         # EXTENDS 'account'
         super()._hook_if_success(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
-        send_by_post = self.enable_send_by_post and self.checkbox_send_by_post
-        if not send_by_post:
-            return
-
         moves = self.env['account.move']
-        for move in moves_data:
-            moves |= move
-        moves = moves.filtered('invoice_pdf_report_id')
+        for move, move_data in moves_data.items():
+            if move_data.get('send_by_post') and move.invoice_pdf_report_id:
+                moves |= move
         if not moves:
             return
 
