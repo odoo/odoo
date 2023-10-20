@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { createFile, inputFiles } from "@web/../tests/utils";
+import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     test: true,
@@ -122,7 +122,13 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Check edited message contains the extra attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("extra.txt")',
-            run() {},
+            async run() {
+                await click(".o-mail-AttachmentCard-unlink", {
+                    parent: [".o-mail-AttachmentCard", { text: "extra.txt" }],
+                });
+                await click(".btn", { text: "Ok", parent: [".modal", { text: "Confirmation" }] });
+                await contains(".o-mail-AttachmentCard", { text: "extra.txt", count: 0 });
+            },
         },
     ],
 });

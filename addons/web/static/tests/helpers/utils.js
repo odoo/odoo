@@ -375,7 +375,7 @@ export function triggerEvent(el, selector, eventType, eventInit, options = {}) {
     const event = new Constructor(eventType, processParams(eventInit));
     target.dispatchEvent(event);
 
-    if (QUnit.config.debug) {
+    if (window.QUnit && QUnit.config.debug) {
         const group = `%c[${event.type.toUpperCase()}]`;
         console.groupCollapsed(group, "color: #b52c9b");
         console.log(target, event);
