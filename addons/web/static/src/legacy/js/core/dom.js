@@ -54,7 +54,7 @@ var dom = {
      * @param {Element} el2
      * @returns {boolean}
      */
-     areColliding(el1, el2) {
+    areColliding(el1, el2) {
         const el1Rect = el1.getBoundingClientRect();
         const el2Rect = el2.getBoundingClientRect();
         return el1Rect.bottom > el2Rect.top
@@ -211,34 +211,6 @@ var dom = {
         return $to_detach.detach();
     },
     /**
-     * Returns the selection range of an input or textarea
-     *
-     * @param {Object} node DOM item input or texteara
-     * @returns {Object} range
-     */
-    getSelectionRange: function (node) {
-        return {
-            start: node.selectionStart,
-            end: node.selectionEnd,
-        };
-    },
-    /**
-     * Returns the distance between a DOM element and the top-left corner of the
-     * window
-     *
-     * @param {Object} e DOM element (input or texteara)
-     * @return {Object} the left and top distances in pixels
-     */
-    getPosition: function (e) {
-        var position = {left: 0, top: 0};
-        while (e) {
-            position.left += e.offsetLeft;
-            position.top += e.offsetTop;
-            e = e.offsetParent;
-        }
-        return position;
-    },
-    /**
      * @returns {HTMLElement}
      */
     getScrollingElement() {
@@ -250,13 +222,6 @@ var dom = {
      */
     hasScrollableContent(el) {
         return $(el).hasScrollableContent();
-    },
-    /**
-     * @param {HTMLElement} el
-     * @returns {boolean}
-     */
-    isScrollable(el) {
-        return $(el).isScrollable();
     },
     /**
      * Protects a function which is to be used as a handler by preventing its
@@ -372,22 +337,6 @@ var dom = {
         };
     },
     /**
-     * Prepends content in a jQuery object and optionnally triggers an event
-     *
-     * @param {jQuery} [$target] the node where content will be prepended
-     * @param {htmlString or Element or Array or jQuery} [content] DOM element,
-     *   array of elements, HTML string or jQuery object to prepend to $target
-     * @param {Boolean} [options.in_DOM] true if $target is in the DOM
-     * @param {Array} [options.callbacks] array of objects describing the
-     *   callbacks to perform (see _notify for a complete description)
-     */
-    prepend: function ($target, content, options) {
-        $target.prepend(content);
-        if (options && options.in_DOM) {
-            _notify(content, options.callbacks);
-        }
-    },
-    /**
      * Renders a button with standard odoo template. This does not use any xml
      * template to avoid forcing the frontend part to lazy load a xml file for
      * each widget which might want to create a simple button.
@@ -486,24 +435,6 @@ var dom = {
             $input.attr('role', options.role);
         }
         return $container.append($input, $label);
-    },
-    /**
-     * Sets the selection range of a given input or textarea
-     *
-     * @param {Object} node DOM element (input or textarea)
-     * @param {integer} range.start
-     * @param {integer} range.end
-     */
-    setSelectionRange: function (node, range) {
-        if (node.setSelectionRange){
-            node.setSelectionRange(range.start, range.end);
-        } else if (node.createTextRange){
-            node.createTextRange()
-                .collapse(true)
-                .moveEnd('character', range.start)
-                .moveStart('character', range.end)
-                .select();
-        }
     },
     /**
      * Computes the size by which a scrolling point should be decreased so that
