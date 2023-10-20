@@ -585,19 +585,4 @@
             }
         }
     }
-
-    .o_cw_popover.o_calendar_color_#{$i - 1} {
-        $color-subdle: mix($o-white, $color, 85%);
-
-        .card-header,
-        .card-header .popover-header {
-            background-color: $color-subdle;
-            color: color-contrast($color-subdle);
-        }
-
-        .card-header {
-            padding-left: 2px;
-            border-color: mix($card-border-color, mix($o-white, $color));
-        }
-    }
 }
