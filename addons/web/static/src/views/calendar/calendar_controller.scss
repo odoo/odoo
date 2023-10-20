@@ -28,6 +28,9 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_sidebar_container {
+    --Avatar-size: #{$o-cw-filter-avatar-size};
+
+    flex: 0 0 auto;
     position: relative;
     grid-area: side;
     background-color: $o-view-background-color;
@@ -59,82 +62,17 @@ $o-cw-filter-avatar-size: 20px;
     }
 
     .o_calendar_filter {
-        font-size: 0.9em;
-        padding: 2em 0 1em;
-
-        .o_cw_filter_collapse_icon {
-            transition: all 0.3s ease;
-            @include o-hover-opacity();
-            font-size: 0.7em;
-        }
-
-        .collapsed .o_cw_filter_collapse_icon {
-            transform: rotate(90deg);
-            opacity: 1;
-        }
 
         .o_calendar_filter_items_checkall,
         .o_calendar_filter_item {
-            cursor: pointer;
-            overflow: hidden;
-
-            input {
-                z-index: -1;
-                opacity: 0;
-            }
-
-            .o_cw_filter_input_bg {
-                width: 1.3em;
-                height: 1.3em;
-                border-width: 2px;
-                border-style: solid;
-                border-radius: 1px;
-                overflow: hidden;
-                display: flex;
-
-                &.o_beside_avatar {
-                    width: $o-cw-filter-avatar-size;
-                    height: $o-cw-filter-avatar-size;
-                    border-radius: 2px;
-                    object-fit: cover;
-                    align-items: center;
-                }
-            }
-
-            input:not(:checked) + label .o_cw_filter_input_bg {
-                &:not(.o_cw_filter_avatar) {
-                    background: transparent !important;
-                }
-
-                i.fa {
-                    visibility: hidden;
-                }
-            }
-
-            .o_cw_filter_avatar {
-                width: $o-cw-filter-avatar-size;
-                height: $o-cw-filter-avatar-size;
-                border-radius: 2px;
-
-                &.fa {
-                    padding: 4px 3px;
-                }
-            }
-
-            .o_cw_filter_title {
-                line-height: $o-line-height-base;
-                flex-grow: 1;
-            }
 
             button.o_remove {
-                @include o-position-absolute(0, 0, 0);
-                transform: translateX(100%);
-                transition: transform 0.2s;
+                transform: translate(100%, -50%);
             }
 
             &:hover {
                 button.o_remove {
-                    transform: translateX(0%);
+                    transform: translate(0%, -50%);
                 }
             }
         }

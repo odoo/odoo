@@ -3,12 +3,12 @@
 
     <t t-name="hr_holidays.CalendarFilterPanel" t-inherit="web.CalendarFilterPanel" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='props.model.filterSections']" position="after">
-            <div class="o_calendar_filter">
+            <div class="o_calendar_filter mt-4">
                 <h5>Legend</h5>
                 <div class="d-flex flex-column">
-                    <span><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
-                    <span><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
-                    <span><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
+                    <span class="align-middle"><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
+                    <span class="align-middle"><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
+                    <span class="align-middle"><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
                 </div>
 
                 <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
@@ -40,7 +40,7 @@
 
     <t t-name="hr_holidays.CalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary">
         <xpath expr="//span[@t-esc='filter.label']" position="replace">
-            <span class="o_cw_filter_title text-truncate flex-grow">
+            <span class="o_cw_filter_title flex-grow-1 text-truncate lh-base">
                 <t t-esc="filter.label"/>
 
                 <t t-if="env.isSmall">
