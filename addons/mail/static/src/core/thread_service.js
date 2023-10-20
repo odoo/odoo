@@ -1082,7 +1082,7 @@ export class ThreadService {
         if (!persona) {
             return DEFAULT_AVATAR;
         }
-        if (persona.is_company === undefined) {
+        if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
             this.personaService.fetchIsCompany(persona);
         }
         if (thread?.model === "discuss.channel") {
