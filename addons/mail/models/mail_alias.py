@@ -117,10 +117,9 @@ class Alias(models.Model):
 
     @api.depends('alias_domain', 'alias_name')
     def _compute_display_name(self):
-        """Return the mail alias display alias_name, including the implicit
-           mail catchall domain if exists from config otherwise "New Alias".
-           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
-        """
+        """ Return the mail alias display alias_name, including the catchall
+        domain if found otherwise "Inactive Alias". e.g.`jobs@mail.odoo.com`
+        or `jobs` or 'Inactive Alias' """
         for record in self:
             if record.alias_name and record.alias_domain:
                 record.display_name = f"{record.alias_name}@{record.alias_domain}"

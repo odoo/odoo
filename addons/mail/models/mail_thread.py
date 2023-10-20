@@ -875,6 +875,40 @@ class MailThread(models.AbstractModel):
                 self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
 
     @api.model
+    def _detect_is_bounce(self, message, message_dict):
+        """Return True if the given email is a bounce email.
+
+        Bounce alias: if any To contains bounce_alias@domain
+        Bounce message (not alias)
+            See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+            As all MTA does not respect this RFC (googlemail is one of them),
+            we also need to verify if the message come from "mailer-daemon"
+        """
+        # detection based on email_to
+        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        email_to = message_dict['to']
+        email_to_localparts = [
+            e.split('@', 1)[0].lower()
+            for e in (tools.email_split(email_to) or [''])
+        ]
+        if bounce_alias and bounce_alias in email_to_localparts:
+            return True
+
+        email_from = message_dict['email_from']
+        email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
+
+        # detection based on email_from
+        if email_from_localpart == 'mailer-daemon':
+            return True
+
+        # detection based on content type
+        content_type = message.get_content_type()
+        if content_type == 'multipart/report' or 'report-type=delivery-status' in content_type:
+            return True
+
+        return False
+
+    @api.model
     def _detect_loop_sender_domain(self, email_from_normalized):
         """Return the domain to be used to detect duplicated records created by alias.
 
@@ -900,7 +934,8 @@ class MailThread(models.AbstractModel):
         email_from_normalized = tools.email_normalize(email_from)
 
         if self.env['mail.gateway.allowed'].sudo().search_count(
-           [('email_normalized', '=', email_from_normalized)]):
+           [('email_normalized', '=', email_from_normalized)]
+        ):
             return False
 
         # Detect the email address sent to many emails
@@ -964,6 +999,21 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.model
+    def _detect_write_to_catchall(self, msg_dict):
+        """Return True if directly contacts catchall."""
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
+        email_to = msg_dict['to']
+        email_to_localparts = [
+            e.split('@', 1)[0].lower()
+            for e in (tools.email_split(email_to) or [''])
+        ]
+        # check it does not directly contact catchall
+        return (
+            catchall_alias and email_to_localparts and
+            all(email_localpart == catchall_alias for email_localpart in email_to_localparts)
+        )
+
+    @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
         """ Attempt to figure out the correct target model, thread_id,
         custom_values and user_id to use for an incoming message.
@@ -1000,12 +1050,18 @@ class MailThread(models.AbstractModel):
         """
         if not isinstance(message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
-        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         catchall_domain_lowered = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain", "").strip().lower()
         catchall_domains_allowed = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain.allowed")
         if catchall_domain_lowered and catchall_domains_allowed:
             catchall_domains_allowed = catchall_domains_allowed.split(',') + [catchall_domain_lowered]
         fallback_model = model
+
+        # handle bounce: verify whether this is a bounced email and use it to
+        # collect bounce data and update notifications for customers
+        if message_dict.get('is_bounce'):
+            self._routing_handle_bounce(message, message_dict)
+            return []
+        self._routing_reset_bounce(message, message_dict)
 
         # get email.message.Message variables for future processing
         message_id = message_dict['message_id']
@@ -1017,9 +1073,10 @@ class MailThread(models.AbstractModel):
             for ref in tools.mail_header_msgid_re.findall(thread_references)
             if 'reply_to' not in ref
         ]
-        mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
-        is_a_reply = bool(mail_messages)
-        reply_model, reply_thread_id = mail_messages.model, mail_messages.res_id
+        replying_to_msg = self.env['mail.message'].sudo().search(
+            [('message_id', 'in', msg_references)], limit=1, order='id desc, message_id'
+        ) if msg_references else self.env['mail.message']
+        is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
 
         # author and recipients
         email_from = message_dict['email_from']
@@ -1037,12 +1094,6 @@ class MailThread(models.AbstractModel):
                 rcpt_tos_localparts.append(to_local.lower())
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
-        # Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
-        if message_dict.get('is_bounce'):
-            self._routing_handle_bounce(message, message_dict)
-            return []
-        self._routing_reset_bounce(message, message_dict)
-
         # 1. Handle reply
         #    if destination = alias with different model -> consider it is a forward and not a reply
         #    if destination = alias with same model -> check contact settings as they still apply
@@ -1055,7 +1106,7 @@ class MailThread(models.AbstractModel):
                 ('alias_model_id', '!=', reply_model_id),
             ])
             if other_model_aliases:
-                is_a_reply = False
+                is_a_reply, reply_model, reply_thread_id = False, False, False
                 rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
 
         if is_a_reply and reply_model:
@@ -1075,7 +1126,7 @@ class MailThread(models.AbstractModel):
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
                     email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
                 return [route]
-            elif route is False:
+            if route is False:
                 return []
 
         # 2. Handle new incoming email by checking aliases and applying their settings
@@ -1084,8 +1135,9 @@ class MailThread(models.AbstractModel):
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
-            if catchall_alias and email_to_localparts and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
+            if self._detect_write_to_catchall(message_dict):
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce',
+                             email_from, email_to, message_id)
                 body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                     'message': message,
                 })
@@ -1344,7 +1396,10 @@ class MailThread(models.AbstractModel):
         extracted from the email. Note that this processing is specific to the
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by the html_sanitize method
-        located in tools. """
+        located in tools.
+
+        :param string message: an email.message instance
+        """
         body, attachments = payload_dict['body'], payload_dict['attachments']
         if not body.strip():
             return {'body': body, 'attachments': attachments}
@@ -1376,7 +1431,10 @@ class MailThread(models.AbstractModel):
         return {'body': body, 'attachments': attachments}
 
     def _message_parse_extract_payload(self, message, message_dict, save_original=False):
-        """Extract body as HTML and attachments from the mail message"""
+        """Extract body as HTML and attachments from the mail message
+
+        :param string message: an email.message instance
+        """
         attachments = []
         body = ''
         if save_original:
@@ -1467,6 +1525,7 @@ class MailThread(models.AbstractModel):
 
         :return dict: bounce-related values will be added, containing
 
+          * is_bounce: whether the email is recognized as a bounce email;
           * bounced_email: email that bounced (normalized);
           * bounce_partner: res.partner recordset whose email_normalized =
             bounced_email;
@@ -1476,6 +1535,10 @@ class MailThread(models.AbstractModel):
         """
         if not isinstance(email_message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
+
+        is_bounce = self._detect_is_bounce(email_message, message_dict)
+        if not is_bounce:
+            return {'is_bounce': False}
 
         email_part = next((part for part in email_message.walk() if part.get_content_type() in {'message/rfc822', 'text/rfc822-headers'}), None)
         if not email_part:
@@ -1520,40 +1583,8 @@ class MailThread(models.AbstractModel):
             'bounced_partner': bounced_partner,
             'bounced_msg_ids': bounced_msg_ids,
             'bounced_message': bounced_message,
+            'is_bounce': True,
         }
-
-    def _message_parse_is_bounce(self, message, message_dict):
-        """Return True if the given email is a bounce email.
-
-        Bounce alias: if any To contains bounce_alias@domain
-        Bounce message (not alias)
-            See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-            As all MTA does not respect this RFC (googlemail is one of them),
-            we also need to verify if the message come from "mailer-daemon"
-        """
-        # detection based on email_to
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
-        email_to = message_dict['to']
-        email_to_localparts = [
-            e.split('@', 1)[0].lower()
-            for e in (tools.email_split(email_to) or [''])
-        ]
-        if bounce_alias and any(email == bounce_alias for email in email_to_localparts):
-            return True
-
-        email_from = message_dict['email_from']
-        email_from_localpart = (tools.email_split(email_from) or [''])[0].split('@', 1)[0].lower()
-
-        # detection based on email_from
-        if email_from_localpart == 'mailer-daemon':
-            return True
-
-        # detection based on content type
-        content_type = message.get_content_type()
-        if content_type == 'multipart/report' or 'report-type=delivery-status' in content_type:
-            return True
-
-        return False
 
     @api.model
     def message_parse(self, message, save_original=False):
@@ -1651,10 +1682,8 @@ class MailThread(models.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         msg_dict.update(self._message_parse_extract_from_parent(self._get_parent_message(msg_dict)))
-        msg_dict['is_bounce'] = self._message_parse_is_bounce(message, msg_dict)
+        msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         msg_dict.update(self._message_parse_extract_payload(message, msg_dict, save_original=save_original))
-        if msg_dict['is_bounce']:
-            msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
 
     def _message_parse_extract_from_parent(self, parent_message):
@@ -1789,7 +1818,7 @@ class MailThread(models.AbstractModel):
             domain = expression.AND([domain, extra_domain])
         return self.env['res.partner'].search(domain)
 
-    def _mail_find_user_for_gateway(self, email, alias=None):
+    def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
         in the target model. Purpose is to link document creation to users whenever
         possible, for example when creating document through mailgateway.
@@ -1802,15 +1831,14 @@ class MailThread(models.AbstractModel):
 
         Note that standard search order is applied.
 
-        :param str email: will be sanitized and parsed to find email;
+        :param str email_value: will be sanitized and parsed to find email;
         :param mail.alias alias: optional alias. Used to fetch owner followers
           or fallback user (alias owner);
-        :param fallback_model: if not alias, related model to check access rights;
 
         :return res.user user: user matching email or void recordset if none found
         """
         # find normalized emails and exclude aliases (to avoid subscribing alias emails to records)
-        normalized_email = tools.email_normalize(email)
+        normalized_email = tools.email_normalize(email_value)
         if not normalized_email:
             return self.env['res.users']
 
