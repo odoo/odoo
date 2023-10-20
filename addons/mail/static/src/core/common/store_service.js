@@ -6,7 +6,7 @@ import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry, Record, RecordInverses, RecordList } from "./record";
+import { modelRegistry, Record, RecordUses, RecordList } from "./record";
 
 export class BaseStore extends Record {
     /**
@@ -151,8 +151,8 @@ export function makeStore(env) {
                     const proxy = new Proxy(this, {
                         /** @param {Record} receiver */
                         get(target, name, receiver) {
-                            if (name !== "__rels__" && receiver.__rels__.has(name)) {
-                                const l1 = receiver.__rels__.get(name);
+                            if (name !== "__rels__" && name in receiver.__rels__) {
+                                const l1 = receiver.__rels__[name];
                                 if (RecordList.isMany(l1)) {
                                     return l1;
                                 }
@@ -161,9 +161,9 @@ export function makeStore(env) {
                             return Reflect.get(target, name, receiver);
                         },
                         deleteProperty(target, name) {
-                            if (name !== "__rels__" && target.__rels__.has(name)) {
+                            if (name !== "__rels__" && name in target.__rels__) {
                                 const r1 = target;
-                                const l1 = r1.__rels__.get(name);
+                                const l1 = r1.__rels__[name];
                                 l1.clear();
                                 return true;
                             }
@@ -172,13 +172,12 @@ export function makeStore(env) {
                         },
                         /** @param {Record} receiver */
                         set(target, name, val, receiver) {
-                            if (!receiver.__rels__.has(name)) {
+                            if (!(name in receiver.__rels__)) {
                                 Reflect.set(target, name, val, receiver);
                                 return true;
                             }
                             /** @type {RecordList<Record>} */
-                            const r1 = receiver;
-                            const l1 = receiver.__rels__.get(name);
+                            const l1 = receiver.__rels__[name];
                             if (RecordList.isMany(l1)) {
                                 // [Record.many] =
                                 if (Record.isCommand(val)) {
@@ -188,9 +187,9 @@ export function makeStore(env) {
                                                 if (cmd === "ADD") {
                                                     l1.add(item);
                                                 } else if (cmd === "ADD.noinv") {
-                                                    l1.__addNoinv(item);
+                                                    l1._addNoinv(item);
                                                 } else if (cmd === "DELETE.noinv") {
-                                                    l1.__deleteNoinv(item);
+                                                    l1._deleteNoinv(item);
                                                 } else {
                                                     l1.delete(item);
                                                 }
@@ -199,9 +198,9 @@ export function makeStore(env) {
                                             if (cmd === "ADD") {
                                                 l1.add(cmdData);
                                             } else if (cmd === "ADD.noinv") {
-                                                l1.__addNoinv(cmdData);
+                                                l1._addNoinv(cmdData);
                                             } else if (cmd === "DELETE.noinv") {
-                                                l1.__deleteNoinv(cmdData);
+                                                l1._deleteNoinv(cmdData);
                                             } else {
                                                 l1.delete(cmdData);
                                             }
@@ -220,7 +219,7 @@ export function makeStore(env) {
                                 const collection = Record.isRecord(val) ? [val] : val;
                                 const oldRecords = l1.slice();
                                 for (const r2 of oldRecords) {
-                                    r2.__invs__.delete(r1.localId, name);
+                                    r2.__uses__.delete(l1);
                                 }
                                 // l1 and collection could be same record list,
                                 // save before clear to not push mutated recordlist that is empty
@@ -234,9 +233,9 @@ export function makeStore(env) {
                                     if (cmd === "ADD") {
                                         l1.add(cmdData);
                                     } else if (cmd === "ADD.noinv") {
-                                        l1.__addNoinv(cmdData);
+                                        l1._addNoinv(cmdData);
                                     } else if (cmd === "DELETE.noinv") {
-                                        l1.__deleteNoinv(cmdData);
+                                        l1._deleteNoinv(cmdData);
                                     } else {
                                         l1.delete(cmdData);
                                     }
@@ -251,32 +250,32 @@ export function makeStore(env) {
                             return true;
                         },
                     });
-                    if (this instanceof Store) {
+                    if (this instanceof BaseStore) {
                         res.store = proxy;
                     }
-                    for (const name of Model.__rels__.keys()) {
+                    for (const name in Model.__rels__) {
                         // Relational fields contain symbols for detection in original class.
                         // This constructor is called on genuine records:
                         // - 'one' fields => undefined
                         // - 'many' fields => RecordList
                         // this[name]?.[0] is ONE_SYM or MANY_SYM
                         const newVal = new RecordList(this[name]?.[0]);
-                        if (this instanceof Store) {
-                            newVal.__store__ = proxy;
+                        if (this instanceof BaseStore) {
+                            newVal.store = proxy;
                         } else {
-                            newVal.__store__ = res.store;
+                            newVal.store = res.store;
                         }
                         newVal.name = name;
                         newVal.owner = proxy;
-                        this.__rels__.set(name, newVal);
-                        this.__invs__ = new RecordInverses();
+                        this.__rels__[name] = newVal;
+                        this.__uses__ = new RecordUses();
                         this[name] = newVal;
                     }
-                    for (const [name, fn] of Model.__computes__.entries()) {
+                    for (const [name, fn] of Object.entries(Model.__computes__)) {
                         let boundFn;
                         const proxy2 = reactive(proxy, () => boundFn());
                         boundFn = () => (proxy[name] = fn.call(proxy2));
-                        this.__computes__.set(name, boundFn);
+                        this.__computes__[name] = boundFn;
                     }
                     return proxy;
                 }
@@ -285,8 +284,8 @@ export function makeStore(env) {
         Object.assign(Model, {
             Class,
             records: JSON.parse(JSON.stringify(OgClass.records)),
-            __rels__: new Map(),
-            __computes__: new Map(),
+            __rels__: {},
+            __computes__: {},
         });
         Models[name] = Model;
         res.store[name] = Model;
@@ -297,20 +296,20 @@ export function makeStore(env) {
             if (![Record.one()[0], Record.many()[0]].includes(SYM)) {
                 continue;
             }
-            Model.__rels__.set(name, { [SYM]: true, ...val[1] });
+            Model.__rels__[name] = { [SYM]: true, ...val[1] };
             if (val[1].compute) {
-                Model.__computes__.set(name, val[1].compute);
+                Model.__computes__[name] = val[1].compute;
             }
         }
     }
     // Sync inverse fields
     for (const Model of Object.values(Models)) {
-        for (const [name, { targetModel, inverse }] of Model.__rels__.entries()) {
+        for (const [name, { targetModel, inverse }] of Object.entries(Model.__rels__)) {
             if (targetModel && !Models[targetModel]) {
                 throw new Error(`No target model ${targetModel} exists`);
             }
             if (inverse) {
-                const rel2 = Models[targetModel].__rels__.get(inverse);
+                const rel2 = Models[targetModel].__rels__[inverse];
                 if (rel2.targetModel && rel2.targetModel !== Model.name) {
                     throw new Error(
                         `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2.targetModel}"`
