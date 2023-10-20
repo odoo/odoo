@@ -30,8 +30,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (this.carriers.length > 0) {
             const carrierChecked = this.carriers.filter(e =>e.checked)
             if (carrierChecked.length === 0) {
-                const payButton = document.querySelector('button[name="o_payment_submit_button"]');
-                payButton? payButton.disabled = true : null;
+                this._disablePayButton();
             } else {
                 carrierChecked[0].click();
             }
@@ -197,6 +196,11 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 
+    _disablePayButton: function (){
+        var payButton = document.querySelector('button[name="o_payment_submit_button"]');
+        payButton? payButton.disabled = true : null;
+    },
+
     _disablePayButtonNoPickupPoint : function (ev){
         const selectedCarrierEl = ev.currentTarget.closest('.o_delivery_carrier_select');
         const address = selectedCarrierEl.querySelector('.o_order_location_address').innerText
@@ -205,8 +209,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
 
         if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
-            var payButton = document.querySelector('button[name="o_payment_submit_button"]');
-            payButton? payButton.disabled = true : null;
+            this._disablePayButton();
             const errorNode = document.createElement("i");
             errorNode.classList.add("small", "error_no_pick_up_point","ms-2");
             errorNode.textContent = _t("Select a pick-up point");
@@ -231,6 +234,10 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
 
     _onClickPaymentMethod: async function (ev) {
         const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'))
+        if(carriers.length === 0){
+            return;
+        }
+        this._disablePayButton();
         let carrierChecked = null;
         carriers.forEach((carrier) => {
             if (carrier.querySelector('input').checked){
@@ -379,6 +386,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onCarrierClick: async function (ev) {
+        this._disablePayButton();
         const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('input[type="radio"]');
         if (radio.checked) {
             return;
