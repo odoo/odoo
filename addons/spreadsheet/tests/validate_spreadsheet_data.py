@@ -182,7 +182,7 @@ def fields_in_spreadsheet(data):
     return dict(fields_by_model)
 
 
-def xml_ids_in_spreadsheet(data):
+def menus_xml_ids_in_spreadsheet(data):
 
     return set(data.get("chartOdooMenusReferences", {}).values()) | {
         url[len(xml_id_url_prefix):]
@@ -212,9 +212,14 @@ class ValidateSpreadsheetData(TransactionCase):
                     if field.relational:
                         field_model = field.comodel_name
 
-        for xml_id in xml_ids_in_spreadsheet(data):
+        for xml_id in menus_xml_ids_in_spreadsheet(data):
             record = self.env.ref(xml_id, raise_if_not_found=False)
             if not record:
                 raise AssertionError(
                     f"xml id '{xml_id}' used in spreadsheet '{spreadsheet_name}' does not exist"
+                )
+            # check that the menu has an action. Root menus always have an action.
+            if not record.action and record.parent_id.id:
+                raise AssertionError(
+                    f"menu with xml id '{xml_id}' used in spreadsheet '{spreadsheet_name}' does not have an action"
                 )

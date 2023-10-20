@@ -9,6 +9,7 @@ import { menuService } from "@web/webclient/menus/menu_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { mountSpreadsheet } from "@spreadsheet/../tests/utils/ui";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 const chartId = "uuid1";
 
@@ -79,6 +80,13 @@ QUnit.module(
                     xmlid: "documents_spreadsheet.test.menu2",
                     appID: 1,
                     actionID: "menuAction2",
+                },
+                3: {
+                    id: 3,
+                    children: [],
+                    name: "test menu 2",
+                    xmlid: "documents_spreadsheet.test.menu_without_action",
+                    appID: 1,
                 },
             };
             this.serverData.actions = {
@@ -328,5 +336,41 @@ QUnit.module(
 
             assert.verifySteps(["doAction"]);
         });
+
+        QUnit.test(
+            "Trying to open a menu without an action sends a notification to the user",
+            async function (assert) {
+                mockActionService(assert, "doAction");
+                const notificationMock = (message) => {
+                    assert.step(message);
+                    return () => {};
+                };
+                const notificationService = makeFakeNotificationService(notificationMock);
+                registry.category("services").add("notification", notificationService, {
+                    force: true,
+                });
+
+                const model = await createModelWithDataSource({
+                    serverData: this.serverData,
+                });
+                const fixture = await mountSpreadsheet(model);
+
+                createBasicChart(model, chartId);
+                model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                    chartId,
+                    odooMenuId: "documents_spreadsheet.test.menu_without_action",
+                });
+                await nextTick();
+
+                await clickChartExternalLink(fixture);
+
+                const expectedNotificationMessage =
+                    "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu.";
+                assert.verifySteps(
+                    [expectedNotificationMessage],
+                    "Notification was send and doAction wasn't called"
+                );
+            }
+        );
     }
 );
