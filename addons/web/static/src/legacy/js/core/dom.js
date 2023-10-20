@@ -13,40 +13,9 @@ import { uniqueId } from "@web/core/utils/functions";
 import { delay } from "@web/core/utils/concurrency";
 import { localization } from "@web/core/l10n/localization";
 
-/**
- * Private function to notify that something has been attached in the DOM
- * @param {htmlString or Element or Array or jQuery} [content] the content that
- * has been attached in the DOM
- * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
- * that on_attach_callback() will be called on each w with arguments args
- */
-function _notify(content, callbacks) {
-    callbacks.forEach(function (c) {
-        if (c.widget && c.widget.on_attach_callback) {
-            c.widget.on_attach_callback(c.callback_args);
-        }
-    });
-}
-
 var dom = {
     DEBOUNCE: 400,
 
-    /**
-     * Appends content in a jQuery object and optionnally triggers an event
-     *
-     * @param {jQuery} [$target] the node where content will be appended
-     * @param {htmlString or Element or Array or jQuery} [content] DOM element,
-     *   array of elements, HTML string or jQuery object to append to $target
-     * @param {Boolean} [options.in_DOM] true if $target is in the DOM
-     * @param {Array} [options.callbacks] array of objects describing the
-     *   callbacks to perform (see _notify for a complete description)
-     */
-    append: function ($target, content, options) {
-        $target.append(content);
-        if (options && options.in_DOM) {
-            _notify(content, options.callbacks);
-        }
-    },
     /**
      * Detects if 2 elements are colliding.
      *
