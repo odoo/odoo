@@ -38,6 +38,7 @@ import {
     navigate,
     pickDate,
     removeFilter,
+    resizeEventToDate,
     resizeEventToTime,
     selectAllDayRange,
     selectDateRange,
@@ -3151,6 +3152,46 @@ test(`attempt to create multiples events and the same day and check the ordering
     });
     expect(`.o_calendar_renderer .fc-view`).toHaveCount(1);
     expect(queryAllTexts`.o_event_title`).toEqual(["First event", "Second event", "Third event"]);
+});
+
+test(`Resizing Pill of Multiple Days(Allday)`, async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual({
+            is_all_day: true,
+            name: "foobar",
+            start: "2016-12-13 00:00:00",
+            start_date: false,
+            stop: "2016-12-14 00:00:00",
+            stop_date: false,
+        });
+    });
+
+    onRpc("write", ({ args }) => {
+        expect.step("write");
+        expect(args[1]).toEqual({
+            is_all_day: true,
+            start: "2016-12-13",
+            stop: "2016-12-16",
+        });
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
+    });
+
+    await selectDateRange("2016-12-13", "2016-12-14");
+    await contains(`.modal .o_field_widget[name="name"] input`).edit("foobar", { confirm: false });
+    await contains(`.modal .o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+
+    await resizeEventToDate(8, "2016-12-16");
+    const event = queryFirst`.o_event[data-event-id="8"]`;
+    expect(event).toHaveText("foobar");
+    expect(event.closest(".fc-daygrid-day")).not.toBeEmpty();
+    expect.verifySteps(["write"]);
 });
 
 test(`create event and resize to next day (24h) on week mode`, async () => {
