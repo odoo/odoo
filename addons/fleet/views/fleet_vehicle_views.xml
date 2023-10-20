@@ -111,9 +111,7 @@
                             <field name="location"/>
                         </group>
                     </group>
-                    <div class="d-flex">
-                        <field name="vehicle_properties" nolabel="1" columns="2" hideKanbanOption="1"/>
-                    </div>
+                    <field name="vehicle_properties" columns="2"/>
                     <notebook>
                         <page string="Tax Info">
                             <group>
@@ -300,6 +298,9 @@
                                     </li>
                                     <li>
                                         <t t-if="record.location.raw_value"><small><i class="fa fa-map-marker" title="Location"></i> <field name="location"/></small></t>
+                                    </li>
+                                    <li>
+                                        <field name="vehicle_properties" widget="properties"/>
                                     </li>
                                 </ul>
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">

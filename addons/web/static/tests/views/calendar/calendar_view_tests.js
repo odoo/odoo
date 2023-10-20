@@ -4811,6 +4811,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 string: "My Char",
                 type: "char",
                 value: "hello",
+                view_in_cards: true,
             },
             {
                 name: "property_2",
@@ -4823,6 +4824,14 @@ QUnit.module("Views", ({ beforeEach }) => {
                 ],
                 value: "b",
                 default: "c",
+                view_in_cards: true,
+            },
+            {
+                name: "property_3",
+                string: "Hidden Char",
+                type: "char",
+                value: "hidden",
+                view_in_cards: false,
             },
         ];
 
@@ -4845,10 +4854,10 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await clickEvent(target, 1);
         assert.deepEqual(
-            [...target.querySelectorAll(".o_popover [name='properties'] .o_property_field")].map(
+            [...target.querySelectorAll(".o_popover [name='properties'] .o_card_property_field")].map(
                 (el) => el.textContent
             ),
-            ["My Charhello", "My SelectionB"]
+            ["hello", "B"]
         );
     });
 

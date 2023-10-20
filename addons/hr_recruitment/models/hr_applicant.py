@@ -111,6 +111,7 @@ class Applicant(models.Model):
         ('refused', 'Refused'),
         ('archived', 'Archived'),
     ], compute="_compute_application_status")
+    applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
     @api.onchange('job_id')
     def _onchange_job_id(self):

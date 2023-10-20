@@ -305,7 +305,7 @@ export class PropertyDefinition extends Component {
     onViewInKanbanChange(newValue) {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
-            view_in_kanban: newValue,
+            view_in_cards: newValue,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
@@ -401,7 +401,6 @@ PropertyDefinition.props = {
     canChangeDefinition: { type: Boolean, optional: true },
     checkDefinitionWriteAccess: { type: Function, optional: true },
     propertyDefinition: { optional: true },
-    hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
     isNewlyCreated: { type: Boolean, optional: true },
     // index and number of properties, to hide the move arrows when needed
