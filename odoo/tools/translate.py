@@ -24,6 +24,7 @@ from os.path import join
 from pathlib import Path
 from babel.messages import extract
 from lxml import etree, html
+from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
 import odoo
@@ -460,6 +461,8 @@ class GettextAlias(object):
         translation = self._get_translation(source)
         assert not (args and kwargs)
         if args or kwargs:
+            if any(isinstance(a, Markup) for a in itertools.chain(args, kwargs.values())):
+                translation = escape(translation)
             try:
                 return translation % (args or kwargs)
             except (TypeError, ValueError, KeyError):
