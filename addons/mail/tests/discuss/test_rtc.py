@@ -17,7 +17,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='Test Channel', group_id=self.env.ref('base.group_user').id)['id'])
+        channel = self.env['discuss.channel'].channel_create(name='Test Channel', group_id=self.env.ref('base.group_user').id)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -96,7 +96,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_10_start_call_in_chat_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
+        channel = self.env['discuss.channel'].channel_get(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         channel_member._rtc_join_call()
@@ -176,7 +176,7 @@ class TestChannelInternals(MailCommon):
     def test_11_start_call_in_group_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
@@ -306,7 +306,7 @@ class TestChannelInternals(MailCommon):
     def test_20_join_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
@@ -450,7 +450,7 @@ class TestChannelInternals(MailCommon):
     def test_21_leave_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
@@ -542,7 +542,7 @@ class TestChannelInternals(MailCommon):
     def test_25_lone_call_participant_leaving_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
@@ -632,7 +632,7 @@ class TestChannelInternals(MailCommon):
     def test_30_add_members_while_in_call_should_invite_new_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -748,7 +748,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_40_leave_call_should_remove_existing_sessions_of_user_in_channel_and_return_data(self):
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -778,7 +778,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_50_garbage_collect_should_remove_old_sessions_and_notify_data(self):
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         channel_member.rtc_session_ids.flush_model()
@@ -811,7 +811,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_51_action_disconnect_should_remove_selected_session_and_notify_data(self):
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
@@ -842,7 +842,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions(self):
-        channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         join_call_values = channel_member._rtc_join_call()
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
