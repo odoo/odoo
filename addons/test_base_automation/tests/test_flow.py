@@ -801,7 +801,7 @@ if env.context.get('old_values', None):  # on write
             trigger='on_unarchive',
             trigger_field_ids=[active_field.id],
             filter_domain="[('active', '=', True)]",
-            _actions={'state': 'code', 'code': "record.write({'name': record.name + '!'})"},
+            _actions={'state': 'object_write', 'evaluation_type': 'equation', 'update_path': 'name', 'value': "record.name + '!'"},
         )
         lead = self.create_lead()
         self.assertEqual(lead.name, 'Lead Test')
@@ -969,8 +969,8 @@ class TestCompute(common.TransactionCase):
         lead_thread_model = self.env["ir.model"]._get("base.automation.lead.thread.test")
         automation = create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
             "state": "object_write",
-            "update_field_id": self.env["ir.model.fields"]._get("base.automation.lead.thread.test", "active").id,
-            "value": False
+            "update_path": "active",
+            "update_boolean_value": "false"
         })
 
         ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
@@ -1013,12 +1013,11 @@ class TestCompute(common.TransactionCase):
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
     def test_webhook_trigger(self):
-        self.authenticate(None, None)
         model = self.env["ir.model"]._get("base.automation.linked.test")
         record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
-        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, log_webhook_calls=True, _actions={
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
             "state": "object_write",
-            "update_field_id": self.env["ir.model.fields"]._get(model.model, "another_field").id,
+            "update_path": "another_field",
             "value": "written"
         })
 
