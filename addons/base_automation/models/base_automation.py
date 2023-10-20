@@ -290,12 +290,18 @@ class BaseAutomation(models.Model):
 
     @api.depends('trg_field_ref', 'trigger_field_ids')
     def _compute_trg_field_ref__model_and_display_names(self):
-        to_compute = self.filtered('trg_field_ref')
+        to_compute = self.filtered(lambda a: a.trg_field_ref is not False)
+        # wondering why we check based on 'is not'? Because the ref could be an empty recordset
+        # and we still need to introspec on the model in that case - not just ignore it
         to_reset = (self - to_compute)
         to_reset.trg_field_ref_model_name = False
         to_reset.trg_field_ref_display_name = False
         for automation in to_compute:
             relation = automation.trigger_field_ids.relation
+            if not relation:
+                automation.trg_field_ref_model_name = False
+                automation.trg_field_ref_display_name = False
+                continue
             resid = automation.trg_field_ref
             automation.trg_field_ref_model_name = relation
             automation.trg_field_ref_display_name = self.env[relation].browse(resid).display_name
