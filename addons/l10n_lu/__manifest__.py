@@ -1,38 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Luxembourg - Accounting',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/luxembourg.html',
+    'name': 'Luxembourg - Demo Data',
+    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['lu'],
-    'version': '2.1',
-    'category': 'Accounting/Localizations/Account Charts',
+    'category': 'Localization/Demo Data',
     'description': """
-This is the base module to manage the accounting chart for Luxembourg.
-======================================================================
-
-    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),
-    * the Tax Code Chart for Luxembourg
-    * the main taxes used in Luxembourg
-    * default fiscal position for local, intracom, extracom
-
-Notes:
-    * the 2015 chart of taxes is implemented to a large extent,
-      see the first sheet of tax.xls for details of coverage
-    * to update the chart of tax template, update tax.xls and run tax2csv.py
-""",
-    'author': 'Odoo S.A., ADN, ACSONE SA/NV',
-    'depends': [
-        'account',
-        'base_iban',
-        'base_vat',
-    ],
-    'data': [
-        'data/l10n_lu_chart_data.xml',
-        'data/account_tax_report_line.xml',
-    ],
+This is the base module to create demonstration data for the Luxembourg localization in Odoo.
+=============================================================================================
+    """,
+    'depends': ['base'],
     'demo': [
         'demo/demo_company.xml',
     ],
-    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }
