@@ -1,33 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Lithuania - Accounting',
+    'name': 'Lithuania - Demo Data',
+    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['lt'],
-    'version': '1.0.0',
+    'category': 'Localization/Demo Data',
     'description': """
-Chart of Accounts (COA) Template for Lithuania's Accounting.
-
-This module also includes:
-
-* List of available banks in Lithuania.
-* Tax groups.
-* Most common Lithuanian Taxes.
-* Fiscal positions.
-* Account Tags.
+This is the base module to create demonstration data for the Lithuanian localization in Odoo.
+=============================================================================================
     """,
-    'license': 'LGPL-3',
-    'author': 'Focusate',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
-    'category': 'Accounting/Localizations/Account Charts',
-    'depends': [
-        'account',
-    ],
-    'data': [
-        'data/account_account_tag_data.xml',
-        'data/res_bank_data.xml',
-    ],
+    'depends': ['base'],
     'demo': [
         'demo/demo_company.xml',
     ],
-    'installable': True,
+    'license': 'LGPL-3',
 }
