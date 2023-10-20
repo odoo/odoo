@@ -6,11 +6,11 @@ from odoo import _, api, fields, models
 class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
-    l10n_it_edi_warning_message = fields.Html(compute='_compute_l10n_it_edi_warning_message')
+    l10n_it_edi_warning_message = fields.Html(compute='_compute_l10n_it_edi_xml_export')
 
     l10n_it_edi_enable_xml_export = fields.Boolean(compute='_compute_l10n_it_edi_xml_export')
     l10n_it_edi_readonly_xml_export = fields.Boolean(compute='_compute_l10n_it_edi_xml_export')
-    l10n_it_edi_checkbox_xml_export = fields.Boolean('E-invoice XML (Italy)',
+    l10n_it_edi_checkbox_xml_export = fields.Boolean('E-invoice XML',
         compute='_compute_l10n_it_edi_checkbox_xml_export',
         store=True,
         readonly=False,
@@ -20,7 +20,7 @@ class AccountMoveSend(models.TransientModel):
 
     l10n_it_edi_enable_send = fields.Boolean(compute='_compute_l10n_it_edi_enable_readonly_send')
     l10n_it_edi_readonly_send = fields.Boolean(compute='_compute_l10n_it_edi_enable_readonly_send')
-    l10n_it_edi_checkbox_send = fields.Boolean('Tax Agency',
+    l10n_it_edi_checkbox_send = fields.Boolean('Send To Tax Agency',
         compute='_compute_l10n_it_edi_checkbox_send',
         store=True,
         readonly=False,
@@ -40,32 +40,47 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('move_ids')
     def _compute_l10n_it_edi_xml_export(self):
         for wizard in self:
-            already_has_xml = any(wizard.move_ids.mapped("l10n_it_edi_attachment_id"))
-            already_has_pdf = any(wizard.move_ids.mapped("invoice_pdf_report_id"))
-            if not wizard.company_id.l10n_it_edi_proxy_user_id:
-                wizard.l10n_it_edi_warning_message = _("You must accept the terms and conditions in the Settings to use the IT EDI.")
+            if wizard.company_id.account_fiscal_country_id.code == 'IT':
+                if not wizard.company_id.l10n_it_edi_proxy_user_id:
+                    wizard.l10n_it_edi_warning_message = _("You must accept the terms and conditions in the Settings to use the IT EDI.")
+                else:
+                    wizard.l10n_it_edi_warning_message = wizard.move_ids._l10n_it_edi_format_export_data_errors()
+                has_pdf_but_no_xml = any(move.invoice_pdf_report_id and not move.l10n_it_edi_attachment_id for move in wizard.move_ids)
+                all_have_xml = all(move.l10n_it_edi_attachment_id for move in wizard.move_ids)
+                wizard.l10n_it_edi_enable_xml_export = any(m._l10n_it_edi_ready_for_xml_export() for m in wizard.move_ids)
+                wizard.l10n_it_edi_readonly_xml_export = bool(wizard.l10n_it_edi_warning_message) or has_pdf_but_no_xml or all_have_xml
             else:
-                wizard.l10n_it_edi_warning_message = wizard.move_ids._l10n_it_edi_format_export_data_errors()
-            wizard.l10n_it_edi_enable_xml_export = any(m._l10n_it_edi_ready_for_xml_export() for m in wizard.move_ids)
-            wizard.l10n_it_edi_readonly_xml_export = bool(wizard.l10n_it_edi_warning_message) or already_has_pdf or already_has_xml
+                wizard.l10n_it_edi_warning_message = False
+                wizard.l10n_it_edi_enable_xml_export = False
+                wizard.l10n_it_edi_readonly_xml_export = False
 
     @api.depends('move_ids', 'l10n_it_edi_checkbox_xml_export', 'l10n_it_edi_warning_message')
     def _compute_l10n_it_edi_enable_readonly_send(self):
         for wizard in self:
-            already_has_xml = any(wizard.move_ids.mapped("l10n_it_edi_attachment_id"))
-            xml_already_sent = all(m.l10n_it_edi_state not in (False, 'rejected') for m in wizard.move_ids)
-            wizard.l10n_it_edi_enable_send = already_has_xml or wizard.l10n_it_edi_checkbox_xml_export
-            wizard.l10n_it_edi_readonly_send = bool(wizard.l10n_it_edi_warning_message) or xml_already_sent
+            if wizard.company_id.account_fiscal_country_id.code == 'IT':
+                xml_already_sent = all(m.l10n_it_edi_state not in (False, 'rejected') for m in wizard.move_ids)
+                wizard.l10n_it_edi_enable_send = wizard.l10n_it_edi_checkbox_xml_export
+                wizard.l10n_it_edi_readonly_send = bool(wizard.l10n_it_edi_warning_message) or xml_already_sent
+            else:
+                wizard.l10n_it_edi_enable_send = False
+                wizard.l10n_it_edi_readonly_send = False
 
     @api.depends('move_ids')
     def _compute_l10n_it_edi_checkbox_xml_export(self):
         for wizard in self:
-            wizard.l10n_it_edi_checkbox_xml_export = wizard.l10n_it_edi_enable_xml_export and not wizard.l10n_it_edi_readonly_xml_export
+            if wizard.company_id.account_fiscal_country_id.code == 'IT':
+                all_have_xml = all(move.l10n_it_edi_attachment_id for move in wizard.move_ids)
+                wizard.l10n_it_edi_checkbox_xml_export = all_have_xml or (wizard.l10n_it_edi_enable_xml_export and not wizard.l10n_it_edi_readonly_xml_export)
+            else:
+                wizard.l10n_it_edi_checkbox_xml_export = False
 
     @api.depends('move_ids', 'l10n_it_edi_checkbox_xml_export')
     def _compute_l10n_it_edi_checkbox_send(self):
         for wizard in self:
-            wizard.l10n_it_edi_checkbox_send = not wizard.l10n_it_edi_readonly_send and wizard.l10n_it_edi_enable_send
+            if wizard.company_id.account_fiscal_country_id.code == 'IT':
+                wizard.l10n_it_edi_checkbox_send = not wizard.l10n_it_edi_readonly_send and wizard.l10n_it_edi_checkbox_xml_export
+            else:
+                wizard.l10n_it_edi_checkbox_send = False
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
