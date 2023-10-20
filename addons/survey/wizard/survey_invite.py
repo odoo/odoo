@@ -124,7 +124,7 @@ class SurveyInvite(models.TransientModel):
             else:
                 valid.extend(email_check)
         if error:
-            raise UserError(_("Some emails you just entered are incorrect: %s") % (', '.join(error)))
+            raise UserError(_("Some emails you just entered are incorrect: %s", ', '.join(error)))
         self.emails = '\n'.join(valid)
 
     @api.onchange('partner_ids')

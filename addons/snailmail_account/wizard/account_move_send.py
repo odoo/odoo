@@ -53,8 +53,9 @@ class AccountMoveSend(models.Model):
                 if invoice_without_valid_address:
                     wizard.send_by_post_warning_message = _(
                         "The partners on the following invoices have no valid address, "
-                        "so those invoices will not be sent: %s"
-                    ) % ", ".join(invoice_without_valid_address.mapped('name'))
+                        "so those invoices will not be sent: %s",
+                        ", ".join(invoice_without_valid_address.mapped('name'))
+                    )
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

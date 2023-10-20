@@ -258,7 +258,7 @@ class CrmLead(models.Model):
         fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
-            raise UserError(_("Not allowed to update the following field(s): %s.") % ", ".join([key for key in values if not key in fields]))
+            raise UserError(_("Not allowed to update the following field(s): %s.", ", ".join([key for key in values if not key in fields])))
         return self.sudo().write(values)
 
     @api.model

@@ -632,11 +632,15 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _check_uom(self):
         moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id != move.product_uom.category_id)
         if moves_error:
-            user_warning = _('You cannot perform the move because the unit of measure has a different category as the product unit of measure.')
-            for move in moves_error:
-                user_warning += _('\n\n%s --> Product UoM is %s (%s) - Move UoM is %s (%s)') % (move.product_id.display_name, move.product_id.uom_id.name, move.product_id.uom_id.category_id.name, move.product_uom.name, move.product_uom.category_id.name)
-            user_warning += _('\n\nBlocking: %s') % ' ,'.join(moves_error.mapped('name'))
-            raise UserError(user_warning)
+            user_warnings = [
+                _('You cannot perform the move because the unit of measure has a different category as the product unit of measure.'),
+                *(
+                    _('%s --> Product UoM is %s (%s) - Move UoM is %s (%s)', move.product_id.display_name, move.product_id.uom_id.name, move.product_id.uom_id.category_id.name, move.product_uom.name, move.product_uom.category_id.name)
+                    for move in moves_error
+                ),
+                _('Blocking: %s', ' ,'.join(moves_error.mapped('name')))
+            ]
+            raise UserError('\n\n'.join(user_warnings))
 
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
@@ -764,7 +768,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not documents or not doc_orig:
             return
 
-        msg = escape(_("The deadline has been automatically updated due to a delay on %s.") % doc_orig[0]._get_html_link())
+        msg = escape(_("The deadline has been automatically updated due to a delay on %s.")) % doc_orig[0]._get_html_link()
         msg_subject = _("Deadline updated due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:

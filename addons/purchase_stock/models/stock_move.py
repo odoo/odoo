@@ -198,7 +198,8 @@ class StockMove(models.Model):
             valuation_total_qty += layers_qty
         if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
             raise UserError(
-                _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
+                _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.',
+                  related_aml.product_id.display_name))
         return valuation_price_unit_total, valuation_total_qty
 
     def _is_purchase_return(self):

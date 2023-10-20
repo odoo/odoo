@@ -88,7 +88,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             map_employees = self.line_ids.mapped('employee_id')
             missing_meployees = timesheet_employees - map_employees
             if missing_meployees:
-                raise UserError(_('The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\nMissing employee(s): %s') % (', '.join(missing_meployees.mapped('name'))))
+                raise UserError(_('The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\nMissing employee(s): %s', ', '.join(missing_meployees.mapped('name'))))
 
         # check here if timesheet already linked to SO line
         timesheet_with_so_line = self.env['account.analytic.line'].search_count([('task_id', 'in', self.project_id.tasks.ids), ('so_line', '!=', False)])

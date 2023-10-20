@@ -52,7 +52,7 @@ class ResCompany(models.Model):
             for seq_field in sequence_fields:
                 if not company[seq_field]:
                     vals = {
-                        'name': _('Securisation of %s - %s') % (seq_field, company.name),
+                        'name': _('Securisation of %s - %s', seq_field, company.name),
                         'code': 'FRSECURE%s-%s' % (company.id, seq_field),
                         'implementation': 'no_gap',
                         'prefix': '',

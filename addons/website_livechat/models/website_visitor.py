@@ -85,7 +85,7 @@ class WebsiteVisitor(models.Model):
                     self.env['mail.guest']._find_or_create_for_channel(
                         channel,
                         country_id=country.id,
-                        name=_("Visitor #%d") % channel.livechat_visitor_id.id,
+                        name=_("Visitor #%d", channel.livechat_visitor_id.id),
                         post_joined_message=False,
                         timezone=visitor.timezone
                     )

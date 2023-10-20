@@ -64,9 +64,9 @@ class IrModule(models.Model):
                     _is_studio_custom(path)):
                 err = _("Studio customizations require Studio")
             else:
-                err = _("Unmet module dependencies: \n\n - %s") % '\n - '.join(
+                err = _("Unmet module dependencies: \n\n - %s", '\n - '.join(
                     known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
-                )
+                ))
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))

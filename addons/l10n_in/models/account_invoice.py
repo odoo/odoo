@@ -70,7 +70,7 @@ class AccountMove(models.Model):
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
             if not move.company_id.state_id:
                 msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
-                "Set the address of your company (Don't forget the State field)") % (move.company_id.name)
+                "Set the address of your company (Don't forget the State field)", move.company_id.name)
                 action = {
                     "view_mode": "form",
                     "res_model": "res.company",

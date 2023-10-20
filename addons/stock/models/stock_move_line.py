@@ -604,7 +604,8 @@ class StockMoveLine(models.Model):
             if float_compare(uom_qty, qty_done, precision_digits=precision_digits) != 0:
                 raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision '
                                   'defined on the unit of measure "%s". Please change the quantity done or the '
-                                  'rounding precision of your unit of measure.') % (ml.product_id.display_name, ml.product_uom_id.name))
+                                  'rounding precision of your unit of measure.',
+                                  ml.product_id.display_name, ml.product_uom_id.name))
 
             qty_done_float_compared = float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)
             if qty_done_float_compared > 0:

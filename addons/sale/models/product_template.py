@@ -76,7 +76,7 @@ class ProductTemplate(models.Model):
                                         'sales orders in another company:\n%s\n'
                                         'You can archive these products and recreate them '
                                         'with your company restriction instead, or leave them as '
-                                        'shared product.') % (target_company.name, ', '.join(used_products)))
+                                        'shared product.', target_company.name, ', '.join(used_products)))
 
     def action_view_sales(self):
         action = self.env['ir.actions.actions']._for_xml_id('sale.report_all_channels_sales_action')

@@ -502,7 +502,7 @@ class AccountJournal(models.Model):
 
         default.update(
             code=copy_code,
-            name=_("%s (copy)") % (self.name or ''))
+            name=_("%s (copy)", self.name or ''))
 
         return super(AccountJournal, self).copy(default)
 
@@ -816,7 +816,7 @@ class AccountJournal(models.Model):
             for seq_field in sequence_fields:
                 if not journal[seq_field]:
                     vals = {
-                        'name': _('Securisation of %s - %s') % (seq_field, journal.name),
+                        'name': _('Securisation of %s - %s', seq_field, journal.name),
                         'code': 'SECUR%s-%s' % (journal.id, seq_field),
                         'implementation': 'no_gap',
                         'prefix': '',

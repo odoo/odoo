@@ -24,7 +24,7 @@ class AccountMove(models.Model):
         ocr_length = self.journal_id.l10n_se_invoice_ocr_length
 
         if len(reference) + 1 > ocr_length:
-            raise UserError(_("OCR Reference Number length is greater than allowed. Allowed length in invoice journal setting is %s.") % str(ocr_length))
+            raise UserError(_("OCR Reference Number length is greater than allowed. Allowed length in invoice journal setting is %s.", ocr_length))
 
         reference = reference.rjust(ocr_length - 1, '0')
         return reference + luhn.calc_check_digit(reference)

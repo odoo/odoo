@@ -103,10 +103,10 @@ class SaleOrder(models.Model):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
-                addresses = (record.partner_shipping_id.display_name, new_partner.display_name)
                 message = _("""The delivery address has been changed on the Sales Order<br/>
                         From <strong>"%s"</strong> To <strong>"%s"</strong>,
-                        You should probably update the partner on this document.""") % addresses
+                        You should probably update the partner on this document.""",
+                            record.partner_shipping_id.display_name, new_partner.display_name)
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 
         if 'commitment_date' in values:
@@ -177,8 +177,8 @@ class SaleOrder(models.Model):
             res['warning'] = {
                 'title': _('Warning!'),
                 'message': _(
-                    'Do not forget to change the partner on the following delivery orders: %s'
-                ) % (','.join(pickings.mapped('name')))
+                    'Do not forget to change the partner on the following delivery orders: %s',
+                    ','.join(pickings.mapped('name')))
             }
         return res
 

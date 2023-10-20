@@ -107,11 +107,11 @@ class AccountMove(models.Model):
                 raise UserError(_("You can only create E-waybill from posted invoice"))
             errors = edi_format._check_move_configuration(move)
             if errors:
-                raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
+                raise UserError(_("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))
             existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
             if existing_edi_document:
                 if existing_edi_document.state in ('sent', 'to_cancel'):
-                    raise UserError(_("E-waybill is already created") % '\n'.join(errors))
+                    raise UserError(_("E-waybill is already created"))
                 existing_edi_document.sudo().write({
                     'state': 'to_send',
                     'attachment_id': False,

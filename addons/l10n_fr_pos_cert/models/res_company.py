@@ -96,4 +96,4 @@ class ResCompany(models.Model):
                 'corrupted_orders': corrupted_orders or 'None'
             }
         else:
-            raise UserError(_('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.') % self.env.company.name)
+            raise UserError(_('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.', self.env.company.name))

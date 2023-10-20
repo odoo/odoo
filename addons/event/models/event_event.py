@@ -357,7 +357,7 @@ class EventEvent(models.Model):
         if operator not in ['=', '!=']:
             raise UserError(_('This operator is not supported'))
         if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %s)') % value)
+            raise UserError(_('Value should be True or False (not %s)', value))
         now = fields.Datetime.now()
         if (operator == '=' and value) or (operator == '!=' and not value):
             domain = [('date_begin', '<=', now), ('date_end', '>', now)]
@@ -615,7 +615,7 @@ class EventEvent(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_("%s (copy)") % (self.name))
+        default = dict(default or {}, name=_("%s (copy)", self.name))
         return super(EventEvent, self).copy(default)
 
     @api.model

@@ -88,9 +88,9 @@ class UoM(models.Model):
             reference_count = sum(
                 uom.uom_type == 'reference' for uom in category.uom_ids)
             if reference_count > 1:
-                raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % category.name)
+                raise ValidationError(_("UoM category %s should only have one reference unit of measure.", category.name))
             elif reference_count == 0:
-                raise ValidationError(_("UoM category %s should have a reference unit of measure.") % category.name)
+                raise ValidationError(_("UoM category %s should have a reference unit of measure.", category.name))
 
     @api.depends('factor')
     def _compute_factor_inv(self):
@@ -211,7 +211,9 @@ class UoM(models.Model):
 
         if self != to_unit and self.category_id.id != to_unit.category_id.id:
             if raise_if_failure:
-                raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
+                raise UserError(_(
+                    'The unit of measure %s defined on the order line doesn\'t belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.',
+                    self.name, to_unit.name))
             else:
                 return qty
 

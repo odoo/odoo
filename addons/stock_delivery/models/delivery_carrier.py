@@ -100,7 +100,7 @@ class DeliveryCarrier(models.Model):
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
         if total_weight == 0.0:
             weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (weight_uom_name))
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s", weight_uom_name))
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -180,10 +180,11 @@ class DeliveryCarrier(models.Model):
                 picking=picking,
             ))
         elif not packages:
-            raise UserError(
-                _("The package cannot be created because the total weight of the products in the "
-                "picking is 0.0 %s") % (picking.weight_uom_name)
-            )
+            raise UserError(_(
+                "The package cannot be created because the total weight of the "
+                "products in the picking is 0.0 %s",
+                picking.weight_uom_name
+            ))
         return packages
 
     def _get_commodities_from_order(self, order):

@@ -93,17 +93,17 @@ class WebsiteRewrite(models.Model):
                     raise ValidationError(_('"URL to" must start with a leading slash.'))
                 for param in re.findall('/<.*?>', rewrite.url_from):
                     if param not in rewrite.url_to:
-                        raise ValidationError(_('"URL to" must contain parameter %s used in "URL from".') % param)
+                        raise ValidationError(_('"URL to" must contain parameter %s used in "URL from".', param))
                 for param in re.findall('/<.*?>', rewrite.url_to):
                     if param not in rewrite.url_from:
-                        raise ValidationError(_('"URL to" cannot contain parameter %s which is not used in "URL from".') % param)
+                        raise ValidationError(_('"URL to" cannot contain parameter %s which is not used in "URL from".', param))
                 try:
                     converters = self.env['ir.http']._get_converters()
                     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
                     rule = werkzeug.routing.Rule(rewrite.url_to)
                     routing_map.add(rule)
                 except ValueError as e:
-                    raise ValidationError(_('"URL to" is invalid: %s') % e)
+                    raise ValidationError(_('"URL to" is invalid: %s', e)) from e
 
     @api.depends('redirect_type')
     def _compute_display_name(self):

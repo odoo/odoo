@@ -1104,15 +1104,15 @@ class Picking(models.Model):
             if pickings_without_quantities:
                 raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
-                raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
+                raise UserError(_('You need to supply a Lot/Serial number for products %s.', ', '.join(products_without_lots.mapped('display_name'))))
         else:
             message = ""
             if pickings_without_moves:
-                message += _('Transfers %s: Please add some items to move.') % ', '.join(pickings_without_moves.mapped('name'))
+                message += _('Transfers %s: Please add some items to move.', ', '.join(pickings_without_moves.mapped('name')))
             if pickings_without_quantities:
-                message += _('\n\nTransfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities.') % ', '.join(pickings_without_quantities.mapped('name'))
+                message += _('\n\nTransfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities.', ', '.join(pickings_without_quantities.mapped('name')))
             if pickings_without_lots:
-                message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.') % (', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
+                message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.', ', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
             if message:
                 raise UserError(message.lstrip())
 
@@ -1662,7 +1662,7 @@ class Picking(models.Model):
         report = self.env['ir.actions.report']._render_qweb_pdf("stock.action_report_delivery", self.id)
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
-            message = _('Order signed by %s') % (self.partner_id.name)
+            message = _('Order signed by %s', self.partner_id.name)
         else:
             message = _('Order signed')
         self.message_post(
