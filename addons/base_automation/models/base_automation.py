@@ -71,6 +71,7 @@ class BaseAutomation(models.Model):
     _description = 'Automation Rule'
 
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
+    description = fields.Html(string="Description")
     model_id = fields.Many2one(
         "ir.model", string="Model", required=True, ondelete="cascade", help="Model on which the automation rule runs."
     )
