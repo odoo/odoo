@@ -16,6 +16,11 @@
         color: $body-color;
         background-color: $o-view-background-color;
         transition: right .3s, left .3s;
+        overflow: hidden;
+
+        @include media-breakpoint-down (md) {
+            line-height: 1.2;
+        }
 
         &:hover {
             color: $body-color;
@@ -51,7 +56,16 @@
         }
 
         .fc-content {
-            margin: 0 map-get($spacers, 1);
+            > .o_event_title {
+                @include media-breakpoint-down(lg){
+                    text-overflow: unset;
+                    white-space: break-spaces;
+
+                    > span {
+                        word-break: break-word;
+                    }
+                }
+            }
         }
     }
 
@@ -247,6 +261,17 @@
                 + hr.fc-widget-header {
                     padding: 1px 0 0;
                     background: map-get($grays, "300");
+                }
+
+                .fc-day-grid-event {
+
+                    @include media-breakpoint-down(md){
+                        margin: 1px;
+
+                        .fc-content {
+                            max-height: 1.2em;
+                        }
+                    }
                 }
 
                 .fc-content-skeleton tr:not(:first-child) .fc-h-event {
@@ -455,10 +480,6 @@
                 > .fc-month {
                     width: 21rem;
                     margin: auto;
-
-                    @include media-breakpoint-down(md) {
-                        width: 95%;
-                    }
 
                     > .fc-toolbar.fc-header-toolbar {
                         margin-bottom: 4px;

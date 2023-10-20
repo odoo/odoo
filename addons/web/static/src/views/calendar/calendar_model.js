@@ -550,6 +550,7 @@ export class CalendarModel extends Model {
             isStriked: rawRecord["is_striked"] || false,
             isTimeHidden: isTimeHidden || !showTime,
             isMonth: this.meta.scale === "month",
+            isSmall: this.env.isSmall,
             rawRecord,
         };
     }
