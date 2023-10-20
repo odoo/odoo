@@ -12,20 +12,11 @@ import { browser } from "@web/core/browser/browser";
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
 const BLACKLISTED_MENUS = [
-    "base.menu_theme_store",
-    "base.menu_third_party",
-    "account.menu_action_account_bank_journal_form",
-    "event.menu_event_registration_desk", // there's no way to come back from this menu
-    "hr_attendance.menu_hr_attendance_kiosk_no_user_mode", // same here
-    "pos_adyen.menu_pos_adyen_account",
-    "payment_odoo.menu_adyen_account",
-    "payment_odoo.root_adyen_menu",
-    // Modal menu
-    "website.menu_edit_menu",
-    "point_of_sale.menu_report_order_details",
-    "point_of_sale.menu_report_daily_details",
-    "account_accountant.menu_action_change_lock_date",
-    "account_accountant.menu_action_auto_reconcile",
+    "base.menu_theme_store", // Open a new tab
+    "base.menu_third_party", // Open a new tab
+    "event_barcode.menu_event_registration_desk", // there's no way to come back from this menu (tablet mode)
+    "hr_attendance.menu_hr_attendance_kiosk_no_user_mode", // same here (tablet mode)
+    "account.menu_action_account_bank_journal_form", // Modal in an iFrame
 ];
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
@@ -43,6 +34,7 @@ let subMenuIndex;
 let testedApps;
 let testedMenus;
 let testedFilters;
+let testedModals;
 
 let unPatchORM;
 
@@ -69,6 +61,7 @@ function setup() {
     testedApps = [];
     testedMenus = [];
     testedFilters = 0;
+    testedModals = 0;
     appIndex = 0;
     menuIndex = 0;
     subMenuIndex = 0;
@@ -361,19 +354,37 @@ async function testViews() {
  *  @returns {Promise}
  */
 async function testMenuItem(element) {
-    const menuDescription = element.innerText.trim() + " " + element.dataset.menuXmlid;
+    const menu = element.dataset.menuXmlid;
+    const menuDescription = element.innerText.trim() + " " + menu;
     browser.console.log(`Testing menu ${menuDescription}`);
-    testedMenus.push(element.dataset.menuXmlid);
-    if (BLACKLISTED_MENUS.includes(element.dataset.menuXmlid)) {
+    if (BLACKLISTED_MENUS.includes(menu)) {
         return Promise.resolve(); // Skip black listed menus
     }
+    testedMenus.push(menu);
     const startActionCount = actionCount;
     await triggerClick(element, `menu item "${element.innerText.trim()}"`);
     try {
-        await waitForCondition(() => startActionCount !== actionCount);
-        await testStudio();
-        await testFilters();
-        await testViews();
+        let isModal = false;
+        await waitForCondition(() => {
+            if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
+                isModal = true;
+                browser.console.log(`Modal detected: ${menuDescription}`);
+                testedModals++;
+                return true;
+            } else {
+                return startActionCount !== actionCount;
+            }
+        });
+        if (isModal) {
+            await triggerClick(
+                document.querySelector(".o_dialog header > .btn-close"),
+                "modal close button"
+            );
+        } else {
+            await testStudio();
+            await testFilters();
+            await testViews();
+        }
     } catch (err) {
         browser.console.error(`Error while testing ${menuDescription}`);
         throw err;
@@ -437,6 +448,7 @@ async function _clickEverywhere(xmlId) {
         console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
         browser.console.log(`Successfully tested ${testedApps.length} apps`);
         browser.console.log(`Successfully tested ${testedMenus.length - testedApps.length} menus`);
+        browser.console.log(`Successfully tested ${testedModals} modals`);
         browser.console.log(`Successfully tested ${testedFilters} filters`);
         if (studioCount > 0) {
             browser.console.log(`Successfully tested ${studioCount} views in Studio`);
