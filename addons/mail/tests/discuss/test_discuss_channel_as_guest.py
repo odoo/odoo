@@ -33,6 +33,8 @@ class TestMailPublicPage(HttpCase):
         self.channel.add_members(portal_user.partner_id.ids)
         self.channel.add_members(internal_user.partner_id.ids)
         self.channel.add_members(guest_ids=[guest.id])
+        internal_member = self.channel.channel_member_ids.filtered(lambda m: internal_user.partner_id == m.partner_id)
+        internal_member._rtc_join_call()
 
         self.group = self.env['discuss.channel'].create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
         self.group.add_members(guest_ids=[guest.id])
