@@ -186,6 +186,7 @@ QUnit.module("clickbot", (hooks) => {
             "Clicking on: apps menu toggle button",
             "Successfully tested 2 apps",
             "Successfully tested 2 menus",
+            "Successfully tested 0 modals",
             "Successfully tested 10 filters",
             "test successful",
         ]);
@@ -307,6 +308,83 @@ QUnit.module("clickbot", (hooks) => {
             "response",
             "onWillUpdateProps called", // click on second filter
             "response",
+            "test successful",
+        ]);
+    });
+
+    QUnit.test("clickbot clickeverywhere menu modal", async (assert) => {
+        serverData.views["foo,false,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>
+        `;
+        serverData.actions["1099"] = {
+            id: 1099,
+            name: "Modal",
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            view_mode: "form",
+            target: "new",
+        };
+        serverData.menus = {
+            root: { id: "root", children: [1, 2], name: "root", appID: "root" },
+            1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
+            2: {
+                id: 2,
+                children: [],
+                name: "App Modal",
+                appID: 2,
+                actionID: 1099,
+                xmlid: "test.modal",
+            },
+        };
+        patchWithCleanup(browser, {
+            console: {
+                log: (msg) => {
+                    assert.step(msg);
+                    if (msg === "test successful") {
+                        clickEverywhereDef.resolve();
+                    }
+                },
+                error: (msg) => {
+                    assert.step(msg);
+                    clickEverywhereDef.resolve();
+                },
+            },
+        });
+        await createWebClient({ serverData });
+        clickEverywhereDef = makeDeferred();
+        window.clickEverywhere();
+        await clickEverywhereDef;
+        assert.verifySteps([
+            "Clicking on: apps menu toggle button",
+            "Testing app menu: app1",
+            "Testing menu App1 app1",
+            'Clicking on: menu item "App1"',
+            "Clicking on: Control Panel menu",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Testing view switch: kanban",
+            "Clicking on: kanban view switcher",
+            "Clicking on: Control Panel menu",
+            "Testing 2 filters",
+            'Clicking on: filter "Not Bar"',
+            'Clicking on: filter "Date"',
+            'Clicking on: filter option "October"',
+            "Clicking on: apps menu toggle button",
+            "Testing app menu: test.modal",
+            "Testing menu App Modal test.modal",
+            'Clicking on: menu item "App Modal"',
+            "Modal detected: App Modal test.modal",
+            "Clicking on: modal close button",
+            "Clicking on: apps menu toggle button",
+            "Successfully tested 2 apps",
+            "Successfully tested 0 menus",
+            "Successfully tested 1 modals",
+            "Successfully tested 4 filters",
             "test successful",
         ]);
     });
