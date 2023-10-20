@@ -1679,4 +1679,43 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getFacetTexts(target), [`Foo contains abc or Foo contains def`]);
     });
+
+    QUnit.test("no rpc for getting display_name for facets if known", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: SearchBar,
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <filter name="filter" string="Filter" domain="[('bar', 'in', [])]"/>
+                </search>
+            `,
+            context: {
+                search_default_filter: true,
+            },
+            mockRPC(route, { method, kwargs }) {
+                assert.step(method || route);
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+                if (method === "name_search") {
+                    assert.step(JSON.stringify(kwargs.args /** domain */));
+                }
+            },
+        });
+        assert.deepEqual(getFacetTexts(target), ["Filter"]);
+        assert.verifySteps([`get_views`]);
+
+        await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+        assert.verifySteps([`fields_get`]);
+
+        await click(target, ".o-autocomplete--input");
+        assert.verifySteps([`name_search`, `["!",["id","in",[]]]`]);
+
+        await click(target.querySelector(".dropdown-menu li"));
+        await click(target.querySelector(".modal footer button"));
+        assert.deepEqual(getFacetTexts(target), ["Bar is in ( First record )"]);
+        assert.verifySteps([`/web/domain/validate`]);
+    });
 });

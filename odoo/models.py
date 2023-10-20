@@ -1720,7 +1720,7 @@ class BaseModel(metaclass=MetaModel):
                              ``'like'`` or ``'='``.
         :param int limit: optional max number of records to return
         :rtype: list
-        :return: list of pairs ``(id, text_repr)`` for all matching records.
+        :return: list of pairs ``(id, display_name)`` for all matching records.
         """
         ids = self._name_search(name, args, operator, limit=limit, order=self._order)
 
