@@ -56,7 +56,7 @@ class TestDiscussChannelMembers(MailCommon):
             'channel_type': 'channel',
             'group_public_id': cls.secret_group.id,
         })
-        cls.public_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(group_id=None, name='Public channel of user 1')['id'])
+        cls.public_channel = cls.env['discuss.channel'].channel_create(group_id=None, name='Public channel of user 1')
         (cls.group | cls.group_restricted_channel | cls.public_channel).channel_member_ids.unlink()
 
     # ------------------------------------------------------------
@@ -243,7 +243,7 @@ class TestDiscussChannelMembers(MailCommon):
     # ------------------------------------------------------------
 
     def test_unread_counter_with_message_post(self):
-        channel_as_user_1 = self.env['discuss.channel'].browse(self.env['discuss.channel'].with_user(self.user_1).channel_create(group_id=None, name='Public channel')['id'])
+        channel_as_user_1 = self.env['discuss.channel'].with_user(self.user_1).channel_create(group_id=None, name='Public channel')
         channel_as_user_1.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
         channel_as_user_1.with_user(self.user_1).add_members(self.user_2.partner_id.ids)
         channel_1_rel_user_2 = self.env['discuss.channel.member'].search([
@@ -260,8 +260,8 @@ class TestDiscussChannelMembers(MailCommon):
         self.assertEqual(channel_1_rel_user_2.message_unread_counter, 1, "should have 1 unread message after someone else posted a message")
 
     def test_unread_counter_with_message_post_multi_channel(self):
-        channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1).browse(self.env['discuss.channel'].with_user(self.user_1).channel_create(group_id=None, name='wololo channel')['id'])
-        channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2).browse(self.env['discuss.channel'].with_user(self.user_2).channel_create(group_id=None, name='walala channel')['id'])
+        channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1).channel_create(group_id=None, name='wololo channel')
+        channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2).channel_create(group_id=None, name='walala channel')
         channel_1_as_user_1.add_members(self.user_2.partner_id.ids)
         channel_2_as_user_2.add_members(self.user_1.partner_id.ids)
         channel_2_as_user_2.add_members(self.user_3.partner_id.ids)

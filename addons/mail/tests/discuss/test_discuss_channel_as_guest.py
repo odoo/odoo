@@ -28,13 +28,13 @@ class TestMailPublicPage(HttpCase):
         )
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
-        self.channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(group_id=None, name='Test channel')['id'])
+        self.channel = self.env['discuss.channel'].channel_create(group_id=None, name='Test channel')
         self.channel.allow_public_upload = True
         self.channel.add_members(portal_user.partner_id.ids)
         self.channel.add_members(internal_user.partner_id.ids)
         self.channel.add_members(guest_ids=[guest.id])
 
-        self.group = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")['id'])
+        self.group = self.env['discuss.channel'].create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
         self.group.add_members(guest_ids=[guest.id])
         self.group.allow_public_upload = True
 

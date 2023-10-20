@@ -27,15 +27,15 @@ class TestChannelAccessRights(MailCommon):
         cls.user_portal = mail_new_test_user(cls.env, login='user_portal', groups='base.group_portal', name='Chell Gladys')
 
         # Channel for certain group
-        cls.group_restricted_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)['id'])
+        cls.group_restricted_channel = cls.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)
         # Public Channel
-        cls.public_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(name='Public Channel', group_id=None)['id'])
+        cls.public_channel = cls.env['discuss.channel'].channel_create(name='Public Channel', group_id=None)
         # Group
-        cls.private_group = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].create_group(partners_to=cls.user_employee.partner_id.ids, name="Group")['id'])
+        cls.private_group = cls.env['discuss.channel'].create_group(partners_to=cls.user_employee.partner_id.ids, name="Group")
         # Chat
-        cls.chat_user_employee = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_employee.partner_id.ids)['id'])
-        cls.chat_user_employee_1 = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_employee_1.partner_id.ids)['id'])
-        cls.chat_user_portal = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_portal.partner_id.ids)['id'])
+        cls.chat_user_employee = cls.env['discuss.channel'].channel_get(cls.user_employee.partner_id.ids)
+        cls.chat_user_employee_1 = cls.env['discuss.channel'].channel_get(cls.user_employee_1.partner_id.ids)
+        cls.chat_user_portal = cls.env['discuss.channel'].channel_get(cls.user_portal.partner_id.ids)
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_public')
@@ -208,7 +208,7 @@ class TestChannelInternals(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)['id'])
+        cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test_customer@example.com',
@@ -248,8 +248,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_chat_message_post_should_update_last_interest_dt(self):
-        channel_info = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
-        chat = self.env['discuss.channel'].with_user(self.user_admin).browse(channel_info['id'])
+        chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         post_time = fields.Datetime.now()
         # Mocks the return value of field.Datetime.now(),
         # so we can see if the `last_interest_dt` is updated correctly
@@ -284,8 +283,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_chat(self):
         """ Posting a message on a chat should not send emails """
-        channel_info = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
-        chat = self.env['discuss.channel'].with_user(self.user_admin).browse(channel_info['id'])
+        chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         with self.mock_mail_gateway():
             with self.with_user('employee'):
                 new_msg = chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
@@ -307,7 +305,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
         """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
-        group_restricted_channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)['id'])
+        group_restricted_channel = self.env['discuss.channel'].channel_create(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)
 
         self.test_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
         group_restricted_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
@@ -325,47 +323,45 @@ class TestChannelInternals(MailCommon):
     @users('employee_nomail')
     def test_channel_info_get(self):
         # `channel_get` should return a new channel the first time a partner is given
-        initial_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
+        initial_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)._channel_info()[0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self.assertEqual({m['persona']['id'] for m in initial_channel_info['channelMembers'][0][1]}, {self.partner_employee_nomail.id, self.test_partner.id})
 
         # `channel_get` should return the existing channel every time the same partner is given
-        same_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
+        same_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)._channel_info()[0]
         self.assertEqual(same_channel_info['id'], initial_channel_info['id'])
 
         # `channel_get` should return the existing channel when the current partner is given together with the other partner
-        together_channel_info = self.env['discuss.channel'].channel_get(partners_to=(self.partner_employee_nomail + self.test_partner).ids)
+        together_channel_info = self.env['discuss.channel'].channel_get(partners_to=(self.partner_employee_nomail + self.test_partner).ids)._channel_info()[0]
         self.assertEqual(together_channel_info['id'], initial_channel_info['id'])
 
         # `channel_get` should return a new channel the first time just the current partner is given,
         # even if a channel containing the current partner together with other partners already exists
-        solo_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
+        solo_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)._channel_info()[0]
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self.assertEqual({m['persona']['id'] for m in solo_channel_info['channelMembers'][0][1]}, {self.partner_employee_nomail.id})
 
         # `channel_get` should return the existing channel every time the current partner is given
-        same_solo_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
+        same_solo_channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)._channel_info()[0]
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
 
     # `channel_get` will pin the channel by default and thus last interest will be updated.
     @users('employee')
     def test_channel_info_get_should_update_last_interest_dt(self):
-        # create the channel via `channel_get`
         self.env['discuss.channel'].channel_get(partners_to=self.partner_admin.ids)
 
         retrieve_time = datetime(2021, 1, 1, 0, 0)
         with patch.object(fields.Datetime, 'now', lambda: retrieve_time):
             # `last_interest_dt` should be updated again when `channel_get` is called
             # because `channel_pin` is called.
-            channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_admin.ids)
+            channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_admin.ids)._channel_info()[0]
         self.assertEqual(channel_info['last_interest_dt'], retrieve_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
 
     @users('employee')
     def test_channel_info_seen(self):
         """ In case of concurrent channel_seen RPC, ensure the oldest call has no effect. """
-        channel_info = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
-        chat = self.env['discuss.channel'].with_user(self.user_admin).browse(channel_info['id'])
+        chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
 
@@ -431,10 +427,10 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a channel/group/chat. """
-        group_restricted_channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)['id'])
-        public_channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='Channel for Everyone', group_id=None)['id'])
-        private_group = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids, name="Group")['id'])
-        chat_user_current = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get(self.env.user.partner_id.ids)['id'])
+        group_restricted_channel = self.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)
+        public_channel = self.env['discuss.channel'].channel_create(name='Channel for Everyone', group_id=None)
+        private_group = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids, name="Group")
+        chat_user_current = self.env['discuss.channel'].channel_get(self.env.user.partner_id.ids)
 
         group_restricted_channel.add_members(self.env.user.partner_id.id)
         public_channel.add_members(self.env.user.partner_id.id)
@@ -489,9 +485,9 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(messages_1, messages_2)
 
     def test_channel_should_generate_correct_default_avatar(self):
-        test_channel = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='Channel', group_id=self.env.ref('base.group_user').id)['id'])
+        test_channel = self.env['discuss.channel'].channel_create(name='Channel', group_id=self.env.ref('base.group_user').id)
         test_channel.uuid = 'channel-uuid'
-        private_group = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
+        private_group = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         private_group.uuid = 'group-uuid'
         bgcolor_channel = html_escape('hsl(316, 61%, 45%)')  # depends on uuid
         bgcolor_group = html_escape('hsl(17, 60%, 45%)')  # depends on uuid
@@ -575,13 +571,13 @@ class TestChannelInternals(MailCommon):
         with self.with_user('employee'):
             initial_channel_info = self.env['discuss.channel'].with_context(
                 allowed_company_ids=self.company_admin.ids
-            ).channel_get(self.partner_employee_c2.ids)
+            ).channel_get(self.partner_employee_c2.ids)._channel_info()[0]
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
 
     @users('employee')
     def test_create_chat_channel_should_only_pin_the_channel_for_the_current_user(self):
         chat = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
-        member_of_current_user = self.env['discuss.channel.member'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.env.user.partner_id.id)])
-        member_of_correspondent = self.env['discuss.channel.member'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.test_partner.id)])
+        member_of_current_user = self.env['discuss.channel.member'].search([('channel_id', '=', chat.id), ('partner_id', '=', self.env.user.partner_id.id)])
+        member_of_correspondent = self.env['discuss.channel.member'].search([('channel_id', '=', chat.id), ('partner_id', '=', self.test_partner.id)])
         self.assertTrue(member_of_current_user.is_pinned)
         self.assertFalse(member_of_correspondent.is_pinned)
