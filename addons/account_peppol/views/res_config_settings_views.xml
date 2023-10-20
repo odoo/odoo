@@ -5,29 +5,27 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="account_peppol" position="replace">
-                <field name="has_peppol_participant" invisible="1"/>
-                <div id="account_peppol" class="mt-3">
+            <xpath expr="//div[@id='account_peppol_install']" position="replace">
+                <div id="account_peppol">
                     <div class="col-12 col-lg-12 o_setting_box">
                         <field name="account_peppol_proxy_state" invisible="1"/>
-                        <div class="o_setting_left_pane">
-                            <field name="is_account_peppol_participant"
-                                   invisible="account_peppol_proxy_state != 'not_registered'"/>
-                        </div>
                         <div class="o_setting_right_pane border-0">
-                            <div invisible="account_peppol_proxy_state != 'not_registered'">
-                                <label for="is_account_peppol_participant" string="Use PEPPOL Invoicing"/>
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    Peppol Details
+                                </span>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                                <div class="text-muted">
+                            </div>
+                            <div invisible="account_peppol_proxy_state != 'not_registered'">
+                                <div class="text-muted oe_inline">
                                     Start sending and receiving documents via Peppol as soon as your registration is complete.
                                 </div>
                                 <div class="alert alert-warning mt-3"
                                      role="alert"
-                                     invisible="not is_account_peppol_participant or not account_peppol_endpoint_warning">
+                                     invisible="not account_peppol_endpoint_warning">
                                     <field name="account_peppol_endpoint_warning"/>
                                 </div>
-                                <div class="pt-3"
-                                     invisible="not is_account_peppol_participant">
+                                <div class="pt-3">
                                     <div class="row">
                                         <label string="Peppol EAS"
                                                for="account_peppol_eas"
@@ -43,23 +41,22 @@
                                 </div>
                             </div>
                             <div class="row"
-                                 invisible="not is_account_peppol_participant or account_peppol_proxy_state not in ('not_registered', 'not_verified')">
+                                 invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified')">
                                 <label string="Phone Number"
                                        for="account_peppol_phone_number"
                                        class="col-lg-3 o_light_label"/>
                                 <field name="account_peppol_phone_number"
-                                       required="is_account_peppol_participant and account_peppol_proxy_state in ('not_registered', 'not_verified')"/>
+                                       required="account_peppol_proxy_state == 'not_verified'"/>
                             </div>
                             <div class="row"
-                                 invisible="not is_account_peppol_participant or account_peppol_proxy_state in ('rejected', 'canceled', 'sent_verification')">
+                                 invisible="account_peppol_proxy_state in ('rejected', 'canceled', 'sent_verification')">
                                 <label string="Primary contact email"
                                        for="account_peppol_contact_email"
                                        class="col-lg-3 o_light_label"/>
-                                <field name="account_peppol_contact_email"
-                                       required="is_account_peppol_participant"/>
+                                <field name="account_peppol_contact_email"/>
                             </div>
                             <div class="content-group pt-3"
-                                 invisible="account_peppol_proxy_state != 'not_registered' or not is_account_peppol_participant">
+                                 invisible="account_peppol_proxy_state != 'not_registered'">
                                 <span>
                                     I want to migrate my Peppol connection to Odoo (optional):
                                 </span>
@@ -70,8 +67,7 @@
                                     <field name="account_peppol_migration_key"/>
                                 </div>
                             </div>
-                            <div class="row mb-3"
-                                 invisible="not is_account_peppol_participant">
+                            <div class="row mb-3">
                                 <div class="content-group mt-3"
                                      invisible="account_peppol_proxy_state in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification')">
                                     <div class="row">
@@ -79,7 +75,7 @@
                                                for="account_peppol_purchase_journal_id"
                                                class="col-lg-3 o_light_label"/>
                                         <field name="account_peppol_purchase_journal_id"
-                                               required="is_account_peppol_participant and account_peppol_proxy_state not in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification')"/>
+                                               required="account_peppol_proxy_state not in ('rejected', 'canceled', 'not_verified', 'not_registered', 'sent_verification')"/>
                                     </div>
                                 </div>
                                 <div class="content-group mt-3"
@@ -88,7 +84,7 @@
                                         We sent a verification code to
                                         <field name="account_peppol_phone_number"
                                                nolabel="1"
-                                               readonly="is_account_peppol_participant and account_peppol_proxy_state == 'sent_verification'"/>.
+                                               readonly="account_peppol_proxy_state == 'sent_verification'"/>.
                                     </span>
                                     <div class="row mt-1 ps-3">
                                         <field name="account_peppol_verification_code" widget="verification_code"/>
@@ -174,11 +170,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <field name="module_account_peppol" position="attributes">
-                <!-- When any company has Peppol enabled, we prevent users from accidentally uninstalling the module -->
-                <attribute name="readonly">has_peppol_participant</attribute>
-            </field>
+            </xpath>
         </field>
     </record>
 </odoo>
