@@ -24,7 +24,7 @@
                         </div>
                     </MailingFilterDropdown>
                 </div>
-                <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ this.filter.canSaveFilter ? 'd-none': '' }}" t-on-click="onRemoveFilter">
+                <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ !this.filter.canRemoveFilter ? 'd-none': '' }}" t-on-click="onRemoveFilter">
                     <i class="fa fa-trash px-3 py-1 align-bottom" title="Remove from Favorites"/>
                 </a>
             </div>
