@@ -147,6 +147,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         self.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
             'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
+            'phone': '+333333333333333'
         }
         self.default_billing_address_values = self.default_address_values | {'mode': 'billing'}
 
