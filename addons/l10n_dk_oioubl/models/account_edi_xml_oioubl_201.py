@@ -238,6 +238,7 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
         # EXTENDS 'account_edi_ubl_cii
         # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
         vals = super()._get_document_type_code_vals(invoice, invoice_data)
+        vals['value'] = "380" if invoice.move_type == 'out_invoice' else "381"
         vals['attrs']['listAgencyID'] = "6"
         vals['attrs']['listID'] = "UN/ECE 1001"
         return vals
