@@ -24,22 +24,19 @@
         </xpath>
         <xpath expr="//t[@t-if='isEventDeletable']" position="after">
             <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
-            <div t-if="displayAttendeeAnswerChoice" class="d-inline-block">
-                <Dropdown togglerClass="'btn btn-secondary ms-1'">
-                    <t t-set-slot="toggler">
-                        <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
-                    </t>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
-                        <i class="fa fa-circle text-success"/> Yes
-                    </DropdownItem>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('declined')">
-                        <i class="fa fa-circle text-danger"/> No
-                    </DropdownItem>
-                    <DropdownItem onSelected="() => this.changeAttendeeStatus('tentative')">
-                        <i class="fa fa-circle text-muted"/> Maybe
-                    </DropdownItem>
-                </Dropdown>
-            </div>
+            <t t-if="displayAttendeeAnswerChoice">
+                <div class="btn-group w-100 w-lg-auto ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'Yes' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('accepted')">Yes</button>
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'No' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('declined')">No</button>
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'Maybe' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('tentative')">Maybe</button>
+                </div>
+            </t>
         </xpath>
     </t>
 </templates>

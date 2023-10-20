@@ -29,7 +29,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
                 accepted: "text-success",
                 declined: "text-danger",
                 tentative: "text-muted",
-                needsAction: "text-dark",
+                needsAction: "false",
             };
             this.statusInfo = {};
             for (const selection of stateSelections) {
