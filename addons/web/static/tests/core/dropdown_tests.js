@@ -5,6 +5,7 @@ import { templates } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
@@ -1353,6 +1354,41 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(
             target.querySelector(".dropdown").outerHTML,
             '<div class="o-dropdown dropdown o-dropdown--no-caret"><button type="button" class="dropdown-toggle" disabled="" tabindex="0" aria-expanded="false"></button></div>'
+        );
+    });
+
+    QUnit.test("Dropdown with CheckboxItem: toggle value", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ checked: false });
+            }
+            onSelected() {
+                this.state.checked = !this.state.checked;
+            }
+        }
+        Parent.template = xml`
+            <Dropdown>
+                <t t-set-slot="toggler">Click to open</t>
+                <CheckboxItem
+                    class="{ selected: state.checked }"
+                    checked="state.checked"
+                    parentClosingMode="'none'"
+                    onSelected.bind="onSelected">
+                    My checkbox item
+                </CheckboxItem>
+            </Dropdown>`;
+        Parent.components = { Dropdown, CheckboxItem };
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        await click(target, ".dropdown-toggle");
+        assert.strictEqual(
+            target.querySelector(".dropdown-item").outerHTML,
+            `<span class="dropdown-item" role="menuitemcheckbox" tabindex="0" aria-checked="false"> My checkbox item </span>`
+        );
+        await click(target, ".dropdown-item");
+        assert.strictEqual(
+            target.querySelector(".dropdown-item").outerHTML,
+            `<span class="dropdown-item selected" role="menuitemcheckbox" tabindex="0" aria-checked="true"> My checkbox item </span>`
         );
     });
 });

@@ -7,7 +7,7 @@ import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {useService} from "@web/core/utils/hooks";
 import {DeletePageDialog} from '@website/components/dialog/page_properties';
-import {SearchDropdownItem} from "@web/search/search_dropdown_item/search_dropdown_item";
+import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
 
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
@@ -78,7 +78,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
 PageListController.template = `website.PageListView`;
 PageListController.components = {
     ...listView.Controller.components,
-    SearchDropdownItem,
+    CheckboxItem,
 };
 
 export class PageListRenderer extends PageRendererMixin(listView.Renderer) {}

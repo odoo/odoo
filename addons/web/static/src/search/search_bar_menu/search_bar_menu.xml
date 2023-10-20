@@ -29,7 +29,7 @@
                                     <t t-if="subGroup !== null and subGroup !== option.groupNumber">
                                         <div class="dropdown-divider" role="separator"/>
                                     </t>
-                                    <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
+                                    <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                                         t-esc="option.description"
                                                         checked="option.isActive"
                                                         parentClosingMode="'none'"
@@ -40,7 +40,7 @@
                             </AccordionItem>
                         </t>
                         <t t-else="">
-                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
@@ -77,7 +77,7 @@
                                     <t t-if="subGroup !== null and subGroup !== option.groupNumber">
                                         <div class="dropdown-divider" role="separator"/>
                                     </t>
-                                    <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
+                                    <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                                         checked="option.isActive ? true : false"
                                                         parentClosingMode="'none'"
                                                         t-esc="option.description"
@@ -88,7 +88,7 @@
                             </AccordionItem>
                         </t>
                         <t t-else="">
-                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
@@ -111,7 +111,7 @@
                         <h5 class="o_dropdown_title d-inline">Comparison</h5>
                     </div>
                     <t t-foreach="comparisonItems" t-as="item" t-key="item.id">
-                        <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                        <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                             checked="item.isActive"
                                             parentClosingMode="'none'"
                                             t-esc="item.description"
@@ -133,7 +133,7 @@
                             <div role="separator" class="dropdown-divider"/>
                         </t>
                         <t t-if="item.type ==='favorite'">
-                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 onSelected="() => this.onFavoriteSelected(item.id)"
@@ -145,7 +145,7 @@
                                        t-on-click.stop="() => this.openConfirmationDialog(item.id)"
                                     />
                                 </span>
-                            </SearchDropdownItem>
+                            </CheckboxItem>
                         </t>
                         <t t-else="">
                             <t t-component="item.Component"/>

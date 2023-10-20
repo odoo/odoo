@@ -5,7 +5,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
-import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 
@@ -109,7 +109,7 @@ export class PivotGroupByMenu extends Component {
 PivotGroupByMenu.components = {
     CustomGroupByItem,
     Dropdown,
-    SearchDropdownItem,
+    CheckboxItem,
     PropertiesGroupByItem,
 };
 PivotGroupByMenu.template = "web.PivotGroupByMenu";
