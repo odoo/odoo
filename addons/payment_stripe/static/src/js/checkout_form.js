@@ -15,10 +15,8 @@ checkoutForm.include({
             ...this._super(...arguments),
             mode: 'payment',
             amount: parseInt(this.stripeInlineFormValues['minor_amount']),
+            setupFutureUsage: 'off_session',
         };
-        if (this.stripeInlineFormValues['is_tokenization_required']) {
-            elementsOptions.setupFutureUsage = 'off_session';
-        }
         return elementsOptions;
     },
 
