@@ -3,7 +3,6 @@ from collections import defaultdict
 from contextlib import contextmanager
 from datetime import date, timedelta
 from functools import lru_cache
-from markupsafe import escape
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
@@ -1548,7 +1547,7 @@ class AccountMoveLine(models.Model):
                     for line in self.filtered(lambda l: l.move_id.id == move_id):
                         tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
                         if tracking_value_ids:
-                            msg = escape(_("Journal Item %s updated")) % line._get_html_link(title=f"#{line.id}")
+                            msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
                             line.move_id._message_log(
                                 body=msg,
                                 tracking_value_ids=tracking_value_ids

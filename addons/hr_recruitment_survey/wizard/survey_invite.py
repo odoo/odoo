@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup, escape
+from markupsafe import Markup
 
 from odoo import fields, models, _
 from odoo.tools.misc import clean_context
@@ -39,10 +39,10 @@ class SurveyInvite(models.TransientModel):
             partner = self.applicant_id.partner_id
             survey_link = survey._get_html_link(title=survey.title)
             partner_link = partner._get_html_link()
-            content = escape(_('The survey %(survey_link)s has been sent to %(partner_link)s')) % {
-                'survey_link': survey_link,
-                'partner_link': partner_link,
-            }
+            content = _('The survey %(survey_link)s has been sent to %(partner_link)s',
+                survey_link=survey_link,
+                partner_link=partner_link,
+            )
             body = Markup('<p>%s</p>') % content
             self.applicant_id.message_post(body=body)
         return super().action_invite()

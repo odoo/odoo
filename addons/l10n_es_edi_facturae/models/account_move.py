@@ -1,7 +1,7 @@
 import re
 
 from collections import defaultdict
-from markupsafe import escape, Markup
+from markupsafe import Markup
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import UserError
@@ -454,7 +454,7 @@ class AccountMove(models.Model):
             })
             with other_invoice._get_edi_creation():
                 self._import_invoice_facturae_invoice(other_invoice, partner, node)
-                other_invoice.message_post(body=escape(_("Created from attachment in %s")) % invoice._get_html_link())
+                other_invoice.message_post(body=_("Created from attachment in %s", invoice._get_html_link()))
 
     def _import_invoice_facturae_invoice(self, invoice, partner, tree):
         logs = []

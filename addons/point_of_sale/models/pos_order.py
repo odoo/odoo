@@ -6,7 +6,6 @@ from markupsafe import Markup
 from functools import partial
 from itertools import groupby
 from collections import defaultdict
-from markupsafe import escape
 
 import psycopg2
 import pytz
@@ -596,8 +595,8 @@ class PosOrder(models.Model):
     def _create_invoice(self, move_vals):
         self.ensure_one()
         new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
-        message = escape(_("This invoice has been created from the point of sale session: %s")) % \
-            self._get_html_link()
+        message = _("This invoice has been created from the point of sale session: %s",
+            self._get_html_link())
 
         new_move.message_post(body=message)
         if self.config_id.cash_rounding:
