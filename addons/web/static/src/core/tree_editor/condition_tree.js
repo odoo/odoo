@@ -31,27 +31,15 @@ import { toPyValue } from "@web/core/py_js/py_utils";
  */
 
 /**
- * @typedef {Object} AND
+ * @typedef {Object} Connector
  * @property {"connector"} type
  * @property {boolean} negate
- * @property {"&"} value
- * @property {(Connector|OR)[]} children
+ * @property {"|"|"&"} value
+ * @property {Tree[]} children
  */
 
 /**
- * @typedef {Object} OR
- * @property {"connector"} type
- * @property {boolean} negate
- * @property {"|"} value
- * @property {(Connector|AND)[]} children
- */
-
-/**
- * @typedef {AND|OR|Condition} SimpleTree
- */
-
-/**
- * @typedef {AND|OR|Condition|ComplexCondition} Tree
+ * @typedef {Connector|Condition|ComplexCondition} Tree
  */
 
 /**
@@ -110,6 +98,70 @@ export class Expression {
     toString() {
         return this._expr;
     }
+}
+
+/**
+ * @param {string} expr
+ * @returns {Expression}
+ */
+export function expression(expr) {
+    return new Expression(expr);
+}
+
+/**
+ * @param {"|"|"&"} value
+ * @param {Tree[]} [children=[]]
+ * @param {boolean} [negate=false]
+ * @returns {Connector}
+ */
+export function connector(value, children = [], negate = false) {
+    return { type: "connector", value, children, negate };
+}
+
+/**
+ * @param {Value} path
+ * @param {Value} operator
+ * @param {Value} value
+ * @param {boolean} [negate=false]
+ * @returns {Condition}
+ */
+export function condition(path, operator, value, negate = false) {
+    return { type: "condition", path, operator, value, negate };
+}
+
+/**
+ * @param {string} value
+ * @returns {ComplexCondition}
+ */
+export function complexCondition(value) {
+    parseExpr(value);
+    return { type: "complex_condition", value };
+}
+
+/**
+ * @param {Value} value
+ * @returns {Value}
+ */
+function cloneValue(value) {
+    if (value instanceof Expression) {
+        return new Expression(value.toAST());
+    }
+    if (Array.isArray(value)) {
+        return value.map(cloneValue);
+    }
+    return value;
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+export function cloneTree(tree) {
+    const clone = {};
+    for (const key in tree) {
+        clone[key] = cloneValue(tree[key]);
+    }
+    return clone;
 }
 
 export function formatValue(value) {
@@ -239,7 +291,7 @@ function _construcTree(ASTs, distributeNot, negate = false) {
  */
 function construcTree(initialASTs, options) {
     if (!initialASTs.length) {
-        return { type: "connector", value: "&", negate: false, children: [] };
+        return connector("&");
     }
     const { tree } = _construcTree(initialASTs, options.distributeNot);
     return tree;
@@ -342,8 +394,6 @@ function _getConditionFromComparator(ast, options) {
         return null;
     }
 
-    const tree = { type: "condition", negate: false };
-
     let operator = ast.op;
     if (operator === "==") {
         operator = "=";
@@ -364,18 +414,15 @@ function _getConditionFromComparator(ast, options) {
             return null;
         }
     }
-    tree.path = left.value;
-    tree.operator = operator;
-    tree.value = toValue(right);
 
-    return tree;
+    return condition(left.value, operator, toValue(right));
 }
 
 /**
  * @param {AST} ast
  * @param {Options} options
  * @param {boolean} [negate=false]
- * @returns {import("@web/core/tree_editor/condition_tree").Condition|ComplexCondition}
+ * @returns {Condition|ComplexCondition}
  */
 function _leafFromAST(ast, options, negate = false) {
     if (isNot(ast)) {
@@ -383,24 +430,12 @@ function _leafFromAST(ast, options, negate = false) {
     }
 
     if (ast.type === 5 /** name */ && isValidPath(ast, options)) {
-        return {
-            type: "condition",
-            negate: false,
-            path: ast.value,
-            operator: negate ? "=" : "!=",
-            value: false,
-        };
+        return condition(ast.value, negate ? "=" : "!=", false);
     }
 
     const astValue = toValue(ast);
     if (["boolean", "number", "string"].includes(typeof astValue)) {
-        return {
-            negate: false,
-            type: "condition",
-            path: astValue ? 1 : 0,
-            operator: "=",
-            value: 1,
-        };
+        return condition(astValue ? 1 : 0, "=", 1);
     }
 
     if (ast.type === 7 && COMPARATORS.includes(ast.op)) {
@@ -414,10 +449,7 @@ function _leafFromAST(ast, options, negate = false) {
     }
 
     // no conclusive way to transform ast in a condition
-    return {
-        type: "complex_condition",
-        value: formatAST(negate ? not(ast) : ast),
-    };
+    return complexCondition(formatAST(negate ? not(ast) : ast));
 }
 
 /**
@@ -432,14 +464,11 @@ function _treeFromAST(ast, options, negate = false) {
     }
 
     if (ast.type === 14) {
-        const tree = {
-            type: "connector",
-            value: ast.op === "and" ? "&" : "|", // and/or are the only ops that are given type 14 (for now)
-            children: [],
-        };
+        const tree = connector(
+            ast.op === "and" ? "&" : "|" // and/or are the only ops that are given type 14 (for now)
+        );
         if (options.distributeNot && negate) {
             tree.value = tree.value === "&" ? "|" : "&";
-            tree.negate = false;
         } else {
             tree.negate = negate;
         }
@@ -574,13 +603,9 @@ function createBetweenOperators(tree) {
             child1.operator === ">=" &&
             child2.operator === "<="
         ) {
-            children.push({
-                type: "condition",
-                negate: false,
-                path: child1.path,
-                operator: "between",
-                value: normalizeValue([child1.value, child2.value]),
-            });
+            children.push(
+                condition(child1.path, "between", normalizeValue([child1.value, child2.value]))
+            );
             i += 1;
         } else {
             children.push(child1);
@@ -605,27 +630,11 @@ export function removeBetweenOperators(tree) {
             return tree;
         }
         const { negate, path, value } = tree;
-        return {
-            type: "connector",
-            negate,
-            value: "&",
-            children: [
-                {
-                    type: "condition",
-                    negate: false,
-                    path,
-                    operator: ">=",
-                    value: value[0],
-                },
-                {
-                    type: "condition",
-                    negate: false,
-                    path,
-                    operator: "<=",
-                    value: value[1],
-                },
-            ],
-        };
+        return connector(
+            "&",
+            [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
+            negate
+        );
     }
     const processedChildren = tree.children.map(removeBetweenOperators);
     if (tree.value === "|") {
@@ -701,15 +710,12 @@ function createComplexConditions(tree) {
         if (tree.path instanceof Expression && tree.operator === "=" && tree.value === 1) {
             // not sure about this one -> we should maybe evaluate the condition and check
             // if it does not become something e.g. the name of a integer field?
-            return {
-                type: "complex_condition",
-                value: String(tree.path),
-            };
+            return complexCondition(String(tree.path));
         }
-        return { ...tree };
+        return cloneTree(tree);
     }
     if (tree.type === "complex_condition") {
-        return { ...tree };
+        return cloneTree(tree);
     }
     return {
         ...tree,
@@ -723,16 +729,11 @@ function createComplexConditions(tree) {
  */
 function removeComplexConditions(tree) {
     if (tree.type === "condition") {
-        return { ...tree };
+        return cloneTree(tree);
     }
     if (tree.type === "complex_condition") {
         const ast = parseExpr(tree.value);
-        return {
-            type: "condition",
-            path: new Expression(bool(ast)),
-            operator: "=",
-            value: 1,
-        };
+        return condition(new Expression(bool(ast)), "=", 1);
     }
     return {
         ...tree,
