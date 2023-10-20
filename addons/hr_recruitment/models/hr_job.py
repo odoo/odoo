@@ -56,6 +56,8 @@ class Job(models.Model):
     activities_overdue = fields.Integer(compute='_compute_activities')
     activities_today = fields.Integer(compute='_compute_activities')
 
+    applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties')
+
     @api.depends_context('uid')
     def _compute_activities(self):
         self.env.cr.execute("""

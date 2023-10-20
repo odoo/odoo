@@ -371,9 +371,7 @@
                             </div>
                         </group>
                     </group>
-                    <div class="d-flex">
-                        <field name="task_properties" nolabel="1" columns="2" hideKanbanOption="1"/>
-                    </div>
+                        <field name="task_properties" columns="2"/>
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add details about this task..."/>
@@ -616,6 +614,7 @@
                                     <div t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']">
                                         <field name="date_deadline" widget="remaining_days"/>
                                     </div>
+                                    <field name="task_properties" widget="properties"/>
                                     <div t-if="record.displayed_image_id.value">
                                         <field name="displayed_image_id" widget="attachment_image"/>
                                     </div>
@@ -762,6 +761,7 @@
                     <field name="stage_id" invisible="not project_id or not stage_id"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
                     <field name="personal_stage_id" string="Personal Stage" invisible="project_id or not personal_stage_id"/>
+                    <field name="task_properties"/>
                 </calendar>
             </field>
         </record>

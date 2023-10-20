@@ -163,6 +163,7 @@
                         </div>
                     </group>
                 </group>
+                <field name="applicant_properties" columns="2"/>
                 <notebook>
                     <page string="Application Summary" name="application_summary">
                         <field name="description" placeholder="Motivations..."/>
@@ -288,6 +289,7 @@
                 <field name="priority" widget="priority"/>
                 <field name="activity_summary"/>
                 <field name="user_id" filters="1" invisible="1"/>
+                <field name="applicant_properties"/>
             </calendar>
         </field>
     </record>
@@ -366,6 +368,7 @@
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
+                                <field name="applicant_properties" widget="properties"/>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="float-start mr4" groups="base.group_user">

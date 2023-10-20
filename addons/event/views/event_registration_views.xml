@@ -81,7 +81,7 @@
                             <field name="utm_source_id"/>
                         </group>
                     </group>
-                    <field name="registration_properties" columns="2" hideKanbanOption="1"/>
+                    <field name="registration_properties" columns="2"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -165,6 +165,7 @@
                                             </span>
                                             <span class="o_text_overflow" invisible="not partner_id">Booked by <field name="partner_id" /></span>
                                             <div id="event_ticket_id" class="o_field_many2many_tags o_field_widget d-flex mt-auto align-items-center">
+                                            <field name="registration_properties"/>
                                                 <t t-if="record.event_ticket_id.raw_value">
                                                     <i class="fa fa-ticket" title="Ticket type"/>
                                                     <b><span class="o_badge_text o_text_overflow ms-1"><t t-out="record.event_ticket_id.value"/></span></b>
@@ -193,6 +194,7 @@
             <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id" event_limit="5">
                 <field name="event_id" filters="1"/>
                 <field name="name"/>
+                <field name="registration_properties"/>
             </calendar>
         </field>
     </record>
