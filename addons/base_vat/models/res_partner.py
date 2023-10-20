@@ -308,9 +308,7 @@ class ResPartner(models.Model):
         if individual:
             return True
         # Check the vat number
-        check_func = stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
-        if check_func is not None:
-            return check_func(vat)
+        return stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
