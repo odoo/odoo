@@ -10,6 +10,7 @@ import time
 import urllib3
 
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +23,6 @@ except ImportError:
 drivers = []
 interfaces = {}
 iot_devices = {}
-
 
 class Manager(Thread):
     def send_alldevices(self):
@@ -100,6 +100,9 @@ class Manager(Thread):
             except Exception as e:
                 _logger.error("Error in %s: %s", str(interface), e)
 
+        #Setup the websocket connection
+        iot_client = WebsocketClient(helpers.get_odoo_server_url())
+        iot_client.start()
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
         self.previous_iot_devices = []
