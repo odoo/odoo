@@ -134,6 +134,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/lib/lame/lame.js'),
             'mail/static/src/js/**/*',
             'mail/static/src/core/common/**/*',
+            'mail/static/src/core/web_portal/**/*',
             'mail/static/src/core/web/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/web/**/*',
