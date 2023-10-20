@@ -2,9 +2,9 @@
 
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-export class SearchDropdownItem extends DropdownItem {}
-SearchDropdownItem.template = "web.SearchDropdownItem";
-SearchDropdownItem.props = {
+export class CheckboxItem extends DropdownItem {}
+CheckboxItem.template = "web.CheckboxItem";
+CheckboxItem.props = {
     ...DropdownItem.props,
     checked: {
         type: Boolean,

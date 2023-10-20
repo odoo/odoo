@@ -3,6 +3,7 @@
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -21,24 +22,13 @@ const BUNDLES_RESTRICTION = [
     "web.assets_frontend_lazy",
 ];
 
-// TODO move in web?
-class CheckableDropdownItem extends DropdownItem {}
-CheckableDropdownItem.template = "website.CheckableDropdownItem";
-CheckableDropdownItem.props = {
-    ...DropdownItem.props,
-    checked: {
-        type: Boolean,
-        optional: false,
-    },
-};
-
 export class ResourceEditor extends Component {
     static components = {
         ResourceEditorWarningOverlay,
         CodeEditor,
         Dropdown,
+        CheckboxItem,
         DropdownItem,
-        CheckableDropdownItem,
         SelectMenu,
     };
     static template = "website.ResourceEditor";

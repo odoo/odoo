@@ -14,7 +14,7 @@
                         selected="item.isActive">
                         <t t-foreach="item.options" t-as="option" t-key="option.id">
                             <t t-set="optionName" t-value="`${item.name}:${option.id}`"/>
-                            <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
+                            <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                 checked="option.isActive"
                                 parentClosingMode="'none'"
                                 t-esc="option.description"
@@ -23,7 +23,7 @@
                         </t>
                     </AccordionItem>
                     <!-- Standard items without option -->
-                    <SearchDropdownItem t-else=""
+                    <CheckboxItem t-else=""
                         class="{ o_menu_item: true, selected: item.isActive }"
                         checked="item.isActive"
                         parentClosingMode="'none'"
@@ -32,9 +32,9 @@
                     />
                 </t>
             </t>
-            <SearchDropdownItem t-else="" checked="false" parentClosingMode="'none'" class="'fst-italic'">
+            <DropdownItem t-else="" parentClosingMode="'none'" class="'fst-italic'">
                 No Properties
-            </SearchDropdownItem>
+            </DropdownItem>
         </AccordionItem>
     </t>
 </templates>

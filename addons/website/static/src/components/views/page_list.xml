@@ -30,7 +30,7 @@
             <h5 class="o_dropdown_title d-inline">Website</h5>
         </div>
         <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
-            <SearchDropdownItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
+            <CheckboxItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
                 checked="state.activeWebsite.id === website.id"
                 parentClosingMode="'none'"
                 t-esc="website.name"
