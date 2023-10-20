@@ -227,12 +227,14 @@ export class Rtc {
             ) {
                 return;
             }
-            if (!this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
-            }
             this.state.pttReleaseTimeout = browser.setTimeout(
-                () => this.setTalking(false),
-                this.userSettingsService.voiceActiveDuration || 0
+                () => {
+                    this.setTalking(false);
+                    if (!this.state.selfSession?.isMute) {
+                        this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                    }
+                },
+                Math.max(this.userSettingsService.voiceActiveDuration || 0, 200)
             );
         }, { capture: true });
 
