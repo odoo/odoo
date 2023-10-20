@@ -83,6 +83,7 @@ class ProductTemplate(models.Model):
                 record.uom_id = record._origin.uom_id
             else:
                 record.uom_id = self._get_default_uom_id()
+            record.uom_po_id = record.uom_id
 
     def _get_service_to_general_map(self):
         return {
@@ -149,6 +150,7 @@ class ProductProduct(models.Model):
                 record.uom_id = record._origin.uom_id
             else:
                 record.uom_id = self._get_default_uom_id()
+            record.uom_po_id = record.uom_id
 
     @api.onchange('service_policy')
     def _onchange_service_policy(self):
