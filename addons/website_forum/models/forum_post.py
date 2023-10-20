@@ -682,7 +682,7 @@ class Post(models.Model):
             'forum_id': question.forum_id.id,
             'content': comment_sudo.body,
             'parent_id': question.id,
-            'name': _('Re: %s') % (question.name or ''),
+            'name': _('Re: %s', question.name or ''),
         }
         # done with the author user to have create_uid correctly set
         new_post = self.with_user(post_create_uid).sudo().create(post_values).sudo(False)

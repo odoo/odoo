@@ -181,8 +181,10 @@ class HrEmployee(models.Model):
                     'check_out': action_date
                 })
         else:
-            raise exceptions.UserError(_('Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
-                'Your attendances have probably been modified manually by human resources.') % {'empl_name': self.sudo().name, })
+            raise exceptions.UserError(_(
+                'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
+                'Your attendances have probably been modified manually by human resources.',
+                empl_name=self.sudo().name))
         return attendance
 
     def action_open_last_month_attendances(self):

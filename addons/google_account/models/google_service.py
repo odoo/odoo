@@ -125,7 +125,7 @@ class GoogleService(models.AbstractModel):
             elif method.upper() in ('POST', 'PATCH', 'PUT'):
                 res = requests.request(method.lower(), preuri + uri, data=params, headers=headers, timeout=timeout)
             else:
-                raise Exception(_('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!') % (method))
+                raise Exception(_('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!', method))
             res.raise_for_status()
             status = res.status_code
 

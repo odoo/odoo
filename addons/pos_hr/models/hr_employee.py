@@ -32,6 +32,6 @@ class HrEmployee(models.Model):
             for employee in self:
                 config_ids = configs_with_all_employees | configs_with_specific_employees.filtered(lambda c: employee in c.basic_employee_ids)
                 if config_ids:
-                    error_msg += _("Employee: %s - PoS Config(s): %s \n") % (employee.name, ', '.join(config.name for config in config_ids))
+                    error_msg += _("Employee: %s - PoS Config(s): %s \n", employee.name, ', '.join(config.name for config in config_ids))
 
             raise UserError(error_msg)

@@ -1001,8 +1001,8 @@ class SaleOrderLine(models.Model):
             ])
             if fields:
                 raise UserError(
-                    _('It is forbidden to modify the following fields in a locked order:\n%s')
-                    % '\n'.join(fields.mapped('field_description'))
+                    _('It is forbidden to modify the following fields in a locked order:\n%s',
+                      '\n'.join(fields.mapped('field_description')))
                 )
 
         result = super().write(values)

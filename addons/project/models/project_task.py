@@ -828,7 +828,7 @@ class Task(models.Model):
     def _ensure_portal_user_can_write(self, fields):
         for field in fields:
             if field not in self.SELF_WRITABLE_FIELDS:
-                raise AccessError(_('You have not write access of %s field.') % field)
+                raise AccessError(_('You have not write access of %s field.', field))
 
     def _load_records_create(self, vals_list):
         for vals in vals_list:

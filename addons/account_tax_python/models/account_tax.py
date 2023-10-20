@@ -39,7 +39,7 @@ class AccountTaxPython(models.Model):
             try:
                 safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             except Exception as e:
-                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (self.python_compute, self.name, e)) from e
+                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", self.python_compute, self.name, e)) from e
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
 
@@ -53,7 +53,7 @@ class AccountTaxPython(models.Model):
                 try:
                     safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
                 except Exception as e:
-                    raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (tax.python_applicable, tax.name, e)) from e
+                    raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s", tax.python_applicable, tax.name, e)) from e
                 return localdict.get('result', False)
 
             return True

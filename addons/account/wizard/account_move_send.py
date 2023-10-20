@@ -205,8 +205,8 @@ class AccountMoveSend(models.Model):
             if wizard.mode == 'invoice_multi' and wizard.checkbox_send_mail and invoices_without_mail_data:
                 wizard.send_mail_warning_message = _(
                     "The partners on the following invoices have no email address, "
-                    "so those invoices will not be sent: %s"
-                ) % ", ".join(invoices_without_mail_data.mapped('name'))
+                    "so those invoices will not be sent: %s",
+                    ", ".join(invoices_without_mail_data.mapped('name')))
 
     @api.depends('move_ids')
     def _compute_checkbox_send_mail(self):

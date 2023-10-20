@@ -719,7 +719,7 @@ class BarcodeConverter(models.AbstractModel):
             if k.startswith('img_') and k[4:] in safe_attrs:
                 img_element.set(k[4:], v)
         if not img_element.get('alt'):
-            img_element.set('alt', _('Barcode %s') % value)
+            img_element.set('alt', _('Barcode %s', value))
         img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
         return Markup(html.tostring(img_element, encoding='unicode'))
 

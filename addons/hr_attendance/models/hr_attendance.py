@@ -173,10 +173,9 @@ class HrAttendance(models.Model):
                 ('id', '!=', attendance.id),
             ], order='check_in desc', limit=1)
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s") % {
-                    'empl_name': attendance.employee_id.name,
-                    'datetime': format_datetime(self.env, attendance.check_in, dt_format=False),
-                })
+                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                                                   empl_name=attendance.employee_id.name,
+                                                   datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
 
             if not attendance.check_out:
                 # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
@@ -186,10 +185,9 @@ class HrAttendance(models.Model):
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if no_check_out_attendances:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s") % {
-                        'empl_name': attendance.employee_id.name,
-                        'datetime': format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False),
-                    })
+                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
+                                                       empl_name=attendance.employee_id.name,
+                                                       datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
             else:
                 # we verify that the latest attendance with check_in time before our check_out time
                 # is the same as the one before our check_in time computed before, otherwise it overlaps
@@ -199,10 +197,9 @@ class HrAttendance(models.Model):
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s") % {
-                        'empl_name': attendance.employee_id.name,
-                        'datetime': format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False),
-                    })
+                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                                                       empl_name=attendance.employee_id.name,
+                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
     @api.model
     def _get_day_start_and_day(self, employee, dt):

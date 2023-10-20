@@ -384,12 +384,10 @@ class BaseAutomation(models.Model):
                 'title': _("Warning"),
                 'message': _(
                     "The \"%(trigger_value)s\" %(trigger_label)s can only be "
-                    "used with the \"%(state_value)s\" action type"
-                ) % {
-                    'trigger_value': dict(trigger_field._description_selection(self.env))['on_change'],
-                    'trigger_label': trigger_field._description_string(self.env),
-                    'state_value': action_states['code'],
-                }
+                    "used with the \"%(state_value)s\" action type",
+                    trigger_value=dict(trigger_field._description_selection(self.env))['on_change'],
+                    trigger_label=trigger_field._description_string(self.env),
+                    state_value=action_states['code'])
             }}
 
         MAIL_STATES = ('mail_post', 'followers', 'next_activity')

@@ -588,13 +588,13 @@ class StockQuant(models.Model):
         )
         for product, _location, lot, qty in groups:
             if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (product.display_name, lot.name))
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s', product.display_name, lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).') % quant.location_id.name)
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -723,7 +723,7 @@ class StockQuant(models.Model):
             if qty > 0:
                 return self._run_least_packages_removal_strategy_astar(domain, qty), 'in_date ASC, id'
             return domain, 'in_date ASC, id'
-        raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
+        raise UserError(_('Removal strategy %s not implemented.', removal_strategy))
 
     def _get_removal_strategy_sort_key(self, removal_strategy):
         key = lambda q: (q.in_date, q.id)

@@ -191,10 +191,10 @@ class PosSession(models.Model):
     def _check_invoices_are_posted(self):
         unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
-            raise UserError(_('You cannot close the POS when invoices are not posted.\n'
-                              'Invoices: %s') % str.join('\n',
-                                                         ['%s - %s' % (invoice.name, invoice.state) for invoice in
-                                                          unposted_invoices]))
+            raise UserError(_(
+                'You cannot close the POS when invoices are not posted.\nInvoices: %s',
+                '\n'.join(f'{invoice.name} - {invoice.state}' for invoice in unposted_invoices)
+            ))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -877,13 +877,13 @@ class PosSession(models.Model):
 
         tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items()]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
-        tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
-        if len(tax_names_no_account) > 0:
-            error_message = _(
+        tax_names_no_account = [line['name'] for line in tax_vals if not line['account_id']]
+        if tax_names_no_account:
+            raise UserError(_(
                 'Unable to close and validate the session.\n'
-                'Please set corresponding tax account in each repartition line of the following taxes: \n%s'
-            ) % ', '.join(tax_names_no_account)
-            raise UserError(error_message)
+                'Please set corresponding tax account in each repartition line of the following taxes: \n%s',
+                ', '.join(tax_names_no_account)
+            ))
         rounding_vals = []
 
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
@@ -949,7 +949,7 @@ class PosSession(models.Model):
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id':  destination_account.id,
-            'ref': _('Combine %s POS payments from %s') % (payment_method.name, self.name),
+            'ref': _('Combine %s POS payments from %s', payment_method.name, self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
@@ -994,7 +994,7 @@ class PosSession(models.Model):
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id': destination_account.id,
-            'ref': _('%s POS payment of %s in %s') % (payment_method.name, payment.partner_id.display_name, self.name),
+            'ref': _('%s POS payment of %s in %s', payment_method.name, payment.partner_id.display_name, self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
@@ -1185,8 +1185,8 @@ class PosSession(models.Model):
             product = order_line.product_id
             income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
-                raise UserError(_('Please define income account for this product: "%s" (id:%d).')
-                                % (product.name, product.id))
+                raise UserError(_('Please define income account for this product: "%s" (id:%d).',
+                                  product.name, product.id))
             return order_line.order_id.fiscal_position_id.map_account(income_account)
 
         company_domain = self.env['account.tax']._check_company_domain(order_line.order_id.company_id)
@@ -1232,8 +1232,9 @@ class PosSession(models.Model):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         if not accounting_partner:
             raise UserError(_("You have enabled the \"Identify Customer\" option for %s payment method,"
-                              "but the order %s does not contain a customer.") % (payment.payment_method_id.name,
-                               payment.pos_order_id.name))
+                              "but the order %s does not contain a customer.",
+                              payment.payment_method_id.name,
+                              payment.pos_order_id.name))
         partial_vals = {
             'account_id': accounting_partner.property_account_receivable_id.id,
             'move_id': self.move_id.id,
@@ -1573,9 +1574,9 @@ class PosSession(models.Model):
         if draft_orders:
             raise UserError(_(
                     'There are still orders in draft state in the session. '
-                    'Pay or cancel the following orders to validate the session:\n%s'
-                ) % ', '.join(draft_orders.mapped('name'))
-            )
+                    'Pay or cancel the following orders to validate the session:\n%s',
+                    ', '.join(draft_orders.mapped('name'))
+            ))
         return True
 
     def try_cash_in_out(self, _type, amount, reason, extras):

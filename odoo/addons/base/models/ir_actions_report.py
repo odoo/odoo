@@ -490,11 +490,18 @@ class IrActionsReport(models.Model):
             if process.returncode not in [0, 1]:
                 if process.returncode == -11:
                     message = _(
-                        'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                        'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s',
+                        process.returncode,
+                        err[-1000:],
+                    )
                 else:
-                    message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
-                _logger.warning(message, process.returncode, err[-1000:])
-                raise UserError(message % (str(process.returncode), err[-1000:]))
+                    message = _(
+                        'Wkhtmltopdf failed (error code: %s). Message: %s',
+                        process.returncode,
+                        err[-1000:],
+                    )
+                _logger.warning(message)
+                raise UserError(message)
             else:
                 if err:
                     _logger.warning('wkhtmltopdf: %s' % err)

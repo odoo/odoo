@@ -1070,7 +1070,7 @@ class Channel(models.Model):
 
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
-        action['name'] = _('Rating of %s') % (self.name)
+        action['name'] = _('Rating of %s', self.name)
         action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
         return action
 
@@ -1126,7 +1126,7 @@ class Channel(models.Model):
             if channel.id not in requested_cids:
                 activities += channel.activity_schedule(
                     'website_slides.mail_activity_data_access_request',
-                    note=_('<b>%s</b> is requesting access to this course.') % partner.name,
+                    note=_('<b>%s</b> is requesting access to this course.', partner.name),
                     user_id=channel.user_id.id,
                     request_partner_id=partner.id
                 )

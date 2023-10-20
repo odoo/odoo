@@ -96,9 +96,9 @@ class Project(models.Model):
     @api.model
     def _search_is_project_overtime(self, operator, value):
         if not isinstance(value, bool):
-            raise ValueError(_('Invalid value: %s') % value)
+            raise ValueError(_('Invalid value: %s', value))
         if operator not in ['=', '!=']:
-            raise ValueError(_('Invalid operator: %s') % operator)
+            raise ValueError(_('Invalid operator: %s', operator))
 
         query = """
             SELECT Project.id

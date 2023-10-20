@@ -35,8 +35,8 @@ class FinancialYearOpeningWizard(models.TransientModel):
                 date(2020, int(wiz.fiscalyear_last_month), wiz.fiscalyear_last_day)
             except ValueError:
                 raise ValidationError(
-                    _('Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s') %
-                    (wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
+                    _('Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s',
+                    wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
                 )
 
     def write(self, vals):

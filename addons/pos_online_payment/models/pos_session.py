@@ -56,7 +56,7 @@ class PosSession(models.Model):
         partner = payment.online_account_payment_id.partner_id
         accounting_partner = self.env["res.partner"]._find_accounting_partner(partner)
         if not accounting_partner:
-            raise UserError(_("The partner of the POS online payment (id=%d) could not be found") % (payment.id))
+            raise UserError(_("The partner of the POS online payment (id=%d) could not be found", payment.id))
         partial_vals = {
             'account_id': accounting_partner.property_account_receivable_id.id,
             'move_id': self.move_id.id,

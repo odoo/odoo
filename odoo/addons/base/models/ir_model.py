@@ -310,7 +310,7 @@ class IrModel(models.Model):
         # Prevent manual deletion of module tables
         for model in self:
             if model.state != 'manual':
-                raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
+                raise UserError(_("Model %r contains module data and cannot be removed.", model.name))
 
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
@@ -626,10 +626,10 @@ class IrModelFields(models.Model):
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
-                raise UserError(_("Unknown field name '%s' in related field '%s'") % (name, self.related))
+                raise UserError(_("Unknown field name %r in related field %r", name, self.related))
             model_name = field.relation
             if index < last and not field.relation:
-                raise UserError(_("Non-relational field name '%s' in related field '%s'") % (name, self.related))
+                raise UserError(_("Non-relational field name %r in related field %r", name, self.related))
         return field
 
     @api.constrains('related')
@@ -638,9 +638,9 @@ class IrModelFields(models.Model):
             if rec.state == 'manual' and rec.related:
                 field = rec._related_field()
                 if field.ttype != rec.ttype:
-                    raise ValidationError(_("Related field '%s' does not have type '%s'") % (rec.related, rec.ttype))
+                    raise ValidationError(_("Related field %r does not have type %r", rec.related, rec.ttype))
                 if field.relation != rec.relation:
-                    raise ValidationError(_("Related field '%s' does not have comodel '%s'") % (rec.related, rec.relation))
+                    raise ValidationError(_("Related field %r does not have comodel %r", rec.related, rec.relation))
 
     @api.onchange('related')
     def _onchange_related(self):
@@ -674,7 +674,7 @@ class IrModelFields(models.Model):
                 continue
             for seq in record.depends.split(","):
                 if not seq.strip():
-                    raise UserError(_("Empty dependency in %r") % (record.depends))
+                    raise UserError(_("Empty dependency in %r", record.depends))
                 model = self.env[record.model]
                 names = seq.strip().split(".")
                 last = len(names) - 1
@@ -683,9 +683,9 @@ class IrModelFields(models.Model):
                         raise UserError(_("Compute method cannot depend on field 'id'"))
                     field = model._fields.get(name)
                     if field is None:
-                        raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))
+                        raise UserError(_("Unknown field %r in dependency %r", name, seq.strip()))
                     if index < last and not field.relational:
-                        raise UserError(_("Non-relational field %r in dependency %r") % (name, seq.strip()))
+                        raise UserError(_("Non-relational field %r in dependency %r", name, seq.strip()))
                     model = model[name]
 
     @api.onchange('compute')
@@ -710,7 +710,7 @@ class IrModelFields(models.Model):
                 else:
                     currency_field = self._get(rec.model, rec.currency_field)
                     if not currency_field:
-                        raise ValidationError(_("Unknown field name '%s' in currency_field") % (rec.currency_field))
+                        raise ValidationError(_("Unknown field name %r in currency_field", rec.currency_field))
 
                 if currency_field.ttype != 'many2one':
                     raise ValidationError(_("Currency field does not have type many2one"))
@@ -882,16 +882,17 @@ class IrModelFields(models.Model):
                 view._check_xml()
         except Exception:
             if not uninstalling:
-                raise UserError("\n".join([
-                    _("Cannot rename/delete fields that are still present in views:"),
-                    _("Fields: %s") % ", ".join(str(f) for f in fields),
-                    _("View: %s", view.name),
-                ]))
+                raise UserError(_(
+                    "Cannot rename/delete fields that are still present in views:\nFields: %s\nView: %s",
+                    ", ".join(str(f) for f in fields),
+                    view.name,
+                ))
             else:
                 # uninstall mode
-                _logger.warning("The following fields were force-deleted to prevent a registry crash "
-                        + ", ".join(str(f) for f in fields)
-                        + " the following view might be broken %s" % view.name)
+                _logger.warning(
+                    "The following fields were force-deleted to prevent a registry crash %s the following view might be broken %s",
+                    ", ".join(str(f) for f in fields),
+                    view.name)
         finally:
             if not uninstalling:
                 # the registry has been modified, restore it
@@ -964,7 +965,7 @@ class IrModelFields(models.Model):
                     ('model', '=', vals['relation']),
                     ('name', '=', vals['relation_field']),
                 ]):
-                    raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
+                    raise UserError(_("Many2one %s on model %s does not exist!", vals['relation_field'], vals['relation']))
 
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
@@ -1575,8 +1576,9 @@ class IrModelSelection(models.Model):
             else:
                 # this shouldn't happen... simply a sanity check
                 raise ValueError(_(
-                    "The ondelete policy %r is not valid for field %r"
-                ) % (ondelete, selection))
+                    "The ondelete policy %r is not valid for field %r",
+                    ondelete, selection
+                ))
 
     def _get_records(self):
         """ Return the records having 'self' as a value. """
@@ -2067,7 +2069,7 @@ class IrModelData(models.Model):
         if self.env[model].search([('id', '=', res_id)]):
             return model, res_id
         if raise_on_access_error:
-            raise AccessError(_('Not enough access rights on the external ID:') + ' %s.%s' % (module, xml_id))
+            raise AccessError(_('Not enough access rights on the external ID %r', '%s.%s', (module, xml_id)))
         return model, False
 
     @api.returns('self', lambda value: value.id)

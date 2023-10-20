@@ -236,20 +236,17 @@ class IrMailServer(models.Model):
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
-                    raise UserError(_('The server refused the sender address (%(email_from)s) '
-                                      'with error %(repl)s') % locals())
+                    raise UserError(_('The server refused the sender address (%(email_from)s) with error %(repl)s', email_from=email_from, repl=repl))
                 # Testing the RCPT TO step should detect most relaying problems
                 (code, repl) = smtp.rcpt(email_to)
                 if code not in (250, 251):
-                    raise UserError(_('The server refused the test recipient (%(email_to)s) '
-                                      'with error %(repl)s') % locals())
+                    raise UserError(_('The server refused the test recipient (%(email_to)s) with error %(repl)s', email_from=email_from, repl=repl))
                 # Beginning the DATA step should detect some deferred rejections
                 # Can't use self.data() as it would actually send the mail!
                 smtp.putcmd("data")
                 (code, repl) = smtp.getreply()
                 if code != 354:
-                    raise UserError(_('The server refused the test connection '
-                                      'with error %(repl)s') % locals())
+                    raise UserError(_('The server refused the test connection with error %(repl)s', repl=repl))
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e

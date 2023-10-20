@@ -67,7 +67,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
-                raise UserError(_('Set an email address for the partner(s): %s') % ", ".join(no_email))
+                raise UserError(_('Set an email address for the partner(s): %s', ", ".join(no_email)))
         if self.forward_type == 'single' and not self.partner_id.email:
             raise UserError(_('Set an email address for the partner %s', self.partner_id.name))
 

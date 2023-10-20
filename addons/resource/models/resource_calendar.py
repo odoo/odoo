@@ -138,7 +138,7 @@ class ResourceCalendar(models.Model):
         if default is None:
             default = {}
         if not default.get('name'):
-            default.update(name=_('%s (copy)') % (self.name))
+            default['name'] = _('%s (copy)', self.name)
         return super().copy(default)
 
     @api.constrains('attendance_ids')

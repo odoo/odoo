@@ -122,7 +122,7 @@ class AccountPartialReconcile(models.Model):
         if moves_to_reverse:
             default_values_list = [{
                 'date': move._get_accounting_date(move.date, move._affect_tax_report()),
-                'ref': _('Reversal of: %s') % move.name,
+                'ref': _('Reversal of: %s', move.name),
             } for move in moves_to_reverse]
             moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
@@ -163,7 +163,8 @@ class AccountPartialReconcile(models.Model):
 
                 if not journal:
                     raise UserError(_("There is no tax cash basis journal defined for the '%s' company.\n"
-                                      "Configure it in Accounting/Configuration/Settings") % partial.company_id.display_name)
+                                      "Configure it in Accounting/Configuration/Settings",
+                                      partial.company_id.display_name))
 
                 partial_amount = 0.0
                 partial_amount_currency = 0.0

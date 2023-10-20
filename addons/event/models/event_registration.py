@@ -379,7 +379,7 @@ class EventRegistration(models.Model):
         elif diff.days == 1:
             return _('tomorrow')
         elif (diff.days < 7):
-            return _('in %d days') % (diff.days, )
+            return _('in %d days', diff.days)
         elif (diff.days < 14):
             return _('next week')
         elif event_date.month == (today + relativedelta(months=+1)).month:

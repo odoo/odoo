@@ -1098,7 +1098,7 @@ class PurchaseOrderLine(models.Model):
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.order_id.state == 'purchase':
-                msg = _("Extra line with %s ") % (line.product_id.display_name,)
+                msg = _("Extra line with %s ", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
         return lines
 
@@ -1129,7 +1129,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.order_id.state in ['purchase', 'done']:
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
-                raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') % (state_description.get(line.state),))
+                raise UserError(_('Cannot delete a purchase order line which is in state %r.', state_description.get(line.state)))
 
     @api.model
     def _get_date_planned(self, seller, po=False):

@@ -247,7 +247,7 @@ class AccountMove(models.Model):
                 if move_applicability:
                     errors = edi_format._check_move_configuration(move)
                     if errors:
-                        raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
+                        raise UserError(_("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))
 
                     existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
                     if existing_edi_document:
@@ -285,8 +285,8 @@ class AccountMove(models.Model):
             if move.edi_show_cancel_button:
                 raise UserError(_(
                     "You can't edit the following journal entry %s because an electronic document has already been "
-                    "sent. Please use the 'Request EDI Cancellation' button instead."
-                ) % move.display_name)
+                    "sent. Please use the 'Request EDI Cancellation' button instead.",
+                    move.display_name))
 
         res = super().button_draft()
 

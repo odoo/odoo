@@ -334,9 +334,9 @@ class Project(models.Model):
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):
         if not isinstance(value, bool):
-            raise ValueError(_('Invalid value: %s') % value)
+            raise ValueError(_('Invalid value: %s', value))
         if operator not in ['=', '!=']:
-            raise ValueError(_('Invalid operator: %s') % operator)
+            raise ValueError(_('Invalid operator: %s', operator))
 
         query = """
             SELECT P.id
@@ -431,7 +431,7 @@ class Project(models.Model):
         if default is None:
             default = {}
         if not default.get('name'):
-            default['name'] = _("%s (copy)") % (self.name)
+            default['name'] = _("%s (copy)", self.name)
         self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
         project = super(Project, self_with_mail_context).copy(default)
         for follower in self.message_follower_ids:

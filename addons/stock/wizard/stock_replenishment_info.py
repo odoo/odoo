@@ -126,11 +126,12 @@ class StockReplenishmentOption(models.TransientModel):
         self.warning_message = ''
         for record in self:
             if record.free_qty < record.qty_to_order:
-                record.warning_message = _('{0} can only provide {1} {2}, while the quantity to order is {3} {2}.').format(
-                    record.warehouse_id.name,
-                    record.free_qty,
-                    record.uom,
-                    record.qty_to_order
+                record.warning_message = _(
+                    '%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to order is %(qty_to_order)s %(uom)s.',
+                    warehouse=record.warehouse_id.name,
+                    free_qty=record.free_qty,
+                    uom=record.uom,
+                    qty_to_order=record.qty_to_order
                 )
 
     def select_route(self):

@@ -264,7 +264,7 @@ class AccountAnalyticLine(models.Model):
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('%s Spent') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
+            node.set('string', _('%s Spent', re.sub(r'[\(\)]', '', encoding_uom.name or '')))
         return doc
 
     @api.model
@@ -274,7 +274,7 @@ class AccountAnalyticLine(models.Model):
         # Just fetch the name of the uom in `timesheet_encode_uom_id` of the current company
         encoding_uom_name = self.env.company.timesheet_encode_uom_id.with_context(prefetch_fields=False).sudo().name
         for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
-            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom_name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            name_with_uom = re.sub(re.escape(_('Hours')) + "|Hours", encoding_uom_name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
             node.set('string', name_with_uom)
 
         return doc

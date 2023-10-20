@@ -152,7 +152,7 @@ class RecurrenceRule(models.Model):
                 week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
                 weekday_short = [week_map[w] for w in weekdays]
                 day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekday_short]
-                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
+                on = _("on %s", ", ".join(day_strings))
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
                     position_label = dict(BYDAY_SELECTION)[recurrence.byday]

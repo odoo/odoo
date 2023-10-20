@@ -81,7 +81,7 @@ class ResPartner(models.Model):
         This method can be used to validate is the VAT is proper defined in the partner """
         self.ensure_one()
         if not self.l10n_ar_vat:
-            raise UserError(_('No VAT configured for partner [%i] %s') % (self.id, self.name))
+            raise UserError(_('No VAT configured for partner [%i] %s', self.id, self.name))
         return self.l10n_ar_vat
 
     def _get_validation_module(self):

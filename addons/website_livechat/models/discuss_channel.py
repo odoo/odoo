@@ -60,12 +60,13 @@ class DiscussChannel(models.Model):
         return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
-        name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
         if cancel:
+            name = self.livechat_visitor_id.display_name or _('The visitor')
             message = _("""%s started a conversation with %s.
-                        The chat request has been canceled.""") % (name, operator or _('an operator'))
+                        The chat request has been canceled.""",
+                        name, operator or _('an operator'))
         else:
-            message = _('Visitor %s left the conversation.') % (f"#{self.livechat_visitor_id.id}" if self.livechat_visitor_id else '')
+            message = _('Visitor %s left the conversation.', ("#%d" % self.livechat_visitor_id.id) if self.livechat_visitor_id else '')
 
         return message
 

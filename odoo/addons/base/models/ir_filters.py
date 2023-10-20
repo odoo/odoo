@@ -108,7 +108,7 @@ class IrFilters(models.Model):
         if matching_filters and (matching_filters[0]['id'] == defaults.id):
             return
 
-        raise UserError(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {'model': vals.get('model_id')})
+        raise UserError(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default", model=vals.get('model_id')))
 
     @api.model
     @api.returns('self', lambda value: value.id)

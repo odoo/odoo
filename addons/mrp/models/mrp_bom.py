@@ -126,8 +126,9 @@ class MrpBom(models.Model):
             for component in components:
                 if component in finished_products:
                     names = finished_products.mapped('display_name')
-                    raise ValidationError(_("The current configuration is incorrect because it would create a cycle "
-                                            "between these products: %s.") % ', '.join(names))
+                    raise ValidationError(_(
+                        "The current configuration is incorrect because it would create a cycle between these products: %s.",
+                        ', '.join(names)))
                 if component not in subcomponents_dict:
                     products_to_find |= component
 
@@ -182,7 +183,7 @@ class MrpBom(models.Model):
                 else:
                     same_product = bom.product_tmpl_id == byproduct.product_id.product_tmpl_id
                 if same_product:
-                    raise ValidationError(_("By-product %s should not be the same as BoM product.") % bom.display_name)
+                    raise ValidationError(_("By-product %s should not be the same as BoM product.", bom.display_name))
                 if byproduct.cost_share < 0:
                     raise ValidationError(_("By-products cost shares must be positive."))
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:

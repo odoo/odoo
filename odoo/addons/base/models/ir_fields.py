@@ -462,9 +462,11 @@ class IrFieldsConverter(models.AbstractModel):
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
-                    warnings.append(ImportWarning(
-                        _(u"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)")
-                        %(str(value).replace('%', '%%'), len(ids))))
+                    warnings.append(ImportWarning(_(
+                        "Found multiple matches for value %r in field %%(field)r (%d matches)",
+                        str(value).replace('%', '%%'),
+                        len(ids),
+                    )))
                 id, _name = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
@@ -473,12 +475,11 @@ class IrFieldsConverter(models.AbstractModel):
                         with self.env.cr.savepoint():
                             id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
+                        error_msg = _("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
                 Exception,
-                _(u"Unknown sub-field '%s'"),
-                subfield
+                _("Unknown sub-field %r", subfield)
             )
 
         set_empty = False

@@ -2427,7 +2427,7 @@ class AccountMove(models.Model):
         self._sanitize_vals(vals)
         for move in self:
             if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
+                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.", ', '.join(move._get_integrity_hash_fields())))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -3660,7 +3660,7 @@ class AccountMove(models.Model):
 
         for move in self:
             if move.state in ['posted', 'cancel']:
-                raise UserError(_('The entry %s (id %s) must be in draft.') % (move.name, move.id))
+                raise UserError(_('The entry %s (id %s) must be in draft.', move.name, move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
                 raise UserError(_('You need to add a line before posting.'))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):

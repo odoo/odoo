@@ -418,7 +418,7 @@ class AccountTax(models.Model):
     def _check_children_scope(self):
         for tax in self:
             if not tax._check_m2m_recursion('children_tax_ids'):
-                raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
+                raise ValidationError(_("Recursion found for tax %r.", tax.name))
             if any(child.type_tax_use not in ('none', tax.type_tax_use) or child.tax_scope != tax.tax_scope for child in tax.children_tax_ids):
                 raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
 
@@ -475,7 +475,7 @@ class AccountTax(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         if 'name' not in default:
-            default['name'] = _("%s (Copy)") % self.name
+            default['name'] = _("%s (Copy)", self.name)
         return super(AccountTax, self).copy(default=default)
 
     @api.depends('type_tax_use', 'tax_scope')
@@ -1491,19 +1491,16 @@ class AccountTaxRepartitionLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        tax_ids = list(set([line.get('tax_id') for line in vals])) # Sorted
-        taxes = self.env['account.tax'].search_fetch([('id', 'in', tax_ids)], ['name'], order='id ASC')
-        tax_dict = dict(zip(tax_ids, taxes))
-        for line in vals:
-            tax = tax_dict.get(line.get('tax_id'))
-            if tax and tax.is_used:
-                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(tax.name))
+        tax_ids = {tax_id for line in vals if (tax_id := line.get('tax_id'))}
+        taxes = self.env['account.tax'].browse(tax_ids)
+        for tax in taxes.filtered('is_used'):
+            raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", tax.name))
         return super().create(vals)
 
     def unlink(self):
         for repartition_line in self:
             if repartition_line.tax_id.is_used:
-                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(repartition_line.tax_id.name))
+                raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", repartition_line.tax_id.name))
         return super().unlink()
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')

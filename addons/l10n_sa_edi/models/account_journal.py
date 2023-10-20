@@ -242,7 +242,7 @@ class AccountJournal(models.Model):
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
         if CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s") % CCSID_data['error'])
+            raise UserError(_("Could not obtain Compliance CSID: %s", CCSID_data['error']))
         self.sudo().write({
             'l10n_sa_compliance_csid_json': json.dumps(CCSID_data),
             'l10n_sa_production_csid_json': False,
@@ -274,7 +274,7 @@ class AccountJournal(models.Model):
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
         if PCSID_data.get('error'):
-            raise UserError(_("Could not obtain Production CSID: %s") % PCSID_data['error'])
+            raise UserError(_("Could not obtain Production CSID: %s", PCSID_data['error']))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
 
     # ====== Compliance Checks =======

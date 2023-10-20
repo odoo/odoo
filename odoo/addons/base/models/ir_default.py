@@ -75,9 +75,9 @@ class IrDefault(models.Model):
             field.convert_to_cache(value, model)
             json_value = json.dumps(value, ensure_ascii=False)
         except KeyError:
-            raise ValidationError(_("Invalid field %s.%s") % (model_name, field_name))
+            raise ValidationError(_("Invalid field %s.%s", model_name, field_name))
         except Exception:
-            raise ValidationError(_("Invalid value for %s.%s: %s") % (model_name, field_name, value))
+            raise ValidationError(_("Invalid value for %s.%s: %s", model_name, field_name, value))
 
         # update existing default for the same scope, or create one
         field = self.env['ir.model.fields']._get(model_name, field_name)

@@ -62,7 +62,7 @@ class MrpRoutingWorkcenter(models.Model):
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
         for operation in self:
-            operation.time_computed_on = _('%i work orders') % operation.time_mode_batch if operation.time_mode != 'manual' else False
+            operation.time_computed_on = _('%i work orders', operation.time_mode_batch) if operation.time_mode != 'manual' else False
 
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
     def _compute_time_cycle(self):

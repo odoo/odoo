@@ -497,7 +497,7 @@ class AssetsBundle(object):
                         else:
                             raise ValueError(_("Module %r not loaded or inexistent (try to inherit %r), or templates of addon being loaded %r are misordered (template %r)", parent_addon, parent_name, addon, template_name))
                     if parent_name not in template_dict[parent_addon]:
-                        raise ValueError(_("Cannot create %r because the template to inherit %r is not found.") % (f'{addon}.{template_name}', f'{parent_addon}.{parent_name}'))
+                        raise ValueError(_("Cannot create %r because the template to inherit %r is not found.", '%s.%s' % (addon, template_name), '%s.%s' % (parent_addon, parent_name)))
 
                     # After several performance tests, we found out that deepcopy is the most efficient
                     # solution in this case (compared with copy, xpath with '.' and stringifying).
