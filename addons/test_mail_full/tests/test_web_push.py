@@ -50,7 +50,7 @@ class TestWebPushNotification(SMSCommon):
             'name': 'Direct Message',
         })
 
-        cls.group_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(name='Channel', group_id=None)['id'])
+        cls.group_channel = cls.env['discuss.channel'].channel_create(name='Channel', group_id=None)
         cls.group_channel.add_members((cls.user_email + cls.user_inbox).partner_id.ids)
 
         cls.env['mail.partner.device'].get_web_push_vapid_public_key()

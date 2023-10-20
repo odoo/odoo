@@ -929,6 +929,7 @@ class Channel(models.Model):
 
     # User methods
     @api.model
+    @api.returns('self', lambda channel: channel._channel_info()[0])
     def channel_get(self, partners_to, pin=True):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
@@ -987,7 +988,7 @@ class Channel(models.Model):
                 'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
             })
             channel._broadcast(partners_to)
-        return channel._channel_info()[0]
+        return channel
 
     def channel_fold(self, state=None, state_count=0):
         """ Update the fold_state of the given session. In order to syncronize web browser
@@ -1138,6 +1139,7 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
+    @api.returns('self', lambda channel: channel._channel_info()[0])
     def channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
@@ -1157,9 +1159,10 @@ class Channel(models.Model):
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel._channel_info()[0]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
-        return channel_info
+        return new_channel
 
     @api.model
+    @api.returns('self', lambda channel: channel._channel_info()[0])
     def create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
@@ -1177,7 +1180,7 @@ class Channel(models.Model):
             'name': name,
         })
         channel._broadcast(partners_to)
-        return channel._channel_info()[0]
+        return channel
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):
