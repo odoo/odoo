@@ -7,7 +7,7 @@
         t-att-class="{
                 'w-100 h-100 o-mobile': ui.isSmall,
                 'o-folded': props.chatWindow.folded,
-                'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
+                'position-fixed bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
                 'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
                 }"
         t-on-keydown="onKeydown"

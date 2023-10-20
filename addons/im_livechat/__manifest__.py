@@ -102,7 +102,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/embed/common/**/*',
         ],
         'im_livechat.assets_embed_external': [
-            'web/static/lib/jquery/jquery.js',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'im_livechat/static/src/embed/common/scss/bootstrap_overridden.scss',
             ('include', 'web._assets_helpers'),
@@ -121,7 +120,8 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
-
+            ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
+            ('remove', 'bus/static/src/simple_notification_service.js'),
             ('include', 'im_livechat.assets_embed_core'),
             'im_livechat/static/src/embed/external/**/*',
         ],

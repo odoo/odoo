@@ -1,10 +1,8 @@
 /* @odoo-module */
 
-import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { makeShadow, makeRoot } from "@im_livechat/embed/common/boot_helpers";
 import { serverUrl } from "@im_livechat/embed/common/livechat_data";
-
-import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
 
 import { mount, whenReady } from "@odoo/owl";
 
@@ -19,7 +17,6 @@ import { session } from "@web/session";
     await whenReady();
     const mainComponentsRegistry = registry.category("main_components");
     mainComponentsRegistry.add("LivechatRoot", { Component: LivechatButton });
-    mainComponentsRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
     const env = makeEnv();
     await startServices(env);
     odoo.isReady = true;
