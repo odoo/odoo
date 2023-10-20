@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
         <div t-attf-class="{{props.class}} d-flex overflow-auto w-100 flex-grow-1">
-            <div class="d-flex flex-fill gap-3 align-content-start p-2 bg-view overflow-auto">
+            <div class="d-flex flex-fill gap-3 align-content-start p-1 bg-view overflow-auto">
                 <div t-foreach="props.categories" t-as="category" t-key="category.id"
                     class="d-flex align-items-center">
                     <i  t-if="category.separator"

@@ -44,8 +44,8 @@
 
     <t t-name="point_of_sale.PaymentScreenValidate">
         <t t-if="ui.isSmall">
-            <div class="switchpane d-flex">
-                <button class="btn-switchpane validation-button btn btn-primary flex-fill py-5 rounded-0 fw-bolder"
+            <div class="switchpane d-flex h-12">
+                <button class="btn-switchpane validation-button btn btn-primary flex-fill py-4 rounded-0 fw-bolder fs-1"
                     t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
                     t-on-click="() => this.validateOrder()">
                     <span>Validate</span>

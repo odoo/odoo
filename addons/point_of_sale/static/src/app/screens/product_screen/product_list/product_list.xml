@@ -3,13 +3,13 @@
 
     <t t-name="point_of_sale.ProductsWidget">
         <div class="products-widget d-flex flex-column flex-grow-1 overflow-auto">
-            <div class="products-widget-control d-flex bg-view shadow-sm" t-att-class="{'h-12': categoriesHasImages}">
+            <div class="products-widget-control d-flex bg-view shadow-sm" t-att-class="{'h-8 min-h-50': categoriesHasImages}">
                 <CategorySelector
                     categories="getCategories()"
                     onClick="(id) => this.pos.setSelectedCategoryId(id)"
                 />
                 <Input tModel="[pos, 'searchProductWord']"
-                    class="'ms-auto p-2 m-2'"
+                    class="'ms-auto m-auto p-2'"
                     isSmall="ui.isSmall"
                     placeholder="'Search products...'"
                     icon="{type: 'fa', value: 'fa-search'}"
