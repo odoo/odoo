@@ -91,8 +91,8 @@ class TestIrMailServer(MailCommon):
                 # outside "from_filter" domain: we will use notifications emails in the
                 # headers, and bounce address in the envelope because the "from_filter"
                 # allows to use the entire domain
-                (self.default_bounce_address, '"test" <notifications.test@test.mycompany.com>'),
-                (self.default_bounce_address, '"Formatted Name" <notifications.test@test.mycompany.com>'),
+                (self.default_bounce_address, f'"test" <{self.default_from}@{self.alias_domain}>'),
+                (self.default_bounce_address, f'"Formatted Name" <{self.default_from}@{self.alias_domain}>'),
             ]
         ):
             for provide_smtp in [False, True]:  # providing smtp session should ont impact test
@@ -146,7 +146,8 @@ class TestIrMailServer(MailCommon):
                 ('notifications', 'example_2.com, example_3.com'),
                 ('notifications@example.com', 'dummy.com, full_email@example_2.com, dummy2.com'),
                 ('notifications', 'dummy.com, full_email@example_2.com, dummy2.com'),
-                ('notifications@example.com', 'example.com'),
+                (f'notifications@{self.alias_domain}', f'{self.alias_domain}'),
+                (f'notifications@{self.alias_domain}', f'{self.alias_domain}, example_2.com'),
                 # default relies on "odoo"
                 (False, 'example.com'),
                 # fallback on user email if no from_filter
@@ -159,7 +160,8 @@ class TestIrMailServer(MailCommon):
                 'notifications@example_2.com',
                 'full_email@example_2.com',
                 'full_email@example_2.com',
-                'notifications@example.com',
+                f'notifications@{self.alias_domain}',
+                f'notifications@{self.alias_domain}',
                 'odoo@example.com',
                 self.env.user.email,
                 self.env.user.email,
@@ -219,7 +221,7 @@ class TestIrMailServer(MailCommon):
                 (self.mail_server_domain, 'unknown_email@test.mycompany.com'),
                 (self.mail_server_domain, 'unknown_email@TEST.MYCOMPANY.COM'),
                 (self.mail_server_domain, '"Unknown" <unknown_email@test.mycompany.com>'),
-                (self.mail_server_notification, 'notifications.test@test.mycompany.com'),
+                (self.mail_server_notification, f'{self.default_from}@test.mycompany.com'),
                 # mail_server_user multiple from_filter check
                 (self.mail_server_user, '"Example" <test@domain2.com>'),
                 (self.mail_server_user, '"Example" <test@domain1.com>'),
@@ -247,9 +249,9 @@ class TestIrMailServer(MailCommon):
                 ('specific_user@test.mycompany.com', 'specific_user@test.mycompany.com', self.mail_server_user),
                 # No mail server are configured for the email address, so it will use the
                 # notifications email instead and encapsulate the old email
-                ('notifications.test@test.mycompany.com', '"Name" <notifications.test@test.mycompany.com>', self.mail_server_notification),
+                (f'{self.default_from}@{self.alias_domain}', f'"Name" <{self.default_from}@{self.alias_domain}>', self.mail_server_notification),
                 # same situation, but the original email has no name part
-                ('notifications.test@test.mycompany.com', '"test" <notifications.test@test.mycompany.com>', self.mail_server_notification),
+                (f'{self.default_from}@{self.alias_domain}', f'"test" <{self.default_from}@{self.alias_domain}>', self.mail_server_notification),
                 # A mail server is configured for the entire domain name, so we can use the bounce
                 # email address because the mail server supports it
                 (self.default_bounce_address, '"Name" <unknown_name@test.mycompany.com>', self.mail_server_domain),
@@ -294,7 +296,7 @@ class TestIrMailServer(MailCommon):
             self.assertEqual(len(self.emails), 1)
             self.assertSMTPEmailsSent(
                 smtp_from=self.default_bounce_address,
-                message_from='"Name" <notifications.test@test.mycompany.com>',
+                message_from=f'"Name" <{self.default_from}@{self.alias_domain}>',
                 mail_server=self.mail_server_domain,
             )
 

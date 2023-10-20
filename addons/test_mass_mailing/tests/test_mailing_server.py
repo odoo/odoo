@@ -112,8 +112,8 @@ class TestMassMailingServer(TestMassMailCommon):
             ('unknow_email@unknow_domain.com', 'unknow_email@unknow_domain.com', self.mail_server_notification),
         ]:
             self.assertSMTPEmailsSent(
-            smtp_from=expected_smtp_from,
-            message_from=expected_msg_from,
-            mail_server=expected_mail_server,
-            emails_count=8,
-        )
+                smtp_from=expected_smtp_from,
+                message_from=expected_msg_from,
+                mail_server=expected_mail_server,
+                emails_count=8,
+            )
