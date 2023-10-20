@@ -9,7 +9,8 @@ import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/
 import { PivotDataSource } from "../pivot_data_source";
 import { pivotTimeAdapter } from "../pivot_time_adapters";
 
-const { astToFormula } = spreadsheet;
+const { astToFormula, helpers } = spreadsheet;
+const { formatValue } = helpers;
 const { DateTime } = luxon;
 
 /**
@@ -295,6 +296,23 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return dataSource.computeOdooPivotHeaderValue(domainArgs);
     }
 
+    /**
+     * High level method computing the formatted result of ODOO.PIVOT.HEADER functions.
+     *
+     * @param {string} pivotId
+     * @param {(string | number)[]} pivotArgs arguments of the function (except the first one which is the pivot id)
+     */
+    getPivotHeaderFormattedValue(pivotId, pivotArgs) {
+        const dataSource = this.getters.getPivotDataSource(pivotId);
+        const value = dataSource.computeOdooPivotHeaderValue(pivotArgs);
+        if (typeof value === "string") {
+            return value;
+        }
+        const format = this.getPivotFieldFormat(pivotId, pivotArgs.at(-2));
+        const locale = this.getters.getLocale();
+        return formatValue(value, { format, locale });
+    }
+
     getPivotFieldFormat(pivotId, fieldName) {
         const dataSource = this.getPivotDataSource(pivotId);
         const { field, aggregateOperator } = dataSource.parseGroupField(fieldName);
@@ -525,6 +543,7 @@ PivotUIPlugin.getters = [
     "getSelectedPivotId",
     "getPivotComputedDomain",
     "computeOdooPivotHeaderValue",
+    "getPivotHeaderFormattedValue",
     "getPivotFieldFormat",
     "getPivotIdFromPosition",
     "getPivotCellValue",
