@@ -72,6 +72,13 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         return vals
 
+    def _get_document_type_code_vals(self, invoice, invoice_data):
+        # EXTENDS 'account_edi_ubl_cii
+        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
+        vals = super()._get_document_type_code_vals(invoice, invoice_data)
+        vals['value'] = "380" if invoice.move_type == 'out_invoice' else "381"
+        return vals
+
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS 'account_edi_ubl_cii'
         constraints = super()._export_invoice_constraints(invoice, vals)

@@ -595,9 +595,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_document_type_code_vals(self, invoice, invoice_data):
         """Returns the values used for the `DocumentTypeCode` node"""
         # To be overriden by custom format if required
-        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
-        document_type_code = 380 if invoice.move_type == 'out_invoice' else 381
-        return {'attrs': {}, 'value': document_type_code}
+        return {'attrs': {}, 'value': None}
 
     # -------------------------------------------------------------------------
     # IMPORT

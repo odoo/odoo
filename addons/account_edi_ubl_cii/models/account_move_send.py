@@ -191,18 +191,19 @@ class AccountMoveSend(models.TransientModel):
         filename = pdf_values['name']
         content = pdf_values['raw']
 
+        doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
         doc_type_code_vals = edi_model._get_document_type_code_vals(invoice, invoice_data)
-        document_type_code_attributes = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
-        document_type_code_value = doc_type_code_vals.get('value', '')
-
+        if doc_type_code_vals['value']:
+            doc_type_code_attrs = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
+            doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
         to_inject = f'''
             <cac:AdditionalDocumentReference
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>
-                <cbc:DocumentTypeCode {document_type_code_attributes}>{document_type_code_value}</cbc:DocumentTypeCode>
+                {doc_type_node}
                 <cac:Attachment>
                     <cbc:EmbeddedDocumentBinaryObject
                         mimeCode="application/pdf"
