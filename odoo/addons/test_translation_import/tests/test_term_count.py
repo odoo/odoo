@@ -2,6 +2,7 @@
 
 import base64
 import io
+from markupsafe import Markup
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
@@ -218,6 +219,13 @@ class TestImport(common.TransactionCase):
         # source error: wrong arguments
         with self.assertRaises(KeyError):
             model_fr_BE.get_code_named_placeholder_translation(symbol="🧀"),
+
+        # correctly translate markup
+        self.assertEqual(
+            model_fr_BE.get_code_named_placeholder_translation(num=Markup(2), symbol="<🧀>"),
+            Markup("Code, 2, &lt;🧀&gt;, Français, Belgium"),
+            "Translation placeholders were not applied when using Markup"
+        )
 
 
 @tagged('post_install', '-at_install')
