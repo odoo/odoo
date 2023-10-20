@@ -1704,7 +1704,7 @@ class StockMove(models.Model):
 
         # Create extra moves where necessary
         for move in moves:
-            if move.state == 'cancel' or (move.quantity_done <= 0 and not move.is_inventory):
+            if not move.exists() or move.state == 'cancel' or (move.quantity_done <= 0 and not move.is_inventory):
                 continue
 
             moves_ids_todo |= move._create_extra_move().ids
