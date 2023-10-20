@@ -209,10 +209,10 @@ class ReportMoOverview(models.AbstractModel):
                 record.product_qty * (components_qty_reserved[product_id] + product_id.free_qty) / comp_qty_to_produce,
                 precision_rounding=record.product_uom_id.rounding, rounding_method='DOWN'
             )
-            if float_is_zero(comp_producible_qty, precision_rounding=record.product_uom_id.rounding):
+            if float_compare(comp_producible_qty, 0, precision_rounding=record.product_uom_id.rounding) <= 0:
                 return _("Not Ready")
             producible_qty = min(comp_producible_qty, producible_qty)
-        if float_is_zero(producible_qty, precision_rounding=record.product_uom_id.rounding):
+        if float_compare(producible_qty, 0, precision_rounding=record.product_uom_id.rounding) <= 0:
             return _("Not Ready")
         elif float_compare(producible_qty, record.product_qty, precision_rounding=record.product_uom_id.rounding) == -1:
             producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit of Measure'))
