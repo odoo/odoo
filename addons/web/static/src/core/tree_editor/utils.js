@@ -7,32 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
 /**
- * @param {import("@web/core/tree_editor/condition_tree").Value} value
- * @returns {import("@web/core/tree_editor/condition_tree").Value}
- */
-function cloneValue(value) {
-    if (value instanceof Expression) {
-        return new Expression(value.toAST());
-    }
-    if (Array.isArray(value)) {
-        return value.map(cloneValue);
-    }
-    return value;
-}
-
-/**
- * @param {import("@web/core/tree_editor/condition_tree").Tree} tree
- * @returns {import("@web/core/tree_editor/condition_tree").Tree}
- */
-export function cloneTree(tree) {
-    const clone = {};
-    for (const key in tree) {
-        clone[key] = cloneValue(tree[key]);
-    }
-    return clone;
-}
-
-/**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
  * @param {boolean} disambiguate
  * @param {Object|null} fieldDef

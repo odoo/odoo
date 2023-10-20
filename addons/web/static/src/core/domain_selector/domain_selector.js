@@ -4,7 +4,12 @@ import { extractPathsFromDomain, useGetDefaultCondition } from "@web/core/domain
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
-import { domainFromTree, treeFromDomain, formatValue } from "@web/core/tree_editor/condition_tree";
+import {
+    domainFromTree,
+    treeFromDomain,
+    formatValue,
+    condition,
+} from "@web/core/tree_editor/condition_tree";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { deepEqual } from "@web/core/utils/objects";
@@ -13,13 +18,7 @@ import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operato
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 
-const ARCHIVED_CONDITION = {
-    type: "condition",
-    value: [true, false],
-    negate: false,
-    path: "active",
-    operator: "in",
-};
+const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
 
 export class DomainSelector extends Component {

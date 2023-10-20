@@ -1,8 +1,12 @@
 /** @odoo-module **/
 
 import {
+    complexCondition,
+    condition,
+    connector,
     domainFromExpression,
     domainFromTree,
+    expression,
     Expression,
     expressionFromDomain,
     expressionFromTree,
@@ -15,39 +19,27 @@ QUnit.module("condition tree", {});
 QUnit.test("domainFromTree", function (assert) {
     const toTest = [
         {
-            tree: { type: "condition", negate: false, path: "foo", operator: "=", value: false },
+            tree: condition("foo", "=", false),
             result: `[("foo", "=", False)]`,
         },
         {
-            tree: { type: "condition", negate: true, path: "foo", operator: "=", value: false },
+            tree: condition("foo", "=", false, true),
             result: `["!", ("foo", "=", False)]`,
         },
         {
-            tree: { type: "condition", negate: false, path: "foo", operator: "=?", value: false },
+            tree: condition("foo", "=?", false),
             result: `[("foo", "=?", False)]`,
         },
         {
-            tree: { type: "condition", negate: true, path: "foo", operator: "=?", value: false },
+            tree: condition("foo", "=?", false, true),
             result: `["!", ("foo", "=?", False)]`,
         },
         {
-            tree: {
-                type: "condition",
-                negate: false,
-                path: "foo",
-                operator: "between",
-                value: [1, 3],
-            },
+            tree: condition("foo", "between", [1, 3]),
             result: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
         },
         {
-            tree: {
-                type: "condition",
-                negate: true,
-                path: "foo",
-                operator: "between",
-                value: [1, new Expression({ type: 5, value: "uid" })],
-            },
+            tree: condition("foo", "between", [1, expression("uid")], true),
             result: `["!", "&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
         },
     ];
@@ -255,80 +247,35 @@ QUnit.test("expressionFromTree", function (assert) {
     };
     const toTest = [
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: false,
-                operator: "=",
-                value: false,
-            },
+            expressionTree: condition("x", "=", false),
             result: `not x`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: true,
-                operator: "=",
-                value: false,
-            },
+            expressionTree: condition("x", "=", false, true),
             result: `x`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: false,
-                operator: "!=",
-                value: false,
-            },
+            expressionTree: condition("x", "!=", false),
             result: `x`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: true,
-                operator: "!=",
-                value: false,
-            },
+            expressionTree: condition("x", "!=", false, true),
             result: `not x`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "y",
-                negate: false,
-                operator: "=",
-                value: false,
-            },
+            expressionTree: condition("y", "=", false),
             result: `not "y"`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: false,
-                operator: "between",
-                value: [1, 3],
-            },
+            expressionTree: condition("x", "between", [1, 3]),
             result: `x >= 1 and x <= 3`,
         },
         {
-            expressionTree: {
-                type: "condition",
-                path: "x",
-                negate: true,
-                operator: "between",
-                value: [1, new Expression("uid")],
-            },
+            expressionTree: condition("x", "between", [1, expression("uid")], true),
             result: `not ( x >= 1 and x <= uid )`,
         },
         {
-            expressionTree: {
-                type: "complex_condition",
-                value: "uid",
-            },
+            expressionTree: complexCondition("uid"),
             result: `uid`,
         },
     ];
@@ -353,202 +300,70 @@ QUnit.test("treeFromExpression", function (assert) {
     const toTest = [
         {
             expression: `not foo`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "not_set",
-                value: false,
-            },
+            result: condition("foo", "not_set", false),
         },
         {
             expression: `foo == False`,
-            result: {
-                type: "condition",
-                path: "foo",
-                operator: "not_set",
-                negate: false,
-                value: false,
-            },
+            result: condition("foo", "not_set", false),
         },
         {
             expression: `foo`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "set",
-                value: false,
-            },
+            result: condition("foo", "set", false),
         },
         {
             expression: `foo == True`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "=",
-                value: true,
-            },
+            result: condition("foo", "=", true),
         },
         {
             expression: `foo is True`,
-            result: {
-                type: "complex_condition",
-                value: `foo is True`,
-            },
+            result: complexCondition(`foo is True`),
         },
         {
             expression: `not (foo == False)`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "set",
-                value: false,
-            },
+            result: condition("foo", "set", false),
         },
         {
             expression: `not (not foo)`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "set",
-                value: false,
-            },
+            result: condition("foo", "set", false),
         },
         {
             expression: `foo >= 1 and foo <= 3`,
-            result: {
-                type: "condition",
-                negate: false,
-                operator: "between",
-                path: "foo",
-                value: [1, 3],
-            },
+            result: condition("foo", "between", [1, 3]),
         },
         {
             expression: `foo >= 1 and foo <= uid`,
-            result: {
-                type: "condition",
-                path: "foo",
-                negate: false,
-                operator: "between",
-                value: [1, new Expression("uid")],
-            },
+            result: condition("foo", "between", [1, expression("uid")]),
         },
         {
             expression: `foo >= 1 if bar else foo <= uid`,
-            result: {
-                type: "connector",
-                negate: false,
-                value: "|",
-                children: [
-                    {
-                        type: "connector",
-                        negate: false,
-                        value: "&",
-                        children: [
-                            {
-                                type: "condition",
-                                path: "bar",
-                                negate: false,
-                                operator: "set",
-                                value: false,
-                            },
-                            {
-                                type: "condition",
-                                path: "foo",
-                                negate: false,
-                                operator: ">=",
-                                value: 1,
-                            },
-                        ],
-                    },
-                    {
-                        type: "connector",
-                        negate: false,
-                        value: "&",
-                        children: [
-                            {
-                                type: "condition",
-                                path: "bar",
-                                negate: false,
-                                operator: "not_set",
-                                value: false,
-                            },
-                            {
-                                type: "condition",
-                                path: "foo",
-                                negate: false,
-                                operator: "<=",
-                                value: new Expression("uid"),
-                            },
-                        ],
-                    },
-                ],
-            },
+            result: connector("|", [
+                connector("&", [condition("bar", "set", false), condition("foo", ">=", 1)]),
+                connector("&", [
+                    condition("bar", "not_set", false),
+                    condition("foo", "<=", new Expression("uid")),
+                ]),
+            ]),
         },
         {
             expression: `context.get('toto')`,
-            result: {
-                type: "complex_condition",
-                value: `context.get("toto")`,
-            },
+            result: complexCondition(`context.get("toto")`),
         },
         {
             expression: `not context.get('toto')`,
-            result: {
-                type: "complex_condition",
-                value: `not context.get("toto")`,
-            },
+            result: complexCondition(`not context.get("toto")`),
         },
         {
             expression: `foo >= 1 if context.get('toto') else bar == 42`,
-            result: {
-                type: "connector",
-                negate: false,
-                value: "|",
-                children: [
-                    {
-                        type: "connector",
-                        negate: false,
-                        value: "&",
-                        children: [
-                            {
-                                type: "complex_condition",
-                                value: `context.get("toto")`,
-                            },
-                            {
-                                type: "condition",
-                                path: "foo",
-                                negate: false,
-                                operator: ">=",
-                                value: 1,
-                            },
-                        ],
-                    },
-                    {
-                        type: "connector",
-                        negate: false,
-                        value: "&",
-                        children: [
-                            {
-                                type: "complex_condition",
-                                value: `not context.get("toto")`,
-                            },
-                            {
-                                type: "condition",
-                                path: "bar",
-                                negate: false,
-                                operator: "=",
-                                value: 42,
-                            },
-                        ],
-                    },
-                ],
-            },
+            result: connector("|", [
+                connector("&", [
+                    complexCondition(`context.get("toto")`),
+                    condition("foo", ">=", 1),
+                ]),
+                connector("&", [
+                    complexCondition(`not context.get("toto")`),
+                    condition("bar", "=", 42),
+                ]),
+            ]),
         },
     ];
     for (const { expression, result, extraOptions } of toTest) {
