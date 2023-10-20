@@ -3758,6 +3758,7 @@ export class OdooEditor extends EventTarget {
         const currentKeyPress = this._currentKeyPress;
         delete this._currentKeyPress;
         const selection = this.document.getSelection();
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
         if (!selection) {
             // Because the `selectionchange` event is async, the selection can
             // be null if the node has been removed between the moment the
@@ -3789,6 +3790,10 @@ export class OdooEditor extends EventTarget {
         if (!isSelectionInEditable) {
             return;
         }
+||||||| parent of 5fb3db0c786 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        console.log(selection);
+=======
+>>>>>>> 5fb3db0c786 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         // When CTRL+A in the editor, sometimes the browser use the editable
         // element as an anchor & focus node. This is an issue for the commands
         // and the toolbar so we need to fix the selection to be based on the
