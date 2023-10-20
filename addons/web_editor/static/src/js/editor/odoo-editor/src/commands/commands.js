@@ -345,17 +345,27 @@ export const editorCommands = {
                     inLI.oToggleList(0);
                 } else {
                     const newEl = setTagName(block, tagName);
-                    newEl.classList.remove(
-                        ...FONT_SIZE_CLASSES,
-                        ...TEXT_STYLE_CLASSES,
-                        // We want to be able to edit the case `<h2 class="h3">`
-                        // but in that case, we want to display "Header 2" and
-                        // not "Header 3" as it is more important to display
-                        // the semantic tag being used (especially for h1 ones).
-                        // This is why those are not in `TEXT_STYLE_CLASSES`.
-                        "h1", "h2", "h3", "h4", "h5", "h6"
-                    );
-                    delete newEl.style.fontSize;
+                    // Remove font size style and classes on the new element and
+                    // all its descendants.
+                    const fontSizedEls = newEl.querySelectorAll(`
+                        .h1, .h2, .h3, .h4, .h5, .h6,
+                        [style*='font-size'],
+                        ${FONT_SIZE_CLASSES.map(className => `.${className}`)}
+                    `);
+                    for (const fontSizedEl of [...fontSizedEls, newEl]) {
+                        fontSizedEl.style.removeProperty("font-size");
+                        fontSizedEl.classList.remove(
+                            ...FONT_SIZE_CLASSES,
+                            ...TEXT_STYLE_CLASSES,
+                            // We want to be able to edit the case
+                            // `<h2 class="h3">`  but in that case, we want to
+                            // display "Header 2" and not "Header 3" as it is
+                            // more important to display the semantic tag being
+                            // used(especially for h1 ones). This is why those
+                            // are not in `TEXT_STYLE_CLASSES`.
+                            "h1", "h2", "h3", "h4", "h5", "h6"
+                        );
+                    }
                     if (extraClass) {
                         newEl.classList.add(extraClass);
                     }
