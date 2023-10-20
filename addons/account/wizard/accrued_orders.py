@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
-from markupsafe import escape
 import json
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
@@ -240,13 +239,13 @@ class AccruedExpenseRevenue(models.TransientModel):
         }])
         reverse_move._post()
         for order in orders_with_entries:
-            body = escape(_(
+            body = _(
                 'Accrual entry created on %(date)s: %(accrual_entry)s.\
-                    And its reverse entry: %(reverse_entry)s.')) % {
-                'date': self.date,
-                'accrual_entry': move._get_html_link(),
-                'reverse_entry': reverse_move._get_html_link(),
-            }
+                    And its reverse entry: %(reverse_entry)s.',
+                date=self.date,
+                accrual_entry=move._get_html_link(),
+                reverse_entry=reverse_move._get_html_link(),
+            )
             order.message_post(body=body)
         return {
             'name': _('Accrual Moves'),

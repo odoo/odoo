@@ -7,7 +7,7 @@ import threading
 from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -1319,7 +1319,7 @@ class Lead(models.Model):
             'meeting_user_time': meeting_usertime,
         }
         message = Markup("<p>%(meeting)s<br/>%(subject_string)s %(subject_link)s<br/>%(duration)s<p>") % {
-            'meeting': escape(_("Meeting scheduled at %s")) % meeting_time,
+            'meeting': _("Meeting scheduled at %s", meeting_time),
             'subject_string': _("Subject: "),
             'subject_link': meeting._get_html_link(),
             'duration': _("Duration: %s", duration),

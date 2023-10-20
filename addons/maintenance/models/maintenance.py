@@ -2,7 +2,6 @@
 
 import ast
 from dateutil.relativedelta import relativedelta
-from markupsafe import escape
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
@@ -348,7 +347,7 @@ class MaintenanceRequest(models.Model):
     def _get_activity_note(self):
         self.ensure_one()
         if self.equipment_id:
-            return escape(_('Request planned for %s')) % self.equipment_id._get_html_link()
+            return _('Request planned for %s', self.equipment_id._get_html_link())
         return False
 
     def activity_update(self):
