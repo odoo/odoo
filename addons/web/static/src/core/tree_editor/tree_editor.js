@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import {
-    cloneTree,
     leafToString,
     useLoadDisplayNames,
     extractIdsFromTree,
@@ -11,7 +10,13 @@ import {
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { formatValue, removeVirtualOperators } from "@web/core/tree_editor/condition_tree";
+import {
+    condition,
+    cloneTree,
+    formatValue,
+    removeVirtualOperators,
+    connector,
+} from "@web/core/tree_editor/condition_tree";
 import {
     getDefaultValue,
     getValueEditorInfo,
@@ -20,21 +25,9 @@ import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_s
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { deepEqual, shallowEqual } from "@web/core/utils/objects";
 
-const TRUE_TREE = {
-    type: "condition",
-    value: 1,
-    negate: false,
-    path: 1,
-    operator: "=",
-};
+const TRUE_TREE = condition(1, "=", 1);
 
-const DEFAULT_CONDITION = {
-    type: "condition",
-    path: "id",
-    negate: false,
-    operator: "=",
-    value: 1,
-};
+const DEFAULT_CONDITION = condition("id", "=", 1);
 
 function collectDifferences(tree, otherTree) {
     // some differences shadow the other differences "below":
@@ -132,19 +125,9 @@ export class TreeEditor extends Component {
     async onPropsUpdated(props) {
         this.tree = cloneTree(props.tree);
         if (shallowEqual(this.tree, TRUE_TREE)) {
-            this.tree = {
-                type: "connector",
-                negate: false,
-                value: props.defaultConnector,
-                children: [],
-            };
+            this.tree = connector(props.defaultConnector);
         } else if (this.tree.type !== "connector") {
-            this.tree = {
-                type: "connector",
-                negate: false,
-                value: props.defaultConnector,
-                children: [this.tree],
-            };
+            this.tree = connector(props.defaultConnector, [this.tree]);
         }
 
         if (this.previousTree) {
@@ -213,13 +196,8 @@ export class TreeEditor extends Component {
         return cloneTree(this.props.defaultCondition);
     }
 
-    createNewBranch(connector) {
-        return {
-            type: "connector",
-            value: connector,
-            negate: false,
-            children: [this.createNewLeaf(), this.createNewLeaf()],
-        };
+    createNewBranch(value) {
+        return connector(value, [this.createNewLeaf(), this.createNewLeaf()]);
     }
 
     insertRootLeaf(parent) {

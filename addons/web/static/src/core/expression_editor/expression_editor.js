@@ -2,7 +2,11 @@
 
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
-import { expressionFromTree, treeFromExpression } from "@web/core/tree_editor/condition_tree";
+import {
+    condition,
+    expressionFromTree,
+    treeFromExpression,
+} from "@web/core/tree_editor/condition_tree";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
@@ -13,13 +17,7 @@ function getDefaultCondition(fieldDefs) {
     const fieldDef = fieldDefs[defaultPath];
     const operator = getExpressionDisplayedOperators(fieldDef)[0];
     const value = getDefaultValue(fieldDef, operator);
-    return {
-        type: "condition",
-        negate: false,
-        path: fieldDef.name,
-        operator,
-        value,
-    };
+    return condition(fieldDef.name, operator, value);
 }
 
 class ExpressionEditorFieldSelector extends Component {

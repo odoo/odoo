@@ -11,6 +11,7 @@ import {
     normalizeValue,
     formatValue as toString,
     createVirtualOperators,
+    condition,
 } from "@web/core/tree_editor/condition_tree";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
@@ -41,13 +42,7 @@ function getDefaultCondition(fieldDefs) {
     const fieldDef = fieldDefs[defaultPath];
     const operator = getDomainDisplayedOperators(fieldDef)[0];
     const value = getDefaultValue(fieldDef, operator);
-    return {
-        type: "condition",
-        negate: false,
-        path: fieldDef.name,
-        operator,
-        value,
-    };
+    return condition(fieldDef.name, operator, value);
 }
 
 function getDefaultDomain(fieldDefs) {
@@ -111,13 +106,7 @@ function simplifyTree(tree) {
                 value.push(...child.value);
             }
         }
-        children.push({
-            type: "condition",
-            negate: false,
-            operator: "in",
-            path: path,
-            value: normalizeValue(value),
-        });
+        children.push(condition(path, "in", normalizeValue(value)));
     }
     if (children.length === 1) {
         return { ...children[0] };
