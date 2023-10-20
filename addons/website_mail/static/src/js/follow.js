@@ -41,7 +41,7 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         this.rpc('/website_mail/is_follower', {
             records: records,
-        }).then(always).guardedCatch(always);
+        }).then(always, always);
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {

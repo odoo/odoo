@@ -61,7 +61,11 @@ export const errorService = {
                     return;
                 }
             }
-            if (uncaughtError.event && !uncaughtError.event.defaultPrevented) {
+            if (
+                uncaughtError.event &&
+                !uncaughtError.event.defaultPrevented &&
+                uncaughtError.traceback
+            ) {
                 // Log the full traceback instead of letting the browser log the incomplete one
                 uncaughtError.event.preventDefault();
                 console.error(uncaughtError.traceback);

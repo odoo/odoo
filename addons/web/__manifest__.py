@@ -62,8 +62,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/legacy/scss/ui.scss',
 
-            'web/static/src/legacy/js/promise_extension.js',
-
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/popper/popper.js',
@@ -117,8 +115,6 @@ This module provides the core of the Odoo Web Client.
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/legacy_promise_error_handler.js',
-            'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/utils.js',
 
             'web/static/src/legacy/xml/base.xml',
@@ -131,7 +127,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/start.js',
         ],
         'web.assets_frontend_minimal': [
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
@@ -228,14 +223,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
             'web/static/src/legacy/js/public/signin.js',
-            'web/static/src/legacy/legacy_promise_error_handler.js',
-            'web/static/src/legacy/legacy_rpc_error_handler.js',
 
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
             # Remove assets_frontend_minimal
-            ('remove', 'web/static/src/legacy/js/promise_extension.js'),
             ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),

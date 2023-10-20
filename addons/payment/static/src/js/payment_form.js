@@ -5,6 +5,7 @@ import { browser } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { renderToMarkup } from '@web/core/utils/render';
+import { RPCError } from '@web/core/network/rpc_service';
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '#o_payment_form',
@@ -91,11 +92,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             [tokenId],
         ).then(linkedRecordsInfo => {
             this._challengeTokenDeletion(tokenId, linkedRecordsInfo);
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(
-                _t("Cannot delete payment method"), error.message.data.message
-            );
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(
+                    _t("Cannot delete payment method"), error.data.message
+                );
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 
@@ -356,10 +360,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             'access_token': this.paymentContext['accessToken'],
         }).then(() => {
             window.location = this.paymentContext['landingRoute'];
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Cannot save payment method"), error.message.data.message);
-            this._enableButton(); // The button has been disabled before initiating the flow.
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Cannot save payment method"), error.data.message);
+                this._enableButton(); // The button has been disabled before initiating the flow.
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 
@@ -399,10 +406,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
                 );
             }
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton(); // The button has been disabled before initiating the flow.
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton(); // The button has been disabled before initiating the flow.
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 
@@ -500,11 +510,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             'token_id': tokenId,
         }).then(() => {
             browser.location.reload();
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(
-                _t("Cannot delete payment method"), error.message.data.message
-            );
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(
+                    _t("Cannot delete payment method"), error.data.message
+                );
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 

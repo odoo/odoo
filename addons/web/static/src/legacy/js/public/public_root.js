@@ -15,6 +15,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { _t } from "@web/core/l10n/translation";
 import { App, Component, whenReady } from "@odoo/owl";
+import { RPCError } from '@web/core/network/rpc_service';
 
 const { Settings } = luxon;
 
@@ -258,7 +259,12 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     _onWidgetsStartRequest: function (ev) {
         this._startWidgets(ev.data.$target, ev.data.options)
             .then(ev.data.onSuccess)
-            .guardedCatch(ev.data.onFailure);
+            .catch((e) => {
+                ev.data.onFailure(e);
+                if (!(e instanceof RPCError)) {
+                    return Promise.reject(e);
+                }
+            });
     },
     /**
      * Called when the root is notified that the public widgets have to be

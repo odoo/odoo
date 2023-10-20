@@ -57,7 +57,6 @@
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
 
@@ -128,8 +127,6 @@
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/legacy_promise_error_handler.js',
-            'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/utils.js',
 
             'mrp_subcontracting/static/src/subcontracting_portal/*',
