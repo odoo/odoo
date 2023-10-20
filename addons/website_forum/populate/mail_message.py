@@ -10,60 +10,37 @@ _logger = logging.getLogger(__name__)
 
 class Message(models.Model):
     _inherit = 'mail.message'
-    _populate_dependencies = ['forum.post']
-    _populate_sizes = {'small': 100, 'medium': 1000, 'large': 90000}
 
-    def _populate_factories(self):
-        comment_subtype = self.env.ref('mail.mt_comment')
-        random = populate.Random('comments_on_forum_posts')
-
-        def get_author_id(iterator, *args):
-            user_ids = self.env.registry.populated_models['res.users']
-            author_ids = self.env['res.users'].search_read([('id', 'in', user_ids)], ['partner_id'])
-
-            for values in iterator:
-                author_id = random.choice(author_ids)
-                values.update(author_id=author_id['partner_id'][0])
-                yield values
-
-        def get_res_id_and_date(iterator, *args):
-            """Randomly assign messages to some populated posts and answers.
-            This makes sure these questions and answers get one to four comments.
-            Also define a date that is more recent than the post/answer's create_date
-            """
-            question_ids = self.env.registry.populated_models['forum.post']
-            posts = self.env['forum.post'].search_read(['|', ('id', 'in', question_ids), ('parent_id', 'in', question_ids)], ['id', 'create_date'])
-            sample_size = int(len(question_ids) * 0.7)
-            res_ids = random.sample(posts, sample_size)
-            nb_comments = 0
-            idx = 0
-            post_to_comment_id = None
-            hours = [_ for _ in range(1, 24)]
-
-            for values in iterator:
-                if nb_comments == 0:
-                    nb_comments = random.choices(*zip(*CP_WEIGHTS.items()))[0]
-                    idx += 1
-                    post_to_comment_id = res_ids[idx]['id']
-                nb_comments -= 1
-                values.update({
-                    'date': fields.Datetime.add(res_ids[idx]['create_date'], hours=random.choice(hours)),
-                    'res_id': post_to_comment_id
-                })
-                yield values
-
-        return [
-            ('author_id', get_author_id),
-            ('body', populate.constant('message_body_{counter}')),
-            ('message_type', populate.constant('comment')),
-            ('model', populate.constant('forum.post')),
-            ('_res_id_and_date', get_res_id_and_date),
-            ('subtype_id', populate.constant(comment_subtype.id)),
-        ]
+    @property
+    def _populate_dependencies(self):
+        return super()._populate_dependencies + ["res.users", "forum.post"]
 
     def _populate(self, size):
+        """Randomly assign messages to some populated posts and answers.
+        This makes sure these questions and answers get one to four comments.
+        Also define a date that is more recent than the post/answer's create_date
+        """
         records = super()._populate(size)
-
+        comment_subtype = self.env.ref('mail.mt_comment')
+        hours = [_ for _ in range(1, 24)]
+        random = populate.Random('comments_on_forum_posts')
+        users = self.env["res.users"].browse(self.env.registry.populated_models['res.users'])
+        vals_list = []
+        question_ids = self.env.registry.populated_models['forum.post']
+        posts = self.env['forum.post'].search(['|', ('id', 'in', question_ids), ('parent_id', 'in', question_ids)])
+        for post in random.sample(posts, int(len(question_ids) * 0.7)):
+            nb_comments = random.choices(*zip(*CP_WEIGHTS.items()))[0]
+            for counter in range(nb_comments):
+                vals_list.append({
+                    "author_id": random.choice(users.partner_id.ids),
+                    "body": f"message_body_{counter}",
+                    "date": fields.Datetime.add(post.create_date, hours=random.choice(hours)),
+                    "message_type": "comment",
+                    "model": "forum.post",
+                    "res_id": post.id,
+                    "subtype_id": comment_subtype.id,
+                })
+        messages = self.env["mail.message"].create(vals_list)
         _logger.info('mail.message: update comments create date and uid')
         _logger.info('forum.post: update last_activity_date for posts with comments and/or commented answers')
         query = """
@@ -101,6 +78,5 @@ class Message(models.Model):
               FROM updated_posts up
              WHERE up.parent_id = fp.id
     """
-        self.env.cr.execute(query, {'comment_ids': tuple(records.ids)})
-
-        return records
+        self.env.cr.execute(query, {'comment_ids': tuple(messages.ids)})
+        return records + messages

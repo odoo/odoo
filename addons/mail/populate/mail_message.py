@@ -6,32 +6,32 @@ from odoo.tools import populate
 
 class Message(models.Model):
     _inherit = "mail.message"
-    _populate_dependencies = ["res.partner"]
-    _populate_sizes = {"small": 1000, "medium": 10000, "large": 500000}
-
-    def _populate_factories(self):
-        thread_ids = self.env.registry.populated_models["res.partner"]
-        return [
-            ("body", populate.constant("message_body_{counter}")),
-            ("message_type", populate.constant("comment")),
-            ("model", populate.constant("res.partner")),
-            ("res_id", populate.randomize(thread_ids)),
-            ("author_id", populate.randomize(thread_ids)),
-        ]
+    _populate_dependencies = ["res.partner", "res.users"]
 
     def _populate(self, size):
-        partner = self.env.ref("base.user_admin").partner_id
-        # create 100 in the chatter of the res.partner admin
+        return super()._populate(size) + self._populate_threads(size, "res.partner")
+
+    def _populate_threads(self, size, model_name):
+        comment_subtype = self.env.ref('mail.mt_comment')
+        note_subtype = self.env.ref('mail.mt_note')
+        random = populate.Random("mail.message")
+        partners = self.env["res.partner"].browse(self.env.registry.populated_models["res.partner"])
+        threads = self.env[model_name].browse(self.env.registry.populated_models[model_name])
+        admin = self.env.ref("base.user_admin").partner_id
         messages = []
-        for counter in range(100):
-            messages.append(
-                {
-                    "body": f"message_body_{counter}",
-                    "message_type": "comment",
-                    "model": "res.partner",
-                    "res_id": partner.id,
-                    "author_id": partner.id,
-                }
-            )
-        self.env["mail.message"].create(messages)
-        return super()._populate(size)
+        for thread in threads:
+            for counter in range(random.randrange({"small": 10, "medium": 100, "large": 1000}[size])):
+                author = random.choice(admin + partners)
+                message_type = random.choice(["email", "comment"]) if author.partner_share else "comment"
+                subtype = comment_subtype if author.partner_share else random.choice(comment_subtype + note_subtype)
+                messages.append(
+                    {
+                        "author_id": author.id,
+                        "body": f"message_body_{counter}",
+                        "message_type": message_type,
+                        "model": "res.partner",
+                        "res_id": thread.id,
+                        "subtype_id": subtype.id,
+                    }
+                )
+        return self.env["mail.message"].create(messages)
