@@ -100,6 +100,11 @@ export class CalendarController extends Component {
         return this.model.meta.date || DateTime.now();
     }
 
+
+    get today() {
+        return DateTime.now().toFormat("d");
+    }
+
     get currentYear() {
         return this.date.toFormat("y");
     }

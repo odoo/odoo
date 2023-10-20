@@ -34,7 +34,7 @@
                         </div>
                         <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="weekends" setScale.bind="setScale"/>
                         <button
-                            class="btn btn-secondary o_calendar_button_today order-3 order-lg-0"
+                            class="btn btn-secondary o_calendar_button_today order-2 order-lg-0 ms-auto ms-lg-0"
                             t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
                             t-on-click.stop="() => this.setDate('today')"
                         >   <span t-if="env.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"></i></span>
