@@ -1697,6 +1697,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'display_submit_button': False,  # The submit button is re-added outside the form.
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
+            'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
         values = {**checkout_page_values, **payment_form_values}
         if request.website.enabled_delivery:
