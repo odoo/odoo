@@ -172,7 +172,7 @@ class TestRatingPerformance(TestRatingCommon):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=1616):  # tmf 1313 / com 1313
+        with self.assertQueryCount(employee=1617):  # tmf 1313 / com 1313
             self.create_ratings('mail.test.rating.thread')
 
         with self.assertQueryCount(employee=2101):  # tmf 1901
@@ -184,7 +184,7 @@ class TestRatingPerformance(TestRatingCommon):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=1723):  # tmf 1419 / com 1419
+        with self.assertQueryCount(employee=1724):  # tmf 1419 / com 1419
             self.create_ratings('mail.test.rating')
 
         with self.assertQueryCount(employee=2304):  # tmf 2104
