@@ -573,10 +573,16 @@
     }
 
     .o_cw_filter_color_#{$i - 1} {
-        .o_cw_filter_input_bg:not(.no_filter_color) {
+        &.form-check:hover .o_cw_filter_input_bg:not(.no_filter_color) {
+            border-color: shade-color($color, 20%);
+        }
+
+        .o_cw_filter_input_bg {
             border-color: $color;
-            background: $color;
-            color: color-contrast($color);
+
+            &:checked {
+                background-color: $color;
+            }
         }
     }
 
