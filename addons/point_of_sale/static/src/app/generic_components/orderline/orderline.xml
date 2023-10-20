@@ -7,11 +7,11 @@
                 <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
                     <span class="text-wrap" t-esc="line.productName"/>
                     <t t-slot="product-name"/>
-                </div>
+            </div>
                 <div t-esc="line.price" class="price fw-bolder"/>
             </div>
             <ul class="info-list ms-2">
-                <li>
+                <li class="price-per-unit">
                     <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" /> 
                     x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
                     <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>

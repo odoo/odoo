@@ -255,5 +255,5 @@ const quantityHelper = (quantity, el) => {
     return increaseQuantity;
 };
 function clickOrderline(name, price, description) {
-    return PosSelf.check.isOrderline(name, price, description, false, true);
+    return PosSelf.isOrderline(name, price, description, false, true);
 }

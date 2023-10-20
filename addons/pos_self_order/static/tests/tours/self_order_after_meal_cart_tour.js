@@ -7,8 +7,8 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
     test: true,
     steps: () => [
         // Verify if the self is open and My Orders is not displayed because we are in "meal" mode
-        PosSelf.check.isNotNotification(),
-        PosSelf.check.isNotPrimaryBtn("My Orders"),
+        PosSelf.isNotNotification(),
+        PosSelf.isNotPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("View Menu"),
 
         // Cancel an orders
@@ -30,29 +30,29 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
 
         // Here we're looking at whether when an orderline is clicked on from
         // the cart and edited, the changes are made to the orderline clicked on.
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", ""),
+        PosSelf.isOrderline("Office Chair Black", "138.58", ""),
         ...PosSelf.action.editOrderline("Office Chair Black", "138.58", "", 5, "no wheels"),
-        PosSelf.check.isOrderline("Office Chair Black", "692.88", "no wheels"),
+        PosSelf.isOrderline("Office Chair Black", "692.88", "no wheels"),
         ...PosSelf.action.editOrderline("Office Chair Black", "692.88", "no wheels", -4, "kidding"),
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
+        PosSelf.isOrderline("Office Chair Black", "138.58", "kidding"),
 
         // Send the order to the server
         // Here it's the first time we send an order to the server, so we check the table.
         // if the table is not selected, we check that the table selection popup is displayed.
         // Then we select a table
         PosSelf.action.clickPrimaryBtn("Order"),
-        PosSelf.check.tablePopupIsShown(),
+        PosSelf.tablePopupIsShown(),
         PosSelf.action.selectTable({ id: "1", name: "1" }),
         PosSelf.action.clickPrimaryBtn("Confirm"),
-        PosSelf.check.isNotification("Your order has been placed!"),
+        PosSelf.isNotification("Your order has been placed!"),
 
         // Once an order has been sent to the server, the user can no
         // longer reduce the quantity of his orderlines. We check this behaviour.
         PosSelf.action.clickPrimaryBtn("View Menu"),
         PosSelf.action.clickPrimaryBtn("Review"),
         ...PosSelf.action.editSentOrderline("Large Cabinet", "736.00", "", -1),
-        PosSelf.check.isNotification("You cannot reduce the quantity"),
-        PosSelf.check.isOrderline("Large Cabinet", "736.00", ""),
+        PosSelf.isNotification("You cannot reduce the quantity"),
+        PosSelf.isOrderline("Large Cabinet", "736.00", ""),
 
         // Here we look at whether the user can reduce the quantity
         // and delete a product that has not yet been sent
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         ...PosSelf.action.addProduct("Funghi", 1),
         PosSelf.action.clickPrimaryBtn("Review"),
         ...PosSelf.action.editOrderline("Funghi", "8.05", "", -1),
-        PosSelf.check.isNotOrderline("Funghi", "8.05", ""),
+        PosSelf.isNotOrderline("Funghi", "8.05", ""),
 
         // Here we're looking at whether adding a product with the same description
         // as the same product already in the basket merges the two products.
@@ -69,11 +69,11 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.action.clickBack(),
         ...PosSelf.action.addProduct("Office Chair Black", 1, "kidding"),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Office Chair Black", "277.15", "kidding"),
+        PosSelf.isOrderline("Office Chair Black", "277.15", "kidding"),
         ...PosSelf.action.editSentOrderline("Office Chair Black", "277.15", "kidding", -1),
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
+        PosSelf.isOrderline("Office Chair Black", "138.58", "kidding"),
         ...PosSelf.action.editSentOrderline("Office Chair Black", "138.58", "kidding", -1),
-        PosSelf.check.isNotification("You cannot reduce the quantity"),
+        PosSelf.isNotification("You cannot reduce the quantity"),
         PosSelf.action.clickBack(),
 
         // Here we check that the product attributes are correctly selected.
@@ -86,11 +86,11 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
             { type: "select", name: "Fabric", value: "Custom" },
         ]),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Desk Organizer", "5.87", "kidding", "M, Leather"),
-        PosSelf.check.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
+        PosSelf.isOrderline("Desk Organizer", "5.87", "kidding", "M, Leather"),
+        PosSelf.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
 
         PosSelf.action.clickOrderline("Desk Organizer", "5.87", "kidding"),
-        ...PosSelf.check.attributes([
+        ...PosSelf.attributes([
             { type: "radio", name: "Size", value: "M" },
             { type: "select", name: "Fabric", value: "Leather" },
         ]),
@@ -105,13 +105,13 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
             trigger: `.o_self_order_main_button`,
         },
 
-        PosSelf.check.isOrderline("Desk Organizer", "5.87", "dav", "S, Custom"),
-        PosSelf.check.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
+        PosSelf.isOrderline("Desk Organizer", "5.87", "dav", "S, Custom"),
+        PosSelf.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
         PosSelf.action.clickPrimaryBtn("Order"),
 
-        PosSelf.check.isPrimaryBtn("My Orders"),
+        PosSelf.isPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("My Orders"),
         PosSelf.action.clickBack(),
-        PosSelf.check.isPrimaryBtn("View Menu"),
+        PosSelf.isPrimaryBtn("View Menu"),
     ],
 });

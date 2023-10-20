@@ -2,10 +2,10 @@
 /* global posmodel */
 
 import { registry } from "@web/core/registry";
-import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";
-import { Numpad } from "./helpers/NumpadTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 function assert(condition, message) {
@@ -103,7 +103,7 @@ steps = steps.concat([
         trigger: ".pos.done-testing",
         run: function () {}, // it's a check
     },
-    ...ProductScreen.do.clickHomeCategory(),
+    ...ProductScreen.clickHomeCategory(),
     {
         content: "click review button",
         trigger: ".btn-switchpane.review-button",

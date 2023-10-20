@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
-import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 
 export function checkSimplifiedInvoiceNumber(number) {
     return [
@@ -15,8 +15,8 @@ export function checkSimplifiedInvoiceNumber(number) {
 
 export function pay() {
     return [
-        ...ProductScreen.do.clickPayButton(),
-        ...PaymentScreen.do.clickPaymentMethod("Bank"),
-        ...PaymentScreen.do.clickValidate(),
+        ...ProductScreen.clickPayButton(),
+        ...PaymentScreen.clickPaymentMethod("Bank"),
+        ...PaymentScreen.clickValidate(),
     ];
 }

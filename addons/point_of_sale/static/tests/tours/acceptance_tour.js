@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
-import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
@@ -11,11 +11,7 @@ function add_product_to_order(product_name) {
             content: "buy " + product_name,
             trigger: '.product-list .product-name:contains("' + product_name + '")',
         },
-        {
-            content: "click review button",
-            trigger: ".btn-switchpane.review-button",
-            mobile: true,
-        },
+        ProductScreen.clickReview(),
         ...Order.hasLine({ productName: product_name }),
         {
             content: "go back to the products",
@@ -27,11 +23,7 @@ function add_product_to_order(product_name) {
 
 function set_fiscal_position_on_order(fp_name) {
     return [
-        {
-            content: "click review button",
-            trigger: ".btn-switchpane.review-button",
-            mobile: true,
-        },
+        ProductScreen.clickReview(),
         {
             content: "click more button",
             trigger: ".mobile-more-button",
@@ -94,11 +86,7 @@ function fillPaymentValue(lineName, val) {
 
 function press_product_numpad(val) {
     return [
-        {
-            content: "click review button",
-            trigger: ".btn-switchpane.review-button",
-            mobile: true,
-        },
+        ProductScreen.clickReview(),
         Numpad.click(val),
         {
             content: "go back to the products",
@@ -120,29 +108,20 @@ function selected_payment_has(name, val) {
 }
 
 function selected_orderline_has({ product, price = null, quantity = null }) {
-    const result = [
+    return [
+        ProductScreen.clickReview(),
+        ...Order.hasLine({ productName: product, quantity, price, withClass: ".selected" }),
         {
-            content: "click review button",
-            trigger: ".btn-switchpane.review-button",
+            content: "go back to the products",
+            trigger: ".floor-button",
             mobile: true,
         },
     ];
-    result.push(...Order.hasLine({ productName: product, quantity, price, withClass: ".selected" }));
-    result.push({
-        content: "go back to the products",
-        trigger: ".floor-button",
-        mobile: true,
-    });
-    return result;
 }
 
 function verify_order_total(total_str) {
     return [
-        {
-            content: "click review button",
-            trigger: ".btn-switchpane.review-button",
-            mobile: true,
-        },
+        ProductScreen.clickReview(),
         Order.hasTotal(total_str),
         {
             content: "go back to the products",
@@ -213,8 +192,7 @@ var steps = [
         run: function () {},
     },
 ];
-steps = steps.concat(...ProductScreen.do.clickHomeCategory());
-
+steps = steps.concat(...ProductScreen.clickHomeCategory());
 steps = steps.concat(add_product_to_order("Desk Organizer"));
 steps = steps.concat(verify_order_total("5.10"));
 

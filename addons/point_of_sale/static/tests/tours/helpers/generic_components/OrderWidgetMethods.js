@@ -27,8 +27,10 @@ export function hasLine({
     quantity,
     price,
     customerNote,
+    internalNote,
     comboParent,
     discount,
+    oldPrice,
 } = {}) {
     let trigger = `.order-container .orderline${withClass}`;
     if (withoutClass) {
@@ -46,11 +48,17 @@ export function hasLine({
     if (customerNote) {
         trigger += `:has(.info-list .customer-note:contains("${customerNote}"))`;
     }
+    if (internalNote) {
+        trigger += `:has(.info-list .internal-note:contains("${internalNote}"))`;
+    }
     if (comboParent) {
         trigger += `:has(.info-list .combo-parent-name:contains("${comboParent}"))`;
     }
     if (discount || discount === "") {
         trigger += `:has(.info-list .discount.em:contains("${discount}"))`;
+    }
+    if (oldPrice) {
+        trigger += `:has(.info-list .price-per-unit s:contains("${oldPrice}"))`;
     }
     const args = JSON.stringify(arguments[0]);
     return [

@@ -7,8 +7,8 @@ registry.category("web_tour.tours").add("self_order_after_meal_product_tour", {
     test: true,
     steps: () => [
         // Verify if the self is open
-        PosSelf.check.isNotNotification(),
-        PosSelf.check.isNotPrimaryBtn("My Orders"),
+        PosSelf.isNotNotification(),
+        PosSelf.isNotPrimaryBtn("My Orders"),
 
         // Add some products
         PosSelf.action.clickPrimaryBtn("View Menu"),
@@ -18,13 +18,13 @@ registry.category("web_tour.tours").add("self_order_after_meal_product_tour", {
 
         // Check if products in the products list have their quantity
         // They should have because in "meal" mode we add products always to the same order
-        PosSelf.check.isProductQuantity("Large Cabinet", 15),
-        PosSelf.check.isProductQuantity("Office Chair Black", 3),
-        PosSelf.check.isProductQuantity("Conference Chair (Aluminium)", 7),
+        PosSelf.isProductQuantity("Large Cabinet", 15),
+        PosSelf.isProductQuantity("Office Chair Black", 3),
+        PosSelf.isProductQuantity("Conference Chair (Aluminium)", 7),
 
         // Check if product price are shown.
-        PosSelf.check.isProductPrice("Cabinet with Doors", "161.00"),
-        PosSelf.check.isProductPrice("Desk Pad", "2.28"),
-        PosSelf.check.isProductPrice("Letter Tray", "5.52"),
+        PosSelf.isProductPrice("Cabinet with Doors", "161.00"),
+        PosSelf.isProductPrice("Desk Pad", "2.28"),
+        PosSelf.isProductPrice("Letter Tray", "5.52"),
     ],
 });

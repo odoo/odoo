@@ -1,18 +1,20 @@
 /** @odoo-module */
 
-import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
-import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
-import { combo } from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
+import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
     test: true,
     url: "/pos/ui",
     steps: () => [
-        ...ProductScreen.do.confirmOpeningPopup(),
-        ...ProductScreen.do.clickDisplayedProduct("Office Combo"),
+        ...ProductScreen.confirmOpeningPopup(),
+        ...ProductScreen.clickDisplayedProduct("Office Combo"),
         combo.isPopupShown(),
         combo.select("Combo Product 3"),
         {
@@ -38,43 +40,42 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             isCheck: true,
         },
         combo.confirm(),
-        ...ProductScreen.check.selectedOrderlineHas("Office Combo"),
-        ...ProductScreen.do.clickOrderline("Combo Product 3"),
-        ...ProductScreen.check.selectedOrderlineHas("Combo Product 3", "1.0", "12.92"),
-        ...ProductScreen.do.clickOrderline("Combo Product 5"),
-        ...ProductScreen.check.selectedOrderlineHas("Combo Product 5", "1.0", "17.87"),
-        ...ProductScreen.do.clickOrderline("Combo Product 8"),
-        ...ProductScreen.check.selectedOrderlineHas("Combo Product 8", "1.0", "28.81"),
+        ...ProductScreen.selectedOrderlineHas("Office Combo"),
+        ...ProductScreen.clickOrderline("Combo Product 3"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 3", "1.0", "12.92"),
+        ...ProductScreen.clickOrderline("Combo Product 5"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 5", "1.0", "17.87"),
+        ...ProductScreen.clickOrderline("Combo Product 8"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "28.81"),
 
         // check that you cannot change the quantity of a combo product
-        ...ProductScreen.do.pressNumpad("2"),
-        ...ErrorPopup.do.clickConfirm(),
+        ...ProductScreen.pressNumpad("2"),
+        ...ErrorPopup.clickConfirm(),
 
         // check that removing a combo product removes all the combo products
-        ...ProductScreen.do.pressNumpad("⌫"),
-        ...ProductScreen.check.orderIsEmpty(),
+        ...ProductScreen.pressNumpad("⌫"),
+        ...ProductScreen.orderIsEmpty(),
 
-        ...ProductScreen.do.clickDisplayedProduct("Office Combo"),
+        ...ProductScreen.clickDisplayedProduct("Office Combo"),
         combo.select("Combo Product 3"),
         combo.select("Combo Product 5"),
         combo.select("Combo Product 8"),
         combo.confirm(),
-        ...ProductScreen.check.totalAmountIs("59.60"),
-        ...ProductScreen.do.clickPayButton(),
-        ...PaymentScreen.do.clickPaymentMethod("Bank"),
-        ...PaymentScreen.do.clickValidate(),
-        ...ReceiptScreen.check.isShown(),
-        ...ReceiptScreen.do.clickNextOrder(),
+        ...ProductScreen.totalAmountIs("59.60"),
+        ...ProductScreen.clickPayButton(),
+        ...PaymentScreen.clickPaymentMethod("Bank"),
+        ...PaymentScreen.clickValidate(),
+        ...ReceiptScreen.isShown(),
+        ...ReceiptScreen.clickNextOrder(),
 
         // another order but won't be sent to the backend
-        ...ProductScreen.do.clickDisplayedProduct("Office Combo"),
+        ...ProductScreen.clickDisplayedProduct("Office Combo"),
         combo.select("Combo Product 2"),
         combo.select("Combo Product 4"),
         combo.select("Combo Product 6"),
         combo.confirm(),
-        ...ProductScreen.check.totalAmountIs("50.00"),
-        ...ProductScreen.check.totalTaxIs("8.92"),
-
+        ...ProductScreen.totalAmountIs("50.00"),
+        ...inLeftSide(Order.hasTax("8.92")),
         // the split screen is tested in `pos_restaurant`
     ],
 });
