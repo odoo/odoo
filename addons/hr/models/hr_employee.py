@@ -407,7 +407,8 @@ class HrEmployeePrivate(models.Model):
                     if vals['work_contact_id'] != bank_account.partner_id.id:
                         if bank_account.allow_out_payment:
                             bank_account.sudo().allow_out_payment = False
-                        bank_account.partner_id = vals['work_contact_id']
+                        if vals['work_contact_id']:
+                            bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
