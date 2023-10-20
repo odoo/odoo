@@ -285,6 +285,9 @@ function not(ast) {
     if (ast.type === 7 && COMPARATORS.includes(ast.op)) {
         return { ...ast, op: TERM_OPERATORS_NEGATION_EXTENDED[ast.op] };
     }
+    if (ast.type === 16) {
+        return { ...ast, value: not(ast.value) };
+    }
     return { type: 6, op: "not", right: isBool(ast) ? ast.args[0] : ast };
 }
 
@@ -330,6 +333,14 @@ function isValidPath(ast, options) {
     const getFieldDef = options.getFieldDef || (() => null);
     if (ast.type === 5) {
         return getFieldDef(ast.value) !== null;
+    }
+    return false;
+}
+
+function isRelational(ast, options) {
+    if (isValidPath(ast, options)) {
+        const fieldDef = options.getFieldDef(ast.value); // safe: isValidPath has not returned null;
+        return ["many2one", "many2many", "one2many"].includes(fieldDef.type);
     }
     return false;
 }
@@ -411,6 +422,79 @@ function _leafFromAST(ast, options, negate = false) {
         if (tree) {
             return tree;
         }
+    }
+
+    if (
+        !negate &&
+        ast.type === 16 /** for comprehension */ &&
+        ast.subtype === "list" &&
+        ast.keys.length === 1
+    ) {
+        const { keys, iterator, value, condition } = ast;
+
+        const isKey = (ast) => ast.type === 5 && ast.value === keys[0];
+        const isSimple = (op, ast) =>
+            ast.type === 7 && ast.op === op && isKey(ast.left) && [4, 10].includes(ast.right.type);
+        const isSimpleOnPath = (op, ast) =>
+            ast.type === 7 && ast.op === op && isKey(ast.left) && isRelational(ast.right, options);
+
+        if (isRelational(iterator, options)) {
+            if (
+                isKey(value) &&
+                condition &&
+                (isSimple("in", condition) || isSimple("not in", condition))
+            ) {
+                return {
+                    type: "condition",
+                    negate: false,
+                    path: iterator.value,
+                    operator: condition.op,
+                    value: toValue(condition.right),
+                };
+            }
+            if (!condition && (isSimple("in", value) || isSimple("not in", value))) {
+                return {
+                    type: "condition",
+                    negate: false,
+                    path: iterator.value,
+                    operator: value.op,
+                    value: toValue(value.right),
+                };
+            }
+        } else if (condition && isSimpleOnPath("in", condition)) {
+            return {
+                type: "condition",
+                negate: false,
+                path: condition.right.value,
+                operator: "in",
+                value: toValue(iterator),
+            };
+        } else if (!condition && isSimpleOnPath("in", value)) {
+            return {
+                type: "condition",
+                negate: false,
+                path: iterator.value,
+                operator: "in",
+                value: value.value,
+            };
+        }
+    }
+
+    if (is("any", ast) && ast.args[0].type === 16 /** for comprehension */) {
+        if (negate) {
+            return _leafFromAST({ ...ast, fn: name("all"), args: ast.args.map(not) }, options);
+        }
+        const tree = _leafFromAST(ast.args[0], options, false);
+        if (tree.type === "condition") {
+            return tree;
+        }
+    }
+
+    if (is("all", ast) && ast.args[0].type === 16 /** for comprehension */) {
+        if (negate) {
+            return _leafFromAST({ ...ast, fn: name("any"), args: ast.args.map(not) }, options);
+        }
+        // TODO: improve this in future
     }
 
     // no conclusive way to transform ast in a condition

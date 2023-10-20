@@ -158,6 +158,14 @@ QUnit.test("domainFromExpression", function (assert) {
             result: `[(not context.get("toto"), "=", 1)]`,
         },
         {
+            expression: `any(id for id in foo_ids if (id in [2,4]))`,
+            result: `[("foo_ids", "in", [2, 4])]`,
+        },
+        {
+            expression: `[id for id in foo_ids if id in [2,4]]`,
+            result: `[("foo_ids", "in", [2, 4])]`,
+        },
+        {
             expression: `True`,
             result: `[(1, "=", 1)]`,
         },
@@ -232,6 +240,22 @@ QUnit.test("domainFromExpression", function (assert) {
         {
             expression: `not bool(A)`,
             result: `[(not A, "=", 1)]`,
+        },
+        {
+            expression: `[a for a in [1]]`,
+            result: `[(bool([a for a in [1]]), "=", 1)]`,
+        },
+        {
+            expression: `[a for a in [1] if a in [1, 2]]`,
+            result: `[(bool([a for a in [1] if a in [1, 2]]), "=", 1)]`,
+        },
+        {
+            expression: `[a for a in foo]`,
+            result: `[(bool([a for a in foo]), "=", 1)]`,
+        },
+        {
+            expression: `[a for a in foo_ids if a in [1, 2]]`,
+            result: `[("foo_ids", "in", [1, 2])]`,
         },
         {
             expression: `not(A and not B)`,
@@ -550,6 +574,146 @@ QUnit.test("treeFromExpression", function (assert) {
                 ],
             },
         },
+        {
+            expression: `[f(id) for id in foo_ids]`,
+            result: {
+                type: "complex_condition",
+                value: `[f(id) for id in foo_ids]`,
+            },
+        },
+        {
+            expression: `[id for id in foo_ids if f(id) in [1, 2]]`,
+            result: {
+                type: "complex_condition",
+                value: `[id for id in foo_ids if f(id) in [1, 2]]`,
+            },
+        },
+        {
+            expression: `[id for id in foo_ids if id in [2,uid]]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id for id in foo_ids if id not in [2,uid]]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "not in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id for id in [2, uid] if id in foo_ids]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id for id in [2, uid] if id not in foo_ids]`,
+            result: {
+                type: "complex_condition",
+                value: `[id for id in [2, uid] if id not in foo_ids]`,
+            },
+        },
+        {
+            expression: `[id in [2, uid] for id in foo_ids]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id not in [2, uid] for id in foo_ids]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "not in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id in foo_ids for id in [2, uid]]`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `[id not in foo_ids for id in [2, uid]]`,
+            result: {
+                type: "complex_condition",
+                value: `[id not in foo_ids for id in [2, uid]]`,
+            },
+        },
+        {
+            expression: `any([id for id in foo_ids if id in [2,uid]])`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `any([id for id in foo_ids if id not in [2,uid]])`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "not in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        {
+            expression: `any([id for id in [2, uid] if id in foo_ids])`,
+            result: {
+                type: "condition",
+                path: "foo_ids",
+                negate: false,
+                operator: "in",
+                value: [2, new Expression("uid")],
+            },
+        },
+        // TODO: improvement: get conditions for the expressions below
+        {
+            expression: `all(id for id in foo_ids if (id in [2,4]))`,
+            result: {
+                type: "complex_condition",
+                value: "all([id for id in foo_ids if id in [2, 4]])",
+            },
+        },
+        {
+            expression: `all(id in [2,4] for (id in foo_ids))`,
+            result: {
+                type: "complex_condition",
+                value: "all([id for (,id,in,foo_ids in id in foo_ids if id in [2, 4]])",
+            },
+        },
+        {
+            expression: `not any(id not in [2,4] for id in foo_ids)`,
+            result: {
+                type: "complex_condition",
+                value: "all([id in [2, 4] for id in foo_ids])",
+            },
+        },
     ];
     for (const { expression, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
@@ -629,6 +793,26 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         {
             expression: `not context.get("toto")`,
             result: `not context.get("toto")`,
+        },
+        {
+            expression: `any(id in [2,4] for id in foo_ids)`,
+            result: `foo_ids in [2, 4]`,
+        },
+        {
+            expression: `[id for id in foo_ids if id in [2,4]]`,
+            result: `foo_ids in [2, 4]`, // because it's a boolean expression
+        },
+        {
+            expression: `any(id for id in foo_ids if (id in [2,4]))`,
+            result: `foo_ids in [2, 4]`,
+        },
+        {
+            expression: `all(id in [2,4] for id in foo_ids)`,
+            result: `all([id for id in foo_ids if id in [2, 4]])`,
+        },
+        {
+            expression: `not any(id not in [2,4] for id in foo_ids)`,
+            result: `all([id in [2, 4] for id in foo_ids])`,
         },
     ];
     for (const { expression, result, extraOptions } of toTest) {
