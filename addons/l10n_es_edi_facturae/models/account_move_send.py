@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models, SUPERUSER_ID
 
-class AccountMoveSend(models.Model):
+
+class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
@@ -8,6 +9,12 @@ class AccountMoveSend(models.Model):
         string="Generate Facturae edi file",
         default=True,
     )
+
+    def _get_wizard_values(self, move):
+        # EXTENDS 'account'
+        values = super()._get_wizard_values(move)
+        values['l10n_es_edi_facturae_xml'] = self.l10n_es_edi_facturae_checkbox_xml
+        return values
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -52,18 +59,18 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if self.l10n_es_edi_facturae_checkbox_xml and invoice._l10n_es_edi_facturae_get_default_enable():
+        if invoice_data.get('l10n_es_edi_facturae_xml') and invoice._l10n_es_edi_facturae_get_default_enable():
             xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
             if errors:
                 invoice_data['error'] = "".join([
                     _("Errors occured while creating the EDI document (format: %s):", "Facturae"),
                     "\n",
-                    "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
-                        else "\n".join(errors)
+                    "<p><li>" + "</li><li>".join(errors) + "</li></p>",
                 ])
             else:
                 invoice_data['l10n_es_edi_facturae_attachment_values'] = {

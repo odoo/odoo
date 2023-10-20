@@ -45,7 +45,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         results = wizard.action_send_and_print()
 
         # Asserts
-        self.assertEqual(wizard.mode, 'done')
+        self.assertEqual((invoice1 + invoice2).mapped('send_and_print_values'), [False, False])
         self.assertEqual(results['type'], 'ir.actions.act_url')
         self.assertEqual(1, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
@@ -75,7 +75,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         results = wizard.action_send_and_print()
 
         # Asserts
-        self.assertEqual(wizard.mode, 'done')
+        self.assertEqual((invoice1 + invoice2).mapped('send_and_print_values'), [False, False])
         self.assertEqual(results['type'], 'ir.actions.act_url')
         self.assertEqual(2, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)

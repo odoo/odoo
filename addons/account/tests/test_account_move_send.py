@@ -161,7 +161,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             .create({'mail_template_id': move_template.id})
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            composer.action_send_and_print(from_cron=True)
+            composer.action_send_and_print(force_synchronous=True)
 
         # check results: emails (mailing mode when being in multi)
         self.assertEqual(len(self._mails), 20, 'Should send an email to each invoice followers (accountman + partner)')
@@ -492,7 +492,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Process.
         results = wizard.action_send_and_print()
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertRecordValues(wizard, [{'mode': 'done'}])
+        self.assertFalse(invoice.send_and_print_values)
 
         # The PDF has been successfully generated.
         pdf_report = invoice.invoice_pdf_report_id
@@ -508,7 +508,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice)
         results = wizard.action_send_and_print()
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertRecordValues(wizard, [{'mode': 'done'}])
+        self.assertFalse(invoice.send_and_print_values)
         self.assertRecordValues(invoice, [{'invoice_pdf_report_id': pdf_report.id}])
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
@@ -578,7 +578,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(invoice2.is_being_sent)
 
         # Run the CRON.
-        wizard.action_send_and_print(from_cron=True)
+        wizard.action_send_and_print(force_synchronous=True)
         self.assertTrue(invoice1.invoice_pdf_report_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
@@ -600,7 +600,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
         self.assertRecordValues(wizard, [wizard_values])
-        wizard.action_send_and_print(from_cron=True)
+        wizard.action_send_and_print(force_synchronous=True)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
             ('res_id', '=', invoice1.id),
@@ -645,7 +645,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Process.
         results = wizard.action_send_and_print()
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertRecordValues(wizard, [{'mode': 'done'}])
+        self.assertEqual((invoice1 + invoice2).mapped('send_and_print_values'), [False, False])
         self.assertTrue(invoice1.invoice_pdf_report_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
@@ -667,7 +667,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
         self.assertRecordValues(wizard, [wizard_values])
-        wizard.action_send_and_print(from_cron=True)
+        wizard.action_send_and_print(force_synchronous=True)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
             ('res_id', '=', invoice1.id),
@@ -864,7 +864,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             results = wizard.action_send_and_print(allow_fallback_pdf=True)
 
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertRecordValues(wizard, [{'mode': 'done'}])
+        self.assertFalse(invoice.send_and_print_values)
 
         # The PDF is not generated but a proforma.
         self.assertFalse(invoice.invoice_pdf_report_id)
@@ -882,51 +882,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             results = wizard.action_send_and_print(allow_fallback_pdf=True)
 
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertRecordValues(wizard, [{'mode': 'done'}])
+        self.assertFalse(invoice.send_and_print_values)
 
         # The PDF is generated even in case of error, but invoice_pdf_report_id is not set
         self.assertFalse(invoice.invoice_pdf_report_id)
         self.assertTrue(invoice.message_main_attachment_id)
-
-    def test_with_unlink_invoices(self):
-        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        wizard = self.create_send_and_print(invoice)
-
-        invoice.button_draft()
-        invoice.unlink()
-
-        results = wizard.action_send_and_print(allow_fallback_pdf=True)
-        self.assertEqual(results['type'], 'ir.actions.act_window_close')
-
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertFalse(wizard.exists())
-
-    def test_unlink_wizard_invoice_single(self):
-        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        wizard = self.create_send_and_print(invoice)
-
-        def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
-            raise UserError('Test Error')
-
-        def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-            invoice_data['error'] = 'test_error'
-
-        # Process with an error so that the wizard doesn't reach 'done' state
-        with (
-            patch.object(type(wizard), '_hook_if_errors', _hook_if_errors),
-            patch.object(type(wizard), '_hook_invoice_document_before_pdf_report_render', _hook_invoice_document_before_pdf_report_render)
-        ):
-            with self.assertRaises(UserError), self.cr.savepoint():
-                wizard.action_send_and_print(allow_fallback_pdf=False)
-
-        # If cron is triggered within the same day wizard is still exists. We don't want to delete an opened wizard.
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertTrue(wizard.exists())
-
-        # If cron is triggered one day or later than the creation it should be garbage collected.
-        with freeze_time(fields.Datetime.now() + relativedelta(hours=24)):
-            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-            self.assertFalse(wizard.exists())
 
     def test_with_empty_mail_template(self):
         """ Test you can use the send & print wizard without any mail template. """
