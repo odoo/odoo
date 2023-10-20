@@ -64,11 +64,13 @@ export function parseAndTransform(htmlString, transformFunction) {
     const string = htmlString.replace(/&lt;/g, openToken);
     let children;
     try {
-        children = $("<div>").html(string).contents();
+        const div = document.createElement("div");
+        div.innerHTML = string;
+        children = Array.from(div.childNodes);
     } catch {
-        children = $("<div>")
-            .html("<pre>" + string + "</pre>")
-            .contents();
+        const div = document.createElement("div");
+        div.innerHTML = `<pre>${string}</pre>`;
+        children = Array.from(div.childNodes);
     }
     return _parseAndTransform(children, transformFunction).replace(
         new RegExp(openToken, "g"),
