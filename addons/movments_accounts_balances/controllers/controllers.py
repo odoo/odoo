@@ -40,7 +40,8 @@ class AccountBalance(models.Model):
                 'debit': line.debit,
                 'credit': line.credit,
                 'balance': line.balance,
-                'account_root_id': line.account_root_id.id
+                'account_root_id': line.account_root_id.id,
+                'Name': line.name,
 
             })
 
@@ -85,7 +86,8 @@ class AccountBalance(models.Model):
                 'debit': line.debit,
                 'credit': line.credit,
                 'balance': line.balance,
-                'account_root_id': line.account_root_id.id
+                'account_root_id': line.account_root_id.id,
+                'Name': line.name,
 
             })
 
