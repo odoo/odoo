@@ -45,10 +45,10 @@ QUnit.test("do not show empty text when at least some future activities", async 
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
-    function selectContaining(domElement, selector, containings) {
+    function containsN(domElement, selector, containings) {
         return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
             containings.every((containing) => sel.textContent.includes(containing))
-        );
+        ).length;
     }
 
     const tomorrow = today().plus({ days: 1 });
@@ -95,22 +95,22 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await contains(".o-mail-ActivityMenu");
     await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", { count: 2 });
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Late"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Late"])
     );
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "1 Today"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "1 Today"])
     );
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Future"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Future"])
     );
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Late"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Late"])
     );
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Today"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "1 Today"])
     );
     assert.ok(
-        selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "2 Future"])
+        containsN(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["mail.test.activity", "2 Future"])
     );
     actionChecks.res_model = "res.partner";
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "res.partner" });
