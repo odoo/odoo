@@ -104,7 +104,6 @@
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/legacy/scss/ui.scss',
-            'web/static/src/legacy/scss/modal.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
@@ -140,7 +139,6 @@
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-
             ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
