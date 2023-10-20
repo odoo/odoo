@@ -104,7 +104,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].set_param('mail.default.from_filter', cls.default_from_filter)
 
         # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}'))
