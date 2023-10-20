@@ -28,7 +28,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
         cls.env.company.write({
             'country_id': cls.env.ref('base.be').id,
-            'is_account_peppol_participant': True,
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'account_peppol_proxy_state': 'active',

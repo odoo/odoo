@@ -25,7 +25,6 @@ class TestPeppolParticipant(TransactionCase):
 
     def _get_participant_vals(self):
         return {
-            'is_account_peppol_participant': True,
             'account_peppol_eas': '9925',
             'account_peppol_endpoint': '0000000000',
             'account_peppol_phone_number': '+32483123456',
@@ -90,7 +89,6 @@ class TestPeppolParticipant(TransactionCase):
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
         settings = self.env['res.config.settings'].create({
-            'is_account_peppol_participant': True,
             'account_peppol_eas': False,
             'account_peppol_endpoint': False,
         })
@@ -181,7 +179,6 @@ class TestPeppolParticipant(TransactionCase):
                 self.assertRecordValues(
                     settings, [{
                         'account_peppol_migration_key': False,
-                        'is_account_peppol_participant': False,
                         'account_peppol_proxy_state': 'not_registered',
                     }]
                 )
