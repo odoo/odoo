@@ -7,36 +7,36 @@ registry.category("web_tour.tours").add("pos_online_payment_self_order_after_mea
     test: true,
     steps: () => [
         // Check that the self is open
-        PosSelf.check.isNotNotification(),
+        PosSelf.isNotNotification(),
 
         PosSelf.action.clickPrimaryBtn("View Menu"),
         ...PosSelf.action.addProduct("Office Chair Black", 1),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", ""),
+        PosSelf.isOrderline("Office Chair Black", "138.58", ""),
 
         PosSelf.action.clickPrimaryBtn("Order"),
-        PosSelf.check.tablePopupIsShown(),
+        PosSelf.tablePopupIsShown(),
         PosSelf.action.selectTable({ id: "1", name: "1" }),
         PosSelf.action.clickPrimaryBtn("Confirm"),
-        PosSelf.check.isNotification("Your order has been placed!"),
-        PosSelf.check.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
+        PosSelf.isNotification("Your order has been placed!"),
+        PosSelf.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
 
         // Modification of the order
         PosSelf.action.clickBack(),
         ...PosSelf.action.addProduct("Funghi", 1),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Funghi", "8.05", ""),
+        PosSelf.isOrderline("Funghi", "8.05", ""),
 
         PosSelf.action.clickPrimaryBtn("Order"),
-        PosSelf.check.isNotification("Your order has been placed!"),
-        PosSelf.check.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
+        PosSelf.isNotification("Your order has been placed!"),
+        PosSelf.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
 
         // No modification of the order
         PosSelf.action.clickBack(),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", ""),
-        PosSelf.check.isOrderline("Funghi", "8.05", ""),
+        PosSelf.isOrderline("Office Chair Black", "138.58", ""),
+        PosSelf.isOrderline("Funghi", "8.05", ""),
 
-        PosSelf.check.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
+        PosSelf.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
     ],
 });
