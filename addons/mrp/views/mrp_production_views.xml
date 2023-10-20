@@ -72,8 +72,8 @@
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
-                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
-                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
+                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="hide"/>
+                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="hide"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state"
                            decoration-success="state in ('done', 'to_close')"
