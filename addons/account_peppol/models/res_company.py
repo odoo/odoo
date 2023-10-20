@@ -150,6 +150,7 @@ class ResCompany(models.Model):
                     *self.env['account.journal']._check_company_domain(company),
                     ('type', '=', 'purchase'),
                 ], limit=1)
+                company.peppol_purchase_journal_id.is_peppol_journal = True
             else:
                 company.peppol_purchase_journal_id = False
 
