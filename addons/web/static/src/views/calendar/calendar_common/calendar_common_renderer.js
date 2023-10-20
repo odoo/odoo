@@ -67,7 +67,7 @@ export class CalendarCommonRenderer extends Component {
     get options() {
         return {
             allDaySlot: this.props.model.hasAllDaySlot,
-            allDayText: _t("All day"),
+            allDayText: _t(""),
             columnHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
@@ -217,7 +217,6 @@ export class CalendarCommonRenderer extends Component {
     onEventRender(info) {
         const { el, event } = info;
         el.dataset.eventId = event.id;
-        el.classList.add("o_event", "py-0");
         const record = this.props.model.records[event.id];
 
         if (record) {
@@ -252,12 +251,18 @@ export class CalendarCommonRenderer extends Component {
             if (DateTime.now() >= record.end) {
                 el.classList.add("o_past_event");
             }
-        }
 
-        if (!el.querySelector(".fc-bg")) {
-            const bg = document.createElement("div");
-            bg.classList.add("fc-bg");
-            el.appendChild(bg);
+            if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
+                el.classList.add("o_event_dot");
+            } else if (record.isAllDay) {
+                el.classList.add("o_event_allday");
+            }
+
+            if (!el.classList.contains("fc-bg")) {
+                const bg = document.createElement("div");
+                bg.classList.add("fc-bg");
+                el.appendChild(bg);
+            }
         }
     }
     async onSelect(info) {
