@@ -240,7 +240,7 @@
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
-                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
+                <filter string="Reserve" name="reserve" domain="[('categ_ids', 'ilike', 'Reserve')]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),('availability','=', False)]"/>
                 <separator/>
@@ -623,7 +623,7 @@
                 <filter string="Creation Date" name="year" date="create_date" default_period="this_year"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
+                <filter string="Reserve" name="reserve" domain="[('categ_ids', 'ilike', 'Reserve')]"/>
                 <separator/>
                 <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>

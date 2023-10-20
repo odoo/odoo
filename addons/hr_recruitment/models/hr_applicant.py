@@ -114,9 +114,12 @@ class Applicant(models.Model):
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
+        reserve_category = self.env.ref('hr_recruitment.tag_applicant_reserve')
         for applicant in self:
             if applicant.job_id.name:
                 applicant.name = applicant.job_id.name
+            if not applicant.job_id:
+                applicant.categ_ids = [(4, reserve_category.id, 0)]
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
