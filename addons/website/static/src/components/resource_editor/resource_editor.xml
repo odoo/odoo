@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="website.CheckableDropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary">
-        <xpath expr="//t[@role='menuitem']" position="attributes">
-            <attribute name="role">menuitemcheckbox</attribute>
-            <attribute name="t-att-aria-checked">props.checked ? 'true' : 'false'</attribute>
-        </xpath>
-    </t>
-
     <t t-name="website.ResourceEditor">
         <div class="o_resource_editor w-100 h-100">
             <div class="o_resource_editor_title">
@@ -35,9 +28,9 @@
                     <Dropdown class="'btn-group o_resource_editor_type_switcher'" togglerClass="'btn btn-primary'">
                         <t t-set-slot="toggler">Filter</t>
                         <t t-foreach="Object.keys(xmlFilters)" t-as="filter" t-key="filter">
-                            <CheckableDropdownItem class="{ selected: state.xmlFilter === filter }" checked="state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
+                            <CheckboxItem class="{ selected: state.xmlFilter === filter }" checked="state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
                                 <t t-esc="xmlFilters[filter]"/>
-                            </CheckableDropdownItem>
+                            </CheckboxItem>
                         </t>
                     </Dropdown>
                 </label>
@@ -45,9 +38,9 @@
                     <Dropdown class="'btn-group o_resource_editor_type_switcher'" togglerClass="'btn btn-primary'">
                         <t t-set-slot="toggler">Filter</t>
                         <t t-foreach="Object.keys(scssFilters)" t-as="filter" t-key="filter">
-                            <CheckableDropdownItem class="{ selected: state.scssFilter === filter }" checked="state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
+                            <CheckboxItem class="{ selected: state.scssFilter === filter }" checked="state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
                                 <t t-esc="scssFilters[filter]"/>
-                            </CheckableDropdownItem>
+                            </CheckboxItem>
                         </t>
                     </Dropdown>
                 </label>

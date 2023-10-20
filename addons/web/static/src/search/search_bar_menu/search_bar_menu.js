@@ -11,7 +11,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
-import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
 import { _t } from "@web/core/l10n/translation";
@@ -23,7 +23,7 @@ export class SearchBarMenu extends Component {
     static components = {
         Dropdown,
         DropdownItem,
-        SearchDropdownItem,
+        CheckboxItem,
         CustomGroupByItem,
         AccordionItem,
         PropertiesGroupByItem,
