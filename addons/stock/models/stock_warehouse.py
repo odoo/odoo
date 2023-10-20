@@ -346,6 +346,9 @@ class Warehouse(models.Model):
             else:
                 data[picking_type].update(create_data[picking_type])
                 sequence = IrSequenceSudo.create(sequence_data[picking_type])
+                existing_sequence = IrSequenceSudo.search_count([('company_id', '=', sequence.company_id.id), ('name', '=', sequence.name)], limit=1)
+                if existing_sequence:
+                    sequence.name = _("%(name)s (copy)(%(id)s)", name=sequence.name, id=str(sequence.id))
                 values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
                 warehouse_data[picking_type] = PickingType.create(values).id
 
