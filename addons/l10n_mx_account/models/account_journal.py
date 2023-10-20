@@ -12,5 +12,5 @@ class AccountJournal(models.Model):
         if company.account_fiscal_country_id.code != 'MX':
             return account_vals
         # Ensure Cash account has the correct tags in order to export the COA
-        account_vals.setdefault('tag_ids', []).append(Command.link(self.env.ref('l10n_mx.tag_credit_balance_account').id))
+        account_vals.setdefault('tag_ids', []).append(Command.link(self.env.ref('l10n_mx_account.tag_credit_balance_account').id))
         return account_vals

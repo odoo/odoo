@@ -55,4 +55,4 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
         super()._setup_utility_bank_accounts(template_code, company, template_data)
-        company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_mx.tag_credit_balance_account')
+        company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_mx_account.tag_credit_balance_account')
