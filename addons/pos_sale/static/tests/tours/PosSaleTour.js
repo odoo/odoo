@@ -1,162 +1,136 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
-import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
-import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
-import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
+const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
+import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
 
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrder', { 
-        test: true, 
-        url: '/pos/ui', 
-        steps: () => {
-            // signal to start generating steps
-            // when finished, steps can be taken from getSteps
-            startSteps();
-            
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.do.clickQuotationButton();
-            ProductScreen.do.selectFirstOrder();
-            ProductScreen.check.selectedOrderlineHas('Pizza Chicken', 9);
-            ProductScreen.do.pressNumpad('Qty', '2'); // Change the quantity of the product to 2
-            ProductScreen.check.selectedOrderlineHas('Pizza Chicken', 2);
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Bank');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.isShown();
-            Chrome.do.clickMenuButton();
-            Chrome.do.clickTicketButton();
-            return getSteps();
-        }
-    });
-    
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrderIncompatiblePartner', { 
-        test: true, 
-        url: '/pos/ui', 
-        steps: () => {
-            
-            startSteps();
-            
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.do.clickQuotationButton();
+registry.category("web_tour.tours").add("PosSettleOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
+            ProductScreen.pressNumpad("Qty", "2"), // Change the quantity of the product to 2
+            ProductScreen.selectedOrderlineHas("Pizza Chicken", 2),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.clickMenuButton(),
+            Chrome.clickTicketButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
             // The second item in the list is the first sale.order.
-            ProductScreen.do.selectNthOrder(2);
-            ProductScreen.check.selectedOrderlineHas('product1', 1);
-            ProductScreen.check.totalAmountIs("10.00");
-            
-            ProductScreen.do.clickQuotationButton();
+            ProductScreen.selectNthOrder(2),
+            ProductScreen.selectedOrderlineHas("product1", 1),
+            ProductScreen.totalAmountIs("10.00"),
+
+            ProductScreen.clickQuotationButton(),
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
             // therefore, the total amount will change.
-            ProductScreen.do.selectNthOrder(1);
-            ProductScreen.check.selectedOrderlineHas('product2', 1);
-            ProductScreen.check.totalAmountIs("11.00");
-            return getSteps(); 
-        } 
-    });
+            ProductScreen.selectNthOrder(1),
+            ProductScreen.selectedOrderlineHas("product2", 1),
+            ProductScreen.totalAmountIs("11.00"),
+        ].flat(),
+});
 
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrder2', { 
-        test: true, 
-        url: '/pos/ui', 
-        steps: () => {
-                
-            startSteps();
-            
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.do.clickQuotationButton();
-            ProductScreen.do.selectFirstOrder();
-            ProductScreen.do.clickOrderline("Product A", "1");
-            ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
-            ProductScreen.do.clickOrderline("Product B", "1");
-            ProductScreen.do.pressNumpad("Qty", "0");
-            ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Bank');
-            PaymentScreen.check.remainingIs('0.0');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.isShown();
-            return getSteps(); 
-        } 
-    });
+registry.category("web_tour.tours").add("PosSettleOrder2", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickOrderline("Product A", "1"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.clickOrderline("Product B", "1"),
+            ProductScreen.pressNumpad("Qty", "0"),
+            ProductScreen.selectedOrderlineHas("Product B", "0.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
 
-registry
-    .category("web_tour.tours")
-    .add('PosRefundDownpayment', { 
-        test: true, 
-        url: '/pos/ui', 
-        steps: () => {
-            startSteps();
-            
-            ProductScreen.do.clickQuotationButton();
-            ProductScreen.do.downPaymentFirstOrder();
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Cash');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.do.clickNextOrder();
-            ProductScreen.do.clickRefund();
+registry.category("web_tour.tours").add("PosRefundDownpayment", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.downPaymentFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickRefund(),
             // Filter should be automatically 'Paid'.
-            TicketScreen.check.filterIs('Paid');
-            TicketScreen.do.selectOrder('-0001');
-            TicketScreen.check.hasLine({productName: 'Down Payment', withClass: '.selected', quantity: '1.0'});
-            ProductScreen.do.pressNumpad('1');
-            TicketScreen.do.confirmRefund();
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Cash');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.do.clickNextOrder();
-            
-            return getSteps(); 
-        } 
-    });
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            Order.hasLine({
+                productName: "Down Payment",
+                withClass: ".selected",
+                quantity: "1.0",
+            }),
+            ProductScreen.pressNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
 
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrderRealTime', { 
-        test: true, 
-        url: '/pos/ui', 
-        steps: () => {
+registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.totalAmountIs(40),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
 
-            startSteps();
-
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.do.clickQuotationButton();
-            ProductScreen.do.selectFirstOrder();
-            ProductScreen.check.totalAmountIs(40);
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Bank');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.isShown();
-
-            return getSteps(); 
-        }
-    });
-
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrder3', {
-        test: true,
-        url: '/pos/ui',
-        steps: () => {
-            startSteps();
-
-            ProductScreen.do.confirmOpeningPopup();
-            ProductScreen.do.clickQuotationButton();
-            ProductScreen.do.selectFirstOrder();
-            ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
-            ProductScreen.do.clickPayButton();
-            PaymentScreen.do.clickPaymentMethod('Bank');
-            PaymentScreen.check.remainingIs('0.0');
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.isShown();
-
-            return getSteps();
-        }
-    });
+registry.category("web_tour.tours").add("PosSettleOrder3", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

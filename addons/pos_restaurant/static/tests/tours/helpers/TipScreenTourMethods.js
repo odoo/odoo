@@ -1,67 +1,57 @@
 /** @odoo-module */
 
-import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
-
-class Do {
-    clickPercentTip(percent) {
-        return [
-            {
-                trigger: `.tip-screen .percentage:contains("${percent}")`,
-            },
-        ];
-    }
-    setCustomTip(amount) {
-        return [
-            {
-                trigger: `.tip-screen .custom-amount-form input`,
-                run: `text ${amount}`,
-            },
-        ];
-    }
-    clickSettle() {
-        return [
-            {
-                trigger: `.button.highlight.next`,
-            },
-        ];
-    }
+export function clickPercentTip(percent) {
+    return [
+        {
+            trigger: `.tip-screen .percentage:contains("${percent}")`,
+        },
+    ];
+}
+export function setCustomTip(amount) {
+    return [
+        {
+            trigger: `.tip-screen .custom-amount-form input`,
+            run: `text ${amount}`,
+        },
+    ];
+}
+export function clickSettle() {
+    return [
+        {
+            trigger: `.button.highlight.next`,
+        },
+    ];
 }
 
-class Check {
-    isShown() {
-        return [
-            {
-                trigger: ".pos .tip-screen",
-                run: () => {},
-            },
-        ];
-    }
-    totalAmountIs(amount) {
-        return [
-            {
-                trigger: `.tip-screen .total-amount:contains("${amount}")`,
-                run: () => {},
-            },
-        ];
-    }
-    percentAmountIs(percent, amount) {
-        return [
-            {
-                trigger: `.tip-screen .percentage:contains("${percent}") ~ .amount:contains("${amount}")`,
-                run: () => {},
-            },
-        ];
-    }
-    inputAmountIs(amount) {
-        return [
-            {
-                trigger: `.tip-screen .custom-amount-form input[data-amount="${amount}"]`,
-                run: () => {},
-            },
-        ];
-    }
+export function isShown() {
+    return [
+        {
+            trigger: ".pos .tip-screen",
+            run: () => {},
+        },
+    ];
 }
-
-// FIXME: this is a horrible hack to export an object as named exports.
-// eslint-disable-next-line no-undef
-Object.assign(__exports, createTourMethods("TipScreen", Do, Check));
+export function totalAmountIs(amount) {
+    return [
+        {
+            trigger: `.tip-screen .total-amount:contains("${amount}")`,
+            run: () => {},
+        },
+    ];
+}
+export function percentAmountIs(percent, amount) {
+    return [
+        {
+            trigger: `.tip-screen .percentage:contains("${percent}") ~ .amount:contains("${amount}")`,
+            run: () => {},
+        },
+    ];
+}
+export function inputAmountIs(amount) {
+    return [
+        {
+            trigger: `.tip-screen .custom-amount-form input[data-amount="${amount}"]`,
+            run: () => {},
+        },
+    ];
+}

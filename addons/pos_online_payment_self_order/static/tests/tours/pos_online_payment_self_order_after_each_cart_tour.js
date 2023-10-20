@@ -7,13 +7,13 @@ registry.category("web_tour.tours").add("pos_online_payment_self_order_after_eac
     test: true,
     steps: () => [
         // Check that the self is open
-        PosSelf.check.isNotNotification(),
+        PosSelf.isNotNotification(),
 
         PosSelf.action.clickPrimaryBtn("View Menu"),
         ...PosSelf.action.addProduct("Office Chair Black", 1),
 
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Office Chair Black", "138.58", ""),
-        PosSelf.check.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
+        PosSelf.isOrderline("Office Chair Black", "138.58", ""),
+        PosSelf.isPrimaryBtn("Pay"), // Not clicked on because it would open another page, losing the tour setup.
     ],
 });

@@ -1,186 +1,164 @@
 /** @odoo-module */
 
-import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
-import { Do as ProductScreenDo } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
-import { Do as PaymentScreenDo } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import { Do as ReceiptScreenDo } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import { Do as ChromeDo } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 
-const ProductScreen = { do: new ProductScreenDo() };
-const PaymentScreen = { do: new PaymentScreenDo() };
-const ReceiptScreen = { do: new ReceiptScreenDo() };
-const Chrome = { do: new ChromeDo() };
-
-class Do {
-    selectRewardLine(rewardName) {
-        return [
-            ...Order.hasLine({
-                withClass: ".fst-italic",
-                withoutClass: ".selected",
-                run: "click",
-                productName: rewardName,
-            }),
-            ...Order.hasLine({
-                withClass: ".selected.fst-italic",
-                productName: rewardName,
-            }),
-        ];
-    }
-    enterCode(code) {
-        const steps = [
-            {
-                content: "open code input dialog",
-                trigger: '.control-button:contains("Enter Code")',
-            },
-            {
-                content: `enter code value: ${code}`,
-                trigger: '.popup-textinput input[type="text"]',
-                run: `text ${code}`,
-            },
-            {
-                content: "confirm inputted code",
-                trigger: ".popup-textinput .button.confirm",
-            },
-        ];
-        return steps;
-    }
-    resetActivePrograms() {
-        return [
-            {
-                content: "open code input dialog",
-                trigger: '.control-button:contains("Reset Programs")',
-            },
-        ];
-    }
-    clickRewardButton() {
-        return [
-            {
-                content: "open reward dialog",
-                trigger: '.control-button:contains("Reward")',
-            },
-        ];
-    }
-    clickEWalletButton(text = "eWallet") {
-        return [{ trigger: `.control-button:contains("${text}")` }];
-    }
-    claimReward(rewardName) {
-        return [
-            {
-                content: "open reward dialog",
-                trigger: '.control-button:contains("Reward")',
-            },
-            {
-                content: "select reward",
-                // There should be description because a program always has a name.
-                extra_trigger: ".selection-item span:nth-child(2)",
-                trigger: `.selection-item:contains("${rewardName}")`,
-            },
-        ];
-    }
-    unselectPartner() {
-        return [{ trigger: ".unselect-tag" }];
-    }
-    clickDiscountButton() {
-        return [
-            {
-                content: "click discount button",
-                trigger: ".js_discount",
-            },
-        ];
-    }
-    clickConfirmButton() {
-        return [
-            {
-                content: "click confirm button",
-                trigger: ".button.confirm",
-            },
-        ];
-    }
-}
-
-class Check {
-    hasRewardLine(rewardName, amount, qty) {
-        return Order.hasLine({
+export function selectRewardLine(rewardName) {
+    return [
+        ...Order.hasLine({
             withClass: ".fst-italic",
+            withoutClass: ".selected",
+            run: "click",
             productName: rewardName,
-            price: amount,
-            quantity: qty,
-        });
-    }
-    orderTotalIs(total_str) {
-        return [Order.hasTotal(total_str)];
-    }
-    checkNoClaimableRewards() {
-        return [
-            {
-                content: "check that no reward can be claimed",
-                trigger: ".control-button:contains('Reward'):not(.highlight)",
-                run: function () {}, // it's a check
-            },
-        ];
-    }
-    isRewardButtonHighlighted(isHighlighted) {
-        return [
-            {
-                trigger: isHighlighted
-                    ? '.control-button.highlight:contains("Reward")'
-                    : '.control-button:contains("Reward"):not(:has(.highlight))',
-                run: function () {}, // it's a check
-            },
-        ];
-    }
-    eWalletButtonState({ highlighted, text = "eWallet" }) {
-        return [
-            {
-                trigger: highlighted
-                    ? `.control-button.highlight:contains("${text}")`
-                    : `.control-button:contains("${text}"):not(:has(.highlight))`,
-                run: function () {}, // it's a check
-            },
-        ];
-    }
-    customerIs(name) {
-        return [
-            {
-                trigger: `.product-screen .set-partner:contains("${name}")`,
-                run: function () {},
-            },
-        ];
-    }
-    notificationMessageContains(str) {
-        return [
-            {
-                trigger: `.o_notification span:contains("${str}")`,
-                run: function () {},
-            },
-        ];
-    }
+        }),
+        ...Order.hasLine({
+            withClass: ".selected.fst-italic",
+            productName: rewardName,
+        }),
+    ];
 }
-
-class Execute {
-    constructor() {
-        this.do = new Do();
-        this.check = new Check();
-    }
-    finalizeOrder(paymentMethod, amount) {
-        return [
-            ...ProductScreen.do.clickPayButton(),
-            ...PaymentScreen.do.clickPaymentMethod(paymentMethod),
-            ...PaymentScreen.do.pressNumpad([...amount].join(" ")),
-            ...PaymentScreen.do.clickValidate(),
-            ...ReceiptScreen.do.clickNextOrder(),
-        ];
-    }
-    removeRewardLine(name) {
-        return [
-            ...this.do.selectRewardLine(name),
-            ...ProductScreen.do.pressNumpad("⌫"),
-            ...Chrome.do.confirmPopup(),
-        ];
-    }
+export function enterCode(code) {
+    const steps = [
+        {
+            content: "open code input dialog",
+            trigger: '.control-button:contains("Enter Code")',
+        },
+        {
+            content: `enter code value: ${code}`,
+            trigger: '.popup-textinput input[type="text"]',
+            run: `text ${code}`,
+        },
+        {
+            content: "confirm inputted code",
+            trigger: ".popup-textinput .button.confirm",
+        },
+    ];
+    return steps;
 }
-
-// FIXME: this is a horrible hack to export an object as named exports.
-// eslint-disable-next-line no-undef
-Object.assign(__exports, createTourMethods("PosLoyalty", Do, Check, Execute));
+export function resetActivePrograms() {
+    return [
+        {
+            content: "open code input dialog",
+            trigger: '.control-button:contains("Reset Programs")',
+        },
+    ];
+}
+export function clickRewardButton() {
+    return [
+        {
+            content: "open reward dialog",
+            trigger: '.control-button:contains("Reward")',
+        },
+    ];
+}
+export function clickEWalletButton(text = "eWallet") {
+    return [{ trigger: `.control-button:contains("${text}")` }];
+}
+export function claimReward(rewardName) {
+    return [
+        {
+            content: "open reward dialog",
+            trigger: '.control-button:contains("Reward")',
+        },
+        {
+            content: "select reward",
+            // There should be description because a program always has a name.
+            extra_trigger: ".selection-item span:nth-child(2)",
+            trigger: `.selection-item:contains("${rewardName}")`,
+        },
+    ];
+}
+export function unselectPartner() {
+    return [{ trigger: ".unselect-tag" }];
+}
+export function clickDiscountButton() {
+    return [
+        {
+            content: "click discount button",
+            trigger: ".js_discount",
+        },
+    ];
+}
+export function clickConfirmButton() {
+    return [
+        {
+            content: "click confirm button",
+            trigger: ".button.confirm",
+        },
+    ];
+}
+export function hasRewardLine(rewardName, amount, qty) {
+    return Order.hasLine({
+        withClass: ".fst-italic",
+        productName: rewardName,
+        price: amount,
+        quantity: qty,
+    });
+}
+export function orderTotalIs(total_str) {
+    return [Order.hasTotal(total_str)];
+}
+export function checkNoClaimableRewards() {
+    return [
+        {
+            content: "check that no reward can be claimed",
+            trigger: ".control-button:contains('Reward'):not(.highlight)",
+            run: function () {}, // it's a check
+        },
+    ];
+}
+export function isRewardButtonHighlighted(isHighlighted) {
+    return [
+        {
+            trigger: isHighlighted
+                ? '.control-button.highlight:contains("Reward")'
+                : '.control-button:contains("Reward"):not(:has(.highlight))',
+            run: function () {}, // it's a check
+        },
+    ];
+}
+export function eWalletButtonState({ highlighted, text = "eWallet" }) {
+    return [
+        {
+            trigger: highlighted
+                ? `.control-button.highlight:contains("${text}")`
+                : `.control-button:contains("${text}"):not(:has(.highlight))`,
+            run: function () {}, // it's a check
+        },
+    ];
+}
+export function customerIs(name) {
+    return [
+        {
+            trigger: `.product-screen .set-partner:contains("${name}")`,
+            run: function () {},
+        },
+    ];
+}
+export function notificationMessageContains(str) {
+    return [
+        {
+            trigger: `.o_notification span:contains("${str}")`,
+            run: function () {},
+        },
+    ];
+}
+export function finalizeOrder(paymentMethod, amount) {
+    return [
+        ...ProductScreen.clickPayButton(),
+        ...PaymentScreen.clickPaymentMethod(paymentMethod),
+        ...PaymentScreen.pressNumpad([...amount].join(" ")),
+        ...PaymentScreen.clickValidate(),
+        ...ReceiptScreen.clickNextOrder(),
+    ];
+}
+export function removeRewardLine(name) {
+    return [
+        ...this.selectRewardLine(name),
+        ...ProductScreen.pressNumpad("⌫"),
+        ...Chrome.confirmPopup(),
+    ];
+}
