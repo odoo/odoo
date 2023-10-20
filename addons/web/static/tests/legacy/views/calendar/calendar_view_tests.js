@@ -8,6 +8,7 @@ import {
     editSelect,
     getFixture,
     makeDeferred,
+    mockTimeout,
     nextTick,
     patchDate,
     patchTimeZone,
@@ -29,6 +30,7 @@ import {
     navigate,
     pickDate,
     resizeEventToTime,
+    resizeEventToDate,
     selectAllDayRange,
     selectDateRange,
     selectTimeRange,
@@ -5639,5 +5641,56 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o_cp_switch_buttons .o_calendar");
 
         assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "The value of the 'all' filter should remain the same as it was before re-rendering")
+    });
+
+    QUnit.test(`Resizing Pill of Multiple Days(Allday)`, async (assert) => {
+        const { advanceTime } = mockTimeout();
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" delete="0" mode="month" >
+                    <field name="stop"/>
+                </calendar>`,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(
+                        args[0],
+                        [
+                            {
+                                allday: true,
+                                name: "new event",
+                                start: "2016-12-26",
+                                stop: "2016-12-27",
+                            },
+                        ],
+                        "should send the correct data to create events"
+                    );
+                } else if (method === "write") {
+                    assert.deepEqual(args[1], {
+                        allday: true,
+                        start: "2016-12-26",
+                        stop: "2016-12-30",
+                    });
+                }
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-26", "2016-12-27");
+        await editInput(target, ".o-calendar-quick-create--input", "new event");
+        await click(target, ".o-calendar-quick-create--create-btn");
+        await resizeEventToDate(target, 8, "2016-12-30");
+        await clickEvent(target, 8);
+        await advanceTime(300);
+        assert.strictEqual(
+            target
+                .querySelector(
+                    ".o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_datetime"
+                )
+                .textContent.split(" ")[0],
+            "12/30/2016",
+            "should have correct stop date"
+        );
     });
 });
