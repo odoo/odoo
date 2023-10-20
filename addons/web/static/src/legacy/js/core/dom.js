@@ -302,7 +302,7 @@ var dom = {
 
             _lock();
             var result = fct.apply(this, arguments);
-            Promise.resolve(result).then(_unlock).guardedCatch(_unlock);
+            Promise.resolve(result).finally(_unlock);
             return result;
         };
     },
@@ -342,7 +342,7 @@ var dom = {
             Promise.resolve(dom.DEBOUNCE && delay(dom.DEBOUNCE)).then(function () {
                 $button.removeClass('pe-none');
                 const restore = dom.addButtonLoadingEffect($button[0]);
-                return Promise.resolve(result).then(restore).guardedCatch(restore);
+                return Promise.resolve(result).finally(restore);
             });
 
             return result;

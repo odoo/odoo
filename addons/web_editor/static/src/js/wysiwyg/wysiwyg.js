@@ -2597,7 +2597,7 @@ export class Wysiwyg extends Component {
                 return this[saveElementFuncName]($els, context || this.options.context)
                 .then(function () {
                     $els.removeClass('o_dirty');
-                }).guardedCatch(function (response) {
+                }).catch(function (response) {
                     // because ckeditor regenerates all the dom, we can't just
                     // setup the popover here as everything will be destroyed by
                     // the DOM regeneration. Add markings instead, and returns a
@@ -2617,7 +2617,7 @@ export class Wysiwyg extends Component {
         });
         return Promise.all(proms).then(function () {
             window.onbeforeunload = null;
-        }).guardedCatch((failed) => {
+        }).catch((failed) => {
             // If there were errors, re-enable edition
             this.cancel(false);
         });

@@ -43,7 +43,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         return Promise.all([def, this.rpc('/website_mass_mailing/is_subscriber', {
             'list_id': this._getListId(),
             'subscription_type': inputName,
-        }).then(always).guardedCatch(always)]);
+        }).then(always, always)]);
     },
     /**
      * @override

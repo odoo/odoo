@@ -427,8 +427,9 @@ Dialog.confirm = function (owner, message, options) {
             }
             isBlocked = true;
             const callbackRes = callback && callback.apply(this, arguments);
-            Promise.resolve(callbackRes).guardedCatch(() => {
+            Promise.resolve(callbackRes).catch((e) => {
                 isBlocked = false;
+                return Promise.reject(e);
             });
             return callbackRes;
         };

@@ -4,6 +4,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import { renderToElement } from '@web/core/utils/render';
 import { markup } from "@odoo/owl";
 import { _t } from '@web/core/l10n/translation';
+import { ConnectionLostError, RPCError } from '@web/core/network/rpc_service';
 
 publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
     selector: 'div[name="o_payment_status"]',
@@ -46,10 +47,9 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
                 } else {
                     self._poll();
                 }
-            }).guardedCatch(error => {
-                error.event.preventDefault();
-                if (error.message.data) { // Server error.
-                    switch (error.message.data.message) {
+            }).catch(error => {
+                if (error instanceof RPCError) { // Server error.
+                    switch (error.data.message) {
                         case 'retry':
                             self._poll();
                             break;
@@ -58,13 +58,15 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
                             break;
                         default:
                             self._renderTemplate(
-                                'payment.exception', { error_message: error.message.data.message }
+                                'payment.exception', { error_message: error.data.message }
                             );
                             break;
                     }
-                } else { // RPC error (server unreachable).
+                } else if (error instanceof ConnectionLostError) { // RPC error (server unreachable).
                     self._renderTemplate('payment.rpc_error');
                     self._poll();
+                } else {
+                    return Promise.reject(error);
                 }
             });
         }, this.timeout);
