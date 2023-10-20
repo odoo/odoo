@@ -916,13 +916,14 @@ class MailComposer(models.TransientModel):
                 'email_from': emails_from[res_id],
                 'scheduled_date': False,
                 'subject': subjects[res_id],
-                # some fields are specific to mail or message
+                # some fields are specific to mail
                 **(
                     {
                         'body_html': bodies[res_id],
                         'res_id': res_id,
                     } if email_mode else {}
                 ),
+                # some fields are specific to message
                 **(
                     {
                         # notify parameter to force layout lang
