@@ -423,6 +423,7 @@ class AccountPartialReconcile(models.Model):
                     'date': move_date,
                     'ref': move.name,
                     'journal_id': partial.company_id.tax_cash_basis_journal_id.id,
+                    'company_id': partial.company_id.id,
                     'line_ids': [],
                     'tax_cash_basis_rec_id': partial.id,
                     'tax_cash_basis_origin_move_id': move.id,
