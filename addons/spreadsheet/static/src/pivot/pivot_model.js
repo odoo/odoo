@@ -312,7 +312,7 @@ export class SpreadsheetPivotModel extends PivotModel {
                 return toNumber(value, DEFAULT_LOCALE);
             }
             const adapter = pivotTimeAdapter(aggregateOperator);
-            return adapter.format(value, locale);
+            return adapter.formatValue(value, locale);
         }
         if (field.relation) {
             const label = this.metadataRepository.getRecordDisplayName(field.relation, value);
