@@ -965,7 +965,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/shop/address?partner_id=%d&mode=billing' % partner_invoice.id)
 
         partner_shipping = order.partner_shipping_id
-        if not self._check_shipping_partner_mandatory_fields(partner_shipping):
+        if not order.only_services and not self._check_shipping_partner_mandatory_fields(partner_shipping):
             return request.redirect('/shop/address?partner_id=%d&mode=shipping' % partner_shipping.id)
 
     def checkout_redirection(self, order):
@@ -1040,7 +1040,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return all(partner_id.read(shipping_fields_required)[0].values())
 
     def _get_mandatory_fields_shipping(self, country_id=False):
-        req = ["name", "street", "city", "country_id"]
+        req = ["name", "street", "city", "country_id", "phone"]
         if country_id:
             country = request.env['res.country'].browse(country_id)
             if country.state_required:
@@ -1093,6 +1093,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             required_fields += self._get_mandatory_fields_shipping(country_id)
         else: # 'billing'
             required_fields += self._get_mandatory_fields_billing(country_id)
+            if all_form_values.get('use_same'):
+                # If the billing address is also used as shipping one, the phone is required as well
+                # because it's required for shipping addresses
+                required_fields.append('phone')
 
         # error message for empty required fields
         for field_name in required_fields:
