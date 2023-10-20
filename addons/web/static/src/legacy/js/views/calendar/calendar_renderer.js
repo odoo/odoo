@@ -188,6 +188,8 @@ return AbstractRenderer.extend({
     },
     custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
         edit_event: '_onEditEvent',
+        view_record: '_onViewRecord',
+        duplicate_record: '_onDuplicateRecord',
         delete_event: '_onDeleteEvent',
         render_event: '_renderEvents',
     }),
@@ -455,9 +457,9 @@ return AbstractRenderer.extend({
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
             },
             selectAllow: function (event) {
-               if (event.end.getDate() === event.start.getDate() || event.allDay) {
-                   return true;
-               }
+                if (event.end.getDate() === event.start.getDate() || event.allDay) {
+                    return true;
+                }
             },
             yearDateClick: function (info) {
                 self._unselectEvent();
@@ -1086,6 +1088,27 @@ return AbstractRenderer.extend({
      * @private
      * @param {OdooEvent} event
      */
+    _onDuplicateRecord: function (event) {
+        this._unselectEvent();
+        this.trigger_up('duplicateRecord', {
+            _id: event.data.id,
+            title: event.data.title,
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onViewRecord: function (event) {
+        this.trigger_up('viewRecord', {
+            _id: event.data.id,
+            title: event.data.title,
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
     _onDeleteEvent: function (event) {
         this._unselectEvent();
         this.trigger_up('deleteRecord', {id: parseInt(event.data.id, 10), event: event.target.event.extendedProps});
@@ -1093,3 +1116,4 @@ return AbstractRenderer.extend({
 });
 
 });
+    
