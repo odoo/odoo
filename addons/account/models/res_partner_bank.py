@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
 from collections import defaultdict
-from markupsafe import escape
 
 import werkzeug
 import werkzeug.exceptions
@@ -255,7 +254,7 @@ class ResPartnerBank(models.Model):
 
         res = super().create(vals_list)
         for account in res:
-            msg = escape(_("Bank Account %s created")) % account._get_html_link(title=f"#{account.id}")
+            msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
             account.partner_id._message_log(body=msg)
         return res
 
@@ -292,7 +291,7 @@ class ResPartnerBank(models.Model):
         for account, initial_values in account_initial_values.items():
             tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
             if tracking_value_ids:
-                msg = escape(_("Bank Account %s updated")) % account._get_html_link(title=f"#{account.id}")
+                msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
                 account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)
                 if 'partner_id' in initial_values:  # notify previous partner as well
                     initial_values['partner_id']._message_log(body=msg, tracking_value_ids=tracking_value_ids)
@@ -301,7 +300,7 @@ class ResPartnerBank(models.Model):
     def unlink(self):
         # EXTENDS base res.partner.bank
         for account in self:
-            msg = escape(_("Bank Account %s with number %s deleted")) % (account._get_html_link(title=f"#{account.id}"), account.acc_number)
+            msg = _("Bank Account %s with number %s deleted", account._get_html_link(title=f"#{account.id}"), account.acc_number)
             account.partner_id._message_log(body=msg)
         return super().unlink()
 

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import escape
-
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
@@ -266,9 +264,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             )
 
             order.with_user(poster).message_post(
-                body=escape(_(
-                    "%s has been created",
-                )) % invoice._get_html_link(title=_("Down payment invoice")),
+                body=_("%s has been created",
+                        invoice._get_html_link(title=_("Down payment invoice"))),
             )
 
             return invoice

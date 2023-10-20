@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from odoo import models, _
 
 
@@ -22,6 +22,6 @@ class MailBot(models.AbstractModel):
             # repeat question if needed
             elif odoobot_state == 'onboarding_canned' and not self._is_help_requested(body):
                 self.env.user.odoobot_failed = True
-                return escape(_("Not sure what you are doing. Please, type %s and wait for the propositions. Select one of them and press enter.")) % \
-                    Markup("<span class=\"o_odoobot_command\">:</span>")
+                return _("Not sure what you are doing. Please, type %s and wait for the propositions. Select one of them and press enter.",
+                    Markup("<span class=\"o_odoobot_command\">:</span>"))
         return super(MailBot, self)._get_answer(record, body, values, command)

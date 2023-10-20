@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import escape
-
 from odoo import _, api, Command, fields, models
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
@@ -241,7 +239,7 @@ class StockPicking(models.Model):
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
         pickings.write({'user_id': user_id})
         for pick in pickings:
-            log_message = escape(_('Assigned to %s Responsible')) % pick.batch_id._get_html_link()
+            log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
             pick.message_post(body=log_message)
 
     def action_view_batch(self):

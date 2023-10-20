@@ -7,7 +7,6 @@ from odoo.tools import float_compare, float_round
 from odoo.osv import expression
 
 from collections import defaultdict
-from markupsafe import escape
 
 class MrpUnbuild(models.Model):
     _name = "mrp.unbuild"
@@ -201,11 +200,11 @@ class MrpUnbuild(models.Model):
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
         if self.mo_id:
-            unbuild_msg = escape(_("%(qty)s %(measure)s unbuilt in %(order)s")) % {
-                'qty': self.product_qty,
-                'measure': self.product_uom_id.name,
-                'order': self._get_html_link(),
-            }
+            unbuild_msg = _("%(qty)s %(measure)s unbuilt in %(order)s",
+                qty=self.product_qty,
+                measure=self.product_uom_id.name,
+                order=self._get_html_link(),
+            )
             self.mo_id.message_post(
                 body=unbuild_msg,
                 subtype_xmlid='mail.mt_note',

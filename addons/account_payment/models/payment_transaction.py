@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import escape
 from odoo import api, fields, models, SUPERUSER_ID, _
 
 
@@ -215,7 +214,7 @@ class PaymentTransaction(models.Model):
         """
         super()._finalize_post_processing()
         for tx in self.filtered('payment_id'):
-            message = escape(_("The payment related to the transaction with reference %(ref)s has been posted: %(link)s")) % {
-                'ref':tx.reference, 'link':tx.payment_id._get_html_link()
-            }
+            message = _("The payment related to the transaction with reference %(ref)s has been posted: %(link)s",
+                ref=tx.reference, link=tx.payment_id._get_html_link(),
+            )
             tx._log_message_on_linked_documents(message)

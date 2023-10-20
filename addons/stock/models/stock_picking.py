@@ -7,7 +7,6 @@ import time
 from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
-from markupsafe import escape
 
 from odoo import SUPERUSER_ID, _, api, Command, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -1363,7 +1362,7 @@ class Picking(models.Model):
                     'backorder_id': picking.id
                 })
                 picking.message_post(
-                    body=escape(_('The backorder %s has been created.')) % backorder_picking._get_html_link()
+                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
                 )
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})

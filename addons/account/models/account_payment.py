@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from markupsafe import escape
-
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
@@ -913,9 +911,9 @@ class AccountPayment(models.Model):
             })
             paired_payment.move_id._post(soft=False)
             payment.paired_internal_transfer_payment_id = paired_payment
-            body = escape(_("This payment has been created from:")) + payment._get_html_link()
+            body = _("This payment has been created from:") + payment._get_html_link()
             paired_payment.message_post(body=body)
-            body = escape(_("A second payment has been created:")) + paired_payment._get_html_link()
+            body = _("A second payment has been created:") + paired_payment._get_html_link()
             payment.message_post(body=body)
 
             lines = (payment.move_id.line_ids + paired_payment.move_id.line_ids).filtered(
