@@ -122,7 +122,6 @@
             'barcodes/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
-            'web/static/src/legacy/js/core/class.js',
             'web/static/src/views/fields/parsers.js',
             'web/static/src/webclient/barcode/barcode_scanner.js',
             'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',

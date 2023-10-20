@@ -90,13 +90,6 @@
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/core/dialog.js',
-            'web/static/src/legacy/xml/dialog.xml',
-            'web/static/src/legacy/js/core/dom.js',
-            'web/static/src/legacy/js/core/mixins.js',
-            'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/widget.js',
 
             ('include', 'web._assets_bootstrap'),
 
