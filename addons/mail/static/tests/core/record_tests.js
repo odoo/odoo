@@ -15,65 +15,126 @@ QUnit.module("record", {
         clearRegistryWithCleanup(modelRegistry);
         Record.register();
         ({ Store: class extends BaseStore {} }).Store.register();
-        start = async () => await makeTestEnv();
+        start = async () => {
+            const env = await makeTestEnv();
+            return env.services.store;
+        };
     },
 });
 
+QUnit.test("Insert by passing only single-id value (non-relational)", async (assert) => {
+    (class Persona extends Record {
+        static id = "name";
+        name;
+    }).register();
+    const store = await start();
+    const john = store.Persona.insert("John");
+    assert.strictEqual(john.name, "John");
+});
+
+QUnit.test("Can pass object as data for relational field with inverse as id", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        composer = Record.one("Composer", { inverse: "thread" });
+    }).register();
+    (class Composer extends Record {
+        static id = "thread";
+        thread = Record.one("Thread");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    Object.assign(thread, { composer: {} });
+    assert.ok(thread.composer);
+    assert.ok(thread.composer.thread.eq(thread));
+});
+
 QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
-    (class A extends Record {
-        static id = "id";
-        id;
-        b = Record.one("B", { inverse: "a" });
-        c = Record.one("C", { inverse: "aa" });
-        dd = Record.many("D", { inverse: "aa" });
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        composer = Record.one("Composer", { inverse: "thread" });
+        members = Record.many("Member", { inverse: "thread" });
+        messages = Record.many("Message", { inverse: "threads" });
     }).register();
-    (class B extends Record {
-        static id = "id";
-        id;
-        a = Record.one("A");
+    (class Composer extends Record {
+        static id = "thread";
+        thread = Record.one("Thread");
     }).register();
-    (class C extends Record {
-        static id = "id";
-        id;
-        aa = Record.many("A");
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread");
     }).register();
-    (class D extends Record {
-        static id = "id";
-        id;
-        aa = Record.many("A");
+    (class Message extends Record {
+        static id = "content";
+        content;
+        threads = Record.many("Thread");
     }).register();
-    const env = await start();
-    const a = env.services.store.A.insert("a");
-    const b = env.services.store.B.insert("b");
-    const c1 = env.services.store.C.insert("c1");
-    const c2 = env.services.store.C.insert("c2");
-    const d1 = env.services.store.D.insert("d1");
-    const d2 = env.services.store.D.insert("d2");
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const john = store.Member.insert("John");
+    const marc = store.Member.insert("Marc");
+    const hello = store.Message.insert("hello");
+    const world = store.Message.insert("world");
     // Assign on fields should adapt inverses
-    Object.assign(a, { b, c: [["ADD", c1]], dd: [d1, d2] });
-    assert.ok(a.b.eq(b));
-    assert.ok(b.a.eq(a));
-    assert.ok(a.c.eq(c1));
-    assert.ok(a.in(c1.aa));
-    assert.ok(d1.in(a.dd));
-    assert.ok(d2.in(a.dd));
-    assert.ok(a.in(d1.aa));
-    assert.ok(a.in(d2.aa));
+    Object.assign(thread, { composer: {}, members: [["ADD", john]], messages: [hello, world] });
+    assert.ok(thread.composer);
+    assert.ok(thread.composer.thread.eq(thread));
+    assert.ok(john.thread.eq(thread));
+    assert.ok(john.in(thread.members));
+    assert.ok(hello.in(thread.messages));
+    assert.ok(world.in(thread.messages));
+    assert.ok(thread.in(hello.threads));
+    assert.ok(thread.in(world.threads));
     // add() should adapt inverses
-    c2.aa.add(a);
-    assert.ok(a.in(c2.aa));
-    assert.ok(a.c.eq(c2));
+    thread.members.add(marc);
+    assert.ok(marc.in(thread.members));
+    assert.ok(marc.thread.eq(thread));
     // delete should adapt inverses
-    c2.aa.delete(a);
-    assert.notOk(a.in(c2.aa));
-    assert.notOk(a.c);
+    thread.members.delete(john);
+    assert.notOk(john.in(thread.members));
+    assert.notOk(john.thread);
+    // can delete with command
+    thread.messages = [["DELETE", world]];
+    assert.notOk(world.in(thread.messages));
+    assert.notOk(thread.in(world.threads));
+    assert.ok(thread.messages.length === 1);
+    assert.ok(hello.in(thread.messages));
+    assert.ok(thread.in(hello.threads));
     // Deletion removes all relations
-    a.delete();
-    assert.notOk(a.b);
-    assert.notOk(b.a);
-    assert.notOk(a.in(c1.aa));
-    assert.notOk(d1.in(a.dd));
-    assert.notOk(d2.in(a.dd));
-    assert.notOk(a.in(d1.aa));
-    assert.notOk(a.in(d2.aa));
+    const composer = thread.composer;
+    thread.delete();
+    assert.notOk(thread.composer);
+    assert.notOk(composer.thread);
+    assert.notOk(marc.in(thread.members));
+    assert.ok(thread.members.length === 0);
+    assert.notOk(hello.in(thread.messages));
+    assert.notOk(thread.in(hello.threads));
+    assert.ok(thread.messages.length === 0);
+});
+
+QUnit.test("Computed relational field", async (assert) => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        admin = Record.one("Persona", {
+            compute() {
+                return this.members[0];
+            },
+        });
+        members = Record.many("Persona");
+    }).register();
+    (class Persona extends Record {
+        static id = "name";
+        name;
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const john = store.Persona.insert("John");
+    const marc = store.Persona.insert("Marc");
+    Object.assign(thread, { members: [john, marc] });
+    assert.ok(thread.admin.eq(john));
+    thread.members.delete(john);
+    assert.ok(thread.admin.eq(marc));
 });

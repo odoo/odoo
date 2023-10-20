@@ -555,14 +555,22 @@ export class Record {
             return res;
         }
         if (typeof this.id === "string") {
+            if (typeof data !== "object" || data === null) {
+                return { [this.id]: data }; // non-object data => single id
+            }
             if (Record.isCommand(data[this.id])) {
                 // Note: only Record.one() is supported
                 const [cmd, data2] = data[this.id].at(-1);
-                if (cmd === "DELETE") {
-                    return { [this.id]: undefined };
-                } else {
-                    return { [this.id]: data2 };
-                }
+                return Object.assign(res, {
+                    [this.id]:
+                        cmd === "DELETE"
+                            ? undefined
+                            : cmd === "DELETE.noinv"
+                            ? [["DELETE.noinv", data2]]
+                            : cmd === "ADD.noinv"
+                            ? [["ADD.noinv", data2]]
+                            : data2,
+                });
             }
             return { [this.id]: data[this.id] };
         }
@@ -714,7 +722,14 @@ export class Record {
     setup() {}
 
     update(data) {
-        Object.assign(this, data);
+        if (typeof data === "object" && data !== null) {
+            Object.assign(this, data);
+        } else {
+            // update on single-id data
+            if (this.Model.__rels__.has(this.Model.id)) {
+                this[this.Model.id] = data;
+            }
+        }
     }
 
     delete() {
