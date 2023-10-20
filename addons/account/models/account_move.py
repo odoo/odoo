@@ -1668,6 +1668,11 @@ class AccountMove(models.Model):
 
     @api.onchange('company_id')
     def _inverse_company_id(self):
+        for move in self:
+            # This can't be caught by a python constraint as it is only triggered at save and the compute method that
+            # needs this data to be set correctly before saving
+            if not move.company_id:
+                raise ValidationError(_("We can't leave this document without any company. Please select a company for this document."))
         self._conditional_add_to_compute('journal_id', lambda m: (
             not m.journal_id.filtered_domain(self.env['account.journal']._check_company_domain(m.company_id))
         ))
