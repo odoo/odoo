@@ -18,6 +18,7 @@ patch(ForecastedButtons.prototype, {
             additionalContext: {
                 active_id: this.bomId,
                 active_product_id: this.productId,
+                activate_availabilities : true,
             },
         });
     }

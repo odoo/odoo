@@ -26,7 +26,7 @@ export class BomOverviewComponent extends Component {
         this.state = useState({
             showOptions: {
                 uom: false,
-                availabilities: true,
+                availabilities: false || this.props.action.context.activate_availabilities,
                 costs: true,
                 operations: true,
                 leadTimes: true,
