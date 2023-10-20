@@ -104,7 +104,7 @@ class TestUBLRO(TestUBLCommon):
         })
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "doesn't have a country code prefix in their Company ID"):
-            invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
+            invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
 
     def test_export_no_vat_but_have_company_id_with_prefix(self):
         self.company_data['company'].write({
@@ -119,7 +119,7 @@ class TestUBLRO(TestUBLCommon):
         self.company_data['company'].vat = '1234567897'
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "doesn't have a country code prefix in their VAT"):
-            invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
+            invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
 
     def test_export_constraints(self):
         self.company_data['company'].company_registry = None
@@ -128,10 +128,10 @@ class TestUBLRO(TestUBLCommon):
             self.company_data["company"][required_field] = None
             invoice = self.create_move("out_invoice", send=False)
             with self.assertRaisesRegex(UserError, "required"):
-                invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
+                invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
             self.company_data["company"][required_field] = prev_val
 
         self.company_data["company"].city = "Bucharest"
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "city name must be 'SECTORX'"):
-            invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
+            invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)

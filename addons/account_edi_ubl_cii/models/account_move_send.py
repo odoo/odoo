@@ -13,17 +13,17 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.Model):
+class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_enable_ubl_cii_xml')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
 
-    def _get_available_field_values_in_multi(self, move):
+    def _get_wizard_values(self, move):
         # EXTENDS 'account'
-        values = super()._get_available_field_values_in_multi(move)
-        values['checkbox_ubl_cii_xml'] = self.checkbox_ubl_cii_xml
+        values = super()._get_wizard_values(move)
+        values['ubl_cii_xml'] = self.checkbox_ubl_cii_xml
         return values
 
     # -------------------------------------------------------------------------
@@ -87,11 +87,12 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if self.mode == 'invoice_single' and self.checkbox_ubl_cii_xml and invoice._need_ubl_cii_xml():
+        if invoice_data.get('ubl_cii_xml') and invoice._need_ubl_cii_xml():
             builder = invoice.partner_id._get_edi_builder()
             xml_content, errors = builder._export_invoice(invoice)
             filename = builder._export_invoice_filename(invoice)
@@ -101,8 +102,7 @@ class AccountMoveSend(models.Model):
                 invoice_data['error'] = "".join([
                     _("Errors occured while creating the EDI document (format: %s):", builder._description),
                     "\n",
-                    "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
-                        else "\n".join(errors)
+                    "<p><li>" + "</li><li>".join(errors) + "</li></p>",
                 ])
                 invoice_data['error_but_continue'] = True
             else:
@@ -119,6 +119,7 @@ class AccountMoveSend(models.Model):
                     'builder': builder,
                 }
 
+    @api.model
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)

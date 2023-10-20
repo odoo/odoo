@@ -539,6 +539,7 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
+    send_and_print_values = fields.Json()
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -628,23 +629,8 @@ class AccountMove(models.Model):
                 move.invoice_user_id = False
 
     def _compute_is_being_sent(self):
-        self.is_being_sent = False
-        if self.ids:
-            self.env['account.move.send'].flush_model(['move_ids', 'mode'])
-            self.env.cr.execute(
-                """
-                SELECT move_send_rel.account_move_id
-                  FROM account_move_send send
-                  JOIN account_move_account_move_send_rel move_send_rel
-                    ON move_send_rel.account_move_id in %(move_ids)s
-                   AND send.id = move_send_rel.account_move_send_id
-                 WHERE send.mode = 'invoice_multi'
-                """,
-                params={'move_ids': tuple(self.ids)}
-            )
-            move_ids = [res[0] for res in self.env.cr.fetchall()]
-            if move_ids:
-                self.env['account.move'].browse(move_ids).is_being_sent = True
+        for move in self:
+            move.is_being_sent = bool(move.send_and_print_values)
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -4088,45 +4074,34 @@ class AccountMove(models.Model):
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
 
     @api.model
-    def _cron_account_move_send(self, job_count=10, with_commit=True):
-        '''
-        :param job_count:   The maximum number of jobs to process if specified.
-        :param with_commit: Flag indicating a commit should be made between each job.
-        '''
-        # Clean already processed wizards.
-        self.env['account.move.send'].search([
-            '|',
-            ('mode', '=', 'done'),
-            '&',
-            ('mode', '=', 'invoice_single'),
-            ('create_date', '<=', fields.Datetime.now() - relativedelta(hours=24)),
-        ]).unlink()
-
-        # Process.
+    def _cron_account_move_send(self, job_count=10):
+        """ Handle Send & Print async processing.
+        :param job_count: maximum number of jobs to process if specified.
+        """
         limit = job_count + 1
-        to_process = self.env['account.move.send'].search([('mode', '=', 'invoice_multi')], limit=limit)
-
+        to_process = self.env['account.move']._read_group(
+            [('send_and_print_values', '!=', False)],
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
+            limit=limit,
+        )
         need_retrigger = len(to_process) > job_count
+        if not to_process:
+            return
 
-        for wizard in to_process[:job_count]:
-            move_to_lock = wizard.move_ids
-            if move_to_lock:
-                try:
-                    with self.env.cr.savepoint(flush=False):
-                        self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
+        for _company, moves in to_process[:job_count]:
+            try:
+                # Lock moves
+                with self.env.cr.savepoint(flush=False):
+                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
 
-                except OperationalError as e:
-                    if e.pgcode == '55P03':
-                        _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                        if not with_commit:
-                            raise UserError(_('This document is being sent by another process already.'))
-                        continue
-                    else:
-                        raise e
-            wizard.action_send_and_print(from_cron=True)
+            except OperationalError as e:
+                if e.pgcode == '55P03':
+                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                else:
+                    raise
 
-            if with_commit:
-                self.env.cr.commit()
+            self.env['account.move.send']._process_send_and_print(moves)
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()
@@ -4303,19 +4278,16 @@ class AccountMove(models.Model):
             **kwargs,
         }
 
-    def _generate_pdf_and_send_invoice(self, template, from_cron=True, allow_fallback_pdf=True, **kwargs):
+    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
         """ Generate the pdf for the current invoices and send them by mail using the send & print wizard.
-
-        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
-                            error.
+        :param force_synchronous:   Flag indicating if the method should be done synchronously.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
+        :param bypass_download: Don't trigger the action from action_send_and_print and get generated attachments_ids instead.
         """
         composer_vals = self._get_pdf_and_send_invoice_vals(template, **kwargs)
         composer = self.env['account.move.send'].create(composer_vals)
-
-        # from_cron=True to log errors in chatter instead of raise
-        return composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+        return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
 
     def get_invoice_pdf_report_attachment(self):
         if len(self) < 2 and self.invoice_pdf_report_id:

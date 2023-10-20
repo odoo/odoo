@@ -103,7 +103,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         })
         invoice.action_post()
-        invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
+        invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)
         return invoice
 
     #########
