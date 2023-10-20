@@ -126,7 +126,7 @@
                                 >
                                     <kanban>
                                         <control>
-                                            <create string="Add a new action" />
+                                            <create string="Add an action" />
                                         </control>
                                         <templates>
                                             <t t-name="kanban-box">
@@ -188,6 +188,9 @@
                                         </templates>
                                     </kanban>
                                 </field>
+                            </page>
+                            <page string="Notes" name="notes">
+                                <field name="description" placeholder="Keep track of what this automation does and why it exists..."/>
                             </page>
                         </notebook>
                     </sheet>
