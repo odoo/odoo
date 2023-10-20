@@ -1,23 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
-    'name': 'Morocco - Accounting',
+    'name': 'Morocco - Demo Data',
+    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ma'],
-    'author': 'Odoo SA',
-    'category': 'Accounting/Localizations/Account Charts',
+    'category': 'Localization/Demo Data',
     'description': """
-This is the base module to manage the accounting chart for Morocco.
-
-This module has been built with the help of Caudigef.
-""",
-    'depends': [
-        'base',
-        'account',
-    ],
-    'data': [
-        'data/account_tax_report_data.xml',
-    ],
+This is the base module to create demonstration data for the Moroccan localization in Odoo.
+===========================================================================================
+    """,
+    'depends': ['base'],
     'demo': [
         'demo/demo_company.xml',
     ],
