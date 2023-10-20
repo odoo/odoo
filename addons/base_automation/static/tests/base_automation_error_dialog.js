@@ -84,11 +84,7 @@ QUnit.module("base_automation", {}, function () {
         await mount(MainComponentsContainer, target, { env });
 
         const errorEvent = new PromiseRejectionEvent("error", {
-            reason: {
-                message: error,
-                legacy: true,
-                event: $.Event(),
-            },
+            reason: error,
             promise: null,
             cancelable: true,
             bubbles: true,
@@ -112,11 +108,7 @@ QUnit.module("base_automation", {}, function () {
         await mount(MainComponentsContainer, target, { env });
 
         const errorEvent = new PromiseRejectionEvent("error", {
-            reason: {
-                message: error,
-                legacy: true,
-                event: $.Event(),
-            },
+            reason: error,
             promise: null,
             cancelable: true,
             bubbles: true,

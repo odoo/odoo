@@ -3,6 +3,7 @@
 
 import { _t } from '@web/core/l10n/translation';
 import paymentForm from '@payment/js/payment_form';
+import { RPCError } from '@web/core/network/rpc_service';
 
 paymentForm.include({
 
@@ -72,12 +73,15 @@ paymentForm.include({
                     onSubmit: this._adyenOnSubmit.bind(this),
                 };
                 this.adyenCheckout = await AdyenCheckout(configuration);
-            }).guardedCatch((error) => {
-                error.event.preventDefault();
-                this._displayErrorDialog(
-                    _t("Cannot display the payment form"), error.message.data.message
-                );
-                this._enableButton();
+            }).catch((error) => {
+                if (error instanceof RPCError) {
+                    this._displayErrorDialog(
+                        _t("Cannot display the payment form"), error.data.message
+                    );
+                    this._enableButton();
+                } else {
+                    return Promise.reject(error);
+                }
             });
         }
 
@@ -182,10 +186,13 @@ paymentForm.include({
             } else { // The payment reached a final state; redirect to the status page.
                 window.location = '/payment/status';
             }
-        }).guardedCatch((error) => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton();
+        }).catch((error) => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton();
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 
@@ -208,10 +215,13 @@ paymentForm.include({
             } else { // The payment reached a final state; redirect to the status page.
                 window.location = '/payment/status';
             }
-        }).guardedCatch((error) => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton();
+        }).catch((error) => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton();
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 

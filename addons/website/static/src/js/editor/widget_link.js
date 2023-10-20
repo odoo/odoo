@@ -81,8 +81,7 @@ patch(LinkTools.prototype, {
                     $option.data('value', anchor);
                     $selectMenu.append($option);
                 }
-                always();
-            }).guardedCatch(always);
+            }).finally(always);
         }
         $selectMenu.data("anchor-for", urlInputValue);
     },

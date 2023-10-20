@@ -3,6 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import { RPCError } from "@web/core/network/rpc_service";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
@@ -116,12 +117,18 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                     if (productId === currentProductId) {
                         $el.prop("disabled", true).addClass('disabled');
                     }
-                }).guardedCatch(function () {
+                }).catch(function (e) {
                     $el.prop("disabled", false).removeClass('disabled');
+                    if (!(e instanceof RPCError)) {
+                        return Promise.reject(e);
+                    }
                 });
             }
-        }).guardedCatch(function () {
+        }).catch(function (e) {
             $el.prop("disabled", false).removeClass('disabled');
+            if (!(e instanceof RPCError)) {
+                return Promise.reject(e);
+            }
         });
     },
     /**

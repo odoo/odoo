@@ -5,6 +5,7 @@ import { _t } from '@web/core/l10n/translation';
 import { loadJS } from '@web/core/assets';
 
 import paymentForm from '@payment/js/payment_form';
+import { RPCError } from '@web/core/network/rpc_service';
 
 paymentForm.include({
 
@@ -145,10 +146,13 @@ paymentForm.include({
             'access_token': processingValues.access_token,
         }).then(() => {
             window.location = '/payment/status';
-        }).guardedCatch((error) => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton();
+        }).catch((error) => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton();
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 

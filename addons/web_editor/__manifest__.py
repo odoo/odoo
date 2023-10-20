@@ -47,7 +47,6 @@ Odoo Web Editor widget.
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
 
@@ -249,7 +248,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/test/utils.js'
         ],
         'web_editor.mocha_tests': [
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             # insert module dependencies here
             'web/static/src/core/utils/concurrency.js',

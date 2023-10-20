@@ -84,7 +84,7 @@ var ParentedMixin = {
                 } else if (shouldReject) {
                     reject();
                 }
-            }).guardedCatch(function (reason) {
+            }).catch(function (reason) {
                 if (!self.isDestroyed()) {
                     reject(reason);
                 } else if (shouldReject) {

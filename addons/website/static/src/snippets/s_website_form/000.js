@@ -456,7 +456,7 @@ const { DateTime } = luxon;
                     self.restoreBtnLoading();
                 }
             })
-            .guardedCatch(error => {
+            .catch(error => {
                 this.update_status(
                     'error',
                     error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",

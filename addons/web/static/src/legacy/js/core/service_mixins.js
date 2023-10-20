@@ -1,11 +1,6 @@
 /** @odoo-module **/
 
 import { SERVICES_METADATA } from "@web/env";
-import {
-    ConnectionAbortedError,
-    ConnectionLostError,
-    RPCError,
-} from "@web/core/network/rpc_service";
 import { Component } from "@odoo/owl";
 
 function protectMethod(widget, fn) {
@@ -19,15 +14,7 @@ function protectMethod(widget, fn) {
                 })
                 .catch((reason) => {
                     if (!widget.isDestroyed()) {
-                        if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
-                            // we do not reject an error here because we want to pass through
-                            // the legacy guardedCatch code
-                            reject({ message: reason, event: $.Event(), legacy: true });
-                        } else if (reason instanceof ConnectionAbortedError) {
-                            reject({ message: reason.message, event: $.Event("abort") });
-                        } else {
-                            reject(reason);
-                        }
+                        reject(reason);
                     }
                 });
         });

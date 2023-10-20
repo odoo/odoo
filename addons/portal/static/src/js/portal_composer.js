@@ -6,6 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { post } from "@web/core/network/http_service";
 import { Component } from "@odoo/owl";
+import { RPCError } from "@web/core/network/rpc_service";
 
 /**
  * Widget PortalComposer
@@ -124,12 +125,14 @@ var PortalComposer = publicWidget.Widget.extend({
                     self.attachments.push(attachment);
                     self._updateAttachments();
                     resolve();
-                }).guardedCatch(function (error) {
-                    self.notification.add(
-                        _t("Could not save file <strong>%s</strong>", escape(file.name)),
-                        { type: 'warning', sticky: true }
-                    );
-                    resolve();
+                }).catch(function (error) {
+                    if (error instanceof RPCError) {
+                        self.notification.add(
+                            _t("Could not save file <strong>%s</strong>", escape(file.name)),
+                            { type: 'warning', sticky: true }
+                        );
+                        resolve();
+                    }
                 });
             });
         })).then(function () {

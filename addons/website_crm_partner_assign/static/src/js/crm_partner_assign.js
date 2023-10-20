@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { parseDate, formatDate, serializeDate } from "@web/core/l10n/dates";
+import { RPCError } from "@web/core/network/rpc_service";
 const { DateTime } = luxon;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
@@ -37,8 +38,11 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _buttonExec: function ($btn, callback) {
         // TODO remove once the automatic system which does this lands in master
         $btn.prop('disabled', true);
-        return callback.call(this).guardedCatch(function () {
+        return callback.call(this).catch(function (e) {
             $btn.prop('disabled', false);
+            if (!(e instanceof RPCError)) {
+                return Promise.reject(e);
+            }
         });
     },
     /**

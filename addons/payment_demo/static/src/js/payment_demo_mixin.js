@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { jsonrpc, RPCError } from "@web/core/network/rpc_service";
 
 export default {
 
@@ -22,10 +22,13 @@ export default {
             'simulated_state': simulatedPaymentState,
         }).then(() => {
             window.location = '/payment/status';
-        }).guardedCatch(error => {
-            error.event.preventDefault();
-            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
-            this._enableButton?.(); // This method doesn't exists in Express Checkout form.
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton?.(); // This method doesn't exists in Express Checkout form.
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 

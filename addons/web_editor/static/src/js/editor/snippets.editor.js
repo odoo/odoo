@@ -26,6 +26,7 @@ import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { touching, closest } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { RPCError } from "@web/core/network/rpc_service";
 
 let cacheSnippetTemplate = {};
 
@@ -3948,14 +3949,17 @@ var SnippetsMenu = Widget.extend({
                             _toMutex: true,
                             reloadWebClient: true,
                         });
-                    }).guardedCatch(reason => {
-                        reason.event.preventDefault();
-                        this.close();
-                        const message = markup(_t("Could not install module <strong>%s</strong>", escape(name)));
-                        self.notification.add(message, {
-                            type: 'danger',
-                            sticky: true,
-                        });
+                    }).catch(reason => {
+                        if (reason instanceof RPCError) {
+                            this.close();
+                            const message = markup(_t("Could not install module <strong>%s</strong>", escape(name)));
+                            self.notification.add(message, {
+                                type: 'danger',
+                                sticky: true,
+                            });
+                        } else {
+                            return Promise.reject(reason);
+                        }
                     });
                 },
             }, {

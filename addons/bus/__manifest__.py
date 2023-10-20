@@ -32,7 +32,6 @@
             ('remove', 'bus/static/tests/helpers/**/*'),
         ],
         'bus.websocket_worker_assets': [
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'bus/static/src/workers/*',
         ],

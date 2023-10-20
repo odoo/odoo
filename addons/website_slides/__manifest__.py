@@ -147,7 +147,6 @@ Featuring
             'web/static/src/legacy/scss/modal.scss',
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
 
-            'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
 
