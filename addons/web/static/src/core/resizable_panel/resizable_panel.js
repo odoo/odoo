@@ -14,6 +14,7 @@ import {
 function useResizable({
     containerRef,
     handleRef,
+    initialWidth = 400,
     getMinWidth = () => 400,
     onResize = () => {},
     getResizeSide = () => "end",
@@ -48,7 +49,7 @@ function useResizable({
 
     onMounted(() => {
         if (handleRef.el) {
-            resize(computeFinalWidth(minWidth));
+            resize(initialWidth);
             handleRef.el.addEventListener("mousedown", onMouseDown);
         }
     });
@@ -127,6 +128,7 @@ export class ResizablePanel extends Component {
     static components = {};
     static props = {
         onResize: { type: Function, optional: true },
+        initialWidth: { type: Number, optional: true },
         minWidth: { type: Number, optional: true },
         class: { type: String, optional: true },
         slots: { type: Object },
@@ -137,6 +139,7 @@ export class ResizablePanel extends Component {
     };
     static defaultProps = {
         onResize: () => {},
+        width: 400,
         minWidth: 400,
         class: "",
         handleSide: "end",
@@ -147,6 +150,7 @@ export class ResizablePanel extends Component {
             containerRef: "containerRef",
             handleRef: "handleRef",
             onResize: this.props.onResize,
+            initialWidth: this.props.initialWidth,
             getMinWidth: (props) => props.minWidth,
             getResizeSide: (props) => props.handleSide,
         });

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { ResizablePanel } from "@web_studio/client_action/xml_resource_editor/resizable_panel/resizable_panel";
 import { Component, reactive, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
     getFixture,
@@ -57,7 +57,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
             static template = xml`
                 <div class="d-flex parent-el" style="direction: rtl;">
                     <div style="width: 50px;" />
-                    <ResizablePanel minWidth="20" >
+                    <ResizablePanel minWidth="20" initialWidth="30">
                         <div style="width: 10px;" class="text-break">
                             A cool paragraph
                         </div>
@@ -69,7 +69,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
         const parentEl = target.querySelector(".parent-el");
         const resizablePanelEl = target.querySelector(".o_resizable_panel");
         let resizablePabelRect = resizablePanelEl.getBoundingClientRect();
-        assert.strictEqual(resizablePabelRect.width, 22.5);
+        assert.strictEqual(resizablePabelRect.width, 30);
 
         const handle = resizablePanelEl.querySelector(".o_resizable_panel_handle");
         await triggerEvents(handle, null, ["mousedown", ["mousemove", { clientX: 10 }], "mouseup"]);
@@ -82,7 +82,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
             static components = { ResizablePanel };
             static template = xml`
                 <div class="d-flex parent-el">
-                    <ResizablePanel minWidth="20" handleSide="'start'" class="'position-fixed'">
+                    <ResizablePanel minWidth="20" initialWidth="30" handleSide="'start'" class="'position-fixed'">
                         <div style="width: 10px;" class="text-break">
                             A cool paragraph
                         </div>
@@ -94,7 +94,7 @@ QUnit.module("Resizable Panel", ({ beforeEach }) => {
         const resizablePanelEl = target.querySelector(".o_resizable_panel");
         resizablePanelEl.style.setProperty("right", "100px");
         let resizablePabelRect = resizablePanelEl.getBoundingClientRect();
-        assert.strictEqual(resizablePabelRect.width, 22.5);
+        assert.strictEqual(resizablePabelRect.width, 30);
 
         const handle = resizablePanelEl.querySelector(".o_resizable_panel_handle");
         await triggerEvents(handle, null, [
