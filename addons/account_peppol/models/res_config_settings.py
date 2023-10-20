@@ -38,9 +38,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.is_account_peppol_participant', readonly=False,
         help='Register as a PEPPOL user',
     )
-    has_peppol_participant = fields.Boolean(
-        compute='_compute_has_peppol_participant'
-    )
     account_peppol_edi_mode = fields.Selection(
         selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
         compute='_compute_account_peppol_edi_mode',
@@ -116,14 +113,6 @@ class ResConfigSettings(models.TransientModel):
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
 
-    @api.depends('company_id.is_account_peppol_participant')
-    def _compute_has_peppol_participant(self):
-        number_of_peppol_participants = len(self.env['res.company'].sudo().search([
-            ('is_account_peppol_participant', '=', True)
-        ]))
-        for config in self:
-            config.has_peppol_participant = number_of_peppol_participants > 0
-
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -143,6 +132,8 @@ class ResConfigSettings(models.TransientModel):
 
         if not self.account_peppol_phone_number:
             raise ValidationError(_("Please enter a phone number to verify your application."))
+        if not self.account_peppol_contact_email:
+            raise ValidationError(_("Please enter a primary contact email to verify your application."))
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']

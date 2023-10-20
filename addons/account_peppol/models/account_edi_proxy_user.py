@@ -35,7 +35,6 @@ class AccountEdiProxyClientUser(models.Model):
             ):
                 self.company_id.write({
                     'account_peppol_proxy_state': 'not_registered',
-                    'is_account_peppol_participant': False,
                     'account_peppol_migration_key': False,
                 })
                 # commit the above changes before raising below
