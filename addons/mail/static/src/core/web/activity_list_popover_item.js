@@ -111,7 +111,7 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get dateDoneFormatted() {
-        return luxon.DateTime.fromISO(this.props.activity.dateDone).toLocaleString(
+        return luxon.DateTime.fromISO(this.props.activity.date_done).toLocaleString(
             luxon.DateTime.DATE_SHORT
         );
     }
