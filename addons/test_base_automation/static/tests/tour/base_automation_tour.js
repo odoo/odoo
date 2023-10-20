@@ -76,19 +76,24 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Set new action to update the record",
-            trigger: " .modal-content .o_form_renderer [name='state'] select",
-            run: 'text "object_write"',
+            trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
         },
         {
-            content: "Open update select",
+            content: "Focus on the 'update_path' field",
+            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+        },
+        {
+            content: "Input field name",
             trigger:
-                '.modal-content .o_form_renderer .o_field_widget[name="update_field_id"] input',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
             run: "text Job Position",
+            in_modal: false,
         },
         {
-            content: "Open update select",
+            content: "Select field",
+            in_modal: false,
             trigger:
-                '.modal-content .o_form_renderer div[name="update_field_id"] .dropdown-menu li a:contains(Job Position):not(:has(.fa-spin))',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="function"] button',
         },
         {
             content: "Open update select",
@@ -147,7 +152,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                         on_time_updated: "After last update",
                         on_create_or_write: "On save",
                         on_unlink: "On deletion",
-                        on_change: "On live update",
+                        on_change: "On UI change",
                         on_webhook: "On webhook",
                     })
                 );
@@ -158,20 +163,35 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: 'text "on_tag_set"',
         },
         {
+            trigger: '.o_form_renderer div[name="trg_field_ref"] input',
+            run: "text test",
+        },
+        {
+            trigger:
+                '.o_form_renderer div[name="trg_field_ref"] .dropdown-menu li a:contains(test):not(:has(.fa-spin))',
+        },
+        {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
         },
         {
-            trigger: " .modal-content .o_form_renderer [name='state'] select",
-            run: 'text "object_write"',
+            trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
         },
         {
+            content: "Focus on the 'update_path' field",
+            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+        },
+        {
+            content: "Input field name",
             trigger:
-                '.modal-content .o_form_renderer .o_field_widget[name="update_field_id"] input',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
             run: "text Name",
+            in_modal: false,
         },
         {
+            content: "Select field",
+            in_modal: false,
             trigger:
-                '.modal-content .o_form_renderer div[name="update_field_id"] .dropdown-menu li a:contains(Name):not(:has(.fa-spin))',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="name"] button',
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
@@ -184,17 +204,24 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
         },
         {
-            trigger: " .modal-content .o_form_renderer [name='state'] select",
-            run: 'text "object_write"',
+            trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
         },
         {
+            content: "Focus on the 'update_path' field",
+            trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+        },
+        {
+            content: "Input field name",
             trigger:
-                '.modal-content .o_form_renderer .o_field_widget[name="update_field_id"] input',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
             run: "text Priority",
+            in_modal: false,
         },
         {
+            content: "Select field",
+            in_modal: false,
             trigger:
-                '.modal-content .o_form_renderer div[name="update_field_id"] .dropdown-menu li a:contains(Priority):not(:has(.fa-spin))',
+                '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="priority"] button',
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="selection_value"] input',
@@ -221,7 +248,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                 );
                 assertEqual(
                     card.querySelector(".o_automation_actions").textContent,
-                    "Update Display NameUpdate Priority"
+                    "Update NameUpdate Priority"
                 );
             },
         },
@@ -335,7 +362,7 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
             async run() {
                 assertEqual(
                     document.querySelector("div[name='action_server_ids']").innerText,
-                    "Create User with name NameX"
+                    "Create Contact with name NameX"
                 );
                 assertEqual(document.querySelectorAll(".fa.fa-edit").length, 1);
             },
@@ -375,7 +402,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             async run() {
                 assertEqual(
                     this.$anchor[0].innerText,
-                    "Set Active To False 0\nSet Active To False 1\nSet Active To False 2"
+                    "Update Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)\nUpdate Active 2\nto\nNo (False)"
                 );
             },
         },
@@ -391,7 +418,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             async run() {
                 assertEqual(
                     this.$anchor[0].innerText,
-                    "Set Active To False 2\nSet Active To False 0\nSet Active To False 1"
+                    "Update Active 2\nto\nNo (False)\nUpdate Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)"
                 );
             },
         },
@@ -412,16 +439,14 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             },
         },
         {
-            trigger: ".modal-content .o_form_renderer [name='state'] select",
-            run: 'text "object_write"',
+            trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
         },
         {
-            trigger: ".modal-content .o_form_renderer [name='state'] select",
-            run: 'text "followers"',
+            trigger: ".modal-content .o_form_renderer [name='state'] span[value*='followers']",
         },
         {
             extra_trigger:
-                ".modal-content .o_form_renderer [name='state'] select:contains(Add Followers)",
+                ".modal-content .o_form_renderer [name='state'] span.active[value*='followers']",
             trigger: ".modal-content .o_form_button_cancel",
         },
         {
@@ -454,7 +479,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "User is set // Based on date fieldAfter creationAfter last update // On saveOn deletionOn live update // On webhook"
+                    "User is set // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
                 );
             },
         },
@@ -488,7 +513,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn live update // On webhook"
+                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
                 );
             },
         },

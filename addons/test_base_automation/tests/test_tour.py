@@ -87,20 +87,21 @@ class BaseAutomationTestUi(HttpCase):
             ('model_id', '=', project_model.id),
             ('name', '=', 'stage_id'),
         ])
-        self.env['test_base_automation.stage'].create({'name': 'Stage value'})
+        test_stage = self.env['test_base_automation.stage'].create({'name': 'Stage value'})
 
         automation = self.env["base.automation"].create({
             "name": "Test Stage",
             "trigger": "on_stage_set",
             "model_id": project_model.id,
             "trigger_field_ids": [stage_field.id],
+            "trg_field_ref": test_stage,
         })
 
         action = {
             "name": "Set Active To False",
             "base_automation_id": automation.id,
             "state": "object_write",
-            "update_field_id": self.env.ref("base.field_res_partner__active").id,
+            "update_path": "user_ids.active",
             "value": False,
             "model_id": project_model.id
         }
@@ -162,7 +163,7 @@ class BaseAutomationTestUi(HttpCase):
         })
 
         action = {
-            "name": "Create User with name NameX",
+            "name": "This name should not survive :)",
             "base_automation_id": automation.id,
             "state": "object_create",
             "value": "NameX",
@@ -192,7 +193,7 @@ class BaseAutomationTestUi(HttpCase):
             "name": "Set Active To False",
             "base_automation_id": automation.id,
             "state": "object_write",
-            "update_field_id": self.env.ref("base.field_res_partner__active").id,
+            "update_path": "active",
             "value": False,
             "model_id": model.id,
         }
@@ -214,11 +215,11 @@ class BaseAutomationTestUi(HttpCase):
             }
         )
         action = {
-            "name": "Set Active To False",
+            "name": "Update Active",
             "base_automation_id": automation.id,
             "state": "object_write",
-            "update_field_id": self.env.ref("base.field_res_partner__active").id,
-            "value": False,
+            "update_path": "active",
+            "update_boolean_value": "false",
             "model_id": model.id,
         }
         automation.write(
@@ -226,7 +227,7 @@ class BaseAutomationTestUi(HttpCase):
         )
         self.assertEqual(
             automation.action_server_ids.mapped("name"),
-            ["Set Active To False 0", "Set Active To False 1", "Set Active To False 2"],
+            ["Update Active 0", "Update Active 1", "Update Active 2"],
         )
 
         onchange_link_passes = 0
@@ -240,10 +241,10 @@ class BaseAutomationTestUi(HttpCase):
                 default_keys = {k: v for k, v in self_model._context.items() if k.startswith("default_")}
                 self.assertEqual(
                     default_keys,
-                    {"default_model_id": model.id, "default_state": False, "default_usage": "base_automation"},
+                    {"default_model_id": model.id, "default_usage": "base_automation"},
                 )
             if onchange_link_passes == 2:
-                self.assertEqual(res["value"]["name"], "Update False")
+                self.assertFalse(res["value"], "No change should be triggered here")
             if onchange_link_passes == 3:
                 self.assertEqual(res["value"]["name"], "Add followers: ")
 
@@ -261,7 +262,7 @@ class BaseAutomationTestUi(HttpCase):
         self.assertEqual(onchange_link_passes, 3)
         self.assertEqual(
             automation.action_server_ids.mapped("name"),
-            ["Set Active To False 2", "Set Active To False 0", "Set Active To False 1"],
+            ["Update Active 2", "Update Active 0", "Update Active 1"],
         )
 
     def test_form_view_model_id(self):

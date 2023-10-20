@@ -179,6 +179,7 @@
                                                                 <span invisible="evaluation_type != 'equation'">as</span>
                                                                 <field name="resource_ref" invisible="not (value_field_to_show == 'resource_ref' and evaluation_type == 'value')" />
                                                                 <field name="selection_value" invisible="not (value_field_to_show == 'selection_value' and evaluation_type == 'value')" class="d-inline"/>
+                                                                <field name="update_boolean_value" invisible="not (value_field_to_show == 'update_boolean_value' and evaluation_type == 'value')" class="d-inline"/>
                                                                 <em invisible="not (value_field_to_show == 'value' and evaluation_type == 'value')" t-out="record.value.raw_value" class="d-inline"/>
                                                                 <code invisible="not (evaluation_type == 'equation')" t-out="record.value.raw_value"/>
                                                             </t>
