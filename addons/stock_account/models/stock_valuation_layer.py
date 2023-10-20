@@ -28,16 +28,18 @@ class StockValuationLayer(models.Model):
     description = fields.Char('Description', readonly=True)
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True, index=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
+    #TODO : ids
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True, index="btree_not_null")
     account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
+    #TODO : update (multiple move_ids)
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
 
     def init(self):
         tools.create_index(
             self._cr, 'stock_valuation_layer_index',
-            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
+            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date'] #TODO
         )
 
     def _validate_accounting_entries(self):
@@ -47,9 +49,9 @@ class StockValuationLayer(models.Model):
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            move = svl.stock_move_id
+            move = svl.stock_move_id    #TODO : batch move
             if not move:
-                move = svl.stock_valuation_layer_id.stock_move_id
+                move = svl.stock_valuation_layer_id.stock_move_id #TODO : batch move
             am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
@@ -57,10 +59,12 @@ class StockValuationLayer(models.Model):
         for svl in self:
             # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
             if svl.company_id.anglo_saxon_accounting:
+                #TODO : for loop, batch
                 svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
 
     def _validate_analytic_accounting_entries(self):
         for svl in self:
+            #TODO : batch
             svl.stock_move_id._account_analytic_entry_move()
 
     def action_open_layer(self):
@@ -92,6 +96,7 @@ class StockValuationLayer(models.Model):
 
     def action_open_reference(self):
         self.ensure_one()
+        #TODO : move_ids + List view ?
         if self.stock_move_id:
             action = self.stock_move_id.action_open_reference()
             if action['res_model'] != 'stock.move':
@@ -120,7 +125,7 @@ class StockValuationLayer(models.Model):
                 continue
             candidate_quantity = abs(candidate.quantity)
             returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity_done, self.uom_id)
-                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done'])
+                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done']) #TODO : Batch move_ids ???
             candidate_quantity -= returned_qty
             if float_is_zero(candidate_quantity, precision_rounding=rounding):
                 continue
@@ -159,7 +164,7 @@ class StockValuationLayer(models.Model):
                 continue
             relevant_qty = abs(svl.quantity)
             returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity_done, self.uom_id)
-                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done'])
+                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done'])  #TODO: batch
             relevant_qty -= returned_qty
             if float_is_zero(relevant_qty, precision_rounding=rounding):
                 continue
