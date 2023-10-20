@@ -8,6 +8,7 @@ import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { PivotDataSource } from "../pivot_data_source";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { pivotTimeAdapter } from "../pivot_time_adapters";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -57,6 +58,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         "getFirstPivotFunction",
         "getPivotComputedDomain",
         "computeOdooPivotHeaderValue",
+        "getPivotFieldFormat",
         "getPivotIdFromPosition",
         "getPivotCellValue",
         "getPivotGroupByValues",
@@ -321,6 +323,12 @@ export class PivotUIPlugin extends OdooUIPlugin {
         return dataSource.computeOdooPivotHeaderValue(domainArgs);
     }
 
+    getPivotFieldFormat(pivotId, fieldName) {
+        const dataSource = this.getPivotDataSource(pivotId);
+        const { field, aggregateOperator } = dataSource.parseGroupField(fieldName);
+        return this._getFieldFormat(field, aggregateOperator);
+    }
+
     /**
      * Get the value for a pivot cell
      *
@@ -446,6 +454,29 @@ export class PivotUIPlugin extends OdooUIPlugin {
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
+
+    /**
+     * @param {import("../../data_sources/metadata_repository").Field} field
+     * @param {"day" | "week" | "month" | "quarter" | "year"} aggregateOperator
+     * @returns {string | undefined}
+     */
+    _getFieldFormat(field, aggregateOperator) {
+        switch (field.type) {
+            case "integer":
+                return "0";
+            case "float":
+                return "#,##0.00";
+            case "monetary":
+                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
+            case "date":
+            case "datetime": {
+                const timeAdapter = pivotTimeAdapter(aggregateOperator);
+                return timeAdapter.getFormat(this.getters.getLocale());
+            }
+            default:
+                return undefined;
+        }
+    }
 
     /**
      * Refresh the cache of a pivot
