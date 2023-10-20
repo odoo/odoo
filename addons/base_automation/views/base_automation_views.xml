@@ -105,8 +105,9 @@
                                 <div invisible="trigger != 'on_webhook'">
                                     <field name="record_getter" string="Target Record"/>
                                     <div>
-                                        <span colspan="2" class="text-muted"> Available variables: </span>
-                                        <ul colspan="2" class="text-muted">
+                                        <div  class="text-muted"><i class="fa fa-info-circle"/> The default target record getter will work out-of-the-box for any webhook coming from another Odoo instance.</div>
+                                        <span class="text-muted"> Available variables: </span>
+                                        <ul class="text-muted">
                                             <li><code>env</code>: environment on which the action is triggered</li>
                                             <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
                                             <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
@@ -156,6 +157,7 @@
                                                                 'remove_followers': 'fa-user-times',
                                                                 'next_activity': 'fa-clock-o',
                                                                 'sms': 'fa-comments-o',
+                                                                'webhook': 'fa-paper-plane',
                                                             }[record.state.raw_value]"
                                                         />
                                                         <field name="name" class="text-truncate" />
