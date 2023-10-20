@@ -48,6 +48,9 @@ function parseGroupField(allFields, groupFieldString) {
         fieldName = groupFieldString.slice(0, index);
         aggregateOperator = groupFieldString.slice(index + 1);
     }
+    if (!fieldName.startsWith) {
+        debugger;
+    }
     const isPositional = fieldName.startsWith("#");
     fieldName = isPositional ? fieldName.substring(1) : fieldName;
     const field = allFields[fieldName];
@@ -293,6 +296,42 @@ export class SpreadsheetPivotModel extends PivotModel {
     }
 
     /**
+     * Get the cell value for the given field-value
+     *
+     * @param {string} fieldName Name of the field
+     * @param {string} valueString Value of the group by
+     * @returns {string | number}
+     */
+    getPivotHeaderValue(fieldName, valueString, locale = DEFAULT_LOCALE) {
+        if (valueString === NO_RECORD_AT_THIS_POSITION) {
+            return "";
+        }
+        if (fieldName === "measure") {
+            // the value is actually the measure field name
+            return this.getMeasureDisplayName(valueString);
+        }
+        const { field, aggregateOperator } = this.parseGroupField(fieldName);
+        const value = toNormalizedPivotValue(field, valueString, aggregateOperator);
+        if (this._isDateField(field)) {
+            const adapter = pivotTimeAdapter(aggregateOperator);
+            return adapter.toValue(value, locale);
+        }
+        return this.getGroupByDisplayLabel(fieldName, valueString, locale);
+    }
+
+    /**
+     * @param {string} measure
+     * @returns {string}
+     */
+    getMeasureDisplayName(measure) {
+        if (measure === "__count") {
+            return _t("Count");
+        }
+        // TODO useless parsing
+        return this.parseGroupField(measure).field.string;
+    }
+
+    /**
      * Get the label the given field-value
      *
      * @param {string} groupFieldString Name of the field
@@ -304,20 +343,17 @@ export class SpreadsheetPivotModel extends PivotModel {
             return "";
         }
         if (groupFieldString === "measure") {
-            if (groupValueString === "__count") {
-                return _t("Count");
-            }
             // the value is actually the measure field name
-            return this.parseGroupField(groupValueString).field.string;
+            return this.getMeasureDisplayName(groupValueString);
         }
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
         if (this._isDateField(field)) {
-            // TODO include this parsing to the pivot time adapters and extend it to other time periods
-            if (value && aggregateOperator === "day") {
-                return toNumber(value, DEFAULT_LOCALE);
-            }
+            // // TODO include this parsing to the pivot time adapters and extend it to other time periods
+            // if (value && aggregateOperator === "day") {
+            //     return toNumber(value, DEFAULT_LOCALE);
+            // }
             const adapter = pivotTimeAdapter(aggregateOperator);
             return adapter.format(value, locale);
         }
@@ -340,14 +376,20 @@ export class SpreadsheetPivotModel extends PivotModel {
      *
      * @param {string[]} domain Domain of the formula
      */
-    getPivotHeaderValue(domain) {
+    getPivotHeaderValueFIIIII(domain) {
+        console.log("getPivotHeaderValueFIIIII", domain);
         const groupFieldString = domain[domain.length - 2];
         if (groupFieldString.startsWith("#")) {
             const { field } = this.parseGroupField(groupFieldString);
             const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
+            console.log(
+                "getPivotHeaderValueFIIIII",
+                this._isCol(field) ? cols[cols.length - 1] : rows[rows.length - 1]
+            );
             return this._isCol(field) ? cols[cols.length - 1] : rows[rows.length - 1];
         }
         const groupValueString = domain[domain.length - 1];
+        console.log("getPivotHeaderValueFIIIII", groupValueString);
         return groupValueString;
     }
 
@@ -357,9 +399,11 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @param {string[]} domain Domain of the formula
      * @returns {string}
      */
-    getDisplayedPivotHeaderValue(domain) {
-        const groupFieldString = domain[domain.length - 2];
-        return this.getGroupByDisplayLabel(groupFieldString, this.getPivotHeaderValue(domain));
+    getDisplayedPivotHeaderValue(fieldName, valueString) {
+        return this.getGroupByDisplayLabel(
+            fieldName,
+            this.getPivotHeaderValue(fieldName, valueString)
+        );
     }
 
     //--------------------------------------------------------------------------

@@ -146,6 +146,17 @@ export class PivotDataSource extends OdooViewsDataSource {
 
     /**
      * @param {string} fieldName
+     * @param {string} value raw string value
+     * @param {object} locale
+     * @returns {string | number}
+     */
+    getPivotHeaderValue(fieldName, value, locale) {
+        this._assertDataIsLoaded();
+        return this._model.getPivotHeaderValue(fieldName, value, locale);
+    }
+
+    /**
+     * @param {string} fieldName
      * @returns {string}
      */
     getFormattedGroupBy(fieldName) {
