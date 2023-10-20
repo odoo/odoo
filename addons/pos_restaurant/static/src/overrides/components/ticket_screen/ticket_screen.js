@@ -57,12 +57,6 @@ patch(TicketScreen.prototype, {
             ? Boolean(this.pos.table)
             : super.allowNewOrders;
     },
-    _getOrderList() {
-        if (this.pos.table) {
-            return this.pos.getTableOrders(this.pos.table.id);
-        }
-        return super._getOrderList(...arguments);
-    },
     async settleTips() {
         // set tip in each order
         for (const order of this.getFilteredOrderList()) {

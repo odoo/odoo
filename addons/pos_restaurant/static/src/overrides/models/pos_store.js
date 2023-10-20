@@ -229,6 +229,15 @@ patch(PosStore.prototype, {
         }
         return super._createOrder(...arguments);
     },
+    getDefaultSearchDetails() {
+        if (this.table && this.table.id) {
+            return {
+                fieldName: "TABLE",
+                searchTerm: this.table.name,
+            };
+        }
+        return super.getDefaultSearchDetails();
+    },
     loadRestaurantFloor() {
         // we do this in the front end due to the circular/recursive reference needed
         // Ignore floorplan features if no floor specified.

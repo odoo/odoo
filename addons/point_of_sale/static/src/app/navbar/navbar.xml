@@ -27,7 +27,7 @@
                                 <li class="ticket-button" t-on-click="onTicketButtonClick">
                                     <a class="dropdown-item with-badge py-2">
                                         Orders
-                                        <span class="badge text-bg-info rounded-pill py-1 ms-2" t-esc="orderCount"/>
+                                        <span t-if="orderCount>0" class="badge text-bg-info rounded-pill py-1 ms-2" t-esc="orderCount"/>
                                     </a>
                                 </li>
                                 <li t-if="showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
