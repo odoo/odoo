@@ -44,19 +44,19 @@ class IrActionsReport(models.Model):
             streams_to_append = {}
             if qr_inv_ids:
                 qr_res = self._render_qweb_pdf_prepare_streams(
-                    'l10n_ch.l10n_ch_qr_report',
+                    'l10n_ch_account.l10n_ch_qr_report',
                     {
                         **data,
                         'skip_headers': False,
                     },
                     res_ids=qr_inv_ids,
                 )
-                header = self.env.ref('l10n_ch.l10n_ch_qr_header', raise_if_not_found=False)
+                header = self.env.ref('l10n_ch_account.l10n_ch_qr_header', raise_if_not_found=False)
                 if header:
                     # Make a separated rendering to get the a page containing the company header. Then, merge the qr bill with it.
 
                     header_res = self._render_qweb_pdf_prepare_streams(
-                        'l10n_ch.l10n_ch_qr_header',
+                        'l10n_ch_account.l10n_ch_qr_header',
                         {
                             **data,
                             'skip_headers': True,

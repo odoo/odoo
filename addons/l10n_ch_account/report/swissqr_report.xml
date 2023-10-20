@@ -18,18 +18,18 @@
             <field name="name">QR-bill</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">l10n_ch.qr_report_main</field>
-            <field name="report_file">l10n_ch.qr_report_main</field>
+            <field name="report_name">l10n_ch_account.qr_report_main</field>
+            <field name="report_file">l10n_ch_account.qr_report_main</field>
             <field name="print_report_name">'QR-bill-%s' % object.name</field>
-            <field name="paperformat_id" ref="l10n_ch.paperformat_euro_no_margin"/>
+            <field name="paperformat_id" ref="l10n_ch_account.paperformat_euro_no_margin"/>
         </record>
 
         <record id="l10n_ch_qr_header" model="ir.actions.report">
             <field name="name">QR-bill Header</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">l10n_ch.qr_report_header</field>
-            <field name="report_file">l10n_ch.qr_report_header</field>
+            <field name="report_name">l10n_ch_account.qr_report_header</field>
+            <field name="report_file">l10n_ch_account.qr_report_header</field>
         </record>
 
         <template id="l10n_ch_header_template">
@@ -234,21 +234,21 @@
             </div>
         </template>
 
-        <template id="l10n_ch.qr_report_main">
+        <template id="l10n_ch_account.qr_report_main">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.partner_id.lang"/>
-                    <t t-call="l10n_ch.l10n_ch_swissqr_template" t-lang="lang"/>
+                    <t t-call="l10n_ch_account.l10n_ch_swissqr_template" t-lang="lang"/>
                 </t>
             </t>
         </template>
 
-        <template id="l10n_ch.qr_report_header">
+        <template id="l10n_ch_account.qr_report_header">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="invoice">
                     <t t-set="o" t-value="invoice"/>
                     <t t-set="lang" t-value="o.partner_id.lang"/>
-                    <t t-call="l10n_ch.l10n_ch_header_template" t-lang="lang"/>
+                    <t t-call="l10n_ch_account.l10n_ch_header_template" t-lang="lang"/>
                 </t>
             </t>
         </template>

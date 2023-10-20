@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="partner_demo_company_ch" model="res.partner">
-        <field name="name">CH Company</field>
+        <field name="name">My Swiss Company</field>
         <field name="vat">CHE-530781296TVA</field>
         <field name="street">14 Meierskappelerstrasse</field>
         <field name="city">Risch-Rotkreuz</field>
@@ -21,7 +21,7 @@
     </record>
 
     <record id="demo_company_ch" model="res.company">
-        <field name="name">CH Company</field>
+        <field name="name">My Swiss Company</field>
         <field name="partner_id" ref="partner_demo_company_ch"/>
     </record>
 
@@ -31,12 +31,6 @@
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_ch.demo_company_ch'))]}"/>
-    </function>
-
-    <function model="account.chart.template" name="try_loading">
-        <value eval="[]"/>
-        <value>ch</value>
-        <value model="res.company" eval="obj().env.ref('l10n_ch.demo_company_ch')"/>
+        <value eval="{'company_ids': [(4, ref('l10n_ch.demo_company_ch'))], 'tz': 'Europe/Zurich'}"/>
     </function>
 </odoo>
