@@ -129,9 +129,7 @@ class TestEmailParsing(TestMailCommon):
             email_to='bounce@xxx.odoo.com',
             delivered_to='bounce@xxx.odoo.com'
         )
-
-        msg_dict = {}
-        msg = self.env['mail.thread']._message_parse_extract_bounce(self.from_string(incoming_bounce), msg_dict)
+        msg = self.env['mail.thread'].message_parse(self.from_string(incoming_bounce))
         self.assertEqual(msg['bounced_email'], partner.email, "The sender email should be correctly parsed")
         self.assertEqual(msg['bounced_partner'], partner, "A partner with this email should exist")
         self.assertEqual(msg['bounced_msg_id'][0], message.message_id, "The sender message-id should correctly parsed")
