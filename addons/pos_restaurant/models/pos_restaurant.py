@@ -23,14 +23,13 @@ class RestaurantFloor(models.Model):
     def _unlink_except_active_pos_session(self):
         confs = self.mapped('pos_config_ids').filtered(lambda c: c.module_pos_restaurant)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
-        if opened_session:
+        if opened_session and confs:
             error_msg = _("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
             for floor in self:
                 for session in opened_session:
                     if floor in session.config_id.floor_ids:
-                        error_msg += _("Floor: %s - PoS Config: %s \n") % (floor.name, session.config_id.name)
-            if confs:
-                raise UserError(error_msg)
+                        error_msg += _("Floor: %s - PoS Config: %s \n", floor.name, session.config_id.name)
+            raise UserError(error_msg)
 
     def write(self, vals):
         for floor in self:

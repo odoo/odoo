@@ -306,7 +306,7 @@ class FleetVehicle(models.Model):
                     vehicle.activity_schedule(
                         'mail.mail_activity_data_todo',
                         user_id=vehicle.manager_id.id or self.env.user.id,
-                        note=_('Specify the End date of %s') % vehicle.driver_id.name)
+                        note=_('Specify the End date of %s', vehicle.driver_id.name))
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)

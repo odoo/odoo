@@ -76,7 +76,7 @@ class ProjectTaskType(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         if not default.get('name'):
-            default['name'] = _("%s (copy)") % (self.name)
+            default['name'] = _("%s (copy)", self.name)
         return super().copy(default)
 
     def toggle_active(self):

@@ -210,7 +210,7 @@ class DeliveryCarrier(models.Model):
             # free when order is large enough
             amount_without_delivery = order._compute_amount_total_without_delivery()
             if res['success'] and self.free_over and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount:
-                res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
+                res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.', self.amount)
                 res['price'] = 0.0
             return res
 

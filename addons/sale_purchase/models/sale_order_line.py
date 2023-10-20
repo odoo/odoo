@@ -217,7 +217,7 @@ class SaleOrderLine(models.Model):
         # determine vendor of the order (take the first matching company and product)
         suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom)
         if warning and not suppliers:
-            raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (self.product_id.display_name,))
+            raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]
 
     def _purchase_service_match_purchase_order(self, partner, company=False):

@@ -146,9 +146,10 @@ class AccountJournal(models.Model):
             lambda j: j.l10n_ar_is_pos and j.type == 'purchase' and
             j.l10n_ar_afip_pos_system not in ['II_IM', 'RLI_RLM', 'RAW_MAW'])
         if journals:
-            raise ValidationError("\n".join([_(
-                "The pos system %s can not be used on a purchase journal (id %s)"
-                ) % (x.l10n_ar_afip_pos_system, x.id) for x in journals]))
+            raise ValidationError("\n".join(
+                _("The pos system %s can not be used on a purchase journal (id %s)", x.l10n_ar_afip_pos_system, x.id)
+                for x in journals
+            ))
 
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):

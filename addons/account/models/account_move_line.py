@@ -1195,7 +1195,7 @@ class AccountMoveLine(models.Model):
             journal = line.move_id.journal_id
 
             if account.deprecated:
-                raise UserError(_('The account %s (%s) is deprecated.') % (account.name, account.code))
+                raise UserError(_('The account %s (%s) is deprecated.', account.name, account.code))
 
             account_currency = account.currency_id
             if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
@@ -1256,15 +1256,15 @@ class AccountMoveLine(models.Model):
             move = line.move_id
             if move.company_id.max_tax_lock_date and move.date <= move.company_id.max_tax_lock_date and line._affect_tax_report():
                 raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
-                                  "Please change the journal entry date or the tax lock date set in the settings (%s) to proceed.")
-                                % format_date(self.env, move.company_id.max_tax_lock_date))
+                                  "Please change the journal entry date or the tax lock date set in the settings (%s) to proceed.",
+                                  format_date(self.env, move.company_id.max_tax_lock_date)))
 
     def _check_reconciliation(self):
         for line in self:
             if line.matched_debit_ids or line.matched_credit_ids:
                 raise UserError(_("You cannot do this modification on a reconciled journal entry. "
                                   "You can just change some non legal fields or you must unreconcile first.\n"
-                                  "Journal Entry (id): %s (%s)") % (line.move_id.name, line.move_id.id))
+                                  "Journal Entry (id): %s (%s)", line.move_id.name, line.move_id.id))
 
     @api.constrains('tax_ids', 'tax_repartition_line_id')
     def _check_caba_non_caba_shared_tags(self):

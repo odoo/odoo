@@ -88,19 +88,19 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             if not partner.vat and not partner.company_registry:
                 constraints[f"ciusro_{partner_type}_tax_identifier_required"] = _(
                     "The following partner doesn't have a VAT nor Company ID: %s. "
-                    "At least one of them is required. "
-                ) % partner.name
+                    "At least one of them is required. ",
+                    partner.name)
 
             if partner.vat and not partner.vat.startswith(partner.country_code):
                 constraints[f"ciusro_{partner_type}_country_code_vat_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their VAT: %s. "
-                ) % partner.name
+                    "The following partner's doesn't have a country code prefix in their VAT: %s.",
+                    partner.name)
 
             if (not partner.vat and partner.company_registry
                     and not partner.company_registry.startswith(partner.country_code)):
                 constraints[f"ciusro_{partner_type}_country_code_company_registry_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their Company ID: %s. "
-                ) % partner.name
+                    "The following partner's doesn't have a country code prefix in their Company ID: %s.",
+                    partner.name)
 
             if (partner.country_code == 'RO'
                     and partner.state_id
@@ -109,7 +109,7 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
                     "The following partner's city name is invalid: %s. "
                     "If partner's state is București, the city name must be 'SECTORX', "
-                    "where X is a number between 1-6. "
-                ) % partner.name
+                    "where X is a number between 1-6.",
+                    partner.name)
 
         return constraints

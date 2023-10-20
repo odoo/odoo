@@ -680,8 +680,8 @@ class AccountBankStatementLine(models.Model):
                     raise UserError(_(
                         "The journal entry %s reached an invalid state regarding its related statement line.\n"
                         "To be consistent, the journal entry must always have exactly one journal item involving the "
-                        "bank/cash account."
-                    ) % st_line.move_id.display_name)
+                        "bank/cash account.",
+                        st_line.move_id.display_name))
 
                 st_line_vals_to_write.update({
                     'payment_ref': liquidity_lines.name,

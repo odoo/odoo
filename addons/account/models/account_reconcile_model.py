@@ -33,7 +33,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
                     current_regex = record.narration_regex
                     re.compile(record.narration_regex)
             except re.error:
-                raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s") % current_regex)
+                raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s", current_regex))
 
 
 class AccountReconcileModelLine(models.Model):

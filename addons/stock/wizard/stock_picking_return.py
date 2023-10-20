@@ -117,7 +117,7 @@ class ReturnPicking(models.TransientModel):
             'picking_type_id': self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id,
             'state': 'draft',
             'return_id': self.picking_id.id,
-            'origin': _("Return of %s") % self.picking_id.name,
+            'origin': _("Return of %s", self.picking_id.name),
         }
         # TestPickShip.test_mto_moves_return, TestPickShip.test_mto_moves_return_extra,
         # TestPickShip.test_pick_pack_ship_return, TestPickShip.test_pick_ship_return, TestPickShip.test_return_lot

@@ -38,11 +38,11 @@ class PosPaymentMethod(models.Model):
                                                   limit=1)
             if existing_payment_method:
                 if existing_payment_method.company_id == payment_method.company_id:
-                    raise ValidationError(_('Terminal %s is already used on payment method %s.')
-                                      % (payment_method.adyen_terminal_identifier, existing_payment_method.display_name))
+                    raise ValidationError(_('Terminal %s is already used on payment method %s.',
+                                      payment_method.adyen_terminal_identifier, existing_payment_method.display_name))
                 else:
-                    raise ValidationError(_('Terminal %s is already used in company %s on payment method %s.')
-                                          % (payment_method.adyen_terminal_identifier,
+                    raise ValidationError(_('Terminal %s is already used in company %s on payment method %s.',
+                                             payment_method.adyen_terminal_identifier,
                                              existing_payment_method.company_id.name,
                                              existing_payment_method.display_name))
 
@@ -52,7 +52,7 @@ class PosPaymentMethod(models.Model):
         }
 
     def _is_write_forbidden(self, fields):
-        whitelisted_fields = set(('adyen_latest_response', 'adyen_latest_diagnosis'))
+        whitelisted_fields = {'adyen_latest_response', 'adyen_latest_diagnosis'}
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
     def _adyen_diagnosis_request_data(self, pos_config_name):

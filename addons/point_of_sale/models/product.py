@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
             if not product.available_in_pos:
                 combo_name = self.env['pos.combo.line'].search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
-                    raise UserError(_('You must first remove this product from the %s combo') % combo_name)
+                    raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'

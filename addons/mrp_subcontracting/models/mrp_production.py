@@ -63,10 +63,10 @@ class MrpProduction(models.Model):
         if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
         if self.product_tracking != 'none' and not self.lot_producing_id:
-            raise UserError(_('You must enter a serial number for %s') % self.product_id.name)
+            raise UserError(_('You must enter a serial number for %s', self.product_id.name))
         for sml in self.move_raw_ids.move_line_ids:
             if sml.tracking != 'none' and not sml.lot_id:
-                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.display_name)
+                raise UserError(_('You must enter a serial number for each line of %s', sml.product_id.display_name))
         if self.move_raw_ids and not any(self.move_raw_ids.mapped('quantity_done')):
             raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
         consumption_issues = self._get_consumption_issues()

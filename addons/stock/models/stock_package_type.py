@@ -45,5 +45,5 @@ class PackageType(models.Model):
 
     def copy(self, default=None):
         default = dict(default or {})
-        default.update(name=_("%s (copy)") % self.name)
+        default['name'] = _("%s (copy)", self.name)
         return super().copy(default)

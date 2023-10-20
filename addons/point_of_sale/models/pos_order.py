@@ -102,7 +102,7 @@ class PosOrder(models.Model):
         _logger.warning('attempting to create recovery session for saving order %s', order['name'])
         new_session = PosSession.create({
             'config_id': closed_session.config_id.id,
-            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+            'name': _('(RESCUE FOR %(session)s)', session=closed_session.name),
             'rescue': True,  # avoid conflict with live sessions
         })
         # bypass opening_control (necessary when using cash control)

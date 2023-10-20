@@ -35,6 +35,6 @@ class DecimalPrecision(models.Model):
                     "You are setting a Decimal Accuracy less precise than the UOMs:\n"
                     "%s\n"
                     "This may cause inconsistencies in computations.\n"
-                    "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
-                 ) % ('\n'.join(uom_descriptions)),
+                    "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy.",
+                    '\n'.join(uom_descriptions)),
             }}

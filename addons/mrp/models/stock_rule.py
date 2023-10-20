@@ -7,7 +7,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
-from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import float_compare, OrderedSet
 
 
@@ -19,13 +18,11 @@ class StockRule(models.Model):
 
     def _get_message_dict(self):
         message_dict = super(StockRule, self)._get_message_dict()
-        source, destination, operation = self._get_message_values()
-        manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.') % (destination)
+        source, destination, __ = self._get_message_values()
+        manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.', destination)
         if self.location_src_id:
-            manufacture_message += _(' <br/><br/> The components will be taken from <b>%s</b>.') % (source)
-        message_dict.update({
-            'manufacture': manufacture_message
-        })
+            manufacture_message += _(' <br/><br/> The components will be taken from <b>%s</b>.', source)
+        message_dict['manufacture'] = manufacture_message
         return message_dict
 
     @api.depends('action')

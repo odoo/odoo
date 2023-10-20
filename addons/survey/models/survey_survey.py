@@ -438,7 +438,7 @@ class Survey(models.Model):
         return clone
 
     def copy_data(self, default=None):
-        new_defaults = {'title': _("%s (copy)") % (self.title)}
+        new_defaults = {'title': _("%s (copy)", self.title)}
         default = dict(new_defaults, **(default or {}))
         return super(Survey, self).copy_data(default)
 

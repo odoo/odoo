@@ -220,16 +220,18 @@ class Location(models.Model):
                 for location in self:
                     warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)])
                     if warehouses:
-                        raise UserError(_("You cannot archive the location %s as it is"
-                        " used by your warehouse %s") % (location.display_name, warehouses[0].display_name))
+                        raise UserError(_(
+                            "You cannot archive the location %s as it is used by your warehouse %s",
+                            location.display_name, warehouses[0].display_name))
 
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
                 children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
                 if children_quants and values['active'] == False:
-                    raise UserError(_('You still have some product in locations %s') %
-                        (', '.join(children_quants.mapped('location_id.display_name'))))
+                    raise UserError(_(
+                        'You still have some product in locations %s'
+                        ', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
@@ -249,7 +251,7 @@ class Location(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         if 'name' not in default:
-            default['name'] = _("%s (copy)") % self.name
+            default['name'] = _("%s (copy)", self.name)
         return super().copy(default=default)
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):

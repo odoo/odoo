@@ -653,7 +653,7 @@ class HolidaysAllocation(models.Model):
     def _unlink_if_correct_states(self):
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         for allocation in self.filtered(lambda allocation: allocation.state not in ['confirm', 'refuse']):
-            raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(allocation.state),))
+            raise UserError(_('You cannot delete an allocation request which is in %s state.', state_description_values.get(allocation.state)))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_leaves(self):

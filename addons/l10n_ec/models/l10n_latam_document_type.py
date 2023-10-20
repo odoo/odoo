@@ -32,9 +32,9 @@ class L10nLatamDocumentType(models.Model):
                 # Fill each number group with zeroes (3, 3 and 9 respectively)
                 document_number = "-".join([n.zfill(3 if i < 2 else 9) for i, n in enumerate(num_match.groups())])
             else:
-                raise UserError(
-                    _(u"Ecuadorian Document %s must be like 001-001-123456789")
-                    % (self.display_name)
-                )
+                raise UserError(_(
+                    "Ecuadorian Document %s must be like 001-001-123456789",
+                    self.display_name
+                ))
 
         return document_number
