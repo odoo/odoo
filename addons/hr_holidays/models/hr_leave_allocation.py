@@ -117,7 +117,7 @@ class HolidaysAllocation(models.Model):
     category_id = fields.Many2one(
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False)
     # accrual configuration
-    lastcall = fields.Date("Date of the last accrual allocation", readonly=True, default=fields.Date.context_today)
+    lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
     allocation_type = fields.Selection([
@@ -607,6 +607,20 @@ class HolidaysAllocation(models.Model):
                 target,
             )
 
+    def _add_lastcalls(self):
+        for allocation in self:
+            if allocation.allocation_type != 'accrual' or allocation.lastcall:
+                continue
+            today = fields.Date.today()
+            current_level = allocation._get_current_accrual_plan_level_id(today)[0]
+            if not current_level:
+                allocation.lastcall = today
+                continue
+            allocation.lastcall = max(
+                current_level._get_previous_date(today),
+                allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
+            )
+
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
@@ -621,9 +635,8 @@ class HolidaysAllocation(models.Model):
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-            if 'lastcall' not in values:
-                values['lastcall'] = fields.Date.today()
         allocations = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        allocations._add_lastcalls()
         for allocation in allocations:
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
