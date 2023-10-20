@@ -40,11 +40,8 @@ class AutoCompleteWithSources extends Component {
         ];
     }
 
-    addNames(nameGets) {
-        const displayNames = {};
-        for (const [id, label] of nameGets) {
-            displayNames[id] = label.split("\n")[0];
-        }
+    addNames(options) {
+        const displayNames = Object.fromEntries(options);
         this.nameService.addDisplayNames(this.props.resModel, displayNames);
     }
 
@@ -58,8 +55,8 @@ class AutoCompleteWithSources extends Component {
         }
         this.lastProm = this.search(name, SEARCH_LIMIT + 1);
         const nameGets = await this.lastProm;
-        this.addNames(nameGets);
-        const options = nameGets.map(([value, label]) => ({ value, label: label.split("\n")[0] }));
+        const options = nameGets.map(([value, label]) => ({value, label: label ? label.split("\n")[0] : _t("Unnamed")}));
+        this.addNames(options);
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({
                 label: _t("Search More..."),
