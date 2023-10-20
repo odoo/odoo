@@ -86,7 +86,8 @@ class BaseAutomation(models.Model):
     )
     url = fields.Char(compute='_compute_url')
     webhook_uuid = fields.Char(string="Webhook UUID", readonly=True, copy=False, default=lambda self: str(uuid4()))
-    record_getter = fields.Char(help="This code will be run to find on which record the automation rule should be run.\nExample: model.browse(payload.get('recordId')))")
+    record_getter = fields.Char(default="env[payload.get('_model')].browse(payload.get('id'))",
+                                help="This code will be run to find on which record the automation rule should be run.")
     log_webhook_calls = fields.Boolean(string="Log Calls", default=False)
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
 
