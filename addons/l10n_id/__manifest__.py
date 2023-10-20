@@ -1,25 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Indonesian - Accounting',
+    'name': 'Indonesia - Demo Data',
+    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['id'],
-    'version': '1.0',
-    'category': 'Accounting/Localizations/Account Charts',
+    'category': 'Localization/Demo Data',
     'description': """
-This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:
-=================================================================================================
-    - generic Indonesian chart of accounts
-    - tax structure""",
-    'author': 'vitraining.com',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/indonesia.html',
-    'depends': [
-        'account',
-        'base_iban',
-        'base_vat',
-    ],
-    'data': [
-        'data/account_tax_template_data.xml',
-    ],
+This is the base module to create demonstration data for the Indonesian localization in Odoo.
+=============================================================================================
+    """,
+    'depends': ['base'],
     'demo': [
         'demo/demo_company.xml',
     ],

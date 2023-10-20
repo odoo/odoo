@@ -30,7 +30,7 @@ the replaced invoice and the new one and you can reset an invoice
 you have not already sent to the government to reuse its number.
     """,
     'category': 'Accounting/Localizations/EDI',
-    'depends': ['l10n_id'],
+    'depends': ['l10n_id_account'],
     'data': [
             'security/ir.model.access.csv',
             'views/account_move_views.xml',
