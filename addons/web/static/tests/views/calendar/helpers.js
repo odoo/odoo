@@ -298,7 +298,7 @@ export function findDateCell(target, date) {
 }
 
 export function findEvent(target, eventId) {
-    return target.querySelector(`.o_event[data-event-id="${eventId}"]`);
+    return target.querySelector(`.fc_event[data-event-id="${eventId}"]`);
 }
 
 function findDateCol(target, date) {

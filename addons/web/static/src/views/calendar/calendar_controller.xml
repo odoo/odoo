@@ -13,44 +13,45 @@
                 <t t-set-slot="layout-actions">
                     <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
                 </t>
-                <t t-set-slot="control-panel-additional-breadcrums">
-                    <span class="currentDate"><t t-out="currentDate"/></span>
-                </t>
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <div class="o_calendar_container">
-                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
-                    <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
-                        <div class="d-flex justify-content-between">
+                <div class="o_calendar_container d-flex d-lg-grid flex-column h-100 bg-view">
+                    <div class="o_calendar_header d-flex align-items-center gap-1 p-2 border-bottom">
+                        <div class="o_calendar_navigation_buttons btn-group">
                             <button
-                                class="btn btn-secondary me-1 o_calendar_button_today"
-                                t-on-click.stop="() => this.setDate('today')"
-                            >
-                                Today
-                            </button>
-                            <div class="o_calendar_navigation_buttons btn-group">
-                                <button
-                                    class="o_calendar_button_prev btn btn-secondary btn-sm d-none d-md-block"
-                                    title="Previous"
-                                    aria-label="Previous"
-                                    t-on-click.stop="() => this.setDate('previous')"
-                                ><i class="oi oi-arrow-left"/></button>
-                                <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility" />
-                                <button
-                                    class="o_calendar_button_next btn btn-secondary btn-sm d-none d-md-block"
-                                    title="Next"
-                                    aria-label="Next"
-                                    t-on-click.stop="() => this.setDate('next')"
-                                ><i class="oi oi-arrow-right"/></button>
-                            </div>
+                                class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
+                                title="Previous"
+                                aria-label="Previous"
+                                t-on-click.stop="() => this.setDate('previous')"
+                            ><i class="oi oi-arrow-left"/></button>
+                            <button
+                                class="o_calendar_button_next btn btn-secondary d-none d-md-block"
+                                title="Next"
+                                aria-label="Next"
+                                t-on-click.stop="() => this.setDate('next')"
+                            ><i class="oi oi-arrow-right"/></button>
                         </div>
+                        <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="weekends" setScale.bind="setScale"/>
+                        <button
+                            class="btn btn-secondary o_calendar_button_today order-3 order-lg-0"
+                            t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
+                            t-on-click.stop="() => this.setDate('today')"
+                        >   <span t-if="env.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"></i></span>
+                            <t t-else="">Today</t>
+                        </button>
+                        <!-- [TODO] -->
+                        <h5 class="d-inline-flex mb-0">October 2023 <span class="badge bg-100 rounded px-1 ms-1">Week 40</span></h5>
+                        <button class="btn btn-light d-none d-lg-block oi oi-panel-right ms-auto collapsed" data-bs-target=".o_calendar_sidebar_container" data-bs-toggle="collapse" aria-expanded="true"/>
+                    </div>
+                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+                    <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container col-auto collapse-horizontal collapse show overflow-x-hidden overflow-y-auto">
                         <div class="o_calendar_sidebar">
                             <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                             <FilterPanel t-props="filterPanelProps" />
                         </div>
                     </div>
-                    <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
                 </div>
             </Layout>
         </div>

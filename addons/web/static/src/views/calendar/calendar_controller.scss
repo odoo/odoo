@@ -1,5 +1,5 @@
 // Variables
-$o-cw-color-today-accent: #fe3b30;
+$o-cw-color-today-accent: #714B67;
 $o-cw-filter-avatar-size: 20px;
 
 // Animations
@@ -13,23 +13,31 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_container {
-    height: 100%;
-    display: flex;
+    grid-template-columns: auto minmax(auto, 210px);
+
+    @include media-breakpoint-up(xl){
+        grid-template: auto 1fr / 1fr auto;
+        grid-template-areas:
+            "head head"
+            "cal side";
+    }
+
+    .o_calendar_header {
+        grid-area: head;
+    }
 }
 
 .o_calendar_sidebar_container {
-    flex: 0 0 auto;
     position: relative;
-    @include o-webclient-padding($top: $o-horizontal-padding/2);
+    grid-area: side;
     background-color: $o-view-background-color;
-    border-right: 1px solid $border-color;
-    overflow-y: auto;
-    width: 240px;
-    @include media-breakpoint-up(xl){
-        width: 280px;
-    }
 
     .o_calendar_sidebar {
+        @include o-webclient-padding($top: $o-horizontal-padding/2);
+        @include media-breakpoint-up(xl){
+            width: 210px;
+        }
+
         .o_datetime_picker {
             --DateTimePicker__Cell-size-md: 1.8rem;
             @include media-breakpoint-up(xl){
