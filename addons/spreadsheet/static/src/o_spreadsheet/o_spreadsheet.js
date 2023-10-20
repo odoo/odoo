@@ -25237,12 +25237,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         };
     }
     function xmlEscape(str) {
-        return String(str)
+        return (String(str)
             .replace(/\&/g, "&amp;")
             .replace(/\</g, "&lt;")
             .replace(/\>/g, "&gt;")
             .replace(/\"/g, "&quot;")
-            .replace(/\'/g, "&apos;");
+            .replace(/\'/g, "&apos;")
+            // Delete all ASCII control characters except for TAB (\x09), LF (\x0A) and CR (\x0D)
+            // They are not valid at all in XML 1.0 (even escaped)
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""));
     }
     function formatAttributes(attrs) {
         return new XMLString(attrs.map(([key, val]) => `${key}="${xmlEscape(val)}"`).join(" "));
@@ -33107,6 +33110,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             currentRanges = currentRanges.concat(toAdd);
             const newRangesXC = recomputeZones(currentRanges, toRemove);
+            if (newRangesXC.length === 0) {
+                this.dispatch("REMOVE_CONDITIONAL_FORMAT", { id: cf.id, sheetId });
+                return;
+            }
             this.dispatch("ADD_CONDITIONAL_FORMAT", {
                 cf: {
                     id: cf.id,
@@ -34762,11 +34769,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         getStatisticFnResults() {
+            const sheetId = this.getters.getActiveSheetId();
             // get deduplicated cells in zones
             const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getCellsInZone(this.getters.getActiveSheetId(), zone))
+                .map((zone) => this.getters.getCellsInZone(sheetId, zone))
                 .flat()
-                .filter((cell) => cell !== undefined));
+                .filter((cell) => {
+                if (!cell) {
+                    return false;
+                }
+                const { col, row } = this.getters.getCellPosition(cell === null || cell === void 0 ? void 0 : cell.id);
+                return !this.getters.isRowHidden(sheetId, row) && !this.getters.isColHidden(sheetId, col);
+            }));
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -42982,9 +42996,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.21';
-    __info__.date = '2023-10-10T07:45:46.154Z';
-    __info__.hash = '5f66b12';
+    __info__.version = '16.0.22';
+    __info__.date = '2023-10-19T15:24:20.617Z';
+    __info__.hash = '7f76b56';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
