@@ -16,7 +16,7 @@ from odoo.tools import float_compare, float_repr, cleanup_xml_node
 _logger = logging.getLogger(__name__)
 
 
-WAITING_STATES = ('processing', 'forward_attempt')
+WAITING_STATES = ('being_sent', 'processing', 'forward_attempt')
 
 
 # -------------------------------------------------------------------------
@@ -187,6 +187,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         if not self.l10n_it_edi_transaction and self.l10n_it_edi_state not in WAITING_STATES:
             raise UserError(_("This move is not waiting for updates from the SdI."))
+        if self.l10n_it_edi_state == 'being_sent':
+            return {'type': 'ir.actions.client', 'tag': 'reload'}
         self._l10n_it_edi_update_send_state()
 
     def button_draft(self):
