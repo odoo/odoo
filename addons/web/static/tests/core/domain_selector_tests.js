@@ -1795,6 +1795,26 @@ QUnit.module("Components", (hooks) => {
         assert.verifySteps([`[("product_id", "!=", 41)]`]);
     });
 
+    QUnit.test("many2one field on record with falsy display_name", async (assert) => {
+        serverData.models.product.records[0].display_name = false
+
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_id", "=", False)]`,
+        });
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.containsNone(target, ".dropdown-menu");
+
+        await click(target, ".o-autocomplete--input");
+
+        assert.strictEqual(
+            target.querySelector("a.dropdown-item").text,
+            "Unnamed",
+            "should have a Unnamed as fallback of many2one display_name"
+        );
+    });
+
     QUnit.test("many2one field and operator in/not in (edit)", async (assert) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         await makeDomainSelector({

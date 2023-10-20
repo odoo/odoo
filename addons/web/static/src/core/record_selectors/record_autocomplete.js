@@ -38,11 +38,8 @@ export class RecordAutocomplete extends Component {
         ];
     }
 
-    addNames(nameGets) {
-        const displayNames = {};
-        for (const [id, label] of nameGets) {
-            displayNames[id] = label.split("\n")[0];
-        }
+    addNames(options) {
+        const displayNames = Object.fromEntries(options);
         this.nameService.addDisplayNames(this.props.resModel, displayNames);
     }
 
@@ -55,9 +52,9 @@ export class RecordAutocomplete extends Component {
             this.lastProm.abort(false);
         }
         this.lastProm = this.search(name, SEARCH_LIMIT + 1);
-        const nameGets = await this.lastProm;
+        const nameGets = (await this.lastProm).map(([id, label]) => ([id, label ? label.split("\n")[0] : _t("Unnamed")]));
         this.addNames(nameGets);
-        const options = nameGets.map(([value, label]) => ({ value, label: label.split("\n")[0] }));
+        const options = nameGets.map(([value, label]) => ({value, label}));
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({
                 label: _t("Search More..."),
