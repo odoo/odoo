@@ -505,6 +505,28 @@ class TestMrpOrder(TestMrpCommon):
         mo.date_start = datetime(2024, 5, 15, 9, 0)
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2024, 5, 15, 10, 0))
 
+    def test_reschedule_mo_dates(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm_sam'
+
+        date_start = datetime(2023, 10, 1, 10, 1)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 1
+        mo_form.date_start = date_start
+        mo = mo_form.save()
+        mo.action_confirm()
+        pre_picking = mo.move_raw_ids.move_orig_ids.picking_id
+        post_picking = mo.move_finished_ids.move_dest_ids.picking_id
+
+        # change date on pre-picking
+        pre_picking.scheduled_date = datetime(2023, 10, 2, 10, 0)
+        mo.action_reschedule_dates()
+        self.assertEqual(mo.date_start, datetime(2023, 10, 2, 10, 0))
+        post_picking.action_reschedule_dates()
+        self.assertEqual(post_picking.scheduled_date, mo.date_finished)
+
     def test_rounding(self):
         """ Checks we round up when bringing goods to produce and round half-up when producing.
         This implementation allows to implement an efficiency notion (see rev 347f140fe63612ee05e).

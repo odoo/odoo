@@ -5,6 +5,7 @@ import json
 import time
 from ast import literal_eval
 from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from markupsafe import escape
 
@@ -1690,3 +1691,30 @@ class Picking(models.Model):
 
     def _get_report_lang(self):
         return self.move_ids and self.move_ids[0].partner_id.lang or self.partner_id.lang or self.env.lang
+
+    def action_reschedule_dates(self):
+        def sort_by_dependency():
+            """ Sort the pickings by dependency. """
+            d = dict((p.id, set(p.move_ids.move_orig_ids.picking_id.ids) & set(self.ids)) for p in self)
+            r = []
+            while d:
+                t = set(i for v in d.values() for i in v) - set(d.keys())
+                t.update(k for k, v in d.items() if not v)
+                r.append(t)
+                d = dict(((k, v - t) for k, v in d.items() if v))
+            ids = [id for i in r for id in i]
+            return self.browse(ids)
+
+        ordered_self = sort_by_dependency()
+        for picking in ordered_self:
+            if picking.state in ('done', 'cancel'):
+                raise UserError(_('You cannot reschedule dates on done or cancelled pickings.'))
+            for move in picking.move_ids:
+                if move.state in ('done', 'cancel') or not move.move_orig_ids:
+                    continue
+                if picking.move_type == 'direct':
+                    move.date = min(move.move_orig_ids.mapped('date'))
+                else:
+                    move.date = max(move.move_orig_ids.mapped('date'))
+                if move.rule_id.delay:
+                    move.date += relativedelta(days=move.rule_id.delay)

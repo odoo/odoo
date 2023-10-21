@@ -550,6 +550,18 @@
                 action = records.button_scrap()</field>
         </record>
 
+        <record id="action_reschedule_dates" model="ir.actions.server">
+            <field name="name">Replan</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    records.action_reschedule_dates()
+            </field>
+        </record>
+
         <record id="action_lead_mass_mail" model="ir.actions.act_window">
             <field name="name">Send email</field>
             <field name="res_model">mail.compose.message</field>

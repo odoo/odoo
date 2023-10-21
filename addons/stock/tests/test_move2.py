@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 
+from odoo import fields
 from odoo.tests import Form
 from odoo.tools import float_is_zero, float_compare
 
@@ -2043,6 +2044,53 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(receipt1.move_ids.mapped("product_uom_qty"), [5])
         self.assertEqual(receipt2.move_ids.filtered(lambda m: m.product_id == self.productB).mapped("product_uom_qty"), [3])
         self.assertEqual(receipt2.move_ids.filtered(lambda m: m.product_id == self.productA).mapped("product_uom_qty"), [5])
+
+    def test_reschedule_dates(self):
+        """3 pickings are chained, when rescheduling them, all pickings should
+        be rescheduled. The delay on rules should be taken into account.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'TEST WAREHOUSE',
+            'code': 'TEST1',
+            'reception_steps': 'three_steps',
+        })
+        reception_route = warehouse.reception_route_id
+        input_rule = reception_route.rule_ids.filtered(lambda r: r.location_src_id.id == self.supplier_location)
+        input_rule.delay = 1
+        quality_rule = reception_route.rule_ids.filtered(lambda r: r.location_src_id == warehouse.wh_input_stock_loc_id)
+        quality_rule.delay = 2
+        stock_rule = reception_route.rule_ids.filtered(lambda r: r.location_src_id == warehouse.wh_qc_stock_loc_id)
+        stock_rule.delay = 3
+        old_date = fields.Datetime.now()
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'scheduled_date': old_date,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'date': old_date,
+        })
+        picking_1.action_confirm()
+        picking_2 = picking_1.move_ids.move_dest_ids.picking_id
+        picking_3 = picking_2.move_ids.move_dest_ids.picking_id
+        self.assertEqual(picking_1.scheduled_date, old_date)
+        self.assertEqual(picking_2.scheduled_date, old_date + timedelta(days=2))
+        self.assertEqual(picking_3.scheduled_date, old_date + timedelta(days=5))
+
+        new_date = fields.Datetime.now() + timedelta(days=10)
+        picking_1.scheduled_date = new_date
+        (picking_1 | picking_2 | picking_3).action_reschedule_dates()
+        self.assertEqual(picking_1.scheduled_date, new_date)
+        self.assertEqual(picking_2.scheduled_date, new_date + timedelta(days=2))
+        self.assertEqual(picking_3.scheduled_date, new_date + timedelta(days=5))
 
     def test_empty_moves_validation_1(self):
         """ Use button validate on a picking that contains only moves

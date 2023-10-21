@@ -219,6 +219,7 @@ class StockRule(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
             'procure_method': 'make_to_order',
+            'rule_id': self.id,
         }
         return new_move_vals
 

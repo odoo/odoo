@@ -2580,3 +2580,13 @@ class MrpProduction(models.Model):
         if missing_lot_id_products:
             error_msg = _('You need to supply Lot/Serial Number for products:') + missing_lot_id_products
             raise UserError(error_msg)
+
+    def action_reschedule_dates(self):
+        for mo in self:
+            if mo.state in ('done', 'cancel'):
+                raise UserError(_('You cannot reschedule dates on done or cancelled orders.'))
+            orig_moves = mo.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.move_orig_ids).move_orig_ids
+            if orig_moves:
+                mo.date_start = max(orig_moves.mapped('date'))
+            if mo.move_raw_ids.rule_id:
+                mo.date_start += relativedelta(days=max(mo.move_raw_ids.rule_id, key=lambda r: r.delay).delay)
