@@ -3,13 +3,12 @@
 # 	* base
 # 
 # Translators:
-# monchai7 <montchye@gmail.com>, 2022
-# Krisa C, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Chatcha Mee, 2022
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
+# Ped Sansiri, 2023
 # Rasareeyar Lappiam, 2023
 # 
 msgid ""
@@ -4336,7 +4335,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr "# สิทธิ์การเข้าใช้งาน"
+msgstr "# สิทธิ์การเข้าถึง"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_aps
@@ -4544,7 +4543,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
 msgid "# Record Rules"
-msgstr "# Record Rules"
+msgstr "# กฎการเข้าถึงรายการ"
 
 #. module: base
 #. odoo-python
@@ -4616,12 +4615,12 @@ msgstr "%B - ชื่อเดือนแบบเต็ม\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr "% H - ชั่วโมง (นาฬิกา 24 ชั่วโมง) [00,23] \""
+msgstr "%H - ชั่วโมง (นาฬิกา 24 ชั่วโมง) [00,23] \""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr "% I - ชั่วโมง (นาฬิกา 12 ชั่วโมง) [01,12] \""
+msgstr "%I - ชั่วโมง (นาฬิกา 12 ชั่วโมง) [01,12] \""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -4754,7 +4753,7 @@ msgstr "'%s' does not seem to be an integer for field '%%(field)s'"
 #: code:addons/fields.py:0
 #, python-format
 msgid "(Record: %s, User: %s)"
-msgstr "(บันทึก: %s, ผู้ใช้: %s)"
+msgstr "(รายการ: %s, ผู้ใช้: %s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -4769,7 +4768,7 @@ msgstr ", or your preferred text editor"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr "Readonly"
+msgstr ", อ่านอย่างเดียว"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -4806,7 +4805,7 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
-"- บันทึกเป็น บริษัท %(company)r และ %(field)r (%(fname)s: %(values)s) "
+"- ข้อมูลเป็น บริษัท %(company)r และ %(field)r (%(fname)s: %(values)s) "
 "เป็นของ บริษัท อื่น."
 
 #. module: base
@@ -4877,7 +4876,7 @@ msgstr "1 วัน"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__hours_1
 msgid "1 Hour"
-msgstr ""
+msgstr "1 ชั่วโมง"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__months_1
@@ -4892,7 +4891,7 @@ msgstr "1. %b, %B         ==&gt; ธ.ค., ธันวาคม"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr "2. %a ,%A         ==&gt; ศุกร์, ศุกร์"
+msgstr "2. %a ,%A         ==&gt; ศุกร์, วันศุกร์"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
@@ -4917,7 +4916,7 @@ msgstr "4. %d, %m         ==&gt; 05, 12"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
 msgid "5 Minutes"
-msgstr ""
+msgstr "5 นาที"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5142,7 +5141,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>, </span>"
-msgstr ""
+msgstr "<span>, </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -5152,17 +5151,17 @@ msgstr "<span> ไดเรคทอรี่ </span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Module</span>"
-msgstr "<span> โมดุล </span>"
+msgstr "<span> โมดูล </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Name</span>"
-msgstr "เร็ก จำนวนเจ้าของล่าสุด     ชื่อนามสกุล"
+msgstr "<span>ชื่อ</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Object:</span>"
-msgstr "<span> หัวข้อ: </span>"
+msgstr "<span>Object:</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -5225,12 +5224,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies :</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>Dependencies :</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Email:</strong>"
-msgstr "<strong>อีเมลล์:</strong>"
+msgstr "<strong>อีเมล:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5240,7 +5239,7 @@ msgstr "<strong>กลุ่ม</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Idx</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>Idx</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
@@ -5273,12 +5272,12 @@ msgstr "<strong>ชื่อ</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr "<strong>เบอร์โทร:</strong>"
+msgstr "<strong>โทรศัพท์:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone</strong>"
-msgstr "<strong>เบอร์โทร:</strong>"
+msgstr "<strong>โทรศัพท์</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
@@ -5299,12 +5298,12 @@ msgstr "<strong>รายงาน :</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Ro</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>Ro</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Rq</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>Rq</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5327,7 +5326,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Tr</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>Tr</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5342,7 +5341,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View :</strong>"
-msgstr "<strong>รหัสลูกค้า:</strong>"
+msgstr "<strong>มุมมอง :</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5357,7 +5356,7 @@ msgstr "<strong>XML ID</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Fields</strong></u>"
-msgstr "<u><strong>ความปลอดภัย</strong></u>"
+msgstr "<u><strong>Fields</strong></u>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5367,7 +5366,7 @@ msgstr "<u><strong>ความปลอดภัย</strong></u>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr "<u><strong>ความปลอดภัย</strong></u>"
+msgstr "<u><strong>มุมมอง</strong></u>"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
@@ -5708,7 +5707,7 @@ msgstr "Accepted Users"
 #: model:ir.model.fields,field_description:base.field_ir_model__access_ids
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
 msgid "Access"
-msgstr "เข้าถึง"
+msgstr "สิทธิ์การเข้าถึง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
@@ -5723,7 +5722,7 @@ msgstr "กลุ่มการเข้าถึง"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__menu_access
 msgid "Access Menu"
-msgstr "เมนูเข้าถึง"
+msgstr "เมนูการเข้าถึง"
 
 #. module: base
 #. odoo-python
@@ -5750,12 +5749,12 @@ msgstr "สิทธิ์การเข้าใช้งาน"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Access Rights Mismatch"
-msgstr ""
+msgstr "สิทธิ์การเข้าถึงไม่ตรงกัน"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
-msgstr "โทเคนเข้าถึง"
+msgstr "โทเคนการเข้าถึง"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
@@ -5765,12 +5764,12 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr "รายชื่อและที่อยู่"
+msgstr "การเข้าถึงที่อยู่ส่วนตัว"
 
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr ""
+msgstr "การใช้การส่งออกข้อมูล"
 
 #. module: base
 #. odoo-python
@@ -5890,7 +5889,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.action_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr "การดำเนินการ"
+msgstr "Action"
 
 #. module: base
 #. odoo-python
@@ -5911,7 +5910,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__help
 #: model:ir.model.fields,field_description:base.field_ir_cron__help
 msgid "Action Description"
-msgstr "รายละเอียดการดำเนินการ"
+msgstr "Action Description"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -5923,18 +5922,18 @@ msgstr "รายละเอียดการดำเนินการ"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base.field_ir_cron__name
 msgid "Action Name"
-msgstr "ชื่อการดำเนินการ"
+msgstr "Action Name"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__target
 msgid "Action Target"
-msgstr "เป้าหมายการดำเนินการ"
+msgstr "Action Target"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:base.field_ir_cron__state
 msgid "Action To Do"
-msgstr "การดำเนินการที่จะทำ"
+msgstr "Action To Do"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__type
@@ -5947,33 +5946,33 @@ msgstr "การดำเนินการที่จะทำ"
 #: model:ir.model.fields,field_description:base.field_ir_cron__type
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
-msgstr "ประเภทการดำเนินการ"
+msgstr "Action Type"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__url
 msgid "Action URL"
-msgstr "URL ของการดำเนินการ"
+msgstr "Action URL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__usage
 msgid "Action Usage"
-msgstr "การใช้งานการดำเนินการ"
+msgstr "Action Usage"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr "หน้าต่างการดำเนินการ"
+msgstr "Action Window"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "Action Window Close"
-msgstr "ปิด"
+msgstr "Action Window Close"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "มุมมองหน้าต่างการดำเนินการ"
+msgstr "Action Window View"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -5982,7 +5981,7 @@ msgstr "มุมมองหน้าต่างการดำเนินก
 #: model:ir.ui.menu,name:base.next_id_6
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Actions"
-msgstr "การดำเนินการ"
+msgstr "Actions"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -6024,7 +6023,7 @@ msgstr "เปิดใช้งานและแปล"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Active"
-msgstr "เปิดใช้งาน"
+msgstr "ใช้งาน"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__active_lang_count
@@ -6046,7 +6045,7 @@ msgstr "เพิ่ม"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Languages"
-msgstr ""
+msgstr "เพิ่มภาษา"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -6109,7 +6108,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add direction"
-msgstr ""
+msgstr "เพิ่มทิศทาง"
 
 #. module: base
 #. odoo-python
@@ -6193,7 +6192,7 @@ msgstr "ที่อยู่"
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Address Format"
-msgstr ""
+msgstr "รูปแบบที่อยู่"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__type
@@ -6204,14 +6203,14 @@ msgstr "ชนิดที่อยู่"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Address format..."
-msgstr "รูปแบบที่อยู่"
+msgstr "รูปแบบที่อยู่..."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Address separator"
-msgstr "ที่อยู่"
+msgstr "อักษรคั่นที่อยู่"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_adyen
@@ -6323,7 +6322,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_administration_administration
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Administration"
-msgstr "ผู้ดูแลระบบ"
+msgstr "การดูแลระบบ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__name
@@ -6385,17 +6384,17 @@ msgstr "หลังจาก"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__after
 msgid "After Address"
-msgstr "จำนวนก่อน"
+msgstr "ที่อยู่ภายหน้า"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__after
 msgid "After Amount"
-msgstr "จำนวนก่อน"
+msgstr "จำนวนภายหลัง"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_helpdesk
 msgid "After-sales services"
-msgstr "บริการ"
+msgstr "บริการหลังการขาย"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -6690,7 +6689,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__append
 msgid "Append"
-msgstr "ผนวก"
+msgstr "ผนวกท้าย"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -6732,7 +6731,7 @@ msgstr "ใช้กับการสร้าง"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_unlink
 msgid "Apply for Delete"
-msgstr "ยืนยันการลบ"
+msgstr "ใชักับการลบ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
@@ -6766,7 +6765,7 @@ msgstr "การประเมิน"
 #: model_terms:ir.ui.view,arch_db:base.module_tree
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Apps"
-msgstr "แอป"
+msgstr "แอพ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__modules
@@ -6776,12 +6775,12 @@ msgstr "แอพที่ส่งออก"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Apps to Uninstall"
-msgstr ""
+msgstr "แอพที่ถอดการติดตั้ง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade__module_info
 msgid "Apps to Update"
-msgstr "อัพเดทรายการแอพ"
+msgstr "แอพที่อัพเดท"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6894,7 +6893,7 @@ msgstr "บุคลากร"
 #. module: base
 #: model:ir.model,name:base.model_ir_asset
 msgid "Asset"
-msgstr "Asset"
+msgstr "สินทรัพย์"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_asset
@@ -6926,7 +6925,7 @@ msgstr "รายงานที่เกี่ยวข้อง"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr "การบริหาร Associations"
+msgstr "Associations Management"
 
 #. module: base
 #. odoo-python
@@ -6949,7 +6948,7 @@ msgstr "แนบกับ"
 #: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
-msgstr "การแนบ"
+msgstr "เอกสารแนบ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -6958,7 +6957,7 @@ msgstr "การแนบ"
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_tree
 msgid "Attachments"
-msgstr "แนบ"
+msgstr "เอกสารแนบ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_attachment_indexation
@@ -7062,7 +7061,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
-msgstr "กฎการดำเนินการโดยอัตโนมัติ"
+msgstr "Automated Action Rules"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -7077,7 +7076,7 @@ msgstr "Wizard"
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr "การติดตั้งอัตโนมัติ"
+msgstr "การเก็บกวาดอัตโนมัติ"
 
 #. module: base
 #. odoo-python
@@ -7109,28 +7108,28 @@ msgstr "อวตาร"
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_1024
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_1024
 msgid "Avatar 1024"
-msgstr "อวตาร 1024"
+msgstr "รูปขนาด 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_128
 msgid "Avatar 128"
-msgstr "อวตาร 128"
+msgstr "รูปขนาด 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_256
 msgid "Avatar 256"
-msgstr "อวตาร 256"
+msgstr "รูปขนาด 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_512
 msgid "Avatar 512"
-msgstr "อวตาร 512"
+msgstr "รูปขนาด 512"
 
 #. module: base
 #: model:ir.model,name:base.model_avatar_mixin
@@ -7349,7 +7348,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Base"
-msgstr "ฐาน"
+msgstr "Base"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_install_request
@@ -7364,7 +7363,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
 msgid "Base Field"
-msgstr "Base Field"
+msgstr "ฟิลด์พื้นฐาน"
 
 #. module: base
 #. odoo-python
@@ -7382,7 +7381,7 @@ msgstr "Base Object"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr "คุณสมบัติพื้นฐาน"
+msgstr "Base Properties"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
@@ -7402,7 +7401,7 @@ msgstr "Base import module"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__primary
 msgid "Base view"
-msgstr "Base view"
+msgstr "มุมมองพื้นฐาน"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -7442,12 +7441,12 @@ msgstr "ก่อนหน้า"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
 msgid "Before Address"
-msgstr "จำนวนก่อน"
+msgstr "ที่อยู่ก่อนหน้า"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__before
 msgid "Before Amount"
-msgstr "จำนวนก่อน"
+msgstr "จำนวนก่อนหน้า"
 
 #. module: base
 #. odoo-python
@@ -7516,7 +7515,7 @@ msgstr "Binary"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_model_id
 msgid "Binding Model"
-msgstr "แบบ"
+msgstr "โมเดลที่ผูก"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_type
@@ -7528,7 +7527,7 @@ msgstr "แบบ"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_type
 msgid "Binding Type"
-msgstr "ประเภท"
+msgstr "Binding Type"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_view_types
@@ -7540,7 +7539,7 @@ msgstr "ประเภท"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_view_types
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_view_types
 msgid "Binding View Types"
-msgstr "ประเภทมุมองการผูก"
+msgstr "ประเภทมุมองที่ผูก"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
@@ -7765,7 +7764,7 @@ msgstr "CRM Gamification"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "CRM"
+msgstr "CRM Livechat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
@@ -7807,7 +7806,7 @@ msgstr "ปฏิทิน"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__call_at
 msgid "Call At"
-msgstr ""
+msgstr "โทร เมื่อ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -7962,7 +7961,7 @@ msgstr "แหลมเวอร์ดี"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
 msgid "Cascade"
-msgstr "เรียงลดหลั่น"
+msgstr "Cascade"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -8179,8 +8178,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"การดำเนินการของเซิร์ฟเวอร์ลูกที่จะดำเนินการ "
-"โปรดทราบว่าค่าการกระทำที่ส่งคืนล่าสุดจะถูกใช้เป็นค่าส่งคืนส่วนกลาง"
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -8249,7 +8248,7 @@ msgstr "เมือง"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
 msgid "Client"
-msgstr "ลูกค้า"
+msgstr "Client"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
@@ -8283,7 +8282,7 @@ msgstr "หมู่เกาะ (คีลิง) โคโคส"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Code"
-msgstr "โค้ด"
+msgstr "Code"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__compute
@@ -8348,12 +8347,12 @@ msgstr "ดัชนีสี"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
 msgid "Column 1"
-msgstr "Use '1' for yes and '0' for no"
+msgstr "Column 1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column2
 msgid "Column 2"
-msgstr "ที่อยู่บรรทัดที่ 2"
+msgstr "Column 2"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column2
@@ -8422,7 +8421,7 @@ msgstr "บริษัท"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Companies count"
-msgstr "บริษัท"
+msgstr "จำนวนบริษัท"
 
 #. module: base
 #. odoo-python
@@ -8479,7 +8478,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
 msgid "Company Logo"
-msgstr "โลโก้บริษัท"
+msgstr "ตราบริษัท"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__name
@@ -8498,7 +8497,7 @@ msgstr "ชื่อบริษัท"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "Company Name..."
-msgstr ""
+msgstr "ชื่อบริษัท..."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -8539,7 +8538,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
 msgid "Compare To View"
-msgstr ""
+msgstr "เปรียบเทียบกับมุมมอง"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
@@ -8674,7 +8673,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Connection"
-msgstr ""
+msgstr "การเชื่อมต่อ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_encryption
@@ -8765,13 +8764,13 @@ msgstr "ชื่อผู้ติดต่อ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr "ป้ายกำกับ"
+msgstr "ป้ายผู้ติดต่อ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr "แท็กติดต่อ"
+msgstr "ป้ายผู้ติดต่อ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -8839,7 +8838,7 @@ msgstr "สัญญา"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__contributors
 msgid "Contributors"
-msgstr "ผู้ให้ข้อมูล"
+msgstr "Contributors"
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -8982,7 +8981,7 @@ msgstr "สิทธิ์การสร้าง"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Create Contextual Action"
-msgstr "สร้าง"
+msgstr "Create Contextual Action"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
@@ -9061,7 +9060,7 @@ msgstr "ปรับแต่ง มุมมอง"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
 msgid "Create a new Record"
-msgstr "สร้างรายการบันทึกใหม่"
+msgstr "สร้างรายการใหม่"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
@@ -9346,7 +9345,7 @@ msgstr "โครเอเชีย - การบัญชี (RRIF 2012)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
-msgstr "ข้าวโพด"
+msgstr "Cron"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
@@ -9403,17 +9402,17 @@ msgstr "อัตราแลกเปลี่ยน"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_search
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_tree
 msgid "Currency Rates"
-msgstr "Rates"
+msgstr "อัตราแลกเปลี่ยน"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__currency_subunit_label
 msgid "Currency Subunit"
-msgstr "เงินตรา"
+msgstr "หน่วยย่อยสกุลเงิน"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__currency_unit_label
 msgid "Currency Unit"
-msgstr "เงินตรา"
+msgstr "หน่วยสกุลเงิน"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
@@ -9430,7 +9429,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
 msgid "Current Line"
-msgstr "Line"
+msgstr "Current Line"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate
@@ -9487,12 +9486,12 @@ msgstr "ลูกค้า"
 #: model:ir.module.module,shortdesc:base.module_portal
 #: model:ir.module.module,summary:base.module_portal
 msgid "Customer Portal"
-msgstr "Portal"
+msgstr "ช่องทางลูกค้า"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr "ลูกค้า"
+msgstr "ความพึงพอใจลูกค้า"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -9636,7 +9635,7 @@ msgstr "ฐานข้อมูล"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__db_datas
 msgid "Database Data"
-msgstr "ฐานข้อมูล"
+msgstr "รายละเอียดฐานข้อมูล"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_id
@@ -9703,7 +9702,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit"
-msgstr "หน่วยวัดระยะทาง"
+msgstr "หน่วยวันที่"
 
 #. module: base
 #. odoo-python
@@ -9749,7 +9748,7 @@ msgstr "ใบเพิ่มหนี้"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
-msgstr "การดีบั๊ก"
+msgstr "Debugging"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
@@ -9760,7 +9759,7 @@ msgstr "ความถูกต้องของทศนิยม"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
 msgid "Decimal Places"
-msgstr "อักษรแบ่งคั่นเลขทศนิยม"
+msgstr "จำนวนหลักทศนิยม"
 
 #. module: base
 #: model:ir.model,name:base.model_decimal_precision
@@ -9772,7 +9771,7 @@ msgstr "ความถูกต้องของทศนิยม"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__decimal_point
 msgid "Decimal Separator"
-msgstr "อักษรแบ่งคั่นเลขทศนิยม"
+msgstr "อักษรแบ่งคั่นทศนิยม"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__decimal_places
@@ -9818,7 +9817,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
-msgstr "รายชื่อ"
+msgstr "รายชื่อที่ไม่ซ้ำ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -9833,12 +9832,12 @@ msgstr "บริษัท เริ่มต้น"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
 msgid "Default Filter"
-msgstr "ตัวกรอง"
+msgstr "ตัวกรอง เริ่มต้น"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_default
 msgid "Default Theme"
-msgstr "ธีม"
+msgstr "ธีม เริ่มต้น"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__json_value
@@ -9885,7 +9884,7 @@ msgstr "รายงาน"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
 msgid "Definition"
-msgstr "คำนิยาม"
+msgstr "Definition"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
@@ -9931,7 +9930,7 @@ msgstr "สาธิต"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__demo
 msgid "Demo Data"
-msgstr "ตัวอย่าง ข้อมูล"
+msgstr "ข้อมูลตัวอย่าง"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
@@ -9941,7 +9940,7 @@ msgstr "Wizard"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr "ตัวอย่าง ข้อมูล"
+msgstr "การติดตั้งข้อมูลตัวอย่างล้มเหลว"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -9955,7 +9954,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
 msgid "Demo failure"
-msgstr "ตัวอย่าง ข้อมูล"
+msgstr "Demo failure"
 
 #. module: base
 #: model:res.country,name:base.cd
@@ -9977,7 +9976,7 @@ msgstr "เดนมาร์ก - การบัญชี"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__dependencies_id
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Dependencies"
-msgstr "การพึ่งพา"
+msgstr "Dependencies"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__depends
@@ -9993,7 +9992,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__depend_id
 msgid "Dependency"
-msgstr "จำเป็นต้องใช้ร่วมกับ"
+msgstr "Dependency"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__description
@@ -10041,7 +10040,7 @@ msgstr "ผู้ผลิตโต๊ะทำงาน"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
-msgstr "ผู้ติดต่อ"
+msgstr "ผู้ติดต่อปลายทาง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
@@ -10073,7 +10072,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
 msgid "Digital Products"
-msgstr "ผลิตภัณฑ์"
+msgstr "ผลิตภัณฑ์ดิจิทัล"
 
 #. module: base
 #. odoo-python
@@ -10095,7 +10094,7 @@ msgstr "ทิศทาง"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__directive
 msgid "Directive"
-msgstr "คำสั่ง"
+msgstr "Directive"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -10226,7 +10225,7 @@ msgstr "แสดง"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
-msgstr "แสดงชื่อ"
+msgstr "ชื่อแสดง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
@@ -10255,7 +10254,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display currency"
-msgstr "แสดงผล"
+msgstr "สกุลเงินที่แสดง"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_format
@@ -10309,7 +10308,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Displayed fields"
-msgstr "ช่องข้อมูล"
+msgstr "ฟิลด์ที่แสดง"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -10426,7 +10425,7 @@ msgstr "Drop Shipping"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Dropdown menu"
-msgstr "เมนูดรอปดาว์น"
+msgstr "Dropdown menu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
@@ -10596,7 +10595,7 @@ msgstr "ที่อยู่อีเมล"
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr "การตลาด"
+msgstr "การตลาดทางอีเมล"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
@@ -10623,7 +10622,7 @@ msgstr "ต้นทุนรายชั่วโมงของพนักง
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
 #: model:ir.module.module,summary:base.module_hr_hourly_cost
 msgid "Employee Hourly Wage"
-msgstr ""
+msgstr "ค่าแรงรายชั่วโมงของพนักงาน"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
@@ -10664,7 +10663,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
 msgid "Enable profiling"
-msgstr "เปิดใช้งานการทำโปรไฟล์"
+msgstr "Enable profiling"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__duration
@@ -10690,7 +10689,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
 msgid "Energy supply"
-msgstr "วิธีการอุปทาน"
+msgstr "ผู้ผลิตพลังงาน"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_enrich
@@ -10899,7 +10898,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organization"
-msgstr "เหตการณ์"
+msgstr "การจัดงาน"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
@@ -10952,7 +10951,7 @@ msgstr "รายชื่อ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__exclusion_id
 msgid "Exclusion Module"
-msgstr "โมดูล"
+msgstr "Exclusion Module"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__exclusion_ids
@@ -10963,23 +10962,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__exclusive
 msgid "Exclusive"
-msgstr ""
-"4. รถยนต์และเอกสารเรื่องการเปลี่ยนแปลงและการโอนทะเบียน <span style=\"border-bottom:2px dotted black\">                                                         </span>ออก\n"
-"                        เพื่อแก้ไขเหตุผลใด ๆ ไม่ว่าดีหรือพิการในสาเหตุของการผิดกฎหมายใด ๆ ผู้ซื้อเป็นผู้รับผิดชอบพิเศษ.\n"
-"สัญญานี้ประกอบไปด้วยสองฉบับที่ถูกต้องทั้งสองฝ่ายมีความเข้าใจที่ดีขึ้น.<br/><br/>\n"
-"                        ลงชื่อเป็นหลักฐานการปรากฏตัวของพยาน.<br/><br/>\n"
-"                        บันทึก<span style=\"border-bottom:2px dotted black\">                                                    </span>   สัญญาณ<span style=\"border-bottom:2px dotted black\">                                                   </span>ผู้ขาย\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                                          </span>\n"
-"                        <br/><br/>\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                              </span>   สัญญาณ<span style=\"border-bottom:2px dotted black\">                                                   </span>ผู้ซื้อ\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                                              </span>\n"
-"                        <br/><br/>\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                    </span>   สัญญาณ<span style=\"border-bottom:2px dotted black\">                                                   </span>พยาน\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                                      </span>\n"
-"                        <br/><br/>\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                    </span>   สัญญาณ<span style=\"border-bottom:2px dotted black\">                                                   </span>พยาน\n"
-"                        <span style=\"border-bottom:2px dotted black\">                                                                      </span>\n"
-"                        <br/><br/><br/>"
+msgstr "Exclusive"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -10999,7 +10982,7 @@ msgstr "Execute several actions"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Execution"
-msgstr "ประมวลผล"
+msgstr "Execution"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__executive
@@ -11070,12 +11053,12 @@ msgstr "ส่งออกการแปล"
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr "Line"
+msgstr "ส่งออก"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr "Line"
+msgstr "รายการ ที่ส่งออก"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines__value
@@ -11093,7 +11076,7 @@ msgstr "ตัวกรองเพิ่มเติม"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
 msgid "Extension View"
-msgstr "Extension View"
+msgstr "มุมมองส่วนขยาย"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__xml_id
@@ -11149,7 +11132,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Extra"
-msgstr "พิเศษ"
+msgstr "Extra"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
@@ -11190,7 +11173,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
 msgid "Failures Count"
-msgstr "จำนวนไฟล์แนบ"
+msgstr "จำนวนครั้งที่ล้มเหลว"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module
@@ -11216,7 +11199,7 @@ msgstr "จังหวัด"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 msgid "Fed. States"
-msgstr "รัฐ"
+msgstr "จังหวัด"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
@@ -11364,7 +11347,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
 msgid "Field Help"
-msgstr "ช่วยเหลือ"
+msgstr "ฟิลด์ช่วยเหลือ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__field_description
@@ -11438,7 +11421,7 @@ msgstr "ฟิลด์"
 #. module: base
 #: model:ir.model,name:base.model_ir_fields_converter
 msgid "Fields Converter"
-msgstr "ช่องข้อมูล"
+msgstr "ตัวแปลงฟิลด์"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -11457,7 +11440,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Fields: %s"
-msgstr "Fields: %s"
+msgstr "ฟิลด์: %s"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -11531,7 +11514,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "โมเดลตัวช่วยการสตรีมไฟล์สำหรับคอนโทรลเลอร์"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -11632,7 +11615,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
-msgstr "ตั้งค่าสถานะ"
+msgstr "ธง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
@@ -11653,7 +11636,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
-msgstr "ลอย"
+msgstr "ตัวเลขทศนิยม"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -11722,7 +11705,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr ""
+msgstr "ลืมรหัสผ่าน?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -11854,12 +11837,12 @@ msgstr "ใบแจ้งหนี้"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Full Access"
-msgstr "เข้าถึงแบบเต็ม"
+msgstr "สิทธิ์เต็ม"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Full Access Right"
-msgstr "สิทธิ์การเข้าถึงแบบเต็ม"
+msgstr "สิทธิ์เต็ม"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -11869,7 +11852,7 @@ msgstr "ชื่อเต็ม"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__complete_name
 msgid "Full Path"
-msgstr "พาธเต็ม"
+msgstr "เส้นทางเต็ม"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__fullscreen
@@ -12346,7 +12329,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr "การกำหนด HTTP"
+msgstr "HTTP Routing"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -12543,14 +12526,14 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide badges"
-msgstr "วิธีการจ่ายเงิน"
+msgstr "ซ่อนป้าย"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide seconds"
-msgstr "Hide seconds"
+msgstr "ซ่อนวินาที"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -12756,13 +12739,13 @@ msgstr "บัญชีธนาคาร IBAN"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
-msgstr "ไอดี"
+msgstr "ID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:base.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr "ID ของการดำเนินการหากกำหนดไว้ในไฟล์ XML"
+msgstr "ID of the action if defined in a XML file"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -12834,7 +12817,7 @@ msgstr "Icon URL"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__aggr_ids
 msgid "Ids"
-msgstr "รหัส"
+msgstr "Ids"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -13091,7 +13074,7 @@ msgstr "การดำเนินการ"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr "การดำเนินการ"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -13131,7 +13114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__modules
 msgid "In Apps"
-msgstr "แอพ"
+msgstr "ในแอพ"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -13145,7 +13128,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr "การซื้อ"
+msgstr "การซื้อในแอพ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -13182,7 +13165,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
 msgid "Indexed"
-msgstr "ทำดัชนี"
+msgstr "Indexed"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__index_content
@@ -13298,7 +13281,7 @@ msgstr "ข้อมูล"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inherit"
-msgstr "สืบทอด"
+msgstr "Inherit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -13308,12 +13291,12 @@ msgstr "Inherited"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
 msgid "Inherited View"
-msgstr "สืบทอดมุมมอง"
+msgstr "มุมมองสืบทอด"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Inherited Views"
-msgstr "Inherited Views"
+msgstr "มุมมองสืบทอด"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__inherited_model_ids
@@ -13352,7 +13335,7 @@ msgstr "Inline Edit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_view_id
 msgid "Input View"
-msgstr "มุมมอง"
+msgstr "มุมมองที่อยู่"
 
 #. module: base
 #. odoo-python
@@ -13479,7 +13462,7 @@ msgstr "บันทึกย่อภายใน"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr "ผู้ใช้งาน"
+msgstr "ผู้ใช้ภายใน"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -13499,7 +13482,7 @@ msgstr "Interval Number"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_type
 msgid "Interval Unit"
-msgstr "หน่วยของช่วงเวลา"
+msgstr "หน่วยช่วงเวลา"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -13979,7 +13962,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_show__key
 #: model_terms:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "Key"
-msgstr "คีย์"
+msgstr "Key"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_config_parameter_key_uniq
@@ -14086,7 +14069,7 @@ msgstr "ภาษา"
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "Language Export"
-msgstr "ส่งออก"
+msgstr "ส่งออกภาษา"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -14387,7 +14370,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "Last update:"
-msgstr ""
+msgstr "อัปเดตครั้งล่าสุด:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -14509,7 +14492,7 @@ msgstr "ลุยกันเลย"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr "วันที่เริ่ม"
+msgstr "เริ่มต้น"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__letter
@@ -14550,19 +14533,19 @@ msgstr "จำกัด"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
 msgid "Line"
-msgstr "ไลน์"
+msgstr "บรรทัด"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Linebreak"
-msgstr ""
+msgstr "แบ่งบรรทัด"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
 msgid "Lines"
-msgstr "ไลน์"
+msgstr "บรรทัด"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
@@ -14657,7 +14640,7 @@ msgstr "ตัวอย่าง ข้อมูล"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
 msgid "Locale Code"
-msgstr "รหัสประเทศ"
+msgstr "Locale Code"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations
@@ -14669,7 +14652,7 @@ msgstr "การปรับเข้ากับท้องถิ่น"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
-msgstr "ล็อก"
+msgstr "Log"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
@@ -14736,7 +14719,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr "MRP Byproducts"
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp
@@ -14841,7 +14824,7 @@ msgstr "ลำดับ"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__main
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__main
 msgid "Main action of Current Window"
-msgstr "หน้าปัจจุบัน"
+msgstr "Main action of Current Window"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__maintainer
@@ -15234,7 +15217,7 @@ msgstr "ผสาน"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr "รวมรายชื่อ"
+msgstr "รวมอัตโนมัติ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -15300,7 +15283,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
 msgid "Mime Type"
-msgstr "ประเภท Mime"
+msgstr "Mime Type"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
@@ -15383,7 +15366,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
 msgid "Mining"
-msgstr "กำลังขุดเหมือง"
+msgstr "การทำเหมือง"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__minutes
@@ -15393,7 +15376,7 @@ msgstr "นาที"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr "ข้อมูลเบ็ดเตล็ด"
+msgstr "เบ็ดเตล็ด"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -15433,7 +15416,7 @@ msgstr "Missing required value for the field '%s' (%s)"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Missing view architecture."
-msgstr "มุมมองออกแบบ"
+msgstr "สถาปัตยกรรมของมุมมองขาดหายไป"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -15506,12 +15489,12 @@ msgstr "Model '%s' contains module data and cannot be removed."
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr "โมเดลการเข้าถึง"
+msgstr "สิทธิ์การเข้าถึงโมเดล"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
 msgid "Model Constraint"
-msgstr "Constraint"
+msgstr "ข้อจำกัดโมเดล"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
@@ -15556,7 +15539,7 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"โมเดลสำหรับบันทึกการสร้าง / อัปเดต "
+"โมเดลสำหรับการสร้างหรืออัปเดตรายการ "
 "ตั้งค่าฟิลด์นี้เพื่อระบุโมเดลที่แตกต่างจากโมเดลพื้นฐานเท่านั้น"
 
 #. module: base
@@ -15576,7 +15559,7 @@ msgstr "Model not found: %(model)s"
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
 #: model:ir.model.fields,help:base.field_ir_cron__model_id
 msgid "Model on which the server action runs."
-msgstr "โมเดลที่การดำเนินการของเซิร์ฟเวอร์ที่ทำงาน"
+msgstr "Model on which the server action runs."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -15590,7 +15573,7 @@ msgstr "โมเดล"
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Modified Architecture"
-msgstr "ดัดแปลงสถาปัตยกรรม"
+msgstr "สถาปัตยกรรมที่เปลี่ยนไป"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -15769,12 +15752,12 @@ msgstr "นาย"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Mrp Repairs"
-msgstr ""
+msgstr "การซ่อมแซมเครื่องจักร"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Mrs."
-msgstr "นางสาว"
+msgstr "นาง"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
@@ -15929,7 +15912,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nc
 msgid "New Caledonia"
-msgstr "ใหม่"
+msgstr "นิวแคลิโดเนีย"
 
 #. module: base
 #. odoo-python
@@ -16112,7 +16095,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
 msgid "No of Views"
-msgstr "ไม่มีผู้เข้าชม"
+msgstr "จำนวนมุมมอง"
 
 #. module: base
 #. odoo-python
@@ -16243,7 +16226,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
-msgstr "โน้ต"
+msgstr "หมายเหตุ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_wishlist
@@ -16253,7 +16236,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_nr
 msgid "Number of Apps"
-msgstr "แอพ"
+msgstr "จำนวนแอพ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__numbercall
@@ -16313,7 +16296,7 @@ msgstr "OHADA - Accounting"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
-msgstr "อ็อบเจกต์"
+msgstr "Object"
 
 #. module: base
 #. odoo-python
@@ -16325,7 +16308,7 @@ msgstr "Model %s does not exist!"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Object:"
-msgstr "อ็อบเจกต์:"
+msgstr "Object:"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -17389,7 +17372,7 @@ msgstr "เครื่องใช้สำนักงาน"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr "โอเค"
+msgstr "ตกลง"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -17591,7 +17574,7 @@ msgstr "เปิด"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
-msgstr "เปิด"
+msgstr "เปิดแอพ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__open_sans
@@ -17606,7 +17589,7 @@ msgstr "เปิด เมนูการตั้งค่า"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_tree
 msgid "Open Window"
-msgstr "Open Window"
+msgstr "เปิดหน้าต่าง"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
@@ -17684,7 +17667,7 @@ msgstr "ตัวเลือก"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
 msgid "Order"
-msgstr "คำสั่ง"
+msgstr "Order"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -17862,7 +17845,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
 msgid "Orientation"
-msgstr "แนบกระดาษ"
+msgstr "แนวกระดาษ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__ref_id
@@ -17874,7 +17857,7 @@ msgstr "มุมมองดั้งเดิม"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Original currency"
-msgstr "มุมมองดั้งเดิม"
+msgstr "สกุลเงินดั้งเดิม"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__oswald
@@ -17893,7 +17876,7 @@ msgstr "อื่น ๆ"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "ที่อยู่อื่น"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -17913,7 +17896,7 @@ msgstr "Other Proprietary"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr "บริการ"
+msgstr "บริการอื่น"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -18203,7 +18186,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "พาร์ทเนอร์"
+msgstr "คู่ค้า"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
@@ -18258,12 +18241,12 @@ msgstr "ข้อมูลที่เกี่ยวข้องกับพา
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "พาร์ทเนอร์"
+msgstr "คู่ค้า"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "คู่ค้า"
+msgstr "พิกัดที่ตั้งของคู่ค้า"
 
 #. module: base
 #. odoo-python
@@ -18277,7 +18260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__password
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__password
 msgid "Password"
-msgstr "ใส่รหัส"
+msgstr "รหัสผ่าน"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_identitycheck
@@ -18503,13 +18486,13 @@ msgstr "โทรศัพท์:"
 #. module: base
 #: model:res.country,name:base.pn
 msgid "Pitcairn Islands"
-msgstr "หมู่เกาะเคย์แมน"
+msgstr "หมู่เกาะพิตแคร์น"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__pivot
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__pivot
 msgid "Pivot"
-msgstr "หมุน"
+msgstr "Pivot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning
@@ -18679,17 +18662,17 @@ msgstr "การตั้งค่า"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__prefix
 msgid "Prefix"
-msgstr "อักษรนำ"
+msgstr "คำนำหน้า"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__prefix
 msgid "Prefix value of the record for the sequence"
-msgstr "ค่า"
+msgstr "คำนำหน้า รายการของเลขลำดับ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
 msgid "Prepend"
-msgstr "นำหน้า"
+msgstr "ผนวกหน้า"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
@@ -18787,7 +18770,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
 msgid "Product Comparison"
-msgstr "ตามสินค้า"
+msgstr "เปรียบเทียบสินค้า"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
@@ -18890,7 +18873,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
 msgid "Project Expenses"
-msgstr ""
+msgstr "รายจ่ายของโปรเจก"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
@@ -18974,12 +18957,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_purchase
 msgid "Project Purchase"
-msgstr ""
+msgstr "การจัดซื้อของโปรเจก"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_expense
 msgid "Project expenses"
-msgstr ""
+msgstr "ค่าใช้จ่ายของโปรเจก"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -19011,7 +18994,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"ระบุฟิลด์ที่ใช้เชื่อมโยงบันทึกที่สร้างขึ้นใหม่บนบันทึกที่ใช้โดยการดำเนินการของเซิร์ฟเวอร์"
+"Provide the field used to link the newly created record on the record used "
+"by the server action."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
@@ -19079,12 +19063,12 @@ msgstr "เปอร์โตริโก"
 #: model:ir.module.module,shortdesc:base.module_purchase
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Purchase"
-msgstr "สั่งซื้อ"
+msgstr "จัดซื้อ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr "การซื้อ"
+msgstr "ข้อตกลงการซื้อ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_product_matrix
@@ -19104,7 +19088,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr "การซื้อ"
+msgstr "Purchase Stock"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -19126,7 +19110,7 @@ msgstr "ใบสั่งซื้อ"
 #: model:ir.model.fields,field_description:base.field_ir_cron__code
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Python Code"
-msgstr "โค้ด Python"
+msgstr "Python Code"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__equation
@@ -19147,12 +19131,12 @@ msgstr "QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_time
 msgid "QWeb Field Time"
-msgstr ""
+msgstr "ฟิลด์เวลา QWeb"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "QWeb views"
-msgstr "QWeb"
+msgstr "มุมมอง QWeb"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -19230,7 +19214,7 @@ msgstr "ฟิลด์ QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr "QWeb"
+msgstr "ฟิลด์บาร์โคด QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
@@ -19255,12 +19239,12 @@ msgstr "ฟิลด์ระยะเวลา QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
 msgid "Qweb Field Float"
-msgstr "ฟิลด์ทศนิยม Qweb"
+msgstr "ฟิลด์เลขทศนิยม Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
 msgid "Qweb Field Float Time"
-msgstr "เลขทศนิยม"
+msgstr "ฟิลด์เวลาทศนิยม QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
@@ -19276,27 +19260,27 @@ msgstr "ฟิลด์รูปภาพ QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
 msgid "Qweb Field Integer"
-msgstr "ฟิลด์จำนวนเต็ม Qweb"
+msgstr "ฟิลด์เลขจำนวนเต็ม Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "Qweb Field Many to One"
-msgstr "ฟิลด์ Qweb Many to One"
+msgstr "ฟิลด์ many2one QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "Qweb Field Monetary"
-msgstr "ฟิลด์ Qweb Monetary"
+msgstr "ฟิลด์เลขการเงิน Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "Qweb Field Relative"
-msgstr "ฟิลด์เกี่ยวข้อง Qweb"
+msgstr "ฟิลด์ความสัมพันธ์ Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
 msgid "Qweb Field Selection"
-msgstr "การเลือกฟิลด์ QWeb"
+msgstr "ฟิลด์ตัวเลือก QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
@@ -19306,12 +19290,12 @@ msgstr "ฟิลด์ข้อความ Qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_qweb
 msgid "Qweb Field qweb"
-msgstr "Qweb Field qweb"
+msgstr "ฟิลด์ qweb QWeb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr "QWeb"
+msgstr "ฟิลด์ many2many QWeb"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -19374,7 +19358,7 @@ msgstr "สิทธิ์การอ่าน"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr "Readonly"
+msgstr "อ่านอย่างเดียว"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -19385,19 +19369,19 @@ msgstr "อสังหาริมทรัพย์"
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__resource_ref
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_form
 msgid "Record"
-msgstr "บันทึก"
+msgstr "รายการ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_id
 #: model:ir.model.fields,field_description:base.field_ir_model_data__res_id
 msgid "Record ID"
-msgstr "ไอดีบันทึก"
+msgstr "Record ID"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
-msgstr "กฎการบันทึก"
+msgstr "กฎการเข้าถึงรายการ"
 
 #. module: base
 #. odoo-python
@@ -19412,7 +19396,7 @@ msgstr "กฎการบันทึก"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #, python-format
 msgid "Record Rules"
-msgstr "Record Rules"
+msgstr "กฎการเข้าถึงรายการ"
 
 #. module: base
 #. odoo-python
@@ -19428,12 +19412,12 @@ msgstr ""
 #: code:addons/fields.py:0
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr "Record does not exist or has been deleted."
+msgstr "ไม่มีรายการ หรือถูกลบไปแล้ว"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Record rules"
-msgstr "Record rules"
+msgstr "กฎการเข้าถึงรายการ"
 
 #. module: base
 #. odoo-python
@@ -19447,7 +19431,7 @@ msgstr "รายการ:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Records: %s"
-msgstr ""
+msgstr "รายการ: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -19511,12 +19495,12 @@ msgstr "ฟิลด์ที่เกี่ยวข้อง"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
 msgid "Related Model"
-msgstr ""
+msgstr "โมเดลที่เกี่ยวข้อง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
 msgid "Related Partner"
-msgstr "พาร์ทเนอร์ที่เกี่ยวข้อง"
+msgstr "คู่ค้าที่เกี่ยวข้อง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__server_id
@@ -19526,7 +19510,7 @@ msgstr "Related Server Action"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr "การตั้งค่าที่เกี่ยวข้องกับการบัญชีถูกจัดการบน"
+msgstr "ฟิลด์ที่เกี่ยวข้อง"
 
 #. module: base
 #. odoo-python
@@ -19545,27 +19529,27 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field
 msgid "Relation Field"
-msgstr "Relation Field"
+msgstr "ฟิลด์ความสัมพันธ์"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_relation
 msgid "Relation Model"
-msgstr "Object Relation"
+msgstr "โมเดลความสัมพันธ์"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__name
 msgid "Relation Name"
-msgstr "ชื่อความสัมพันธ์"
+msgstr "Relation Name"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_table
 msgid "Relation Table"
-msgstr "ตารางความสัมพันธ์"
+msgstr "Relation Table"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
 msgid "Relation field"
-msgstr "Relation Field"
+msgstr "ฟิลด์ความสัมพันธ์"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
@@ -19576,19 +19560,17 @@ msgstr "โหลดใหม่จากสิ่งที่แนบมา"
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__remove
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove"
-msgstr "นำออก"
+msgstr "ลบออก"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove 'More' top-menu contextual action related to this action"
-msgstr ""
-"ลบการดำเนินการตามบริบทของเมนูบนสุด \"เพิ่มเติม\" "
-"ที่เกี่ยวข้องกับการดำเนินการนี้"
+msgstr "Remove 'More' top-menu contextual action related to this action"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove Contextual Action"
-msgstr "ลบออก"
+msgstr "Remove Contextual Action"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -19646,7 +19628,7 @@ msgstr "รายงาน"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "การดําเนินการรายงาน"
+msgstr "Report Action"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -19666,7 +19648,7 @@ msgstr "เค้าโครงรายงาน"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr "Report Model"
+msgstr "โมเดลรายงาน"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_type
@@ -19704,7 +19686,7 @@ msgstr "รายงาน"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__request
 msgid "Request"
-msgstr "คำร้องขอ"
+msgstr "คำร้อง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__required
@@ -19870,7 +19852,7 @@ msgstr "Rules can not be applied on the Record Rules model."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run"
-msgstr "เริ่มทำงาน"
+msgstr "Run"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -20262,13 +20244,13 @@ msgstr "Scheduled Action"
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "การกระทำที่กำหนดไว้"
+msgstr "Scheduled Actions"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
-msgstr ""
+msgstr "Scheduled Actions Triggers"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -20294,7 +20276,7 @@ msgstr "ค้นหา"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "Search Actions"
-msgstr "ค้นหาการดำเนินการ"
+msgstr "Search Actions"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_bank_view_search
@@ -20319,7 +20301,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
 msgid "Search View"
-msgstr "Search View Ref."
+msgstr "มุมมองการค้นหา"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -20619,7 +20601,7 @@ msgstr "Server"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr "การดำเนินการเซิร์ฟเวอร์"
+msgstr "Server Action"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -20632,7 +20614,7 @@ msgstr "Server Action value mapping"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr "การดำเนินการของเซิร์ฟเวอร์"
+msgstr "Server Actions"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
@@ -20664,7 +20646,7 @@ msgstr "บริการ"
 #: model:ir.model.fields,field_description:base.field_ir_profile__session
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_search
 msgid "Session"
-msgstr "วาระการขาย"
+msgstr "Session"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
@@ -20705,7 +20687,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
-"การตั้งค่าทำให้การดำเนินการนี้พร้อมใช้งานในแถบด้านข้างสำหรับโมเดลที่กำหนด"
+"Setting a value makes this action available in the sidebar for the given "
+"model."
 
 #. module: base
 #. odoo-python
@@ -20800,12 +20783,12 @@ msgstr "เซียร์ราลีโอน"
 #: model:ir.module.category,name:base.module_category_sales_sign
 #: model:ir.module.module,shortdesc:base.module_sign
 msgid "Sign"
-msgstr "เพิ่ม"
+msgstr "ลงนาม"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr "สมัครสมาชิก"
+msgstr "สมัคร"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
@@ -20839,12 +20822,12 @@ msgstr "Sint Maarten (Dutch part)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
 msgid "Size"
-msgstr "ไซส์"
+msgstr "ขนาด"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_size_gt_zero
 msgid "Size of the field cannot be negative."
-msgstr "ปริมาณเป็นค่าลบไม่ได้"
+msgstr "ขนาดของฟิลด์เป็นค่าลบไม่ได้"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_survey
@@ -21030,7 +21013,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
 msgid "Sparse Fields"
-msgstr "ช่องข้อมูล"
+msgstr "ฟิลด์แบบ Sparse"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__new_password
@@ -21098,7 +21081,7 @@ msgstr "Sponsors, Tracks, Agenda, Event News"
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_stock_account
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_website_sale_slides
 msgid "Spreadsheet"
-msgstr ""
+msgstr "สเปรดชีต"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_account
@@ -21207,7 +21190,7 @@ msgstr "เริ่มการตั้งค่า"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "รัฐ"
+msgstr "จังหวัด"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -21227,7 +21210,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ps
 msgid "State of Palestine"
-msgstr "สถานะ"
+msgstr "รัฐปาเลสไตน์"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
@@ -21237,7 +21220,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "รัฐ"
+msgstr "จังหวัด"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -21253,7 +21236,7 @@ msgstr "สถานะ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
 msgid "Step"
-msgstr "สถานะ"
+msgstr "ขั้น"
 
 #. module: base
 #. odoo-python
@@ -21272,7 +21255,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Stored"
-msgstr "ชื่อไฟล์ที่จัดเก็บ"
+msgstr "จัดเก็บแล้ว"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__store_fname
@@ -21361,7 +21344,7 @@ msgstr "คำต่อท้าย"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__suffix
 msgid "Suffix value of the record for the sequence"
-msgstr "Suffix value of the record for the sequence"
+msgstr "คำต่อท้าย รายการของเลขลำดับ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
@@ -21518,7 +21501,7 @@ msgstr "Tabloid 29 279.4 x 431.8 มม."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Tag"
-msgstr "แท็ก"
+msgstr "ป้าย"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__name
@@ -21529,7 +21512,7 @@ msgstr "ชื่อแท็ก"
 #: model:ir.model.fields,field_description:base.field_res_partner__category_id
 #: model:ir.model.fields,field_description:base.field_res_users__category_id
 msgid "Tags"
-msgstr "แท็ก"
+msgstr "ป้าย"
 
 #. module: base
 #: model:res.country,name:base.tw
@@ -21593,7 +21576,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr "Logs"
+msgstr "Task Logs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
@@ -21674,7 +21657,7 @@ msgstr "Test API"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_action_bindings
 msgid "Test Action Bindings"
-msgstr ""
+msgstr "Test Action Bindings"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -22415,8 +22398,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The server refused the test recipient (%(email_to)s) with error %(repl)s"
-msgstr ""
-"เซิร์ฟเวอร์ปฏิเสธผู้รับการทดสอบ (%(email_to)s) โดยมีข้อผิดพลาด %(repl)s"
+msgstr "เซิร์ฟเวอร์ปฏิเสธผู้รับทดสอบ (%(email_to)s) โดยมีข้อผิดพลาด %(repl)s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
@@ -22582,7 +22564,7 @@ msgstr "ฟิลด์นี้เหมือนกับฟิลด์ `arch
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
 msgid "This field is used to set/get locales for user"
-msgstr "ฟิลด์นี้ใช้เพื่อตั้งค่า/รับตำแหน่งสำหรับผู้ใช้"
+msgstr "ฟิลด์นี้ใช้เพื่อตั้งค่า/รับรูปแบบภาษาสำหรับผู้ใช้"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch
@@ -22944,6 +22926,7 @@ msgstr ""
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
+"การลงชื่อเข้าใช้ล้มเหลวหลายครั้ง กรุณารอซักครู่ก่อนลงชื่อเข้าใช้อีกครั้ง"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_tools
@@ -23084,7 +23067,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__tree
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Tree"
-msgstr "มุมมองต้นไม้"
+msgstr "ต้นไม้"
 
 #. module: base
 #. odoo-python
@@ -23096,7 +23079,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr ""
+msgstr "Triggered actions"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -23200,15 +23183,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
-"ประเภทของการทำงานของเซิร์ฟเวอร์ ค่าต่อไปนี้มีอยู่:\n"
-"- 'การรันโค้ด Python': บล็อกของโค้ด Python ที่จะถูกดำเนินการ\n"
-"- 'สร้างบันทึกใหม่': สร้างบันทึกใหม่ด้วยค่าใหม่\n"
-"- 'อัปเดตบันทึก': อัปเดตค่าของบันทึก\n"
-"- 'ดำเนินการหลายการกระทำ': กำหนดการกระทำที่กระตุ้นให้เกิดการกระทำของเซิร์ฟเวอร์อื่น\n"
-"- 'ส่งอีเมล': โพสต์ข้อความ บันทึก หรือส่งอีเมล (แชท)\n"
-"- 'เพิ่มผู้ติดตาม': เพิ่มผู้ติดตามในบันทึก (แชท)\n"
-"- 'สร้างกิจกรรมถัดไป': สร้างกิจกรรม (แชท)\n"
-"- 'ส่งข้อความ SMS': ส่ง SMS บันทึกไว้ในเอกสาร (SMS)"
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create a new Record': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': post a message, a note or send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)\n"
+"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -23563,7 +23546,7 @@ msgstr "รายการอัพเดตโมดูล"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
 msgid "Update the Record"
-msgstr "ไม่มีอัพเดท:"
+msgstr "อัพเดทรายงาน"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
@@ -23770,7 +23753,7 @@ msgstr "ส่วนติดต่อผู้ใช้"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user__user_login
 msgid "User Login"
-msgstr "ลงชื่อผู้ใช้"
+msgstr "User Login"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
@@ -23780,7 +23763,7 @@ msgstr "ผู้ใช้งาน"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
 msgid "User log entries"
-msgstr "ผู้ใช้งาน"
+msgstr "รายการ Log ผู้ใช้"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
@@ -23875,7 +23858,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
 msgid "Users Log"
-msgstr "ลงชื่อผู้ใช้"
+msgstr "Log ผู้ใช้"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -24053,7 +24036,7 @@ msgstr "เวียดนาม"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr "ดู"
+msgstr "มุมมอง"
 
 #. module: base
 #. odoo-python
@@ -24081,11 +24064,7 @@ msgstr "ดูสถาปัตยกรรม"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
 msgid "View Mode"
-msgstr ""
-"This function field computes the ordered list of views that should be "
-"enabled when displaying the result of an action, federating view mode, views"
-" and reference view. The result is returned as an ordered list of pairs "
-"(view_id,view_mode)."
+msgstr "แบบมุมมอง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
@@ -24119,7 +24098,7 @@ msgstr "ดูเซสชันแชทสดสำหรับลูกค้
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "View: %s"
-msgstr "View: %s"
+msgstr "มุมมอง: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -24164,7 +24143,7 @@ msgstr "Virgin Islands (USA)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
 msgid "Visible"
-msgstr "สามารถมองเห็น"
+msgstr "มองเห็นได้"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
@@ -24419,8 +24398,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
-"เมื่อจัดการกับการดำเนินการหลายอย่าง คำสั่งดำเนินการจะขึ้นอยู่กับลำดับ "
-"ตัวเลขต่ำหมายถึงลำดับความสำคัญสูง"
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__sequence
@@ -24571,7 +24550,7 @@ msgstr "สิทธิ์การแก้ไข"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "เขียนวันที่"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -24580,8 +24559,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-"เขียนโค้ด Python ที่การดำเนินการจะเกิดขึ้น ตัวแปรบางตัวพร้อมใช้งาน "
-"ความช่วยเหลือเกี่ยวกับนิพจน์ python มีให้ในแถบช่วยเหลือ"
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
@@ -25009,7 +24988,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_account
 msgid "account"
-msgstr ""
+msgstr "บัญชี"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
@@ -25234,7 +25213,7 @@ msgstr "eLearning"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
-msgstr ""
+msgstr "ค่าใช้จ่าย"
 
 #. module: base
 #. odoo-python
@@ -25248,7 +25227,7 @@ msgstr "external id"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
-msgstr "เป็นเท็จ"
+msgstr "เท็จ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
@@ -25311,7 +25290,7 @@ msgstr "init"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__integer
 msgid "integer"
-msgstr "ตัวเลขจำนวนเต็ม"
+msgstr "เลขจำนวนเต็ม"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_act_url
@@ -25380,7 +25359,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "นาที"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -25486,7 +25465,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference
 msgid "reference"
-msgstr "อ้างอิง"
+msgstr "reference"
 
 #. module: base
 #. odoo-python
@@ -25498,12 +25477,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
 msgid "selection"
-msgstr "เลือก"
+msgstr "selection"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
-msgstr "บัญชี"
+msgstr "บัญชีไปรษณีย์"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install

@@ -716,7 +716,7 @@ msgid ""
 "class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
-"class=\"o_form_label o_td_label\">Lettrer la facture fournisseur/client "
+"class=\"o_form_label o_td_label\">Rapprocher la facture fournisseur/client "
 "avec</span>"
 
 #. module: account
@@ -1446,7 +1446,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr "Un modèle de lettrage porte déjà ce nom."
+msgstr "Un modèle de rapprochement porte déjà ce nom."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -3221,12 +3221,12 @@ msgstr "Partenaire bancaire"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Préselection de transactions bancaires à lettrer"
+msgstr "Préselection de transactions bancaires à rapprocher"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Préselection de transactions bancaires à lettrer"
+msgstr "Préselection de transactions bancaires à rapprocher"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -3272,7 +3272,7 @@ msgid ""
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
 "Les transactions bancaires sont comptabilisées immédiatement après l'import ou la synchronisation bancaire. La contrepartie est le compte bancaire d'attente,\n"
-" jusqu'au moment de la réconciliation définitive par le compte définitif. "
+" jusqu'au moment du rapprochement définitive par le compte définitif. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -4653,7 +4653,7 @@ msgstr "Créer un nouveau produit vendable"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Créer un nouveau modèle de lettrage"
+msgstr "Créer un nouveau modèle de rapprochement"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -7715,7 +7715,7 @@ msgid ""
 "Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
-"Les paiements sortants sont comptabilisés sur un compte des paiements entrants en suspens. Dans le widget de la réconciliation bancaire, ils apparaissent sous forme de lignes bleues. \n"
+"Les paiements sortants sont comptabilisés sur un compte des paiements entrants en suspens. Dans le widget du rapprochement bancaire, ils apparaissent sous forme de lignes bleues. \n"
 "Les transactions bancaires sont ensuite réconciliées sur le compte d'attente des reçus, plutôt que sur le compte débiteur."
 
 #. module: account
@@ -9419,7 +9419,7 @@ msgstr "Lettrage #"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__matching_order
 msgid "Matching Order"
-msgstr "Ordre de lettrage"
+msgstr "Ordre de rapprochement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -10796,7 +10796,7 @@ msgstr "Partenaire est défini"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Correspondance de partenaires pour les modèles de lettrage"
+msgstr "Correspondance de partenaires pour les modèles de rapprochement"
 
 #. module: account
 #. odoo-python
@@ -11412,8 +11412,8 @@ msgstr "Acomptes"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Préconfigurer pour créer une pièce pendant le lettrage entre des factures et"
-" des paiements"
+"Préconfigurer pour créer une pièce pendant le rapprochement entre des "
+"factures et des paiements"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11725,7 +11725,7 @@ msgstr "Modèle de ligne de modèle de réconciliation"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr "Modèle de lettrage"
+msgstr "Modèle de rapprochement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -11768,7 +11768,7 @@ msgstr "Modèle de lettrage"
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "Modèles de lettrage"
+msgstr "Modèles de rapprochement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
@@ -12240,7 +12240,7 @@ msgstr "Arbre d'arrondi"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "Règle pour lettrer les factures clients/fournisseurs"
+msgstr "Règle pour rapprocher les factures clients/fournisseurs"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -12251,7 +12251,7 @@ msgstr "Règle pour suggérer l'écriture de la contrepartie"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "Règles pour les modèles de lettrage"
+msgstr "Règles pour les modèles de rapprochement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
@@ -14636,7 +14636,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué qu'aux catégories de clients / "
+"Le modèle de rapprochement ne sera appliqué qu'aux catégories de clients / "
 "fournisseurs sélectionnées."
 
 #. module: account
@@ -14646,7 +14646,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué qu'aux clients/fournisseurs "
+"Le modèle de rapprochement ne sera appliqué qu'aux clients/fournisseurs "
 "sélectionnés."
 
 #. module: account
@@ -14658,7 +14658,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué qu'au type de transaction sélectionné:\n"
+"Le modèle de rapprochement ne sera appliqué qu'au type de transaction sélectionné:\n"
 "         * Montant reçu : S'applique uniquement à la réception d'un montant.\n"
 "         * Montant payé : S'applique uniquement lors du paiement d'un montant.\n"
 "         * Montant payé/reçu : appliqué dans les deux cas."
@@ -14669,8 +14669,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué que lorsqu'un client/fournisseur est "
-"défini."
+"Le modèle de rapprochement ne sera appliqué que lorsqu'un client/fournisseur"
+" est défini."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14679,8 +14679,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué que lorsque le montant est plus petit"
-" que, plus grand que, ou entre le(s) montant(s) spécifié(s)."
+"Le modèle de rapprochement ne sera appliqué que lorsque le montant est plus "
+"petit que, plus grand que, ou entre le(s) montant(s) spécifié(s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -14691,7 +14691,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué que lorsque le libellé :\n"
+"Le modèle de rapprochement ne sera appliqué que lorsque le libellé :\n"
 "        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
 "        * Ne contient pas : l'opposé de \"Contient\".\n"
 "        * Match Regex : définissez vos propres expressions régulières."
@@ -14705,7 +14705,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué que lorsque la note :\n"
+"Le modèle de rapprochement ne sera appliqué que lorsque la note :\n"
 "        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
 "        * Ne contient pas : l'opposé de \"Contient\".\n"
 "        * Match Regex : définissez vos propres expressions régulières."
@@ -14719,7 +14719,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Le modèle de lettrage ne sera appliqué que lorsque le type de transaction :\n"
+"Le modèle de rapprochement ne sera appliqué que lorsque le type de transaction :\n"
 "        * Contient : la proposition de libellé doit contenir cette chaine (insensible à la casse).\n"
 "        * Ne contient pas : l'opposé de \"Contient\".\n"
 "        * Match Regex : définissez vos propres expressions régulières."
@@ -14730,7 +14730,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be available from the selected journals."
 msgstr ""
-"Le modèle de lettrage ne sera disponible que depuis les journaux "
+"Le modèle de rapprochement ne sera disponible que depuis les journaux "
 "sélectionnés."
 
 #. module: account
@@ -15305,8 +15305,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
-"Cette règle de lettrage est utilisée lorsque l'utilisateur n'est pas certain"
-" de toutes les informations de la contrepartie."
+"Cette règle de rapprochement est utilisée lorsque l'utilisateur n'est pas "
+"certain de toutes les informations de la contrepartie."
 
 #. module: account
 #. odoo-python
@@ -15411,15 +15411,15 @@ msgid ""
 "This reconciliation model can't be used in the manual reconciliation widget "
 "because its configuration is not adapted"
 msgstr ""
-"Ce modèle de lettrage n'est pas utilisable dans le widget de lettrage manuel"
-" car sa configuration n'est pas adaptée"
+"Ce modèle de rapprochement n'est pas utilisable dans le widget de "
+"rapprochement manuel car sa configuration n'est pas adaptée"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr "Ce modèle de lettrage n'a créé aucune écriture jusqu'à présent"
+msgstr "Ce modèle de rapprochement n'a créé aucune écriture jusqu'à présent"
 
 #. module: account
 #. odoo-python
@@ -15451,7 +15451,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Ceux-ci seront utilisés pour créer rapidement une écriture comptable lors de la réconciliation\n"
+"Ceux-ci seront utilisés pour créer rapidement une écriture comptable lors du rapprochement\n"
 "d'un virement bancaire ou d'un compte."
 
 #. module: account
@@ -16111,7 +16111,8 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
-"Valider la ligne du relevé automatiquement (lettrage basé sur votre règle)."
+"Valider la ligne du relevé automatiquement (rapprochement basé sur votre "
+"règle)."
 
 #. module: account
 #. odoo-javascript
@@ -16434,7 +16435,7 @@ msgstr "Avec Odoo, vous n'aurez pas à enregistrer les factures manuellement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr "Avec un lettrage partenaire"
+msgstr "Avec un rapprochement partenaire"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
