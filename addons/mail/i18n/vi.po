@@ -66,6 +66,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s không được công nhận là email hợp lệ. Đây là điều kiện bắt buộc để"
+" tạo một khách hàng mới."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -545,7 +547,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
 msgid "A bus presence must have a user or a guest."
-msgstr ""
+msgstr "Sự hiện diện bus phải có người dùng hoặc khách."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_partner_partner_or_guest_exists
@@ -591,7 +593,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr ""
+msgstr "Cài đặt âm lượng phải có đối tác hoặc khách."
 
 #. module: mail
 #. openerp-web
@@ -859,7 +861,7 @@ msgstr "Thêm người dùng"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr ""
+msgstr "Thêm thông tin đăng nhập twilio của bạn cho máy chủ ICE"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1043,7 +1045,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn bỏ hạn chế Địa chỉ email này không?"
 
 #. module: mail
 #. openerp-web
@@ -1506,6 +1508,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(guest_names)s"
 msgstr ""
+"Kênh \"%(channel_name)s\" chỉ chấp nhận thành viên trong nhóm "
+"\"%(group_name)s\". Bị cấm đối với: %(guest_names)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1714,7 +1718,7 @@ msgstr "Cài đặt cấu hình"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr ""
+msgstr "Cấu hình danh sách máy chủ ICE của bạn cho webRTC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2017,7 +2021,7 @@ msgstr "Hạn chót"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Deafen"
-msgstr ""
+msgstr "Tắt tiếng"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -2107,7 +2111,7 @@ msgstr "Loại trễ"
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "Delay after releasing push-to-talk"
-msgstr ""
+msgstr "Độ trễ sau khi nhả nút bấm để nói"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -2146,7 +2150,7 @@ msgstr "Phát thư thất bại"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "Lỗi gửi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2224,7 +2228,7 @@ msgstr "Ngắt kết nối"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "Disconnected from the RTC call by the server"
-msgstr ""
+msgstr "Máy chủ đã ngắt kết nối khỏi cuộc gọi RTC"
 
 #. module: mail
 #. openerp-web
@@ -2631,6 +2635,8 @@ msgid ""
 "Email alias %(alias_name)s cannot be used on %(count)d records at the same "
 "time. Please update records one by one."
 msgstr ""
+"Không thể sử dụng bí danh email %(alias_name)s trên các tập dữ liệu "
+"%(count)d cùng một lúc. Vui lòng cập nhật lần lượt từng tập dữ liệu."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3021,7 +3027,7 @@ msgstr "Từ"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
-msgstr ""
+msgstr "Toàn bộ composer"
 
 #. module: mail
 #. openerp-web
@@ -3091,7 +3097,7 @@ msgstr "Nhóm theo..."
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Grouped Chat"
-msgstr ""
+msgstr "Cuộc trò chuyện được nhóm"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
@@ -3240,23 +3246,25 @@ msgid ""
 "How long the audio broadcast will remain active after passing the volume "
 "threshold"
 msgstr ""
+"Trình phát âm thanh sẽ duy trì hoạt động trong bao lâu sau khi vượt qua "
+"ngưỡng âm lượng"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "ICE Servers"
-msgstr ""
+msgstr "Máy chủ ICE"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE server"
-msgstr ""
+msgstr "Máy chủ ICE"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
 #: model:ir.ui.menu,name:mail.mail_channel_ice_servers_menu
 msgid "ICE servers"
-msgstr ""
+msgstr "Máy chủ ICE"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__id
@@ -3323,7 +3331,7 @@ msgstr "Id của tài nguyên đã theo dõi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 msgid "Identity"
-msgstr ""
+msgstr "Định danh"
 
 #. module: mail
 #. openerp-web
@@ -3387,6 +3395,9 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Nếu được thiết lập, trình quản lý danh sách chờ sẽ gửi email sau ngày đó. "
+"Nếu không được thiết lập, email sẽ được gửi sớm nhất có thể. Nếu không xác "
+"định rõ múi giờ, thì nó được coi là nằm trong múi giờ UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -3425,6 +3436,9 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
+"Nếu đúng, câu trả lời sẽ không đi vào luồng thảo luận tài liệu gốc. Thay vào"
+" đó, nó sẽ kiểm tra reply_to trong id tin nhắn theo dõi và chuyển hướng "
+"tương ứng với kết quả. Điều này có tác động đến id tin nhắn được tạo."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3448,7 +3462,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
-msgstr ""
+msgstr "Nếu bạn muốn sử dụng twilio làm nhà cung cấp máy chủ TURN/STUN"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -3703,12 +3717,12 @@ msgstr "Là đoạn chat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
 msgid "Is discuss sidebar category channel open?"
-msgstr ""
+msgstr "Kênh danh mục thanh bên thảo luận có mở không?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_chat_open
 msgid "Is discuss sidebar category chat open?"
-msgstr ""
+msgstr "Hộp thoại trò chuyện danh mục thanh bên thảo luận có mở không?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
@@ -3723,12 +3737,12 @@ msgstr "Được ghim ở giao diện"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_camera_on
 msgid "Is sending user video"
-msgstr ""
+msgstr "Đang gửi video của người dùng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr ""
+msgstr "Đang chia sẻ màn hình"
 
 #. module: mail
 #. openerp-web
@@ -3747,7 +3761,7 @@ msgstr "Tham gia"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Join Call"
-msgstr ""
+msgstr "Tham gia cuộc gọi"
 
 #. module: mail
 #. openerp-web
@@ -3775,7 +3789,7 @@ msgstr "Tham gia nhóm"
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "LIVE"
-msgstr ""
+msgstr "TRỰC TIẾP"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__lang
@@ -3794,7 +3808,7 @@ msgstr "Tìm nạp lần cuối"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__last_interest_dt
 msgid "Last Interest"
-msgstr ""
+msgstr "Lần quan tâm cuối cùng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity____last_update
@@ -4020,7 +4034,7 @@ msgstr "Ghi một ghi chú nội bộ"
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Log an internal note..."
-msgstr ""
+msgstr "Ghi nhận ghi chú nội bộ..."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -4039,7 +4053,7 @@ msgstr "Tạo ghi chú"
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "Logged as"
-msgstr ""
+msgstr "Đã đăng nhập với tư cách là"
 
 #. module: mail
 #. openerp-web
@@ -4084,19 +4098,19 @@ msgstr "Mẫu kênh thư"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
 msgid "Mail Composer Mixin"
-msgstr ""
+msgstr "Mixin composer email"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "Mail Failures"
-msgstr ""
+msgstr "Lỗi email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_rtc_session
 msgid "Mail RTC session"
-msgstr ""
+msgstr "Phiên RTC email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
@@ -6031,7 +6045,7 @@ msgstr "Giới hạn mẫu thư và kết xuất Jinja."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Restrict mail templates edition and QWEB placeholders usage."
-msgstr ""
+msgstr "Hạn chế phiên bản mẫu thư và việc sử dụng trình giữ chỗ QWEB."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -6052,7 +6066,7 @@ msgstr "Thông điệp Rich-text/HTML"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__rtc_inviting_session_id
 msgid "Ringing session"
-msgstr ""
+msgstr "Ringing session"
 
 #. module: mail
 #. openerp-web
@@ -6863,7 +6877,7 @@ msgstr ""
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment %s does not exist."
-msgstr ""
+msgstr "Tệp đính kèm %s không tồn tại."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -7252,12 +7266,12 @@ msgstr "Bật camera"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 msgid "Twilio Account Auth Token"
-msgstr ""
+msgstr "Token xác thực tài khoản Twilio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
 msgid "Twilio Account SID"
-msgstr ""
+msgstr "SID tài khoản Twilio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -7357,7 +7371,7 @@ msgstr "Lý do bỏ khỏi danh sách đen: %s"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Undeafen"
-msgstr ""
+msgstr "Bỏ tắt tiếng"
 
 #. module: mail
 #. openerp-web
@@ -7649,6 +7663,8 @@ msgid ""
 "Value for `mail.catchall.domain.allowed` cannot be validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
+"Không thể xác thực giá trị cho `mail.catchall.domain.allowed`.\n"
+"Nó phải là một danh sách các tên miền được phân tách bằng dấu phẩy. VD:. example.com, example.org."
 
 #. module: mail
 #. openerp-web
@@ -7686,7 +7702,7 @@ msgstr "Dạng hiển thị"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Xem hình ảnh"
 
 #. module: mail
 #. openerp-web
@@ -7808,7 +7824,7 @@ msgstr "Tên hoạt động sai (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "YYYY-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web
@@ -7949,6 +7965,8 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
+"Bạn không có quyền truy cập để bỏ hạn chế email. Vui lòng liên hệ với quản "
+"trị viên."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8092,7 +8110,7 @@ msgstr "Thu nhỏ (-)"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered partners"
-msgstr ""
+msgstr "địa chỉ liên kết với các đối tác đã đăng ký"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
@@ -8124,7 +8142,7 @@ msgstr "board-meetings"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
-msgstr ""
+msgstr "trả về"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -8152,7 +8170,7 @@ msgstr ""
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "catchall"
-msgstr ""
+msgstr "nhận tất cả"
 
 #. module: mail
 #. openerp-web
@@ -8226,12 +8244,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "e.g. support"
-msgstr ""
+msgstr "VD: hỗ trợ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
-msgstr ""
+msgstr "VD: true.true..f"
 
 #. module: mail
 #. openerp-web
@@ -8283,7 +8301,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "live"
-msgstr ""
+msgstr "trực tiếp"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -8338,7 +8356,7 @@ msgstr "ms"
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #, python-format
 msgid "muted"
-msgstr ""
+msgstr "tắt tiếng"
 
 #. module: mail
 #. openerp-web
@@ -8361,7 +8379,7 @@ msgstr "trên"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "on:"
-msgstr ""
+msgstr "trên:"
 
 #. module: mail
 #. openerp-web
@@ -8376,7 +8394,7 @@ msgstr "hoặc"
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
 #, python-format
 msgid "other members."
-msgstr ""
+msgstr "thành viên khác."
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
@@ -8443,7 +8461,7 @@ msgstr "giới hạn chỉ cho tác giả đã biết"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "results out of"
-msgstr ""
+msgstr "kết quả trong số"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
@@ -8461,12 +8479,12 @@ msgstr ""
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "some specific addresses"
-msgstr ""
+msgstr "một số địa chỉ cụ thể"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__stun
 msgid "stun:"
-msgstr ""
+msgstr "stun:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8497,12 +8515,12 @@ msgstr "để đóng cho"
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "toggle push-to-talk"
-msgstr ""
+msgstr "chuyển đổi bấm để nói"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__turn
 msgid "turn:"
-msgstr ""
+msgstr "turn:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

@@ -60,13 +60,13 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr ""
+msgstr "%(team_name)skomandaya ayrılan %(assigned)spotensial müştərilər"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr ""
+msgstr "%(attach_name)s (%(lead_name)sdan)"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -80,6 +80,8 @@ msgstr "%(duplicates)s Təkrarlanan potensial müştərilər birləşdirildi. "
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
+"%(member_count)s satış təmsilçiləri arasında təyin edilən "
+"%(members_assigned)spotensial müştərilər"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -238,6 +240,8 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\">  </span>da"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -599,7 +603,7 @@ msgstr "Tapşırıq Qaydaları"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "%(team)skomanda üçün təyinat domeni yanlış formatlaşdırıb"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -841,7 +845,7 @@ msgstr "Təbriklər, belə böyük nailiyyətlər qazanmaq üçün uğurlar! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Yaradılmış potensial müştəriləri nəzərdən keçirin bu tarixdən"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1140,6 +1144,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
+"Satış Qrupu elektron poçtuna göndərilən e-poçtların satış kanalınızda "
+"fürsətlər yaratdığını bilirdinizmi?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1217,6 +1223,7 @@ msgstr "Domen"
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats !"
 msgstr ""
+"Razılaşma əldə edildikdə fürsəti <b>Qazanılmış</b>a sürüşdürün. Təbriklər!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1432,7 +1439,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr ""
+msgstr "Məcburi Təyinat"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -2357,6 +2364,9 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
+"%(team_name)s komandaya və onun satış işçilərinə heç bir ayrılmış potensial "
+"müştəri yoxdur, çünki təyin edilməmiş potensial müştəri onun domeninə uyğun "
+"gəlmir."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2406,6 +2416,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+"Heç bir potensial müştəri onun domeninə uyğun gəlmədiyi üçün %(team_name)s "
+"komandaya  heç bir potensial müştəri ayrılmayıb. "
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -3086,6 +3098,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
+"Müqavilələrin yenilənmə dövrünü (məsələn: Aylıq, İllik) göstərmək üçün "
+"Fürsətlər üzrə Təkrarlanan Planlar təyin edin."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3473,6 +3487,8 @@ msgstr "Tövsiyyə: Gələn elektron poçtları fürsətlərə çevirin"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
 msgstr ""
+"Tövsiyyə : Odoo-nun təchiz edilmiş sistemi tərəfindən işləyən potensial "
+"müştəri tapma funksiyası olduğunu biliyinizmi?\""
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3511,6 +3527,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
+"Məlumat itkisinin qarşısını almaq üçün Potensial Müştərilər və Fürsətlər "
+"yalnız %(max_length)s qruplar tərəfindən birləşdirilə bilər"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3532,7 +3550,7 @@ msgstr "İzləmə"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "Son 12 ay"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -3671,6 +3689,8 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
 msgstr ""
+"Elekton poçt slüzünü sınamaq üçün yuxarı solda yerləşən   <i>Yarat</i> "
+"düyməsindən istifadə edin, yaxud %s elekton - poçt göndərin. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

@@ -41,14 +41,14 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires \"%s\" access"
-msgstr "\"%s\" erfordert \"%s\" Zugang"
+msgstr "„%s“ erfordert „%s“-Zugriff"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr "\"%s\" erfordert Zugang zum Mikrofon"
+msgstr "„%s“ erfordert Zugriff aufs Mikrofon"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -119,7 +119,7 @@ msgstr "%s (Kopie)"
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid "%s and %s are typing..."
-msgstr "%s und %s schreiben..."
+msgstr "%s und %s schreiben ..."
 
 #. module: mail
 #. openerp-web
@@ -167,7 +167,7 @@ msgstr "%s hat mit %s reagiert"
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid "%s is typing..."
-msgstr "%s schreibt..."
+msgstr "%s schreibt ..."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel_partner.py:0
@@ -292,9 +292,9 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 "<br><br>\n"
-"            Tippen Sie<b>@Benutzername</b> um jemanden zu erwähnen und dessen Aufmerksamkeit zu erhalten.<br>\n"
-"            Tippen Sie <b>#channel</b> um einen Channel zu erwähnen.<br>\n"
-"            Tippen Sie <b>/Befehl</b> um einen Befehl auszuführen.<br>"
+"            Tippen Sie<b>@Benutzername</b>, um jemanden zu erwähnen und dessen Aufmerksamkeit zu erhalten.<br>\n"
+"            Tippen Sie <b>#Kanal</b>, um einen Kanal zu erwähnen.<br>\n"
+"            Tippen Sie <b>/Befehl</b>, um einen Befehl auszuführen.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -316,7 +316,7 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">hat<a href=\"#\" data-oe-"
 "model=\"res.partner\" data-oe-"
-"id=\"%(new_partner_id)d\">%(new_partner_name)s</a> zum Channel "
+"id=\"%(new_partner_id)d\">%(new_partner_name)s</a> zum Kanal "
 "eingeladen</div>"
 
 #. module: mail
@@ -324,13 +324,13 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">joined the channel</div>"
-msgstr "<div class=\"o_mail_notification\">ist dem Channel beigetreten</div>"
+msgstr "<div class=\"o_mail_notification\">ist dem Kanal beigetreten</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">left the channel</div>"
-msgstr "<div class=\"o_mail_notification\">hat den Channel verlassen</div>"
+msgstr "<div class=\"o_mail_notification\">hat den Kanal verlassen</div>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -420,7 +420,7 @@ msgid ""
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                <strong>Email-Massenmail</strong> an\n"
+"                                <strong>E-Mail-Massenmailing</strong> an\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">die ausgewählten Datensätze</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">mit dem aktuellen Suchfilter</span>.\n"
 "                            </span>\n"
@@ -1502,7 +1502,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Changed"
-msgstr "geändert"
+msgstr "Geändert"
 
 #. module: mail
 #. openerp-web
@@ -1863,7 +1863,7 @@ msgstr "Land"
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Create"
-msgstr "Anlegen"
+msgstr "Erstellen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -1899,7 +1899,7 @@ msgstr "%(document)s erstellen durch E-Mail an %(email_link)s"
 #: code:addons/mail/static/src/components/discuss/discuss.js:0
 #, python-format
 msgid "Create or search channel..."
-msgstr "Channel erstellen oder suchen..."
+msgstr "Kanal erstellen oder suchen ..."
 
 #. module: mail
 #. openerp-web
@@ -2361,7 +2361,7 @@ msgstr "Dokumentmodell"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr "Dokumenten Name"
+msgstr "Dokumentname"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2534,7 +2534,7 @@ msgstr "E-Mail-Adresse"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr "E-Mail Alias"
+msgstr "E-Mail-Alias"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -2716,7 +2716,7 @@ msgstr "Auftragsverfolgung aktivieren"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Enable desktop notifications to chat."
-msgstr "Aktivieren Sie Desktop-Benachrichtigungen für den Chat."
+msgstr "Desktop-Benachrichtigungen für den Chat aktivieren"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2814,13 +2814,13 @@ msgstr "Fehlgeschlagen"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render QWeb template : %s)"
-msgstr "QWeb-Vorlage konnte nicht gerendert werden : %s)"
+msgstr "QWeb-Vorlage konnte nicht gerendert werden: %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render inline_template template : %s)"
-msgstr "Die Vorlage inline_template konnte nicht gerendert werden : %s)"
+msgstr "Die Vorlage inline_template konnte nicht gerendert werden: %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -2956,7 +2956,7 @@ msgstr "Einen Kanal finden oder erstellen..."
 #: code:addons/mail/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "Find or start a conversation..."
-msgstr "Eine Unterhaltung finden oder beginnen"
+msgstr "Eine Unterhaltung finden oder beginnen ..."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__folded
@@ -3034,7 +3034,7 @@ msgstr "FontAwesome-Icon, z. B. fa-tasks"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Formatierte Email"
+msgstr "Formatierte E-Mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4268,7 +4268,7 @@ msgstr "Als gelesen markieren"
 #: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Mark as Todo"
-msgstr "Als zu erledigen markieren"
+msgstr "Als To-do markieren"
 
 #. module: mail
 #. openerp-web
@@ -6744,7 +6744,7 @@ msgstr "Betreff (Platzhalter können verwendet werden)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Subject..."
-msgstr "Betreff..."
+msgstr "Betreff ..."
 
 #. module: mail
 #. openerp-web
@@ -7006,7 +7006,7 @@ msgstr "Der auskommentierte HTLM-Code, der das Tastaturkürzel ersetzt"
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #, python-format
 msgid "The field %s does not exist on the model %s"
-msgstr "Das Feld %s existiert nicht im Model %s"
+msgstr "Das Feld %s existiert nicht im Modell %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
@@ -7022,7 +7022,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Das Model (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
+"Das Modell (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
 "eingehenden E-Mails ohne Bezug zu einer bereits vorhandenen E-Mail führen "
 "üblicherweise zur Erstellung eines neuen Datensatz dieses Modells (z. B. "
 "Projektaufgabe)."
@@ -7230,7 +7230,7 @@ msgstr "An (Partner)"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To Do"
-msgstr "Zu erledigen"
+msgstr "To-do"
 
 #. module: mail
 #. openerp-web

@@ -54,8 +54,8 @@ msgstr "%s Kassenzahlung von %s in %s"
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order ?"
 msgstr ""
-"%s hat einen Gesamtbetrag von %s, sind Sie sicher, dass Sie diese Bestellung"
-" stornieren möchten?"
+"%s hat einen Gesamtbetrag von %s, sind Sie sicher, dass Sie diesen Auftrag "
+"stornieren möchten?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -543,7 +543,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_gift_card
 msgid "Allow the use of gift card"
-msgstr "Erlaube die Nutzung von Geschenkkarten"
+msgstr "Die Verwendung von Geschenkkarten erlauben"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_orderline_customer_notes
@@ -685,7 +685,7 @@ msgstr "Autorisierte Differenz"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
-msgstr "Automatische Sitzung für Einzelaufträge, in den Bedingungen ignoriert"
+msgstr "Automatische Sitzung für Bestellungen, in den Bedingungen ignoriert"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -756,7 +756,7 @@ msgstr "Bankzahlungen"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
-msgstr "Bankauszug"
+msgstr "Kontoauszug"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1229,7 +1229,7 @@ msgstr "Kundenbildschirm getrennt"
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
 msgstr ""
-"Kundenbildschirm nicht unterstützt. Bitte aktualisieren Sie die IoT Box."
+"Kundenbildschirm nicht unterstützt. Bitte aktualisieren Sie die IoT-Box."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1360,7 +1360,7 @@ msgstr "Konfiguration"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr "Konfiguration für Buchungssätze von PoS-Aufträgen"
+msgstr "Konfiguration für Journalbuchungen von Kassenaufträgen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -1387,13 +1387,12 @@ msgstr "Bestätigen"
 #: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #, python-format
 msgid "Confirm ?"
-msgstr "Bestätigen ?"
+msgstr "Bestätigen?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
-msgstr ""
-"Verbinden Sie Geräte direkt zu Ihrem PoS ohne eine IoT-Box zu verwenden"
+msgstr "Verbinden Sie Geräte direkt ohne IoT-Box mit Ihrem Kassensystem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1528,7 +1527,7 @@ msgstr "Land"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_coupon
 msgid "Coupon and Promotion Programs"
-msgstr "Kupons und Promos"
+msgstr "Gutscheine und Werbeaktionen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1747,7 +1746,7 @@ msgstr "Fehlerbeseitigungsfenster"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
 msgid "Default Account"
-msgstr "Standard-Account"
+msgstr "Standardkonto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
@@ -1854,7 +1853,7 @@ msgstr "Bezahlte Aufträge löschen"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr "Bezahlte Aufträge entfernen?"
+msgstr "Bezahlte Aufträge löschen?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1868,7 +1867,7 @@ msgstr "Unbezahlte Aufträge löschen"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr "Unbezahlte Aufträge entfernen?"
+msgstr "Unbezahlte Aufträge löschen?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2127,7 +2126,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Electronic Scale"
-msgstr "Elektronische Verkäufe"
+msgstr "Elektronische Waage"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3046,8 +3045,8 @@ msgstr ""
 "Leer lassen, um das Debitorenkonto des Kunden zu verwenden.\n"
 "Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ Wahr ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
 "Beim Kassenjournal wird über die Auszugszeilen direkt auf das Standardkonto im Journal geschrieben.\n"
-"Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für offene geschrieben.\n"
-"Es sind nur Bar- und Bankjournale zulässig."
+"Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für offene Rechnungen geschrieben.\n"
+"Es sind nur Kassen- und Bankjournale zulässig."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.letter_tray
