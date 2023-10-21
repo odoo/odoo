@@ -4000,6 +4000,104 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 0.01,     'tax_ids': [],              'tax_tag_ids': self.tax_tags[5].ids,    'account_id': self.tax_account_2.id},
         ])
 
+    def test_matching_number_full_reconcile(self):
+        currency = self.env.company.currency_id
+        line_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        line_b = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        (line_a + line_b).reconcile()
+        self.assertFullReconcile(line_a.full_reconcile_id, (line_a + line_b))
+        self.assertEqual(line_a.matching_number, str(line_a.full_reconcile_id.id))
+        self.assertEqual(line_a.matching_number, line_b.matching_number)
+
+    def test_matching_number_partial_single_reconcile(self):
+        currency = self.env.company.currency_id
+        line_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        line_b = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        (line_a + line_b).reconcile()
+        self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.id}')
+        self.assertEqual(line_a.matching_number, line_b.matching_number)
+
+    def test_matching_number_partial_multi_reconcile(self):
+        currency = self.env.company.currency_id
+        line_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        line_b = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        line_c = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        line_d = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        (line_a + line_b).reconcile()
+        (line_a + line_c).reconcile()
+        (line_c + line_d).reconcile()
+        self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.ids[0]}')
+        self.assertEqual(line_b.matching_number, line_a.matching_number)
+        self.assertEqual(line_c.matching_number, line_a.matching_number)
+        self.assertEqual(line_d.matching_number, line_a.matching_number)
+
+        line_b.remove_move_reconcile()
+        self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.ids[0]}')
+        self.assertEqual(line_b.matching_number, False)
+        self.assertEqual(line_c.matching_number, f'P{line_c.matched_debit_ids.ids[0]}')
+        self.assertEqual(line_d.matching_number, line_c.matching_number)
+
+        (line_a + line_b).reconcile()  # everything should be matched again
+        self.assertEqual(line_a.matching_number, line_c.matching_number)
+        self.assertEqual(line_b.matching_number, line_c.matching_number)
+        self.assertEqual(line_c.matching_number, f'P{line_c.matched_debit_ids.ids[0]}')
+        self.assertEqual(line_d.matching_number, line_c.matching_number)
+
+    def test_matching_number_partial_multi_separate_reconcile(self):
+        currency = self.env.company.currency_id
+        line_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        line_b = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        (line_a + line_b).reconcile()
+        self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.id}')
+        self.assertEqual(line_a.matching_number, line_b.matching_number)
+
+        line_c = self.create_line_for_reconciliation(-300, -300, currency, '2016-01-01')
+        (line_a + line_c).reconcile()
+        self.assertEqual(line_a.matching_number, f'P{line_a.matched_credit_ids.ids[0]}')
+        self.assertEqual(line_a.matching_number, line_b.matching_number)
+        self.assertEqual(line_a.matching_number, line_c.matching_number)
+
+    def test_matching_number_unreconcile_single(self):
+        currency = self.env.company.currency_id
+        full_line_a = self.create_line_for_reconciliation(200, 200, currency, '2016-01-01')
+        full_line_b = self.create_line_for_reconciliation(-200, -200, currency, '2016-01-01')
+        partial_line_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        partial_line_b = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        (full_line_a + full_line_b).reconcile()
+        (partial_line_a + partial_line_b).reconcile()
+        (full_line_a + full_line_b + partial_line_a + partial_line_b).remove_move_reconcile()
+        self.assertFalse(full_line_a.matching_number)
+        self.assertFalse(full_line_b.matching_number)
+        self.assertFalse(partial_line_a.matching_number)
+        self.assertFalse(partial_line_b.matching_number)
+
+    def test_matching_number_unreconcile_multi(self):
+        currency = self.env.company.currency_id
+        line_a = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        line_b = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        line_c = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        line_d = self.create_line_for_reconciliation(300, 300, currency, '2016-01-01')
+        (line_a + line_b).reconcile()
+        (line_b + line_c).reconcile()
+        (line_c + line_d).reconcile()
+
+        previous_matching_number = line_a.matching_number
+        line_a.remove_move_reconcile()
+        self.assertFalse(line_a.matching_number)
+        self.assertNotEqual(previous_matching_number, line_b.matching_number)
+        self.assertEqual(line_b.matching_number, line_c.matching_number)
+        self.assertEqual(line_b.matching_number, line_d.matching_number)
+
+        previous_matching_number = line_b.matching_number
+        line_b.remove_move_reconcile()
+        self.assertFalse(line_b.matching_number)
+        self.assertNotEqual(previous_matching_number, line_c.matching_number)
+        self.assertEqual(line_c.matching_number, line_d.matching_number)
+
+        line_c.remove_move_reconcile()
+        self.assertFalse(line_c.matching_number)
+        self.assertFalse(line_d.matching_number)
+
     def test_caba_mix_reconciliation(self):
         """ Test the reconciliation of tax lines (when using a reconcilable tax account)
         for cases mixing taxes exigible on payment and on invoices.
