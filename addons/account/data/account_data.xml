@@ -97,18 +97,6 @@
                 Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})]"/>
         </record>
 
-        <!--
-        Account Statement Sequences
-        -->
-        <record id="sequence_reconcile_seq" model="ir.sequence">
-            <field name="name">Account reconcile sequence</field>
-            <field name="code">account.reconcile</field>
-            <field name="prefix">A</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="False" name="company_id"/>
-        </record>
-
         <!-- Account-related subtypes for messaging / Chatter -->
         <record id="mt_invoice_validated" model="mail.message.subtype">
             <field name="name">Validated</field>

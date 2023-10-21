@@ -6,7 +6,6 @@ class AccountFullReconcile(models.Model):
     _name = "account.full.reconcile"
     _description = "Full Reconcile"
 
-    name = fields.Char(string='Number', required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('account.reconcile'))
     partial_reconcile_ids = fields.One2many('account.partial.reconcile', 'full_reconcile_id', string='Reconciliation Parts')
     reconciled_line_ids = fields.One2many('account.move.line', 'full_reconcile_id', string='Matched Journal Items')
     exchange_move_id = fields.Many2one('account.move', index="btree_not_null")
@@ -35,3 +34,10 @@ class AccountFullReconcile(models.Model):
             moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        fulls = super().create(vals_list)
+        for full in fulls:
+            full.reconciled_line_ids.matching_number = str(full.id)
+        return fulls

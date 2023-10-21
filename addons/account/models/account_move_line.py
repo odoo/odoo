@@ -257,7 +257,7 @@ class AccountMoveLine(models.Model):
     )
     matching_number = fields.Char(
         string="Matching #",
-        compute='_compute_matching_number', store=True,
+        readonly=True,
         help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
              "the full reconcile if it exists.",
     )
@@ -666,16 +666,6 @@ class AccountMoveLine(models.Model):
                 line.amount_currency = line.currency_id.round(line.balance * line.currency_rate)
             if line.currency_id == line.company_id.currency_id:
                 line.amount_currency = line.balance
-
-    @api.depends('full_reconcile_id.name', 'matched_debit_ids', 'matched_credit_ids')
-    def _compute_matching_number(self):
-        for record in self:
-            if record.full_reconcile_id:
-                record.matching_number = record.full_reconcile_id.name
-            elif record.matched_debit_ids or record.matched_credit_ids:
-                record.matching_number = 'P'
-            else:
-                record.matching_number = None
 
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
     def _compute_cumulated_balance(self):
@@ -2949,13 +2939,22 @@ class AccountMoveLine(models.Model):
 
     def _all_reconciled_lines(self):
         reconciliation_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
-        current_lines = reconciliation_lines
-        current_partials = self.env['account.partial.reconcile']
-        while current_lines:
-            current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
-            current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
-            reconciliation_lines += current_lines
-        return reconciliation_lines
+        self.env['account.partial.reconcile'].flush_model()
+        self.env.cr.execute("""
+            WITH RECURSIVE partials (current_id) AS (
+                    SELECT line.id
+                      FROM account_move_line line
+                     WHERE id = ANY(%s)
+
+                                                UNION
+
+                    SELECT CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id ELSE partial.debit_move_id END
+                      FROM partials p
+                      JOIN account_partial_reconcile partial ON partial.debit_move_id = p.current_id OR partial.credit_move_id = p.current_id
+            )
+            SELECT current_id FROM partials;
+        """, [reconciliation_lines.ids])
+        return self.browse(r[0] for r in self.env.cr.fetchall())
 
     def _get_attachment_domains(self):
         self.ensure_one()

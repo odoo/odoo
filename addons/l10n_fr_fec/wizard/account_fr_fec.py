@@ -337,7 +337,7 @@ class AccountFrFec(models.TransientModel):
                 ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
-            CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
+            CASE WHEN rec.id IS NULL THEN ''::text ELSE rec.id::text END AS EcritureLet,
             CASE WHEN aml.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(rec.create_date, 'YYYYMMDD') END AS DateLet,
             TO_CHAR(am.date, 'YYYYMMDD') AS ValidDate,
             CASE
