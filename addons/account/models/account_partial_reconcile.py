@@ -8,7 +8,6 @@ from datetime import date
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
-    _rec_name = "id"
 
     # ==== Reconciliation fields ====
     debit_move_id = fields.Many2one(
@@ -106,6 +105,7 @@ class AccountPartialReconcile(models.Model):
 
         # Retrieve the matching number to unlink.
         full_to_unlink = self.full_reconcile_id
+        all_reconciled = self.debit_move_id + self.credit_move_id
 
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
@@ -126,7 +126,56 @@ class AccountPartialReconcile(models.Model):
             } for move in moves_to_reverse]
             moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
+        self._update_matching_number(all_reconciled)
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        partials = super().create(vals_list)
+        self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
+        return partials
+
+    @api.model
+    def _update_matching_number(self, amls):
+        amls = amls._all_reconciled_lines()
+        self.env['account.partial.reconcile'].flush_model()
+        amls.flush_recordset(['full_reconcile_id'])
+        self.env.cr.execute("""
+            WITH RECURSIVE partials (line_id, current_id) AS (
+                    SELECT id, id 
+                      FROM account_move_line
+                     WHERE id = ANY(%s)
+                       AND full_reconcile_id IS NULL
+
+                                                UNION
+                                                
+                    SELECT p.line_id,
+                           CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id
+                                ELSE partial.debit_move_id
+                           END
+                      FROM partials p
+                      JOIN account_partial_reconcile partial ON p.current_id = partial.debit_move_id
+                                                             OR p.current_id = partial.credit_move_id
+            )
+              SELECT line_id, 'P' || MIN(partial.id) AS matching_number
+                FROM partials
+                JOIN account_partial_reconcile partial ON current_id = partial.debit_move_id
+                                                       OR current_id = partial.credit_move_id
+            GROUP BY line_id
+        """, [
+            amls.ids,
+        ])
+
+        line_matching_number = dict(self.env.cr.fetchall())
+
+        for line in amls:
+            if line.full_reconcile_id:
+                line.matching_number = str(line.full_reconcile_id.id)
+            elif line.matched_debit_ids or line.matched_credit_ids:
+                line.matching_number = line_matching_number[line.id]
+            else:
+                line.matching_number = False
+
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
