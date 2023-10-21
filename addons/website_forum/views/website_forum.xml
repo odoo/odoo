@@ -1532,7 +1532,7 @@
 
         <div class="row mb-5" t-if="tags">
             <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <span t-attf-class="badge border px-2 #{tag.message_is_follower and 'border-success text-success' or 'badge-light text-600'}">
+                <span style="white-space: normal;" t-attf-class="badge border px-2 #{tag.message_is_follower and 'border-success text-success' or 'badge-light text-600'}">
                     <i class="fa fa-tag small"/>
                     <t t-esc="tag.name"/>
                     <b class="small align-top">(<t t-esc="tag.posts_count"/>)</b>
