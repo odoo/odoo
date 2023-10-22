@@ -15,7 +15,7 @@
 # Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
 # Trần Hà <tranthuha13590@gmail.com>, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -44,6 +44,12 @@ msgstr " Thêm hình"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\"cảnh báo với một"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"URL từ\" không thể trống."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -499,6 +505,8 @@ msgid ""
 "<br/><br/>\n"
 "                    Example of rule:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"                    Quy tắc ví dụ:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1037,7 +1045,7 @@ msgstr "Tiêu đề biểu đồ"
 msgid ""
 "A Google Map error occurred. Make sure to read the key configuration popup "
 "carefully."
-msgstr ""
+msgstr "Đã xảy ra lỗi Google Map. Hãy chắc chắn đọc kỹ pop-up cấu hình chính."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -3249,7 +3257,7 @@ msgstr "Bật thanh toán trên Google Project của bạn"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable the right google map APIs in your google account"
-msgstr ""
+msgstr "Kích hoạt đúng API Google Map trong tài khoản Google của bạn"
 
 #. module: website
 #. openerp-web
@@ -5068,7 +5076,7 @@ msgstr "Hành động chính"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Make sure billing is enabled"
-msgstr ""
+msgstr "Đảm bảo tính năng lập hoá đơn được bật"
 
 #. module: website
 #. openerp-web
@@ -5078,13 +5086,15 @@ msgid ""
 "Make sure to wait if errors keep being shown: sometimes enabling an API "
 "allows to use it immediately but Google keeps triggering errors for a while"
 msgstr ""
+"Hãy chờ đợi nếu lỗi tiếp tục hiển thị: đôi khi việc bật API cho phép sử dụng"
+" API ngay lập tức nhưng Google vẫn tiếp tục báo lỗi trong một thời gian"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Make sure your settings are properly configured:"
-msgstr ""
+msgstr "Đảm bảo cài đặt của bạn được định cấu hình chính xác:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -5111,14 +5121,14 @@ msgstr "Quản lý trang này"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps JavaScript API"
-msgstr ""
+msgstr "Maps JavaScript API"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps Static API"
-msgstr ""
+msgstr "Maps Static API"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5234,7 +5244,7 @@ msgstr "Giữa"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Min-Height"
-msgstr ""
+msgstr "Chiều cao tối thiểu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -5261,7 +5271,7 @@ msgstr "Di động"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile Alignment"
-msgstr ""
+msgstr "Căn chỉnh trên điện thoại"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
@@ -5981,7 +5991,7 @@ msgstr "Pills"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Places API"
-msgstr ""
+msgstr "API địa điểm"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7521,6 +7531,18 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+"Phông chữ này đã tồn tại, bạn chỉ có thể thêm nó làm phông chữ cục bộ để "
+"thay thế phiên bản máy chủ."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -7805,7 +7827,7 @@ msgstr "Thuộc tính dịch"
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #, python-format
 msgid "Translate Selection Option"
-msgstr ""
+msgstr "Tùy chọn lựa chọn dịch"
 
 #. module: website
 #. openerp-web
