@@ -48,7 +48,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
 #, python-format
 msgid " - Tasks by Deadline"
-msgstr ""
+msgstr "- Nhiệm vụ theo hạn chót"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
@@ -81,46 +81,48 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
+"#{record.milestone_count_reached.value} Mốc thời gian đã đạt trong số "
+"#{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s"
-msgstr ""
+msgstr "%(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "Biểu đồ burn-down %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "Mốc thời gian của %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr ""
+msgstr "Đánh giá của %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
+msgstr "Phân tích nhiệm vụ của %(name)s"
 
 #. module: project
 #. odoo-python
@@ -134,7 +136,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr ""
+msgstr "Cập nhật của %(name)s"
 
 #. module: project
 #. odoo-python
@@ -285,6 +287,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Tôi rất vui mừng được thông báo với bạn rằng chúng tôi đã hoàn thành dự án \"<strong t-out=\"object.name or ''\">Cải tiến</strong>\" thành công .\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bạn nhận được email này vì dự án của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Hoàn tất</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -302,6 +314,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Cảm ơn câu hỏi của bạn!<br>\n"
+"    Nếu bạn có bất kì thắc mắc nào thêm, vui lòng liên hệ với chúng tôi.\n"
+"    <br><br>\n"
+"    Cảm ơn bạn!\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -322,7 +346,7 @@ msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Riêng tư"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -350,7 +374,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
+msgstr "<i title=\"Nhiệm vụ riêng tư\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -360,7 +384,7 @@ msgstr "<small class=\"text-end\">Giai đoạn:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Ngày\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -368,11 +392,13 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Bí danh miền\" title=\"Bí"
+" danh miền\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Đối tác\" title=\"Đối tác\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -393,7 +419,7 @@ msgstr "<span class=\"o_stat_text\">Đang chặn</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Đánh giá cuối cùng</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -471,7 +497,7 @@ msgstr "<strong>Lịch sử tin nhắn và truyền thông</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr ""
+msgstr "<strong>Mốc thời gian:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -514,11 +540,13 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"Không thể liên kết một giai đoạn cá nhân với một dự án vì nó chỉ hiển thị "
+"với người dùng tương ứng."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "Một nhiệm vụ phụ không thể lặp lại."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -723,7 +751,7 @@ msgstr "Giờ phân bổ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
 msgid "Allow Customer Ratings"
-msgstr ""
+msgstr "Cho phép đánh giá của khách hàng"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
@@ -745,6 +773,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Tài khoản phân tích liên kết với dự án này cùng với các nhiệm vụ và bảng chấm công của dự án.\n"
+"Theo dõi chi phí và doanh thu của dự án bằng cách cài đặt tài khoản phân tích này trên các chứng từ liên quan của bạn (ví dụ: đơn bán hàng, hóa đơn, đơn mua hàng, hóa đơn mua hàng, chi phí,...).\n"
+"Tài khoản phân tích này có thể được thay đổi trên từng nhiệm vụ riêng lẻ nếu cần thiết.\n"
+"Cần có tài khoản phân tích để sử dụng bảng chấm công."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -753,6 +785,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"Tài khoản phân tích liên kết với nhiệm vụ này và bảng chấm công của nhiệm vụ.\n"
+"Theo dõi chi phí và doanh thu của dự án bằng cách cài đặt tài khoản phân tích này trên các chứng từ liên quan của bạn (ví dụ: đơn bán hàng, hóa đơn, đơn mua hàng, hóa đơn mua hàng, chi phí,...).\n"
+"Theo mặc định, tài khoản phân tích của dự án đã được thiết lập. Tuy nhiên, nó có thể được thay đổi trên từng nhiệm vụ riêng lẻ nếu cần thiết."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -766,12 +801,14 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
+"Phân tích tốc độ hoàn thành nhiệm vụ dự án và kiểm tra xem mọi thứ có tiến "
+"triển theo kế hoạch hay không."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
+msgstr "Phân tích tiến độ dự án và hiệu quả làm việc của nhân viên."
 
 #. module: project
 #. odoo-javascript
@@ -811,7 +848,7 @@ msgstr "Bạn có chắc chắn muốn tiếp tục không?"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn xóa các giai đoạn này không?"
 
 #. module: project
 #. odoo-javascript
@@ -842,7 +879,7 @@ msgstr "Lắp ráp"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Assign a responsible to your task"
-msgstr ""
+msgstr "Phân công người phụ trách nhiệm vụ của bạn"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -898,7 +935,7 @@ msgstr "Người được phân công"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "Ngày phân công"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -945,7 +982,7 @@ msgstr "Tự động tạo nhiệm vụ cho các hoạt động thường xuyên
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
 msgid "Automatic Kanban Status"
-msgstr ""
+msgstr "Trạng thái kanban tự động"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_state
@@ -954,6 +991,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"Tự động điều chỉnh trạng thái khi khách hàng trả lời phản hồi cho giai đoạn này.\n"
+"* Phản hồi tốt từ khách hàng sẽ cập nhật trạng thái thành 'Đã phê duyệt' (dấu đầu dòng màu xanh lá cây).\n"
+"* Phản hồi trung lập hoặc không tốt sẽ chuyển trạng thái kanban thành 'Đã yêu cầu thay đổi' (dấu đầu dòng màu cam).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1032,7 +1072,7 @@ msgstr "Đã chặn bởi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Blocking"
-msgstr ""
+msgstr "Chặn"
 
 #. module: project
 #. odoo-javascript
@@ -1044,7 +1084,7 @@ msgstr "Brainstorm"
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "Lỗi"
 
 #. module: project
 #. odoo-python
@@ -1061,7 +1101,7 @@ msgstr "Sơ đồ chi tiết"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
-msgstr ""
+msgstr "Có thể đánh dấu là đã hoàn tất"
 
 #. module: project
 #. odoo-javascript
@@ -1095,7 +1135,7 @@ msgstr "Cannot aggregate field %r."
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 #, python-format
 msgid "Changes Requested"
-msgstr ""
+msgstr "Đã yêu cầu thay đổi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1148,12 +1188,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
 msgid "Closed Sub-tasks Count"
-msgstr ""
+msgstr "Số nhiệm vụ phụ đã đóng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed Tasks"
-msgstr ""
+msgstr "Nhiệm vụ đã đóng"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
@@ -1168,6 +1208,9 @@ msgid ""
 "Kanban view of your tasks. Collaborators will be able to edit parts of tasks"
 " and send messages."
 msgstr ""
+"Cộng tác hiệu quả với các bên liên quan chính bằng cách chia sẻ với họ chế "
+"độ xem kanban nhiệm vụ của bạn. Cộng tác viên sẽ có thể chỉnh sửa các phần "
+"của nhiệm vụ và gửi tin nhắn."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
@@ -1192,6 +1235,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"Thu thập phản hồi từ khách hàng của bạn bằng cách gửi cho họ yêu cầu đánh giá khi nhiệm vụ bước vào một giai đoạn nhất định. Để làm như vậy, hãy chỉ định mẫu email xếp hạng ở các giai đoạn tương ứng.\n"
+"Đánh giá khi thay đổi giai đoạn: một email sẽ được gửi tự động khi nhiệm vụ đạt đến giai đoạn mà mẫu email xếp hạng được thiết lập.\n"
+"Đánh giá định kỳ: một email sẽ được gửi tự động đều đặn nếu nhiệm vụ vẫn ở giai đoạn mà mẫu email xếp hạng được thiết lập."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1269,6 +1315,7 @@ msgstr "Xác nhận"
 #, python-format
 msgid "Congratulations, you are now a master of project management."
 msgstr ""
+"Xin chúc mừng, giờ đây bạn giống như một bậc thầy trong quản lý dự án."
 
 #. module: project
 #. odoo-javascript
@@ -1310,6 +1357,8 @@ msgstr "Ảnh bìa"
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
 msgstr ""
+"Tạo <b>hoạt động</b> để tạo việc cần làm cho mình hoặc lên lịch các cuộc "
+"họp."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1329,7 +1378,7 @@ msgstr "Tạo một giai đoạn mới trong quy trình thực hiện nhiệm v�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create project"
-msgstr ""
+msgstr "Tạo dự án"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1337,6 +1386,8 @@ msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
 msgstr ""
+"Tạo dự án để sắp xếp nhiệm vụ của bạn và xác định quy trình làm việc khác "
+"nhau cho từng dự án."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1344,6 +1395,8 @@ msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
 msgstr ""
+"Tạo dự án để tổ chức nhiệm vụ của bạn. Xác định quy trình làm việc khác nhau"
+" cho từng dự án."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1354,7 +1407,7 @@ msgstr "Tạo công việc bằng cách gửi email tới"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr ""
+msgstr "Tạo nhiệm vụ bằng cách gửi email đến địa chỉ email dự án của bạn."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1504,6 +1557,8 @@ msgstr ""
 #, python-format
 msgid "Customers will be added to the followers of their project and tasks."
 msgstr ""
+"Khách hàng sẽ được thêm vào danh sách người theo dõi dự án và nhiệm vụ của "
+"họ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1528,7 +1583,7 @@ msgstr "Ngày"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "Date and Stage"
-msgstr ""
+msgstr "Ngày và giai đoạn"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_last_stage_update
@@ -1536,6 +1591,8 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"Ngày mà trạng thái nhiệm vụ của bạn được điều chỉnh lần cuối.\n"
+"Dựa trên thông tin này, bạn có thể xác định các nhiệm vụ đang bị đình trệ và nhận số liệu thống kê về thời gian thông thường cần để chuyển nhiệm vụ từ giai đoạn/trạng thái này sang giai đoạn/trạng thái khác."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1543,6 +1600,8 @@ msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
 msgstr ""
+"Ngày mà dự án này kết thúc. Khung thời gian xác định trong dự án sẽ được "
+"tính đến khi xem kế hoạch dự án."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1550,6 +1609,9 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
+"Ngày mà nhiệm vụ này được phân công lần cuối (hoặc chưa được phân công). Dựa"
+" trên thông tin này, bạn có thể nhận được số liệu thống kê về thời gian "
+"thông thường cần để phân công nhiệm vụ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1591,13 +1653,13 @@ msgstr "Thân gửi"
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan"
-msgstr ""
+msgstr "Kế hoạch mặc định"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr ""
+msgstr "Kế hoạch mặc định cho tài khoản phân tích mới của dự án"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1622,11 +1684,14 @@ msgstr ""
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
+"Xác định các bước mà dự án của bạn trải qua từ khi tạo đến khi hoàn thành."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
+"Xác định các nhiệm vụ mà dự án của bạn trải qua từ khi tạo đến khi hoàn "
+"thành."
 
 #. module: project
 #. odoo-javascript
@@ -1652,7 +1717,7 @@ msgstr "Xóa mốc"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "Xoá giai đoạn dự án"
 
 #. module: project
 #. odoo-python
@@ -1671,6 +1736,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"Tự động cung cấp dịch vụ của bạn khi đạt đến một cột mốc bằng cách liên kết "
+"nó với một mục đơn bán hàng."
 
 #. module: project
 #. odoo-javascript
@@ -1704,7 +1771,7 @@ msgstr "Mô tả"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr ""
+msgstr "Mô tả để cung cấp thêm thông tin và bối cảnh về dự án này"
 
 #. module: project
 #. odoo-javascript
@@ -1782,7 +1849,7 @@ msgstr "Tên Hiển thị"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr ""
+msgstr "Hiển thị nút Nhiệm vụ cha"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
@@ -1844,7 +1911,7 @@ msgstr "Sửa"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_renderer.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "Chỉnh sửa giai đoạn cá nhân"
 
 #. module: project
 #. odoo-javascript
@@ -1871,6 +1938,8 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
+"Địa chỉ email nằm trong phần CC của các email đến từ nhiệm vụ này và hiện "
+"không được liên kết với khách hàng hiện tại."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -1909,7 +1978,7 @@ msgstr "Ngày kết thúc"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "Lỗi! Bạn không thể tạo một hệ thống phân cấp nhiệm vụ đệ quy."
 
 #. module: project
 #. odoo-javascript
@@ -1917,6 +1986,8 @@ msgstr ""
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
 msgstr ""
+"Mọi người đều có thể đề xuất ý tưởng và Người biên tập sẽ đánh dấu những ý "
+"tưởng hay nhất là"
 
 #. module: project
 #. odoo-javascript
@@ -1929,7 +2000,7 @@ msgstr "Dự kiến"
 #. module: project
 #: model:project.tags,name:project.project_tags_02
 msgid "Experiment"
-msgstr ""
+msgstr "Thử nghiệm"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1955,7 +2026,7 @@ msgstr "Yêu thích"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Dự án yêu thích"
 
 #. module: project
 #. odoo-python
@@ -2003,7 +2074,7 @@ msgstr "Đã theo dõi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr ""
+msgstr "Cập nhật được theo dõi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2110,7 +2181,7 @@ msgstr "Mặt vui vẻ"
 #: model:ir.model.fields,field_description:project.field_project_task__has_late_and_unreached_milestone
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__has_late_and_unreached_milestone
 msgid "Has Late And Unreached Milestone"
-msgstr ""
+msgstr "Có mốc thời gian muộn và chưa đạt được"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2134,7 +2205,7 @@ msgstr "Lịch sử"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "Cải tạo nhà cửa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2221,6 +2292,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Nếu được bật, giai đoạn này sẽ được hiển thị dưới dạng thu gọn trong chế độ "
+"xem kanban của dự án. Các dự án ở giai đoạn thu gọn được coi là đã đóng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2229,6 +2302,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"Nếu thiết lập, yêu cầu đánh giá sẽ tự động được gửi qua email cho khách hàng khi nhiệm vụ đạt đến giai đoạn này.\n"
+"Ngoài ra, yêu cầu đánh giá sẽ được gửi định kỳ nếu nhiệm vụ vẫn ở giai đoạn này, tùy vào cấu hình dự án của bạn.\n"
+"Để sử dụng tính năng này, hãy đảm bảo rằng tùy chọn 'Đánh giá của khách hàng' được bật trên dự án của bạn."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2236,6 +2312,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the project"
 " reaches this stage."
 msgstr ""
+"Nếu thiết lập, một email sẽ tự động được gửi đến khách hàng khi dự án đạt "
+"đến giai đoạn này."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2243,6 +2321,8 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
+"Nếu thiết lập, một email sẽ tự động được gửi đến khách hàng khi nhiệm vụ đạt"
+" đến giai đoạn này."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2325,7 +2405,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Ghi chú nội bộ chỉ được hiển thị cho người dùng nội bộ."
 
 #. module: project
 #. odoo-python
@@ -2407,7 +2487,7 @@ msgstr "Là người theo dõi"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "Quá mốc thời gian"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2428,6 +2508,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Theo dõi tiến độ nhiệm vụ của bạn từ khi tạo đến khi hoàn thành.<br>\n"
+"                    Cộng tác hiệu quả bằng cách trò chuyện trong thời gian thực hoặc qua email."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2435,6 +2517,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Theo dõi tiến độ nhiệm vụ của bạn từ khi tạo đến khi hoàn thành.<br>\n"
+"                    Cộng tác hiệu quả bằng cách trò chuyện trong thời gian thực hoặc qua email."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2519,7 +2603,7 @@ msgstr "Hoạt động chậm trễ"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Mốc thời gian chậm trễ"
 
 #. module: project
 #. odoo-python
@@ -2542,7 +2626,7 @@ msgstr "Để lại một bình luận"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Hãy tạo <b>giai đoạn</b> đầu tiên của bạn."
 
 #. module: project
 #. odoo-javascript
@@ -2564,7 +2648,7 @@ msgstr "Hãy tạo <b>nhiệm vụ</b> đầu tiên của bạn."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "Hãy tạo <b>giai đoạn</b> thứ hai của bạn."
 
 #. module: project
 #. odoo-javascript
@@ -2628,6 +2712,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"Quản lý vòng đời dự án của bạn bằng chế độ xem Kanban. Thêm các dự án mới,\n"
+"          phân công chúng và sử dụng"
 
 #. module: project
 #. odoo-javascript
@@ -2664,6 +2750,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Đo lường sự hài lòng của khách hàng bằng cách gửi yêu cầu đánh giá khi nhiệm"
+" vụ đạt đến một giai đoạn nhất định."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -2720,7 +2808,7 @@ msgstr "Số mốc thời gian"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count_reached
 msgid "Milestone Count Reached"
-msgstr ""
+msgstr "Số mốc thời gian đã đạt"
 
 #. module: project
 #. odoo-javascript
@@ -2779,7 +2867,7 @@ msgstr "Nhiệm vụ của tôi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr ""
+msgstr "Cập nhật của tôi"
 
 #. module: project
 #. odoo-python
@@ -2820,6 +2908,8 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"Tên được sử dụng để gọi các nhiệm vụ dự án của bạn, ví dụ: nhiệm vụ, phiếu "
+"hỗ trợ, chạy nước rút,..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2842,7 +2932,7 @@ msgstr "Mới"
 #. module: project
 #: model:project.tags,name:project.project_tags_01
 msgid "New Feature"
-msgstr ""
+msgstr "Tính năng mới"
 
 #. module: project
 #. odoo-javascript
@@ -2925,13 +3015,18 @@ msgstr "Loại hoạt động tiếp theo"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Không có khách hàng"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr ""
+msgstr "Không có mốc thời gian"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "Không có dự án"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__none
@@ -2953,7 +3048,7 @@ msgstr "Không tìm thấy loại hoạt động nào. Hãy tạo một loại!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found"
-msgstr ""
+msgstr "Không tìm thấy cộng tác viên nào"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3015,7 +3110,7 @@ msgstr "Không "
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Not Implemented."
-msgstr ""
+msgstr "Không được triển khai."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3074,7 +3169,7 @@ msgstr "Số tin nhắn bị gửi lỗi"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr ""
+msgstr "Không đúng tiến độ"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
@@ -3106,7 +3201,7 @@ msgstr "Đang giữu"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "Đúng tiến độ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3163,6 +3258,8 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Sắp xếp các nhiệm vụ của bạn bằng cách điều chuyển chúng trong chu trình làm việc.<br>\n"
+"                    Cộng tác hiệu quả bằng cách trò chuyện trong thời gian thực hoặc qua email."
 
 #. module: project
 #. odoo-python
@@ -3246,6 +3343,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Những người có thể thấy được dự án này và các nhiệm vụ dự án.\n"
+"\n"
+"- Người dùng nội bộ được mời: khi theo dõi một dự án, người dùng nội bộ sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
+"Người dùng có cấp độ quyền truy cập quản trị viên dự án vẫn có thể truy cập dự án này và các nhiệm vụ dự án, ngay cả khi rõ ràng họ không phải là một người theo dõi.\n"
+"\n"
+"- Tất cả người dùng nội bộ: tất cả người dùng nội bộ đều có thể truy cập vào dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
+"\n"
+"- Người dùng cổng thông tin được mời và tất cả người dùng nội bộ: tất cả người dùng nội bộ có thể truy cập dự án và tất cả nhiệm vụ dự án mà không có sự phân biệt.\n"
+"Khi theo dõi một dự án, người dùng cổng thông tin sẽ có quyền truy cập vào tất cả nhiệm vụ dự án mà không có sự phân biệt. Nếu không, họ sẽ chỉ có quyền truy cập vào các nhiệm vụ nhất định mà họ đang theo dõi.\n"
+"\n"
+"Khi một dự án được chia sẻ ở chế độ chỉ đọc, người dùng cổng thông tin sẽ được chuyển hướng đến cổng thông tin của họ. Họ có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng.\n"
+"Khi một dự án được chia sẻ trong chế độ chỉnh sửa, người dùng cổng thông tin sẽ được chuyển hướng đến chế độ xem kanban và chế độ xem danh sách của nhiệm vụ. Họ có thể sửa đổi một số trường đã chọn trong nhiệm vụ.\n"
+"\n"
+"Trong mọi trường hợp, nếu người dùng nội bộ không có quyền truy cập dự án nhưng được cung cấp URL nhiệm vụ (và họ là một người theo dõi, nếu dự án ở chế độ riêng tư), thì họ vẫn có thể truy cập nhiệm vụ tương ứng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3351,6 +3462,8 @@ msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
 msgstr ""
+"Người dùng cổng thông tin sẽ bị xóa khỏi danh sách người theo dõi dự án và "
+"nhiệm vụ dự án."
 
 #. module: project
 #. odoo-javascript
@@ -3381,6 +3494,8 @@ msgstr "Ưu tiên"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
 msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
 msgstr ""
+"Mức độ ưu tiên: {{'Quan trọng' nếu task.priority == '1' không thì 'Bình "
+"thường'}}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
@@ -3485,7 +3600,7 @@ msgstr "Tên dự án"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr ""
+msgstr "Trạng thái đánh giá dự án"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -3533,7 +3648,7 @@ msgstr "Thẻ dự án"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "Công cụ xóa giai đoạn nhiệm vụ dự án"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3543,7 +3658,7 @@ msgstr "Nhiệm vụ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "Tiêu đề dự án"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -3565,12 +3680,12 @@ msgstr "Hiển thị dự án"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "Mô tả dự án..."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "Trạng thái dự án - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3580,12 +3695,12 @@ msgstr "Nhiệm vụ của dự án"
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "Dự án: Dự án đã hoàn thành"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "Dự án: Yêu cầu xác nhận"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -3595,7 +3710,7 @@ msgstr "Dự án: Gửi đánh giá"
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr ""
+msgstr "Dự án: Lời mời đánh giá nhiệm vụ"
 
 #. module: project
 #. odoo-python
@@ -3630,6 +3745,8 @@ msgstr "Dự án"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"Các dự án chứa các nhiệm vụ về cùng một chủ đề và mỗi dự án có trang tổng "
+"quan riêng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -3638,6 +3755,9 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"Các dự án có giai đoạn này. Nếu bạn thực hiện cùng một quy trình làm việc "
+"trong nhiều dự án, bạn có thể chia sẻ giai đoạn này giữa các dự án và nhận "
+"về thông tin tổng hợp."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -3930,7 +4050,7 @@ msgstr "Mặt buồn"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Hài lòng"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__top
@@ -3942,7 +4062,7 @@ msgstr "Hài lòng"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
-msgstr ""
+msgstr "Lên kế hoạch hoạt động khi nó đã sẵn sàng."
 
 #. module: project
 #. odoo-javascript
@@ -3994,7 +4114,7 @@ msgstr "Tìm trong tin nhắn"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Milestone"
-msgstr ""
+msgstr "Tìm kiếm trong Mốc thời gian"
 
 #. module: project
 #. odoo-python
@@ -4070,7 +4190,7 @@ msgstr "Đặt hình đại diện"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "Thiết lập trạng thái"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4084,20 +4204,22 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
+"Thiết lập trên giai đoạn dự án để thông báo cho khách hàng khi dự án đạt đến"
+" giai đoạn đó"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/fields/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "Đặt mức độ ưu tiên là %s"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "Đặt trạng thái là..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4105,6 +4227,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"Đặt mẫu này ở giai đoạn dự án để mời khách hàng của bạn gửi phản hồi. Kích "
+"hoạt tính năng \"đánh giá của khách hàng\" trên dự án"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4144,7 +4268,7 @@ msgstr "Chia sẻ dự án"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Read-only"
-msgstr ""
+msgstr "Chia sẻ ở chế độ chỉ đọc"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4292,7 +4416,7 @@ msgstr "Trạng thái"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Cập nhật trạng thái - "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4335,7 +4459,7 @@ msgstr "Giờ dự kiến cho nhiệm vụ phụ"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Đã gửi vào"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4344,6 +4468,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"Tổng số giờ được phân bổ cho tất cả nhiệm vụ phụ (và nhiệm vụ phụ của chính "
+"chúng) liên kết với nhiệm vụ này. Thường nhỏ hơn hoặc bằng số giờ được phân "
+"bổ cho nhiệm vụ này."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4395,13 +4522,13 @@ msgstr "Các hoạt động nhiệm vụ"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "Nhiệm vụ được phê duyệt"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "Nhiệm vụ bị huỷ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4444,7 +4571,7 @@ msgstr "Hoàn thành công việc"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "Nhiệm vụ đang thực hiện"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4454,7 +4581,7 @@ msgstr "Nhật kí công việc"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
-msgstr ""
+msgstr "Thuộc tính nhiệm vụ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
@@ -4504,17 +4631,17 @@ msgstr "Tiêu đề nhiệm vụ..."
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "Nhiệm vụ đang chờ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "Nhiệm vụ được phê duyệt"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task canceled"
-msgstr ""
+msgstr "Nhiệm vụ bị huỷ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4524,7 +4651,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "Nhiệm vụ hoàn tất"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4608,7 +4735,7 @@ msgstr "Tests"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "The Burndown Chart must be grouped by"
-msgstr ""
+msgstr "Biểu đồ burn-down phải được nhóm theo"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4625,7 +4752,7 @@ msgstr "Giai đoạn nhiệm vụ cá nhân của người dùng hiện tại."
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "Ngày kết thúc phải nằm trong tương lai"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4642,7 +4769,7 @@ msgstr "Các mốc thời gian sau đã được thêm:"
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "Khoảng cách ngày phải lớn hơn 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4693,14 +4820,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
-msgstr ""
+msgstr "Ngày bắt đầu dự án phải trước ngày kết thúc."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "The search does not support the %s operator or %s value."
-msgstr ""
+msgstr "Tìm kiếm không hỗ trợ toán tử %s hoặc giá trị %s."
 
 #. module: project
 #. odoo-python
@@ -4720,7 +4847,7 @@ msgstr ""
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "The view must be grouped by date and by stage_id"
-msgstr ""
+msgstr "Chế độ xem phải được nhóm theo ngày và theo stage_id"
 
 #. module: project
 #. odoo-javascript
@@ -4750,7 +4877,7 @@ msgstr "Không có tác vụ"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "Không có gì để báo cáo. "
 
 #. module: project
 #. odoo-python
@@ -4776,7 +4903,7 @@ msgstr "Tuần này"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "Nhiệm vụ này bị chặn bởi một nhiệm vụ khác chưa hoàn thành"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4806,7 +4933,7 @@ msgstr "Quản lý thời gian"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "Mẹo: Tạo nhiệm vụ từ email đến"
 
 #. module: project
 #. odoo-python
@@ -4823,7 +4950,7 @@ msgstr "Tiêu đề"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "Cần lập hoá đơn"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -4886,6 +5013,7 @@ msgstr "Theo dõi mức độ hài lòng của khách hàng đối với các nh
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
+"Theo dõi các điểm tiến trình quan trọng cần đạt được để đi đến thành công"
 
 #. module: project
 #. odoo-javascript
@@ -4903,6 +5031,9 @@ msgid ""
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
 msgstr ""
+"Theo dõi lợi nhuận dự án của bạn. Trong mọi dự án, các nhiệm vụ và bảng chấm"
+" công của dự án đều được liên kết với một tài khoản phân tích và mọi tài "
+"khoản phân tích đều thuộc về một kế hoạch."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4920,6 +5051,8 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
+"Thẻ trong suốt không hiển thị trong chế độ xem kanban của dự án và nhiệm vụ "
+"của bạn."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
@@ -4931,7 +5064,7 @@ msgstr "Hai lần một tháng"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "Hai nhiệm vụ không thể phụ thuộc vào nhau."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -4945,14 +5078,14 @@ msgstr "Loại hoạt động ngoại lệ trong dữ liệu."
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "Bỏ lưu trữ dự án"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unarchive Tasks"
-msgstr ""
+msgstr "Bỏ lưu trữ nhiệm vụ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5002,12 +5135,12 @@ msgstr "Cập nhật"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Đã tạo cập nhật"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_03
 msgid "Usability"
-msgstr ""
+msgstr "Khả năng sử dụng"
 
 #. module: project
 #. odoo-javascript
@@ -5024,7 +5157,7 @@ msgstr "Dùng bí danh email"
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr ""
+msgstr "Sử dụng mốc thời gian"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -5081,7 +5214,7 @@ msgstr "Dùng thẻ để phân loại nhiệm vụ."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr ""
+msgstr "Sử dụng"
 
 #. module: project
 #. odoo-javascript
@@ -5106,6 +5239,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Sử dụng các từ khóa này trong tiêu đề để thiết lập nhiệm vụ mới:\n"
+"\n"
+"         30h Phân bổ 30 giờ cho nhiệm vụ\n"
+"         #thẻ Tạo thẻ cho nhiệm vụ\n"
+"         @người_dùng Gán nhiệm vụ cho một người dùng\n"
+"         ! Đặt nhiệm vụ ở mức độ ưu tiên cao\n"
+"\n"
+"Hãy đảm bảo sử dụng đúng định dạng và thứ tự. VD: Cải thiện màn hình cấu hình 5h #tính_năng #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5136,7 +5277,7 @@ msgstr "Xem nhiệm vụ"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr ""
+msgstr "Xem nhiệm vụ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5249,6 +5390,7 @@ msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
 msgstr ""
+"Bạn có muốn hủy lưu trữ tất cả dự án có trong các giai đoạn này không?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5256,6 +5398,7 @@ msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
 msgstr ""
+"Bạn có muốn hủy lưu trữ tất cả nhiệm vụ có trong các giai đoạn này không?"
 
 #. module: project
 #. odoo-javascript
@@ -5288,7 +5431,7 @@ msgstr "Năm"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr ""
+msgstr "Bạn chỉ có thể thiết lập giai đoạn cá nhân cho một nhiệm vụ riêng tư."
 
 #. module: project
 #. odoo-python
@@ -5305,6 +5448,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"Bạn không thể xóa các giai đoạn chứa dự án. Bạn có thể lưu trữ chúng hoặc "
+"trước tiên xóa tất cả dự án của chúng."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5312,6 +5457,8 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
+"Bạn không thể xóa các giai đoạn chứa dự án. Tước tiên, bạn phải xóa tất cả "
+"dự án của chúng."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5336,14 +5483,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "Bạn không thể đọc các trường %s trong nhiệm vụ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "Bạn không thể ghi lên trường %s trong nhiệm vụ."
 
 #. module: project
 #. odoo-python
@@ -5373,6 +5520,9 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
+"Bạn có những thay đổi chưa được lưu, nhưng đừng lo lắng! Odoo sẽ tự động lưu"
+" chúng khi bạn điều hướng.<br/> Bạn có thể bỏ qua những thay đổi này từ đây "
+"hoặc lưu nhiệm vụ của mình theo cách thủ công.<br/> Hãy lưu thủ công."
 
 #. module: project
 #. odoo-javascript
@@ -5389,6 +5539,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Ít nhất bạn nên có một giai đoạn cá nhân. Tạo một giai đoạn mới để chuyển "
+"các nhiệm vụ sang sau khi giai đoạn này bị xóa."
 
 #. module: project
 #. odoo-javascript
@@ -5407,11 +5559,13 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"và phản hồi nào được\n"
+"      chuyển sang cột \"Bị từ chối\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr ""
+msgstr "người được phân công"
 
 #. module: project
 #. odoo-javascript
@@ -5445,7 +5599,7 @@ msgstr "bình luận"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "VD: Nhận xét hàng tháng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5458,13 +5612,13 @@ msgstr "vd: Tiệc văn phòng"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "VD: Ra mắt sản phẩm"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "VD: Gửi lời mời"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5474,7 +5628,7 @@ msgstr "vd: Tiệc văn phòng"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "VD: Ra mắt sản phẩm"
 
 #. module: project
 #. odoo-javascript
@@ -5487,7 +5641,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "biểu tượng để sắp xếp hoạt động hàng ngày của bạn."
 
 #. module: project
 #. odoo-javascript
@@ -5495,7 +5649,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "biểu tượng."
 
 #. module: project
 #. odoo-javascript
@@ -5507,17 +5661,17 @@ msgstr "đã đăng nhập"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "chế độ xem menu Nhiệm vụ của tôi"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "dự án."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "ready to be marked as reached"
-msgstr ""
+msgstr "sẵn sàng được đánh dấu là đã đạt được"
 
 #. module: project
 #. odoo-python
@@ -5529,12 +5683,12 @@ msgstr "nhiệm vụ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr ""
+msgstr "hạn chót của các mốc thời gian sau đã được cập nhật:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr ""
+msgstr "hạn chót của các mốc thời gian sau đã được cập nhật:"
 
 #. module: project
 #. odoo-javascript
@@ -5544,6 +5698,8 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"để xác định xem dự án đã\n"
+"      sẵn sàng cho bước tiếp theo hay chưa."
 
 #. module: project
 #. odoo-javascript
@@ -5564,12 +5720,12 @@ msgstr "đăng một bình luận."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "để báo hiệu trạng thái hiện tại của Ý tưởng của bạn là gì."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "sẽ tạo ra các nhiệm vụ trong"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
