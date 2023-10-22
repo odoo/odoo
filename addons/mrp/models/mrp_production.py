@@ -1533,7 +1533,7 @@ class MrpProduction(models.Model):
                 if move.quantity_done:
                     continue
                 move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
-                move.move_line_ids.lot_id = order.lot_producing_id
+                move.move_line_ids.write(order._prepare_finished_extra_vals())
             # workorder duration need to be set to calculate the price of the product
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
@@ -2289,3 +2289,7 @@ class MrpProduction(models.Model):
         if missing_lot_id_products:
             error_msg = _('You need to supply Lot/Serial Number for products:') + missing_lot_id_products
             raise UserError(error_msg)
+
+    def _prepare_finished_extra_vals(self):
+        self.ensure_one()
+        return {'lot_id' : self.lot_producing_id}
