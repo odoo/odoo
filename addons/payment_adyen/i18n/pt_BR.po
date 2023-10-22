@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Maitê Dietze, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +27,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Aviso:</strong> Para capturar o valor manualmente, você também precisa definir\n"
+"                    o Atraso de captura como manual nas definições da sua conta Adyen."
 
 #. module: payment_adyen
 #. odoo-python
@@ -32,6 +36,7 @@ msgstr ""
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
 msgstr ""
+"A solicitação foi enviada para anular a transação com referência %s (%s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -50,23 +55,24 @@ msgstr "Adyen"
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
 msgstr ""
+"Ocorreu um erro durante o processamento do seu pagamento. Tente novamente."
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr ""
+msgstr "Ocorreu um erro ao exibir este formulário de pagamento."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "Checkout API URL"
-msgstr ""
+msgstr "URL da API de checkout"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Chave do cliente"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
@@ -83,29 +89,29 @@ msgstr "Não foi possível estabelecer a conexão com a API."
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "Chave HMAC"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Tem transação Adyen"
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect Payment Details"
-msgstr ""
+msgstr "Informações de pagamento incorretas"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Learn More"
-msgstr "Saiba Mais"
+msgstr "Saiba mais"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "Merchant Account"
-msgstr "Conta do Comerciante"
+msgstr "Conta comercial"
 
 #. module: payment_adyen
 #. odoo-python
@@ -132,54 +138,54 @@ msgstr "Token de pagamento"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transação do Pagamento"
+msgstr "Transação do pagamento"
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Please verify your payment details."
-msgstr ""
+msgstr "Verifique as informações de pagamento."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
-msgstr ""
+msgstr "Dados da transação dependente recebidos sem valores de transação"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Dados recebidos com estado de pagamento inválido: %s"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Dados recebidos sem a referência do comerciante"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Dados recebidos sem estado de pagamento."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Dados da solicitação de pagamento recebidos alterados."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_recurring_api_url
 msgid "Recurring API URL"
-msgstr ""
+msgstr "URL da API recorrente"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -194,17 +200,17 @@ msgstr "Erro interno do servidor"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Referência do comprador"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "A chave da API do usuário do serviço web"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "A chave HMAC do webhook"
 
 #. module: payment_adyen
 #. odoo-python
@@ -214,16 +220,18 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"O valor processado pelo Adyen para a transação %s é diferente do valor "
+"solicitado. Outra transação foi criada com o valor correto."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "The base URL for the Checkout API endpoints"
-msgstr ""
+msgstr "A URL de base dos endpoints da API de checkout"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_recurring_api_url
 msgid "The base URL for the Recurring API endpoints"
-msgstr ""
+msgstr "A URL de base dos endpoints da API recorrente"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -231,6 +239,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"A captura ou anulação da transação pode levar alguns minutos para ser\n"
+"                    processada pelo Adyen e refletida no Odoo."
 
 #. module: payment_adyen
 #. odoo-python
@@ -240,23 +250,25 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
+"A solicitação de captura de %(amount)s da transação com referência a %(ref)s"
+" foi realizada (%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "A chave do cliente do usuário do serviço web"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "O código da conta comercial a ser usada com este provedor"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "A comunicação com a API falhou. Detalhes: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
@@ -273,7 +285,7 @@ msgstr "A transação não está vinculada a um token."
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "A referência exclusiva do usuário a quem pertence o token"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -289,4 +301,4 @@ msgstr "Não foi possível processar o seu pagamento."
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Seu pagamento foi recusado. Tente novamente."

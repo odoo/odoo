@@ -59,7 +59,7 @@ msgstr "%(line_description)s (Draft)"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "%(line_description)s (referensi: %(reference)s pada %(date)s)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -83,7 +83,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -760,6 +760,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Dikunci"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -948,7 +950,7 @@ msgstr "<strong> Tanggal Kadaluarsa:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr ""
+msgstr "<strong>Kadaluwarsa:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -977,7 +979,7 @@ msgstr "<strong>Tanggal Penawaran:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>Salesperson:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1017,7 +1019,7 @@ msgstr "<strong>Quotation ini sudah dibatalkan.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Referensi Anda:</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1800,7 +1802,7 @@ msgstr "Tanda Tangan Pelanggan"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Status Pelanggan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1810,7 +1812,7 @@ msgstr "Pajak Pelanggan"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "ZIP Pelanggan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
@@ -2060,7 +2062,7 @@ msgstr "Product Down Payment"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Down Payment: %(date)s (Draft)"
 
 #. module: sale
 #. odoo-python
@@ -2722,7 +2724,7 @@ msgstr "Dikunci"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Order yang dikunci tidak dapat dimodifikasi."
 
 #. module: sale
 #. odoo-javascript
@@ -2909,7 +2911,7 @@ msgstr "Tidak Ada Pesan"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Tidak ada persyaratan lebih lanjut untuk pembayaran ini"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2997,12 +2999,12 @@ msgstr "Onboarding"
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Onboarding Order Confirmation"
-msgstr ""
+msgstr "Konfirmasi Order Onboarding"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sample_quotation
 msgid "Onboarding Sample Quotation"
-msgstr ""
+msgstr "Sampel Quotation Onboarding"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding_step
@@ -3224,7 +3226,7 @@ msgstr "Order Penjualan untuk Upsell"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3791,7 +3793,7 @@ msgstr "Kesalahan Pengiriman SMS`"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3832,7 +3834,7 @@ msgstr "Wizard onboarding penyedia Pembayaran Sale"
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
 msgid "Sale Quotation Onboarding"
-msgstr ""
+msgstr "Onboarding Sale Quotation"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4525,6 +4527,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Sale Order %(order)s yang di-link ke Akun Analitik %(account)s dibatalkan. "
+"Anda tidak dapat mendaftarkan pengeluaran pada Sale Order yang dibatalkan."
 
 #. module: sale
 #. odoo-python
@@ -4535,6 +4539,9 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"Sale Order %(order)s di-link ke Akun Analitik %(account)s yang saat ini "
+"dikunci. Anda tidak dapat mendaftarkan pengeluaran pada Sales Order yang "
+"terkunci. Silakan buat SO baru yang ditautkan ke Akun Analitik ini."
 
 #. module: sale
 #. odoo-python
@@ -4544,6 +4551,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"Sale Order %(order)s yang di-link ke Akun Analitik %(account)s harus "
+"divalidasi sebelum mendaftarkan pengeluaran."
 
 #. module: sale
 #. odoo-python
@@ -4580,6 +4589,7 @@ msgstr "Jumlah tetap untuk difaktur dimuka."
 #, python-format
 msgid "The following orders are not in a state requiring confirmation: %s"
 msgstr ""
+"Order-order berikut tidak dalam status yang membutuhkan konfirmasi: %s"
 
 #. module: sale
 #. odoo-python
@@ -4647,7 +4657,7 @@ msgstr "Komunikasi pembayaran untuk sale order ini."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Pembayaran harus juga dikirim dengan penuh cinta"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -5099,6 +5109,8 @@ msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
 msgstr ""
+"Pengeluaran dan tagihan vendor yang divalidasi dapat difaktur ulang ke "
+"pelanggan pada harga biaya atau harga jual."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5247,6 +5259,8 @@ msgstr "Anda tidak dapat mengedit produk ini di katalog."
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr ""
+"Anda tidak dapat membatalkan order yang dikunci. Silakan buka kunci terlebih"
+" dahulu."
 
 #. module: sale
 #. odoo-python

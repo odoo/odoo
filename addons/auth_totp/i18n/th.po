@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "%(browser)s บน %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "วิซาร์ดการตั้งค่า 2-Factor"
+msgstr "โปรแกรมตั้งค่า 2-Factor"
 
 #. module: auth_totp
 #. odoo-python
@@ -44,6 +45,8 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
 "                                    Learn More"
 msgstr ""
+"<i title=\"เอกสาร\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                                    เรียนรู้เพิ่มเติม"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -51,6 +54,8 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
 "                            Learn More"
 msgstr ""
+"<i title=\"เอกสาร\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>\n"
+"                            เรียนรู้เพิ่มเติม"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -58,6 +63,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
 "muted\">This account is protected!</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">บัญชีนี้มีการป้องกัน!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -117,6 +124,7 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"คุณแน่ใจไหม? ผู้ใช้อาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -124,6 +132,7 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"คุณแน่ใจไหม? คุณอาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -191,7 +200,7 @@ msgstr "ปิดการใช้งาน 2FA"
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "ปิดใช้งานการรับรองความถูกต้องด้วยสองปัจจัย"
+msgstr "ปิดใช้งานการรับรองความถูกต้องด้วย Two-factor"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -273,7 +282,7 @@ msgstr "บน Google Play"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr "Qrcode"
+msgstr "Qr โค้ด"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -330,14 +339,14 @@ msgstr "อุปกรณ์ที่เชื่อถือได้"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-Factor Authentication Activation"
-msgstr "การเปิดใช้งานการรับรองความถูกต้องด้วยสองปัจจัย"
+msgstr "การเปิดใช้งานการรับรองความถูกต้องด้วย Two-factor"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr "การรับรองความถูกต้องแบบสองปัจจัย"
+msgstr "การรับรองความถูกต้องแบบ Two-factor"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -346,7 +355,7 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
-"การรับรองความถูกต้องแบบสองปัจจัย (\"2FA\") เป็นระบบการตรวจสอบสิทธิ์แบบคู่\n"
+"การรับรองความถูกต้องแบบ Two-factor (\"2FA\") เป็นระบบการตรวจสอบสิทธิ์แบบคู่\n"
 "                                อันแรกใช้รหัสผ่านของคุณและอันที่สองใช้โค้ดที่คุณได้รับจากแอปมือถือเฉพาะ\n"
 "                                รายการยอดนิยม ได้แก่ Authy, Google Authenticator หรือ Microsoft Authenticator"
 
@@ -357,28 +366,31 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"การตรวจสอบสิทธิ์แบบ Two-factor (\"2FA\") คือระบบการตรวจสอบสิทธิ์แบบสองชั้น\n"
+"                        อันแรกใช้รหัสผ่านของคุณและอันที่สองใช้รหัสที่คุณได้รับจากแอปมือถือโดยเฉพาะ\n"
+"                        แอปยอดนิยม ได้แก่ Authy, Google Authenticator หรือ Microsoft Authenticator"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr "การรับรองความถูกต้องแบบสองปัจจัย"
+msgstr "การรับรองความถูกต้องแบบ Two-factor"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "ปิดใช้งานการรับรองความถูกต้องแบบสองปัจจัย"
+msgstr "ปิดใช้งานการรับรองความถูกต้องแบบ Two-factor"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "เปิดใช้งานการรับรองความถูกต้องแบบสองปัจจัย"
+msgstr "เปิดใช้งานการรับรองความถูกต้องแบบ Two-factor"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr "เปิดใช้งานการรับรองความถูกต้องแบบสองปัจจัยแล้ว"
+msgstr "เปิดใช้งานการรับรองความถูกต้องแบบ Two-factor แล้ว"
 
 #. module: auth_totp
 #. odoo-python
@@ -386,14 +398,15 @@ msgstr "เปิดใช้งานการรับรองความถ
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
 msgstr ""
-"การตรวจสอบสิทธิ์แบบสองปัจจัยสามารถเปิดใช้งานได้สำหรับตัวคุณเองเท่านั้น"
+"การตรวจสอบสิทธิ์แบบ Two-factor สามารถเปิดใช้งานได้สำหรับตัวคุณเองเท่านั้น"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr "การรับรองความถูกต้องแบบสองปัจจัยถูกปิดใช้งานสำหรับผู้ใช้ต่อไปนี้:%s"
+msgstr ""
+"การรับรองความถูกต้องแบบ Two-factor ถูกปิดใช้งานสำหรับผู้ใช้ต่อไปนี้:%s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

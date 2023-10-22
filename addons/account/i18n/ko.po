@@ -6,8 +6,8 @@
 # Wil Odoo, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1321,7 +1321,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "해당 지역에 해외 부가가치세 관련 재정 상태 자료가 이미 존재합니다."
+msgstr "해당 지역에 해외 부가가치세 관련 재정 위치 자료가 이미 존재합니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1329,8 +1329,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"전표는 여러 가지 전표입력 항목으로 구성되며,\n"
-"                각 항목은 차변 또는 대변 거래입니다."
+"전표는 차변 또는 대변 거래로 이루어진\n"
+"                여러 가지 전표 입력 항목으로 구성되어 있습니다."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -1430,7 +1430,7 @@ msgstr "명세서에는 동일한 전표에 있는 행만 포함되어야 합니
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "세금 재정 상태는 동일한 세금 항목에 대해서 한 번만 지정할 수 있습니다."
+msgstr "세금 재정 위치는 동일한 세금 항목에 대해서 한 번만 지정할 수 있습니다."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1901,7 +1901,7 @@ msgstr "계정"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "재정 상태 계정 매핑"
+msgstr "재정 위치 계정 매핑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2303,7 +2303,7 @@ msgstr "현금주의로 세금을 설정하는 것을 허용합니다."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "선택 가능한 전표"
+msgstr "사용 전표"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -2467,7 +2467,7 @@ msgstr "재무상태표에 계상되지 않은 계정에 세금을 매길 수 �
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr "계정 재정 상태는 동일한 계정에서 한 번만 정의할 수 있습니다."
+msgstr "계정 위치 상태는 동일한 계정에서 한 번만 정의할 수 있습니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -3133,8 +3133,8 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"청구서 기준:청구서가 검증되는 즉시 세금을 지불해야 합니다.\n"
-"결제 기준: 청구서 대금을 받는 즉시 세금을 지불해야 합니다."
+"청구서 기준: 청구서 승인 즉시 세금을 납부해야 합니다.\n"
+"결제 기준: 청구서 대금 수금 즉시 세금을 납부해야 합니다."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
@@ -3168,7 +3168,7 @@ msgstr "Bic"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill"
-msgstr "청구"
+msgstr "업체 청구서"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_bill_tree
@@ -3226,7 +3226,7 @@ msgstr "건 승인 대기 중"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bills to pay"
-msgstr "지급할 청구"
+msgstr "지급할 청구서"
 
 #. module: account
 #: model:account.account,name:account.1_to_receive_pay
@@ -3237,7 +3237,7 @@ msgstr "지급받을 청구서"
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
 #: model:ir.model.fields,field_description:account.field_account_report_expression__blank_if_zero
 msgid "Blank if Zero"
-msgstr "0인 경우 공란으로 둠"
+msgstr "0인 경우 비워둠"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3282,15 +3282,14 @@ msgstr "상대 항목 생성 버튼"
 msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
-msgstr ""
-"가능한 항목들은 기본 설정으로 모두 펼쳐져 있습니다. 이 항목을 선택하시면 내용 펼치기가 기본으로 설정되지 않고 접기 버튼이 표시됩니다."
+msgstr "기본값은 내용 펼치기로 되어 있습니다. 표시할 경우, 내용 펼치기를 기본값으로 하지 않고 접기 버튼을 표시합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "활성 필드에서 표시를 제거하면 삭제하지 않고 재정 포지션을 숨길 수 있습니다."
+msgstr "활성화되어 있는 필드의 선택을 취소하면, 삭제하지 않고 재정 위치를 숨길 수 있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -4300,7 +4299,7 @@ msgstr "주소록에 신규 고객 정보를 생성합니다."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "새로운 재정 상태 항목을 생성합니다."
+msgstr "새로운 재정 위치 항목을 생성합니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -6305,13 +6304,13 @@ msgstr "회계 기간"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -6326,7 +6325,7 @@ msgstr "회계연도"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -6336,7 +6335,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "재정 상태는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 사용합니다. 기본값은 고객 정보에서 가져옵니다."
+msgstr "재정 위치는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 사용합니다. 기본값은 고객 정보에서 가져옵니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7868,7 +7867,7 @@ msgstr "이동이 비동기적으로 전송되는지 여부"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr "이메일을 전송하면 청구서 초안 및 청구서가 생성됩니다. "
+msgstr "이메일을 전송하면 청구서 및 업체 청구서 초안이 생성됩니다. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -9419,7 +9418,7 @@ msgstr "조치가 필요한 메시지 숫자입니다."
 #: model:ir.model.fields,help:account.field_res_company__message_has_error_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류가 발생한 메시지 숫자입니다."
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__past_months_limit
@@ -11097,7 +11096,7 @@ msgstr "환불"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Register Payment"
-msgstr "결제 항목을 처리합니다."
+msgstr "결제 등록"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -11275,7 +11274,7 @@ msgstr "특정 품목에만 세금을 적용합니다."
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "명세서와 동일한 통화만 사용이 가능합니다."
+msgstr "명세서와 동일한 통화만 사용할 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -11632,7 +11631,7 @@ msgstr "검색창"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "재정 상태 검색"
+msgstr "재정 위치 검색"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -12217,7 +12216,7 @@ msgstr "일반 우편"
 msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
-msgstr "현재 전표 입력 항목 중, 허용되지 않은 계정이 있습니다."
+msgstr "현재 입력되어 있는 전표 항목 중에 허용되지 않은 계정이 있습니다."
 
 #. module: account
 #. odoo-python
@@ -12676,7 +12675,7 @@ msgstr "세금 매핑"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "재정 상태의 세금 일치 작업"
+msgstr "재정 위치의 세금 일치 작업"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -12861,7 +12860,7 @@ msgstr "세금 설정 완료!"
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr "해당 국가의 세무, 재정 상태, 계정과목표 및 법률 문서입니다."
+msgstr "해당 국가의 세무, 재정 위치, 계정과목표 및 법률 문서입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -13219,7 +13218,7 @@ msgstr "해당 세금이 적용되는 국가입니다."
 msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
-msgstr "해외 VAT 재정 상태로 설정된 국가는 보고서에 설정된 국가와 일치해야 합니다."
+msgstr "해외 VAT 재정 위치로 설정된 국가는 보고서에 설정된 국가와 일치해야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -13335,7 +13334,7 @@ msgstr "'공급업체' 필드는 필수 입력 항목입니다. 업체 청구서
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "재정 상태에 따라서 연락처에 적용될 세금이나 계정이 결정됩니다."
+msgstr "재정 위치에 따라서 연락처에 적용될 세금이나 계정이 결정됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13871,7 +13870,7 @@ msgstr "총 잔여액 계획안이 이 금액/백분율에 따른 명세서 내�
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "이 재정 상태에 매핑된 지역의 회사 세금 ID입니다."
+msgstr "이 재정 위치에 매핑된 지역의 회사 세금 ID입니다."
 
 #. module: account
 #. odoo-python
@@ -14118,7 +14117,7 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"이 항목에는 재정 상태와 부합하지 않는 세금이 포함되어 있습니다. 환경 설정의 재정 상태 및 세금 항목에서 국가 설정을 확인하세요."
+"이 항목에는 재정 위치와 부합하지 않는 세금이 포함되어 있습니다. 환경 설정의 재정 상태 및 세금 항목에서 국가 설정을 확인하세요."
 
 #. module: account
 #. odoo-python
@@ -14918,8 +14917,8 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"청구서를 자동으로 발송하려면 '<i>우편 발송</i>' 메뉴를 선택하세요. 현지 우표 비용 만으로 저희가 모든 수작업을 대신해 드립니다."
-" 청구서를 해당 국가에 적합하도록 인쇄하고 봉투에 넣어서 일반 우편으로 발송합니다. 목록 보기에서 이 기능으로 수백 건의 청구서를 대량 "
+"청구서를 자동으로 발송하려면 '<i>우편 발송</i>' 메뉴를 선택하세요. 현지 우표 비용만으로 저희가 모든 수작업을 대신해 드립니다. "
+"청구서를 해당 국가에 적합하도록 인쇄하고 봉투에 넣어서 일반 우편으로 발송합니다. 목록 보기에서 이 기능으로 수백 건의 청구서를 대량 "
 "발행해 보세요."
 
 #. module: account
@@ -15384,12 +15383,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"미결 전표 항목이 포함되어 있는 전표는 보관 처리할 수 없습니다.\n"
+"전표 입력 상태가 초안인 전표는 보관 처리할 수 없습니다.\n"
 "\n"
-"계속하려면 다음을 참고하십시오:\n"
-"1/ 이 전표 양식의 오른쪽 상단에 있는 '전표입력' 을 클릭하십시오\n"
-"2/ 그 후 필터를 '미결' 항목으로 설정하십시오\n"
-"3/ 전체 선택 후 작업 메뉴를 통해 발행하거나 삭제하십시오"
+"계속하려면 다음을 참고하세요:\n"
+"1/ 전표 양식의 오른쪽 상단에 있는 '전표 입력'을 클릭하세요.\n"
+"2/ 그 다음 필터를 '미결'로 설정하세요.\n"
+"3/ 전체 선택 후 활동 메뉴를 통해 발행 또는 삭제하세요."
 
 #. module: account
 #. odoo-python
@@ -15398,7 +15397,7 @@ msgstr ""
 msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
-msgstr "다른 곳에서 계속 참조되고 있는 항목이므로 지급 조건을 삭제할 수 없습니다. 대신 보관처리하는 것은 가능합니다."
+msgstr "지급 조건을 삭제할 수 없습니다. 다른 레코드에서 계속 참조 중입니다. 대신 보관 처리할 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -15406,7 +15405,7 @@ msgstr "다른 곳에서 계속 참조되고 있는 항목이므로 지급 조�
 #, python-format
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
-msgstr "전표가 잠긴 경우에는 날짜순으로 순서를 재정렬 할 수 없습니다."
+msgstr "전표가 해시로 잠긴 경우에는 날짜순으로 재정렬할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15451,21 +15450,21 @@ msgstr "정부로 발송된 청구서에 대해서만 취소를 요청할 수 �
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr "동일한 전표에 있는 항목만 순서를 변경할 수 있습니다."
+msgstr "같은 전표에 있는 항목끼리만 순서를 변경할 수 있습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr "승인된 전표만 역분개 가능합니다"
+msgstr "승인된 전표만 역분개를 할 수 있습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "You can only send from the same company."
-msgstr "동일한 회사에서만 전송할 수 있습니다."
+msgstr "같은 회사에서만 보낼 수 있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -15474,15 +15473,15 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"여기에서 고객 청구서에 표시될 기본 내용을 설정할 수 있으며, 일단 청구서를 승인하게 되면 고객이 결제 단계에서 관련 청구서를 참조할 수"
-" 있습니다. "
+"여기에서 고객 청구서에 표시될 기본 내용을 설정할 수 있습니다. 승인이 완료되면, 결제 단계에서 고객이 관련 청구서를 참조할 수 "
+"있습니다. "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "You can't send invoice(s) in draft state."
-msgstr ""
+msgstr "청구서가 미결 상태인 경우에는 전송할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15491,7 +15490,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
-msgstr "연결된 전표입력 항목이 있으므로 계정의 회사를 변경할 수 없습니다."
+msgstr "전표에 연결된 항목이 있으므로 계정에서 회사를 변경할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15500,7 +15499,7 @@ msgstr "연결된 전표입력 항목이 있으므로 계정의 회사를 변경
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
-msgstr "연결된 전표입력 내역이 있으므로 전표 상의 회사를 변경할 수 없습니다."
+msgstr "전표에 연결된 항목이 있으므로 전표에 있는 회사를 변경할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15530,7 +15529,7 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr "%s 전표에 가계정이 설정되어 있지 않은 경우에는 새로운 명세서 내역을 생성할 수 없습니다."
+msgstr "%s 전표에 가계정을 설정하지 않으면 새로운 명세서 내역을 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15546,7 +15545,7 @@ msgstr "다른 회사에서 입력한 항목에 대해서는 결제 항목을 �
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "You can't delete a report that has variants."
-msgstr "속성 항목이 있는 리포트는 삭제 할 수 없습니다."
+msgstr "속성 항목이 있는 보고서는 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15564,7 +15563,7 @@ msgstr "두 가지 결제 방법의 이름이 같고(%s) 결제 유형도 같은
 msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
-msgstr "최소 하나 이상 미수금/미지급금 항목을 기재해야 결제 등록 마법사를 열 수 있습니다."
+msgstr "결제 등록 마법사를 열기 위해서는 미수금/미지급금 항목이 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -15573,7 +15572,7 @@ msgstr "최소 하나 이상 미수금/미지급금 항목을 기재해야 결�
 msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
-msgstr "'통화 환산 금액' 영역에 금액을 지정하지 않으면 외화를 표시할 수 없습니다."
+msgstr "외화를 표시하려면 '통화 환산 금액' 영역에 금액을 지정하세요."
 
 #. module: account
 #. odoo-python
@@ -15582,7 +15581,7 @@ msgstr "'통화 환산 금액' 영역에 금액을 지정하지 않으면 외화
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
-msgstr "외환 통화를 지정하지 않으면 금액을 외화로 표시할 수 없습니다."
+msgstr "외화 금액을 표시하려면 외환 통화를 지정하세요."
 
 #. module: account
 #. odoo-python
@@ -15591,7 +15590,7 @@ msgstr "외환 통화를 지정하지 않으면 금액을 외화로 표시할 �
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
-msgstr "선택한 전표에 결제할 항목이 더 이상 없으므로 결제 등록을 진행할 수 없습니다."
+msgstr "결제를 등록할 수 없습니다. 선택한 전표에 결제할 항목이 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15600,7 +15599,7 @@ msgstr "선택한 전표에 결제할 항목이 더 이상 없으므로 결제 �
 msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
-msgstr "전표가 인바운드이거나 아웃바운드로만 구성된 경우에는 결제 등록을 할 수 없습니다."
+msgstr "전표 항목 전체가 인바운드 또는 아웃바운드인 경우에는 결제 등록을 할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15608,7 +15607,7 @@ msgstr "전표가 인바운드이거나 아웃바운드로만 구성된 경우�
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
-msgstr "%s 마감 날짜 이전 및 이후에 항목을 추가/수정할 수 없습니다."
+msgstr "해당 날짜를 포함하여 잠금 날짜 %s 이전의 항목은 추가 또는 수정할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15617,7 +15616,9 @@ msgstr "%s 마감 날짜 이전 및 이후에 항목을 추가/수정할 수 없
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
-msgstr "마감일 %s까지 항목을 추가/수정할 수 없습니다. 회사 설정을 확인하거나 ‘자문’ 역할이 부여된 사용자에게 요청하십시오."
+msgstr ""
+"해당 날짜를 포함하여 잠금 날짜 %s 이전의 항목은 추가 또는 수정할 수 없습니다.. 회사 설정을 확인하거나 ‘어드바이저’ 사용자에게 "
+"요청하세요."
 
 #. module: account
 #. odoo-python
@@ -15635,7 +15636,7 @@ msgstr "회사의 통화를 변경할 수 없습니다. 이미 전표에서 사�
 msgid ""
 "You cannot change the type of an account set as Bank Account on a journal to"
 " Receivable or Payable."
-msgstr "전표에 계좌 유형이 은행 계좌로 설정된 경우에는 미수금이나 미지급금으로 변경할 수 없습니다."
+msgstr "전표의 계좌 유형이 은행 계좌인 경우에는 미수금이나 미지급금으로 변경할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15644,7 +15645,7 @@ msgstr "전표에 계좌 유형이 은행 계좌로 설정된 경우에는 미�
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr "회계 기준 국가 내에서 주를 설정하지 않으면 해외 VAT 번호를 이용하여 재정 상태를 생성할 수 없습니다."
+msgstr "주를 설정하지 않으면 해외 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 위치를 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15653,7 +15654,7 @@ msgstr "회계 기준 국가 내에서 주를 설정하지 않으면 해외 VAT 
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
-msgstr "회계 기준 국가 내에서 해외 국가의 VAT 번호를 이용하여 재정 상태를 생성할 수 없습니다."
+msgstr "해외 국가의 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 위치를 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15662,8 +15663,7 @@ msgstr "회계 기준 국가 내에서 해외 국가의 VAT 번호를 이용하�
 msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
-msgstr ""
-"회사용으로 설정한 기본 VAT 번호와 동일한 번호로 회계 기준 국가에서 재정 상태를 동일한 VAT 번호로 생성할 수 없습니다."
+msgstr "회계 기준 국가의 재정 위치 VAT 번호를 회사용으로 설정한 VAT 기본값과 동일하게 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15672,7 +15672,7 @@ msgstr ""
 msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
-msgstr "이미 발행된 상태에서는 진행할 수 없습니다. 미결 전표 생성 후 발행하십시오."
+msgstr "발행 완료 상태에서는 작업을 생성할 수 없습니다. 나중에 미결 전표를 생성하여 발행하세요."
 
 #. module: account
 #. odoo-python
@@ -15681,14 +15681,14 @@ msgstr "이미 발행된 상태에서는 진행할 수 없습니다. 미결 전�
 msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
-msgstr "지급 조건과 일치하지 않으므로 미수금/미지급금 항목을 삭제할 수 없습니다."
+msgstr "미지급금이나 미수금 내역을 삭제할 수 없습니다. 삭제할 경우 지급 조건과 일치하지 않게 됩니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "세금신고서에 영향을 미칠 수 있으므로 세금 내역은 삭제할 수 없습니다."
+msgstr "세금신고서에 변동이 생길 수 있으므로 세금 내역은 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15714,7 +15714,7 @@ msgstr ""
 msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
-msgstr "일부 세금이 현금주의 원칙을 적용하므로 이 설정을 비활성화할 수 없습니다. 이 설정을 비활성화하기 전에 세금을 수정하십시오."
+msgstr "설정을 비활성화할 수 없습니다. 현금주의 기준인 세금이 있습니다. 설정을 비활성화하려면 먼저 세금을 수정하세요."
 
 #. module: account
 #. odoo-python
@@ -15734,7 +15734,7 @@ msgstr ""
 msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
-msgstr "전표에서 제한 모드가 활성화되어 다음 필드를 편집 할 수 없습니다 : %s."
+msgstr "다음 필드를 편집 할 수 없습니다 : %s. 전표에 제한 모드가 되어 있습니다."
 
 #. module: account
 #. odoo-python
@@ -15746,7 +15746,7 @@ msgid ""
 "%s"
 msgstr ""
 "다음의 필드는 편집할 수 없습니다: %s.\n"
-"다음은 이미 해시된 항목입니다:\n"
+"이미 해시된 항목입니다:\n"
 "%s"
 
 #. module: account
@@ -15756,7 +15756,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
-msgstr "계정 작업에 대해서 이미 일련번호가 부여된 경우에는 전표를 수정할 수 없습니다."
+msgstr "전표를 수정할 수 없습니다. 계정 작업에 이미 일련 번호가 부여되어 있습니다."
 
 #. module: account
 #. odoo-python
@@ -15764,7 +15764,7 @@ msgstr "계정 작업에 대해서 이미 일련번호가 부여된 경우에는
 #, python-format
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
-msgstr "계정을 이동시킨 전표의 경우에는 이미 발행된 후에는 편집할 수 없습니다."
+msgstr "전표를 수정할 수 없습니다. 계정 작업이 이미 발행되었습니다."
 
 #. module: account
 #. odoo-python
@@ -15773,7 +15773,7 @@ msgstr "계정을 이동시킨 전표의 경우에는 이미 발행된 후에는
 msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
-msgstr "미수금/미지급금 계정은 조정이 불가능하도록 설정할 수 없습니다 (계정 코드: %s)."
+msgstr "미수금/미지급금 계정은 반드시 조정이 가능해야만 합니다 (계정 코드: %s)."
 
 #. module: account
 #. odoo-python
@@ -15782,7 +15782,7 @@ msgstr "미수금/미지급금 계정은 조정이 불가능하도록 설정할 
 msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
-msgstr "\"현재 연도 소득\"을 유형으로 하는 계정을 두 개 이상 가질 수 없습니다. (계정 : %s)"
+msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계정 : %s)"
 
 #. module: account
 #. odoo-python
@@ -15793,8 +15793,8 @@ msgid ""
 "already posted.                         If you are absolutely sure you want "
 "to modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"기초 작업 (%s)이 발행된 경우에는 \"openning_balance\" 를 가져올 수 없습니다."
-"                         계정의 기초 잔액을 수정하려는 것이 확실한 경우, 초안 항목으로 작업을 재설정하십시오."
+"기초 작업 (%s)이 이미 발행된 후에는 \"openning_balance\" 파일을 가져올 수 없습니다."
+"                         계정의 기초 잔액을 꼭 수정해야만 한다면, 작업을 미결 상태로 초기화하세요."
 
 #. module: account
 #. odoo-python
@@ -15803,7 +15803,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr "최소 모드의 전표이므로 발행된 입력 내용을 수정할 수 없습니다."
+msgstr "발행된 항목을 수정할 수 없습니다. 전표에 제한 모드가 적용되었습니다. "
 
 #. module: account
 #. odoo-python
@@ -15812,7 +15812,7 @@ msgstr "최소 모드의 전표이므로 발행된 입력 내용을 수정할 �
 msgid ""
 "You cannot modify the account number or partner of an account that has been "
 "trusted."
-msgstr "계좌 번호나 계정 협력사를 신뢰함으로 한 후에는 수정할 수 없습니다."
+msgstr "신뢰함 표시를 한 계좌 번호나 협력사는 수정할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15821,7 +15821,7 @@ msgstr "계좌 번호나 계정 협력사를 신뢰함으로 한 후에는 수�
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
-msgstr "회계 입력이 완료된 전표의 %s 필드는 수정할 수 없습니다."
+msgstr "%s 필드를 수정할 수 없습니다. 전표에 회계 입력이 완료되었습니다."
 
 #. module: account
 #. odoo-python
@@ -15839,7 +15839,7 @@ msgstr "전표 발행이 완료되면 관련된 세금을 수정할 수 없습�
 msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
-msgstr "회계의 변경 불가능성을 보장하는 값을 덮어 쓸 수 없습니다."
+msgstr "회계의 변경 불가능성을 보장하는 값은 덮어 쓸 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15847,7 +15847,7 @@ msgstr "회계의 변경 불가능성을 보장하는 값을 덮어 쓸 수 없�
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr "계정이 전표 입력에 사용된 경우에는 이 작업을 수행할 수 없습니다."
+msgstr "전표 입력에 사용된 계정에는 이 작업을 수행할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15863,7 +15863,7 @@ msgstr "보관 처리된 전표 (%(journal)s)는 발행할 수 없습니다."
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
-msgstr "이미 회계 항목 입력에 사용한 통화에 대해서는 소수점 자리수를 줄일 수 없습니다."
+msgstr "통화의 소수점 자릿수를 줄일 수 없습니다. 이미 회계 입력에 사용된 통화입니다."
 
 #. module: account
 #. odoo-python
@@ -15881,7 +15881,7 @@ msgstr "%s 계정은 삭제 또는 비활성화할 수 없습니다. 고객이�
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
-msgstr "세금 분할 항목에서 설정된 \"%s\" 계정은 제거하거나 활성화를 중단할 수 없습니다."
+msgstr "'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 세금 분할 내역에 설정되어 있는 계정입니다."
 
 #. module: account
 #. odoo-python
@@ -15890,7 +15890,7 @@ msgstr "세금 분할 항목에서 설정된 \"%s\" 계정은 제거하거나 �
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
-msgstr "재정 상태의 계정 매핑에 설정된 \"%s\" 계정은 제거하거나 활성화를 중단할 수 없습니다."
+msgstr "'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 재정 위치의 계정 매핑에 설정되어 있는 계정입니다."
 
 #. module: account
 #. odoo-python
@@ -15904,7 +15904,7 @@ msgstr "세금과 관련되어 현금주의로 설정된 전표는 미결로 초
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr "교환 차액 분개 항목 초안을 작성하도록 재설정할 수 없습니다."
+msgstr "외환 차액에 대한 미결 전표로 초기화할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15913,7 +15913,7 @@ msgstr "교환 차액 분개 항목 초안을 작성하도록 재설정할 수 �
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
-msgstr "이 계정에는 이미 다른 외화를 사용한 전표입력 항목이 있으므로 이 계정에 통화를 설정할 수 없습니다."
+msgstr "이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화가 전표에 입력되어 있습니다."
 
 #. module: account
 #. odoo-python
@@ -15922,7 +15922,7 @@ msgstr "이 계정에는 이미 다른 외화를 사용한 전표입력 항목�
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
-msgstr "일부 부분 조정은 아직 보류 중인 경우 조정을 방지하기 위해 계정을 전환할 수 없습니다."
+msgstr "조정되는 것을 막기 위해 계정을 전환할 수 없습니다. 일부 보류 중인 부분 조정 항목이 있습니다."
 
 #. module: account
 #. odoo-python
@@ -15936,14 +15936,14 @@ msgstr "문서 발행이 완료된 경우에는 유형을 변경할 수 없습�
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr "더 이상 사용되지 않는 계정을 사용할 수 없습니다."
+msgstr "사용이 중단된 계정은 선택할 수 없습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
-msgstr "재무상태표에 기입하지 않는 계정의 내역에 세금을 사용할 수 없습니다"
+msgstr "재무상태표에 기입되지 않는 계정에는 세금을 적용할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -15988,29 +15988,29 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"총액이 마이너스인 청구서의 유효성을 승인할 수 없습니다. 대신 대변전표를 작성해야 합니다. 작업 메뉴를 사용하여 대변전표 또는 환불로 "
-"변환하십시오."
+"청구서를 승인할 수 없습니다. 총 금액이 마이너스입니다. 대신 대변전표를 생성해야 합니다. 활동 메뉴를 통해 대변전표 또는 환불 항목으로"
+" 변환하세요."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "You do not have the right to trust or un-trust a bank account."
-msgstr "은행 계좌에 대해 신뢰하거나 신뢰하지 않을 권한이 없습니다."
+msgstr "은행 계좌를 신뢰하거나 신뢰하지 않을 권한이 없습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "You do not have the rights to trust or un-trust accounts."
-msgstr "계좌에 대해 신뢰하거나 신뢰하지 않을 권한이 없습니다."
+msgstr "계좌를 신뢰하거나 신뢰하지 않을 권한이 없습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr "청구서을 게시할 수 있는 접근 권한이 없습니다."
+msgstr "청구서 발행 권한이 없습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16025,7 +16025,7 @@ msgid ""
 "You have to configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "회계 항목에서 환율 차이와 관련한 기장을 자동으로 관리하려면 회사 설정에서 '환차손익 전표'를 구성해야 합니다."
+msgstr "회사 설정에서 '환차손익 전표'를 설정해야 합니다. 환율 간의 차이로 인한 회계 기장을 자동으로 관리합니다."
 
 #. module: account
 #. odoo-python
@@ -16049,7 +16049,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차익 계정'을 구성해야 합니다."
+msgstr "회사 설정에서 '외환차익 계정'을 설정해야 합니다. 환율 간의 차이로 인한 회계 기장을 자동으로 관리합니다. "
 
 #. module: account
 #. odoo-python
@@ -16059,7 +16059,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "환율 차이로 인한 회계 항목의 기장을 자동으로 관리하려면, 회사 설정 메뉴에서 '외환차손 계정'을 구성해야 합니다."
+msgstr "회사 설정에서 '외환차손 계정'을 설정해야 합니다. 환율 간의 차이로 인한 회계 기장을 자동으로 관리합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16288,7 +16288,7 @@ msgid ""
 "is a money transfer service and not a bank.\n"
 "                            Double check if the account can be trusted by calling the vendor.<br/>"
 msgstr ""
-"은(는) 은행이 아니라 이체 서비스입니다.\n"
+"은(는) 은행이 아니라 이체 서비스 업체입니다.\n"
 "                       거래처에 연락하여 신뢰할 수 있는 계좌인지 다시 확인하시기 바랍니다.<br/>"
 
 #. module: account

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,21 +38,35 @@ msgid ""
 "                        </option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                        <option value=\"done\" title=\"Successful payment\">\n"
+"                            Sucesso\n"
+"                        </option>\n"
+"                        <option value=\"pending\" title=\"Payment processing\">\n"
+"                            Pendente\n"
+"                        </option>\n"
+"                        <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                            Cancelado\n"
+"                        </option>\n"
+"                        <option value=\"error\" title=\"Processing error\">\n"
+"                            Erro\n"
+"                        </option>\n"
+"                    </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Details (test data)</b></small>"
-msgstr ""
+msgstr "<small><b>Informações de pagamento (dados de teste)</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Status</b></small>"
-msgstr ""
+msgstr "<small><b>Status do pagamento</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr ""
+msgstr "Autorizar"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -66,7 +81,7 @@ msgstr "Cancelada"
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Capturar quantia manualmente"
+msgstr "Capturar valor manualmente"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
@@ -75,7 +90,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Capture o valor a partir do Odoo quando a entrega for concluída.\n"
+"Capture o valor pelo Odoo quando a entrega for concluída.\n"
 "Use isso se você quiser cobrar os cartões dos clientes somente quando\n"
 "tiver certeza de que pode enviar as mercadorias para eles."
 
@@ -105,6 +120,7 @@ msgstr "Demonstração"
 #, python-format
 msgid "Demo providers should never be enabled."
 msgstr ""
+"Provedores de pagamento de demonstração nunca devem estar habilitados."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -136,7 +152,7 @@ msgstr "Transação de pagamento"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "Pagamentos feitos com este método terão <b>sucesso</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -144,11 +160,12 @@ msgid ""
 "Payments made with this payment method will be automatically "
 "<b>canceled</b>."
 msgstr ""
+"Pagamentos feitos com este método serão <b>cancelados</b> automaticamente."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
-msgstr ""
+msgstr "Pagamentos feitos com este método permanecerão <b>pendentes</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -156,6 +173,7 @@ msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
 msgstr ""
+"Pagamentos feitos com esse método simularão um <b>erro</b> de processamento."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -165,17 +183,19 @@ msgstr "Pendente"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "Definir como erro"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "Estado simulado"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
 msgstr ""
+"O estado em que devem ser definidas as transações criadas a partir deste "
+"token."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -192,11 +212,11 @@ msgstr "A transação não está vinculada a um token."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Você selecionou o seguinte status de pagamento de demonstração: %s"

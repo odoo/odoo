@@ -36,7 +36,7 @@ msgstr "<span class=\"o_stat_text\">Cuti</span>"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Work Resources</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sumber Daya Kerja</span>"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -63,6 +63,8 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar? All "
 "entries will be lost"
 msgstr ""
+"Apakah Anda yakin ingin mengganti templat kalender ini menjadi templat "
+"kalender 1 minggu? Semua entri akan hilang"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -70,30 +72,34 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar? All "
 "entries will be lost"
 msgstr ""
+"Apakah Anda yakin ingin mengganti templat kalender ini menjadi templat "
+"kalender 2 minggu? Semua entri akan hilang"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Absensi tidak boleh tumpang tindih."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Rata-Rata Jam per Hari"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Rata-rata jam per hari di mana sumber daya harusnya bekerja untuk kalender "
+"ini."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Kalender dalam mode 2 minggu"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -134,7 +140,7 @@ msgstr "Dibuat pada"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr ""
+msgstr "Periode Hari"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -183,7 +189,7 @@ msgstr "Tanggal Berakhir"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "Penjelasan"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -195,7 +201,7 @@ msgstr "Pertama"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Minggu pertama"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -207,14 +213,14 @@ msgstr "Jumat"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Jumat Sore"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Lunch"
-msgstr ""
+msgstr "Makan Siang Jumat"
 
 #. module: resource
 #. odoo-python
@@ -226,7 +232,7 @@ msgstr "Jumat Pagi"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
+msgstr "Memberikan urutan baris ini saat menampilkan kalender sumber daya."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -264,6 +270,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Bila kosong, ini adalah cuti umum untuk perusahaan. Bila sumber daya "
+"ditetapkan, cuti hanya untuk sumber daya ini"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -280,6 +288,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Bila field aktif ditetapkan menjadi False, ini akan memungkinkan Anda untuk "
+"menyembunyikan Waktu Kerja tanpa menghapusnya."
 
 #. module: resource
 #. odoo-python
@@ -288,6 +298,8 @@ msgstr ""
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
+"Dalam kalender dengan mode 2 minggu, semua periode harus berada dalam "
+"bagiannya."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -326,14 +338,14 @@ msgstr "Senin"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Senin Sore"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Lunch"
-msgstr ""
+msgstr "Makan Siang Senin"
 
 #. module: resource
 #. odoo-python
@@ -427,7 +439,7 @@ msgstr "Sumber Daya"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Sumber Daya Cuti"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -454,7 +466,7 @@ msgstr "Cari Sumber Daya"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Cari Cuti Periode Kerja"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -471,7 +483,7 @@ msgstr "Kedua"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Minggu kedua"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -512,7 +524,7 @@ msgstr "Tanggal Mulai"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "Tanggal Mulai Cuti"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -522,12 +534,12 @@ msgstr "Minggu"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr ""
+msgstr "Ganti ke kalender 1 minggu"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 2 weeks calendar"
-msgstr ""
+msgstr "Ganti ke kalender 2 minggu"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
@@ -539,14 +551,14 @@ msgstr "Technical field for UX purpose."
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr ""
+msgstr "Minggu saat ini (dari %s sampai %s) sesuai dengan %s."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "Tanggal mulai cuti harus lebih awal dari tanggal akhir."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -582,14 +594,14 @@ msgstr "Kamis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Kamis Sore"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "Makan Siang Kamis"
 
 #. module: resource
 #. odoo-python
@@ -607,18 +619,18 @@ msgstr "Cuti"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Time Off Date"
-msgstr ""
+msgstr "Tanggal Cuti"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "Detail Cuti"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "Tipe Waktu"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
@@ -647,14 +659,14 @@ msgstr "Selasa"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Selasa Sore"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "Makan Siang Selasa"
 
 #. module: resource
 #. odoo-python
@@ -686,14 +698,14 @@ msgstr "Rabu"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Rabu Sore"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "Makan Siang Rabu"
 
 #. module: resource
 #. odoo-python
@@ -705,7 +717,7 @@ msgstr "Rabu Pagi"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "Nomor Minggu"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -713,6 +725,7 @@ msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
 msgstr ""
+"Apakah ini harus dihitung sebagai cuti atau jam kerja (contoh: formation)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -767,21 +780,21 @@ msgstr "Waktu Kerja"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "Anda tidak dapat menghapus bagian di antara minggu."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "first"
-msgstr ""
+msgstr "pertama"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "minggu lain"
 
 #. module: resource
 #. odoo-python

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -278,13 +278,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
 "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-"title=\"Done\"/><span class=\"d-none d-md-inline\"> 완료</span>"
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"완료\" "
+"title=\"완료\"/><span class=\"d-none d-md-inline\"> 완료</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>결제완료</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>결제 완료</b>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -307,9 +307,8 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
-"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> 청구서 "
-"대기 중</span>"
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"청구서 대기 중\" "
+"title=\"청구서 대기 중\"/><span class=\"d-none d-md-inline\"> 청구서 대기 중</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -317,8 +316,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
-"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> 취소됨</span>"
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"취소됨\" "
+"title=\"취소됨\"/><span class=\"d-none d-md-inline\"> 취소됨</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -540,7 +539,7 @@ msgstr "<strong>주문 참조 :</strong>"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "A sample email has been sent to %s."
-msgstr "샘플이메일이 %s로 전송됩니다."
+msgstr "견본 메일이 %s로 전송됩니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -688,7 +687,7 @@ msgstr "모든 경고상태의 견적요청서"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
-msgstr "공급업체에게 입고일을 주지시키기 위한 이메일을 자동으로 전송하는 것을 허용합니다"
+msgstr "공급업체에게 입고일을 주지시키기 위한 이메일을 자동 전송하도록 허용합니다."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -735,7 +734,7 @@ msgstr "분석 계획에 대한 적용 가능성"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "분석의 정확성"
+msgstr "분석 정확성"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1022,7 +1021,7 @@ msgstr "관리 기준"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+msgstr "측정 단위 간의 변환은 동일한 카테고리에 속한 경우에만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
@@ -1234,7 +1233,7 @@ msgstr "%s을 포함한 내역 추가"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -1757,7 +1756,7 @@ msgstr "조치가 필요한 메시지 수"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류가 발생한 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -2759,7 +2758,7 @@ msgstr "UX용 기술 필드"
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr "재정 국가 및 재정 상황에 따라 사용할 수 있는 세금에 필터를 걸 수 있는 기술 필드입니다."
+msgstr "재정 국가 및 재정 위치에 따라 세금을 필터링할 수 있는 기술 필드입니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content

@@ -89,11 +89,11 @@ msgstr ""
 "        <tr>\n"
 "            <td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p>\n"
-"                    축하합니다\n"
+"                    축하합니다,\n"
 "                    <span t-out=\"object.name or ''\">Joel Willis</span>님!\n"
 "                </p>\n"
 "                <p>\n"
-"                    새로운 레벨에 도달했습니다: <strong t-out=\"object.rank_id.name or ''\">초보</strong>\n"
+"                    새로운 레벨에 도달했습니다: <strong t-out=\"object.rank_id.name or ''\">초보</strong> 레벨\n"
 "                </p>\n"
 "                <t t-if=\"object.next_rank_id.name\">\n"
 "                    <p>계속하시면 <strong t-out=\"object.next_rank_id.name or ''\">학생</strong> 레벨로 올라가실 수 있습니다!</p>\n"
@@ -153,8 +153,8 @@ msgid ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
-"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
-"aria-label=\"Goal in Progress\"/>"
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"진행 중인 목표\" aria-"
+"label=\"진행 중인 목표\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -2052,7 +2052,7 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류가 발생한 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count

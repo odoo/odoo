@@ -5,6 +5,7 @@
 # Translators:
 # grazziano <grazziano.do+transifex@gmail.com>, 2023
 # Wil Odoo, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
-msgstr "ID do Usuário da API"
+msgstr "ID de usuário da API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
-msgstr "Senha do Usuário da API"
+msgstr "Senha do usuário da API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
@@ -45,12 +46,12 @@ msgstr "Não foi possível estabelecer a conexão com a API."
 #. module: payment_ogone
 #: model:payment.provider,display_as:payment_ogone.payment_provider_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "Cartão de crédito (desenvolvido por Ogone)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "Função de hash"
 
 #. module: payment_ogone
 #. odoo-python
@@ -78,56 +79,57 @@ msgstr "Provedor de serviços de pagamento"
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transação do Pagamento"
+msgstr "Transação do pagamento"
 
 #. module: payment_ogone
 #. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Dados recebidos com status de pagamento inválido: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr "Insira chave SHA"
+msgstr "Chave SHA IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr "Chave SHA"
+msgstr "Chave SHA OUT"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_ogone
 #. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
-msgstr ""
+msgstr "É necessário armazenar suas informações de pagamento para uso futuro."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
+"O ID usada exclusivamente para identificar o usuário da API com a Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "O ID usado exclusivamente para identificar a conta com a Ogone"
 
 #. module: payment_ogone
 #. odoo-python
@@ -141,7 +143,7 @@ msgstr "A comunicação com a API falhou."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "O pagamento foi recusado: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
@@ -161,6 +163,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Stripe</strong>."
 msgstr ""
+"Esse provedor está obsoleto.\n"
+"Considere desativá-lo e mudar para <strong>Stripe</strong>."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
@@ -177,7 +181,7 @@ msgstr "Seu pagamento foi cancelado."
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
 msgstr ""
-"Seu pagamento foi processado com sucesso, mas está aguardando por aprovação."
+"Seu pagamento foi processado com sucesso, mas está aguardando aprovação."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone

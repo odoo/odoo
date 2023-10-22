@@ -59,7 +59,7 @@ msgstr "%(line_description)s （ドラフト）"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "%(line_description)s (参照: %(reference)s %(date)sでの)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -83,7 +83,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -753,6 +753,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    ロック済"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -934,12 +936,12 @@ msgstr "<strong>有効期限日:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr ""
+msgstr "<strong>有効期日:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>財政状態備考:</strong>"
+msgstr "<strong>会計ポジション備考:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -963,7 +965,7 @@ msgstr "<strong>見積日:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>販売担当者:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1003,7 +1005,7 @@ msgstr "<strong>この見積は取り消されました。</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>あなたの参照:</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1758,7 +1760,7 @@ msgstr "顧客署名"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "顧客ステータス"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1768,7 +1770,7 @@ msgstr "顧客税"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "顧客郵便番号"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
@@ -2154,7 +2156,7 @@ msgstr "FedExコネクター"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "財政状態"
+msgstr "会計ポジション"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2162,7 +2164,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr "財政状態は、特定の顧客、または特定の受注・請求書に、税金と勘定を調整するために使用されます。デフォルト値は顧客から取得されます。"
+msgstr ""
+"会計ポジションは、特定の顧客、または特定の販売オーダ/請求書に、税金と勘定を調整するために使用されます。デフォルト値は顧客から取得されます。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2256,17 +2259,17 @@ msgstr "グループ化"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr "有効な価格リストがあります"
+msgstr "有効な価格リストあり"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr "確定されたオーダがあります"
+msgstr "検証済オーダあり"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "財政状態は変更しましたか"
+msgstr "会計ポジション変更済"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2281,7 +2284,7 @@ msgstr "価格表が変更されました"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "前受金がある"
+msgstr "前受金あり"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2655,7 +2658,7 @@ msgstr "ロック済"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "ロックされたオーダは修正できません。"
 
 #. module: sale
 #. odoo-javascript
@@ -2771,7 +2774,7 @@ msgstr "説明責任のある販売注文明細に必須フィールドがあり
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2842,7 +2845,7 @@ msgstr "メッセージなし"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "この支払に関する追加条件はありません。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2929,12 +2932,12 @@ msgstr "オンボーディング"
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Onboarding Order Confirmation"
-msgstr ""
+msgstr "オンボーディングオーダ確認"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sample_quotation
 msgid "Onboarding Sample Quotation"
-msgstr ""
+msgstr "オンボーディングサンプル見積書"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding_step
@@ -3145,7 +3148,7 @@ msgstr "アップセル対象オーダ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3393,7 +3396,7 @@ msgstr "プロダクト価格が再計算されました。"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "財政状態%sに基づいて、製品の税金は再計算されました。"
+msgstr "会計ポジション%sに基づいて、プロダクトの税金が再計算されました。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3602,7 +3605,7 @@ msgstr "この価格表に基づいてすべての価格を再計算します"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr "この財政状態に基づいて、すべての税を再計算します"
+msgstr "この会計ポジションに基づいて、全ての税を再計算します"
 
 #. module: sale
 #. odoo-python
@@ -3707,7 +3710,7 @@ msgstr "SMS配信エラー"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3748,7 +3751,7 @@ msgstr "販売決済プロバイダーオンボーディングウィザード"
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
 msgid "Sale Quotation Onboarding"
-msgstr ""
+msgstr "販売見積書オンボーディング"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4430,6 +4433,7 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"販売オーダ%(order)s(分析アカウント%(account)sにリンク)は取消されます。取消済の販売オーダに経費を登録することはできません。"
 
 #. module: sale
 #. odoo-python
@@ -4440,6 +4444,7 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"販売オーダ%(order)s(分析アカウント%(account)sにリンク)は現在ロックされています。ロックされた販売オーダに経費を登録することはできません。この分析アカウントにリンクされた新しい販売オーダを作成して下さい。"
 
 #. module: sale
 #. odoo-python
@@ -4448,7 +4453,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
-msgstr ""
+msgstr "販売オーダ%(order)s(分析アカウント%(account)sにリンク)は経費を登録する前に検証される必要があります。"
 
 #. module: sale
 #. odoo-python
@@ -4481,7 +4486,7 @@ msgstr "事前に請求される定額。"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "The following orders are not in a state requiring confirmation: %s"
-msgstr ""
+msgstr "以下のオーダは確認を要求するステータスにはありません:%s"
 
 #. module: sale
 #. odoo-python
@@ -4546,7 +4551,7 @@ msgstr "この販売注文の支払い通信。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "心を込めて支払ましょう。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -4715,7 +4720,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
-msgstr "選択された財政状態に基づいて、すべての税が更新されます。"
+msgstr "選択された会計ポジションに基づいて、全ての税が更新されます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4963,7 +4968,7 @@ msgstr "注文を検証"
 msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
-msgstr ""
+msgstr "検証済経費と仕入先請求書は、原価または販売価格で顧客に再請求できます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5106,7 +5111,7 @@ msgstr "カタログでこのプロダクトを編集することはできませ
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "ロックされたオーダを取消できません。先にロック解除して下さい。"
 
 #. module: sale
 #. odoo-python

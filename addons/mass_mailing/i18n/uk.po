@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid " %(subject)s (final)"
-msgstr ""
+msgstr " %(subject)s (фінальна)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -58,17 +58,17 @@ msgstr "$18"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Blacklist"
-msgstr ""
+msgstr "% Чорного списку"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Bounce"
-msgstr ""
+msgstr "% Відхилених"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Opt-out"
-msgstr ""
+msgstr "% Відмов"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -173,6 +173,10 @@ msgid ""
 "                                        <i class=\"fa fa-envelope-o\"/> Contacts\n"
 "                                    </span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">\n"
+"                                        <i class=\"fa fa-envelope-o\"/> Контакти\n"
+"                                    </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -180,6 +184,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Blacklist</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Чорний список</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -187,6 +193,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Bounce</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Відхилено</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -194,6 +202,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Mailings</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Розсилки</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -201,6 +211,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Opt-Out</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Відмова</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -305,6 +317,9 @@ msgid ""
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
+"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"                                                    Надіслати переможця зараз\n"
+"                                                </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -312,6 +327,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign totals"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"                        Сума всіх відсотків цієї кампанії A/B"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
@@ -378,6 +395,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
 "False)]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
+"False)]}\">Контакт розсилки</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -414,7 +433,7 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Відкрити одержувача</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -578,7 +597,7 @@ msgstr "<span>Дизайн</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "<span>There wasn't enough recipients left for this mailing</span>"
-msgstr ""
+msgstr "<span>Для цієї розсилки не було достатньо одержувачів</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -597,6 +616,9 @@ msgid ""
 "                                    <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
 "                                </strong>"
 msgstr ""
+"<strong class=\"d-block\" attrs=\"{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}\">\n"
+"                                    <span name=\"ab_test_text\">Не було надано достатньо одержувачів для цієї розсилки. </span>\n"
+"                                </strong>"
 
 #. module: mass_mailing
 #. odoo-python
@@ -654,7 +676,7 @@ msgstr "Унікальне значення"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
 msgid "A/B Campaign Winner Mailing"
-msgstr ""
+msgstr "Розсилка переможця A/B кампанії"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -915,6 +937,11 @@ msgid ""
 "is hidden on the unsubscription page. The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Дозвольте одержувачу самостійно керувати своїм статусом у чорному списку "
+"через сторінку скасування підписки. Якщо опція активна, кнопка «Додати мене "
+"у чорний список» прихована на сторінці скасування підписки. Кнопка "
+"«Повернутися» буде завжди видимою в будь-якому випадку, щоб потенційні "
+"клієнти та партнери могли повторно підписатися."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1075,7 +1102,7 @@ msgstr "Фоновий колір"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_on_mailing_list
 msgid "Based on Mailing Lists"
-msgstr ""
+msgstr "На основі списків розсилки"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -1139,7 +1166,7 @@ msgstr "Електронні адреси у чорному списку"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist removal request from portal"
-msgstr ""
+msgstr "Запит на видалення чорного списку з порталу"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1149,13 +1176,15 @@ msgid ""
 "Blocklist removal request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Запит на видалення чорного списку розсилки з порталу %(mailing_link)s "
+"(документ %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist request from portal"
-msgstr ""
+msgstr "Запит із списку блокування з порталу"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1165,6 +1194,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Запит чорного списку з порталу розсилки %(mailing_link)s (документ "
+"%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1174,6 +1205,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
+"Запит на блокування за посиланням для скасування розсилки %(mailing_link)s "
+"(документ %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1603,7 +1636,7 @@ msgstr "Продовдити читати <i class=\"fa fa-long-arrow-right alig
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Could not retrieve URL: %s"
-msgstr ""
+msgstr "Не вдалося отримати URL: %s"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
@@ -2158,7 +2191,7 @@ msgstr "Назва фільтру"
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "Filter templates"
-msgstr ""
+msgstr "Шаблони фільтру"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
@@ -2518,7 +2551,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_ab_test_sent
 msgid "Is Ab Test Sent"
-msgstr ""
+msgstr "Чи надіслано Ab тестування"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_body_empty
@@ -2539,7 +2572,7 @@ msgstr "Чи активована кампанія масової розсилк
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_is_winner_mailing
 msgid "Is the Winner of its Campaign"
-msgstr ""
+msgstr "Чи є переможцем цієї кампанії"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -4075,7 +4108,7 @@ msgstr "Надіслано на"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send test"
-msgstr ""
+msgstr "Надіслати тест"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -4334,7 +4367,7 @@ msgstr "Тестова розсилка"
 #: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
 #, python-format
 msgid "Test mailing could not be sent to %s:"
-msgstr ""
+msgstr "Тестову розсилку не вдалося надіслати %s:"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4516,6 +4549,8 @@ msgid ""
 "This email has been automatically added in blocklist because of too much "
 "bounced."
 msgstr ""
+"Цю електронну пошту було автоматично додано до чорного списку через велику "
+"кількість відхилень."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -4563,6 +4598,8 @@ msgid ""
 "This will send the email to all recipients. Are you sure you want to "
 "proceed?"
 msgstr ""
+"Електронний лист буде надіслано всім одержувачам. Ви впевнені, що бажаєте "
+"продовжити?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -4576,7 +4613,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
 msgid "TikTok"
-msgstr ""
+msgstr "TikTok"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
@@ -4774,6 +4811,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "Use alternative versions to be able to select the winner."
 msgstr ""
+"Використовуйте альтернативні версії, щоб мати можливість вибрати переможця."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -4929,6 +4967,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Під час створення розсилки ви можете визначити правила фільтрації одержувачів.\n"
+"                Щоб зберегти ті самі критерії для подальшого використання, ви можете додати його до списку вибраного\n"
+"                натиснувши іконку <i class=\"fa fa-floppy-o text-warning\"></i> біля \"Одержувачів\"."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -5182,6 +5223,8 @@ msgid ""
 "of all potential recipients.<br/>\n"
 "                        <b class=\"text-danger\">Some of the mailings will not be sent</b>, as only 1 email will be sent for each unique recipient in this campaign."
 msgstr ""
+"усіх потенційних одержувачів.<br/>\n"
+"                        <b class=\"text-danger\">Деякі розсилки не будуть відправлені</b>, оскільки лише 1 електронний лист буде надіслано кожному унікальному одержувачу в цій кампанії."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -5208,7 +5251,7 @@ msgstr "цей"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "to the remaining recipients."
-msgstr ""
+msgstr "решті одержувачів."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -5218,12 +5261,12 @@ msgstr "буде надіслано"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version."
-msgstr ""
+msgstr "отримає цю версію."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version.<br/>"
-msgstr ""
+msgstr "отримає цю версію.<br/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options

@@ -188,7 +188,7 @@ msgstr "%s Imposte incluse"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "%s Statement %s"
-msgstr ""
+msgstr "%s Estratto conto %s"
 
 #. module: account
 #. odoo-python
@@ -309,7 +309,7 @@ msgstr "... (%s altri)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "1.05"
-msgstr ""
+msgstr "1.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
@@ -319,7 +319,7 @@ msgstr "10 giorni dopo la fine del prossimo mese"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "11.05"
-msgstr ""
+msgstr "11.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -340,32 +340,32 @@ msgstr "2/7 Netto 30"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "20.00"
-msgstr ""
+msgstr "20.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2021-09-19"
-msgstr ""
+msgstr "19-09-2021"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-12"
-msgstr ""
+msgstr "12-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-25"
-msgstr ""
+msgstr "25-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-10-31"
-msgstr ""
+msgstr "31-10-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2024-01-01"
-msgstr ""
+msgstr "01-01-2024"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -378,12 +378,12 @@ msgstr "21 giorni"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -403,20 +403,20 @@ msgstr "30% ora, saldo tra 60 giorni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "30.00"
-msgstr ""
+msgstr "30.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "4.05"
-msgstr ""
+msgstr "4.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -426,7 +426,7 @@ msgstr "45 giorni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "9.00"
-msgstr ""
+msgstr "9.00"
 
 #. module: account
 #. odoo-python
@@ -739,6 +739,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}\" class=\"fst-italic\">\n"
+"                                        Un secondo pagamento verrà creato nel registro di destinazione.\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1003,12 +1006,12 @@ msgstr "<span role=\"separator\">Visualizza</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Last Statement</span>"
-msgstr ""
+msgstr "<span title=\"Latest Statement\">Ultimo estratto conto</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr ""
+msgstr "<span title=\"Outstanding Payments/Receipts\">Pagamenti</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1204,7 +1207,7 @@ msgstr "<strong>Data nota di credito:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong><br/>"
-msgstr ""
+msgstr "<strong>Codice cliente:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1214,7 +1217,7 @@ msgstr "<strong>Data:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Data di consegna:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1224,7 +1227,7 @@ msgstr "<strong>Scadenza:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Data di scadenza:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1234,7 +1237,7 @@ msgstr "<strong>Saldo finale</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm:</strong><br/>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1250,7 +1253,7 @@ msgstr "<strong>Data ricevuta:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Riferimento:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1379,6 +1382,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Una nota il cui contenuto di solito si applica alla sezione o al prodotto in"
+" alto."
 
 #. module: account
 #. odoo-python
@@ -1438,7 +1443,7 @@ msgstr "È stato creato un secondo pagamento:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
-msgstr ""
+msgstr "Titolo sezione"
 
 #. module: account
 #. odoo-python
@@ -1526,7 +1531,7 @@ msgstr "Valuta del conto"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr ""
+msgstr "Integrazione dashboard conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3327,7 +3332,7 @@ msgstr "Booleano"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #, python-format
 msgid "Branch:"
-msgstr ""
+msgstr "FIliale:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
@@ -3812,7 +3817,7 @@ msgstr "Piano dei conti"
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Chart of accounts set!"
-msgstr ""
+msgstr "Piano dei conti configurato!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -4090,7 +4095,7 @@ msgstr "Azienda correlata al registro"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
-msgstr ""
+msgstr "Relazione di sintesi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
@@ -4697,7 +4702,7 @@ msgstr "Note di credito"
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
 #: model:ir.model.fields,field_description:account.field_res_users__credit_to_invoice
 msgid "Credit To Invoice"
-msgstr ""
+msgstr "Credito da fatturare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -5118,7 +5123,7 @@ msgstr "Giorni"
 #: model:ir.model.fields,field_description:account.field_res_partner__days_sales_outstanding
 #: model:ir.model.fields,field_description:account.field_res_users__days_sales_outstanding
 msgid "Days Sales Outstanding (DSO)"
-msgstr ""
+msgstr "DSO (Days Sales Outstanding)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after_end_of_month
@@ -5307,7 +5312,7 @@ msgstr "Definisce il taglio minimo di valuta da usare nei pagamenti per cassa"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
-msgstr ""
+msgstr "Indica la periodicità delle dichiarazioni IVA e degli anni fiscali."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -7080,12 +7085,12 @@ msgstr "FATT"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/00001"
-msgstr ""
+msgstr "FATT/2023/00001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/0001"
-msgstr ""
+msgstr "FATT/2023/0001"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_exception_icon
@@ -7322,7 +7327,7 @@ msgstr "Modello di importazione per movimenti contabili"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
 msgid "Import Vendor Bills"
-msgstr ""
+msgstr "Importa fatture fornitore"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7997,7 +8002,7 @@ msgstr "App. di fatturazione precedente"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_invoice
 msgid "Invoicing Onboarding"
-msgstr ""
+msgstr "Integrazione fatturazione"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -9050,7 +9055,7 @@ msgstr "Data massima delle righe abbinate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__max_tax_lock_date
 msgid "Max Tax Lock Date"
-msgstr ""
+msgstr "Data massima di blocco dell'IVA"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -9288,7 +9293,7 @@ msgstr "Naviga facilmente fra i rendiconti e scopri cosa c'è dietro i numeri"
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
-msgstr ""
+msgstr "Necessità di annullare la richiesta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9769,24 +9774,24 @@ msgstr "Inserimento lavorativo"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
 msgid "Onboarding Accounting Periods"
-msgstr ""
+msgstr "Integrazione periodi contbaili"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_bank_account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_chart_of_accounts
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_sales_tax
 msgid "Onboarding Bank Account"
-msgstr ""
+msgstr "Integrazione conto bancario"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
 msgid "Onboarding Company Data"
-msgstr ""
+msgstr "Integrazione dati azienda"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_create_invoice
 msgid "Onboarding Create Invoice"
-msgstr ""
+msgstr "Integrazione crea fattura"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
@@ -9806,7 +9811,7 @@ msgstr "Immagine fase integrazione"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
 msgid "Onboarding Taxes"
-msgstr ""
+msgstr "Integrazione imposte"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -9883,7 +9888,7 @@ msgstr "Solo gli amministratori psosono installare i modelli di grafico"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only draft journal entries can be cancelled."
-msgstr ""
+msgstr "È possibile annullare solo le registrazioni contabili in bozza."
 
 #. module: account
 #. odoo-python
@@ -9906,6 +9911,8 @@ msgstr ""
 #, python-format
 msgid "Only posted/cancelled journal entries can be reset to draft."
 msgstr ""
+"È possibile reimpostare come bozza solo le registrazioni contabili "
+"confermate/annullate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10651,7 +10658,7 @@ msgstr "Termini di pagamento: pagamento immediato"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment within 30 calendar days"
-msgstr ""
+msgstr "Pagamento in 30 giorni di calendario"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -10913,7 +10920,7 @@ msgstr "Totale parziale precedente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
 msgid "Prefix Groups Threshold"
-msgstr ""
+msgstr "Soglia gruppi prefissi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
@@ -11493,7 +11500,7 @@ msgstr "Rappresenta il conio più piccolo diverso da zero (ad esempio 0,05)."
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr ""
+msgstr "Richiesta di annullamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -11784,7 +11791,7 @@ msgstr "Errore di consegna SMS"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "SO123"
-msgstr ""
+msgstr "SO123"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -11989,12 +11996,12 @@ msgstr "Sezione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_main_report_ids
 msgid "Section Of"
-msgstr ""
+msgstr "Sezione di"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 msgid "Sections"
-msgstr ""
+msgstr "Sezioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
@@ -12360,7 +12367,7 @@ msgstr "Applicazione delle imposte"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Set up your chart of accounts and record initial balances."
-msgstr ""
+msgstr "Configura i piani dei conti e registra i saldi iniziali."
 
 #. module: account
 #. odoo-python
@@ -12438,7 +12445,7 @@ msgstr "Mostra separatore decimale"
 #: model:ir.model.fields,field_description:account.field_account_move__show_delivery_date
 #: model:ir.model.fields,field_description:account.field_account_payment__show_delivery_date
 msgid "Show Delivery Date"
-msgstr ""
+msgstr "Mostra data di consegna"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_discount_details
@@ -12650,7 +12657,7 @@ msgstr "Riga estratto conto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 msgid "Statement Name"
-msgstr ""
+msgstr "Nome estratto conto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -12737,7 +12744,7 @@ msgstr "Passaggio completato!"
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Step completed!"
-msgstr ""
+msgstr "Passaggio completato!"
 
 #. module: account
 #: model:account.account,name:account.1_stock_out
@@ -13195,7 +13202,7 @@ msgstr ""
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_default_taxes
 msgid "Taxes set!"
-msgstr ""
+msgstr "Imposte configurate!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14181,6 +14188,7 @@ msgstr ""
 #, python-format
 msgid "The sections defined on a report cannot have sections themselves."
 msgstr ""
+"Le sezioni definiti in un rendiconto non possono avere sezioni a loro volta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14452,7 +14460,7 @@ msgstr "Queste imposte vengono applicate a tutti i nuovi prodotti creato."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Thirty one dollar and Five cents"
-msgstr ""
+msgstr "Trentuno dollari e cinque centesimi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -14607,7 +14615,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "This entry has been %s"
-msgstr ""
+msgstr "La registrazione è stata %s"
 
 #. module: account
 #. odoo-python
@@ -14621,7 +14629,7 @@ msgstr "La voce è stata duplicata da %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr ""
+msgstr "La registrazione è stata stornata da %s"
 
 #. module: account
 #. odoo-python
@@ -15994,6 +16002,8 @@ msgstr ""
 msgid ""
 "You can only request a cancellation for invoice sent to the government."
 msgstr ""
+"È possibile richiedere l'annullamento solo per le fatture inviate al "
+"governo."
 
 #. module: account
 #. odoo-python
@@ -16032,7 +16042,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "You can't send invoice(s) in draft state."
-msgstr ""
+msgstr "Non è possibile inviare fatture in bozza."
 
 #. module: account
 #. odoo-python
@@ -16743,6 +16753,8 @@ msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
 msgstr ""
+"[(Totale credio/totale ricavo) * numero di giorni dalla prima fattura] per "
+"questo cliente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -17049,7 +17061,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "reversed"
-msgstr ""
+msgstr "stornato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain

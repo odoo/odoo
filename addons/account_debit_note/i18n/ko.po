@@ -96,14 +96,14 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr "비워둘 경우, 차변 분개 항목이 있는 전표를 사용합니다."
+msgstr "비워둘 경우, 차변 분개할 전표를 사용합니다."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "모든 항목을 수정해야 하는 경우에는, 복사해두는 것이 편할 수 있습니다. 차변전표에서 대변전표로는 복사되지 않습니다."
+msgstr "전체 항목을 수정해야 할 경우, 복사하면 간편하게 사용할 수 있습니다. 차변전표에서 대변전표로는 복사할 수 없습니다."
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -160,8 +160,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"두 개의 문자로 된 ISO 국가 코드.\n"
-"이 필드는 빠른 검색을 위해 사용할 수 있습니다."
+"두 개의 문자로 이루어진 ISO 국가 코드입니다.\n"
+"빠른 검색을 위해 사용합니다."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
@@ -189,14 +189,14 @@ msgstr "특정 전표 사용"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "고객용 청구서나 대변전표, 공급업체 청구서나 대변전표에 대해서만 차변전표를 생성할 수 있습니다."
+msgstr "고객용 청구서/대변전표, 공급업체 청구서/대변전표에만 차변전표를 생성할 수 있습니다."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr "승인된 전표만 차변 입력 처리할 수 있습니다."
+msgstr "승인된 전표만 차변 입력할 수 있습니다."
 
 #. module: account_debit_note
 #. odoo-python
@@ -205,4 +205,4 @@ msgstr "승인된 전표만 차변 입력 처리할 수 있습니다."
 msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
-msgstr "이미 차변전표가 연결되어 있는 청구서에 대해서는 차변전표를 생성할 수 없습니다."
+msgstr "차변전표를 생성할 수 없습니다. 이미 청구서에 차변전표가 연결되어 있습니다."

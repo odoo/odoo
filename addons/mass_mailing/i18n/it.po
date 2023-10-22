@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid " %(subject)s (final)"
-msgstr ""
+msgstr " %(subject)s (finale)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -318,6 +318,9 @@ msgid ""
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
+"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"                                                    Inviare il vincitore ora\n"
+"                                                </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -597,6 +600,8 @@ msgstr "<span>Design</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "<span>There wasn't enough recipients left for this mailing</span>"
 msgstr ""
+"<span>Non vi erano più destinatari a sufficienza per l'invio di questa "
+"e-mail</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -615,6 +620,9 @@ msgid ""
 "                                    <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
 "                                </strong>"
 msgstr ""
+"<strong class=\"d-block\" attrs=\"{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}\">\n"
+"                                    <span name=\"ab_test_text\">Non vi erano destinatari a sufficienza assegnati a questa e-mail. </span>\n"
+"                                </strong>"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1630,7 +1638,7 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Could not retrieve URL: %s"
-msgstr ""
+msgstr "Non è stato possibile recuperare l'URL: %s"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
@@ -2545,7 +2553,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_ab_test_sent
 msgid "Is Ab Test Sent"
-msgstr ""
+msgstr "Test Ab inviato"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__is_body_empty

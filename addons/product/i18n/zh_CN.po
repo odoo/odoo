@@ -2537,7 +2537,7 @@ msgstr "该产品的类型与详细类型不符"
 msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
-msgstr ""
+msgstr "属性%(attribute)s必须至少具有产品%(product)s的一个值。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2647,7 +2647,7 @@ msgstr "销售价格由产品模板管理。点击“可变配置”按钮来设
 msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
-msgstr ""
+msgstr "尚未为产品%(product)s上的属性%(attribute)s定义值%(value)s。"
 
 #. module: product
 #. odoo-python
@@ -3131,7 +3131,7 @@ msgstr "您不能更改 %(value)s 值的属性，因为它已用于以下产品�
 msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "无法更改在产品%(product)s上设置的产品值%(value)s。"
 
 #. module: product
 #. odoo-python
@@ -3140,7 +3140,7 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "无法更改在产品%(product)s上设置的值%(value)s。"
 
 #. module: product
 #. odoo-python
@@ -3191,6 +3191,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"无法删除值%(value)s，因为它用于以下产品：\n"
+"%(products)s\n"
+"如果该值过去已与产品关联，则无法删除。"
 
 #. module: product
 #. odoo-python
@@ -3229,7 +3232,7 @@ msgstr "您无法删除值 %s，因为它曾在某些产品中使用过。"
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
-msgstr ""
+msgstr "无法将属性%(attribute)s从产品%(product_src)s调整至产品%(product_dest)s。"
 
 #. module: product
 #. odoo-python

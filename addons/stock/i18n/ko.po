@@ -961,7 +961,7 @@ msgstr "주소"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
 msgid "Address where goods should be delivered. Optional."
-msgstr "화물이 배달되어야 할 주소. 선택."
+msgstr "품목이 전송될 주소를 나타냅니다. 선택 입력 사항입니다."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
@@ -3113,7 +3113,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"예측 수량 (수량으로 계산-예약 수량)\n"
+"예측 수량 (보유 수량-예약 수량으로 계산됨)\n"
 "단일 재고 위치와 관련하여 여기에는 이 위치 또는 그 하위에 저장된 품목이 포함됩니다.\n"
 "단일 창고와 관련하여 여기에는 이 창고 또는 그 하위의 재고 위치에 저장된 품목이 포함됩니다.\n"
 "그렇지 않으면 여기에는 '내부' 유형의 재고 위치에 저장된 품목이 포함됩니다."
@@ -3181,7 +3181,7 @@ msgstr "예측 보고서"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr "예상 재고"
+msgstr "예상 재고량"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
@@ -3823,7 +3823,7 @@ msgstr "창고간 이동"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Internal"
-msgstr "내부"
+msgstr "내부 이동"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__internal
@@ -3881,7 +3881,7 @@ msgstr "제조자의 LOT/일련번호와 다른 경우 내부 참조 번호를 �
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid ""
 "Internal transfers allow you to move products from one location to another."
-msgstr "내부 전송을 통해 한 위치에서 다른 위치로 품목을 이동시킬 수 있습니다."
+msgstr "내부 이동을 통해 품목을 기존 위치에서 다른 위치로 이동시킬 수 있습니다."
 
 #. module: stock
 #. odoo-python
@@ -4060,12 +4060,12 @@ msgstr "서명됨"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "반송용으로 지정할 장소인가요?"
+msgstr "반송 위치 여부"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "폐기 공간입니까?"
+msgstr "폐기 공간 여부"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -4370,7 +4370,7 @@ msgstr "비워두기"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr "이 경로가 모든 회사간에 공유되는 경우 이 입력란을 비워 둡니다"
+msgstr "이 경로가 모든 회사간에 공유되는 경우 이 필드는 공백으로 비워둡니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4397,7 +4397,7 @@ msgstr "길이 측정 단위 라벨"
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
 #: model:ir.model.fields,help:stock.field_stock_quant__company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr "이 위치가 회사간에 공유되는 경우 이 필드를 공백으로 두십시오"
+msgstr "이 위치가 회사간에 공유되는 경우 이 필드를 공백으로 비워둡니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -4440,7 +4440,7 @@ msgstr "위치 바코드"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
-msgstr "위치 명칭"
+msgstr "위치 이름"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__location_id
@@ -5237,7 +5237,7 @@ msgstr "조치가 필요한 메시지 수"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류가 발생한 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
@@ -6010,7 +6010,7 @@ msgstr "라벨 인쇄"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
 msgid "Printed"
-msgstr "인쇄 됨"
+msgstr "인쇄 완료"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__priority
@@ -6144,7 +6144,7 @@ msgstr "품목 카테고리"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
 msgid "Product Label (ZPL)"
-msgstr "품목 라벨(ZPL)"
+msgstr "품목 라벨 (ZPL)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_product_product_view
@@ -6362,12 +6362,12 @@ msgstr "속성"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull_push
 msgid "Pull & Push"
-msgstr "끌어오고 밀어넣기"
+msgstr "푸쉬-풀 방식"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull
 msgid "Pull From"
-msgstr "다음에서 끌어오기"
+msgstr "풀 방식"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6382,7 +6382,7 @@ msgstr "밀어넣기 규칙"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__push
 msgid "Push To"
-msgstr "다음으로 밀어넣기"
+msgstr "푸시 방식"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7848,7 +7848,7 @@ msgstr "다시 알림"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Some selected lines already have quantities set, they will be ignored."
-msgstr "선택한 항목 일부에 이미 수량이 설정되어 있으므로, 해당 내용을 적용하지 않습니다."
+msgstr "일부 선택 항목에 이미 설정된 수량이 있으므로, 해당 내용을 적용할 수 없습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -8224,9 +8224,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
-"재고에서 가져오기 : 품목은 원래 공간의 사용 가능한 재고에서 가져올 것입니다.\n"
-"다른 규칙 실행 : 시스템이 품목을 시작 공간로 가져올 재고 규칙을 찾으려고 시도합니다. 가용 재고는 무시됩니다.\n"
-"재고에서 가져옴을 사용할 수 없는 경우 다른 규칙을 실행 : 제품은 시작 공간의 사용 가능한 재고에서 가져옵니다. 사용 가능한 재고가 없는 경우 시스템은 제품을 원래 공간에 가져오는 규칙을 찾으려고 합니다."
+"재고에서 가져오기: 기존 위치에 있는 사용 가능한 재고에서 품목을 이동시켜 재고를 확보합니다.\n"
+"다른 규칙 실행: 시스템이 기존 위치로 품목을 가져올 수 있는 재고 규칙을 찾으려고 시도합니다. 가용 재고는 무시됩니다.\n"
+"재고에서 가져오기가 불가능할 경우 다른 규칙 실행: 기존 위치에 있는 가용 재고에서 품목을 가져오며, 사용 가능한 재고가 없는 경우에는 시스템에서 제품을 기존 위치에 가져오는 규칙을 찾으려고 합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -8333,7 +8333,7 @@ msgstr "마감일이 %s 지연으로 인하여 자동으로 변경되었습니�
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr "생성한 전송의 예상일은 이 리드타임을 기준으로 계산됩니다."
+msgstr "새로 생성된 이동의 예상 배송일은 이 리드타임을 기준으로 계산됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -8401,7 +8401,7 @@ msgstr "이 퀀트가 포함된 꾸러미 상품"
 msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
-msgstr "이 공간(위치)을 포함하는 상위 공간(위치). 예: '입고 공간(위치)'은 '게이트1'의 상위 공간(위치)입니다."
+msgstr "이 공간(위치)을 포함하는 상위 공간(위치)입니다. 예: '입고 공간(위치)'은 '게이트1'의 상위 공간(위치)입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -9623,7 +9623,7 @@ msgstr "중량 단위"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "무게 단위 꼬리표"
+msgstr "무게 단위 라벨"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
@@ -9677,8 +9677,7 @@ msgstr "품목 도착 위치"
 msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
-msgstr ""
-"<b>%s</b>에서 품목이 필요할 경우 <br/> <b>%s</b> 이(가) <b>%s</b>에서 생성되어 필요를 충족시킵니다."
+msgstr "<b>%s</b>에서 품목을 필요로 하는 경우 <br/> <b>%s</b>이(가) <b>%s</b>에서 생성됩니다."
 
 #. module: stock
 #. odoo-python

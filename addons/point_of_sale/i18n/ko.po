@@ -5,8 +5,8 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-25 07:43+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "\"%s\" 관련 %s 고객이 검색되었습니다."
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 #, python-format
 msgid "%s fiscal position(s) added to the configuration."
-msgstr "%s 재정 상태가 구성에 추가되었습니다."
+msgstr "%s 재정 위치가 설정에 추가되었습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -706,7 +706,7 @@ msgstr ""
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
-msgstr "제품 가격을 로드할 때 오류가 발생했습니다. POS에서 모든 가격표를 사용할 수 있는지 확인하십시오."
+msgstr "제품 가격을 불러오는 중 오류가 발생했습니다. POS에서 모든 가격표를 사용할 수 있는지 확인해 주세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1300,7 +1300,7 @@ msgstr "하위 범주"
 msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
-msgstr "고객의 종류(면세, 현장 또는 테이크 아웃 등)에 따라 주문에서 특정 회계 위치를 선택하십시오."
+msgstr "주문할 때 고객 분류 (면세, 현장 또는 테이크아웃 등)에 따라 특정 재정 위치를 선택하세요."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1893,7 +1893,7 @@ msgstr "기본 미수금 (POS)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr "기본 회계 위치"
+msgstr "기본 재정 위치"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2214,14 +2214,14 @@ msgstr "작업자"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "Download Paid Orders"
-msgstr "결제한 주문 내려받기"
+msgstr "결제한 주문 다운로드"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr "미결제 주문 내려받기"
+msgstr "미결제 주문 다운로드"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2318,7 +2318,7 @@ msgstr "전자 저울 통합을 가능하게 합니다."
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
 #, python-format
 msgid "Encountered error when loading image. Please try again."
-msgstr "이미지를 불러오는 중에 오류가 발생했습니다. 다시 시도해주십시오."
+msgstr "이미지를 불러오는 중 오류가 발생했습니다. 다시 시도해주십시오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -2443,21 +2443,21 @@ msgstr "주문 가져오기 완료됨"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Fiscal Position not found"
-msgstr "재정 상태를 찾을 수 없습니다."
+msgstr "재정 위치를 찾을 수 없습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fiscal Positions"
-msgstr "재정 상태"
+msgstr "재정 위치"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3721,7 +3721,7 @@ msgstr "조치가 필요한 메시지 수"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "전송 오류가 발생한 메시지 수"
+msgstr "전송 오류가 발생한 메시지 수입니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5751,7 +5751,7 @@ msgstr "선택"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/fiscal_position_button/fiscal_position_button.js:0
 #, python-format
 msgid "Select Fiscal Position"
-msgstr "회계 위치 선택"
+msgstr "재정 위치 선택"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5961,7 +5961,7 @@ msgstr "세션을 종료할 때 예상 금액과 계산 금액 간의 최대 허
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/fiscal_position_button/fiscal_position_button.xml:0
 #, python-format
 msgid "Set fiscal position"
-msgstr "재정 상태 설정"
+msgstr "재정 위치 설정"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6544,7 +6544,7 @@ msgstr "주문을 받는 중 재무 데이터 모듈에 오류가 발생했습�
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
-msgstr "원 주문에 사용된 재정 상태를 불러오지 못했습니다. POS 환경 설정에 추가 후 불러왔는지 다시 확인하세요."
+msgstr "원 주문에 사용된 재정 위치를 불러오지 못했습니다. POS 환경 설정에 추가한 후 불러오시기 바랍니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6722,7 +6722,7 @@ msgstr "선택한 가격표는 회사 또는 POS의 회사에 속하지 않아�
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr "주문을 받는 중에 서버에 오류가 발생했습니다."
+msgstr "주문을 받는 중 서버에 오류가 발생했습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7374,7 +7374,7 @@ msgstr "바코드를 사용하여 제품이나 고객 카드 등을 스캔하십
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr "재정 상태를 사용하여 주문별로 세금을 다르게 받으십시오."
+msgstr "재정 위치를 사용하여 주문별로 세금을 다르게 받으십시오."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

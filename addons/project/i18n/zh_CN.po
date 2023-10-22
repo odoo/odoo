@@ -484,7 +484,7 @@ msgstr "<span class=\"o_stat_text\">最新评价</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">上级任务</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -602,12 +602,12 @@ msgstr "个人阶段无法链接到项目，因为它只对其相应的用户可
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "私密任务不可有上级任务。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "子任务不能重复出现。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -728,7 +728,7 @@ msgstr "添加联系人以分享项目..."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "添加有关此任务的详细信息..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -1060,6 +1060,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"当客户回复此阶段的反馈时，自动修改状态。\n"
+" * 客户的良好反馈会将状态更新为 \"已批准\" （绿色标记）。\n"
+" * 中立或不良反馈会将看板状态设置为 \"要求修改\"（橙色标记）。\n"
 
 #. module: project
 #. odoo-javascript
@@ -1143,7 +1146,7 @@ msgstr "阻塞"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocking Tasks"
-msgstr ""
+msgstr "受阻任务"
 
 #. module: project
 #. odoo-javascript
@@ -1201,7 +1204,7 @@ msgstr "已取消"
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 #, python-format
 msgid "Changes Requested"
-msgstr ""
+msgstr "请求变更"
 
 #. module: project
 #. odoo-javascript
@@ -1237,7 +1240,7 @@ msgstr "关闭在"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
 msgid "Closed Sub-tasks Count"
-msgstr ""
+msgstr "已关闭子任务计数"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2185,7 +2188,7 @@ msgstr "历史"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "家居改造"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2

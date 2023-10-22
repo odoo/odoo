@@ -832,6 +832,7 @@ msgstr "Aggiungi una reazione"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
 msgstr ""
+"Aggiungi una chiave API GIF Tenor per abilitare il supporto delle GIF."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -839,6 +840,8 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
+"Aggiungi una chiave API GIF Tenor per abilitare il supporto delle GIF. "
+"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -3149,7 +3152,7 @@ msgstr "Non riuscito"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
-msgstr ""
+msgstr "Caricamento GIF non riuscito..."
 
 #. module: mail
 #. odoo-python
@@ -3227,7 +3230,7 @@ msgstr "Preleva ora"
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Fetch up to the specified number of GIF."
-msgstr ""
+msgstr "Inserisci il numero di GIF specificato."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -3242,6 +3245,8 @@ msgid ""
 "Field \"%(field)s\" on model \"%(model)s\" must be of type Many2one and have"
 " tracking=True for the computation of duration."
 msgstr ""
+"Il campo \"%(field)s\" nel modello \"%(model)s\" deve essere di tipo molti a"
+" uno e avere il monitoraggio=Vero per il calcolo della durata."
 
 #. module: mail
 #. odoo-python
@@ -3468,21 +3473,21 @@ msgstr "Attività future"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Category"
-msgstr ""
+msgstr "Categoria GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Favorites"
-msgstr ""
+msgstr "GIF preferite"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_gif_favorite_action
@@ -3490,19 +3495,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_tree
 msgid "GIF favorite"
-msgstr ""
+msgstr "GIF preferite"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "ID GIF da Tenor"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_patch.xml:0
 #, python-format
 msgid "GIFs"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -3519,7 +3524,7 @@ msgstr "Utente generico dal record"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr ""
+msgstr "Vai alla conversazione"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -3705,7 +3710,7 @@ msgstr "Nascondi elenco membri"
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #, python-format
 msgid "Hide Pinned Messages"
-msgstr ""
+msgstr "Nascondi messaggi fissati"
 
 #. module: mail
 #. odoo-javascript
@@ -4578,7 +4583,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Ultimo utilizzo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -4588,7 +4593,7 @@ msgstr "Data ultima visualizzazione"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
 msgid "Last time this shortcode was used"
-msgstr ""
+msgstr "L'ultima volta in cui è stato utilizzato il codice breve"
 
 #. module: mail
 #. odoo-javascript
@@ -5060,7 +5065,7 @@ msgstr "Conteggio Membri"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 #, python-format
 msgid "Member List"
-msgstr ""
+msgstr "Elenco membri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
@@ -5319,6 +5324,8 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
+"Mixin per calcolare il tempo che ogni registrazione ha trascorso in ogni "
+"valore che un campo molti a uno può avere"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -5865,7 +5872,7 @@ msgstr "Odoo invierà notifiche a questo dispositivo!"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
 msgid "Off"
-msgstr ""
+msgstr "Off"
 
 #. module: mail
 #. odoo-javascript
@@ -6015,7 +6022,7 @@ msgstr "Apri"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr ""
+msgstr "Apri menu azioni"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -6295,7 +6302,7 @@ msgstr "Password"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Paste your API key"
-msgstr ""
+msgstr "Incolla la chiave API"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -7097,7 +7104,7 @@ msgstr "Salva come nuovo modello"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
-msgstr ""
+msgstr "Salva la GIF preferita dall'API di Tenor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -7204,7 +7211,7 @@ msgstr "Cerca un canale..."
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search for a gif"
-msgstr ""
+msgstr "Cerca una GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -7278,7 +7285,7 @@ msgstr "Seleziona un utente..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Select the content filter used for filtering GIFs"
-msgstr ""
+msgstr "Seleziona il filtro per il contenuto utilizzando per filtrare le GIF."
 
 #. module: mail
 #. odoo-javascript
@@ -7559,7 +7566,7 @@ msgstr "Mostra attività"
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Show all recipients"
-msgstr ""
+msgstr "Mostra tutti i destinatari"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -7624,7 +7631,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "So uhh... maybe go favorite some GIFs?"
-msgstr ""
+msgstr "Quindi mmm... vuoi scegliere le GIF che ti piacciono di più?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -7672,7 +7679,7 @@ msgstr "Inizia una chiamata"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Start a Conversation"
-msgstr ""
+msgstr "Inizia una conversazione"
 
 #. module: mail
 #. odoo-javascript
@@ -7731,7 +7738,7 @@ msgstr "Durata stato"
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 #, python-format
 msgid "Status with time"
-msgstr ""
+msgstr "Stato con ora"
 
 #. module: mail
 #. odoo-javascript
@@ -7976,32 +7983,32 @@ msgstr "Modelli"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Tenor API key"
-msgstr ""
+msgstr "Chiave API Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF API key"
-msgstr ""
+msgstr "Chiave API GIF Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF content filter"
-msgstr ""
+msgstr "Filtro contenuto GIF Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr ""
+msgstr "Numero limitato di GIF Tenor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr ""
+msgstr "Limite GIF Tenor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
 msgid "Tenor content filter"
-msgstr ""
+msgstr "Filtro contenuto Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8960,7 +8967,7 @@ msgstr "Utente in linea"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
 msgid "User should not have duplicated favorite GIF"
-msgstr ""
+msgstr "L'utente non avrebbe dovuto duplicare la GIF preferita"
 
 #. module: mail
 #. odoo-python
@@ -9734,7 +9741,7 @@ msgstr "ti ha appena assegnato la seguente attivita:"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
 msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr ""
+msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #. module: mail
 #. odoo-python
@@ -9786,7 +9793,7 @@ msgstr "elenco"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
-msgstr ""
+msgstr "elemento elenco"
 
 #. module: mail
 #. odoo-javascript

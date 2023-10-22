@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:35+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,9 +71,9 @@ msgstr ""
 "\n"
 "    * 다음의 계정과목표 서식을 정의합니다:\n"
 "        * 오스트리아 일반 계정과목 일람표 2010\n"
-"    * 판매 및 구매 관련된 VAT 서식을 정의합니다.\n"
+"    * 판매 및 매입 관련된 VAT 서식을 정의합니다.\n"
 "    * 세무 서식을 정의합니다.\n"
-"    * 오스트리아 재정법에 의거하여 재정 상태를 정의합니다.\n"
+"    * 오스트리아 재정법에 의거하여 재정 위치를 정의합니다.\n"
 "    * 세무신고서 U1/U30 관련하여 정의합니다.\n"
 "\n"
 "    "
@@ -524,7 +524,7 @@ msgstr ""
 "메모:\n"
 "-----\n"
 "\n"
-"* POS 구현에서 발생할 수 있는 특수한 요구 사항을 처리하기 위해 재정 상황 '内税' 및 '外税'가 추가되었습니다. [1] 정상적인 상황에서는 보통은 전혀 사용할 필요가 없습니다.\n"
+"* POS 구현에서 발생할 수 있는 특수한 요구 사항을 처리하기 위해 재정 위치 '内税' 및 '外税'가 추가되었습니다. [1] 정상적인 상황에서는 보통은 전혀 사용할 필요가 없습니다.\n"
 "\n"
 "[1] 자세한 내용은 https://github.com/odoo/odoo/pull/6470 를 확인하십시오.\n"
 "\n"
@@ -1160,7 +1160,7 @@ msgstr ""
 "        이 모듈에는 다음의 내용도 포함되어 있습니다:\n"
 "        * 세금 그룹,\n"
 "        * 가장 일반적인 내용의 라트비아 세무,\n"
-"        * 재정 상태,\n"
+"        * 재정 위치,\n"
 "        * 라트비아 은행 목록.\n"
 "\n"
 "        작성자는 Allegro IT 입니다 (자세한 내용은 다음 참조: https://www.allegro.lv).\n"
@@ -3873,7 +3873,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"사용자가 비밀번호를 등록하고 재설정하도록 허용\n"
+"사용자가 비밀번호를 등록하고 재설정하도록 허용합니다.\n"
 "===============================================\n"
 "    "
 
@@ -5330,7 +5330,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"체코 회계 계정과목표 및 현지화. 세금 및 기본 재정 상태를 표시하는 계정과목표 포함.\n"
+"체코 회계 계정과목표 및 현지화. 세금 및 기본 재정 위치를 표시하는 계정과목표 포함.\n"
 "\n"
 "Tento modul definuje:\n"
 "\n"
@@ -5631,7 +5631,7 @@ msgstr ""
 "2021년 7월 1일부터 EU에서 다른 EU 회원국에 위치한 구매자에게 10,000유로 이상의 매출을 발생시킨 EU 사업장은, 구매자의 회원국에서 VAT를 등록 및 납부하여야 합니다.\n"
 "본 신규 EU 내 적용 지침 미만의 금액에 대해서는 국경 간 판매에 VAT에 대한 국내 규칙을 계속 적용할 수 있습니다. 이 EU 지침을 간편하게 적용시키기 위해서 OSS (One Stop Shop) 등록 체계를 통해 기업들은 자체적으로 세금 신고를 할 수 있습니다.\n"
 "\n"
-"이 모듈은 해당되는 세금을 자동으로 적용하고 기록하기 위해 필요한 EU 재정 상태 및 세금을 생성할 수 있도록 지원하고 있습니다.\n"
+"이 모듈은 해당되는 세금을 자동으로 적용하고 기록하기 위해 필요한 EU 재정 위치 및 세금을 생성할 수 있도록 지원하고 있습니다.\n"
 "\n"
 "제안되는 매핑에 대해서 판매 상품이나 서비스에 적합한지 확인하기만 하면 됩니다.\n"
 "\n"
@@ -12505,7 +12505,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"로그인\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -14449,7 +14449,7 @@ msgstr "웹사이트 고객이 배송 픽업 지점을 선택하도록 허용"
 msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
-msgstr "또한 여기서 모든 관련 문서를 찾아 개별 문서를 클릭하여 다운로드할 수 있습니다."
+msgstr "여기에서 모든 관련 문서를 찾을 수 있으며, 개별 문서를 클릭하면 다운로드할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
@@ -28929,7 +28929,7 @@ msgstr "협력사 : %(category)s"
 #: model:ir.model.fields,field_description:base.field_res_users__password
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__password
 msgid "Password"
-msgstr "암호"
+msgstr "비밀번호"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_identitycheck
@@ -31859,7 +31859,7 @@ msgstr "상담 단계 이동 시 문자 메시지 발송"
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
 msgid "Send your parcels through Easypost and track them online"
-msgstr "Easypost를 통해 패키지를 보내고 온라인으로 추적하십시오."
+msgstr "Easypost를 통해 소포를 발송하고 온라인에서 배송 현황을 추적하세요."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
@@ -33634,7 +33634,7 @@ msgstr "지역 코드는 국가별로 고유해야 합니다!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr "계정 번호 / 협력사는 고유한 조합이어야 합니다."
+msgstr "계좌 번호와 협력사는 고유하게 조합되어야 합니다."
 
 #. module: base
 #. odoo-python
@@ -34422,8 +34422,8 @@ msgid ""
 "change the report filename. You can use a python expression with the "
 "'object' and 'time' variables."
 msgstr ""
-"이것은 다운로드될 보고서의 파일 이름입니다. 보고서 파일 이름을 변경하지 않으려면 비워 둡니다. '객체' 및 '시간' 변수와 함께 파이썬"
-" 식을 사용할 수 있습니다."
+"다운로드할 보고서의 파일 이름입니다. 파일 이름을 따로 변경하지 않으려면 비워두면 됩니다. '객체' 및 '시간' 변수와 함께 파이썬 식을"
+" 사용할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no

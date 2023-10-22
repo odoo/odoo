@@ -33,14 +33,14 @@ msgstr "%(user)s确认该费用与类似费用不重复。"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is not from your department"
-msgstr ""
+msgstr "%s：不是你们部门的"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is your own expense"
-msgstr ""
+msgstr "%s：是您自己的费用"
 
 #. module: hr_expense
 #. odoo-python
@@ -353,7 +353,7 @@ msgstr "账单参考号"
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
-msgstr ""
+msgstr "包含税费的价格和不包含税费的价格，在费用方面会均被视为包含税费的价格。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
@@ -382,7 +382,7 @@ msgstr "取消"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "无法批准原因"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -562,7 +562,7 @@ msgstr "员工支付费用的默认会计日记帐"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default expense categories for uploaded expenses"
-msgstr ""
+msgstr "已上传费用的默认费用类别"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -677,7 +677,7 @@ msgstr "员工家庭地址"
 msgid ""
 "Enable users to choose default category for automatically generated "
 "expenses."
-msgstr ""
+msgstr "允许用户为自动生成的费用选择默认类别。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -830,7 +830,7 @@ msgstr "费用类别可以向客户重新开票。"
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "已从%s创建默认费用条目"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -855,7 +855,7 @@ msgstr "费用报告被拒绝"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "费用报告重置为草稿"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -918,7 +918,7 @@ msgstr "按日期筛选费用"
 msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
-msgstr ""
+msgstr "已向审批者提交报告，并等待审批的费用。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -931,7 +931,7 @@ msgstr "您的团队成员的费用"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses paid by employee that are approved but not paid yet."
-msgstr ""
+msgstr "已由员工支付并审批，但尚未报销的费用。"
 
 #. module: hr_expense
 #. odoo-python
@@ -1143,7 +1143,7 @@ msgstr "日记账分录"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "已删除日记账分录"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1155,12 +1155,12 @@ msgstr "日记账项目"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Journal entries"
-msgstr ""
+msgstr "日记账分录"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "已删除日记账分录"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
@@ -1366,7 +1366,7 @@ msgstr "没有费用报告。请配置一个先！"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No work contact found for the employee %s, please configure one."
-msgstr ""
+msgstr "未找到员工%s的工作联系人，请设定一个。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2013,7 +2013,7 @@ msgstr "拆分关闭后的总和保持不变"
 msgid ""
 "The work email of the employee is required to post the expense report. "
 "Please add it on the employee form."
-msgstr ""
+msgstr "若要发布费用报告，员工的工作邮箱为必填项。请在员工表格中添加。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2414,7 +2414,7 @@ msgstr "报销"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr ""
+msgstr "待提交"
 
 #. module: hr_expense
 #. odoo-python

@@ -23,7 +23,7 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
-msgstr ""
+msgstr "('修理オーダ - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -39,6 +39,11 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* '新規' ステータスは、ユーザが未確認の新規修理オーダをエンコードする場合に使用されます。\n"
+"* '確認済' ステータスはユーザが修理オーダを確認した際に使用されます。\n"
+"* '修理中' ステータスは修理が進行中の際に使用されます。\n"
+"* '修理済' ステータスは修理が完了した際に使用されます。\n"
+"* '取消済' ステータスはユーザが修理オーダを取消した際に使用されます。"
 
 #. module: repair
 #. odoo-python
@@ -55,12 +60,12 @@ msgstr "<i>(追加)</i>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">In Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">修理中</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repaired</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">修理済</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -70,7 +75,7 @@ msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Used</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">使用済</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -85,22 +90,22 @@ msgstr "<span>オーダ</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<span>Repair Order #:</span>"
-msgstr ""
+msgstr "<span>修理オーダ #:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>顧客:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial:</strong>"
-msgstr ""
+msgstr "<strong>ロット/シリアル:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product:</strong>"
-msgstr ""
+msgstr "<strong>プロダクト:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -155,7 +160,7 @@ msgstr "内部注記を追加"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
 msgid "Added Parts Destination Location"
-msgstr ""
+msgstr "追加部品移動先ロケーション"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -165,7 +170,7 @@ msgstr "全て"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
 msgid "All Parts are available"
-msgstr ""
+msgstr "全ての部品が利用可能"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
@@ -185,7 +190,7 @@ msgstr "プロダクト引当解除の権限あり"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
 msgid "Any Part is late"
-msgstr ""
+msgstr "全ての部品が遅れ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -275,7 +280,7 @@ msgstr "単位間の変換は同じカテゴリに属している場合のみ可
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
-msgstr ""
+msgstr "見積作成"
 
 #. module: repair
 #. odoo-python
@@ -284,20 +289,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_product_template__create_repair
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "修理を作成"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "返品から修理オーダを作成"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_product_product__create_repair
 #: model:ir.model.fields,help:repair.field_product_template__create_repair
 msgid ""
 "Create a linked Repair Order on Sale Order confirmation of this product."
-msgstr ""
+msgstr "このプロダクトの販売オーダ確認時にリンクした修理オーダを作成"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -334,12 +339,12 @@ msgstr "デフォルト移動先ロケーション"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid "Default Recycle Destination Location"
-msgstr ""
+msgstr "デフォルトリサイクル移動ロケーション"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Default Remove Destination Location"
-msgstr ""
+msgstr "デフォルト廃棄移動先ロケーション"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -373,7 +378,7 @@ msgstr "表示名"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "修理を確定しますか"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -423,6 +428,8 @@ msgid ""
 "For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
+"一部の部品については、当初の需要と実際に使用された数量に差があります。<br/>\n"
+"　　　　本当に確定しますか？"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -478,14 +485,14 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
-msgstr ""
+msgstr "チェックを入れると、修理オーダから転送された全てのプロダクトの販売価格が0に設定されます。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
-msgstr ""
+msgstr "チェックを入れると、返品から修理オーダを直接作成できるようになります。"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -551,7 +558,7 @@ msgstr "遅れた活動"
 msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
-msgstr ""
+msgstr "この修理オーダの最新の部品供給状況。緑色の場合、修理オーダの準備ステータスは準備完了です。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
@@ -620,7 +627,7 @@ msgstr "次の活動タイプ"
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "修理オーダが見つかりません。作成しましょう！"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -640,7 +647,7 @@ msgstr "利用不可"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "返品倉庫と修理ロケーションが一致していないことに留意して下さい！"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -650,17 +657,17 @@ msgstr "アクション数"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_late
 msgid "Number of Repair Orders Late"
-msgstr ""
+msgstr "遅延修理オーダ数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_waiting
 msgid "Number of Repair Orders Waiting"
-msgstr ""
+msgstr "待機修理オーダ数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
 msgid "Number of Repair Orders to Process"
-msgstr ""
+msgstr "処理予定修理オーダ数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -702,12 +709,12 @@ msgstr "部品"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
 msgid "Parts Availability State"
-msgstr ""
+msgstr "部品利用可能ステータス"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "Parts Available"
-msgstr ""
+msgstr "部品利用可能"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
@@ -759,7 +766,7 @@ msgstr "プロダクトバリアント"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__repair_request
 msgid "Product from which the Repair Order was created."
-msgstr ""
+msgstr "修理オーダが作成されたプロダクト"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
@@ -769,7 +776,7 @@ msgstr "修理製品"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 msgid "Product to Repair Source & Destination Location"
-msgstr ""
+msgstr "修理予定プロダクトの移動元＆移動先ロケーション"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
@@ -801,12 +808,12 @@ msgstr "修理準備完了"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
 msgid "Recycle"
-msgstr ""
+msgstr "リサイクル"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
-msgstr ""
+msgstr "リサイクル部品移動先ロケーション"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
@@ -816,7 +823,7 @@ msgstr "削除"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
 msgid "Removed Parts Destination Location"
-msgstr ""
+msgstr "廃棄部品移動先ロケーション"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
@@ -836,7 +843,7 @@ msgstr "修理注記"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
 msgid "Repair Operation Type"
-msgstr ""
+msgstr "修理オペレーションタイプ"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
@@ -851,7 +858,7 @@ msgstr "修理オーダ"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
-msgstr ""
+msgstr "修理オーダ"
 
 #. module: repair
 #. odoo-python
@@ -884,18 +891,18 @@ msgstr "修理参照"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
 msgid "Repair Request"
-msgstr ""
+msgstr "修理依頼"
 
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "修理サービス"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "修理タグ"
 
 #. module: repair
 #. odoo-python
@@ -907,14 +914,14 @@ msgstr "修理は修理完了まで修理中でなくてはなりません。"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "修理オーダ数"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "%sの修理オーダ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
@@ -924,7 +931,7 @@ msgstr "修理済"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
 msgid "Repaired count"
-msgstr ""
+msgstr "修理済数"
 
 #. module: repair
 #. odoo-python
@@ -972,12 +979,12 @@ msgstr "返却"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "修理予定プロダクトの由来元の返品オーダ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "以下の返品タイプ:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1004,12 +1011,12 @@ msgstr "受注明細"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
-msgstr ""
+msgstr "修理オーダの由来元の販売オーダ明細"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the Repair Order comes from."
-msgstr ""
+msgstr "修理オーダの由来元の販売オーダ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order
@@ -1036,21 +1043,21 @@ msgstr "修理オーダの検索"
 #: code:addons/repair/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence repair"
-msgstr ""
+msgstr "修理シーケンス"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "シリアル番号は、プロダクトを使用したオペレーション明細に必要です: %s"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for product to repair : %s"
-msgstr ""
+msgstr "シリアル番号は、修理するプロダクトに必要です: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1146,7 +1153,7 @@ msgstr "いつ引当て解除できるかを確認する技術フィールド"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr ""
+msgstr "選択したプロダクト単位は、プロダクト単位とは異なるカテゴリを持っています。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_location_dest_id
@@ -1163,30 +1170,30 @@ msgstr ""
 msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
-msgstr ""
+msgstr "このオペレーションタイプで修理オーダを作成した場合のデフォルトのリサイクル移動先ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
-msgstr ""
+msgstr "このオペレーションタイプで修理オーダを作成した場合のデフォルトの廃棄移動先ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "修理予定プロダクトのあるロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
 #: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
 msgid "This is the location where the repair parts are located."
-msgstr ""
+msgstr "修理部品があるロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
 msgid "This is the location where the repaired product is located."
-msgstr ""
+msgstr "修理済プロダクトがあるロケーションです。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -1213,7 +1220,7 @@ msgstr "移動"
 msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
-msgstr ""
+msgstr "この修理が返品オーダにリンクされ、オーダが'完了'している場合はTRUE。そうでない場合はFALSE。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
@@ -1236,7 +1243,7 @@ msgstr "記録上の例外活動の種類。"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
 #, python-format
 msgid "Uncomplete Move(s)"
-msgstr ""
+msgstr "未完了の移動"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1246,7 +1253,7 @@ msgstr "修理中"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "保証期間中"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
@@ -1284,12 +1291,12 @@ msgstr "倉庫"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "不十分な修理数の警告"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_warn_uncomplete_move
 msgid "Warn Uncomplete Move(s)"
-msgstr ""
+msgstr "未完了の移動の警告"
 
 #. module: repair
 #. odoo-python
@@ -1320,7 +1327,7 @@ msgstr "負の数量を入力することはできません。"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr ""
+msgstr "すでに完了済の修理オーダを取り消すことはできません。"
 
 #. module: repair
 #. odoo-python
@@ -1330,6 +1337,8 @@ msgid ""
 "You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
+"既存の販売オーダにリンクされている修理オーダに対して、見積書を作成することはできません。\n"
+"該当する修理オーダ:\n"
 
 #. module: repair
 #. odoo-python
@@ -1339,6 +1348,8 @@ msgid ""
 "You need to define a customer for a repair order in order to create an associated quotation.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
+"関連する見積書を作成するためには、修理オーダの顧客を定義する必要があります。\n"
+"該当する修理オーダ:\n"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
