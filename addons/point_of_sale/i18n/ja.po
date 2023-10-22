@@ -1709,7 +1709,7 @@ msgstr "アクセス権がありません。ユーザーのダイジェストメ
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "ウェブプリンタを使用して印刷しますか？"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1796,7 +1796,7 @@ msgstr "メールの領収書"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "Eメールが送信されました。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1880,7 +1880,7 @@ msgstr "エラー: 再帰カテゴリを作成することはできません。"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Existing orderlines"
-msgstr ""
+msgstr "既存オーダ明細"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
@@ -1947,7 +1947,7 @@ msgstr "会計ポジション"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "会計データモジュールエラー"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2262,7 +2262,7 @@ msgstr "無効なアクション"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "無効なEメール"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4168,7 +4168,7 @@ msgstr "丸め方法"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "支払明細の丸め誤差"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4188,7 +4188,7 @@ msgstr "SMS配信エラー"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "シリアル番号"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -4865,7 +4865,7 @@ msgstr "POSは、'丸め線の追加'丸め戦略のみをサポートします�
 msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
-msgstr ""
+msgstr "取引を有効にするには、支払明細の金額を四捨五入する必要があります。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4879,7 +4879,7 @@ msgstr "デフォルトの価格表は、利用可能な価格表に含まれて
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr ""
+msgstr "デフォルトの価格表は、どの企業にも属さないか、またはPOSの企業に属している必要があります。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4887,7 +4887,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "会計データモジュールで、オーダを受信する際にエラーが発生しました。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5763,6 +5763,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"シリアル番号やロット番号が設定されているプロダクトを販売しようとしていますが、設定されていないものがあります。\n"
+"このまま進めますか？"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5780,6 +5782,7 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"POSオーダが存在しない場合は、バックエンドのインターフェイスからPOSオーダを作成したり、プライスリストを解除したり、フォームツールを使ってPythonテストでpos.orderを作成したり、スタジオでフォームビューを編集したりすることはできません。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5788,12 +5791,14 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"請求書が記帳されていない時はPOSをクローズすることができません。\n"
+"請求書: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "オーダがドラフト中の場合はPOS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
