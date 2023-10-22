@@ -41,7 +41,7 @@ class AccountBalance(models.Model):
                 'credit': line.credit,
                 'balance': line.balance,
                 'account_root_id': line.account_root_id.id,
-                'Name': line.name,
+                'name': line.name,
 
             })
 
@@ -81,13 +81,28 @@ class AccountBalance(models.Model):
 
         # Iterate through the retrieved move lines and assemble ledger data
         for line in move_lines:
+            move_line_id = line.id
+            analytic_account_info = self.env['account.analytic.line'].search([('move_line_id', '=', move_line_id)])
+            if analytic_account_info:
+                # Get the first analytic move ID if available
+                analytic_move_id = analytic_account_info[0].id
+                analytic_amount = analytic_account_info[0].amount
+                analytic_description = analytic_account_info[0].name
+            else:
+                analytic_move_id = 'Analytic Inactive.'
+                analytic_amount = 'Analytic Inactive.'
+                analytic_description = 'Analytic Inactive.'
+
             ledger_data.append({
+                'id': line.id,
                 'date': line.date,
                 'debit': line.debit,
                 'credit': line.credit,
                 'balance': line.balance,
                 'account_root_id': line.account_root_id.id,
-                'Name': line.name,
+                'analytic_move_id': analytic_move_id,
+                'analytic_amount': analytic_amount,
+                'analytic_description': analytic_description,
 
             })
 
