@@ -279,14 +279,22 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <t t-if="!record.image_1024.raw_value">
-                                <field name="avatar_128" class="o_kanban_image_fill_left d-block"
-                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
-                            </t>
-                            <t t-else="">
+                            <t t-if="record.image_1024.raw_value">
                                 <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
                                     widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
                             </t>
+                            <t t-elif="record.image_128.raw_value">
+                                <field name="avatar_128" class="o_kanban_image_fill_left d-block"
+                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            </t>
+                            <div t-else="" class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-100 bg-gradient">
+                                <svg class="w-75 h-75 opacity-50" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <g fill="currentColor">
+                                        <path d="M 10 11 C 4.08 11 2 14 2 16 L 2 19 L 18 19 L 18 16 C 18 14 15.92 11 10 11 Z"/>
+                                        <circle cx="10" cy="5.5" r="4.5"/>
+                                    </g>
+                                </svg>
+                            </div>
 
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
