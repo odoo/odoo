@@ -33,7 +33,7 @@ msgstr "%(carrier)s错误"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>获取费率"
 
 #. module: delivery
 #. odoo-python
@@ -309,6 +309,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"交货邮编前缀被分配给交货承运商，\n"
+"            以限制其可用的邮编范围。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -345,6 +347,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"每家承运商（如 UPS）可以有多种投递方式（如\n"
+"            UPS 快递、UPS 标快），每种方式都有一套定价规则。    "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -744,7 +748,7 @@ msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
-msgstr ""
+msgstr "这些方法可以根据您的设置，在销售订单（基于报价单）或发票（基于交货单）上自动计算交货价格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
