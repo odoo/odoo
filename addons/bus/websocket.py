@@ -782,14 +782,13 @@ class WebsocketRequest:
         appropriate ir.websocket method since only two events are
         tolerated: `subscribe` and `update_presence`.
         """
-        ir_websocket = self.env['ir.websocket']
-        ir_websocket._authenticate()
+        self.env['ir.websocket']._authenticate()
         if context:
             self.update_context(**context)
         if event_name == 'subscribe':
-            ir_websocket._subscribe(data)
+            self.env['ir.websocket']._subscribe(data)
         if event_name == 'update_presence':
-            ir_websocket._update_bus_presence(**data)
+            self.env['ir.websocket']._update_bus_presence(**data)
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)
