@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
+import { loadBundle } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";
 
 const ChartWidget = publicWidget.Widget.extend({
     selector: '.s_chart',
     disabledInEditableMode: false,
-    jsLibs: [
-        '/web/static/lib/Chart/Chart.js',
-        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
-    ],
 
     /**
      * @override
@@ -122,6 +119,10 @@ const ChartWidget = publicWidget.Widget.extend({
         window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
         this.chart = new window.Chart(canvas, chartData);
         return this._super.apply(this, arguments);
+    },
+
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
     },
     /**
      * @override

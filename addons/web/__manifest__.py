@@ -426,8 +426,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/ace/mode-qweb.js',
             'web/static/lib/ace/theme-monokai.js',
             'web/static/lib/stacktracejs/stacktrace.js',
-            'web/static/lib/Chart/Chart.js',
-            'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+            ('include', "web.chartjs_lib"),
             'web/static/lib/jSignature/jSignatureCustom.js',
             'web/static/src/libs/jSignatureCustom.js',
 
@@ -467,6 +466,10 @@ This module provides the core of the Odoo Web Client.
         'web.assets_clickbot': [
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
+        "web.chartjs_lib" : [
+            '/web/static/lib/Chart/Chart.js',
+            '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+        ]
     },
     'bootstrap': True,  # load translations for login screen,
     'license': 'LGPL-3',

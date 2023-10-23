@@ -5,7 +5,7 @@ import { getBorderWhite, DEFAULT_BG, getColor, hexToRGBA } from "@web/core/color
 import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
-import { loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
@@ -58,8 +58,7 @@ export class GraphRenderer extends Component {
         this.legendTooltip = null;
 
         onWillStart(async () => {
-            await loadJS("/web/static/lib/Chart/Chart.js");
-            await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
+            await loadBundle("web.chartjs_lib");
         });
 
         useEffect(() => this.renderChart());
