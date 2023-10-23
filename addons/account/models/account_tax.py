@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools import frozendict, groupby
 
-from collections import Counter, defaultdict
+from collections import defaultdict
 from markupsafe import Markup
 
 import ast
@@ -238,23 +238,54 @@ class AccountTax(models.Model):
                 ('country_id', '=', False),
             ], limit=1)
 
-    def _hook_compute_is_used(self):
+    def _hook_compute_is_used(self, tax_to_compute):
         '''
-            To be overriden to add taxed transactions in the computation of `is_used`
-            Should return a Counter containing a dictionary {record: int} where
-            the record is an account.tax object. The int should be greater than 0
-            if the tax is used in a transaction.
+            Override to compute the ids of taxes used in other modules. It takes
+            as parameter a set of tax ids. It should return a set containing the
+            ids of the taxes from that input set that are used in transactions.
         '''
-        return Counter()
+        return set()
 
     def _compute_is_used(self):
-        taxes_in_transactions_ctr = (
-            Counter(dict(self.env['account.move.line']._read_group([], groupby=['tax_ids'], aggregates=['__count']))) +
-            Counter(dict(self.env['account.reconcile.model.line']._read_group([], groupby=['tax_ids'], aggregates=['__count']))) +
-            self._hook_compute_is_used()
-        )
+        used_taxes = set()
+
+        # Fetch for taxes used in account moves
+        self.env['account.move.line'].flush_model(['tax_ids'])
+        self.env.cr.execute("""
+            SELECT id
+            FROM account_tax
+            WHERE EXISTS(
+                SELECT 1
+                FROM account_move_line_account_tax_rel AS line
+                WHERE account_tax_id IN %s
+                AND account_tax.id = line.account_tax_id
+            )
+        """, [tuple(self.ids)])
+        used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
+        taxes_to_compute = set(self.ids) - used_taxes
+
+        # Fetch for taxes used in reconciliation
+        if taxes_to_compute:
+            self.env['account.reconcile.model.line'].flush_model(['tax_ids'])
+            self.env.cr.execute("""
+                SELECT id
+                FROM account_tax
+                WHERE EXISTS(
+                    SELECT 1
+                    FROM account_reconcile_model_line_account_tax_rel AS reco
+                    WHERE account_tax_id IN %s
+                    AND account_tax.id = reco.account_tax_id
+                )
+            """, [tuple(taxes_to_compute)])
+            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
+            taxes_to_compute -= used_taxes
+
+        # Fetch for tax used in other modules
+        if taxes_to_compute:
+            used_taxes.update(self._hook_compute_is_used(taxes_to_compute))
+
         for tax in self:
-            tax.is_used = bool(taxes_in_transactions_ctr[tax])
+            tax.is_used = tax.id in used_taxes
 
     @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):
