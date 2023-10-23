@@ -444,3 +444,73 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         pol = purchase_order.order_line
         self.assertRecordValues(pol, [{'qty_invoiced': line.qty_received} for line in pol])
         self.assertRecordValues(aml, [{'reconciled': True} for line in aml])
+
+    def test_create_fifo_vacuum_anglo_saxon_expense_entry(self):
+
+        # create purchase
+        self.product_a.write({
+            'standard_price': 27.0,
+            'categ_id': self.stock_account_product_categ,
+            'detailed_type': 'product',
+        })
+
+        self.stock_account_product_categ['property_cost_method'] = 'average'
+
+        #create purchase
+        date_po_and_delivery = '2018-01-01'
+        purchase_order = self._create_purchase(self.product_a, date_po_and_delivery, 1, price_unit=27)
+
+        # proccess picking
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+
+        # create return
+        picking = purchase_order.picking_ids[0]
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.write({'quantity': 1000.0})
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_line_ids.write({'quantity': 1000})
+        return_pick.button_validate()
+
+        # create vendor bill
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
+        move_form._view['modifiers']['purchase_id']['invisible'] = False
+        move_form.partner_id = purchase_order.partner_id
+        move_form.invoice_date = date_po_and_delivery
+        move_form.purchase_id = purchase_order
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 999.0
+        invoice = move_form.save()
+        invoice.action_post()
+
+        # register payment
+        self.env['account.payment.register']\
+            .with_context(active_ids=invoice.ids, active_model='account.move')\
+            .create({})\
+            ._create_payments()
+
+        # create another purchase
+        purchase_order2 = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'currency_id': self.env.company.currency_id.id,
+                'order_line': [
+                    (0, 0, {
+                        'name': self.product_a.name,
+                        'product_id': self.product_a.id,
+                        'product_qty': 1,
+                        'product_uom': self.product_a.uom_po_id.id,
+                        'price_unit': 29,
+                        'date_planned': date_po_and_delivery,
+                    })],
+                'date_order': date_po_and_delivery,
+            })
+        # confirm PO
+        purchase_order2.button_confirm()
+        # process pickings
+        self._process_pickings(purchase_order2.picking_ids, date_po_and_delivery)
+
+        picking2 = purchase_order2.picking_ids[0]
+        self.assertEqual(picking2.state, 'done')
