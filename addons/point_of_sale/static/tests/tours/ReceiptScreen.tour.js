@@ -79,3 +79,15 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.check.discountAmountIs('0.7');
 
 Tour.register('ReceiptScreenDiscountWithPricelistTour', { test: true, url: '/pos/ui' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.do.enterLotNumber('123456789');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.trackingMethodIsLot();
+
+Tour.register('ReceiptTrackingMethodTour', { test: true, url: '/pos/ui' }, getSteps());
