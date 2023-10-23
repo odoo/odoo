@@ -970,7 +970,7 @@ class SaleOrder(models.Model):
     def action_lock(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom':
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'wire_transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
         self.locked = True
