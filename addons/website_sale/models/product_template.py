@@ -5,7 +5,7 @@ import logging
 from odoo import api, fields, models
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models import ir_http
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
@@ -165,6 +165,15 @@ class ProductTemplate(models.Model):
         for product in self:
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
+
+    #=== CRUD METHODS ===#
+
+    def write(self, vals):
+        # Clear empty ecommerce description content to avoid side-effects on product pages
+        # when there is no content to display anyway.
+        if vals.get('description_ecommerce') and is_html_empty(vals['description_ecommerce']):
+            vals['description_ecommerce'] = ''
+        return super().write(vals)
 
     #=== BUSINESS METHODS ===#
 
