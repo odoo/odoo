@@ -5,11 +5,14 @@ import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
 
+const ATTR_SYM = Symbol("attr");
 const MANY_SYM = Symbol("many");
 const ONE_SYM = Symbol("one");
 const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 const IS_RECORD_SYM = Symbol("isRecord");
+
+/** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */
 
 export function AND(...args) {
     return [AND_SYM, ...args];
@@ -101,18 +104,18 @@ export class RecordList extends Array {
                         if (r2 && r2.notEq(r3)) {
                             r2.__uses__.delete(receiver);
                         }
-                        const { inverse, onDelete } = receiver.owner.Model.__rels__[receiver.name];
+                        const { inverse, onDelete } = receiver.owner.Model._fields[receiver.name];
                         onDelete?.call(receiver.owner, r2);
                         if (inverse) {
-                            r2.__rels__[inverse].delete(receiver);
+                            r2._fields[inverse].delete(receiver);
                         }
                         receiver.data[index] = r3?.localId;
                         if (r3) {
                             r3.__uses__.add(receiver);
-                            const { inverse, onAdd } = receiver.owner.Model.__rels__[receiver.name];
+                            const { inverse, onAdd } = receiver.owner.Model._fields[receiver.name];
                             onAdd?.call(receiver.owner, r3);
                             if (inverse) {
-                                r3.__rels__[inverse].add(receiver);
+                                r3._fields[inverse].add(receiver);
                             }
                         }
                     });
@@ -143,7 +146,7 @@ export class RecordList extends Array {
      *   comes from deletion, we want to "DELETE".
      */
     _insert(val, fn, { inv = true, mode = "ADD" } = {}) {
-        const { inverse } = this.owner.Model.__rels__[this.name];
+        const { inverse } = this.owner.Model._fields[this.name];
         if (inverse && inv) {
             // special command to call _addNoinv/_deleteNoInv, to prevent infinite loop
             val[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
@@ -151,7 +154,7 @@ export class RecordList extends Array {
         /** @type {R} */
         let r3;
         if (!Record.isRecord(val)) {
-            const { targetModel } = this.owner.Model.__rels__[this.name];
+            const { targetModel } = this.owner.Model._fields[this.name];
             r3 = this.owner.Model.store[targetModel].preinsert(val);
         } else {
             r3 = val;
@@ -159,7 +162,7 @@ export class RecordList extends Array {
         fn(r3);
         if (!Record.isRecord(val)) {
             // was preinserted, fully insert now
-            const { targetModel } = this.owner.Model.__rels__[this.name];
+            const { targetModel } = this.owner.Model._fields[this.name];
             this.owner.Model.store[targetModel].insert(val);
         }
         return r3;
@@ -178,10 +181,10 @@ export class RecordList extends Array {
                 this.data.push(r3.localId);
                 r3.__uses__.add(this);
             });
-            const { inverse, onAdd } = this.owner.Model.__rels__[this.name];
+            const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r.__rels__[inverse].add(this.owner);
+                r._fields[inverse].add(this.owner);
             }
         }
         return this.data.length;
@@ -198,11 +201,11 @@ export class RecordList extends Array {
     shift() {
         const r2 = this.store.get(this.data.shift());
         r2?.__uses__.delete(this);
-        const { inverse, onDelete } = this.owner.Model.__rels__[this.name];
+        const { inverse, onDelete } = this.owner.Model._fields[this.name];
         if (r2) {
             onDelete?.call(this.owner, r2);
             if (inverse) {
-                r2.__rels__[inverse].delete(this.owner);
+                r2._fields[inverse].delete(this.owner);
             }
         }
         return r2;
@@ -214,10 +217,10 @@ export class RecordList extends Array {
                 this.data.unshift(r3.localId);
                 r3.__uses__.add(this);
             });
-            const { inverse, onAdd } = this.owner.Model.__rels__[this.name];
+            const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r.__rels__[inverse].add(this.owner);
+                r._fields[inverse].add(this.owner);
             }
         }
         return this.data.length;
@@ -287,18 +290,18 @@ export class RecordList extends Array {
         this.data.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
         for (const r of oldRecords) {
             r.__uses__.delete(this);
-            const { inverse, onDelete } = this.owner.Model.__rels__[this.name];
+            const { inverse, onDelete } = this.owner.Model._fields[this.name];
             onDelete?.call(this.owner, r);
             if (inverse) {
-                r.__rels__[inverse].delete(this.owner);
+                r._fields[inverse].delete(this.owner);
             }
         }
         for (const r of newRecords) {
             r.__uses__.add(this);
-            const { inverse, onAdd } = this.owner.Model.__rels__[this.name];
+            const { inverse, onAdd } = this.owner.Model._fields[this.name];
             onAdd?.call(this.owner, r);
             if (inverse) {
-                r.__rels__[inverse].add(this.owner);
+                r._fields[inverse].add(this.owner);
             }
         }
     }
@@ -435,12 +438,20 @@ export class RecordList extends Array {
 }
 
 /**
- * @typedef {Object} RelationDefinition
- * @property {string} [targetModel]
- * @property {Function} [compute]
- * @property {string} [inverse]
- * @property {Function} [onAdd]
- * @property {Function} [onDelete]
+ * @typedef {Object} FieldDefinition
+ * @property {boolean} [ATTR_SYM] true when this is an attribute, i.e. a non-relational field.
+ * @property {boolean} [MANY_SYM] true when this is a many relation.
+ * @property {boolean} [ONE_SYM] true when this is a one relation.
+ * @property {any} [default] the default value of this attribute.
+ * @property {string} [targetModel] model name of records contained in this relational field.
+ * @property {Function} [compute] if set the field is computed based on provided function.
+ *   The `this` of function is the record, and the function is recalled whenever any field
+ *   in models used by this compute function is changed.
+ * @property {string} [inverse] name of inverse relational field in targetModel.
+ * @property {Function} [onAdd] hook that is called when relation is updated
+ *   with a record being added. Callback param is record being added into relation.
+ * @property {Function} [onDelete] hook that is called when relation is updated
+ *   with a record being deleted. Callback param is record being deleted from relation.
  */
 
 export class Record {
@@ -450,15 +461,26 @@ export class Record {
     /** @type {import("@mail/core/common/store_service").Store} */
     static store;
     /**
-     * Contains tracked relational fields of the model:
-     * - key : (relational) field name
-     * - value: Value contains definition of relational field
+     * Contains field definitions of the model:
+     * - key : field name
+     * - value: Value contains definition of field
      *
-     * @type {Object.<string, {RelationDefinition}>}
+     * @type {Object.<string, {FieldDefinition}>}
      */
-    static __rels__ = {};
+    static _fields = {};
     static isRecord(record) {
         return Boolean(record?.[IS_RECORD_SYM]);
+    }
+    /** @param {FIELD_SYM|RecordList} val */
+    static isRelation(val) {
+        if ([MANY_SYM, ONE_SYM].includes(val)) {
+            return true;
+        }
+        return RecordList.isOne(val) || RecordList.isMany(val);
+    }
+    /** @param {FIELD_SYM} SYM */
+    static isField(SYM) {
+        return [MANY_SYM, ONE_SYM, ATTR_SYM].includes(SYM);
     }
     static get(data) {
         return this.records[this.localId(data)];
@@ -480,9 +502,12 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
-            if (expr in this.__rels__) {
-                if (RecordList.isMany(this.__rels__[expr])) {
+            if (expr in this._fields) {
+                if (RecordList.isMany(this._fields[expr])) {
                     throw new Error("Using a Record.Many() as id is not (yet) supported");
+                }
+                if (!Record.isRelation(this._fields[expr])) {
+                    return data[expr];
                 }
                 if (this.isCommand(data[expr])) {
                     // Note: only Record.one() is supported
@@ -634,6 +659,14 @@ export class Record {
     static many(targetModel, { compute, inverse, onAdd, onDelete } = {}) {
         return [MANY_SYM, { targetModel, compute, inverse, onAdd, onDelete }];
     }
+    /**
+     * @template T
+     * @param {T} def;
+     * @returns {T}
+     */
+    static attr(def) {
+        return [ATTR_SYM, { default: def }];
+    }
     /** @returns {Record} */
     static insert(data) {
         const res = this.preinsert(data);
@@ -677,7 +710,7 @@ export class Record {
      *
      * @type {Object<string, RecordList>}
      */
-    __rels__ = {};
+    _fields = {};
     __uses__ = new RecordUses();
     get _store() {
         return this.Model.store;
@@ -711,7 +744,7 @@ export class Record {
             Object.assign(this, data);
         } else {
             // update on single-id data
-            if (this.Model.id in this.Model.__rels__) {
+            if (this.Model.id in this.Model._fields) {
                 this[this.Model.id] = data;
             }
         }
@@ -719,7 +752,7 @@ export class Record {
 
     delete() {
         const r1 = this;
-        for (const name in r1.__rels__) {
+        for (const name in r1._fields) {
             r1[name] = undefined;
         }
         for (const [localId, names] of r1.__uses__.data.entries()) {
@@ -730,7 +763,7 @@ export class Record {
                     r1.__uses__.data.delete(localId);
                     continue;
                 }
-                const l2 = r2.__rels__[name2];
+                const l2 = r2._fields[name2];
                 if (RecordList.isMany(l2)) {
                     for (let c = 0; c < count; c++) {
                         r2[name2].delete(r1);
@@ -772,7 +805,7 @@ export class Record {
 
     toData() {
         const data = { ...this };
-        for (const [name, val] of Object.entries(this.__rels__)) {
+        for (const [name, val] of Object.entries(this._fields)) {
             if (RecordList.isMany(val)) {
                 data[name] = val.map((r) => r.toIdData());
             } else {
@@ -780,7 +813,7 @@ export class Record {
             }
         }
         delete data._store;
-        delete data.__rels__;
+        delete data._fields;
         delete data.__uses__;
         delete data.Model;
         return data;

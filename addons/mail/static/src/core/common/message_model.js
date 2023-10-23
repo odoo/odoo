@@ -89,8 +89,7 @@ export class Message extends Record {
 
     attachments = Record.many("Attachment", { inverse: "message" });
     author = Record.one("Persona");
-    /** @type {string} */
-    body;
+    body = Record.attr("");
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {string} */
     default_subject;
