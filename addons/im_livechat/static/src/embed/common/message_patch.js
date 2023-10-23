@@ -13,6 +13,10 @@ patch(Message.prototype, {
         this.session = session;
     },
 
+    get quickActionCount() {
+        return this.props.thread?.type === "livechat" ? 2 : super.quickActionCount;
+    },
+
     /**
      * @param {import("@im_livechat/embed/common/chatbot/chatbot_step_model").StepAnswer} answer
      */
