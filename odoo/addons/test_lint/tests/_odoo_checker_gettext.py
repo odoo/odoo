@@ -1,11 +1,20 @@
 import astroid
+import pylint.interfaces
 from pylint.checkers import BaseChecker
+
 try:
     from pylint.checkers.utils import only_required_for_messages
 except ImportError:
     from pylint.checkers.utils import check_messages as only_required_for_messages
 
+def parse_version(s):
+    # can't use odoo.tools.parse_version because pythonpath is screwed from
+    # inside pylint on runbot
+    return [s.rjust(3, '0') for s in s.split('.')]
+
 class OdooBaseChecker(BaseChecker):
+    if parse_version(pylint.__version__) < parse_version('2.14.0'):
+        __implements__ = pylint.interfaces.IAstroidChecker
     name = 'odoo'
 
     msgs = {

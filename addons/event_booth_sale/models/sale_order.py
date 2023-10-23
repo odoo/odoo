@@ -28,8 +28,8 @@ class SaleOrder(models.Model):
                 continue
             so_lines_missing_booth = so.order_line.filtered(lambda line: line.product_type == 'event_booth' and not line.event_booth_pending_ids)
             if so_lines_missing_booth:
-                so_lines_descriptions = "".join([f"- {so_line_description.name} \n" for so_line_description in so_lines_missing_booth])
-                raise ValidationError(_("Please make sure all your event-booth related lines are configured before confirming this order: \n%s" % so_lines_descriptions))
+                so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_booth)
+                raise ValidationError(_("Please make sure all your event-booth related lines are configured before confirming this order:%s", so_lines_descriptions))
             so.order_line._update_event_booths()
         return res
 

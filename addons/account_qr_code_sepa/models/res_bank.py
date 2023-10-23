@@ -47,7 +47,7 @@ class ResPartnerBank(models.Model):
             sepa_iban_codes = {code for code in sepa_country_codes if code not in non_iban_codes}
             error_messages = []
             if currency.name != 'EUR':
-                error_messages.append(_("Can't generate a SEPA QR Code with the %s currency." % currency.name))
+                error_messages.append(_("Can't generate a SEPA QR Code with the %s currency.", currency.name))
             if self.acc_type != 'iban':
                 error_messages.append(_("Can't generate a SEPA QR code if the account type isn't IBAN."))
             if not (self.sanitized_acc_number and self.sanitized_acc_number[:2] in sepa_iban_codes):
