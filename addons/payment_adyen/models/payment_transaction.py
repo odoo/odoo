@@ -422,21 +422,17 @@ class PaymentTransaction(models.Model):
                     _("An error occurred during the processing of your payment. Please try again.")
                 )
             elif event_code == 'CANCELLATION':
-                failed_void_msg = "The void of the transaction with reference %s failed."
-                logger_msg = failed_void_msg + " reason: %s"
-                _logger.warning(logger_msg, self.reference, refusal_reason)
+                _logger.warning("The void of the transaction with reference %s failed. reason: %s", self.reference, refusal_reason)
                 if self.source_transaction_id:  # child tx => The event can't be retried.
-                    self._set_error(_(failed_void_msg, self.reference))
+                    self._set_error(_("The void of the transaction with reference %s failed.", self.reference))
                 else:  # source tx with failed void stays in its state, could be voided again
-                    self._log_message_on_linked_documents(_(failed_void_msg, self.reference))
+                    self._log_message_on_linked_documents(_("The void of the transaction with reference %s failed.", self.reference))
             else:  # 'CAPTURE', 'CAPTURE_FAILED'
-                failed_capture_msg = "The capture of the transaction with reference %s failed."
-                logger_msg = failed_capture_msg + " reason: %s"
-                _logger.warning(logger_msg, self.reference, refusal_reason)
+                _logger.warning("The capture of the transaction with reference %s failed. reason: %s", self.reference, refusal_reason)
                 if self.source_transaction_id:  # child_tx => The event can't be retried.
-                    self._set_error(_(failed_capture_msg, self.reference))
+                    self._set_error(_("The capture of the transaction with reference %s failed.", self.reference))
                 else:  # source tx with failed capture stays in its state, could be captured again
-                    self._log_message_on_linked_documents(_(failed_capture_msg, self.reference))
+                    self._log_message_on_linked_documents(_("The capture of the transaction with reference %s failed.", self.reference))
         elif payment_state in RESULT_CODES_MAPPING['refused']:
             _logger.warning(
                 "the transaction with reference %s was refused. reason: %s",

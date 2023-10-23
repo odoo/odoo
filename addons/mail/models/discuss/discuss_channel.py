@@ -4,7 +4,6 @@ import base64
 import logging
 from collections import defaultdict
 from hashlib import sha512
-from markupsafe import Markup
 from secrets import choice
 from markupsafe import Markup
 
@@ -738,11 +737,9 @@ class Channel(models.Model):
                 </div>
             '''
             notification = Markup(notification_text) % {
-                'user_pinned_a_message_to_this_channel': _(
-                    Markup('%(user_name)s pinned a <a href="#" data-oe-type="highlight" data-oe-id="%(message_id)s">message</a> to this channel.') % {
-                        'user_name': self.env.user.display_name,
-                        'message_id': message_id
-                    }
+                'user_pinned_a_message_to_this_channel': Markup('<a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a>') % (
+                    message_id,
+                    _('%(user_name)s pinned a message to this channel.', user_name=self.env.user.display_name),
                 ),
                 'see_all_pins': _('See all pinned messages.'),
             }
