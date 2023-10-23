@@ -49,12 +49,14 @@ class AccountAnalyticLine(models.Model):
         for timesheet in self:
             timesheet.commercial_partner_id = timesheet.task_id.partner_id.commercial_partner_id or timesheet.project_id.partner_id.commercial_partner_id
 
-    @api.depends('so_line.product_id', 'project_id', 'amount')
+    @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
     def _compute_timesheet_invoice_type(self):
         for timesheet in self:
             if timesheet.project_id:  # AAL will be set to False
-                invoice_type = 'non_billable' if not timesheet.so_line else False
-                if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
+                invoice_type = False
+                if not timesheet.so_line:
+                    invoice_type = 'non_billable' if timesheet.project_id.billing_type != 'manually' else 'billable_manual'
+                elif timesheet.so_line.product_id.type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
                             invoice_type = 'timesheet_revenues' if timesheet.amount > 0 else 'billable_time'
