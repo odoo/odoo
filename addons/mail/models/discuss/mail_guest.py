@@ -170,7 +170,7 @@ class MailGuest(models.Model):
             guests_formatted_data[guest] = data
         return guests_formatted_data
 
-    def _find_or_create_for_channel(self, channel, name, country_id, timezone, add_as_member=True, post_joined_message=False):
+    def _find_or_create_for_channel(self, channel, name, country_id, timezone, post_joined_message=False):
         """Get a guest for the given channel. If there is no guest yet,
         create one.
 
@@ -178,7 +178,6 @@ class MailGuest(models.Model):
         :param guest_name: name of the guest
         :param country_id: country of the guest
         :param timezone: timezone of the guest
-        :param add_as_member: whether to add the guest as a member of the channel
         :param post_joined_message: whether to post a message to the channel
             to notify that the guest joined
         """
@@ -194,12 +193,11 @@ class MailGuest(models.Model):
                     "timezone": timezone,
                 }
             )
-        if add_as_member:
-            channel = channel.with_context(guest=guest)
-            try:
-                channel.add_members(guest_ids=[guest.id], post_joined_message=post_joined_message)
-            except UserError:
-                raise NotFound()
+        channel = channel.with_context(guest=guest)
+        try:
+            channel.add_members(guest_ids=[guest.id], post_joined_message=post_joined_message)
+        except UserError:
+            raise NotFound()
         return guest
 
     def _set_auth_cookie(self):

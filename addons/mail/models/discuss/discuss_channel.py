@@ -772,11 +772,10 @@ class Channel(models.Model):
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
-    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, add_as_member=True, post_joined_message=True):
+    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True):
         """
         :param channel: channel to add the persona to
         :param guest_name: name of the persona
-        :param add_as_member: whether to add the persona as a member of the channel
         :param post_joined_message: whether to post a message to the channel
             to notify that the persona joined
         :return tuple(partner, guest):
@@ -786,7 +785,7 @@ class Channel(models.Model):
         member = self.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=self.id)
         if member:
             return member.partner_id, member.guest_id
-        if not self.env.user._is_public() and add_as_member:
+        if not self.env.user._is_public():
             try:
                 self.add_members([self.env.user.partner_id.id], post_joined_message=post_joined_message)
             except UserError:
@@ -795,7 +794,6 @@ class Channel(models.Model):
             is_guest_known = self.env["mail.guest"]._get_guest_from_context().exists()
             country_id = self.env["res.country"].search([("code", "=", country_code)], limit=1).id
             guest = self.env["mail.guest"]._find_or_create_for_channel(
-                add_as_member=add_as_member,
                 channel=self,
                 country_id=country_id,
                 name=guest_name,

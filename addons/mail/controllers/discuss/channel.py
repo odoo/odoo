@@ -3,9 +3,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import http
-from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import consteq
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
@@ -15,27 +13,6 @@ class ChannelController(http.Controller):
     def discuss_channel_members(self, channel_id, known_member_ids):
         channel_member = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=channel_id)
         return channel_member.channel_id.sudo().load_more_members(known_member_ids)
-
-    @http.route("/discuss/channel/add_guest_as_member", methods=["POST"], type="json", auth="public")
-    @add_guest_to_context
-    def discuss_channel_add_guest_as_member(self, channel_id, channel_uuid):
-        channel_sudo = request.env["discuss.channel"].browse(int(channel_id)).sudo().exists()
-        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, channel_uuid):
-            raise NotFound()
-        if channel_sudo.channel_type == "chat":
-            raise NotFound()
-        guest = channel_sudo.env["mail.guest"]._get_guest_from_context()
-        # Only guests should take this route.
-        if not guest:
-            raise NotFound()
-        channel_member = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_id)
-        # Do not add the guest to channel members if they are already member.
-        if not channel_member:
-            channel_sudo = channel_sudo.with_context(guest=guest)
-            try:
-                channel_sudo.add_members(guest_ids=[guest.id])
-            except UserError:
-                raise NotFound()
 
     @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json")
     def discuss_channel_avatar_update(self, channel_id, data):

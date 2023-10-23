@@ -88,12 +88,10 @@ class PublicPageController(http.Controller):
             guest_name=_("Guest"),
             country_code=request.geoip.country_code,
             timezone=request.env['mail.guest']._get_timezone_from_request(request),
-            add_as_member=guest_already_known or not channel_sudo.env.user._is_public(),
         )
         if guest and not guest_already_known:
             discuss_public_view_data.update(
                 {
-                    "addGuestAsMemberOnJoin": True,
                     "shouldDisplayWelcomeViewInitially": True,
                 }
             )
