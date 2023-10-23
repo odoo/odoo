@@ -91,7 +91,7 @@ QUnit.test("Can handle im_status of unknown partner", async (assert) => {
     });
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-        Partner: { im_status: "online", id: partnerId },
+        Persona: { im_status: "online", id: partnerId, type: "partner" },
     });
     await nextTick();
     const persona = env.services["mail.store"].Persona.get({ type: "partner", id: partnerId });

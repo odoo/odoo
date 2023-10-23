@@ -12,10 +12,10 @@ class IrWebsocket(models.AbstractModel):
     def _get_im_status(self, im_status_ids_by_model):
         im_status = {}
         if 'res.partner' in im_status_ids_by_model:
-            im_status['Partner'] = self.env['res.partner'].with_context(active_test=False).search_read(
+            im_status['Persona'] = [{**p, 'type': "partner"} for p in self.env['res.partner'].with_context(active_test=False).search_read(
                 [('id', 'in', im_status_ids_by_model['res.partner'])],
                 ['im_status']
-            )
+            )]
         return im_status
 
     def _build_bus_channel_list(self, channels):

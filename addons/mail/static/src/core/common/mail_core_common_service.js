@@ -89,20 +89,12 @@ export class MailCoreCommon {
                 if (payload.Thread) {
                     this.store.Thread.insert(payload.Thread);
                 }
-                if (payload.Partner) {
-                    const partners = Array.isArray(payload.Partner)
-                        ? payload.Partner
-                        : [payload.Partner];
-                    for (const partner of partners) {
-                        if (partner.im_status) {
-                            this.store.Persona.insert({ ...partner, type: "partner" });
-                        }
-                    }
-                }
-                if (payload.Guest) {
-                    const guests = Array.isArray(payload.Guest) ? payload.Guest : [payload.Guest];
-                    for (const guest of guests) {
-                        this.store.Persona.insert({ ...guest, type: "guest" });
+                if (payload.Persona) {
+                    const personas = Array.isArray(payload.Persona)
+                        ? payload.Persona
+                        : [payload.Persona];
+                    for (const persona of personas) {
+                        this.store.Persona.insert(persona);
                     }
                 }
                 const { LinkPreview: linkPreviews } = payload;
