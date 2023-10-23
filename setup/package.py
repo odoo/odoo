@@ -297,7 +297,7 @@ class DockerTgz(Docker):
             'service postgresql start',
             'pip3 install /data/src/odoo_%s.%s.tar.gz' % (VERSION, TSTAMP),
             'su postgres -s /bin/bash -c "createuser -s odoo"',
-            'su postgres -s /bin/bash -c "createdb mycompany"',
+            'su odoo -s /bin/bash -c "createdb mycompany"',
             'su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init"',
             'su odoo -s /bin/bash -c "odoo -d mycompany --pidfile=/data/src/odoo.pid"',
         ]
@@ -364,7 +364,8 @@ class DockerRpm(Docker):
         cmds = [
             'su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"',
             'sleep 5',
-            'su postgres -c "createdb mycompany"',
+            'su postgres -c "createuser -s odoo"',
+            'su odoo -c "createdb mycompany"',
             'dnf install -d 0 -e 0 /data/src/odoo_%s.%s.rpm -y' % (VERSION, TSTAMP),
             'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init"',
             'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany --pidfile=/data/src/odoo.pid"',
