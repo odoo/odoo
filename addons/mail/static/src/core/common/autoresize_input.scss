@@ -1,9 +1,9 @@
-.o-mail-AutoresizeInput:not([disabled]):focus {
-    border-color: map-get($theme-colors, "dark");
-    background-color: $white;
-}
+.o-mail-AutoresizeInput {
+    --o-input-border-color: transparent;
 
-.o-mail-AutoresizeInput:not([disabled]):hover {
-    background-color: $white;
-    border: $border-width solid $border-color;
+    &:not([disabled]) {
+        &:hover, &:focus {
+            --o-input-border-color: #{$border-color};
+        }
+    }
 }

@@ -99,10 +99,10 @@
                                     </div>
                                     <ul class="col-5 o_job_activities">
                                         <li>
-                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
+                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
                                                 <field name="no_of_recruitment"/> To Recruit
                                             </a>
-                                            <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
+                                            <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
                                                 <field name="no_of_recruitment"/> To Recruit
                                             </span>
                                         </li>

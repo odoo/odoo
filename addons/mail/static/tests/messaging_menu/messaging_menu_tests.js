@@ -443,7 +443,7 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     assert.verifySteps(["set_last_seen_message"]);
-    await contains(".o-mail-NotificationItem.o-muted");
+    await contains(".o-mail-NotificationItem.text-muted");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
