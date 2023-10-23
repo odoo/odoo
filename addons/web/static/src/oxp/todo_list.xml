@@ -16,16 +16,10 @@
                         t-key="todoItem.id"
                         class="list-group-item d-flex align-items-center border-0 mb-2 rounded justify-content-between"
                         style="background-color: #f4f6f7;">
-                        <input t-if="todoItem.id === state.todoIdInEdition" t-att-value="todoItem.message" t-on-change="editMessage" class="form-control"/>
-                        <t t-else="" >
-                          <span t-esc="todoItem.message"
-                            t-att-class="todoItem.isDone ? 'text-decoration-line-through' : ''"
-                            t-on-click="() => this.toggleDone(todoItem.id)"/>
-                          <div>
-                            <button t-on-click="() => this.switchInEdition(todoItem.id)" type="button" class="btn btn-primary me-1">Edit</button>
-                            <button t-on-click="() => this.delete(todoItem.id)" type="button" class="btn btn-danger">Delete</button>
-                          </div>
-                        </t>
+                        <TodoItem todoItem="todoItem"
+                            editMessage="(message) => this.editMessage(todoItem.id, message)"
+                            delete="() => this.delete(todoItem.id)"
+                            toggleDone="() => this.toggleDone(todoItem.id)"/>
                     </li>
                 </ul>
             </div>

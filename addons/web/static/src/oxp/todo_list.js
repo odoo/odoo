@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-
 import { Component, useState } from "@odoo/owl";
+import { TodoItem } from "./todo_item";
 
 export class TodoList extends Component {
     static template = "web.TodoList";
+    static components = { TodoItem };
 
     setup() {
         this.nextId = 1;
@@ -17,7 +18,6 @@ export class TodoList extends Component {
                     isDone: false,
                 },
             ],
-            todoIdInEdition: null,
         });
     }
 
@@ -30,6 +30,11 @@ export class TodoList extends Component {
         ev.target.value = "";
     }
 
+    editMessage(id, message) {
+        const todoItem = this.state.todoItems.find((todo) => todo.id === id);
+        todoItem.message = message;
+    }
+
     delete(id) {
         const index = this.state.todoItems.findIndex((todo) => todo.id === id);
         this.state.todoItems.splice(index, 1);
@@ -38,18 +43,6 @@ export class TodoList extends Component {
     toggleDone(id) {
         const todoItem = this.state.todoItems.find((todo) => todo.id === id);
         todoItem.isDone = !todoItem.isDone;
-    }
-
-    switchInEdition(id) {
-        this.state.todoIdInEdition = id;
-    }
-
-    editMessage(ev) {
-        const todoItem = this.state.todoItems.find(
-            (todo) => todo.id === this.state.todoIdInEdition
-        );
-        todoItem.message = ev.target.value;
-        this.state.todoIdInEdition = null;
     }
 }
 
