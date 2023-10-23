@@ -1,9 +1,10 @@
 .o_searchview {
-    background-color: $input-focus-bg;
+    --SearchBar-background-color: $input-focus-bg;
+    
+    background-color: var(--SearchBar-background-color);
     border: $input-border-width solid $border-color;
 
     &:focus-within {
-        background-color: $input-focus-bg;
         border-color: $input-focus-border-color;
         color: $input-focus-color;
 
@@ -16,8 +17,6 @@
 
     .o_searchview_input {
         appearance: none;
-        color: inherit;
-        background: inherit;
     }
 
     .o_searchview_autocomplete {
