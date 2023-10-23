@@ -53,15 +53,11 @@ class AccountBalance(models.Model):
                 'account_root_id': line.account_root_id.id,
                 'analytic_move_id': analytic_info.id if analytic_info else '',
                 'analytic_amount': analytic_info.amount if analytic_info else '',
-                'analytic_description': analytic_info.name if analytic_info else ''
+                'analytic_name': analytic_info.name if analytic_info else ''
             })
 
         return {
-            'account_info': {
-                'id': account_id,
-                'name': self.env['account.account'].browse(account_id).name,
-                # Add more account details as needed
-            },
+
             'ledger_data': ledger_data
         }
 
