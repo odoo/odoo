@@ -15,24 +15,13 @@ class IrAsset(models.Model):
         params['website_id'] = self.env['website'].get_current_website(fallback=False).id
         return params
 
-    def _get_asset_extra(self, extra, website_id=None, **params):
-        extra = super()._get_asset_extra(extra, **params)
-        if extra == '%':
-            return extra
-        website_id_path = website_id and ('website-%s+' % website_id) or ''
-        return website_id_path + extra
-
-    def _parse_assets_extra(self, extra_parts, asset_type):
-        website_params = {}
-        if extra_parts[0].startswith('website-'):
-            website_extra, *extra_parts = extra_parts
-            website_id = int(website_extra[8:])
-            if not self.env['website'].browse(website_id).exists():
-                message = f'{website_extra} contains a non existing website'
-                raise ValueError(message)
-            website_params['website_id'] = website_id
-        params, rtl = super()._parse_assets_extra(extra_parts, asset_type)
-        return {**params, **website_params}, rtl
+    def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
+        route_prefix = '/web/assets'
+        if ignore_params: # we dont care about website id, match both
+            route_prefix = '/web/assets%'
+        elif website_id := assets_params.get('website_id', None):
+            route_prefix = f'/web/assets/{website_id}'
+        return f'{route_prefix}/{unique}/{filename}'
 
     def _get_related_assets(self, domain, website_id=None, **params):
         if website_id:

@@ -145,10 +145,9 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
-        extra = '-'
-        if extension in ['css', 'min.css']:
-            extra = 'rtl' if rtl else 'ltr'
-        url = f'/web/assets/%/{extra}/{bundle}.{extension}'
+        direction = '.rtl' if rtl else ''
+        bundle_name = f"{bundle}{direction}.{extension}"
+        url = self.env['ir.asset']._get_asset_bundle_url(bundle_name, '%', {})
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
@@ -376,7 +375,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.cssbundle_name, debug_assets=True)
         links = debug_bundle.get_links()
         # there should be a minified file
-        self.assertEqual(links[0], '/web/assets/debug/ltr/test_assetsbundle.bundle2.css')
+        self.assertEqual(links[0], '/web/assets/debug/test_assetsbundle.bundle2.css')
 
         # there should be one css asset created in debug mode
         debug_bundle.css()
@@ -577,13 +576,13 @@ class TestJavascriptAssetsBundle(FileTouchable):
         content = debug_bundle.get_links()
 
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
-        self.assertEqual(f'/web/assets/debug/rtl/{self.cssbundle_name}.css', content[0],
+        self.assertEqual(f'/web/assets/debug/{self.cssbundle_name}.rtl.css', content[0],
                       "there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets")
 
         debug_bundle.css()
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
         css_bundle = self.env['ir.attachment'].search([
-            ('url', '=like', f'/web/assets/%/rtl/{self.cssbundle_name}.css'),
+            ('url', '=like', f'/web/assets/%/{self.cssbundle_name}.rtl.css'),
         ])
         self.assertEqual(len(css_bundle), 1,
                          "there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets")
@@ -617,11 +616,11 @@ class TestJavascriptAssetsBundle(FileTouchable):
     <head>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="/web/assets/debug/ltr/test_assetsbundle.bundle4.css"/>
+        <link type="text/css" rel="stylesheet" href="/web/assets/debug/test_assetsbundle.bundle4.css"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="/web/assets/debug/-/test_assetsbundle.bundle4.js" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" src="/web/assets/debug/test_assetsbundle.bundle4.js" onerror="__odooAssetError=1"></script>
     </head>
     <body>
     </body>
@@ -1953,7 +1952,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 class TestErrorManagement(HttpCase):
 
     def test_assets_bundle_css_error_backend(self):
-        self.env['ir.qweb']._get_asset_bundle('web.assets_backend', assets_params={'website_id': self.env['website'].search([], limit=1).id}).css() # force pregeneration so that we have the base style
+        self.env['ir.qweb']._get_asset_bundle('web.assets_backend', assets_params={}).css() # force pregeneration so that we have the base style
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_backend',
@@ -1964,6 +1963,7 @@ class TestErrorManagement(HttpCase):
             self.start_tour('/web', 'css_error_tour', login='admin')
 
     def test_assets_bundle_css_error_frontend(self):
+        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params={'website_id': self.env['website'].search([], limit=1).id}).css() # force pregeneration so that we have the base style
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_frontend',

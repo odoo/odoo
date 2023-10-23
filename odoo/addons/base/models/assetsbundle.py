@@ -37,6 +37,7 @@ from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
+ANY_UNIQUE = '_' * 7
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less", ".xml")
 
 class CompileError(RuntimeError): pass
@@ -125,9 +126,8 @@ class AssetsBundle(object):
 
     def get_link(self, asset_type):
         unique = self.get_version(asset_type) if not self.is_debug_assets else 'debug'
-        extra = self.extra(asset_type)
         extension = asset_type if self.is_debug_assets else f'min.{asset_type}'
-        return self.get_asset_url(unique=unique, extra=extra, name=self.name, extension=extension)
+        return self.get_asset_url(unique=unique, extension=extension)
 
     def get_version(self, asset_type):
         return self.get_checksum(asset_type)[0:7]
@@ -150,9 +150,10 @@ class AssetsBundle(object):
             self._checksum_cache[asset_type] = hashlib.sha512(unique_descriptor.encode()).hexdigest()[:64]
         return self._checksum_cache[asset_type]
 
-    def get_asset_url(self, unique='%', extra='-', name='%', sep=".", extension='%'):
-        extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
-        return f"/web/assets/{unique}/{extra}/{name}{sep}{extension}"
+    def get_asset_url(self, unique='%', extension='%', ignore_params=False):
+        direction = '.rtl' if self.is_css(extension) and self.rtl else ''
+        bundle_name = f"{self.name}{direction}.{extension}"
+        return self.env['ir.asset']._get_asset_bundle_url(bundle_name, unique, self.assets_params, ignore_params)
 
     def _unlink_attachments(self, attachments):
         """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
@@ -168,15 +169,10 @@ class AssetsBundle(object):
         for fpath in to_delete:
             attachments._file_delete(fpath)
 
-    def extra(self, extension):
-        if self.is_css(extension):
-            return 'rtl' if self.rtl else 'ltr'
-        return '-'
-
     def is_css(self, extension):
         return extension in ['css', 'min.css', 'css.map']
 
-    def clean_attachments(self, extension, keep_url, extra):
+    def _clean_attachments(self, extension, keep_url):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
 
@@ -188,9 +184,7 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         to_clean_pattern = self.get_asset_url(
-            unique='%',
-            extra=extra,
-            name=self.name,
+            unique=ANY_UNIQUE,
             extension=extension,
         )
         domain = [
@@ -198,6 +192,7 @@ class AssetsBundle(object):
             ('url', '!=', keep_url),
             ('public', '=', True),
         ]
+
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
@@ -221,12 +216,9 @@ class AssetsBundle(object):
                                else: the url contains a version equal to that of the self.get_version(type)
                                 => web/assets/self.get_version(type)/name.extension.
         """
-        unique = "%" if ignore_version else self.get_version('css' if self.is_css(extension) else 'js')
-        extra = self.extra(extension)
+        unique = ANY_UNIQUE if ignore_version else self.get_version('css' if self.is_css(extension) else 'js')
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra=extra,  # not sure about css.map
-            name=self.name,
             extension=extension,
         )
         query = """
@@ -246,8 +238,6 @@ class AssetsBundle(object):
         if not attachment_id and not ignore_version:
             fallback_url_pattern = self.get_asset_url(
                 unique=unique,
-                extra='%', #ignore website_id and rtl
-                name=self.name,
                 extension=extension,
             )
 
@@ -258,9 +248,8 @@ class AssetsBundle(object):
                 _logger.info('Found a similar attachment for %s, copying from %s', url_pattern, similar.url)
                 url = self.get_asset_url(
                     unique=unique,
-                    extra=extra,
-                    name=self.name,
                     extension=extension,
+                    ignore_params=True,
                 )
                 values = {
                     'name': similar.name,
@@ -300,12 +289,9 @@ class AssetsBundle(object):
             'application/json' if extension in ['js.map', 'css.map'] else
             'application/javascript'
         )
-        extra = self.extra(extension)
         unique = self.get_version('css' if self.is_css(extension) else 'js')
         url = self.get_asset_url(
             unique=unique,
-            extra=extra,
-            name=self.name,
             extension=extension,
         )
         values = {
@@ -320,7 +306,7 @@ class AssetsBundle(object):
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
 
-        self.clean_attachments(extension, url, extra)
+        self._clean_attachments(extension, url)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
@@ -376,7 +362,7 @@ class AssetsBundle(object):
                         or self.save_attachment('js.map', '')
         generator = SourceMapGenerator(
             source_root="/".join(
-                [".." for i in range(0, len(self.get_asset_url(name=self.name).split("/")) - 2)]
+                [".." for i in range(0, len(self.get_asset_url().split("/")) - 2)]
                 ) + "/",
         )
         content_bundle_list = []
@@ -595,7 +581,7 @@ css_error_message {
         """
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
-        debug_asset_url = self.get_asset_url(unique='debug', name=self.name, extra=self.extra('css'))
+        debug_asset_url = self.get_asset_url(unique='debug')
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]

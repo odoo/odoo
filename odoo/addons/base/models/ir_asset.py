@@ -98,25 +98,31 @@ class IrAsset(models.Model):
         """
         return {}
 
-    def _get_asset_extra(self, extra):
-        """
-        This method can be overriden to use param as keyword arguments
-        Return the extra based on additionnal assets_params
-        """
-        return extra
+    def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
+        return f'/web/assets/{unique}/{filename}'
 
-    def _parse_assets_extra(self, extra_parts, asset_type):
-        if len(extra_parts) != 1:
-            raise ValueError('Expect only one element in extra')
-        direction = extra_parts[0]
-        if asset_type == 'css':
-            if direction not in ['rtl', 'ltr']:
-                msg = f'Invalid extra {direction}'
+    def _parse_bundle_name(self, bundle_name, debug_assets):
+        bundle_name, asset_type = bundle_name.rsplit('.', 1)
+        rtl = False
+        if not debug_assets:
+            bundle_name, min_ = bundle_name.rsplit('.', 1)
+            if min_ != 'min':
+                msg = "'min' expected in extension in non debug mode"
+                _logger.error(msg)
                 raise ValueError(msg)
-        elif direction != '-':
-            msg = f'Invalid extra {direction}'
+        if asset_type == 'css':
+            if bundle_name.endswith('.rtl'):
+                bundle_name = bundle_name[:-4]
+                rtl = True
+        elif asset_type != 'js':
+            msg = 'Only js and css assets bundle are supported for now'
+            _logger.error(msg)
             raise ValueError(msg)
-        return {}, direction == 'rtl'
+        if len(bundle_name.split('.')) != 2:
+            msg = f'{bundle_name} is not a valid bundle name, should have two parts'
+            _logger.error(msg)
+            raise ValueError(msg)
+        return bundle_name, rtl, asset_type
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
