@@ -430,18 +430,22 @@ class MockSmtplibCase:
             {
                 'name': 'Domain based server',
                 'from_filter': 'test.mycompany.com',
+                'sequence': 0,
                 ** ir_mail_server_values,
             }, {
                 'name': 'User specific server',
                 'from_filter': 'specific_user@test.mycompany.com',
+                'sequence': 1,
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
                 'from_filter': 'notifications.test@test.mycompany.com',
+                'sequence': 2,
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server No From Filter',
                 'from_filter': False,
+                'sequence': 3,
                 ** ir_mail_server_values,
             },
         ])
