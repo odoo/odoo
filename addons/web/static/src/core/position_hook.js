@@ -86,16 +86,13 @@ const DEFAULTS = {
 };
 
 /**
- * @param {HTMLElement} el
+ * @param {HTMLElement} popperEl
+ * @param {HTMLElement} targetEl
  * @returns {HTMLIFrameElement?}
  */
-function getIFrame(el) {
-    const parentDocument = el.ownerDocument.defaultView.parent?.document;
-    if (!parentDocument || parentDocument === el.ownerDocument) {
-        return;
-    }
-    return [...parentDocument.getElementsByTagName("iframe")].find((iframe) =>
-        iframe.contentDocument.contains(el)
+function getIFrame(popperEl, targetEl) {
+    return [...popperEl.ownerDocument.getElementsByTagName("iframe")].find((iframe) =>
+        iframe.contentDocument?.contains(targetEl)
     );
 }
 
@@ -319,7 +316,7 @@ export function usePosition(refName, getTarget, options = {}) {
         }
 
         // Prepare
-        const iframe = getIFrame(targetEl);
+        const iframe = getIFrame(ref.el, targetEl);
         reposition(ref.el, targetEl, { ...DEFAULTS, ...options }, iframe);
     };
 
