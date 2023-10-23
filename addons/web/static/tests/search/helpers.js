@@ -8,7 +8,6 @@ import {
     getFixture,
     mount,
     mouseEnter,
-    nextTick,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { commandService } from "@web/core/commands/command_service";
@@ -199,10 +198,6 @@ export function getMenuItemTexts(target) {
     return [...el.querySelectorAll(`.dropdown-menu .o_menu_item`)].map((e) => e.innerText.trim());
 }
 
-export function getButtons(el) {
-    return [...el.querySelectorAll(`div.o_control_panel_breadcrumbs button`)];
-}
-
 export function getVisibleButtons(el) {
     return [
         ...$(el).find(
@@ -216,69 +211,11 @@ export function getVisibleButtons(el) {
 
 /** Filter menu */
 
-export async function toggleFilterMenu(el) {
-    await click(findItem(el, `.o_filter_menu button.dropdown-toggle`));
-}
-
 export async function openAddCustomFilterDialog(el) {
     await click(findItem(el, `.o_filter_menu .o_menu_item.o_add_custom_filter`));
 }
 
-//////////////////////////////////////////////////////
-// for legacy code
-//////////////////////////////////////////////////////
-export async function toggleAddCustomFilter(el) {
-    await mouseEnter(findItem(el, `.o_add_custom_filter_menu .dropdown-toggle`));
-}
-
-export async function editConditionField(el, index, fieldName) {
-    const condition = findItem(el, `.o_filter_condition`, index);
-    const select = findItem(condition, "select", 0);
-    select.value = fieldName;
-    await triggerEvent(select, null, "change");
-}
-
-export async function editConditionOperator(el, index, operator) {
-    const condition = findItem(el, `.o_filter_condition`, index);
-    const select = findItem(condition, "select", 1);
-    select.value = operator;
-    await triggerEvent(select, null, "change");
-}
-
-export async function editConditionValue(el, index, value, valueIndex = 0, triggerChange = true) {
-    const condition = findItem(el, `.o_filter_condition`, index);
-    const target = findItem(
-        condition,
-        ".o_generator_menu_value input,.o_generator_menu_value select",
-        valueIndex
-    );
-    target.value = value;
-    if (triggerChange) {
-        triggerEvent(target, null, "change");
-    }
-    await nextTick();
-}
-
-export async function applyFilter(el) {
-    await click(findItem(el, `.o_add_custom_filter_menu .dropdown-menu button.o_apply_filter`));
-}
-
-export async function addCondition(el) {
-    await click(findItem(el, `.o_add_custom_filter_menu .dropdown-menu button.o_add_condition`));
-}
-
-export async function removeCondition(el, index) {
-    const condition = findItem(el, `.o_filter_condition`, index);
-    await click(findItem(condition, ".o_generator_menu_delete"));
-}
-
-//////////////////////////////////////////////////////
-
 /** Group by menu */
-
-export async function toggleGroupByMenu(el) {
-    await click(findItem(el, `.o_group_by_menu .dropdown-toggle`));
-}
 
 export async function selectGroup(el, fieldName) {
     el.querySelector(".o_add_custom_group_menu").value = fieldName;
@@ -291,10 +228,6 @@ export async function groupByMenu(el, fieldName) {
 }
 
 /** Favorite menu */
-
-export async function toggleFavoriteMenu(el) {
-    await click(findItem(el, `.o_favorite_menu .dropdown-toggle`));
-}
 
 export async function deleteFavorite(el, favoriteFinder) {
     const favorite = findItem(el, `.o_favorite_menu .o_menu_item`, favoriteFinder);
@@ -316,12 +249,6 @@ export async function editFavoriteName(el, name) {
 
 export async function saveFavorite(el) {
     await click(findItem(el, `.o_favorite_menu .o_add_favorite + .o_accordion_values button`));
-}
-
-/** Comparison menu */
-
-export async function toggleComparisonMenu(el) {
-    await click(findItem(el, `.o_comparison_menu button.dropdown-toggle`));
 }
 
 /** Search bar */
