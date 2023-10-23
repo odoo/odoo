@@ -27,7 +27,7 @@
     %-stat-button-value {
         order: 2;
         font-weight: $font-weight-bold;
-        color: $o-brand-primary;
+        color: var(--o-stat-text-color, #{$o-brand-primary});
         font-size: $o-font-size-base-smaller;
     }
 
@@ -50,7 +50,7 @@
 
         .o_button_icon {
             font-size: $-stat-button-icon-size;
-            color: $primary;
+            color: var(--o-stat-button-color, #{$primary});
 
             &:before {
                 margin-right: $-stat-button-icon-margin-end;

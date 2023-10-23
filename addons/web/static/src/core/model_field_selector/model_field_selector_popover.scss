@@ -1,9 +1,9 @@
 .o_popover_field_selector {
     &.o-popover-top > .popover-arrow::after {
-        border-top-color: map-get($theme-colors, 'primary');
+        border-top-color: #{$o-gray-300};
     }
     &.o-popover-bottom > .popover-arrow::after {
-        border-bottom-color: map-get($theme-colors, 'primary');
+        border-bottom-color: #{$o-gray-300};
     }
 }
 
@@ -18,7 +18,7 @@
 
     .o_model_field_selector_popover_header, .o_model_field_selector_popover_footer {
         color: color-contrast(map-get($theme-colors, 'primary'));
-        background: map-get($theme-colors, 'primary');
+        background: #{$o-gray-300};
         font-weight: bold;
         padding: 5px 0.4em;
 
@@ -27,12 +27,6 @@
             @include o-text-overflow;
             padding: 0px 35px;
             text-align: center;
-        }
-        .o_model_field_selector_popover_search > .o_input, > input {
-            color: $o-main-text-color;
-            font-size: 115%;
-            border: none;
-            padding: 5px 0.4rem;
         }
         .o_model_field_selector_popover_option {
             @include o-position-absolute($top: 0);
