@@ -66,9 +66,9 @@
                             <!-- For bank and cash -->
                             <div t-if="journal_type == 'bank' || journal_type == 'cash'" class="row">
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
-                                    <div id="card_action_view_menus" class="o_kanban_card_manage_title">
+                                    <h5 id="card_action_view_menus" class="o_kanban_card_manage_title">
                                         <span role="separator">View</span>
-                                    </div>
+                                    </h5>
                                     <div id="action_card_statements">
                                         <a t-if="journal_type == 'bank'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
                                         <a t-if="journal_type == 'cash'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_view_bank_statement_tree', 'search_default_journal': True}">Cash Registers</a>
@@ -88,9 +88,9 @@
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_user">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span role="separator">New</span>
-                                    </div>
+                                    </h5>
                                     <div name="bank_customer_payment">
                                         <a role="menuitem" type="object" name="create_customer_payment">Cust. Payment</a>
                                     </div>
@@ -103,9 +103,9 @@
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span role="separator">Reconciliation</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': ['|', ('match_journal_ids', '=', False), ('match_journal_ids', 'in', [id])]}" groups="account.group_account_manager">Reconciliation Models</a>
                                     </div>
@@ -115,9 +115,9 @@
                             <!-- For purchase and sale -->
                             <div t-if="journal_type == 'purchase' || journal_type == 'sale'" class="row">
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>View</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'action_name': 'action_move_out_invoice_type'}">Invoices</a>
                                         <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'action_name': 'action_move_in_invoice_type'}">Bills</a>
@@ -132,9 +132,9 @@
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_invoice">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>New</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a type="object" name="action_create_new">
                                             <span t-if="journal_type == 'sale'">Invoice</span>
@@ -153,9 +153,9 @@
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>Reporting</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a t-if="journal_type == 'sale'" type="action" name="%(action_account_invoice_report_all)d" groups="account.group_account_readonly">Invoices Analysis</a>
                                         <a t-if="journal_type == 'purchase'" type="action" name="%(action_account_invoice_report_all_supp)d" groups="account.group_account_readonly">Bills Analysis</a>
@@ -166,9 +166,9 @@
                             <!-- For general and situation -->
                             <div t-if="journal_type == 'general' || journal_type == 'situation'" class="row">
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>View</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line'}">Journal Entries</a>
                                     </div>
@@ -181,18 +181,18 @@
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new" groups="account.group_account_user">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>New</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a type="object" name="action_create_new">Journal Entry</a>
                                     </div>
                                 </div>
 
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_operations">
-                                    <div class="o_kanban_card_manage_title">
+                                    <h5 class="o_kanban_card_manage_title">
                                         <span>Operations</span>
-                                    </div>
+                                    </h5>
                                     <div>
                                         <a type="object" name="open_action_with_context" context="{'action_name': 'action_validate_account_move', 'search_default_journal': True}"  groups="account.group_account_user">Post All Entries</a>
                                     </div>
