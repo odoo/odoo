@@ -14,12 +14,12 @@
         </field>
         <field name="line_ids">
             <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.report.line">
-                <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
+                <field name="name">4. VAT Computation (U1/U30)</field>
                 <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance)</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_4_1" model="account.report.line">
-                        <field name="name">4.1 Gesamtbetrag der Bemessungsgrundlage für Lieferungen und sonstige Leistungen [000]</field>
+                        <field name="name">4.1 Total amount of the taxable base for deliveries and other services [000]</field>
                         <field name="code">AT_000</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_1_tag" model="account.report.expression">
@@ -30,7 +30,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_2" model="account.report.line">
-                        <field name="name">4.2 zuzüglich Eigenverbrauch (§ 1 Abs. 1 Z 2, § 3 Abs. 2 und § 3a Abs. 1a) [001]</field>
+                        <field name="name">4.2 Plus own consumption (Section 1(1)(2), Section 3(2) and Section 3a(1a)) [001]</field>
                         <field name="code">AT_001</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_2_tag" model="account.report.expression">
@@ -41,7 +41,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_3" model="account.report.line">
-                        <field name="name">4.3 abzüglich Umsätze, für die die Steuerschuld gemäß § 19 Abs. 1 (Leistungsempfänger) [021]</field>
+                        <field name="name">4.3 Minus revenue for which the tax liability is the beneficiary according to Section 19(1) [021]</field>
                         <field name="code">AT_021</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_3_tag" model="account.report.expression">
@@ -52,15 +52,15 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_4" model="account.report.line">
-                        <field name="name">4.4 Summe</field>
+                        <field name="name">4.4 Total</field>
                         <field name="aggregation_formula">AT_000.balance + AT_001.balance - AT_021.balance</field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_01_report_title" model="account.report.line">
-                        <field name="name">Davon steuerfrei MIT Vorsteuerabzug gemäß</field>
+                        <field name="name">Tax-exempt WITH input tax deduction according to</field>
                         <field name="aggregation_formula">AT_011.balance + AT_012.balance + AT_015.balance + AT_017.balance + AT_018.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_5" model="account.report.line">
-                                <field name="name">4.5 § 6 Abs. 1 Z 1 iVm § 7 (Ausfuhrlieferungen) [011]</field>
+                                <field name="name">4.5 Section 6(1)(1) in conjunction with Section 7 (export deliveries) [011]</field>
                                 <field name="code">AT_011</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_5_tag" model="account.report.expression">
@@ -71,7 +71,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_6" model="account.report.line">
-                                <field name="name">4.6 § 6 Abs. 1 Z 1 iVm § 8 (Lohnveredelungen) [012]</field>
+                                <field name="name">4.6 Section 6(1)(1) in conjunction with Section 8 (contract processing) [012]</field>
                                 <field name="code">AT_012</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_6_tag" model="account.report.expression">
@@ -82,7 +82,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_7" model="account.report.line">
-                                <field name="name">4.7 § 6 Abs. 1 Z 2 bis 6 sowie § 23 Abs. 5 (Seeschifffahrt, Luftfahrt, ...) [015]</field>
+                                <field name="name">4.7 Section 6(1)(2)-(6) and Section 23(5) (seafaring, aviation, ...) [015]</field>
                                 <field name="code">AT_015</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_7_tag" model="account.report.expression">
@@ -93,7 +93,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_8" model="account.report.line">
-                                <field name="name">4.8 Art. 6 Abs. 1 (innergemeinschaftliche Lieferungen ohne die nachstehend gesondert anzuführenden Fahrzeuglieferungen) [017]</field>
+                                <field name="name">4.8 Article 6(1) (Intra-Community deliveries excluding deliveries of vehicles to be specified separately below) [017]</field>
                                 <field name="code">AT_017</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_8_tag" model="account.report.expression">
@@ -104,7 +104,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_9" model="account.report.line">
-                                <field name="name">4.9 Art. 6 Abs. 1, sofern Lieferungen neuer Fahrzeuge an Abnehmer ohne UID-Nummer bzw. durch Fahrzeuglieferer gemäß Art. 2 erfolgten. [018]</field>
+                                <field name="name">4.9 Article 6(1), if deliveries of new vehicles were made to customers without a VAT number or by vehicle suppliers pursuant to article. 2 [018]</field>
                                 <field name="code">AT_018</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_9_tag" model="account.report.expression">
@@ -117,11 +117,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_02_report_title" model="account.report.line">
-                        <field name="name">Davon steuerfrei OHNE Vorsteuerabzug gemäß</field>
+                        <field name="name">Tax-exempt WITHOUT input tax deduction according to</field>
                         <field name="aggregation_formula">AT_019.balance + AT_016.balance + AT_020.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_10" model="account.report.line">
-                                <field name="name">4.10 § 6 Abs. 1 Z 9 lit. a (Grundstücksumsätze) [019]</field>
+                                <field name="name">4.10 Section 6(1)(9)(a) (land sales) [019]</field>
                                 <field name="code">AT_019</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_10_tag" model="account.report.expression">
@@ -132,7 +132,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_11" model="account.report.line">
-                                <field name="name">4.11 § 6 Abs. 1 Z 27 (Kleinunternehmer) [016]</field>
+                                <field name="name">4.11 Section 6(1)(27) (small business) [016]</field>
                                 <field name="code">AT_016</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_11_tag" model="account.report.expression">
@@ -143,7 +143,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_12" model="account.report.line">
-                                <field name="name">4.12 § 6 Abs. 1 Z .. (übrige steuerfreie Umsätze ohne Vorsteuerabzug) [020]</field>
+                                <field name="name">4.12 Section 6(1)(...) (other tax-exempt transactions without deduction of input tax) [020]</field>
                                 <field name="code">AT_020</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_12_tag" model="account.report.expression">
@@ -156,15 +156,15 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_13" model="account.report.line">
-                        <field name="name">4.13 Gesamtbetrag der steuerpflichtigen Lieferungen, sonstigen Leistungen und Eigenverbrauch (einschließlich steuerpflichtiger Anzahlungen)</field>
+                        <field name="name">4.13 Total amount of taxable deliveries, other services and own consumption (including taxable advance payments)</field>
                         <field name="aggregation_formula">(AT_000.balance + AT_001.balance - AT_021.balance) - AT_011.balance - AT_012.balance - AT_015.balance - AT_017.balance - AT_018.balance - AT_019.balance - AT_016.balance - AT_020.balance</field>
                     </record>
                     <record id="tax_report_line_at_base_title_umsatz_base_4_14_19" model="account.report.line">
-                        <field name="name">Bemessungsgrundlage</field>
+                        <field name="name">Taxable base</field>
                         <field name="aggregation_formula">AT_022_base.balance + AT_029_base.balance + AT_006_base.balance + AT_037_base.balance + AT_052_base.balance + AT_007_base.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_14_base" model="account.report.line">
-                                <field name="name">4.14 20% Normalsteuersatz [022]</field>
+                                <field name="name">4.14 20% Standard rate [022]</field>
                                 <field name="code">AT_022_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_14_base_tag" model="account.report.expression">
@@ -175,7 +175,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_15_base" model="account.report.line">
-                                <field name="name">4.15 10% ermäßigter Steuersatz [029]</field>
+                                <field name="name">4.15 10% Reduced rate [029]</field>
                                 <field name="code">AT_029_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_15_base_tag" model="account.report.expression">
@@ -186,7 +186,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_16_base" model="account.report.line">
-                                <field name="name">4.16 13% ermäßigter Steuersatz [006]</field>
+                                <field name="name">4.16 13% Reduced rate [006]</field>
                                 <field name="code">AT_006_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_16_base_tag" model="account.report.expression">
@@ -197,7 +197,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_17_base" model="account.report.line">
-                                <field name="name">4.17 19% für Jungholz und Mittelberg [037]</field>
+                                <field name="name">4.17 19% for Jungholz and Mittelberg [037]</field>
                                 <field name="code">AT_037_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_17_base_tag" model="account.report.expression">
@@ -208,7 +208,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_18_base" model="account.report.line">
-                                <field name="name">4.18 10% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe [052]</field>
+                                <field name="name">4.18 10% Additional tax for flat-rate agricultural and forestry holdings [052]</field>
                                 <field name="code">AT_052_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_18_base_tag" model="account.report.expression">
@@ -219,7 +219,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_19_base" model="account.report.line">
-                                <field name="name">4.19 7% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe [007]</field>
+                                <field name="name">4.19 7% Additional tax for flat-rate agricultural and forestry holdings [007]</field>
                                 <field name="code">AT_007_base</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_19_base_tag" model="account.report.expression">
@@ -232,11 +232,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_at_tax_title_4_14_19" model="account.report.line">
-                        <field name="name">Umsatzsteuer</field>
+                        <field name="name">VAT</field>
                         <field name="aggregation_formula">AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_14_tax" model="account.report.line">
-                                <field name="name">4.14 20% Normalsteuersatz</field>
+                                <field name="name">4.14 20% Standard rate</field>
                                 <field name="code">AT_022_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_14_tax_tag" model="account.report.expression">
@@ -247,7 +247,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_15_tax" model="account.report.line">
-                                <field name="name">4.15 10% ermäßigter Steuersatz</field>
+                                <field name="name">4.15 10% Reduced rate</field>
                                 <field name="code">AT_029_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_15_tax_tag" model="account.report.expression">
@@ -258,7 +258,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_16_tax" model="account.report.line">
-                                <field name="name">4.16 13% ermäßigter Steuersatz</field>
+                                <field name="name">4.16 13% Reduced rate</field>
                                 <field name="code">AT_006_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_16_tax_tag" model="account.report.expression">
@@ -269,7 +269,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_17_tax" model="account.report.line">
-                                <field name="name">4.17 19% für Jungholz und Mittelberg</field>
+                                <field name="name">4.17 19% for Jungholz and Mittelberg</field>
                                 <field name="code">AT_037_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_17_tax_tag" model="account.report.expression">
@@ -280,7 +280,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_18_tax" model="account.report.line">
-                                <field name="name">4.18 10% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe</field>
+                                <field name="name">4.18 10% Additional tax for flat-rate agricultural and forestry holdings</field>
                                 <field name="code">AT_052_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_18_tax_tag" model="account.report.expression">
@@ -291,7 +291,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_19_tax" model="account.report.line">
-                                <field name="name">4.19 7% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe</field>
+                                <field name="name">4.19 7% Additional tax for flat-rate agricultural and forestry holdings</field>
                                 <field name="code">AT_007_tax</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_19_tax_tag" model="account.report.expression">
@@ -304,7 +304,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_20" model="account.report.line">
-                        <field name="name">4.20 Steuerschuld gemäß § 11 Abs. 12 und 14, § 16 Abs. 2 sowie gemäß Art. 7 Abs. 4 [056]</field>
+                        <field name="name">4.20 Tax liability pursuant to Section 11(12,14), Section 16(2) and pursuant to Art. 7(4) [056]</field>
                         <field name="code">AT_056</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_20_tag" model="account.report.expression">
@@ -315,7 +315,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_21" model="account.report.line">
-                        <field name="name">4.21 Steuerschuld gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c, 1e sowie gemäß Art. 25 Abs. 5 [057]</field>
+                        <field name="name">4.21 Tax liability pursuant to Section 19(1) second sentence, Section 19(1c,1e) and pursuant to Art. 25(5) [057]</field>
                         <field name="code">AT_057</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_21_tag" model="account.report.expression">
@@ -326,7 +326,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_22" model="account.report.line">
-                        <field name="name">4.22 Steuerschuld gemäß § 19 Abs. 1a (Bauleistungen) [048]</field>
+                        <field name="name">4.22 Tax liability according to Section 19(1a) (construction services) [048]</field>
                         <field name="code">AT_048</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_22_tag" model="account.report.expression">
@@ -337,7 +337,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_23" model="account.report.line">
-                        <field name="name">4.23 Steuerschuld gemäß § 19 Abs. 1b (Sicherungseigentum, ...) [044]</field>
+                        <field name="name">4.23 Tax liability under Section 19(1b) (security property, ...) [044]</field>
                         <field name="code">AT_044</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_23_tag" model="account.report.expression">
@@ -348,7 +348,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_4_24" model="account.report.line">
-                        <field name="name">4.24 Steuerschuld gemäß § 19 Abs. 1d (Schrott und Abfallstoffe) [032]</field>
+                        <field name="name">4.24 Tax liability under Section 19(1d) (scrap and waste materials) [032]</field>
                         <field name="code">AT_032</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_24_tag" model="account.report.expression">
@@ -359,11 +359,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_03_report_title" model="account.report.line">
-                        <field name="name">Innergemeinschaftliche Erwerb</field>
+                        <field name="name">Intra-Community acquisition</field>
                         <field name="aggregation_formula">AT_070.balance + AT_071.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_25" model="account.report.line">
-                                <field name="name">4.25 Gesamtbetrag der Bemessungsgrundlagen für innergemeinschaftliche Erwerbe [070]</field>
+                                <field name="name">4.25 Total amount of taxable amounts for intra-Community acquisitions [070]</field>
                                 <field name="code">AT_070</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_25_tag" model="account.report.expression">
@@ -374,7 +374,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_26" model="account.report.line">
-                                <field name="name">4.26 Davon steuerfrei gemäß Art. 6 Abs. 2 [071]</field>
+                                <field name="name">4.26 Tax-exempt under Art. 6(2) [071]</field>
                                 <field name="code">AT_071</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_26_tag" model="account.report.expression">
@@ -385,21 +385,21 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_27" model="account.report.line">
-                                <field name="name">4.27 Gesamtbetrag der steuerpflichtigen innergemeinschaftlichen Erwerbe</field>
+                                <field name="name">4.27 Total amount of taxable intra-Community acquisitions</field>
                                 <field name="aggregation_formula">AT_070.balance - AT_071.balance</field>
                             </record>
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_04_report_title" model="account.report.line">
-                        <field name="name">Davon sind zu versteuern mit</field>
+                        <field name="name">Of which taxable with</field> <!-- TODO: -->
                         <field name="aggregation_formula">AT_072_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_at_base_title_umsatz_base_4_28_31" model="account.report.line">
-                                <field name="name">Bemessungsgrundlage</field>
+                                <field name="name">Taxable base</field>
                                 <field name="aggregation_formula">AT_072_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_28_base" model="account.report.line">
-                                        <field name="name">4.28 20% Normalsteuersatz [072]</field>
+                                        <field name="name">4.28 20% Standard rate [072]</field>
                                         <field name="code">AT_072_base</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_28_base_tag" model="account.report.expression">
@@ -410,7 +410,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_29_base" model="account.report.line">
-                                        <field name="name">4.29 10% ermäßigter Steuersatz [073]</field>
+                                        <field name="name">4.29 10% Reduced rate [073]</field>
                                         <field name="code">AT_073_base</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_29_base_tag" model="account.report.expression">
@@ -421,7 +421,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_30_base" model="account.report.line">
-                                        <field name="name">4.30 13% ermäßigter Steuersatz [008]</field>
+                                        <field name="name">4.30 13% Reduced rate [008]</field>
                                         <field name="code">AT_008_base</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_30_base_tag" model="account.report.expression">
@@ -432,7 +432,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_31_base" model="account.report.line">
-                                        <field name="name">4.31 19% für Jungholz und Mittelberg [088]</field>
+                                        <field name="name">4.31 19% for Jungholz and Mittelberg [088]</field>
                                         <field name="code">AT_088_base</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_31_base_tag" model="account.report.expression">
@@ -445,11 +445,11 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_at_tax_title_4_28_31" model="account.report.line">
-                                <field name="name">Umsatzsteuer</field>
+                                <field name="name">VAT</field>
                                 <field name="aggregation_formula">AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_28_tax" model="account.report.line">
-                                        <field name="name">4.28 20% Normalsteuersatz</field>
+                                        <field name="name">4.28 20% Standard rate</field>
                                         <field name="code">AT_072_tax</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_28_tax_tag" model="account.report.expression">
@@ -460,7 +460,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_29_tax" model="account.report.line">
-                                        <field name="name">4.29 10% ermäßigter Steuersatz</field>
+                                        <field name="name">4.29 10% Reduced rate</field>
                                         <field name="code">AT_073_tax</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_29_tax_tag" model="account.report.expression">
@@ -471,7 +471,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_30_tax" model="account.report.line">
-                                        <field name="name">4.30 13% ermäßigter Steuersatz</field>
+                                        <field name="name">4.30 13% Reduced rate</field>
                                         <field name="code">AT_008_tax</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_30_tax_tag" model="account.report.expression">
@@ -482,7 +482,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_l10n_at_tva_line_4_31_tax" model="account.report.line">
-                                        <field name="name">4.31 19% für Jungholz und Mittelberg</field>
+                                        <field name="name">4.31 19% for Jungholz and Mittelberg</field>
                                         <field name="code">AT_088_tax</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_l10n_at_tva_line_4_31_tax_tag" model="account.report.expression">
@@ -497,11 +497,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_05_report_title" model="account.report.line">
-                        <field name="name">Nicht zu versteuernde Erwerbe</field>
+                        <field name="name">Non-taxable acquisitions</field>
                         <field name="aggregation_formula">AT_076.balance + AT_077.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_32" model="account.report.line">
-                                <field name="name">4.32 Erwerbe gemäß Art. 3 Abs. 8 zweiter Satz, die im Mitgliedstaat des Bestimmungslandes besteuert worden sind [076]</field>
+                                <field name="name">4.32 Acquisitions pursuant to Art. 3(8), second sentence, that have been taxed in the Member State of destination [076]</field>
                                 <field name="code">AT_076</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_32_tag" model="account.report.expression">
@@ -512,7 +512,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_l10n_at_tva_line_4_33" model="account.report.line">
-                                <field name="name">4.33 Erwerbe gemäß Art. 3 Abs. 8 zweiter Satz, die gemäß Art. 25 Abs. 2 im Inland als besteuert gelten [077]</field>
+                                <field name="name">4.33 Acquisitions under Art. 3(8), second sentence, deemed to be taxed domestically under Art. 25(2) [077]</field>
                                 <field name="code">AT_077</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_33_tag" model="account.report.expression">
@@ -527,12 +527,12 @@
                 </field>
             </record>
             <record id="tax_report_line_l10n_at_tva_purchase_report_title" model="account.report.line">
-                <field name="name">5. Berechnung der abziehbaren Vorsteuer</field>
+                <field name="name">5. Deductible input tax computation</field>
                 <field name="aggregation_formula">AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_5_1" model="account.report.line">
-                        <field name="name">5.1 Gesamtbetrag der Vorsteuern (ohne die nachstehend gesondert anzuführenden Beträge) [060]</field>
+                        <field name="name">5.1 Total amount of input taxes (excluding amounts to be shown separately below) [060]</field>
                         <field name="code">AT_060</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_1_tag" model="account.report.expression">
@@ -543,7 +543,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_2" model="account.report.line">
-                        <field name="name">5.2 Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. a) [061]</field>
+                        <field name="name">5.2 Input tax relating to import turnover tax paid (Section 12(1)(2)(a)) [061]</field>
                         <field name="code">AT_061</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_2_tag" model="account.report.expression">
@@ -554,7 +554,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_3" model="account.report.line">
-                        <field name="name">5.3 Vorsteuern betreffend die geschuldete, auf dem Abgabenkonto verbuchte Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. b) [083]</field>
+                        <field name="name">5.3 Input tax concerning the import turnover tax owed and entered in the tax account (Section 12(1)(2)(b)) [083]</field>
                         <field name="code">AT_083</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_3_tag" model="account.report.expression">
@@ -565,7 +565,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_4" model="account.report.line">
-                        <field name="name">5.4 Vorsteuern aus dem innergemeinschaftlichen Erwerb [065]</field>
+                        <field name="name">5.4 Input taxes from intra-Community acquisition [065]</field>
                         <field name="code">AT_065</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_4_tag" model="account.report.expression">
@@ -576,7 +576,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_5" model="account.report.line">
-                        <field name="name">5.5 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c, 1e sowie gemäß Art. 25 Abs. 5 [066]</field>
+                        <field name="name">5.5 Input taxes concerning the tax liability pursuant to Section 19(1) second sentence, Section 19(1c,1e) and pursuant to Art. 25(5) [066]</field>
                         <field name="code">AT_066</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_5_tag" model="account.report.expression">
@@ -587,7 +587,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_6" model="account.report.line">
-                        <field name="name">5.6 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1a (Bauleistungen) [082]</field>
+                        <field name="name">5.6 Input taxes relating to tax liability pursuant to Section 19(1a) (construction services) [082]</field>
                         <field name="code">AT_082</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_6_tag" model="account.report.expression">
@@ -598,7 +598,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_7" model="account.report.line">
-                        <field name="name">5.7 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1b (Sicherungseigentum, ...) [087]</field>
+                        <field name="name">5.7 Input taxes relating to tax liability under Section 19(1b) (security property, ...) [087]</field>
                         <field name="code">AT_087</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_7_tag" model="account.report.expression">
@@ -609,7 +609,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_8" model="account.report.line">
-                        <field name="name">5.8 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1d (Schrott und Abfallstoffe) [089]</field>
+                        <field name="name">5.8 Input taxes relating to tax liability under Section 19(1d) (scrap and waste materials) [089]</field>
                         <field name="code">AT_089</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_8_tag" model="account.report.expression">
@@ -620,7 +620,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_9" model="account.report.line">
-                        <field name="name">5.9 Vorsteuern für innergemeinschaftliche Lieferungen neuer Fahrzeuge von Fahrzeuglieferern gemäß Art. 2 [064]</field>
+                        <field name="name">5.9 Input taxes for intra-Community deliveries of new vehicles by vehicle suppliers under Art. 2 [064]</field>
                         <field name="code">AT_064</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_9_tag" model="account.report.expression">
@@ -631,7 +631,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_10" model="account.report.line">
-                        <field name="name">5.10 Davon nicht abzugsfähig gemäß § 12 Abs. 3 iVm Abs. 4 und 5 [062]</field>
+                        <field name="name">5.10 Not deductible under Section 12(3) in conjunction with Subsections 4 and 5 [062]</field>
                         <field name="code">AT_062</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_10_tag" model="account.report.expression">
@@ -642,7 +642,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_11" model="account.report.line">
-                        <field name="name">5.11 Berichtigung gemäß § 12 Abs. 10 und 11 [063]</field>
+                        <field name="name">5.11 Correction pursuant to Section 12(10,11) [063]</field>
                         <field name="code">AT_063</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_11_tag" model="account.report.expression">
@@ -653,7 +653,7 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_12" model="account.report.line">
-                        <field name="name">5.12 Berichtigung gemäß § 16 [067]</field>
+                        <field name="name">5.12 Correction pursuant to Section 16 [067]</field>
                         <field name="code">AT_067</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_5_12_tag" model="account.report.expression">
@@ -664,18 +664,18 @@
                         </field>
                     </record>
                     <record id="tax_report_line_l10n_at_tva_line_5_13" model="account.report.line">
-                        <field name="name">5.13 Gesamtbetrag der abziehbaren Vorsteuer</field>
+                        <field name="name">5.13 Total amount of deductible input tax</field>
                         <field name="aggregation_formula">AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance</field>
                     </record>
                 </field>
             </record>
             <record id="tax_report_line_l10n_at_tva_final_report_title" model="account.report.line">
-                <field name="name">6. Sonstige Berichtigungen</field>
+                <field name="name">6. Other corrections</field>
                 <field name="aggregation_formula">AT_090.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_6" model="account.report.line">
-                        <field name="name">Sonstige Berichtigungen [090]</field>
+                        <field name="name">Other corrections [090]</field>
                         <field name="code">AT_090</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_6_tag" model="account.report.expression">
@@ -688,7 +688,7 @@
                 </field>
             </record>
             <record id="tax_report_line_l10n_at_tva_line_7" model="account.report.line">
-                <field name="name">7. Zahllast (-) bzw. Gutschrift/Überschuss (+) [095]</field>
+                <field name="name">7. Prepayment/debit (-) or credit/surplus (+) [095]</field>
                 <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance + AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance) + AT_090.balance</field>
                 <field name="hierarchy_level">0</field>
             </record>
