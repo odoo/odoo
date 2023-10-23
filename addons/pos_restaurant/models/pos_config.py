@@ -77,7 +77,11 @@ class PosConfig(models.Model):
                 vals['iface_splitbill'] = True
             if not is_restaurant or not vals.get('iface_tipproduct', False):
                 vals['set_tip_after_payment'] = False
-        return super(PosConfig, self).create(vals_list)
+        pos_configs = super().create(vals_list)
+        for config in pos_configs:
+            if config.module_pos_restaurant:
+                self._setup_default_floor(config)
+        return pos_configs
 
     def write(self, vals):
         if ('module_pos_restaurant' in vals and vals['module_pos_restaurant'] is False):
@@ -128,3 +132,19 @@ class PosConfig(models.Model):
         self._set_tips_after_payment_if_country_custom()
         self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
         self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
+
+    def _setup_default_floor(self, pos_config):
+        if not pos_config.floor_ids:
+            main_floor = self.env['restaurant.floor'].create({
+                'name': pos_config.company_id.name,
+                'pos_config_ids': [(4, pos_config.id)],
+            })
+            self.env['restaurant.table'].create({
+                'name': '1',
+                'floor_id': main_floor.id,
+                'seats': 1,
+                'position_h': 100,
+                'position_v': 100,
+                'width': 100,
+                'height': 100,
+            })
