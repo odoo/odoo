@@ -90,18 +90,18 @@ QUnit.module("CalendarView - YearPopover", ({ beforeEach }) => {
     QUnit.test("group records", async (assert) => {
         await start({});
 
-        assert.containsN(target, ".o_cw_body > div", 5);
-        assert.containsN(target, ".o_cw_body > a", 5);
+        assert.containsN(target, ".o_cw_body > div", 4);
+        assert.containsN(target, ".o_cw_body > a", 1);
 
         const sectionTitles = target.querySelectorAll(".o_cw_body > div");
-        assert.strictEqual(sectionTitles[0].textContent.trim(), "July 16, 2021");
-        assert.strictEqual(sectionTitles[1].textContent.trim(), "July 13-17, 2021");
-        assert.strictEqual(sectionTitles[2].textContent.trim(), "July 15-17, 2021");
-        assert.strictEqual(sectionTitles[3].textContent.trim(), "July 15-19, 2021");
+        assert.strictEqual(sectionTitles[0].textContent.trim(), "July 16, 2021R114:00R2");
+        assert.strictEqual(sectionTitles[1].textContent.trim(), "July 13-17, 2021R4");
+        assert.strictEqual(sectionTitles[2].textContent.trim(), "July 15-17, 2021R3");
+        assert.strictEqual(sectionTitles[3].textContent.trim(), "July 15-19, 2021R5");
 
         assert.strictEqual(
             target.querySelector(".o_cw_body").textContent.trim(),
-            "July 16, 2021R114:00 R2July 13-17, 2021R4July 15-17, 2021R3July 15-19, 2021R5 Create"
+            "July 16, 2021R114:00R2July 13-17, 2021R4July 15-17, 2021R3July 15-19, 2021R5 Create"
         );
     });
 
@@ -113,8 +113,8 @@ QUnit.module("CalendarView - YearPopover", ({ beforeEach }) => {
                 editRecord: () => assert.step("edit"),
             },
         });
-        assert.containsOnce(target, ".o_cw_body > a");
-        await click(target, ".o_cw_body > a");
+        assert.containsOnce(target, ".o_cw_body a.o_cw_popover_link");
+        await click(target, ".o_cw_body a.o_cw_popover_link");
         assert.verifySteps(["edit"]);
     });
 });

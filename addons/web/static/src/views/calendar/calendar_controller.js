@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -62,12 +65,15 @@ export class CalendarController extends Component {
             getLocalState: () => this.model.exportedState,
         });
 
+        const sessionShowSidebar = browser.sessionStorage.getItem("calendar.showSideBar");
         this.state = useState({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            showSideBar: !this.env.isSmall,
+            showSideBar:
+                !this.env.isSmall &&
+                Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -94,6 +100,44 @@ export class CalendarController extends Component {
         } else {
             return "";
         }
+    }
+
+    get date() {
+        return this.model.meta.date || DateTime.now();
+    }
+
+    get today() {
+        return DateTime.now().toFormat("d");
+    }
+
+    get currentYear() {
+        return this.date.toFormat("y");
+    }
+
+    get dayHeader() {
+        return `${this.date.toFormat("d")} ${this.date.toFormat("MMMM")} ${this.date.year}`;
+    }
+
+    get weekHeader() {
+        const { rangeStart, rangeEnd } = this.model;
+        if (rangeStart.year != rangeEnd.year) {
+            return `${rangeStart.toFormat("MMMM")} ${rangeStart.year} - ${rangeEnd.toFormat(
+                "MMMM"
+            )} ${rangeEnd.year}`;
+        } else if (rangeStart.month != rangeEnd.month) {
+            return `${rangeStart.toFormat("MMMM")} - ${rangeEnd.toFormat("MMMM")} ${
+                rangeStart.year
+            }`;
+        }
+        return `${rangeStart.toFormat("MMMM")} ${rangeStart.year}`;
+    }
+
+    get currentMonth() {
+        return `${this.date.toFormat("MMMM")} ${this.date.year}`;
+    }
+
+    get currentWeek() {
+        return this.date.toFormat("W");
     }
 
     get rendererProps() {
@@ -153,8 +197,15 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             sideBarShown: this.state.showSideBar,
-            toggleSideBar: () => (this.state.showSideBar = !this.state.showSideBar),
+            toggleSideBar: () => {
+                this.state.showSideBar = !this.state.showSideBar;
+            },
         };
+    }
+
+    toggleSideBar() {
+        this.state.showSideBar = !this.state.showSideBar;
+        browser.sessionStorage.setItem("calendar.showSideBar", this.state.showSideBar);
     }
 
     get showCalendar() {
@@ -311,6 +362,7 @@ export class CalendarController extends Component {
 
     async setScale(scale) {
         await this.model.load({ scale });
+        browser.sessionStorage.setItem("calendar-scale", this.model.scale);
     }
 
     toggleWeekendVisibility() {

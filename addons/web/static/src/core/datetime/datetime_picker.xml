@@ -136,31 +136,33 @@
 
     <t t-name="web.DateTimePicker">
         <div
-            class="o_datetime_picker d-flex flex-column gap-2 p-2 p-lg-3 user-select-none"
+            class="o_datetime_picker d-flex flex-column gap-1 user-select-none"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
         >
-            <nav class="o_datetime_picker_header btn-group">
-                <button class="o_previous btn btn-light flex-grow-0" t-on-click="previous">
-                    <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
-                </button>
+            <nav class="o_datetime_picker_header d-flex align-items-center justify-content-between">
                 <button
-                    class="o_zoom_out o_datetime_button btn btn-light d-flex align-items-center justify-content-around px-0 text-truncate"
-                    t-att-disabled="isLastPrecisionLevel"
+                    class="o_zoom_out o_datetime_button btn btn-light btn-sm px-1 text-truncate"
+                    t-att-class="isLastPrecisionLevel ? 'pe-none' : ''"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
                     t-on-click="zoomOut"
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
                         <strong
-                            t-attf-class="o_header_part fs-5 {{
+                            t-attf-class="o_header_part fs-6 {{
                                 props.range ? 'flex-basis-50' : 'flex-basis-100'
                             }}"
                             t-esc="title"
                         />
                     </t>
                 </button>
-                <button class="o_next btn btn-light flex-grow-0" t-on-click="next">
-                    <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
-                </button>
+                <div class="btn-group btn-group-sm">
+                    <button class="o_previous btn btn-light btn-sm flex-grow-0 px-1" t-on-click="previous">
+                        <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
+                    </button>
+                    <button class="o_next btn btn-light flex-grow-0 px-1" t-on-click="next">
+                        <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
+                    </button>
+                </div>
             </nav>
             <t t-if="state.precision === 'days'">
                 <t t-call="web.DateTimePicker.Days" />

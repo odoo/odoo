@@ -1,14 +1,34 @@
 .o_cw_popover_link {
-    border: solid 2px;
-    padding-left: 5px;
     margin-top: 2px;
-    color: black;
+
     @for $i from 1 through length($o-colors-complete) {
         $color: nth($o-colors-complete, $i);
+        $color-subtle: mix($o-white, $color, 55%);
 
         &.o_calendar_color_#{$i - 1} {
+            --o-bg-opacity: 1;
             border-color: $color;
-            background: $color;
+            background: rgba($color-subtle, var(--o-bg-opacity));
+            color: color-contrast($color-subtle);
+            font-weight: $font-weight-normal;
+            border-radius: $border-radius;
+            padding: 0 map-get($spacers, 1);
+
+            &:hover {
+                --o-bg-opacity: .5 !important;
+            }
+
+            &.o_event_dot {
+                --o-bg-opacity: 0;
+                &:before {
+                    content: '\f111';
+                    margin-right: map-get($spacers, 1);
+                    font-family: FontAwesome;
+                    font-size: $o-font-size-base-smaller;
+                    color: $color;
+                }
+
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ export class CalendarYearRenderer extends Component {
             selectable: this.props.model.canCreate,
             showNonCurrentDates: false,
             timeZone: luxon.Settings.defaultZone.name,
-            titleFormat: { month: "short", year: "numeric" },
+            titleFormat: { month: "long", year: "numeric" },
             unselectAuto: false,
             weekNumberCalculation: "ISO",
             weekNumbers: false,

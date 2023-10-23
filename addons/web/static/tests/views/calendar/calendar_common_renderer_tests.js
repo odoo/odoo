@@ -67,7 +67,9 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
     QUnit.test("Day: check date", async (assert) => {
         await start({ model: { scale: "day" } });
         assert.containsOnce(target, ".fc-day-header");
-        assert.strictEqual(target.querySelector(".fc-day-header").textContent, "July 16, 2021");
+        const dayHeader = target.querySelector(".fc-day-header");
+        assert.strictEqual(dayHeader.querySelector(".o_cw_day_name").textContent, "Friday");
+        assert.strictEqual(dayHeader.querySelector(".o_cw_day_number").textContent, "16");
     });
 
     QUnit.test("Day: click all day slot", async (assert) => {
@@ -152,11 +154,13 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
         await start({ model: { scale: "week" } });
         assert.containsN(target, ".fc-day-header", 7);
 
-        const dates = ["Sun 11", "Mon 12", "Tue 13", "Wed 14", "Thu 15", "Fri 16", "Sat 17"];
+        const dateNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dates = ["11", "12", "13", "14", "15", "16", "17"];
 
         const els = target.querySelectorAll(".fc-day-header");
         for (let i = 0; i < els.length; i++) {
-            assert.strictEqual(els[i].textContent, dates[i]);
+            assert.strictEqual(els[i].querySelector(".o_cw_day_name").textContent, dateNames[i]);
+            assert.strictEqual(els[i].querySelector(".o_cw_day_number").textContent, dates[i]);
         }
     });
 

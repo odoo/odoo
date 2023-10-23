@@ -16,26 +16,26 @@
     </t>
 
     <t t-name="web.CalendarYearPopover.popover">
-        <div class="position-absolute" style="top: 0; right: 0.5rem;">
+        <div class="position-absolute" style="top: .75rem; right: 1rem;">
             <span class="o_cw_popover_close" t-on-click.stop="() => props.close()">
-                <i class="fa fa-close small" />
+                <i class="fc-close fc-icon fc-icon-x" />
             </span>
         </div>
-        <div class="o_cw_body popover-body">
+        <div class="o_cw_body popover-body d-flex flex-column gap-2">
             <t t-call="{{ constructor.subTemplates.body }}" />
-            <div t-if="props.model.canCreate" class="mt-2">
+            <t t-if="props.model.canCreate">
                 <t t-call="{{ constructor.subTemplates.footer }}" />
-            </div>
+            </t>
         </div>
     </t>
 
     <t t-name="web.CalendarYearPopover.body">
-        <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
-            <div class="fw-bold mt-2" t-esc="recordGroup.title" />
+        <div t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
+            <h5 t-out="recordGroup.title" />
             <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
                 <t t-call="{{ constructor.subTemplates.record }}" />
             </t>
-        </t>
+        </div>
     </t>
 
     <t t-name="web.CalendarYearPopover.footer">
@@ -57,12 +57,12 @@
             href="#"
             t-on-click.prevent="() => this.onRecordClick(record)"
             t-attf-style="{{ getRecordStyle(record) }}"
-            t-attf-class="o_cw_popover_link btn-link d-block {{ getRecordClass(record) }}"
+            t-attf-class="o_cw_popover_link d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
             t-att-data-id="record.id"
             t-att-data-title="record.title"
         >
-            <t t-if="record.startHour"><t t-esc="record.startHour" /> </t>
-            <t t-esc="record.title"/>
+            <span t-if="record.startHour"><t t-out="record.startHour" /></span>
+            <span t-esc="record.title"/>
         </a>
     </t>
 
