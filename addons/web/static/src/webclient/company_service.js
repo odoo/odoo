@@ -40,11 +40,6 @@ export const companyService = {
         }
 
         const availableCompanies = session.user_companies.allowed_companies;
-        const unavailableAncestorCompanies = session.user_companies.disallowed_ancestor_companies;
-        const availableCompaniesWithAncestors = {
-            ...availableCompanies,
-            ...unavailableAncestorCompanies,
-        };
         const allowedCompanyIds = computeAllowedCompanyIds(cids);
         const nextAvailableCompanies = allowedCompanyIds.slice();  // not using a Set because order is important
         nextAvailableCompanies.add = (companyId) => {
@@ -78,7 +73,6 @@ export const companyService = {
 
         return {
             availableCompanies,
-            unavailableAncestorCompanies,
             nextAvailableCompanies,
             get allowedCompanyIds() {
                 return allowedCompanyIds.slice();
@@ -87,7 +81,7 @@ export const companyService = {
                 return availableCompanies[allowedCompanyIds[0]];
             },
             getCompany(companyId) {
-                return availableCompaniesWithAncestors[companyId];
+                return availableCompanies[companyId];
             },
             setCompanies(mode, companyId) {
                 if (mode === "toggle") {

@@ -44,7 +44,6 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
                 4: { id: 4, name: "Hercules", sequence: 4, parent_id: 1, child_ids: [] },
                 5: { id: 5, name: "Hulk", sequence: 5, parent_id: 1, child_ids: [] },
             },
-            disallowed_ancestor_companies: {},
             current_company: 3,
         });
         serviceRegistry.add("ui", uiService);

@@ -14,9 +14,7 @@ class TestSessionInfo(common.HttpCase):
         cls.company_a = cls.env['res.company'].create({'name': "A"})
         cls.company_b = cls.env['res.company'].create({'name': "B"})
         cls.company_c = cls.env['res.company'].create({'name': "C"})
-        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_b.id})
-        cls.allowed_companies = cls.company_a + cls.company_b_branch + cls.company_c
-        cls.disallowed_ancestor_companies = cls.company_b
+        cls.companies = [cls.company_a, cls.company_b, cls.company_c]
 
         cls.user_password = "info"
         cls.user = common.new_test_user(
@@ -27,7 +25,7 @@ class TestSessionInfo(common.HttpCase):
             tz="UTC")
         cls.user.write({
             'company_id': cls.company_a.id,
-            'company_ids': [Command.set(cls.allowed_companies.ids)],
+            'company_ids': [Command.set([company.id for company in cls.companies])],
         })
 
         cls.payload = json.dumps(dict(jsonrpc="2.0", method="call", id=str(uuid4())))
@@ -51,23 +49,11 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'parent_id': company.parent_id.id,
-            } for company in self.allowed_companies
+            } for company in self.companies
         }
-
-        expected_disallowed_ancestor_companies = {
-            str(company.id): {
-                'id': company.id,
-                'name': company.name,
-                'sequence': company.sequence,
-                'child_ids': company.child_ids.ids,
-                'parent_id': company.parent_id.id,
-            } for company in self.disallowed_ancestor_companies
-        }
-
         expected_user_companies = {
             'current_company': self.company_a.id,
             'allowed_companies': expected_allowed_companies,
-            'disallowed_ancestor_companies': expected_disallowed_ancestor_companies,
         }
         self.assertEqual(
             result['user_companies'],
