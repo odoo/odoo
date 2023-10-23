@@ -16,11 +16,8 @@ class AccountBalance(models.Model):
     @api.model
     def get_balance(self, account_id, end_date):
         # Define search criteria to filter account move lines
-        domain = [('account_id', '=', account_id)]
-
-        if end_date:
-            domain.append(('date', '<=', end_date))
-
+        domain = [('account_id', '=', account_id),
+                  ('date', '<=', end_date)]
         # Retrieve the most recent account move line based on the criteria
         move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
 
