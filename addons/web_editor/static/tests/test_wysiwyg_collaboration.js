@@ -216,6 +216,7 @@ export async function createPeers(peers) {
             },
             _getNewPtp() {
                 const ptp = super._getNewPtp(...arguments);
+                ptp.options.onRequest.get_client_avatar = () => '';
 
                 patch(ptp, {
                     removeClient(peerId) {
