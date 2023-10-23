@@ -6,11 +6,7 @@
     transition: opacity 0.5s;
 
     hr {
-        border-color: lighten($o-brand-odoo, 15%) !important;
-    }
-
-    hr, span {
-        color: lighten($o-brand-odoo, 15%);
+        border: $border-width * .5 solid map-get($o-theme-text-colors, 'danger');
     }
 }
 

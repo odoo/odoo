@@ -50,20 +50,20 @@
                 will overflow on the corners without this rule.
             -->
             <div class="o_web_sign_signature_group position-relative mt-3 border" style="overflow: hidden;">
-                <div class="card-header">
+                <div class="card-header bg-transparent">
                     <div class="row g-0 flex-nowrap">
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ widget.signMode === 'auto' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_auto_button me-2 btn btn-secondary {{ widget.signMode === 'auto' ? 'active': '' }}">
                                 Auto
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ widget.signMode === 'draw' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_draw_button me-2 btn btn-secondary {{ widget.signMode === 'draw' ? 'active': '' }}">
                                 Draw
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ widget.signMode === 'load' ? 'active': '' }}">
+                            <a role="button" href="#" t-attf-class="o_web_sign_load_button me-2 btn btn-secondary {{ widget.signMode === 'load' ? 'active': '' }}">
                                 Load
                             </a>
                         </div>

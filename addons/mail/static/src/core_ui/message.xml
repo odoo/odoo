@@ -37,7 +37,7 @@
                                 }"/>
                         </div>
                         <t t-elif="!message.isTransient">
-                            <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
+                            <small t-if="isActive" class="o-mail-Message-date text-muted opacity-75 ms-2">
                                 <t t-esc="messageService.dateSimple(message)"/>
                             </small>
                             <div t-else="" class="ms-2">
@@ -54,7 +54,7 @@
                                 <strong class="me-1 text-truncate"><t t-if="message.author" t-esc="message.author.name"/><t t-else="" t-esc="message.email_from"/></strong>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.isTransient" class="o-mail-Message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
+                            <small t-if="!message.isTransient" class="o-mail-Message-date text-muted opacity-75" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <RelativeTime datetime="message.datetime"/>
                             </small>

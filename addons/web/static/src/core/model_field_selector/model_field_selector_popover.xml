@@ -25,7 +25,7 @@
                     <div class="o_model_field_selector_popover_search mt-2">
                         <input type="text"
                                placeholder='Search...'
-                               class="o_input"
+                               class="o_input p-1 border rounded-1 bg-view"
                                t-att-value="state.page.query"
                                t-on-input="(ev) => this.debouncedSearchFields(ev.target.value)" />
                     </div>
@@ -35,14 +35,14 @@
                 <ul class="o_model_field_selector_popover_page">
                     <t t-foreach="state.page.fieldNames" t-as="fieldName" t-key="fieldName">
                         <t t-set="fieldDef" t-value="state.page.fieldDefs[fieldName]" />
-                        <li class="o_model_field_selector_popover_item d-flex" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
-                            <button class="o_model_field_selector_popover_item_name btn flex-fill text-start" t-on-click="() => this.selectField(fieldDef)">
+                        <li class="o_model_field_selector_popover_item d-flex border-bottom" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
+                            <button class="o_model_field_selector_popover_item_name btn btn-light flex-fill rounded-0 text-start" t-on-click="() => this.selectField(fieldDef)">
                                 <t t-esc="fieldDef.string" />
                                 <t t-if="fieldDef.record_name"> (<t t-esc="fieldDef.record_name" />)</t>
                                 <div t-if="props.isDebugMode" class="text-muted o_model_field_selector_popover_item_title"><t t-esc="fieldName"/> (<t t-esc="fieldDef.type"/>)</div>
                             </button>
                             <t t-if="(!fieldDef.is_property and fieldDef.relation and props.followRelations) or fieldDef.type === 'properties'">
-                                <button class="o_model_field_selector_popover_item_relation btn btn-link" t-on-click.stop="() => this.followRelation(fieldDef)">
+                                <button class="o_model_field_selector_popover_item_relation btn btn-light border-0 border-start rounded-0" t-on-click.stop="() => this.followRelation(fieldDef)">
                                     <i class="oi oi-chevron-right o_model_field_selector_popover_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow" />
                                 </button>
                             </t>

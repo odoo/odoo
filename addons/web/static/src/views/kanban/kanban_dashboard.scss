@@ -165,7 +165,7 @@
                 padding-top: $o-kanban-dashboard-dropdown-complex-gap*3;
 
                 &:not(:first-child) {
-                    border-top: 1px solid map-get($grays, '300');
+                    border-top: 1px solid $dropdown-divider-bg;
                 }
 
                 .oe_kanban_colorpicker {
@@ -174,7 +174,7 @@
                 }
 
                 div[class*="col-"] + div[class*="col-"] {
-                    border-left: 1px solid map-get($grays, '300');
+                    border-left: 1px solid $dropdown-divider-bg;
                 }
                 > div:last-child {
                     @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);

@@ -17,7 +17,7 @@
 
 
 <t t-name="web.SwitchCompanyItem" owl="1">
-    <DropdownItem class="'p-0 bg-white'">
+    <DropdownItem class="'p-0'">
         <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)"/>
         <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id"/>
         <div class="d-flex" data-menu="company" t-att-data-company-id="company.id">
@@ -31,7 +31,7 @@
                 t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
                 t-on-click.stop="() => this.toggleCompany(company.id)">
 
-                <span class="btn btn-light border-0 p-2">
+                <span class="btn btn-link p-2 border-0 text-primary">
                     <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
                 </span>
             </div>
@@ -43,12 +43,12 @@
                 t-att-title="'Switch to ' + company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary ms-1 me-2' : 'btn btn-light fw-normal border-0'"
+                t-att-class="isCurrent ? 'alert-primary' : 'btn btn-link fw-normal border-0 text-primary'"
                 t-on-click="() => this.logIntoCompany(company.id)">
 
                 <span
                     class='company_label pe-3'
-                    t-att-class="isCurrent ? 'text-900 fw-bold' : 'ms-1'">
+                    t-att-class="isCurrent ? 'fw-bold' : 'ms-1'">
                     <t t-esc="company.name"/>
                 </span>
             </div>

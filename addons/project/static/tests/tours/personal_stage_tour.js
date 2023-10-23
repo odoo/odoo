@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     trigger: '.o-kanban-button-new',
 }, {
     content: "Create a new personal task",
-    trigger: 'input.o_input',
+    trigger: 'input.o_input:not(.o_searchview_input)',
     run: 'text New Test Task',
 }, {
     content: "Confirm create",
