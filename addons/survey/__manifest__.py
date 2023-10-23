@@ -61,8 +61,7 @@ sent mails with personal token for the invitation of the survey.
     'sequence': 220,
     'assets': {
         'survey.survey_assets': [
-            'web/static/lib/Chart/Chart.js',
-            'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+            ('include', "web.chartjs_lib"),
             'survey/static/src/js/survey_image_zoomer.js',
             '/survey/static/src/xml/survey_image_zoomer_templates.xml',
             'survey/static/src/js/survey_quick_access.js',

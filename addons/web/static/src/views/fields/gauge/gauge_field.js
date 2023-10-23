@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/core/utils/numbers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -13,7 +13,7 @@ export class GaugeField extends Component {
         this.chart = null;
         this.canvasRef = useRef("canvas");
 
-        onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
+        onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
         useEffect(() => {
             this.renderChart();
