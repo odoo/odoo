@@ -41,6 +41,8 @@ const HOUR_FORMATS = {
     },
 };
 
+const { DateTime } = luxon;
+
 export class CalendarCommonRenderer extends Component {
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
@@ -65,7 +67,7 @@ export class CalendarCommonRenderer extends Component {
     get options() {
         return {
             allDaySlot: this.props.model.hasAllDaySlot,
-            allDayText: _t("All day"),
+            allDayText: _t(""),
             columnHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
@@ -81,6 +83,7 @@ export class CalendarCommonRenderer extends Component {
             eventDrop: this.onEventDrop,
             eventLimit: this.props.model.eventLimit,
             eventLimitClick: this.onEventLimitClick,
+            eventLimitText: this.env.isSmall ? "" : "more",
             eventMouseEnter: this.onEventMouseEnter,
             eventMouseLeave: this.onEventMouseLeave,
             eventRender: this.onEventRender,
@@ -111,6 +114,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
+            columnHeaderHtml: this.getHeaderHtml,
         };
     }
 
@@ -173,7 +177,12 @@ export class CalendarCommonRenderer extends Component {
         );
     }
     updateSize() {
-        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top;
+        let headerHeight = 0;
+        if (!this.env.isSmall) {
+            headerHeight =
+                document.querySelector(".o_calendar_header")?.getBoundingClientRect()?.height ?? 0;
+        }
+        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top - headerHeight;
         this.fc.el.style.height = `${height}px`;
         this.fc.api.updateSize();
     }
@@ -203,11 +212,12 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventClick(info) {
         this.click(info);
+        info.el.classList.toggle("o_calendar_popover_open");
     }
     onEventRender(info) {
         const { el, event } = info;
         el.dataset.eventId = event.id;
-        el.classList.add("o_event", "py-0");
+        el.classList.add("o_event");
         const record = this.props.model.records[event.id];
 
         if (record) {
@@ -239,12 +249,21 @@ export class CalendarCommonRenderer extends Component {
             if (record.duration <= 0.25) {
                 el.classList.add("o_event_oneliner");
             }
-        }
+            if (DateTime.now() >= record.end) {
+                el.classList.add("o_past_event");
+            }
 
-        if (!el.querySelector(".fc-bg")) {
-            const bg = document.createElement("div");
-            bg.classList.add("fc-bg");
-            el.appendChild(bg);
+            if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
+                el.classList.add("o_event_dot");
+            } else if (record.isAllDay) {
+                el.classList.add("o_event_allday");
+            }
+
+            if (!el.classList.contains("fc-bg")) {
+                const bg = document.createElement("div");
+                bg.classList.add("fc-bg");
+                el.appendChild(bg);
+            }
         }
     }
     async onSelect(info) {
@@ -305,9 +324,25 @@ export class CalendarCommonRenderer extends Component {
     onWindowResize() {
         this.updateSize();
     }
+
+    getHeaderHtml(date) {
+        const scale = this.props.model.scale;
+        const {
+            weekdayShort: weekdayShort,
+            weekdayLong: weekdayLong,
+            day,
+        } = DateTime.fromJSDate(date);
+        return renderToString(this.constructor.headerTemplate, {
+            weekdayShort,
+            weekdayLong,
+            day,
+            scale,
+        });
+    }
 }
 CalendarCommonRenderer.components = {
     Popover: CalendarCommonPopover,
 };
 CalendarCommonRenderer.template = "web.CalendarCommonRenderer";
 CalendarCommonRenderer.eventTemplate = "web.CalendarCommonRenderer.event";
+CalendarCommonRenderer.headerTemplate = "web.CalendarCommonRendererHeader";

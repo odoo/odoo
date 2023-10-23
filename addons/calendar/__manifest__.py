@@ -5,7 +5,7 @@
     'name': 'Calendar',
     'version': '1.1',
     'sequence': 165,
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'mail', 'onboarding'],
     'summary': "Schedule employees' meetings",
     'description': """
 This is a full-featured calendar system.
@@ -28,6 +28,7 @@ If you need to manage your meetings, you should install the CRM module.
         'data/calendar_cron.xml',
         'data/mail_template_data.xml',
         'data/calendar_data.xml',
+        'data/calendar_onboarding_data.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
         'views/mail_activity_views.xml',

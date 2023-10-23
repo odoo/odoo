@@ -1,15 +1,8 @@
 /** @odoo-module **/
 
-import {
-    getFixture,
-    patchDate,
-    patchWithCleanup,
-} from "@web/../tests/helpers/utils";
+import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-import {
-    changeScale,
-    clickEvent,
-} from "@web/../tests/views/calendar/helpers";
+import { changeScale, clickEvent } from "@web/../tests/views/calendar/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -27,7 +20,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
 
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
-            clearTimeout: () => { },
+            clearTimeout: () => {},
         });
 
         target = getFixture();
@@ -93,7 +86,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                         },
                         is_hatched: { string: "Hatched", type: "boolean" },
                         is_striked: { string: "Striked", type: "boolean" },
-                        res_model_name: { string: "Linked Model Name", type: "char" }
+                        res_model_name: { string: "Linked Model Name", type: "char" },
                     },
                     records: [
                         {
@@ -124,7 +117,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                     methods: {
                         check_access_rights() {
                             return Promise.resolve(true);
-                        }
+                        },
                     },
                 },
                 user: {
@@ -171,8 +164,8 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                         { id: 2, user_id: uid, partner_id: 2, partner_checked: true },
                         { id: 3, user_id: 4, partner_id: 3, partner_checked: true },
                     ],
-                }
-            }
+                },
+            },
         };
     });
 
@@ -188,8 +181,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
             stop: "2016-12-11 10:00:00",
             allday: false,
             partner_ids: [1, 2, 3],
-            res_model_name: 'Time Off',
-
+            res_model_name: "Time Off",
         });
 
         await makeView({
@@ -222,6 +214,8 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                     return Promise.resolve(true);
                 } else if (route === "/web/dataset/call_kw/res.partner/get_attendee_detail") {
                     return Promise.resolve([]);
+                } else if (route === "/calendar/check_credentials") {
+                    return Promise.resolve({});
                 }
             },
         });
@@ -230,13 +224,9 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
             ".o_calendar_renderer .fc-view-container",
             "should instance of fullcalendar"
         );
-        await changeScale(target, 'week');
+        await changeScale(target, "week");
         await clickEvent(target, 3);
-        assert.containsOnce(
-            target,
-            ".fa-link",
-            "A link icon should be present"
-        );
+        assert.containsOnce(target, ".fa-link", "A link icon should be present");
         assert.strictEqual(target.querySelector("li a[href='#']").textContent, "Time Off");
     });
 });

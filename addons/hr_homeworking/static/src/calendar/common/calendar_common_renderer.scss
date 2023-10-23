@@ -1,29 +1,17 @@
-.btnWorklocation{
-    display:flex ;
-    align-items: center;
-    opacity: 0;
-    &:hover {
-      opacity: 100;
+.o_worklocation_btn {
+    margin: 2px;
+
+    .o_worklocation_text, .o_worklocation_line {
+        box-shadow: 0 1px 0 rgba(0,0,0, 0.3)
     }
-    .o_month{
-      box-shadow: 0.1em 0.1em 0.1em rgb(131, 126, 126);
-      border-radius: 100px;
-      font-size: 0.75em;
-      width: 50%;
-      border-color: transparent;
-    }
-    
-    .line{
-      box-shadow: 0.1em 0.1em 0.1em rgb(131, 126, 126);
-      border: none;
-      border-color: transparent;
-      height: 0.3px;
-      width:100%;
+
+    .o_worklocation_text {
+        font-size: $o-font-size-base-smaller;
     }
 }
 
-.fc-event {
-    box-shadow: none !important;
+.o_worklocation_line {
+    height: 3px;
 }
 
 .fc-event.o_homework_event {
@@ -31,59 +19,59 @@
     border-color: transparent;
     box-shadow: none;
     cursor: pointer;
-    .o_homework_single {
-        display:flex;
-        align-items: center;
-        width: 100%;
-        .fc-content {
-            margin: 0 !important;
-            padding: 3px 6px 3px 6px;
-            border-radius: 100px;
-            width: auto;
-            overflow: visible;
-            opacity: 1;
-            font-weight: 600;
-        }
-        .line{
-            height: 0.3em;
-            width: 100%;
-          }
-    }
 
-    .o_homework_multi {
-        display: flex;
-        .fc-content .fa-2x {
-            display: flex;
-            align-content: center;
-            flex-wrap: wrap;
-            justify-content: center;
-            height: 20px;
-            width: 20px;
-            border-radius: 100%;
-            font-size: 1.2em;
-            &.fa-building {
-                font-size: 1.0em;
-            }
+    .o_homework_multi .o_homeworking_content .fa {
+        height: var(--o-homework-icon-size, 20px);
+        aspect-ratio: 1;
+        font-size: var(--o-homework-icon-size, 1.2rem);
+
+        &.fa-building:before {
+            transform: scale(.8);
         }
     }
 }
 
-@for $i from 1 through length($o-colors-complete) {
-    $color: nth($o-colors-complete, $i);
-    .o_popover{
-        .wl_color_#{$i - 1} {
-            color: $color;
+// ----- View specific
+.fc-timeGridDay-view {
+    .o_worklocation_btn .o_worklocation_line{
+        display: none;
+    }
+}
+
+@include media-breakpoint-down(md) {
+
+
+    .fc-timeGridWeek-view .o_homework_multi {
+        --o-homework-icon-size: 1rem;
+
+        > span {
+            display: none !important;
         }
     }
+
+    .fc-dayGridMonth-view .o_homework_multi {
+        --o-homework-icon-size: .75rem;
+
+        > span {
+            display: none !important;
+        }
+    }
+}
+
+@for $-i from 1 through length($o-colors-complete) {
+    $-color: nth($o-colors-complete, $-i);
+    $-color-subtle: tint-color($-color, 65%);
+
     .o_homework_multi {
-        .wl_color_#{$i - 1} {
-            color: $color;
-            background-color: scale-color($color, $lightness: 85%);
+        .wl_color_#{$-i - 1} {
+            color: shade-color($-color, 10%);
+            background-color: $-color-subtle;
+            border-color:  $-color-subtle !important;
         }
     }
     .o_homework_single {
-        .wl_color_#{$i - 1} {
-            background-color: scale-color($color, $lightness: 50%);
+        .wl_color_#{$-i - 1} {
+            background-color: $-color-subtle;
         }
     }
 }

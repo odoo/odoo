@@ -282,9 +282,9 @@ export function findPickedDate(target) {
 export async function pickDate(target, date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    const el = target.querySelectorAll(
-        `.o_datetime_picker .o_date_item_cell:not(.o_out_of_range)`
-    )[iDay];
+    const el = target.querySelectorAll(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range)`)[
+        iDay
+    ];
     el.scrollIntoView();
     await click(el);
 }

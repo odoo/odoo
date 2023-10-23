@@ -4,27 +4,25 @@
         <t t-if="isWorkLocationEvent()">
         <Record resModel="'hr.employee.location'" fieldNames="fieldNames" fields="fields" activeFields="fields" values="values" mode="'readonly'" t-slot-scope="slot">
             <div class="card-header d-flex justify-content-between py-2 pe-2">
-                <h4 class="p-0 pt-1">
-                    <span class="popover-header border-0">
-                        <t t-if="slot.record.data.work_location_type === 'office'">
-                            <i class="fa fa-fw fa-building fa-1x" role="img" t-att-class="`wl_color_${props.record.colorIndex}`"/>
-                        </t>
-                        <t t-elif="slot.record.data.work_location_type === 'home'">
-                            <i class="fa fa-fw fa-home fa-1x" role="img" t-att-class="`wl_color_${props.record.colorIndex}`" />
-                        </t>
-                        <t t-else="">
-                        <i class="fa fa-fw fa-map-marker fa-1x" t-att-class="`wl_color_${props.record.colorIndex}`" role="img"/>
-                        </t>
-                        <t t-esc="props.record.title"/>
-                    </span>
-                </h4>
+                <span class="popover-header border-0">
+                    <t t-if="slot.record.data.work_location_type === 'office'">
+                        <i class="fa fa-fw fa-building me-2" role="img" t-att-class="`wl_color_${props.record.colorIndex}`"/>
+                    </t>
+                    <t t-elif="slot.record.data.work_location_type === 'home'">
+                        <i class="fa fa-fw fa-home me-2" role="img" />
+                    </t>
+                    <t t-else="">
+                    <i class="fa fa-fw fa-map-marker me-2" t-att-class="`wl_color_${props.record.colorIndex}`" role="img"/>
+                    </t>
+                    <t t-esc="props.record.title"/>
+                </span>
                 <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
-                    <i class="fa fa-close" />
+                    <i class="fc-close fc-icon fc-icon-x" />
                 </span>
             </div>
             <div class="o_cw_body">
                 <t t-call="{{ constructor.subTemplates.body }}" />
-                <div class="card-footer border-top" t-att-class="{ 'o_footer_shrink': !hasFooter }">
+                <div class="card-footer border-top d-flex gap-1" t-att-class="{ 'o_footer_shrink': !hasFooter }">
                     <t t-call="{{ constructor.subTemplates.footer }}" />
                 </div>
             </div>
@@ -38,15 +36,16 @@
         <t t-if="isWorkLocationEvent()">
                 <ul class="list-group list-group-flush">
                     <div class="list-group-item">
+                        <i class="fa fa-fw fa-calendar me-2" t-att-class="`wl_color_${props.record.colorIndex}`"/>
                         <t t-if="props.record.start.ts != props.record.end.ts">
-                            <t t-esc="props.record.start.toFormat('d MMM')" t-options="{'widget': 'date'}"/>
+                            <t t-esc="props.record.start.toFormat('d MMMM')" t-options="{'widget': 'date'}"/>
                         </t>
                         <t t-else="">
-                            <t t-esc="props.record.start.toFormat('d MMM')" t-options="{'widget': 'date'}"/>
+                            <t t-esc="props.record.start.toFormat('d MMMM yyyy')" t-options="{'widget': 'date'}"/>
                         </t>
                     </div>
                     <div class="list-group-item">
-                        <i class="fa fa-fw fa-calendar" t-att-class="`wl_color_${props.record.colorIndex}`"/>
+                        <i class="fa fa-fw fa-user me-2" t-att-class="`wl_color_${props.record.colorIndex}`"/>
                         <Field name="'employee_name'" record="slot.record"/>
                     </div>
                 </ul>

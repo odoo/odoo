@@ -549,6 +549,8 @@ export class CalendarModel extends Model {
             isHatched: rawRecord["is_hatched"] || false,
             isStriked: rawRecord["is_striked"] || false,
             isTimeHidden: isTimeHidden || !showTime,
+            isMonth: this.meta.scale === "month",
+            isSmall: this.env.isSmall,
             rawRecord,
         };
     }
@@ -843,4 +845,4 @@ export class CalendarModel extends Model {
         };
     }
 }
-CalendarModel.services = ["user"];
+CalendarModel.services = ["user", "rpc"];

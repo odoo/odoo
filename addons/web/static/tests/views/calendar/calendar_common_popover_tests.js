@@ -62,7 +62,7 @@ QUnit.module("CalendarView - CommonPopover", ({ beforeEach }) => {
         });
         const dateTimeGroup = target.querySelector(`.list-group`);
         const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(dateTimeLabels, "July 16, 2021 (All day)");
+        assert.strictEqual(dateTimeLabels, "July 16, 2021");
     });
 
     QUnit.test("date duration: is all day and two days duration", async (assert) => {
@@ -77,7 +77,7 @@ QUnit.module("CalendarView - CommonPopover", ({ beforeEach }) => {
         });
         const dateTimeGroup = target.querySelector(`.list-group`);
         const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(dateTimeLabels, "July 16-17, 2021 (2 days)");
+        assert.strictEqual(dateTimeLabels, "July 16-17, 2021 2 days");
     });
 
     QUnit.test("time duration: 1 hour diff", async (assert) => {
@@ -152,10 +152,7 @@ QUnit.module("CalendarView - CommonPopover", ({ beforeEach }) => {
         });
         const dateTimeGroup = target.querySelector(`.list-group`);
         const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(
-            dateTimeLabels,
-            "July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)"
-        );
+        assert.strictEqual(dateTimeLabels, "July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)");
     });
 
     QUnit.test("isTimeHidden is true", async (assert) => {
@@ -177,10 +174,7 @@ QUnit.module("CalendarView - CommonPopover", ({ beforeEach }) => {
         });
         const dateTimeGroup = target.querySelector(`.list-group`);
         const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(
-            dateTimeLabels,
-            "July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)"
-        );
+        assert.strictEqual(dateTimeLabels, "July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)");
     });
 
     QUnit.test("canDelete is true", async (assert) => {

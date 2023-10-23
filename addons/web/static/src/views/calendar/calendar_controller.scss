@@ -1,5 +1,5 @@
 // Variables
-$o-cw-color-today-accent: #fe3b30;
+$o-cw-color-today-accent: #714B67;
 $o-cw-filter-avatar-size: 20px;
 
 // Animations
@@ -13,27 +13,38 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_container {
-    height: 100%;
-    display: flex;
+    grid-template-columns: auto minmax(auto, 210px);
+
+    @include media-breakpoint-up(xl){
+        grid-template: auto 1fr / 1fr auto;
+        grid-template-areas:
+            "head head"
+            "cal side";
+    }
+
+    .o_calendar_header {
+        grid-area: head;
+    }
 }
 
 .o_calendar_sidebar_container {
+    --Avatar-size: #{$o-cw-filter-avatar-size};
+
     flex: 0 0 auto;
     position: relative;
-    @include o-webclient-padding($top: $o-horizontal-padding/2);
+    grid-area: side;
     background-color: $o-view-background-color;
-    border-right: 1px solid $border-color;
-    overflow-y: auto;
-    width: 240px;
-    @include media-breakpoint-up(xl){
-        width: 280px;
-    }
 
     .o_calendar_sidebar {
+        @include o-webclient-padding($top: $o-horizontal-padding/2);
+        @include media-breakpoint-up(xl){
+            width: 210px;
+        }
+
         .o_datetime_picker {
             --DateTimePicker__Cell-size-md: 1.8rem;
             @include media-breakpoint-up(xl){
-                --DateTimePicker__Cell-size-md: 2.2rem;
+                --DateTimePicker__Cell-size-md: 1.5rem;
             }
             padding-right: 0 !important;
             padding-left: 0 !important;
@@ -41,6 +52,10 @@ $o-cw-filter-avatar-size: 20px;
             .o_day_of_week_cell {
                 --background-color: transparent;
                 border: none !important;
+            }
+
+            .o_cell_md {
+                font-size: .75rem;
             }
         }
 
@@ -51,82 +66,17 @@ $o-cw-filter-avatar-size: 20px;
     }
 
     .o_calendar_filter {
-        font-size: 0.9em;
-        padding: 2em 0 1em;
-
-        .o_cw_filter_collapse_icon {
-            transition: all 0.3s ease;
-            @include o-hover-opacity();
-            font-size: 0.7em;
-        }
-
-        .collapsed .o_cw_filter_collapse_icon {
-            transform: rotate(90deg);
-            opacity: 1;
-        }
 
         .o_calendar_filter_items_checkall,
         .o_calendar_filter_item {
-            cursor: pointer;
-            overflow: hidden;
-
-            input {
-                z-index: -1;
-                opacity: 0;
-            }
-
-            .o_cw_filter_input_bg {
-                width: 1.3em;
-                height: 1.3em;
-                border-width: 2px;
-                border-style: solid;
-                border-radius: 1px;
-                overflow: hidden;
-                display: flex;
-
-                &.o_beside_avatar {
-                    width: $o-cw-filter-avatar-size;
-                    height: $o-cw-filter-avatar-size;
-                    border-radius: 2px;
-                    object-fit: cover;
-                    align-items: center;
-                }
-            }
-
-            input:not(:checked) + label .o_cw_filter_input_bg {
-                &:not(.o_cw_filter_avatar) {
-                    background: transparent !important;
-                }
-
-                i.fa {
-                    visibility: hidden;
-                }
-            }
-
-            .o_cw_filter_avatar {
-                width: $o-cw-filter-avatar-size;
-                height: $o-cw-filter-avatar-size;
-                border-radius: 2px;
-
-                &.fa {
-                    padding: 4px 3px;
-                }
-            }
-
-            .o_cw_filter_title {
-                line-height: $o-line-height-base;
-                flex-grow: 1;
-            }
 
             button.o_remove {
-                @include o-position-absolute(0, 0, 0);
-                transform: translateX(100%);
-                transition: transform 0.2s;
+                transform: translate(100%, -50%);
             }
 
             &:hover {
                 button.o_remove {
-                    transform: translateX(0%);
+                    transform: translate(0%, -50%);
                 }
             }
         }

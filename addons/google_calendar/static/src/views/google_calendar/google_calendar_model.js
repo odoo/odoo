@@ -59,4 +59,8 @@ patch(AttendeeCalendarModel.prototype, {
         this.googlePendingSync = false;
         return result;
     },
+
+    get googleCredentialsSet() {
+        return this.credentialStatus['google_calendar'] ?? false;
+    }
 });

@@ -7,7 +7,16 @@
         overflow: hidden !important;
     }
     &.o-section-slide-enter-active {
-        max-height: 20rem; // fixed value is required to properly trigger transition
+        max-height: 100%; // max-height is required to properly trigger transition
         overflow: auto;
+    }
+    .o_calendar_filter_item {
+        &.no_filter_color, &.o_cw_filter_color_false, &:not([class*='o_cw_filter_color']) {
+            input, input:hover {
+                border-color: $light;
+                background-color: transparent !important;
+                filter: invert(1) grayscale(1);
+            }
+        }
     }
 }
