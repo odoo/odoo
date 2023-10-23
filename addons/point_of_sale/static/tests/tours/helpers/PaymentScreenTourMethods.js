@@ -254,3 +254,13 @@ export function pay(method, amount) {
     steps.push(...clickValidate());
     return steps;
 }
+
+export function isInvoiceButtonChecked() {
+    return [
+        {
+            content: 'check invoice button is checked',
+            trigger: '.js_invoice.highlight',
+            run: () => {},
+        }
+    ]
+}
