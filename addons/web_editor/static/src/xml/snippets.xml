@@ -60,22 +60,22 @@
     <div t-name="web_editor.ColorPalette" class="colorpicker" t-ref="el">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
             <t t-set="first_button_name"><t t-if="props.withCombinations">Theme</t><t t-else="">Solid</t></t>
-            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn btn" t-attf-data-target="#{props.withCombinations ? 'color-combinations' : 'theme-colors'}"
+            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{props.withCombinations ? 'color-combinations' : 'theme-colors'}"
                     t-att-title="first_button_name"
                     t-on-click="this._onSwitchPaneButtonClick">
                 <span t-out="first_button_name"/>
             </button>
-            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn btn" data-target="custom-colors" title="Custom"
+            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors" title="Custom"
                     t-on-click="this._onSwitchPaneButtonClick">
                 <span>Custom</span>
             </button>
-            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn btn" data-target="gradients" title="Gradient"
+            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients" title="Gradient"
                     t-on-click="this._onSwitchPaneButtonClick">
                 <span>Gradient</span>
             </button>
             <t t-if="props.resetButton">
                 <t t-set="trash_title"><t t-if="props.withCombinations">None</t><t t-else="">Reset</t></t>
-                <button type="button" class="fa fa-trash my-1 ms-5 py-0 o_we_color_btn btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title" />
+                <button type="button" class="fa fa-trash my-1 ms-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title" />
             </t>
         </div>
         <div class="o_colorpicker_sections pt-2 px-2 pb-3" data-color-tab="color-combinations">
