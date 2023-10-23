@@ -154,8 +154,8 @@ class Alias(models.Model):
                 company = owner[owner._mail_get_company_field()]
                 if company and company.alias_domain_id != alias.alias_domain_id and alias.alias_domain_id.company_ids:
                     raise ValidationError(_(
-                        "We could not create alias %(alias_name)s because domain " +
-                        "%(alias_domain_name)s belongs to company %(alias_company_names)s " +
+                        "We could not create alias %(alias_name)s because domain "
+                        "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                         "while the owner document belongs to company %(company_name)s.",
                         alias_company_names=','.join(alias.alias_domain_id.company_ids.mapped('name')),
                         alias_domain_name=alias.alias_domain_id.name,
@@ -166,8 +166,8 @@ class Alias(models.Model):
                 company = target[target._mail_get_company_field()]
                 if company and company.alias_domain_id != alias.alias_domain_id and alias.alias_domain_id.company_ids:
                     raise ValidationError(_(
-                        "We could not create alias %(alias_name)s because domain " +
-                        "%(alias_domain_name)s belongs to company %(alias_company_names)s " +
+                        "We could not create alias %(alias_name)s because domain "
+                        "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                         "while the target document belongs to company %(company_name)s.",
                         alias_company_names=','.join(alias.alias_domain_id.company_ids.mapped('name')),
                         alias_domain_name=alias.alias_domain_id.name,

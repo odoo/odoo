@@ -169,10 +169,10 @@ class HolidaysAllocation(models.Model):
                 if allocation.env.context.get('is_employee_allocation'):
                     if allocation.holiday_status_id:
                         allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                        title = _(" %s Allocation Request ( %s %s)" % (
+                        title = _("%s allocation request (%s %s)",
                             allocation.holiday_status_id.name,
                             allocation_duration,
-                            allocation.type_request_unit))
+                            allocation.type_request_unit)
                     else:
                         title = _("Allocation Request")
                 allocation.name = title

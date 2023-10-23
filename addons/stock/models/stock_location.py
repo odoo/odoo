@@ -216,28 +216,28 @@ class Location(models.Model):
                     " Please unreserve the products first."
                 ))
         if 'active' in values:
-            if values['active'] == False:
+            if not values['active']:
                 for location in self:
-                    warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)])
+                    warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)], limit=1)
                     if warehouses:
                         raise UserError(_(
                             "You cannot archive the location %s as it is used by your warehouse %s",
-                            location.display_name, warehouses[0].display_name))
+                            location.display_name, warehouses.display_name))
 
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
                 children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
-                if children_quants and values['active'] == False:
+                if children_quants and not values['active']:
                     raise UserError(_(
-                        'You still have some product in locations %s'
+                        "You can't disable locations %s because they still contain products.",
                         ', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
                     })
 
-        res = super(Location, self).write(values)
+        res = super().write(values)
         self.invalidate_model(['warehouse_id'])
         return res
 

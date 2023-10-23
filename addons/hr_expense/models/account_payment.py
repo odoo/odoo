@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
+from odoo.api import ondelete
 from odoo.exceptions import UserError
 
 
@@ -41,8 +42,7 @@ class AccountPayment(models.Model):
             return _("Payment created for: %s", self.move_id.expense_sheet_id._get_html_link())
         return super()._creation_message()
 
-    def unlink(self):
-        # EXTENDS account
+    @ondelete(at_uninstall=True)
+    def _must_delete_all_expense_payments(self):
         if self.expense_sheet_id and self.expense_sheet_id.account_move_ids.payment_ids - self:  # If not all the payments are to be deleted
             raise UserError(_("You cannot delete only some payments linked to an expense report. All payments must be deleted at the same time."))
-        return super().unlink()

@@ -1497,11 +1497,11 @@ class AccountTaxRepartitionLine(models.Model):
             raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", tax.name))
         return super().create(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _check_tax_use(self):
         for repartition_line in self:
             if repartition_line.tax_id.is_used:
                 raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", repartition_line.tax_id.name))
-        return super().unlink()
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
     def _compute_tag_ids_domain(self):
