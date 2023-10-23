@@ -107,7 +107,7 @@ class Company(models.Model):
 
     @api.depends('parent_path')
     def _compute_parent_ids(self):
-        for company in self:
+        for company in self.with_context(active_test=False):
             company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
             company.root_id = company.parent_ids[0]
 
