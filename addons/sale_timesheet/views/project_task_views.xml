@@ -46,6 +46,12 @@
                     </p>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='allow_billable']" position="after">
+                <div invisible="not allow_billable or not allow_timesheets" class="text-muted">
+                    Timesheets without a sales order item are
+                    <field name="billing_type" nolabel="1"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
