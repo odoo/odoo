@@ -144,10 +144,10 @@
                         <div class="container" t-if="record.show_picking_type.raw_value">
                             <div class="row">
                                 <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                    <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span t-if="record.code.raw_value == 'internal'">Transfers</span>
                                         <span t-else="">View</span>
-                                    </div>
+                                    </h5>
                                     <div role="menuitem">
                                         <a name="get_stock_picking_action_picking_type" type="object">All</a>
                                     </div>
@@ -162,9 +162,9 @@
                                     </div>
                                 </div>
                                 <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                    <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <a name="%(action_picking_form)d" type="action">New</a>
-                                    </div>
+                                    </h5>
                                 </div>
                             </div>
 

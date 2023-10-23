@@ -15,9 +15,9 @@
                 <div class="container" t-if="record.code.raw_value == 'mrp_operation'">
                     <div class="row">
                         <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view" name="picking_left_manage_pane">
-                            <div role="menuitem" class="o_kanban_card_manage_title">
+                            <h5 role="menuitem" class="o_kanban_card_manage_title">
                                 <span>Orders</span>
-                            </div>
+                            </h5>
                             <div role="menuitem">
                                 <a name="%(mrp_production_action_picking_deshboard)d" type="action">All</a>
                             </div>
@@ -29,9 +29,9 @@
                             </div>
                         </div>
                         <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                            <div role="menuitem" class="o_kanban_card_manage_title">
+                            <h5 role="menuitem" class="o_kanban_card_manage_title">
                                 <span>New</span>
-                            </div>
+                            </h5>
                             <div role="menuitem">
                                 <a name="%(action_mrp_production_form)d" context="{'default_picking_type_id': id}" type="action">Manufacturing Order</a>
                             </div>
