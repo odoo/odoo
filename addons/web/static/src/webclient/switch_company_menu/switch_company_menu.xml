@@ -24,7 +24,7 @@
     <t t-set="isCompanySelected" t-value="selectedCompanies.includes(props.company.id)"/>
     <t t-set="isCompanyAvailable" t-value="props.company.id in companyService.availableCompanies"/>
     <t t-set="isCurrent" t-value="props.company.id === companyService.currentCompany.id"/>
-    <DropdownItem class="'p-0 bg-white'" parentClosingMode="!isCompanyAvailable ? 'none' : 'all'">
+    <DropdownItem class="'p-0'" parentClosingMode="!isCompanyAvailable ? 'none' : 'all'">
         <div
             class="d-flex"
             t-att-class="!isCompanyAvailable ? 'disabled' : ''"
@@ -40,7 +40,7 @@
                 t-att-class="isCurrent ? 'border-primary' : !isCompanyAvailable ? 'disabled' : ''"
                 t-on-click.stop="() => isCompanyAvailable &amp;&amp; this.toggleCompany(props.company.id)">
 
-                <span class="btn border-0 p-2" t-att-class="isCompanyAvailable ? 'btn-light' : 'disabled'">
+                <span class="btn border-0 p-2" t-att-class="isCompanyAvailable ? 'btn-link text-primary' : 'disabled'">
                     <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
                 </span>
             </div>
@@ -52,7 +52,7 @@
                 t-att-title="'Switch to ' + props.company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAvailable ? 'btn-light' : 'disabled')"
+                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAvailable ? 'btn-link text-primary' : 'disabled')"
                 t-on-click="() => isCompanyAvailable &amp;&amp; this.logIntoCompany(props.company.id)">
 
                 <span

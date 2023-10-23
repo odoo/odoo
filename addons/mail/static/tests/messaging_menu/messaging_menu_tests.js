@@ -355,7 +355,7 @@ QUnit.test("mark unread channel as read", async (assert) => {
 
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     assert.verifySteps(["set_last_seen_message"]);
-    assert.hasClass($(".o-mail-NotificationItem"), "o-muted");
+    assert.hasClass($(".o-mail-NotificationItem"), "text-muted");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
     assert.containsNone($, ".o-mail-NotificationItem [title='Mark As Read']");
     assert.containsNone($, ".o-mail-ChatWindow");

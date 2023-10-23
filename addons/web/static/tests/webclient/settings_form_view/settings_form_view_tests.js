@@ -1731,7 +1731,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         assert.containsOnce(target, "[name='textField'] input");
         assert.verifySteps([
-            `focusin: <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox">`,
+            `focusin: <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox">`,
         ]);
     });
 

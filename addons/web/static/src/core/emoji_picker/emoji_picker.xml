@@ -8,8 +8,8 @@
             <span class="fs-5 text-muted">Failed to load emojis...</span>
         </t>
         <t t-else="">
-            <div class="o-EmojiPicker-search d-flex align-items-center mt-2 mx-2 rounded">
-                <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="input" placeholder="Search for an emoji" t-model="state.searchStr" t-on-input="() => this.state.activeEmojiIndex = 0"/>
+            <div class="o-EmojiPicker-search d-flex align-items-center p-1 mt-2 mx-2 border rounded">
+                <input type="text" class="o_input border-0 flex-grow-1 rounded-end-0" t-ref="input" placeholder="Search for an emoji" t-model="state.searchStr" t-on-input="() => this.state.activeEmojiIndex = 0"/>
                 <i class="oi oi-search p-2 fs-5 rounded-end" title="Search..." role="img" aria-label="Search..."/>
             </div>
             <t t-set="itemIndex" t-value="0"/>
