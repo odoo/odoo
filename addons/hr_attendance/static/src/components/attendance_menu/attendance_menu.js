@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 
-import { Component, useState, onWillStart } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -23,14 +23,12 @@ export class ActivityMenu extends Component {
         this.state = useState({
             checkedIn: false,
             isDisplayed: false
-            });
+        });
         this.date_formatter = registry.category("formatters").get("float_time")
         this.onClickSignInOut = useDebounced(this.signInOut, 200, true);
-        onWillStart(this.onWillStart);
-    }
-
-    async onWillStart() {
-        await this.searchReadEmployee();
+        // load data but do not wait for it to render to prevent from delaying
+        // the whole webclient
+        this.searchReadEmployee();
     }
 
     async searchReadEmployee(){
@@ -76,4 +74,4 @@ export const systrayAttendance = {
 
 registry
     .category("systray")
-    .add("hr_attendance.attendance_menu", systrayAttendance, { sequence: 100 });
+    .add("hr_attendance.attendance_menu", systrayAttendance, { sequence: 101 });
