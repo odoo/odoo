@@ -1,6 +1,7 @@
 %global name odoo
 %global release 1
 %global unmangled_version %{version}
+%global __requires_exclude ^.*odoo/addons/mail/static/scripts/odoo-mailgate.py$
 
 Summary: Odoo Server
 Name: %{name}
