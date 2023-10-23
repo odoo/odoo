@@ -4,7 +4,7 @@ import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { loadJS, templates } from "@web/core/assets";
+import { loadBundle, templates } from "@web/core/assets";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
 
 import { App } from "@odoo/owl";
@@ -18,8 +18,7 @@ import { registry } from "@web/core/registry";
  * @returns {Promise<HTMLElement>}
  */
 export async function mountSpreadsheet(model) {
-    await loadJS("/web/static/lib/Chart/Chart.js");
-    await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
+    await loadBundle("web.chartjs_lib");
     const app = new App(Spreadsheet, {
         props: { model },
         templates: templates,

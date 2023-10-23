@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { loadJS } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -90,10 +90,6 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
  *
  */
 publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
-    jsLibs: [
-        '/web/static/lib/Chart/Chart.js',
-        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
-    ],
 
     //--------------------------------------------------------------------------
     // Widget
@@ -134,6 +130,10 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 self.chart = self._loadChart();
             }
         });
+    },
+
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
     },
 
     // -------------------------------------------------------------------------

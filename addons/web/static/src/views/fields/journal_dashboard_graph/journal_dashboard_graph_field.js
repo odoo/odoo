@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
@@ -20,7 +20,7 @@ export class JournalDashboardGraphField extends Component {
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.record.data[this.props.name]);
 
-        onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
+        onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
         useEffect(() => {
             this.renderChart();

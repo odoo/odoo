@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
+import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 const { DateTime } = luxon;
 
 var BarChart = publicWidget.Widget.extend({
-    jsLibs: [
-        '/web/static/lib/Chart/Chart.js',
-        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
-    ],
     /**
      * @constructor
      * @param {Object} parent
@@ -67,13 +64,12 @@ var BarChart = publicWidget.Widget.extend({
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
+    },
 });
 
 var PieChart = publicWidget.Widget.extend({
-    jsLibs: [
-        '/web/static/lib/Chart/Chart.js',
-        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
-    ],
     /**
      * @override
      * @param {Object} parent
@@ -117,6 +113,9 @@ var PieChart = publicWidget.Widget.extend({
         var canvas = this.$('canvas')[0];
         var context = canvas.getContext('2d');
         new Chart(context, config);
+    },
+    willStart: async function () {
+        await loadBundle("web.chartjs_lib");
     },
 });
 
