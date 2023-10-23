@@ -786,3 +786,60 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
         self.assertEqual(bill.currency_id, self.currency_data['currency'], "The currency of the Bill should be the one of the context")
         self.assertEqual(bill.invoice_line_ids.currency_id, self.currency_data['currency'], "The currency of the Bill lines should be the same as the currency of the Bill")
+
+    def test_payment_reference_autocomplete_invoice(self):
+        """
+        Test that the payment_reference field is not replaced when selected a purchase order
+        We test the flow for 8 use cases:
+        - Purchase order with partner ref:
+            - Bill with ref:
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the po.partner_ref
+            - Bill without ref:
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the po.partner_ref
+        - Purchase order without partner ref:
+            - Bill with ref
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be the bill ref
+            - Bill with ref
+                - Bill with payment_reference -> should not be replaced
+                - Bill without payment_reference -> should be empty
+        """
+        purchase_order_w_ref, purchase_order_wo_ref = self.env['purchase.order'].with_context(tracking_disable=True).create([
+            {
+                'partner_id': self.partner_a.id,
+                'partner_ref': partner_ref,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_order.id,
+                        'product_qty': 1.0,
+                        'price_unit': self.product_order.list_price,
+                        'taxes_id': False,
+                    }),
+                ]
+            } for partner_ref in ('PO-001', False)
+        ])
+        (purchase_order_w_ref + purchase_order_wo_ref).button_confirm()
+
+        expected_values_dict = {
+            purchase_order_w_ref: {
+                'w_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': purchase_order_w_ref.partner_ref},
+                'wo_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': purchase_order_w_ref.partner_ref},
+            },
+            purchase_order_wo_ref: {
+                'w_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': '111'},
+                'wo_bill_ref': {'w_payment_reference': '222', 'wo_payment_reference': ''},
+            }
+        }
+
+        for purchase_order, purchase_expected_values in expected_values_dict.items():
+            for w_bill_ref, expected_values in purchase_expected_values.items():
+                for w_payment_reference, expected_value in expected_values.items():
+                    with self.subTest(po_partner_ref=purchase_order.partner_ref, w_bill_ref=w_bill_ref, w_payment_reference=w_payment_reference, expected_value=expected_value):
+                        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+                        move_form.ref = '111' if w_bill_ref == 'w_bill_ref' else ''
+                        move_form.payment_reference = '222' if w_payment_reference == 'w_payment_reference' else ''
+                        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
+                        payment_reference = move_form._values['payment_reference']
+                        self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)
