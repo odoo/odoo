@@ -151,8 +151,8 @@ export function makeStore(env) {
                     const proxy = new Proxy(this, {
                         /** @param {Record} receiver */
                         get(target, name, receiver) {
-                            if (name !== "__rels__" && name in receiver.__rels__) {
-                                const l1 = receiver.__rels__[name];
+                            if (name !== "_fields" && name in receiver._fields) {
+                                const l1 = receiver._fields[name];
                                 if (RecordList.isMany(l1)) {
                                     return l1;
                                 }
@@ -161,9 +161,9 @@ export function makeStore(env) {
                             return Reflect.get(target, name, receiver);
                         },
                         deleteProperty(target, name) {
-                            if (name !== "__rels__" && name in target.__rels__) {
+                            if (name !== "_fields" && name in target._fields) {
                                 const r1 = target;
-                                const l1 = r1.__rels__[name];
+                                const l1 = r1._fields[name];
                                 l1.clear();
                                 return true;
                             }
@@ -172,12 +172,12 @@ export function makeStore(env) {
                         },
                         /** @param {Record} receiver */
                         set(target, name, val, receiver) {
-                            if (!(name in receiver.__rels__)) {
+                            if (!(name in receiver._fields)) {
                                 Reflect.set(target, name, val, receiver);
                                 return true;
                             }
                             /** @type {RecordList<Record>} */
-                            const l1 = receiver.__rels__[name];
+                            const l1 = receiver._fields[name];
                             if (RecordList.isMany(l1)) {
                                 // [Record.many] =
                                 if (Record.isCommand(val)) {
@@ -253,23 +253,27 @@ export function makeStore(env) {
                     if (this instanceof BaseStore) {
                         res.store = proxy;
                     }
-                    for (const name in Model.__rels__) {
-                        // Relational fields contain symbols for detection in original class.
-                        // This constructor is called on genuine records:
-                        // - 'one' fields => undefined
-                        // - 'many' fields => RecordList
-                        // this[name]?.[0] is ONE_SYM or MANY_SYM
-                        const newVal = new RecordList(this[name]?.[0]);
-                        if (this instanceof BaseStore) {
-                            newVal.store = proxy;
+                    for (const name in Model._fields) {
+                        if (Record.isRelation(this[name]?.[0])) {
+                            // Relational fields contain symbols for detection in original class.
+                            // This constructor is called on genuine records:
+                            // - 'one' fields => undefined
+                            // - 'many' fields => RecordList
+                            // this[name]?.[0] is ONE_SYM or MANY_SYM
+                            const newVal = new RecordList(this[name]?.[0]);
+                            if (this instanceof BaseStore) {
+                                newVal.store = proxy;
+                            } else {
+                                newVal.store = res.store;
+                            }
+                            newVal.name = name;
+                            newVal.owner = proxy;
+                            this._fields[name] = newVal;
+                            this.__uses__ = new RecordUses();
+                            this[name] = newVal;
                         } else {
-                            newVal.store = res.store;
+                            this[name] = Model._fields[name].default;
                         }
-                        newVal.name = name;
-                        newVal.owner = proxy;
-                        this.__rels__[name] = newVal;
-                        this.__uses__ = new RecordUses();
-                        this[name] = newVal;
                     }
                     for (const [name, fn] of Object.entries(Model.__computes__)) {
                         let boundFn;
@@ -284,19 +288,19 @@ export function makeStore(env) {
         Object.assign(Model, {
             Class,
             records: JSON.parse(JSON.stringify(OgClass.records)),
-            __rels__: {},
+            _fields: {},
             __computes__: {},
         });
         Models[name] = Model;
         res.store[name] = Model;
-        // Detect relational fields with a dummy record and setup getter/setters on them
+        // Detect fields with a dummy record and setup getter/setters on them
         const obj = new OgClass();
         for (const [name, val] of Object.entries(obj)) {
             const SYM = val?.[0];
-            if (![Record.one()[0], Record.many()[0]].includes(SYM)) {
+            if (!Record.isField(SYM)) {
                 continue;
             }
-            Model.__rels__[name] = { [SYM]: true, ...val[1] };
+            Model._fields[name] = { [SYM]: true, ...val[1] };
             if (val[1].compute) {
                 Model.__computes__[name] = val[1].compute;
             }
@@ -304,12 +308,16 @@ export function makeStore(env) {
     }
     // Sync inverse fields
     for (const Model of Object.values(Models)) {
-        for (const [name, { targetModel, inverse }] of Object.entries(Model.__rels__)) {
+        for (const [name, definition] of Object.entries(Model._fields)) {
+            if (!Record.isRelation(definition)) {
+                continue;
+            }
+            const { targetModel, inverse } = definition;
             if (targetModel && !Models[targetModel]) {
                 throw new Error(`No target model ${targetModel} exists`);
             }
             if (inverse) {
-                const rel2 = Models[targetModel].__rels__[inverse];
+                const rel2 = Models[targetModel]._fields[inverse];
                 if (rel2.targetModel && rel2.targetModel !== Model.name) {
                     throw new Error(
                         `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2.targetModel}"`
