@@ -64,9 +64,7 @@ patch(MockServer.prototype, {
             ["message_id", "=", messageId],
             ["content", "=", content],
         ]);
-        const currentPartner = this.pyEnv["res.partner"].searchRead([
-            ["id", "=", this.pyEnv.currentPartnerId],
-        ])[0];
+        const guest = this._mockMailGuest__getGuestFromContext();
         const result = {
             id: messageId,
             reactions: [
@@ -80,9 +78,9 @@ patch(MockServer.prototype, {
                             [
                                 action === "add" ? "ADD" : "DELETE",
                                 {
-                                    id: this.pyEnv.currentPartnerId,
-                                    name: currentPartner.name,
-                                    type: "partner",
+                                    id: guest ? guest.id : this.pyEnv.currentPartnerId,
+                                    name: guest ? guest.name : this.pyEnv.currentPartner.name,
+                                    type: guest ? "guest" : "partner",
                                 },
                             ],
                         ],
