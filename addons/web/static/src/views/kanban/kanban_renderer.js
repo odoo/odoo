@@ -279,7 +279,7 @@ export class KanbanRenderer extends Component {
     getGroupsOrRecords() {
         const { list } = this.props;
         if (list.isGrouped) {
-            return list.groups
+            return [...list.groups]
                 .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
                 .map((group, i) => ({
                     group,
