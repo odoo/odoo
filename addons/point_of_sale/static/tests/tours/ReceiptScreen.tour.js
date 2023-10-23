@@ -114,3 +114,19 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("ReceiptTrackingMethodTour", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => [
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.enterLotNumber('123456789'),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod('Cash'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.trackingMethodIsLot(),
+        ].flat(),
+    });
