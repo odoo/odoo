@@ -36,13 +36,11 @@ class AccountBalance(models.Model):
 
     @api.model
     def general_ledger_report(self, account_id, start_date, end_date):
-        domain = [('account_id', '=', account_id)]
-
-        if start_date and end_date:
-            domain.extend([
-                ('date', '>=', start_date),
-                ('date', '<=', end_date)
-            ])
+        domain = [
+            ('account_id', '=', account_id),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ]
 
         move_lines = self.env['account.move.line'].search(domain)
 
