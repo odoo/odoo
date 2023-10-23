@@ -26,8 +26,8 @@ class SaleOrder(models.Model):
                 continue
             so_lines_missing_events = so.order_line.filtered(lambda line: line.product_type == 'event' and not line.event_id)
             if so_lines_missing_events:
-                so_lines_descriptions = "".join([f"- {so_line_description.name} \n" for so_line_description in so_lines_missing_events])
-                raise ValidationError(_("Please make sure all your event related lines are configured before confirming this order: \n%s" % so_lines_descriptions))
+                so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_events)
+                raise ValidationError(_("Please make sure all your event related lines are configured before confirming this order:%s", so_lines_descriptions))
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
             if len(self) == 1:

@@ -3,6 +3,7 @@
 from markupsafe import escape
 
 from odoo import models, fields, api, _
+from odoo.api import ondelete
 from odoo.exceptions import UserError
 from odoo.tools.misc import frozendict
 
@@ -61,8 +62,7 @@ class AccountMove(models.Model):
         # else, when restarting the expense flow we get duplicate issue on vendor.bill
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
-    def unlink(self):
-        # EXTENDS account
+    @ondelete(at_uninstall=True)
+    def _must_delete_all_expense_entries(self):
         if self.expense_sheet_id and self.expense_sheet_id.account_move_ids - self:  # If not all the payments are to be deleted
             raise UserError(_("You cannot delete only some entries linked to an expense report. All entries must be deleted at the same time."))
-        return super().unlink()
