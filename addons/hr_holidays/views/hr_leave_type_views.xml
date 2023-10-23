@@ -28,7 +28,7 @@
                                 attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('id', '=', False)]}"
                                 help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
                             <div class="o_stat_info">
-                                <field name="allocation_count"/>
+                                <field name="allocation_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Allocations</span>
                             </div>
                         </button>
@@ -39,7 +39,7 @@
                                 attrs="{'invisible': [('id', '=', False)]}"
                                 help="Count of time off requests for this time off type (approved or waiting for approbation) with a start date in the current year.">
                             <div class="o_stat_info">
-                                <field name="group_days_leave"/>
+                                <field name="group_days_leave" class="o_stat_value"/>
                                 <span class="o_stat_text">Time Off</span>
                             </div>
                         </button>
@@ -50,7 +50,7 @@
                                 attrs="{'invisible': ['|', ('id', '=', False), ('accrual_count', '=', 0)]}"
                                 help="Count of plans linked to this time off type.">
                             <div class="o_stat_info">
-                                <field name="accrual_count"/>
+                                <field name="accrual_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Accruals</span>
                             </div>
                         </button>

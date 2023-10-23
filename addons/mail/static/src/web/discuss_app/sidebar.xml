@@ -44,7 +44,7 @@
             <t t-esc="mailbox.name"/>
         </div>
         <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
-        <div t-if="mailbox.counter > 0" t-attf-class="badge rounded-pill {{ mailbox.id === 'starred' ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3">
+        <div t-if="mailbox.counter > 0" t-attf-class="badge rounded-pill ms-1 me-3 {{ mailbox.id === 'starred' ? 'text-bg-300' : 'text-bg-primary' }} {{ mailbox.id === 'starred' and mailbox.localId === store.discuss.threadLocalId ? 'bg-400' : '' }}">
             <t t-esc="mailbox.counter"/>
         </div>
     </button>

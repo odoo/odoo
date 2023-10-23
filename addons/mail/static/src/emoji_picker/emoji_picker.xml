@@ -21,7 +21,7 @@
             <div class="o-mail-EmojiPicker-searchContainer d-flex mx-2 my-1 rounded">
                 <div class="o-mail-EmojiPicker-search border-0 align-items-center p-1 d-flex rounded w-100">
                     <i class="oi oi-search p-2 fs-5 text-muted opacity-75" title="Search..." role="img" aria-label="Search..."></i>
-                    <input type="text" class="border-0 flex-grow-1" t-ref="input" placeholder="Search for an emoji" t-model="state.searchStr" t-on-input="() => this.state.activeEmojiIndex = 0"/>
+                    <input type="text" class="o_input border-0 flex-grow-1" t-ref="input" placeholder="Search for an emoji" t-model="state.searchStr" t-on-input="() => this.state.activeEmojiIndex = 0"/>
                 </div>
             </div>
             <t t-set="itemIndex" t-value="0"/>
