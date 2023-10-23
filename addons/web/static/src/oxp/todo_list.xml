@@ -11,15 +11,12 @@
                 </div>
 
                 <ul class="list-group mb-0">
-                    <li t-foreach="state.todoItems"
+                    <li t-foreach="todoListModel.todoItems"
                         t-as="todoItem"
                         t-key="todoItem.id"
                         class="list-group-item d-flex align-items-center border-0 mb-2 rounded justify-content-between"
                         style="background-color: #f4f6f7;">
-                        <TodoItem todoItem="todoItem"
-                            editMessage="(message) => this.editMessage(todoItem.id, message)"
-                            delete="() => this.delete(todoItem.id)"
-                            toggleDone="() => this.toggleDone(todoItem.id)"/>
+                        <TodoItem todoItem="todoItem"/>
                     </li>
                 </ul>
             </div>

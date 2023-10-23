@@ -8,10 +8,10 @@
     <t t-else="">
         <span t-esc="props.todoItem.message"
           t-att-class="props.todoItem.isDone ? 'text-decoration-line-through' : ''"
-          t-on-click="props.toggleDone"/>
+          t-on-click="() => this.props.todoItem.toggleDone()"/>
         <div>
           <button t-on-click="switchInEdition" type="button" class="btn btn-primary me-1">Edit</button>
-          <button t-on-click="props.delete" type="button" class="btn btn-danger">Delete</button>
+          <button t-on-click="() => this.props.todoItem.delete()" type="button" class="btn btn-danger">Delete</button>
         </div>
   </t>
 

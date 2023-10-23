@@ -6,9 +6,6 @@ export class TodoItem extends Component {
     static template = "web.TodoItem";
     static props = {
         todoItem: Object,
-        toggleDone: Function,
-        delete: Function,
-        editMessage: Function,
     };
 
     setup() {
@@ -18,7 +15,7 @@ export class TodoItem extends Component {
     }
 
     editMessage(ev) {
-        this.props.editMessage(ev.target.value);
+        this.props.todoItem.editMessage(ev.target.value);
         this.state.isInEdition = false;
     }
 
