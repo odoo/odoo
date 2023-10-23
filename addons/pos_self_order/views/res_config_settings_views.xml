@@ -12,14 +12,29 @@
             </xpath>
             <block id="restaurant_section" position="after">
                 <block title="Mobile self-order &amp; Kiosk" id="self_ordering_section">
-                    <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">
-                        <field name="pos_self_ordering_mode" />
+                    <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">a
+                        <div class="content-group row">
+                            <label for="pos_self_ordering_mode" class="col-lg-4" string="Self Ordering"/>
+                            <field name="pos_self_ordering_mode" />
+                        </div>
                         <div class="d-flex flex-column align-items-start w-50" invisible="pos_self_ordering_mode == 'nothing'">
                             <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview Web interface"/>
                             <button class="btn-link p-0" icon="oi-arrow-right" name="custom_link_action" type="object" string="Home buttons"/>
                             <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Print QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
                             <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_zip" type="object" string="Download QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
                             <button groups="base.group_no_one" class="btn-link p-0" icon="oi-arrow-right" name="update_access_tokens" type="object" string="Reset QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                        </div>
+                        <div class="content-group row mt-4" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
+                            <field name="pos_self_ordering_service_mode" readonly="not pos_module_pos_restaurant and pos_self_ordering_mode != 'kiosk'" />
+                        </div>
+                        <div class="content-group row" groups="base.group_no_one" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label for="pos_self_ordering_default_user_id" class="col-lg-4" string="Default User"/>
+                            <field name="pos_self_ordering_default_user_id" />
+                        </div>
+                        <div id="self-payment-after" class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label string="Pay after" for="pos_self_ordering_pay_after" class="col-lg-4"/>
+                            <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk' or (pos_self_ordering_service_mode == 'counter' and pos_self_ordering_mode == 'mobile')" widget="upgrade_selection"/>
                         </div>
                     </setting>
                     <setting string="Splash screens" help="Personalize your splash screen by adding one or multiple images to create a slideshow" invisible="pos_self_ordering_mode == 'nothing'">
@@ -43,20 +58,6 @@
                     <setting string="Customize Header" help="Add an image to brand your header." invisible="pos_self_ordering_mode == 'nothing'">
                         <field name="pos_self_ordering_image_brand_name" invisible ="1"/>
                         <field name="pos_self_ordering_image_brand" class="w-100" filename="pos_self_ordering_image_brand_name"/>
-                    </setting>
-                    <setting string="Options" help="All options for your Self devices" invisible="pos_self_ordering_mode in ['nothing', 'consultation']">
-                        <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
-                            <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
-                            <field name="pos_self_ordering_service_mode" readonly="not pos_module_pos_restaurant and pos_self_ordering_mode != 'kiosk'" />
-                        </div>
-                        <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
-                            <label for="pos_self_ordering_default_user_id" class="col-lg-4" string="Default User"/>
-                            <field name="pos_self_ordering_default_user_id" />
-                        </div>
-                        <div id="self-payment-after" class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
-                            <label string="Pay after" for="pos_self_ordering_pay_after" class="col-lg-4"/>
-                            <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk' or (pos_self_ordering_service_mode == 'counter' and pos_self_ordering_mode == 'mobile')" widget="upgrade_selection"/>
-                        </div>
                     </setting>
                     <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout." invisible="not pos_self_ordering_mode in ['mobile', 'kiosk']">
                         <field name="pos_self_ordering_takeaway"/>

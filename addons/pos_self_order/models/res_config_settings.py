@@ -1,6 +1,6 @@
-# -*- codingimport base64
+# -*- coding: utf-8 -*-
+
 import qrcode
-import base64
 import zipfile
 from io import BytesIO
 
