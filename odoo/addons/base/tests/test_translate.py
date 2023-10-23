@@ -988,6 +988,7 @@ class TestXMLTranslation(TransactionCase):
 
         # modify source term in view (add css style)
         terms_en = ('Bread <span style="font-weight:bold">and</span> cheese', 'Fork')
+        archf = '<form string="X">%s<div>%s</div><div/></form>'
         view.with_env(env_en).write({'arch_db': archf % terms_en})
 
         # check whether translations have been kept
@@ -998,6 +999,7 @@ class TestXMLTranslation(TransactionCase):
 
         # modify source term in view (actual text change)
         terms_en = ('Bread <span style="font-weight:bold">and</span> butter', 'Fork')
+        archf = '<form string="X">%s<div>%s</div><div/><div/></form>'
         view.with_env(env_en).write({'arch_db': archf % terms_en})
 
         # check whether translations have been reset
@@ -1069,8 +1071,8 @@ class TestXMLTranslation(TransactionCase):
         </section>
     </div>
 </form>'''
-        terms_en = ('Bread and cheese', 'Knive and Fork', 'Knive <span style="font-weight:bold">and</span> Fork')
-        terms_fr = ('Pain et fromage', 'Couteau et Fourchette', 'Couteau et Fourchette')
+        terms_en = ('Bread and cheese', 'Knive and Fork', 'Knive <span style="font-weight:bold">and</span> Fork')  # terms_fr[1:] have typo
+        terms_fr = ('Pain et fromage', 'Fourchette et Couteau', 'Fourchette et Couteau')  # terms_fr[1:] are bad translations
         terms_nl = ('Brood and kaas', 'Mes en Vork', 'Mes en Vork')
         view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
 
@@ -1094,7 +1096,18 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
-        # modify source term in view (actual text change)
+        # modify term in view (translation fix)
+        terms_fr = ('Bread and cheese', 'Couteau et Fourchette', 'Couteau <span style="font-weight:bold">et</span> Fourchette')
+        view.with_env(env_fr).write({'arch_db': archf % terms_fr})
+
+        # check whether translations have been kept
+        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_fr[0], terms_fr[1], terms_fr[2]))
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_nl[0], terms_nl[1], terms_nl[2]))
+
+        # modify source term in view (actual text change) and modify the archf
+        archf = archf[:-7] + '<div/></form>'
         terms_en = ('Bread and cheese', 'Fork and Knife', 'Fork <span style="font-weight:bold">and</span> Knife')
         view.with_env(env_en).write({'arch_db': archf % terms_en})
 

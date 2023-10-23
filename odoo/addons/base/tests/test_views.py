@@ -3331,7 +3331,7 @@ class TestViewTranslations(common.TransactionCase):
         """ Check translations of 'arch' after xml tags changes in source terms. """
         archf = '<form string="X">%s</form>'
         terms_en = ('Bread and cheese',)
-        terms_fr = ('Pain et fromage',)
+        terms_fr = ('Fromage et pain',)  # bad translation
         terms_nl = ('Brood and kaas',)
         view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
 
@@ -3355,7 +3355,18 @@ class TestViewTranslations(common.TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
 
-        # modify source term in view (actual text change)
+        # modify term in view (translation fix)
+        terms_fr = ('Fromage et pain',)
+        view.with_env(env_en).write({'arch': archf % terms_en})
+
+        # check whether translations have been kept
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        # modify source term and archf in view (actual text change)
+        archf = '<form string="X">%s<div/></form>'
         terms_en = ('Bread <span style="font-weight:bold">and</span> butter',)
         view.with_env(env_en).write({'arch': archf % terms_en})
 

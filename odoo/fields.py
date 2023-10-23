@@ -1811,6 +1811,8 @@ class _String(Field):
         # pylint: disable=not-callable
         cache_value = self.translate(lambda t: None, cache_value)
         new_terms = set(self.get_trans_terms(cache_value))
+        # TODO: remove this translate by refactoring get_trans_terms and get_translation_dictionary
+        body = self.translate(lambda t: 'x', cache_value)
         for record in records:
             # shortcut when no term needs to be translated
             if not new_terms:
@@ -1823,26 +1825,32 @@ class _String(Field):
                 new_translations_list.append({'en_US': cache_value, lang: cache_value})
                 continue
             from_lang_value = old_translations.get(lang, old_translations['en_US'])
-            translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2terms = defaultdict(list)
-            for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
+            # TODO: remove this translate by refactoring get_trans_terms and get_translation_dictionary
+            old_body = self.translate(lambda t: 'x', from_lang_value)
+            if old_body == body:
+                new_translations = old_translations
+            else:
+                translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
+                text2terms = defaultdict(list)
+                for term in new_terms:
+                    text2terms[self.get_text_content(term)].append(term)
 
-            for old_term in list(translation_dictionary.keys()):
-                if old_term not in new_terms:
-                    old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
-                    if matches:
-                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
-                        old_is_text = old_term == self.get_text_content(old_term)
-                        closest_is_text = closest_term == self.get_text_content(closest_term)
-                        if old_is_text or not closest_is_text:
-                            translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
-            # pylint: disable=not-callable
-            new_translations = {
-                l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
-                for l in old_translations.keys()
-            }
+                # TODO: TBD may not be necessary
+                for old_term in list(translation_dictionary.keys()):
+                    if old_term not in new_terms:
+                        old_term_text = self.get_text_content(old_term)
+                        matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
+                        if matches:
+                            closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                            old_is_text = old_term == self.get_text_content(old_term)
+                            closest_is_text = closest_term == self.get_text_content(closest_term)
+                            if old_is_text or not closest_is_text:
+                                translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+                # pylint: disable=not-callable
+                new_translations = {
+                    l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
+                    for l in old_translations.keys()
+                }
             new_translations[lang] = cache_value
             if not records.env['res.lang']._lang_get_id('en_US'):
                 new_translations['en_US'] = cache_value
