@@ -28,8 +28,8 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
         'views/account_menuitem.xml',
-        'views/account_move_send_views.xml',
 
+        'wizard/account_move_send_views.xml',
         'wizard/account_move_reversal_view.xml',
     ],
     'demo': [
