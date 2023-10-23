@@ -11,8 +11,13 @@
                         <t t-esc="line.customerNote" />
                     </li>
                     <ul t-if="line.pack_lot_lines">
-                        <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
-                            SN <t t-esc="lot.lot_name"/>
+                        <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
+                            <t t-if="lot.order_line.product.tracking == 'lot'">
+                                Lot Number <t t-esc="lot.lot_name"/>
+                            </t>
+                            <t t-else="">
+                                SN <t t-esc="lot.lot_name"/>
+                            </t>
                         </li>
                     </ul>
                 </Orderline>

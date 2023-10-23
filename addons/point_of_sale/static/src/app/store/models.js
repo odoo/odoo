@@ -1081,6 +1081,7 @@ export class Orderline extends PosModel {
             customerNote: this.get_customer_note(),
             internalNote: this.getNote(),
             comboParent: this.comboParent?.get_full_product_name(),
+            pack_lot_lines: this.get_lot_lines(),
         };
     }
 }
