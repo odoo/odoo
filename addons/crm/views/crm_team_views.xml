@@ -298,7 +298,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_view')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[hasclass('o_kanban_manage_view')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -311,7 +311,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_new')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[hasclass('o_kanban_manage_new')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_lead_action_open_lead_form)d" type="action">
                                 Leads
@@ -324,7 +324,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads
