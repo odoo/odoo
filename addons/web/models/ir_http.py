@@ -86,10 +86,12 @@ class Http(models.AbstractModel):
         mods = odoo.conf.server_wide_modules or []
         if request.db:
             mods = list(request.registry._init_modules) + mods
+        is_internal_user = user.has_group('base.group_user')
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
+            "is_internal_user": is_internal_user,
             "user_context": user_context,
             "db": self.env.cr.dbname,
             "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
@@ -119,7 +121,7 @@ class Http(models.AbstractModel):
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
-        if self.env.user.has_group('base.group_user'):
+        if is_internal_user:
             # the following is only useful in the context of a webclient bootstrapping
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
