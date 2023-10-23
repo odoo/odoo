@@ -45,7 +45,7 @@ $o-tour-pointer-size-delay-in: $o-tour-pointer-duration-in - $o-tour-pointer-siz
     --TourPointer__scale: 1.12;
     --TourPointer__color: #{$o-enterprise-color};
     --TourPointer__color-accent: #{lighten($o-enterprise-color, 7%)};
-    --TourPointer__border-width: 3px;
+    --TourPointer__border-width: 1px;
     --TourPointer__border-color-rgb: 255, 255, 255;
     --TourPointer__border-color: rgba(var(--TourPointer__border-color-rgb), 1);
     --TourPointer__arrow-size: 1rem;
@@ -83,7 +83,7 @@ $o-tour-pointer-size-delay-in: $o-tour-pointer-duration-in - $o-tour-pointer-siz
     .o_tour_pointer_tip {
         width: var(--TourPointer__width);
         height: var(--TourPointer__height);
-        border: var(--TourPointer__border-width) solid var(--TourPointer__border-color);
+        border: var(--TourPointer__border-width) solid white;
         border-radius: 0 50% 50% 50%;
         background-image: radial-gradient(
             var(--TourPointer__color-accent),
@@ -93,7 +93,7 @@ $o-tour-pointer-size-delay-in: $o-tour-pointer-duration-in - $o-tour-pointer-siz
     }
 
     .o_tour_pointer_content {
-        background-color: inherit;
+        background-color: $light;
         color: transparent;
         transition: color 0s ease var(--TourPointer__expand-duration);
 
@@ -140,21 +140,21 @@ $o-tour-pointer-size-delay-in: $o-tour-pointer-duration-in - $o-tour-pointer-siz
     }
 
     &.o_open {
-        border-color: var(--TourPointer__color);
-        background-color: var(--TourPointer__border-color);
+        border-color: #{$o-gray-400};
+        background-color: #{$o-gray-300};
         animation: var(--TourPointer__reveal-animation);
 
         .o_tour_pointer_tip {
             width: var(--TourPointer__arrow-size);
             height: var(--TourPointer__arrow-size);
-            border-color: var(--TourPointer__color);
+            border-color: #{$o-gray-400};
             border-radius: 0;
-            background: white;
+            background: $light;
             box-shadow: none;
         }
 
         .o_tour_pointer_content {
-            color: var(--TourPointer__text-color);
+            color: $o-black;
         }
 
         &.o_left {

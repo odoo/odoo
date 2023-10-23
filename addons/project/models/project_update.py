@@ -11,10 +11,10 @@ from odoo.tools import formatLang
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
-    'at_risk': 2,  # orange
+    'at_risk': 22,  # orange
     'off_track': 23,  # red / danger
-    'on_hold': 4,  # light blue
-    'done': 5,  # purple
+    'on_hold': 21,  # light blue
+    'done': 24,  # purple
     False: 0,  # default grey -- for studio
     # Only used in project.task
     'to_define': 0,

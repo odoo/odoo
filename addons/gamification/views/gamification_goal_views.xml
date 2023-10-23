@@ -175,7 +175,7 @@
                                     <t t-if="record.definition_display.raw_value == 'boolean'">
                                         <div class="o_goal_state">
                                             <t t-if="record.state.raw_value=='reached'"><i role="img" class="text-success fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="text-700 fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
                                             <t t-if="record.state.raw_value=='failed'"><i role="img" class="text-danger fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
                                         </div>
                                     </t>

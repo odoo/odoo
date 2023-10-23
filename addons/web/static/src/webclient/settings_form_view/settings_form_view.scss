@@ -35,9 +35,9 @@
 
 // BASE SETTINGS LAYOUT
 .o_base_settings_view .o_form_renderer {
-   --settings__tab-bg: #{map-get($grays, '900')};
-   --settings__tab-bg--active: #{map-get($grays, '800')};
-   --settings__tab-color: #{map-get($grays, '400')};
+   --settings__tab-bg: #{map-get($grays, '100')};
+   --settings__tab-bg--active: #{$o-component-active-bg};
+   --settings__tab-color: #{map-get($grays, '700')};
    --settings__title-bg: #{map-get($grays, '200')};
 
    height: 100%;
@@ -71,8 +71,8 @@
            overflow: auto;
 
            .selected {
-               background-color: var(--settings__tab-bg--active);
-               box-shadow: inset 2px 0 0 $o-brand-primary;
+               background-color: var(--settings__tab-bg--active, #{$o-component-active-bg});
+               box-shadow: inset 2px 0 0 $o-component-active-border;
            }
 
            .tab {
@@ -92,7 +92,7 @@
                }
 
                &:hover, &.selected {
-                   color: white;
+                   color: $o-gray-900;
                }
            }
        }
@@ -106,7 +106,7 @@
            > .app_settings_block {
                h2 {
                    margin: 0 0 !important;
-                   @include o-base-settings-horizontal-padding(.4rem);
+                   @include o-base-settings-horizontal-padding(.7rem);
                    background-color: var(--settings__title-bg);
                    font-size: 15px;
 
@@ -117,7 +117,7 @@
 
                h3 {
                    margin: 0 0 !important;
-                   @include o-base-settings-horizontal-padding(.4rem);
+                   @include o-base-settings-horizontal-padding(.7rem);
                    font-weight: 400;
                    font-size: 13px;
                }

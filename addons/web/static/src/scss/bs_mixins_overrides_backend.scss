@@ -27,7 +27,7 @@
 
     a#{$-parent}, button#{$-parent} {
         &:hover, &:focus, &:active, &.active {
-            @include o-print-color(darken($-color, $link-shade-percentage), color, text-opacity);
+            @include o-print-color(shift-color($-color, $link-shade-percentage), color, text-opacity);
         }
     }
 }

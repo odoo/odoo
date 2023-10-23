@@ -55,7 +55,7 @@
                 data-bs-toggle="popover"
                 t-on-click="(event) => this._onOpenPopover(event, employee)">
             <a href="#"
-                t-attf-class="badge rounded-pill bg-white border {{employee.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }}"
+                t-attf-class="badge rounded-pill bg-300 border {{employee.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }}"
                 t-esc="employee.indirect_sub_count"
                 />
         </button>
