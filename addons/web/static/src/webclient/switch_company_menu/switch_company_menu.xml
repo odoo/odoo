@@ -18,7 +18,7 @@
 
 
 <t t-name="web.SwitchCompanyItem">
-    <DropdownItem class="'p-0 bg-white'" parentClosingMode="!isCompanyAllowed ? 'none' : 'all'">
+    <DropdownItem class="'p-0'" parentClosingMode="!isCompanyAllowed ? 'none' : 'all'">
         <div
             class="d-flex"
             t-att-class="{ 'disabled': !isCompanyAllowed }"
@@ -34,7 +34,7 @@
                 t-att-class="{ 'border-primary': isCurrent, 'disabled': !isCompanyAllowed }"
                 t-on-click.stop="() => this.toggleCompany()">
 
-                <span class="btn border-0 p-2" t-att-class="isCompanyAllowed ? 'btn-light' : 'disabled'">
+                <span class="btn border-0 p-2" t-att-class="isCompanyAllowed ? 'btn-link text-primary' : 'disabled'">
                     <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
                 </span>
             </div>
@@ -46,7 +46,7 @@
                 t-att-title="'Switch to ' + props.company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-light' : 'disabled')"
+                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"
                 t-on-click="() => this.logIntoCompany()">
 
                 <span

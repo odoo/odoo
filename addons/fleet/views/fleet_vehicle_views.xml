@@ -311,10 +311,10 @@
                                             <field name="contract_count"/>
                                             Contract(s)
                                             <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
-                                                class="fa fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
+                                                class="fa fa-exclamation-triangle text-warning" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
                                             </span>
                                              <span t-if="record.contract_renewal_overdue.raw_value"
-                                                class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
+                                                class="fa fa-exclamation-triangle text-danger" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
                                             </span>
                                         </a>
                                         <field name="activity_ids" widget="kanban_activity"/>

@@ -12,7 +12,7 @@
                 >
 
                 <!-- :hover overlay -->
-                <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-white border rounded-2 shadow opacity-0 opacity-100-hover"/>
+                <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
 
                 <div class="o_searchview_facet_label position-relative rounded-start-2 px-1"
                     t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
@@ -53,7 +53,7 @@
 
     <t t-name="web.SearchBar.Input">
         <input type="text"
-            class="o_searchview_input d-print-none flex-grow-1 w-auto border-0"
+            class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
             accesskey="Q"
             placeholder="Search..."
             role="searchbox"
