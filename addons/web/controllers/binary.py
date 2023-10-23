@@ -8,7 +8,6 @@ import logging
 import os
 import unicodedata
 
-import werkzeug.exceptions
 try:
     from werkzeug.utils import send_file
 except ImportError:
@@ -17,6 +16,7 @@ except ImportError:
 import odoo
 import odoo.modules.registry
 from odoo import SUPERUSER_ID, _, http
+from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
 from odoo.tools import file_open, file_path, replace_exceptions
@@ -84,13 +84,17 @@ class Binary(http.Controller):
         return res
 
     @http.route([
-        '/web/assets/<path:extra>/<string:filename>',
-        '/web/assets/<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
-    def content_assets(self, filename=None, unique='%', extra='-', nocache=False):
+        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public")
+    def content_assets(self, filename=None, unique=ANY_UNIQUE, nocache=False, assets_params=None):
+        assets_params = assets_params or {}
+        assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
+        if unique in ('any', '%'):
+            unique = ANY_UNIQUE
         attachment = None
         if unique != 'debug':
-            url = f'/web/assets/{unique}/{extra}/{filename}'
+            url = request.env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
+            assert not '%' in url
             domain = [
                 ('public', '=', True),
                 ('url', '!=', False),
@@ -102,39 +106,27 @@ class Binary(http.Controller):
             attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
         if not attachment:
             # try to generate one
-            with replace_exceptions(ValueError, by=werkzeug.exceptions.BadRequest):
-                if debug_assets:
-                    bundle_name, asset_type = filename.rsplit('.', 1)
-                else:
-                    bundle_name, min_, asset_type = filename.rsplit('.', 2)
-                    if min_ != 'min':
-                        _logger.error("'min' expected in extension in non debug mode")
-                        raise request.not_found()
-                try:
-                    params, rtl = request.env['ir.asset']._parse_assets_extra(extra.split('+'), asset_type)
-                except ValueError:
-                    _logger.exception('Invalid assets')
-                    raise request.not_found()
+            try:
+                bundle_name, rtl, asset_type = request.env['ir.asset']._parse_bundle_name(filename, debug_assets)
                 css = asset_type == 'css'
                 js = asset_type == 'js'
-                if not js and not css:
-                    _logger.error('Only js and css assets bundle are supported for now')
-                    raise request.not_found()
                 bundle = request.env['ir.qweb']._get_asset_bundle(
                     bundle_name,
                     css=css,
                     js=js,
                     debug_assets=debug_assets,
                     rtl=rtl,
-                    assets_params=params,
+                    assets_params=assets_params,
                 )
                 # check if the version matches. If not, redirect to the last version
-                if not debug_assets and unique != '%' and unique != bundle.get_version(asset_type):
+                if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
                     return request.redirect(bundle.get_link(asset_type))
                 if css and bundle.stylesheets:
                     attachment = bundle.css()
                 elif js and bundle.javascripts:
                     attachment = bundle.js()
+            except ValueError as e:
+                raise request.not_found() from e
         if not attachment:
             raise request.not_found()
         stream = request.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
