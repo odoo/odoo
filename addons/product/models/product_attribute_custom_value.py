@@ -15,6 +15,8 @@ class ProductAttributeCustomValue(models.Model):
         required=True,
         ondelete='restrict')
     custom_value = fields.Char(string="Custom Value")
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', readonly=True)
+    res_model = fields.Char('Resource Model', readonly=True)
 
     @api.depends('custom_product_template_attribute_value_id.name', 'custom_value')
     def _compute_name(self):
@@ -23,3 +25,8 @@ class ProductAttributeCustomValue(models.Model):
             if record.custom_product_template_attribute_value_id.display_name:
                 name = "%s: %s" % (record.custom_product_template_attribute_value_id.display_name, name)
             record.name = name
+
+    _sql_constraints = [
+        ('custom_value_unique', 'unique(custom_product_template_attribute_value_id, res_id, res_model)',
+        "Only one Custom Value is allowed per Attribute Value per Model implementing the Product Description Mixin.")
+    ]

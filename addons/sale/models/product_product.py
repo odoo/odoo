@@ -98,16 +98,6 @@ class ProductProduct(models.Model):
         linked_product_ids = [product.id for [product] in lines]
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
-
-class ProductAttributeCustomValue(models.Model):
-    _inherit = "product.attribute.custom.value"
-
-    sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", ondelete='cascade')
-
-    _sql_constraints = [
-        ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
-    ]
-
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
 

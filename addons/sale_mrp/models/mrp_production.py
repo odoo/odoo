@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 
 
 class MrpProduction(models.Model):
@@ -36,3 +36,24 @@ class MrpProduction(models.Model):
                 'view_mode': 'tree,form',
             })
         return action
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # this override checks if the production comes from a sale order (MTO)
+        # If it's the case, we need to retreive the product_no_variant_attribute_value_ids and
+        # the product_custom_attribute_value_ids as there is no other way to determine them from the product itself
+        for vals in vals_list:
+            if 'move_dest_ids' not in vals:
+                continue
+            dest_move = self.env['stock.move'].browse(
+                self._fields['move_dest_ids'].convert_to_cache(vals_list[0]['move_dest_ids'], self))
+            if len(dest_move) != 1:
+                continue
+            order_line = dest_move.sale_line_id
+            if not order_line:
+                continue
+            vals.update({
+                'product_no_variant_attribute_value_ids': [Command.set(order_line.product_no_variant_attribute_value_ids.ids)],
+                'product_custom_attribute_value_ids': [Command.set(order_line.product_custom_attribute_value_ids.ids)],
+            })
+        return super().create(vals_list)

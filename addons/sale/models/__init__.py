@@ -7,6 +7,7 @@ from . import account_move_line
 from . import crm_team
 from . import payment_provider
 from . import payment_transaction
+from . import product_attribute_custom_value
 from . import product_document
 from . import product_product
 from . import product_template

@@ -18,6 +18,7 @@ PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 class StockMove(models.Model):
     _name = "stock.move"
+    _inherit = 'product.description.mixin'
     _description = "Stock Move"
     _order = 'sequence, id'
 
@@ -191,6 +192,12 @@ class StockMove(models.Model):
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
+    product_custom_attribute_value_ids = fields.One2many(
+        comodel_name='product.attribute.custom.value', inverse_name='res_id',
+        string="Custom Values",
+        compute='_compute_custom_attribute_values',
+        store=True, readonly=False, precompute=True, copy=True,
+        domain=[('res_model', '=', 'stock.move')])
 
     @api.depends('product_id')
     def _compute_product_uom(self):
