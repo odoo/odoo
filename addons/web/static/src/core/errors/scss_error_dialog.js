@@ -13,7 +13,7 @@ ScssErrorDialog.title = _t("Style error");
 const scssErrorDisplayService = {
     dependencies: ["dialog"],
     start(env, { dialog }) {
-        const assets = [...document.styleSheets].filter((sheet) => sheet.href?.includes("/web/assets"));
+        const assets = [...document.styleSheets].filter((sheet) => sheet.href?.includes("/web") && sheet.href?.includes("/assets/"));
         for (const { cssRules } of assets) {
             const lastRule = cssRules?.[cssRules?.length - 1];
             if (lastRule?.selectorText === "css_error_message") {
@@ -25,5 +25,4 @@ const scssErrorDisplayService = {
 
     },
 };
-
 registry.category("services").add("scss_error_display", scssErrorDisplayService);
