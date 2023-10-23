@@ -52,6 +52,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'printer_ids': [(4, printer.id)],
             'iface_tipproduct': False,
         })
+        pos_config.floor_ids.unlink()
 
         main_floor = self.env['restaurant.floor'].create({
             'name': 'Main Floor',
