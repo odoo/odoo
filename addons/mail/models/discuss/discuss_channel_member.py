@@ -8,16 +8,16 @@ from odoo.osv import expression
 
 
 class ChannelMember(models.Model):
-    _name = 'discuss.channel.member'
-    _description = 'Listeners of a Channel'
-    _rec_names_search = ['partner_id', 'guest_id']
+    _name = "discuss.channel.member"
+    _description = "Channel Member"
+    _rec_names_search = ["channel_id", "partner_id", "guest_id"]
     _bypass_create_check = {}
 
     # identity
-    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', index=True)
-    guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True, index=True)
+    partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
+    guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade", readonly=True, index=True)
     # channel
-    channel_id = fields.Many2one('discuss.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
+    channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", readonly=True, required=True)
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
@@ -64,10 +64,14 @@ class ChannelMember(models.Model):
         else:
             self.message_unread_counter = 0
 
-    @api.depends('partner_id', 'guest_id')
+    @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self):
-        for record in self:
-            record.display_name = record.partner_id.name or record.guest_id.name
+        for member in self:
+            member.display_name = _(
+                "“%(member_name)s” in “%(channel_name)s”",
+                member_name=member.partner_id.name or member.guest_id.name,
+                channel_name=member.channel_id.display_name,
+            )
 
     def init(self):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)

@@ -28,6 +28,7 @@
                                     <img t-att-src="kanban_image('discuss.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
                                     <div class="oe_module_desc">
                                         <h4 class="o_kanban_record_title">#<field name="name"/></h4>
+                                        <field name="channel_type" groups="base.group_no_one"/>
                                         <p class="oe_module_name" t-att-class="!record.active.raw_value ? 'o_module_desc_short': ''">
                                             <field name="description"/>
                                         </p>
@@ -62,6 +63,7 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="active" invisible="1"/>
+                            <field name="channel_type" groups="base.group_no_one"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
                         <notebook>
@@ -78,7 +80,8 @@
                                 <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="tree" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <tree string="Members" editable="bottom">
-                                        <field name="partner_id" required="1" readonly="id"/>
+                                        <field name="partner_id" readonly="id"/>
+                                        <field name="guest_id" readonly="id"/>
                                     </tree>
                                 </field>
                             </page>
