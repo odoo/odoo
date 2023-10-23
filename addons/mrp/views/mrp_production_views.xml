@@ -275,11 +275,47 @@
                             <field name="use_create_components_lots" invisible="1"/>
                             <field name="show_lot_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="product_id" context="{'default_is_storable': True}" readonly="state != 'draft'" default_focus="1" placeholder="Product to build..."/>
-                            <field name="product_tmpl_id" invisible="1"/>
+                            <field name="product_id"
+                                string="Product Variant"
+                                invisible="1"
+                                context="{'default_is_storable': True}"
+                                readonly="state != 'draft'"
+                                default_focus="1"
+                                placeholder="Product to build..."
+                                groups="mrp.group_mrp_configurator"
+                            />
+                            <field name="product_id"
+                                context="{'default_is_storable': True}"
+                                readonly="state != 'draft'"
+                                default_focus="1"
+                                placeholder="Product to build..."
+                                groups="!mrp.group_mrp_configurator"
+                            />
+                            <field name="product_tmpl_id"
+                                string="Product"
+                                invisible="1"
+                                readonly="1"
+                                groups="!mrp.group_mrp_configurator"
+                            />
+                            <field name="product_tmpl_id"
+                                string="Product"
+                                readonly="state != 'draft'"
+                                widget="product_many2one"
+                                groups="mrp.group_mrp_configurator"
+                            />
+                            <field name="product_description" invisible="not is_configurable_product"/>
+                            <field name="product_custom_attribute_value_ids" invisible="1" >
+                                <tree>
+                                    <field name="custom_product_template_attribute_value_id" />
+                                    <field name="custom_value" />
+                                </tree>
+                            </field>
+                            <field name="product_template_attribute_value_ids" invisible="1"/>
+                            <field name="product_no_variant_attribute_value_ids" invisible="1"/>
+                            <field name="is_configurable_product" invisible="1"/>
+                            <field name="product_uom_qty" invisible="1"/>
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-0">
@@ -478,7 +514,36 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
-                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="state == 'done'"/>
+                                    <field name="product_id"
+                                        context="{'default_is_storable': True}"
+                                        domain="[('id', '!=', parent.product_id)]"
+                                        required="1" readonly="state == 'done'"
+                                        groups="!mrp.group_mrp_configurator"/>
+                                    <field name="product_id"
+                                        string="Product variant"
+                                        context="{'default_is_storable': True}"
+                                        domain="[('id', '!=', parent.product_id)]"
+                                        required="1" readonly="state == 'done'" column_invisible="1"
+                                        groups="mrp.group_mrp_configurator"/>
+                                    <field name="product_tmpl_id" string="Product" domain="[('id', '!=', parent.product_tmpl_id)]"
+                                        column_invisible="1" readonly="1"
+                                        groups="!mrp.group_mrp_configurator"/>
+                                    <field name="product_tmpl_id" string="Product" readonly="0" domain="[('id', '!=', parent.product_tmpl_id)]"
+                                        widget="product_many2one"
+                                        groups="mrp.group_mrp_configurator"/>
+                                    <field name="product_description" invisible="not is_configurable_product"/>
+                                    <field name="product_custom_attribute_value_ids" column_invisible="1">
+                                        <tree>
+                                            <field name="custom_product_template_attribute_value_id" />
+                                            <field name="custom_value" />
+                                        </tree>
+                                    </field>
+                                    <field name="product_template_attribute_value_ids" column_invisible="1"/>
+                                    <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                                    <field name="is_configurable_product" column_invisible="1"/>
+                                    <field name="product_uom_qty" column_invisible="1"/>
+                                    <field name="product_uom" column_invisible="1"/>
+
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
@@ -634,7 +699,7 @@
                 <search string="Search Production">
                     <field name="name" string="Manufacturing Order" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <field name="product_id"/>
-                    <field name="product_variant_attributes"/>
+                    <field name="product_template_attribute_value_ids"/>
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
