@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { TodoItem } from "./todo_item";
 import { useTodoListModel } from "./todo_model";
-import { ComponentA } from "./component_a";
 
-export class TodoList extends Component {
-    static template = "web.TodoList";
-    static components = { TodoItem, ComponentA };
+export class TodoInput extends Component {
+    static template = "web.TodoInput";
 
     setup() {
         this.todoListModel = useTodoListModel();
@@ -21,5 +17,3 @@ export class TodoList extends Component {
         ev.target.value = "";
     }
 }
-
-registry.category("actions").add("todo_list", TodoList);

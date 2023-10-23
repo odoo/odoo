@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { reactive, useComponent, useState, useSubEnv } from "@odoo/owl";
+
 let nextId = 1;
 
 class TodoItemModel {
@@ -36,4 +38,20 @@ export class TodoListModel {
         const index = this.todoItems.findIndex((todo) => todo.id === id);
         this.todoItems.splice(index, 1);
     }
+}
+
+export function useTodoListModel() {
+    const component = useComponent();
+    if (!component.env.todoListModel) {
+        useSubEnv({
+            todoListModel: reactive(
+                new TodoListModel([
+                    {
+                        message: "Send email to John",
+                    },
+                ])
+            ),
+        });
+    }
+    return useState(component.env.todoListModel);
 }
