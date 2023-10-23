@@ -494,7 +494,7 @@ class MailMail(models.Model):
 
         # Then find the mail server for each email_from and group the <mail.mail>
         # per mail_server_id and smtp_from
-        mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence')
+        mail_servers = self.env['ir.mail_server'].sudo().search([], order='sequence, id')
         group_per_smtp_from = defaultdict(list)
         for (mail_server_id, email_from), mail_ids in group_per_email_from.items():
             if not mail_server_id:
