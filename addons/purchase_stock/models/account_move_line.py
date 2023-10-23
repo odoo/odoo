@@ -305,7 +305,7 @@ class AccountMoveLine(models.Model):
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()
-            aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.date, round=False)
+            aml_price_unit = aml.currency_id._convert(aml_gross_price_unit, aml.company_id.currency_id, aml.company_id, aml.move_id.invoice_date or aml.date, round=False)
             aml_price_unit = aml.product_uom_id._compute_price(aml_price_unit, product_uom)
 
             unit_valuation_difference = aml_price_unit - layer_price_unit
