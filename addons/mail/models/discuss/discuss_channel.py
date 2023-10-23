@@ -601,16 +601,14 @@ class Channel(models.Model):
 
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
-        # Last interest and is_pinned are updated for a chat when posting a message.
+        # Last interest and is_pinned are updated for a channel when posting a message.
         # So a notification is needed to update UI, and it should come before the
         # notification of the message itself to ensure the channel automatically opens.
-        if self.is_chat or self.channel_type in ['channel', 'group']:
-            for member in self.channel_member_ids.filtered('partner_id'):
-                bus_notifications.insert(0, [member.partner_id, 'discuss.channel/last_interest_dt_changed', {
-                    'id': self.id,
-                    'isServerPinned': member.is_pinned,
-                    'last_interest_dt': member.last_interest_dt,
-                }])
+        bus_notifications.insert(0, (self, 'discuss.channel/last_interest_dt_changed', {
+            'id': self.id,
+            'isServerPinned': True,
+            'last_interest_dt': fields.Datetime.now(),
+        }))
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
         if self.is_chat or self.channel_type == 'group':
             self._notify_thread_by_web_push(message, rdata, msg_vals, **kwargs)
