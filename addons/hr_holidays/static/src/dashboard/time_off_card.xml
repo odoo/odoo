@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card py-3 text-odoo">
+    <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card py-3 text-primary">
         <t t-set="data" t-value="props.data"/>
         <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
         <t t-set="parsed_duration" t-value="formatNumber(this.lang, duration)"/>

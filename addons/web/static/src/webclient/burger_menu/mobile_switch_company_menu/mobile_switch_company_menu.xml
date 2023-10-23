@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.MobileSwitchCompanyMenu">
-    <div class="o_burger_menu_companies p-3 bg-100">
+    <div class="o_burger_menu_companies p-3">
         <div class="o_burger_menu_user_title h6 mb-3">Companies</div>
         <t t-foreach="Object.values(companyService.availableCompanies)
                       .filter((c) => !c.parent_id)
