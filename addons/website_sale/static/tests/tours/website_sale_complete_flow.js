@@ -62,7 +62,7 @@
     {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h3:contains("My details")',
+        extra_trigger: 'h3:contains("Shipping address")',
         run: function () {
             $('input[name="name"]').val('def');
             $('input[name="phone"]').val('8888888888');
@@ -97,7 +97,7 @@
     {
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h3:contains("Your address")',
+        extra_trigger: 'h3:contains("Billing address")',
         run: function () {
             $('input[name="name"]').val('abcd');
             $('input[name="phone"]').val('11111111');
