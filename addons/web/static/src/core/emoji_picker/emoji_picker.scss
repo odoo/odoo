@@ -47,15 +47,8 @@
         grid-area: search;
         background-color: $input-bg;
 
-        input {
-            &:focus, &:hover {
-                & + .oi-search {
-                    @extend .bg-white !optional;
-                }
-            }
-            &:not(:focus) + i.oi-search {
-                opacity: 60%;
-            }
+        &:focus-within {
+            border-color: $input-focus-border-color !important;
         }
     }
 

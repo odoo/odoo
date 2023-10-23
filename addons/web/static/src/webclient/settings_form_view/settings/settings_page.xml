@@ -3,7 +3,7 @@
     <t t-name="web.SettingsPage" owl="1">
         <div class="o_setting_container">
             <div class="position-sticky top-0 flex-grow-0 z-index-1">
-                <div class="settings_tab h-100" t-if="!env.isSmall or state.search.value.length === 0">    
+                <div class="settings_tab h-100 border-end" t-if="!env.isSmall or state.search.value.length === 0">
                     <t t-foreach="props.modules" t-as="module" t-key="module.key">
                         <div class="tab" t-if="!module.isVisible"
                              t-att-class="{

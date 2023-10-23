@@ -2,15 +2,8 @@
     width: 100%;
     text-overflow: clip;
     overflow: hidden;
-    border: none;
     padding: 0px 5px 0px 2px;
     color: $o-brand-secondary;
-
-    &:focus {
-        outline: 1px solid #ccc;
-        outline-offset: -1px;
-        color: $dark;
-    }
 
     &.o-todo-untitled {
         font-style: italic;
@@ -23,8 +16,4 @@
     &:disabled {
         background-color: inherit;
     }
-}
-
-.o_todo_breadcrumb_name_input:hover {
-    border-bottom: $input-border-width solid $o-brand-primary;
 }

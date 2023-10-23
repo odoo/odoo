@@ -39,7 +39,7 @@
         </div>
         <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
         <div t-if="mailbox.counter > 0">
-            <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge {{ mailbox.id === 'starred' ? 'o-muted' : '' }} ms-1 me-3 fw-bold" t-esc="mailbox.counter"/>
+            <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-3 {{ mailbox.id === 'starred' ? 'o-muted' : '' }} {{ mailbox.id === 'starred' and mailbox.localId === store.discuss.threadLocalId ? 'bg-400' : '' }} fw-bold" t-esc="mailbox.counter"/>
         </div>
     </button>
 </t>
