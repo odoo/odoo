@@ -27,6 +27,7 @@ import {
     pagerNext,
     toggleSearchBarMenu,
     validateSearch,
+    toggleMenuItem,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -5309,18 +5310,18 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Ensuring each progress bar has some space", async (assert) => {
         serverData.models.partner.records = [
-            ({
+            {
                 id: 1,
                 foo: "blip",
                 state: "def",
-            }),
-            ({
+            },
+            {
                 id: 2,
                 foo: "blip",
                 state: "abc",
-            }),
+            },
         ];
-        
+
         for (let i = 0; i < 20; i++) {
             serverData.models.partner.records.push({
                 id: 3 + i,
@@ -5328,7 +5329,7 @@ QUnit.module("Views", (hooks) => {
                 state: "ghi",
             });
         }
-        
+
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -8604,19 +8605,21 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getCard(0), "oe_kanban_color_9");
     });
 
-    QUnit.test("edit the kanban color with translated colors resulting in the same terms", async (assert) => {
-        serverData.models.category.records[0].color = 12;
+    QUnit.test(
+        "edit the kanban color with translated colors resulting in the same terms",
+        async (assert) => {
+            serverData.models.category.records[0].color = 12;
 
-        patchWithCleanup(translatedTerms, {
-            "Purple": "Violet",
-            "Violet": "Violet",
-        });
+            patchWithCleanup(translatedTerms, {
+                Purple: "Violet",
+                Violet: "Violet",
+            });
 
-        await makeView({
-            type: "kanban",
-            resModel: "category",
-            serverData,
-            arch: `
+            await makeView({
+                type: "kanban",
+                resModel: "category",
+                serverData,
+                arch: `
                 <kanban>
                     <field name="color"/>
                     <templates>
@@ -8630,12 +8633,13 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-        });
+            });
 
-        await toggleRecordDropdown(0);
-        await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
-        assert.hasClass(getCard(0), "oe_kanban_color_9");
-    });
+            await toggleRecordDropdown(0);
+            await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
+            assert.hasClass(getCard(0), "oe_kanban_color_9");
+        }
+    );
 
     QUnit.test("colorpicker doesnt appear when missing access rights", async (assert) => {
         await makeView({
@@ -8851,7 +8855,9 @@ QUnit.module("Views", (hooks) => {
             "first column should have a default title for when no value is provided"
         );
 
-        const groupsTitle = [...target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")];
+        const groupsTitle = [
+            ...target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title"),
+        ];
         await mouseEnter(groupsTitle[0]);
         assert.containsNone(
             target,
@@ -8908,7 +8914,9 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.containsN(target, ".o_column_title", 2);
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
+        await mouseEnter(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]
+        );
         assert.containsNone(target, ".o-tooltip");
 
         await triggerEvent(
@@ -8918,7 +8926,9 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsNone(target, ".o-tooltip");
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
+        await mouseEnter(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]
+        );
         assert.containsNone(target, ".o-tooltip");
 
         prom.resolve();
@@ -8954,7 +8964,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
+        await mouseEnter(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]
+        );
         assert.containsOnce(target, ".o-tooltip");
         assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
         assert.verifySteps(["read: product"]);
@@ -8966,7 +8978,9 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsNone(target, ".o-tooltip", "tooltip should be closed");
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
+        await mouseEnter(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]
+        );
         assert.containsOnce(target, ".o-tooltip");
         assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
         assert.verifySteps([]);
@@ -13753,18 +13767,20 @@ QUnit.module("Views", (hooks) => {
         assert.notEqual(previousScrollTop, 0, "Should not have the scrollTop value at 0");
     });
 
-    QUnit.test("Kanban: no reset of the groupby when a non-empty column is deleted", async (assert) => {
-        let dialogProps;
+    QUnit.test(
+        "Kanban: no reset of the groupby when a non-empty column is deleted",
+        async (assert) => {
+            let dialogProps;
 
-        patchDialog((_cls, props) => {
-            dialogProps = props;
-        });
+            patchDialog((_cls, props) => {
+                dialogProps = props;
+            });
 
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <kanban default_group_by="product_id">
                     <field name="foo"/>
                     <field name="product_id"/>
@@ -13775,54 +13791,137 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            searchViewArch: `
+                searchViewArch: `
             <search>
                 <filter name="groupby_category" string="Category" context="{'group_by': 'category_ids'}"/>
             </search>
             `,
+            });
+            // validate presence of the search arch info
+            await toggleSearchBarMenu(target);
+            assert.containsOnce(target, ".o_group_by_menu span.o_menu_item");
+            // select the groupby:category_ids filter
+            await click(target.querySelector(".o_group_by_menu span.o_menu_item"));
+            // check the initial rendering
+            assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
+            // check availability of delete action in kanban header's config dropdown
+            await toggleColumnActions(2);
+            assert.containsOnce(
+                getColumn(2),
+                ".o_column_delete",
+                "should be able to delete the column"
+            );
+            // delete second column (first cancel the confirm request, then confirm)
+            let clickColumnAction = await toggleColumnActions(1);
+            await clickColumnAction("Delete");
+            dialogProps.cancel();
+            await nextTick();
+
+            assert.strictEqual(
+                getColumn(1).querySelector(".o_column_title").innerText,
+                "gold",
+                'column [6, "gold"] should still be there'
+            );
+
+            dialogProps.confirm();
+            await nextTick();
+
+            clickColumnAction = await toggleColumnActions(1);
+            await clickColumnAction("Delete");
+
+            assert.strictEqual(
+                getColumn(1).querySelector(".o_column_title").innerText,
+                "silver",
+                'last column should now be [7, "silver"]'
+            );
+            assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
+            assert.strictEqual(
+                getColumn(0).querySelector(".o_column_title").innerText,
+                "None\n3",
+                "first column should have no id (Undefined column)"
+            );
+        }
+    );
+
+    QUnit.test("searchbar filters are displayed directly", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            searchViewArch: `
+                <search>
+                    <filter name="some_filter" string="Some Filter" domain="[['foo', '!=', 'bar']]"/>
+                </search>`,
+            async mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    await def;
+                }
+            },
         });
-        // validate presence of the search arch info
+
+        assert.deepEqual(getFacetTexts(target), []);
+
+        // toggle a filter, and slow down the web_search_read rpc
+        def = makeDeferred();
         await toggleSearchBarMenu(target);
-        assert.containsOnce(target, ".o_group_by_menu span.o_menu_item");
-        // select the groupby:category_ids filter
-        await click(target.querySelector('.o_group_by_menu span.o_menu_item'));
-        // check the initial rendering
-        assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
-        // check availability of delete action in kanban header's config dropdown
-        await toggleColumnActions(2);
-        assert.containsOnce(
-            getColumn(2),
-            ".o_column_delete",
-            "should be able to delete the column"
-        );
-        // delete second column (first cancel the confirm request, then confirm)
-        let clickColumnAction = await toggleColumnActions(1);
-        await clickColumnAction("Delete");
-        dialogProps.cancel();
+        await toggleMenuItem(target, "Some Filter");
+
+        assert.deepEqual(getFacetTexts(target), ["Some Filter"]);
+
+        def.resolve();
         await nextTick();
+        assert.deepEqual(getFacetTexts(target), ["Some Filter"]);
+    });
 
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
-            "gold",
-            'column [6, "gold"] should still be there'
-        );
+    QUnit.test("searchbar filters are displayed directly (with progressbar)", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["int_field"],
+            searchViewArch: `
+                <search>
+                    <filter name="some_filter" string="Some Filter" domain="[['foo', '!=', 'bar']]"/>
+                </search>`,
+            async mockRPC(route, args) {
+                if (args.method === "read_progress_bar") {
+                    await def;
+                }
+            },
+        });
 
-        dialogProps.confirm();
+        assert.deepEqual(getFacetTexts(target), []);
+
+        // toggle a filter, and slow down the read_progress_bar rpc
+        def = makeDeferred();
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Some Filter");
+
+        assert.deepEqual(getFacetTexts(target), ["Some Filter"]);
+
+        def.resolve();
         await nextTick();
-
-        clickColumnAction = await toggleColumnActions(1);
-        await clickColumnAction("Delete");
-
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
-            "silver",
-            'last column should now be [7, "silver"]'
-        );
-        assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
-        assert.strictEqual(
-            getColumn(0).querySelector(".o_column_title").innerText,
-            "None\n3",
-            "first column should have no id (Undefined column)"
-        );
+        assert.deepEqual(getFacetTexts(target), ["Some Filter"]);
     });
 });
