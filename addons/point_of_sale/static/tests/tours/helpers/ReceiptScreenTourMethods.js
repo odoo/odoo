@@ -105,6 +105,16 @@ class Check {
             },
         ];
     }
+
+    trackingMethodIsLot() {
+        return [
+            {
+                content: `tracking method is Lot`,
+                trigger: `li:contains("Lot Number")`,
+                run: () => {},
+            },
+        ];
+    }
 }
 
 class Execute {

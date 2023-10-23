@@ -110,3 +110,17 @@ ProductScreen.check.lastClosingCashIs("25.00");
 registry
     .category("web_tour.tours")
     .add("OrderPaidInCash", { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.do.enterLotNumber('123456789');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.trackingMethodIsLot();
+
+registry
+    .category("web_tour.tours")
+    .add("ReceiptTrackingMethodTour", { test: true, url: "/pos/ui", steps: getSteps() });
