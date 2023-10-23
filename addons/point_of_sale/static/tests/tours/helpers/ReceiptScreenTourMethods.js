@@ -89,3 +89,13 @@ export function emailIsSuccessful() {
 export function nextOrder() {
     return [...isShown(), ...clickNextOrder()];
 }
+
+export function trackingMethodIsLot() {
+    return [
+        {
+            content: `tracking method is Lot`,
+            trigger: `li:contains("Lot Number")`,
+            run: () => {},
+        },
+    ];
+}
