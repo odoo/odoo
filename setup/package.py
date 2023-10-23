@@ -295,11 +295,14 @@ class DockerTgz(Docker):
         logging.info('Start testing python tgz package')
         cmds = [
             'service postgresql start',
-            'pip3 install /data/src/odoo_%s.%s.tar.gz' % (VERSION, TSTAMP),
             'su postgres -s /bin/bash -c "createuser -s odoo"',
+            'su odoo -s /bin/bash -c "python3 -m venv /var/lib/odoo/odoovenv"',
+            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/python3 -m pip install --upgrade pip"',
+            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/python3 -m pip install -r /opt/release/requirements.txt"',
+            f'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/python3 -m pip install /data/src/odoo_{VERSION}.{TSTAMP}.tar.gz"',
             'su odoo -s /bin/bash -c "createdb mycompany"',
-            'su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init"',
-            'su odoo -s /bin/bash -c "odoo -d mycompany --pidfile=/data/src/odoo.pid"',
+            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany -i base --stop-after-init"',
+            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany --pidfile=/data/src/odoo.pid"',
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-src-test-%s' % TSTAMP, user='root', detach=True, exposed_port=8069, timeout=300)
         self.test_odoo()
