@@ -1,15 +1,30 @@
 # -*- coding: utf-8 -*-
 
-from collections import Counter
 from odoo import models
 
 
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    def _hook_compute_is_used(self):
-        # OVERRIDE in order to count the usage of taxes in expenses
+    def _hook_compute_is_used(self, taxes_to_compute):
+        # OVERRIDE in order to fetch taxes used in expenses
 
-        taxes_in_transactions_ctr = Counter(dict(self.env['hr.expense']._read_group([], groupby=['tax_ids'], aggregates=['__count'])))
+        used_taxes = super()._hook_compute_is_used(taxes_to_compute)
+        taxes_to_compute -= used_taxes
 
-        return super()._hook_compute_is_used() + taxes_in_transactions_ctr
+        if taxes_to_compute:
+            self.env['hr.expense'].flush_model(['tax_ids'])
+            self.env.cr.execute("""
+                SELECT id
+                FROM account_tax
+                WHERE EXISTS(
+                    SELECT 1
+                    FROM expense_tax AS exp
+                    WHERE tax_id IN %s
+                    AND account_tax.id = exp.tax_id
+                )
+            """, [tuple(taxes_to_compute)])
+
+            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
+
+        return used_taxes
