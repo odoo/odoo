@@ -203,6 +203,15 @@ class Check {
             },
         ];
     }
+    isInvoiceButtonChecked() {
+        return [
+            {
+                content: 'check invoice button is checked',
+                trigger: '.js_invoice.highlight',
+                run: () => {},
+            }
+        ]
+    }
 }
 
 class Execute {
