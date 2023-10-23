@@ -1293,9 +1293,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         update_values['partner_invoice_id'] = partner_id
                         if kw.get('use_same'):
                             update_values['partner_shipping_id'] = partner_id
-                        elif not kw.get('callback') and not order.only_services:
+                        elif (
+                            order._is_public_order()
+                            and not kw.get('callback')
+                            and not order.only_services
+                        ):
                             # Now that the billing is set, if shipping is necessary
-                            # request the user to fill the shipping address
+                            # request the customer to fill the shipping address
                             kw['callback'] = '/shop/address'
                     elif address_mode == 'shipping':
                         update_values['partner_shipping_id'] = partner_id
