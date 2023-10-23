@@ -18,6 +18,7 @@ export class Toolbar extends Component {
         showChecklist: { type: Boolean, optional: true },
         showColors: { type: Boolean, optional: true },
         showFontSize: { type: Boolean, optional: true },
+        customFontSize: { type: Boolean, optional: true },
         showHistory: { type: Boolean, optional: true },
 
         showStyle: { type: Boolean, optional: true },
@@ -50,6 +51,7 @@ export class Toolbar extends Component {
         showChecklist: true,
         showColors: true,
         showFontSize: true,
+        customFontSize: false,
         showHistory: false,
 
         showStyle: true,

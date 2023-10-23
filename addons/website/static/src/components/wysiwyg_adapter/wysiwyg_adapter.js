@@ -356,6 +356,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 ...options.toolbarOptions,
                 showChecklist: false,
                 showAnimateText: true,
+                showFontSize: false,
+                customFontSize: true,
             },
             context: this._context,
             editable: this.$editable,
