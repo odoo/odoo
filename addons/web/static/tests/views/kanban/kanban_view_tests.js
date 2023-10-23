@@ -43,7 +43,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 
-import { Component, onWillRender, xml } from "@odoo/owl";
+import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 
@@ -520,7 +520,16 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(13);
+        assert.expect(17);
+
+        patchWithCleanup(KanbanRenderer.prototype, {
+            setup() {
+                super.setup(...arguments);
+                onRendered(() => {
+                    assert.step("rendered");
+                });
+            },
+        });
 
         await makeView({
             type: "kanban",
@@ -551,6 +560,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.verifySteps(["rendered"]);
 
         await toggleColumnActions(0);
 
@@ -578,6 +588,7 @@ QUnit.module("Views", (hooks) => {
         // changing its result.
         await validateSearch(target);
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.verifySteps(["rendered"]);
     });
 
     QUnit.test(
