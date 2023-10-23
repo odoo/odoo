@@ -11,27 +11,20 @@
                         t-key="category.id"
                         t-ref="category_{{category.id}}"
                         t-attf-class="nav-link category-item flex-shrink-0 p-0"
-                        t-att-class="{
-                            'active-no-image border border-sm rounded p-1 d-flex align-items-center': !category.has_image
-                        }"
                         t-attf-href="#scrollspy_{{category.id}}">
-                        <div t-if="category.has_image" class="ratio ratio-1x1 mb-1">
-                            <div class="placeholder-glow">
-                                <div class="placeholder w-100 h-100 bg-300 rounded"/>
+                        <div class="ratio ratio-1x1 mb-1">
+                            <div t-att-class="{'placeholder-glow': category.has_image}">
+                                <div class="w-100 h-100 bg-200 rounded d-flex align-items-center justify-content-center" t-att-class="{'placeholder': category.has_image}">
+                                    <small class="d-block fw-bold text-white text-center" t-esc="category.name"/>
+                                </div>
                             </div>
-                            <img class="rounded w-100 h-100"
+                            <img t-if="category.has_image"  class="rounded w-100 h-100"
                                 t-attf-src="/pos-self/get-category-image/{{ category.id }}"
                                 alt="Product image"
                                 loading="lazy"
                                 onerror="this.remove()" />
                         </div>
-                        <small
-                            class="d-block fw-bold text-center"
-                            t-att-class="{
-                                'py-2' : !category.has_image,
-                                'text-truncate' : category.has_image,
-                            }"
-                            t-esc="category.name"/>
+                        <small class="d-block fw-bold text-center" t-esc="category.name"/>
                     </a>
                 </nav>
 
