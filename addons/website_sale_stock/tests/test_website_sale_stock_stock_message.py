@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
-from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
+
+from odoo.addons.sale.tests.product_configurator_common import TestSaleProductConfiguratorCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal):
+class TestWebsiteSaleStockProductConfigurator(TestSaleProductConfiguratorCommon, HttpCaseWithUserPortal):
 
     def test_01_stock_message_update_after_close_with_optional_products(self):
         product_product_with_options = self.env['product.product'].create({

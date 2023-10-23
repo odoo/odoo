@@ -3,11 +3,11 @@
 from odoo.tests.common import HttpCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
+from odoo.addons.sale.tests.product_configurator_common import TestSaleProductConfiguratorCommon
 
 
 @tagged('post_install', '-at_install')
-class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
+class TestProductConfiguratorUi(HttpCase, TestSaleProductConfiguratorCommon):
 
     @classmethod
     def setUpClass(cls):

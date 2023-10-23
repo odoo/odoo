@@ -2,7 +2,7 @@
 
 function addOptionalProduct(productName) {
     return {
-        trigger: `table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}")) td.o_sale_product_configurator_price button:contains("Add")`,
+        trigger: `table.o_product_configurator_table_optional tr:has(td>div[name="o_product_configurator_name"] h5:contains("${productName}")) td.o_sale_product_configurator_price button:contains("Add")`,
         content: `Add ${productName}`,
         run: "click",
     };
@@ -45,7 +45,7 @@ function selectAttribute(productName, attributeName, attributeValue, attributeTy
 
 function setCustomAttribute(productName, attributeName, customValue) {
     return {
-        trigger: `table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}")) td>div[name="ptal"]:has(div>label:contains("${attributeName}")) input[type="text"]`,
+        trigger: `table.o_product_configurator_table tr:has(td>div[name="o_product_configurator_name"] h5:contains("${productName}")) td>div[name="ptal"]:has(div>label:contains("${attributeName}")) input[type="text"]`,
         content: `Set ${customValue} as a custom attribute for ${productName} ${attributeName}`,
         run: `edit ${customValue} && click .modal-body`,
     };
@@ -60,7 +60,7 @@ function selectAndSetCustomAttribute(productName, attributeName, attributeValue,
 
 function assertPriceTotal(total) {
     return {
-        trigger: `table.o_sale_product_configurator_table tr>td[colspan="4"] span:contains("${total}")`,
+        trigger: `table.o_product_configurator_table tr>td[colspan=4] span:contains("${total}")`,
         content: `Assert that the total is ${total}`,
         isCheck: true,
     };
@@ -68,7 +68,7 @@ function assertPriceTotal(total) {
 
 function assertProductNameContains(productName) {
     return {
-        trigger: `table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}"))`,
+        trigger: `table.o_product_configurator_table tr:has(td>div[name="o_product_configurator_name"] h5:contains("${productName}"))`,
         content: `Assert that the productName contains ${productName}`,
         isCheck: true,
     };
