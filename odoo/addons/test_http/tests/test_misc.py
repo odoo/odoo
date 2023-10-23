@@ -7,9 +7,9 @@ from unittest.mock import patch
 from urllib.parse import urlparse
 
 import odoo
-from odoo.http import root
+from odoo.http import root, content_disposition
 from odoo.tests import tagged
-from odoo.tests.common import HOST, new_test_user, get_db_name
+from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
 from odoo.tools import config, file_path
 from odoo.addons.test_http.controllers import CT_JSON
 
@@ -201,3 +201,29 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db1')
+
+class TestContentDisposition(BaseCase):
+
+    def test_content_disposition(self):
+        """ Test that content_disposition filename conforms to RFC 6266, RFC 5987 """
+        assertions = [
+            ('foo bar.xls', 'foo%20bar.xls', 'Space character'),
+            ('foo(bar).xls', 'foo%28bar%29.xls', 'Parenthesis'),
+            ('foo<bar>.xls', 'foo%3Cbar%3E.xls', 'Angle brackets'),
+            ('foo[bar].xls', 'foo%5Bbar%5D.xls', 'Brackets'),
+            ('foo{bar}.xls', 'foo%7Bbar%7D.xls', 'Curly brackets'),
+            ('foo@bar.xls', 'foo%40bar.xls', 'At sign'),
+            ('foo,bar.xls', 'foo%2Cbar.xls', 'Comma sign'),
+            ('foo;bar.xls', 'foo%3Bbar.xls', 'Semicolon sign'),
+            ('foo:bar.xls', 'foo%3Abar.xls', 'Colon sign'),
+            ('foo\\bar.xls', 'foo%5Cbar.xls', 'Backslash sign'),
+            ('foo"bar.xls', 'foo%22bar.xls', 'Double quote sign'),
+            ('foo/bar.xls', 'foo%2Fbar.xls', 'Slash sign'),
+            ('foo?bar.xls', 'foo%3Fbar.xls', 'Question mark'),
+            ('foo=bar.xls', 'foo%3Dbar.xls', 'Equal sign'),
+            ('foo*bar.xls', 'foo%2Abar.xls', 'Star sign'),
+            ("foo'bar.xls", 'foo%27bar.xls', 'Single-quote sign'),
+            ('foo%bar.xls', 'foo%25bar.xls', 'Percent sign'),
+        ]
+        for filename, pct_encoded, hint in assertions:
+            self.assertEqual(content_disposition(filename), f"attachment; filename*=UTF-8''{pct_encoded}", f'{hint} should be percent encoded')
