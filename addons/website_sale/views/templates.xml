@@ -1844,18 +1844,19 @@
                     <div class="row">
                         <div class="oe_cart col-12 col-lg-8">
                             <div>
-                                <t t-if="mode == ('new', 'billing') and is_public_user">
+                                <t t-set="address_mode" t-value="mode[1]"/>
+                                <t t-if="is_public_order">
                                     <h3 class="mb-3">
                                         <span t-if="account_on_checkout != 'mandatory'">Fill in your address</span>
                                         <small class="text-muted" t-if="account_on_checkout == 'optional'"> or </small>
                                         <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout'  style="margin-top: -11px"> Sign in</a>
                                     </h3>
                                 </t>
-                                <t t-elif="mode == ('edit', 'billing') or mode[1] == 'billing' and not is_public_user">
-                                    <h3 class="mb-3">Your address</h3>
+                                <t t-elif="address_mode == 'billing'">
+                                    <h3 class="mb-3">Billing address</h3>
                                 </t>
-                                <t t-if="mode[1] == 'shipping'">
-                                    <h3 class="mb-3">My details</h3>
+                                <t t-else="">
+                                    <h3 class="mb-3">Shipping address</h3>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert" t-if="not only_services">
@@ -1887,7 +1888,7 @@
                                         <t t-if="website._display_partner_b2b_fields()">
                                             <div class="w-100"/>
                                             <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
-                                            <t t-if="(mode == ('new', 'billing') and website_sale_order._is_public_order()
+                                            <t t-if="(mode == ('new', 'billing') and is_public_order
                                                 or mode == ('edit', 'billing') and partner_id == website_sale_order.partner_id.id)
                                                 and (can_edit_vat or 'vat' in checkout and checkout['vat'])"
                                             >
@@ -1959,11 +1960,20 @@
                                         <t t-if="mode == ('new', 'billing') and not only_services">
                                             <div class="col-lg-12">
                                                 <div class="form-check form-switch mt-2 mb-3">
-                                                  <label>
-                                                    <input type="checkbox" id='shipping_use_same' class="form-check-input mr8" name='use_same' value="1" t-att-checked='website.is_public_user()'/>Ship to the same address
-                                                    <t t-if='website.is_public_user()'>
-                                                        <span class='form-check-label ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
-                                                    </t>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            id="shipping_use_same"
+                                                            class="form-check-input mr8"
+                                                            name="use_same"
+                                                            value="1"
+                                                            t-att-checked="use_same"/>Ship to the same address
+                                                        <span
+                                                            t-if="is_public_user"
+                                                            class="form-check-label ship_to_other text-muted"
+                                                            style="display: none">
+                                                            &amp;nbsp;(<i>Your shipping address will be requested later)</i>
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>
