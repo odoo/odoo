@@ -116,6 +116,37 @@ QUnit.module("utils", () => {
             comp.destroy();
         });
 
+        QUnit.test("useAutofocus: does not strictly depend on uiService", async function (assert) {
+            class MyComponent extends Component {
+                static template = xml`
+                    <span>
+                        <input type="text" t-ref="autofocus" />
+                    </span>
+                `;
+
+                setup() {
+                    this.inputRef = useAutofocus();
+                }
+            }
+
+            const env = await makeTestEnv();
+            Object.defineProperty(env, "isSmall", {
+                get() {
+                    return undefined;
+                },
+            });
+
+            const target = getFixture();
+            const comp = await mount(MyComponent, target, { env });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.inputRef.el);
+
+            comp.render();
+            await nextTick();
+            assert.strictEqual(document.activeElement, comp.inputRef.el);
+        });
+
         QUnit.test("useAutofocus: autofocus outside of active element doesn't work (CommandPalette)", async function (assert) {
             class MyComponent extends Component {
                 setup() {
