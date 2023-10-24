@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component } from '@odoo/owl';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { browser } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
@@ -168,9 +169,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _enableButton(unblockUI = true) {
-        if (this._canSubmit()) {
-            this._getSubmitButton().removeAttribute('disabled');
-        }
+        Component.env.bus.trigger('enablePaymentButton');
         if (unblockUI) {
             this.call('ui', 'unblock');
         }
@@ -184,7 +183,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _disableButton(blockUI = false) {
-        this._getSubmitButton().setAttribute('disabled', true);
+        Component.env.bus.trigger('disablePaymentButton');
         if (blockUI) {
             this.call('ui', 'block');
         }
@@ -202,7 +201,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         tokenizeContainer?.classList.remove('d-none');
 
         // Show the submit button.
-        this._getSubmitButton().classList.remove('d-none');
+        Component.env.bus.trigger('showPaymentButton');
     },
 
     /**
@@ -221,7 +220,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         tokenizeContainer?.classList.add('d-none');
 
         // Hide the submit button.
-        this._getSubmitButton().classList.add('d-none');
+        Component.env.bus.trigger('hidePaymentButton');
     },
 
     /**
@@ -312,20 +311,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     },
 
     // #=== PAYMENT FLOW ===#
-
-    /**
-     * Check whether the payment form can be submitted, i.e. whether exactly one payment option is
-     * selected.
-     *
-     * For a module to add a condition on the submission of the form, it must override this method
-     * and return whether both this method's condition and the override method's condition are met.
-     *
-     * @private
-     * @return {boolean} Whether the form can be submitted.
-     */
-    _canSubmit() {
-        return this.el.querySelectorAll('input[name="o_payment_radio"]:checked').length === 1;
-    },
 
     /**
      * Set the payment flow for the selected payment option.
@@ -533,19 +518,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     _getInlineForm(radio) {
         const inlineFormContainer = radio.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
-    },
-
-    /**
-     * Find and return the submit button.
-     *
-     * The button is searched in the whole document, rather than only in the current form, to allow
-     * modules to place it outside the payment form (e.g., eCommerce).
-     *
-     * @private
-     * @return {Element} The submit button.
-     */
-    _getSubmitButton() {
-        return document.querySelector('[name="o_payment_submit_button"]');
     },
 
     /**
