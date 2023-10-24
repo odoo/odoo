@@ -560,11 +560,18 @@ class Slide(models.Model):
 
     @api.onchange('slide_category')
     def _on_change_slide_category(self):
-        """ Prevents mis-match when ones uploads an image and then a pdf without saving the form. """
+        """ Prevents mis-match when ones uploads an image and then a pdf without saving the form.
+        Also erases the html_content/url when the category should not have a html_content/url"""
         if self.slide_category != 'infographic' and self.image_binary_content:
             self.image_binary_content = False
         elif self.slide_category != 'document' and self.document_binary_content:
             self.document_binary_content = False
+
+        if self.slide_category != 'article' and self.html_content:
+            self.html_content = False
+
+        if self.slide_category not in ['infographic', 'document', 'video'] and self.url:
+            self.url = False
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):

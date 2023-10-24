@@ -128,28 +128,24 @@
                                             'invisible': [('slide_category', 'not in', ['infographic', 'document'])]}" />
                                         <field name="video_url" attrs="{
                                             'required': [('slide_category', '=', 'video')],
-                                            'invisible': [('slide_category', '!=', 'video')],
-                                            'readonly': [('slide_category', '!=', 'video')]}"
+                                            'invisible': [('slide_category', '!=', 'video')]}"
                                             placeholder='e.g "www.youtube.com/watch?v=ebBez6bcSEc"'
                                             widget="url"/>
                                         <field name="document_google_url" attrs="{
-                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')],
-                                            'readonly': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')]}"
+                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')]}"
                                             placeholder='e.g "https://drive.google.com/file/..."'
                                             widget="url"/>
                                         <field name="image_google_url" attrs="{
-                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'infographic')],
-                                            'readonly': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'infographic')]}"
+                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'infographic')]}"
                                             placeholder='e.g "https://drive.google.com/file/..."'
                                             widget="url"/>
                                         <field name="document_binary_content" string="" options="{'accepted_file_extensions': '.pdf'}"
                                             attrs="{
-                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'document')],
-                                                'readonly': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'document')]}"/>
+                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'document')]}"/>
                                         <field name="image_binary_content" string="" options="{'accepted_file_extensions': 'image/*'}"
                                             attrs="{
-                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')],
-                                                'readonly': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')]}"/>
+                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')]}"/>
+                                        <field name="html_content" invisible="1"/>
                                     </group>
                                     <group name="related_details">
                                         <field name="user_id" string="Responsible" widget="many2one_avatar"/>
