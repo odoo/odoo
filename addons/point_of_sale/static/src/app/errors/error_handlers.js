@@ -26,7 +26,7 @@ function rpcErrorHandler(env, error, originalError) {
 registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
 function offlineErrorHandler(env, error, originalError) {
-    if (error instanceof ConnectionLostError) {
+    if (error instanceof ConnectionLostError || originalError instanceof ConnectionLostError) {
         env.services.popup.add(OfflineErrorPopup);
         return true;
     }

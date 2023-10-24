@@ -33,7 +33,11 @@ export class ReceiptScreen extends Component {
             // When the order is paid, if there is still a part of the order
             // to send in preparation it is automatically sent
             if (this.pos.orderPreparationCategories.size) {
-                await this.pos.sendOrderInPreparation(this.currentOrder);
+                try {
+                    await this.pos.sendOrderInPreparation(this.currentOrder);
+                } catch (error) {
+                    Promise.reject(error);
+                }
             }
         });
     }
