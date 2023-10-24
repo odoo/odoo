@@ -3,7 +3,6 @@
 
 from . import account_move
 from . import mrp_production
-from . import product_description_mixin
 from . import sale_order
 from . import sale_order_line
 from . import stock_move

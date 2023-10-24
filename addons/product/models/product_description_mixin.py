@@ -72,7 +72,7 @@ class ProductDescriptionMixin(models.AbstractModel):
             if not vals.get('product_custom_attribute_value_ids'):
                 continue
             for pcav in vals['product_custom_attribute_value_ids']:
-                if not self.is_linkable_to_model(pcav):
+                if pcav[0] != 0:
                     continue
                 pcav[2]['res_model'] = self._name
         return super().create(vals_list)
@@ -112,8 +112,3 @@ class ProductDescriptionMixin(models.AbstractModel):
             pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
             name += "\n" + pacv.display_name
         return name
-
-    def is_linkable_to_model(self, pcav):
-        if len(pcav[2]) == 0:
-            return False
-        return True
