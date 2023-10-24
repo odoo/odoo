@@ -32,7 +32,7 @@ class AccountMoveSend(models.TransientModel):
     )
 
     # == MAIL ==
-    enable_send_mail = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    enable_send_mail = fields.Boolean(compute='_compute_enable_send_mail')
     checkbox_send_mail = fields.Boolean(
         string="Email",
         compute='_compute_checkbox_send_mail',
@@ -42,7 +42,6 @@ class AccountMoveSend(models.TransientModel):
     display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
     send_mail_warning_message = fields.Text(compute='_compute_send_mail_extra_fields')
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
-
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
         string="Use template",
@@ -61,14 +60,14 @@ class AccountMoveSend(models.TransientModel):
     )
     mail_subject = fields.Char(
         string="Subject",
-        compute='_compute_mail_subject',
+        compute='_compute_mail_subject_body',
         store=True,
         readonly=False,
     )
     mail_body = fields.Html(
         string="Contents",
         sanitize_style=True,
-        compute='_compute_mail_body',
+        compute='_compute_mail_subject_body',
         store=True,
         readonly=False,
     )
@@ -99,48 +98,46 @@ class AccountMoveSend(models.TransientModel):
             .with_context(lang=lang)\
             ._render_field(field, move.ids, **kwargs)[move._origin.id]
 
-    def _get_default_mail_body(self, moves, mail_template, mail_lang):
-        if mail_template and len(moves) == 1:
-            return self._get_mail_default_field_value_from_template(
-                mail_template,
-                mail_lang,
-                moves,
-                'body_html',
-                options={'post_process': True},
-            )
-        return None
+    def _get_default_mail_lang(self, move, mail_template=None):
+        return mail_template._render_lang([move.id]).get(move.id) if mail_template else get_lang(self.env).code
 
-    def _get_default_mail_subject(self, moves, mail_template, mail_lang):
-        if mail_template and len(moves) == 1:
-            return self._get_mail_default_field_value_from_template(
-                mail_template,
-                mail_lang,
-                moves,
-                'subject',
-            )
-        return None
+    def _get_default_mail_body(self, move, mail_template, mail_lang):
+        return self._get_mail_default_field_value_from_template(
+            mail_template,
+            mail_lang,
+            move,
+            'body_html',
+            options={'post_process': True},
+        )
 
-    def _get_default_mail_partner_ids(self, moves, mail_template, mail_lang):
-        partners = self.env['res.partner'].with_company(moves.company_id)
-        if mail_template and len(moves) == 1:
-            if mail_template.email_to:
-                for mail_data in tools.email_split(mail_template.email_to):
-                    partners |= partners.find_or_create(mail_data)
-            if mail_template.email_cc:
-                for mail_data in tools.email_split(mail_template.email_cc):
-                    partners |= partners.find_or_create(mail_data)
-            if mail_template.partner_to:
-                partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, moves, 'partner_to')
-                partner_ids = mail_template._parse_partner_to(partner_to)
-                partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
+    def _get_default_mail_subject(self, move, mail_template, mail_lang):
+        return self._get_mail_default_field_value_from_template(
+            mail_template,
+            mail_lang,
+            move,
+            'subject',
+        )
+
+    def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
+        partners = self.env['res.partner'].with_company(move.company_id)
+        if mail_template.email_to:
+            for mail_data in tools.email_split(mail_template.email_to):
+                partners |= partners.find_or_create(mail_data)
+        if mail_template.email_cc:
+            for mail_data in tools.email_split(mail_template.email_cc):
+                partners |= partners.find_or_create(mail_data)
+        if mail_template.partner_to:
+            partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
+            partner_ids = mail_template._parse_partner_to(partner_to)
+            partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners
 
-    def _get_default_mail_attachments_widget(self, moves, mail_template):
-        return self._get_placeholder_mail_attachments_data(moves) \
-            + self._get_invoice_extra_attachments_data(moves) \
+    def _get_default_mail_attachments_widget(self, move, mail_template):
+        return self._get_placeholder_mail_attachments_data(move) \
+            + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
-    def _get_wizard_values(self, move=None):
+    def _get_wizard_values(self, move):
         self.ensure_one()
         return {
             'mail_template_id': self.mail_template_id.id,
@@ -148,10 +145,10 @@ class AccountMoveSend(models.TransientModel):
             'send_mail': self.checkbox_send_mail,
         }
 
-    def _get_mail_move_data(self, move, wizard=None):
+    def _get_mail_move_values(self, move, wizard=None):
         mail_template_id = move.send_and_print_values and move.send_and_print_values.get('mail_template_id')
         mail_template = wizard and wizard.mail_template_id or self.env['mail.template'].browse(mail_template_id)
-        mail_lang = mail_template._render_lang([move.id]).get(move.id) if mail_template else get_lang(self.env).code
+        mail_lang = self._get_default_mail_lang(move, mail_template)
         return {
             'mail_template_id': mail_template,
             'mail_lang': mail_lang,
@@ -240,10 +237,19 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.checkbox_download = wizard.enable_download and wizard.company_id.invoice_is_download
 
+    @api.depends('move_ids')
+    def _compute_enable_send_mail(self):
+        for wizard in self:
+            wizard.enable_send_mail = wizard.mode in ('invoice_single', 'invoice_multi')
+
+    @api.depends('enable_send_mail')
+    def _compute_checkbox_send_mail(self):
+        for wizard in self:
+            wizard.checkbox_send_mail = wizard.company_id.invoice_is_email and not wizard.send_mail_readonly
+
     @api.depends('checkbox_send_mail')
     def _compute_send_mail_extra_fields(self):
         for wizard in self:
-            wizard.enable_send_mail = wizard.mode in ('invoice_single', 'invoice_multi')
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
             wizard.send_mail_warning_message = False
 
@@ -256,43 +262,40 @@ class AccountMoveSend(models.TransientModel):
                     "so those invoices will not be sent: %s",
                     ", ".join(invoices_without_mail_data.mapped('name')))
 
-    @api.depends('move_ids')
-    def _compute_checkbox_send_mail(self):
-        for wizard in self:
-            wizard.checkbox_send_mail = wizard.company_id.invoice_is_email and not wizard.send_mail_readonly
-
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
         for wizard in self:
-            if wizard.mail_template_id and wizard.mode == 'invoice_single':
-                move = wizard.move_ids
-                wizard.mail_lang = wizard.mail_template_id._render_lang([move.id]).get(move.id)
+            if wizard.mode == 'invoice_single':
+                wizard.mail_lang = self._get_default_mail_lang(wizard.move_ids, wizard.mail_template_id)
             else:
                 wizard.mail_lang = get_lang(self.env).code
 
     @api.depends('mail_template_id', 'mail_lang')
     def _compute_mail_partner_ids(self):
         for wizard in self:
-            wizard.mail_partner_ids = self._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+            if wizard.mode == 'invoice_single' and wizard.mail_template_id:
+                wizard.mail_partner_ids = self._get_default_mail_partner_ids(self.move_ids, wizard.mail_template_id, wizard.mail_lang)
+            else:
+                wizard.mail_partner_ids = None
 
     @api.depends('mail_template_id', 'mail_lang')
-    def _compute_mail_subject(self):
+    def _compute_mail_subject_body(self):
         for wizard in self:
-            wizard.mail_subject = self._get_default_mail_subject(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+            if wizard.mode == 'invoice_single' and wizard.mail_template_id:
+                wizard.mail_subject = self._get_default_mail_subject(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+                wizard.mail_body = self._get_default_mail_body(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+            else:
+                wizard.mail_subject = wizard.mail_body = None
 
-    @api.depends('mail_template_id', 'mail_lang')
-    def _compute_mail_body(self):
-        for wizard in self:
-            wizard.mail_body = self._get_default_mail_body(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
-
-    @api.depends('mail_template_id', 'mail_lang')
+    @api.depends('mail_template_id')
     def _compute_mail_attachments_widget(self):
         for wizard in self:
             if wizard.mode == 'invoice_single':
                 manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
-                wizard.mail_attachments_widget = \
-                    self._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id) \
-                    + manual_attachments_data
+                wizard.mail_attachments_widget = (
+                        self._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id)
+                        + manual_attachments_data
+                )
             else:
                 wizard.mail_attachments_widget = []
 
@@ -602,7 +605,7 @@ class AccountMoveSend(models.TransientModel):
         moves_data = {
             move: {
                 **(move.send_and_print_values if not wizard else wizard._get_wizard_values(move)),
-                **self._get_mail_move_data(move, wizard),
+                **self._get_mail_move_values(move, wizard),
             }
             for move in moves
         }

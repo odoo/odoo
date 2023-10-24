@@ -4,10 +4,10 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
-    l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_l10n_es_edi_facturae_enable_xml')
     l10n_es_edi_facturae_checkbox_xml = fields.Boolean(
         string="Generate Facturae edi file",
-        default=True,
+        compute='_compute_l10n_es_edi_facturae_checkbox_xml',
     )
 
     def _get_wizard_values(self, move):
@@ -20,11 +20,15 @@ class AccountMoveSend(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    def _compute_send_mail_extra_fields(self):
-        # EXTENDS 'account'
-        super()._compute_send_mail_extra_fields()
+    @api.depends('move_ids')
+    def _compute_l10n_es_edi_facturae_enable_xml(self):
         for wizard in self:
             wizard.l10n_es_edi_facturae_enable_xml = any(move._l10n_es_edi_facturae_get_default_enable() for move in wizard.move_ids)
+
+    @api.depends('l10n_es_edi_facturae_enable_xml')
+    def _compute_l10n_es_edi_facturae_checkbox_xml(self):
+        for wizard in self:
+            wizard.l10n_es_edi_facturae_checkbox_xml = wizard.l10n_es_edi_facturae_enable_xml
 
     @api.depends('l10n_es_edi_facturae_checkbox_xml')
     def _compute_mail_attachments_widget(self):
@@ -82,6 +86,7 @@ class AccountMoveSend(models.TransientModel):
                     'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
                 }
 
+    @api.model
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoice, invoice_data)

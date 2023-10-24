@@ -114,6 +114,7 @@ class AccountMoveSend(models.TransientModel):
                     attachments_vals[move] = invoices_data[move]['l10n_it_edi_values']
         moves._l10n_it_edi_send(attachments_vals)
 
+    @api.model
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoice, invoice_data)
