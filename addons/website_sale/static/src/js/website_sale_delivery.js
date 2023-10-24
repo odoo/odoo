@@ -192,9 +192,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 
+    /**
+     * Disable the payment button.
+     *
+     * @private
+     * @return {void}
+     */
     _disablePayButton: function (){
-        var payButton = document.querySelector('button[name="o_payment_submit_button"]');
-        payButton? payButton.disabled = true : null;
+        Component.env.bus.trigger('disablePaymentButton');
     },
 
     _disablePayButtonNoPickupPoint : function (ev){
@@ -247,57 +252,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         this._enableButton(result.status);
     },
     /**
-     * Check if the submit button can be enabled.
-     * If it is the case, trigger the `_enableButton` from payment
+     * Enable the payment button if the rate_shipment request succeeded.
      *
      * @private
+     * @param {boolean} status - The status of the rate_shipment request.
+     * @return {void}
      */
-    _enableButton: function(status){
-        if (!this._isPayable(status)) {
-            return;
+    _enableButton(status){
+        if (status) {
+            Component.env.bus.trigger('enablePaymentButton');
         }
-        Component.env.bus.trigger('enableButton');
-    },
-    /**
-     * @private
-     * @param {boolean} status  : the status of the rate_shipment request
-     * @return {boolean}
-     */
-    // FYI we don't cover the case where the payement method is not selected because it already throws an error
-    _isPayable: function(status=false){
-        // abort if no paybutton
-        var payButton = document.querySelector('button[name="o_payment_submit_button"]');
-        if (!payButton) {
-            return false;
-        }
-        // abort if the rating failed
-        if (!status){
-            return false;
-        }
-        const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'))
-        let carrierChecked = null;
-        carriers.forEach((carrier) => {
-            if (carrier.querySelector('input').checked){
-                carrierChecked = carrier;
-            }
-        })
-        //abort if no carrier is selected
-        if (!carrierChecked){
-            return false;
-        }
-
-        // if the carrier does not need a pickup point
-        const isPickUpPointNeeded = carrierChecked.querySelector('.o_show_pickup_locations')
-        if (!isPickUpPointNeeded){
-            return true;
-        }
-
-        const address = carrierChecked.querySelector('.o_order_location_address').innerText
-        const isPickUp = carrierChecked.lastChild.previousSibling.children;
-        if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
-            return false;
-        }
-        return true;
     },
 
     _isPickupLocationSelected: function (ev) {
@@ -381,11 +345,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onCarrierClick: async function (ev) {
-        this._disablePayButton();
-        const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('input[type="radio"]');
-        if (radio.checked && !this._shouldDisplayPickupLocations(ev)) {
+        const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(
+            'input[type="radio"]'
+        );
+        if (radio.checked) {
             return;
         }
+
+        this._disablePayButton();
         this._showLoading(radio);
         radio.checked = true;
         await this._onClickShowLocations(ev);
