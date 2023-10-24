@@ -52,12 +52,24 @@ class AccountBalance(models.Model):
             analytic_move_id = analytic_info.id if analytic_info else None
             analytic_amount = analytic_info.amount if analytic_info else None
             analytic_name = analytic_info.name if analytic_info else None
+            partner_id = line.partner_id.id if line.partner_id else None
+            partner_type = None
+            if line.partner_id:
+                partner = line.partner_id
+                if partner.customer_rank > 0 and partner.supplier_rank > 0:
+                    partner_type = 'Customer/Vendor'
+                elif partner.customer_rank > 0:
+                    partner_type = 'Customer'
+                elif partner.supplier_rank > 0:
+                    partner_type = 'Vendor'
         
             ledger_data.append({
                 'id': line.id,
                 'date': line.date,
                 'debit': line.debit,
                 'credit': line.credit,
+                'partner_id': partner_id,  
+                'partner_type': partner_type,
                 'analytic_move_id': analytic_move_id,
                 'analytic_amount': analytic_amount,
                 'analytic_name': analytic_name
