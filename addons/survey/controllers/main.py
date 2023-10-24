@@ -479,13 +479,13 @@ class Survey(http.Controller):
         Triggered on all attendees screens when the host goes to the next question. """
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return {'error': access_data['validity_code']}
+            return {}, {'error': access_data['validity_code']}
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
         if answer_sudo.state == 'new' and answer_sudo.is_session_answer:
             answer_sudo._mark_in_progress()
 
-        return self._prepare_question_html(survey_sudo, answer_sudo, **post)
+        return {}, self._prepare_question_html(survey_sudo, answer_sudo, **post)
 
     @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='json', auth='public', website=True)
     def survey_submit(self, survey_token, answer_token, **post):
