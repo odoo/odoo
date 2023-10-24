@@ -168,7 +168,7 @@ class AccountPartialReconcile(models.Model):
 
         line_matching_number = dict(self.env.cr.fetchall())
 
-        for line in amls:
+        for line in amls.with_context(skip_invoice_sync=True):
             if line.full_reconcile_id:
                 line.matching_number = str(line.full_reconcile_id.id)
             elif line.matched_debit_ids or line.matched_credit_ids:
