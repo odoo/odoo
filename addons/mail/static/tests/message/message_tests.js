@@ -1619,3 +1619,25 @@ QUnit.test("Can edit a message only containing an attachment", async () => {
     await click(".o-mail-Message [title='Edit']");
     await contains(".o-mail-Message-editable .o-mail-Composer-input");
 });
+
+QUnit.test("Click on view reactions shows the reactions on the message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("[title='Add a Reaction']");
+    await click(".o-Emoji", { text: "😅" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='View Reactions']");
+    await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
+});

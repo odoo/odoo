@@ -6,7 +6,7 @@
             <div class="d-flex h-100" t-on-keydown="onKeydown" t-ref="root">
                 <div class="d-flex overflow-auto flex-column bg-100 p-2 h-100 border-end">
                     <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
-                        <button class="btn p-1 rounded-2 mx-2 py-0 d-flex align-items-center" t-att-class="{ 'bg-200 border-primary': reaction.eq(state.reaction) }" t-att-title="getEmojiShortcode(reaction)" t-att-data-reaction="reaction" t-on-click="() => state.reaction = reaction">
+                        <button class="btn p-1 rounded-2 mx-2 py-0 d-flex align-items-center" t-att-class="{ 'bg-200 border-primary': reaction.eq(state.reaction) }" t-att-title="getEmojiShortcode(reaction)" t-on-click="() => state.reaction = reaction">
                             <span class="mx-1 fs-2" t-esc="reaction.content"/>
                             <span class="mx-1 pe-2" t-att-class="{ 'text-primary': reaction.eq(state.reaction) }" t-esc="reaction.count"/>
                         </button>
