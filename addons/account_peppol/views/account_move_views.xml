@@ -72,7 +72,12 @@
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//search/group/filter[@name='status']" position="after">
-                <filter string="PEPPOL state" name="peppol_move_state" context="{'group_by': 'peppol_move_state'}"/>
+                <filter string="Peppol status" name="peppol_move_state" context="{'group_by': 'peppol_move_state'}"/>
+            </xpath>
+            <xpath expr="//filter[@name='to_check']" position='after'>
+                <separator/>
+                <filter name="peppol_ready" string="Peppol Ready" domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready')]"/>
+                <separator/>
             </xpath>
         </field>
     </record>

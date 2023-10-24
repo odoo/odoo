@@ -58,7 +58,7 @@ def _mock_make_request(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]],
+            } for i in args[1]['documents']],
         }
 
     endpoint = args[0].split('/')[-1]

@@ -11,15 +11,16 @@ class AccountMove(models.Model):
     peppol_message_uuid = fields.Char(string='PEPPOL message ID')
     peppol_move_state = fields.Selection(
         selection=[
-            ('to_send', 'To Send'),
-            ('processing', 'Processing'),
+            ('ready', 'Ready to send'),
+            ('to_send', 'Queued'),
+            ('processing', 'Pending Reception'),
             ('canceled', 'Canceled'),
             ('done', 'Done'),
             ('error', 'Error'),
         ],
+        compute='_compute_peppol_move_state', store=True,
         string='PEPPOL status',
         copy=False,
-        readonly=True,
     )
     peppol_is_demo_uuid = fields.Boolean(compute="_compute_peppol_is_demo_uuid")
 
@@ -29,8 +30,22 @@ class AccountMove(models.Model):
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
         self.peppol_move_state = 'canceled'
+        self.send_and_print_values = False
 
     @api.depends('peppol_message_uuid')
     def _compute_peppol_is_demo_uuid(self):
         for move in self:
             move.peppol_is_demo_uuid = (move.peppol_message_uuid or '').startswith('demo_')
+
+    @api.depends('state')
+    def _compute_peppol_move_state(self):
+        for move in self:
+            if all([
+                move.company_id.account_peppol_proxy_state == 'active',
+                move.partner_id.account_peppol_is_endpoint_valid,
+                move.state == 'posted',
+                not move.peppol_move_state,
+            ]):
+                move.peppol_move_state = 'ready'
+            else:
+                move.peppol_move_state = move.peppol_move_state
