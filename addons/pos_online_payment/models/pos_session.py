@@ -20,7 +20,7 @@ class PosSession(models.Model):
 
         split_receivables_online = defaultdict(amounts)
         currency_rounding = self.currency_id.rounding
-        for order in self.order_ids:
+        for order in self._get_closed_orders():
             for payment in order.payment_ids:
                 amount = payment.amount
                 if tools.float_is_zero(amount, precision_rounding=currency_rounding):
