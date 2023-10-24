@@ -121,7 +121,11 @@ export class LivechatService {
         });
         this.cookie.deleteCookie(this.SESSION_COOKIE);
         this.cookie.deleteCookie(this.OPERATOR_COOKIE);
-        this.cookie.setCookie(this.SESSION_COOKIE, JSON.stringify(session), 60 * 60 * 24); // 1 day cookie.
+        this.cookie.setCookie(
+            this.SESSION_COOKIE,
+            JSON.stringify(session).replaceAll("→", " "),
+            60 * 60 * 24
+        ); // 1 day cookie.
         if (session?.operator_pid) {
             this.cookie.setCookie(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
         }
