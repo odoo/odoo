@@ -47,4 +47,17 @@ patch(ThreadService.prototype, {
             thread.isLoadingAttachments = false;
         }
     },
+
+    async muteThread(thread, { minutes = false } = {}) {
+        await this.rpc("/discuss/channel/mute", { channel_id: thread.id, minutes });
+    },
+
+    async updateCustomNotifications(thread, custom_notifications) {
+        // Update the UI instantly to provide a better UX (no need to wait for the RPC to finish).
+        thread.custom_notifications = custom_notifications;
+        await this.rpc("/discuss/channel/update_custom_notifications", {
+            channel_id: thread.id,
+            custom_notifications,
+        });
+    },
 });

@@ -4,6 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 
+
 class ChannelMember(models.Model):
     _name = "discuss.channel.member"
     _description = "Channel Member"
@@ -23,6 +24,12 @@ class ChannelMember(models.Model):
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
+    custom_notifications = fields.Selection(
+        [("mentions", "Mentions Only"), ("no_notif", "Nothing")],
+        "Customized Notifications",
+        help="All Messages if not specified",
+    )
+    mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
     last_seen_dt = fields.Datetime("Last seen date")
@@ -149,6 +156,21 @@ class ChannelMember(models.Model):
             notifications.append([member.channel_id.uuid, 'discuss.channel.member/typing_status', formatted_member])  # notify livechat users
         self.env['bus.bus']._sendmany(notifications)
 
+    @api.model
+    def _unmute(self):
+        # Unmute notifications for the all the channel members whose mute date is passed.
+        members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
+        members.write({"mute_until_dt": False})
+        notifications = []
+        for member in members:
+            channel_data = {
+                "id": member.channel_id.id,
+                "model": "discuss.channel",
+                "mute_until_dt": False,
+            }
+            notifications.append((member.partner_id, "mail.record/insert", {"Thread": channel_data}))
+        self.env["bus.bus"]._sendmany(notifications)
+
     def _discuss_channel_member_format(self, fields=None):
         if not fields:
             fields = {'id': True, 'channel': {}, 'persona': {}}
@@ -168,6 +190,10 @@ class ChannelMember(models.Model):
                     # sudo: mail.guest - reading _guest_format related to a member is considered acceptable
                     persona = member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)
                 data['persona'] = persona
+            if 'custom_notifications' in fields:
+                data['custom_notifications'] = member.custom_notifications
+            if 'mute_until_dt' in fields:
+                data['mute_until_dt'] = member.mute_until_dt
             members_formatted_data[member] = data
         return members_formatted_data
 

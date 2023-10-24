@@ -45,7 +45,8 @@
             t-att-class="{
                 'o-bg-inherit': thread.notEq(store.discuss.thread),
                 'o-active': thread.eq(store.discuss.thread),
-                'o-unread': thread.message_unread_counter > 0,
+                'o-unread': thread.message_unread_counter > 0 and !thread.muteUntilDateTime,
+                'opacity-50': thread.muteUntilDateTime,
             }"
             t-on-click="(ev) => this.openThread(ev, thread)"
         >
@@ -53,7 +54,7 @@
                 <img class="w-100 h-100 rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
                 <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle o-bg-inherit'"/>
             </div>
-            <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 }">
+            <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 and !thread.muteUntilDateTime }">
                 <t t-esc="thread.displayName"/>
             </span>
             <div class="flex-grow-1"/>
@@ -65,7 +66,7 @@
             </div>
             <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
             <div t-if="counter > 0">
-                <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-3 fw-bold" t-esc="counter"/>
+                <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-3 fw-bold {{thread.muteUntilDateTime ? 'o-muted' : ''}}" t-esc="counter"/>
             </div>
         </button>
     </t>

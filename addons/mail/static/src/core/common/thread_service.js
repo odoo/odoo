@@ -40,6 +40,7 @@ export class ThreadService {
         this.user = services.user;
         this.messageService = services["mail.message"];
         this.personaService = services["mail.persona"];
+        this.outOfFocusService = services["mail.out_of_focus"];
     }
 
     /**
@@ -919,6 +920,42 @@ export class ThreadService {
     }
 
     /**
+     * Handle the notification of a new message based on the notification setting of the user.
+     * Thread on mute:
+     * 1. No longer see the unread status: the bold text disappears and the channel name fades out.
+     * 2. Without sound + need action counter.
+
+     * Thread Notification Type:
+     * All messages:All messages sound + need action counter
+     * Mentions:Only mention sounds + need action counter
+     * Nothing: No sound + need action counter
+
+     * @param {Thread} thread
+     * @param {Message} message
+     */
+    notifyMessageToUser(thread, message) {
+        if (
+            thread.type === "channel" &&
+            message.recipients?.includes(this.store.user) &&
+            message.notIn(thread.needactionMessages)
+        ) {
+            thread.needactionMessages.add(message);
+            thread.message_needaction_counter++;
+        }
+        if (
+            thread.chatPartner?.eq(this.store.odoobot) ||
+            thread.muteUntilDateTime ||
+            thread.custom_notifications === "no_notif" ||
+            (thread.custom_notifications === "mentions" &&
+                !message.recipients?.includes(this.store.user))
+        ) {
+            return;
+        }
+        this.store.ChatWindow.insert({ thread });
+        this.outOfFocusService.notify(message, thread);
+    }
+
+    /**
      * Following a load more or load around, listing of messages contains persistent messages.
      * Transient messages are missing, so this function puts known transient messages at the
      * right place in message list of thread.
@@ -977,6 +1014,7 @@ export const threadService = {
         "router",
         "mail.message",
         "mail.persona",
+        "mail.out_of_focus",
         "ui",
         "user",
     ],

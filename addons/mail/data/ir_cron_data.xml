@@ -77,5 +77,16 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="True"/>
         </record>
+
+        <record id="ir_cron_discuss_channel_member_unmute" model="ir.cron">
+            <field name="name">Discuss: channel member unmute</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_discuss_channel_member"/>
+            <field name="code">model._unmute()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

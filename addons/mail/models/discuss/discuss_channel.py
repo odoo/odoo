@@ -799,6 +799,8 @@ class Channel(models.Model):
                     info['state'] = member.fold_state or 'open'
                     info['message_unread_counter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
+                    info['custom_notifications'] = member.custom_notifications
+                    info['mute_until_dt'] = member.mute_until_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT) if member.mute_until_dt else False
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned

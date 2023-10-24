@@ -55,7 +55,7 @@ export class DiscussCoreWeb {
                     this.store.odoobotOnboarding = false;
                     return;
                 }
-                this.store.ChatWindow.insert({ thread: channel });
+                this.threadService.notifyMessageToUser(channel, message);
             }
         );
         this.busService.subscribe("res.users.settings", (payload) => {

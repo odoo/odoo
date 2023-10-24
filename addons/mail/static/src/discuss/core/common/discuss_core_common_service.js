@@ -19,7 +19,6 @@ export class DiscussCoreCommon {
         this.rpc = services.rpc;
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
-        this.outOfFocusService = services["mail.out_of_focus"];
         this.store = services["mail.store"];
         this.threadService = services["mail.thread"];
     }
@@ -245,20 +244,14 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (!channel.chatPartner?.eq(this.store.odoobot)) {
-            if (
-                !this.presence.isOdooFocused() &&
-                channel.isChatChannel &&
-                !message.isSelfAuthored
-            ) {
-                this.outOfFocusService.notify(message, channel);
-            }
-
-            if (channel.type !== "channel" && !this.store.guest) {
-                // disabled on non-channel threads and
-                // on "channel" channels for performance reasons
-                this.threadService.markAsFetched(channel);
-            }
+        if (
+            !channel.chatPartner?.eq(this.store.odoobot) &&
+            channel.type !== "channel" &&
+            this.store.user
+        ) {
+            // disabled on non-channel threads and
+            // on "channel" channels for performance reasons
+            this.threadService.markAsFetched(channel);
         }
         if (
             !channel.loadNewer &&
