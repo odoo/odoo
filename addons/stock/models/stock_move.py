@@ -1069,7 +1069,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             for __, g in groupby(candidate_moves, key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g)
                 # Merge all positive moves together
-                if len(moves) > 1:
+                if len(moves) > 1 and any(m in self for m in moves):
                     # link all move lines to record 0 (the one we will keep).
                     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
                     # merge move data
@@ -1077,8 +1077,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # update merged moves dicts
                     moves_to_unlink |= moves[1:]
                     merged_moves |= moves[0]
-                # Add the now single positive move to its limited key record
-                moves_by_neg_key[neg_key(moves[0])] |= moves[0]
+                    moves = moves[0]
+                for m in moves:
+                    moves_by_neg_key[neg_key(m)] |= m
 
         for neg_move in neg_qty_moves:
             # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
