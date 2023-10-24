@@ -52,7 +52,7 @@ export function useAutofocus(params = {}) {
     useEffect(
         function autofocus() {
             const target = comp.el.querySelector(selector);
-            if (target && (!uiService?.activeElement || uiService.activeElement.contains(target))) {
+            if (target && (!uiService || !uiService.activeElement || uiService.activeElement.contains(target))) {
                 target.focus();
                 if (["INPUT", "TEXTAREA"].includes(target.tagName) && target.type !== 'number') {
                     const inputEl = target;

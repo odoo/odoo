@@ -2,10 +2,12 @@
 
 import { usePopover } from "@web/core/popover/popover_hook";
 import { popoverService } from "@web/core/popover/popover_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick } from "../../helpers/utils";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
 const { Component, mount, xml } = owl;
 
@@ -36,6 +38,8 @@ QUnit.module("Popover hook", {
     async beforeEach() {
         clearRegistryWithCleanup(mainComponents);
         registry.category("services").add("popover", popoverService);
+        registry.category("services").add("ui", uiService);
+        registry.category("services").add("localization", makeFakeLocalizationService());
 
         fixture = getFixture();
         env = await makeTestEnv();

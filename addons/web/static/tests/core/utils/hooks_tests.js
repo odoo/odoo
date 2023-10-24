@@ -118,16 +118,16 @@ QUnit.module("utils", () => {
 
         QUnit.test("useAutofocus: does not strictly depend on uiService", async function (assert) {
             class MyComponent extends Component {
-                static template = xml`
-                    <span>
-                        <input type="text" t-ref="autofocus" />
-                    </span>
-                `;
-
                 setup() {
                     this.inputRef = useAutofocus();
                 }
             }
+
+            MyComponent.template = xml`
+                <span>
+                    <input type="text" t-ref="autofocus" />
+                </span>
+            `;
 
             const env = await makeTestEnv();
             Object.defineProperty(env, "isSmall", {
