@@ -6157,3 +6157,42 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(len(receipt.move_line_ids), 1)
         self.assertEqual(receipt.move_line_ids.quantity, 1)
+
+    def test_skip_putaway_if_dest_loc_set_by_user(self):
+        """
+        Suppose the putaway rules and storage categories enabled. On the
+        detailed operations, the user adds a new line, set a specific
+        destination location and then the done quantity. In such cases, since
+        the user has defined himself the destination location, we should not try
+        to apply any putaway rule that would override his choice.
+        """
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+
+        child_location = self.stock_location.child_ids[0]
+        in_type = self.env.ref('stock.picking_type_in')
+
+        in_type.show_operations = True
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': in_type.id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        receipt.action_confirm()
+
+        with Form(receipt.move_ids, view='stock.view_stock_move_operations') as move_form:
+            with move_form.move_line_ids.edit(0) as line:
+                line.location_dest_id = child_location
+                line.quantity = 2
+
+        self.assertRecordValues(receipt.move_ids.move_line_ids[-1], [
+            {'location_dest_id': child_location.id, 'product_id': self.product.id, 'quantity': 2},
+        ])
