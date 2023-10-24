@@ -1,47 +1,11 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { patch } from "@web/core/utils/patch";
-import {
-    useX2ManyCrud,
-    useOpenX2ManyRecord,
-    X2ManyFieldDialog,
-} from "@web/views/fields/relational_utils";
+import { useX2ManyCrud, useOpenX2ManyRecord } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 const fieldRegistry = registry.category("fields");
-
-patch(X2ManyFieldDialog.prototype, {
-    /**
-     * Dirty patching of the 'X2ManyFieldDialog'.
-     * It is done to force the "save and new" to close the dialog first, and then click again on
-     * the "Add a line" link.
-     *
-     * This is the only way (or at least the least complicated) to correctly compute the sequence
-     * field, which is crucial when creating chatbot.steps, as they depend on each other.
-     *
-     */
-    async save({ saveAndNew }) {
-        if (this.record.resModel !== "chatbot.script.step") {
-            return super.save(...arguments);
-        }
-
-        if (await this.record.checkValidity()) {
-            this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
-        } else {
-            return false;
-        }
-
-        this.props.close();
-
-        if (saveAndNew) {
-            document.querySelector(".o_field_x2many_list_row_add a").click();
-        }
-
-        return true;
-    },
-});
 
 export class ChatbotStepsOne2manyRenderer extends ListRenderer {
     /**
