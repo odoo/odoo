@@ -14,7 +14,7 @@ export class Composer extends Record {
         if (Boolean(message) === Boolean(thread)) {
             throw new Error("Composer shall have a thread xor a message.");
         }
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     attachments = Record.many("Attachment");

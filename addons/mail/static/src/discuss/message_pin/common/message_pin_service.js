@@ -6,7 +6,7 @@ import { Message as MessageModel } from "@mail/core/common/message_model";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -80,13 +80,9 @@ export class MessagePin {
             const messagesData = await this.rpcService("/discuss/channel/pinned_messages", {
                 channel_id: channel.id,
             });
-            messagesData.forEach((messageData) => {
-                if (messageData.parentMessage) {
-                    messageData.parentMessage.body = markup(messageData.parentMessage.body);
-                }
-                messageData.body = markup(messageData.body);
-                this.store.Message.insert(messageData);
-            });
+            messagesData.forEach((messageData) =>
+                this.store.Message.insert(messageData, { html: true })
+            );
             channel.pinnedMessagesState = "loaded";
         } catch (e) {
             channel.pinnedMessagesState = "error";

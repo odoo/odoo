@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -84,8 +84,19 @@ export class DiscussCoreCommon {
                     model: "discuss.channel",
                     id: payload.res_id,
                 });
-                const message = this.messageService.createTransient(
-                    Object.assign(payload, { body: markup(payload.body) })
+                const { body, res_id, model } = payload;
+                const lastMessageId = this.messageService.getLastMessageId();
+                const message = this.store.Message.insert(
+                    {
+                        author: this.store.odoobot,
+                        body,
+                        id: lastMessageId + 0.01,
+                        is_note: true,
+                        is_transient: true,
+                        res_id,
+                        model,
+                    },
+                    { html: true }
                 );
                 channel.messages.push(message);
                 channel.transientMessages.push(message);
@@ -204,17 +215,7 @@ export class DiscussCoreCommon {
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
-        if ("parentMessage" in messageData && messageData.parentMessage.body) {
-            messageData.parentMessage.body = markup(messageData.parentMessage.body);
-        }
-        const data = Object.assign(messageData, {
-            body: markup(messageData.body),
-        });
-        const message = this.store.Message.insert({
-            ...data,
-            res_id: channel.id,
-            model: channel.model,
-        });
+        const message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);

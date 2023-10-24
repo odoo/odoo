@@ -14,7 +14,7 @@ export class Notification extends Record {
     }
     /** @returns {import("models").Notification} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @type {number} */

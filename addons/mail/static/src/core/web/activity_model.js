@@ -49,6 +49,15 @@ export class Activity extends Record {
      * @returns {import("models").Activity}
      */
     static insert(data, { broadcast = true } = {}) {
+        return super.insert(...arguments);
+    }
+    /**
+     * @param {Data} data
+     * @param {Object} [param1]
+     * @param {boolean} param1.broadcast
+     * @returns {import("models").Activity}
+     */
+    static _insert(data, { broadcast = true } = {}) {
         /** @type {import("models").Activity} */
         const activity = this.preinsert(data);
         if (data.request_partner_id) {
@@ -101,8 +110,7 @@ export class Activity extends Record {
     id;
     /** @type {Object[]} */
     mail_template_ids;
-    /** @type {string} */
-    note;
+    note = Record.attr("", { html: true });
     /** @type {number|false} */
     previous_activity_type_id;
     /** @type {number|false} */

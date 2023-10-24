@@ -27,8 +27,11 @@ export class Failure extends Record {
     }
     /** @returns {import("models").Failure} */
     static insert(data) {
+        return super.insert(...arguments);
+    }
+    static _insert() {
         /** @type {import("models").Failure} */
-        const failure = super.insert(data);
+        const failure = super._insert(...arguments);
         if (failure.notifications.length === 0) {
             failure.delete();
         } else {

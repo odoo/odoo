@@ -443,6 +443,8 @@ export class RecordList extends Array {
  * @property {boolean} [MANY_SYM] true when this is a many relation.
  * @property {boolean} [ONE_SYM] true when this is a one relation.
  * @property {any} [default] the default value of this attribute.
+ * @property {boolean} [html] whether the attribute is an html field. Useful to automatically markup
+ *   when the insert is trusted.
  * @property {string} [targetModel] model name of records contained in this relational field.
  * @property {Function} [compute] if set the field is computed based on provided function.
  *   The `this` of function is the record, and the function is recalled whenever any field
@@ -455,6 +457,15 @@ export class RecordList extends Array {
  */
 
 export class Record {
+    /** @param {FieldDefinition} */
+    static isAttr(definition) {
+        return Boolean(definition[ATTR_SYM]);
+    }
+    /**
+     * Determines whether the inserts are considered trusted or not.
+     * Useful to auto-markup html fields when this is set
+     */
+    static trusted = false;
     static id;
     /** @type {Object<string, Record>} */
     static records = {};
@@ -465,7 +476,7 @@ export class Record {
      * - key : field name
      * - value: Value contains definition of field
      *
-     * @type {Object.<string, {FieldDefinition}>}
+     * @type {Object.<string, FieldDefinition>}
      */
     static _fields = {};
     static isRecord(record) {
@@ -611,10 +622,10 @@ export class Record {
      */
     static new(data) {
         const obj = new this.Class();
+        obj.Model = this;
         const ids = this._retrieveIdFromData(data);
         let record = Object.assign(obj, {
             [IS_RECORD_SYM]: true,
-            Model: this,
             localId: this.localId(data),
             ...ids,
         });
@@ -662,13 +673,23 @@ export class Record {
     /**
      * @template T
      * @param {T} def;
+     * @param {boolean} [html] if set, the field value contains html value.
+     *   Useful to automatically markup when the insert is trusted.
      * @returns {T}
      */
-    static attr(def) {
-        return [ATTR_SYM, { default: def }];
+    static attr(def, { html } = {}) {
+        return [ATTR_SYM, { default: def, html }];
     }
     /** @returns {Record} */
-    static insert(data) {
+    static insert(data, { html } = {}) {
+        const oldTrusted = Record.trusted;
+        Record.trusted = html ?? Record.trusted;
+        const res = this._insert(...arguments);
+        Record.trusted = oldTrusted;
+        return res;
+    }
+    /** @returns {Record} */
+    static _insert(data) {
         const res = this.preinsert(data);
         res.update(data);
         return res;
@@ -808,8 +829,10 @@ export class Record {
         for (const [name, val] of Object.entries(this._fields)) {
             if (RecordList.isMany(val)) {
                 data[name] = val.map((r) => r.toIdData());
-            } else {
+            } else if (RecordList.isOne(val)) {
                 data[name] = this[name]?.toIdData();
+            } else {
+                data[name] = this[name]; // Record.attr()
             }
         }
         delete data._store;

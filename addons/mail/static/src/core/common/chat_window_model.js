@@ -15,11 +15,15 @@ export class ChatWindow extends Record {
     static get(data) {
         return super.get(data);
     }
+    /** @returns {import("models").ChatWindow} */
+    static insert() {
+        return super.insert(...arguments);
+    }
     /**
      * @param {ChatWindowData} [data]
      * @returns {import("models").ChatWindow}
      */
-    static insert(data = {}) {
+    static _insert(data = {}) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(data.thread));
         if (!chatWindow) {
             /** @type {import("models").ChatWindow} */

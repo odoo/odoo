@@ -3,8 +3,6 @@
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 
-import { markup } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -51,10 +49,7 @@ patch(ThreadService.prototype, {
         if ("activities" in result) {
             const existingIds = new Set();
             for (const activity of result.activities) {
-                if (activity.note) {
-                    activity.note = markup(activity.note);
-                }
-                existingIds.add(this.store.Activity.insert(activity).id);
+                existingIds.add(this.store.Activity.insert(activity, { html: true }).id);
             }
             for (const activity of thread.activities) {
                 if (!existingIds.has(activity.id)) {

@@ -5,6 +5,7 @@ import { BaseStore, makeStore } from "@mail/core/common/store_service";
 
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { markup } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 
@@ -137,4 +138,17 @@ QUnit.test("Computed relational field", async (assert) => {
     assert.ok(thread.admin.eq(john));
     thread.members.delete(john);
     assert.ok(thread.admin.eq(marc));
+});
+
+QUnit.test("Trusted insert on html field with { html: true }", async (assert) => {
+    (class Message extends Record {
+        static id = "body";
+        body = Record.attr("", { html: true });
+    }).register();
+    const store = await start();
+    const hello = store.Message.insert("<p>hello</p>", { html: true });
+    const world = store.Message.insert("<p>world</p>");
+    assert.ok(hello.body instanceof markup("").constructor);
+    assert.strictEqual(hello.body.toString(), "<p>hello</p>");
+    assert.strictEqual(world.body, "<p>world</p>");
 });

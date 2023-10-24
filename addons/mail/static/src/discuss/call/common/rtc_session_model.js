@@ -12,8 +12,11 @@ export class RtcSession extends Record {
     }
     /** @returns {number, import("models").RtcSession} */
     static insert(data) {
+        return super.insert(...arguments);
+    }
+    static _insert() {
         /** @type {import("models").RtcSession} */
-        const session = super.insert(data);
+        const session = super._insert(...arguments);
         session.channel?.rtcSessions.add(session);
         return session;
     }

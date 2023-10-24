@@ -12,7 +12,7 @@ export class CannedResponse extends Record {
     }
     /** @returns {import("models").CannedResponse} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @type {number} */
