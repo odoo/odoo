@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
@@ -58,9 +57,7 @@ export class MessageService {
     async delete(message) {
         if (message.isStarred) {
             this.store.discuss.starred.counter--;
-            removeFromArrayWithPredicate(this.store.discuss.starred.messages, (msg) =>
-                msg.eq(message)
-            );
+            this.store.discuss.starred.messages.delete(message);
         }
         message.body = "";
         message.attachments = [];

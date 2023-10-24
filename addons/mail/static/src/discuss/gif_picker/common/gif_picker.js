@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
 import { useService, useAutofocus } from "@web/core/utils/hooks";
@@ -46,6 +45,7 @@ import { useDebounced } from "@web/core/utils/timing";
  * @property {Object} [state]
  * @extends {Component<Props, Env>}
  */
+
 export class GifPicker extends Component {
     static template = "discuss.GifPicker";
     static props = ["PICKERS?", "className?", "close?", "onSelect", "state?"];
@@ -250,7 +250,10 @@ export class GifPicker extends Component {
             this.state.favorites.gifs.push(gif);
             await this.orm.silent.create("discuss.gif.favorite", [{ tenor_gif_id: gif.id }]);
         } else {
-            removeFromArrayWithPredicate(this.state.favorites.gifs, ({ id }) => id === gif.id);
+            const index = this.state.favorites.gifs.findIndex(({ id }) => id === gif.id);
+            if (index >= 0) {
+                this.state.favorites.gifs.splice(index, 1);
+            }
             await this.rpc(
                 "/discuss/gif/remove_favorite",
                 { tenor_gif_id: gif.id },

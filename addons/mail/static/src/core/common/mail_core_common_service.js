@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-
 import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -37,10 +35,7 @@ export class MailCoreCommon {
                 const { id, message_id } = payload;
                 const message = this.store.Message.get(message_id);
                 if (message) {
-                    removeFromArrayWithPredicate(
-                        message.linkPreviews,
-                        (linkPreview) => linkPreview.id === id
-                    );
+                    message.linkPreviews.delete({ id });
                 }
             });
             this.busService.subscribe("mail.message/delete", (payload) => {
