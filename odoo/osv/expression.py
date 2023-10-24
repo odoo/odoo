@@ -58,11 +58,8 @@ take a recursive form: a domain is not a valid second-level operand.
 
 Unaccent - Accent-insensitive search
 
-OpenERP will use the SQL function 'unaccent' when available for the
-'ilike' and 'not ilike' operators, and enabled in the configuration.
-Normally the 'unaccent' function is obtained from `the PostgreSQL
-'unaccent' contrib module
-<http://developer.postgresql.org/pgdocs/postgres/unaccent.html>`_.
+Odoo will use the SQL function 'unaccent' when available for the
+'ilike', 'not ilike' and '=ilike' operators, and enabled in the configuration.
 
 .. todo: The following explanation should be moved in some external
          installation guide
@@ -793,11 +790,6 @@ class expression(object):
         # parse the domain expression
         self.parse()
 
-    def _unaccent(self, field):
-        if getattr(field, 'unaccent', False):
-            return self._unaccent_wrapper
-        return lambda x: x
-
     # ----------------------------------------
     # Parsing
     # ----------------------------------------
@@ -1052,9 +1044,9 @@ class expression(object):
                     ))
 
                 else:
-                    if operator in ('like', 'ilike', 'not like', 'not ilike'):
+                    if operator in ('ilike', 'not ilike'):
                         right = f'%{pycompat.to_text(right)}%'
-                        unaccent = self._unaccent(field)
+                        unaccent = self._unaccent_wrapper
                     else:
                         unaccent = lambda x: x
 
@@ -1412,17 +1404,16 @@ class expression(object):
                             _right = pattern_to_translated_trigram_pattern(right)
 
                         if _right != '%':
-                            _unaccent = self._unaccent(field)
                             _left = SQL("jsonb_path_query_array(%s, '$.*')::text", sql_field)
                             _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
                             sql_exprs.append(SQL(
                                 "%s %s %s AND",
-                                _unaccent(_left),
+                                self._unaccent_wrapper(_left),
                                 _sql_operator,
-                                _unaccent(SQL("%s", _right))
+                                self._unaccent_wrapper(SQL("%s", _right))
                             ))
 
-                    unaccent = self._unaccent(field) if operator.endswith('ilike') else lambda x: x
+                    unaccent = self._unaccent_wrapper if operator.endswith('ilike') else lambda x: x
                     sql_left = model._field_to_sql(alias, field.name, self.query)
 
                     if need_wildcard:
@@ -1577,9 +1568,8 @@ class expression(object):
         if operator.endswith('like'):
             sql_left = SQL("%s::text", sql_field)
         if operator.endswith('ilike'):
-            unaccent = self._unaccent(field)
-            sql_left = unaccent(sql_left)
-            sql_right = unaccent(sql_right)
+            sql_left = self._unaccent_wrapper(sql_left)
+            sql_right = self._unaccent_wrapper(sql_right)
 
         sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_right)
 

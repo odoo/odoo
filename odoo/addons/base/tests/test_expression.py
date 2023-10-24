@@ -747,7 +747,7 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         with patch('odoo.osv.expression.get_unaccent_wrapper') as w:
             w().side_effect = lambda x: x
-            rs = Model.search([('parent_path', 'like', f'{helen.id}/%')], order='id asc')
+            rs = Model.search([('parent_path', '=like', f'{helen.id}/%')], order='id asc')
             self.assertEqual(rs, helen | hermione | nicostratus)
             # the result of `get_unaccent_wrapper()` is the wrapper and that's
             # what should not be called

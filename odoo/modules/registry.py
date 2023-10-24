@@ -598,7 +598,7 @@ class Registry(Mapping):
         """ Create or drop column indexes for the given models. """
 
         expected = [
-            (sql.make_index_name(Model._table, field.name), Model._table, field, getattr(field, 'unaccent', False))
+            (sql.make_index_name(Model._table, field.name), Model._table, field)
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -613,7 +613,7 @@ class Registry(Mapping):
                    [tuple(row[0] for row in expected)])
         existing = dict(cr.fetchall())
 
-        for indexname, tablename, field, unaccent in expected:
+        for indexname, tablename, field in expected:
             index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
             if index and indexname not in existing and \
@@ -623,16 +623,15 @@ class Registry(Mapping):
                     if field.translate:
                         column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
                     # add `unaccent` to the trigram index only because the
-                    # trigram indexes are mainly used for (i/=)like search and
+                    # trigram indexes are mainly used for (=)ilike search and
                     # unaccent is added only in these cases when searching
-                    if unaccent and self.has_unaccent:
-                        if self.has_unaccent == FunctionStatus.INDEXABLE:
-                            column_expression = get_unaccent_wrapper(cr)(column_expression)
-                        else:
-                            warnings.warn(
-                                "PostgreSQL function 'unaccent' is present but not immutable, "
-                                "therefore trigram indexes may not be effective.",
-                            )
+                    if self.has_unaccent == FunctionStatus.INDEXABLE:
+                        column_expression = get_unaccent_wrapper(cr)(column_expression)
+                    else:
+                        warnings.warn(
+                            "PostgreSQL function 'unaccent' is present but not immutable, "
+                            "therefore trigram indexes may not be effective.",
+                        )
                     expression = f'{column_expression} gin_trgm_ops'
                     method = 'gin'
                     where = ''

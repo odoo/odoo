@@ -3147,11 +3147,9 @@ class BaseModel(metaclass=MetaModel):
     def _check_parent_path(self):
         field = self._fields.get('parent_path')
         if field is None:
-            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True, unaccent=False)`.", self._name)
+            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True)`.", self._name)
         elif not field.index:
             _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
-        elif field.unaccent:
-            _logger.warning("parent_path field on model %r should have unaccent disabled. Add `unaccent=False` to the field definition.", self._name)
 
     def _add_sql_constraints(self):
         """ Modify this model's database table constraints so they match the one

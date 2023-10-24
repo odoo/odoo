@@ -194,7 +194,6 @@ class Lead(models.Model):
         compute="_compute_email_domain_criterion",
         index='btree_not_null',  # used for exact match, void value do not matter
         store=True,
-        unaccent=False,  # normalized, exact matching
     )
     phone = fields.Char(
         'Phone', tracking=50,
