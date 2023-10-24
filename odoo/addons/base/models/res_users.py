@@ -561,16 +561,19 @@ class Users(models.Model):
         super(Users, self).toggle_active()
 
     def read(self, fields=None, load='_classic_read'):
-        if fields and self == self.env.user:
-            readable = self.SELF_READABLE_FIELDS
-            for key in fields:
-                if not (key in readable or key.startswith('context_')):
-                    break
-            else:
-                # safe fields only, so we read as super-user to bypass access rights
-                self = self.sudo()
-
+        readable = self.SELF_READABLE_FIELDS
+        if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
+            # safe fields only, so we read as super-user to bypass access rights
+            self = self.sudo()
         return super(Users, self).read(fields=fields, load=load)
+
+    @api.model
+    def check_field_access_rights(self, operation, field_names):
+        readable = self.SELF_READABLE_FIELDS
+        if field_names and self == self.env.user and all(key in readable or key.startswith('context_') for key in field_names):
+            # safe fields only, so we read as super-user to bypass access rights
+            self = self.sudo()
+        return super(Users, self).check_field_access_rights(operation, field_names)
 
     @api.model
     def _read_group_check_field_access_rights(self, field_names):
