@@ -503,3 +503,10 @@ class PaymentProvider(models.Model):
             'payment_methods_mapping': const.PAYMENT_METHODS_MAPPING,
         }
         return json.dumps(inline_form_values)
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'stripe':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES
