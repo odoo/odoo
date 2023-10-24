@@ -60,6 +60,15 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                         });
                     });
+                    it('should not turn a div into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore:
+                                '<div>ab[]cd</div>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter:
+                                '<div>ab[]cd<ul><li></li></ul></div>',
+                        });
+                    });
                     it('should turn an empty paragraph of multiple table cells into a list', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: unformat(`
