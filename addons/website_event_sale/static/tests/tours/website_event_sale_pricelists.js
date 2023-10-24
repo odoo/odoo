@@ -13,12 +13,17 @@
             trigger: '.o_wevent_events_list a:contains("Pycon")',
         },
         {
-            content: "Register",
-            trigger: '.btn-primary:contains("Register")',
+            content: "Open the register modal",
+            trigger: 'button:contains("Register")',
+        },
+        {
+            content: "Click on Register button inside modal",
+            trigger: 'div.modal-footer button:contains("Register")',
+            run: 'click'
         },
         {
             content: "Fill attendees details",
-            trigger: 'form[id="attendee_registration"] .btn[type=submit]',
+            trigger: 'form[id="attendee_registration"]',
             run: function () {
                 $("input[name*='1-name']").val("Great Name");
                 $("input[name*='1-phone']").val("111 111");
