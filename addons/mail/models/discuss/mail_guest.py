@@ -147,6 +147,7 @@ class MailGuest(models.Model):
              # sudo: ir.config_parameter: safe to check for existence of tenor api key
             'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
+            'hasMessageTranslationFeature': False,
              # sudo: bus.bus: reading non-sensitive last id
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'menu_id': False,

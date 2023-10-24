@@ -126,6 +126,7 @@ class TestDiscussFullPerformance(HttpCase):
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'hasGifPickerFeature': False,
             'hasLinkPreviewFeature': True,
+            'hasMessageTranslationFeature': False,
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
             'odoobotOnboarding': False,
