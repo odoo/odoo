@@ -137,7 +137,7 @@ class AccountMoveSend(models.TransientModel):
             + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         self.ensure_one()
         return {
             'mail_template_id': self.mail_template_id.id,
@@ -604,7 +604,7 @@ class AccountMoveSend(models.TransientModel):
 
         moves_data = {
             move: {
-                **(move.send_and_print_values if not wizard else wizard._get_wizard_values(move)),
+                **(move.send_and_print_values if not wizard else wizard._get_wizard_values()),
                 **self._get_mail_move_values(move, wizard),
             }
             for move in moves
@@ -658,7 +658,7 @@ class AccountMoveSend(models.TransientModel):
         if process_later:
             # Set sending information on moves
             for move in self.move_ids:
-                move.send_and_print_values = self._get_wizard_values(move)
+                move.send_and_print_values = self._get_wizard_values()
             self.env.ref('account.ir_cron_account_move_send')._trigger()
             return {'type': 'ir.actions.act_window_close'}
 

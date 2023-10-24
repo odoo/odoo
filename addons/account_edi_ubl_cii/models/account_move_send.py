@@ -20,9 +20,9 @@ class AccountMoveSend(models.TransientModel):
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         # EXTENDS 'account'
-        values = super()._get_wizard_values(move)
+        values = super()._get_wizard_values()
         values['ubl_cii_xml'] = self.checkbox_ubl_cii_xml
         return values
 

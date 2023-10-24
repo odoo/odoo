@@ -10,9 +10,9 @@ class AccountMoveSend(models.TransientModel):
         compute='_compute_l10n_es_edi_facturae_checkbox_xml',
     )
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         # EXTENDS 'account'
-        values = super()._get_wizard_values(move)
+        values = super()._get_wizard_values()
         values['l10n_es_edi_facturae_xml'] = self.l10n_es_edi_facturae_checkbox_xml
         return values
 
