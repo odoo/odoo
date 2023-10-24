@@ -5,6 +5,7 @@ import datetime
 
 from odoo import tests, _
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests.common import new_test_user
 
 
 @tests.tagged('post_install', '-at_install')
@@ -140,3 +141,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel.livechat_active, True, "The livechat session must be active as the visitor did not left the conversation yet.")
 
         return channel
+
+    def test_livechat_as_portal_user(self):
+        new_test_user(self.env, login="portal_user", groups="base.group_portal")
+        self.start_tour("/my", "website_livechat_as_portal_tour", login="portal_user")
