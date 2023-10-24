@@ -65,6 +65,11 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='discuss.tenor_gif_limit',
         help="Fetch up to the specified number of GIF.",
     )
+    google_translate_api_key = fields.Char(
+        "Message Translation API Key",
+        help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
+        config_parameter="mail.google_translate_api_key",
+    )
 
     def _compute_fail_counter(self):
         previous_date = fields.Datetime.now() - datetime.timedelta(days=30)

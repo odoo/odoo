@@ -127,6 +127,12 @@ export class Message extends Record {
     subtype_description;
     /** @type {Object[]} */
     trackingValues = [];
+    /** @type {string|undefined} */
+    translationValue;
+    /** @type {string|undefined} */
+    translationSource;
+    /** @type {string|undefined} */
+    translationErrors;
     /** @type {string} */
     type;
     /** @type {string} */

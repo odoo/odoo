@@ -4197,8 +4197,7 @@ class MailThread(models.AbstractModel):
         empty_messages = message.sudo()._filter_empty()
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
-
-        self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
+        payload = {
             'Message': {
                 'id': message.id,
                 'body': message.body,
@@ -4207,7 +4206,12 @@ class MailThread(models.AbstractModel):
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message.partner_ids],
                 'write_date': message.write_date,
             }
-        })
+        }
+        if "body" in msg_values:
+            # sudo: mail.message.translation - discarding translations of message after editing it
+            self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
+            payload["Message"]["translationValue"] = False
+        self.env["bus.bus"]._sendone(message._bus_notification_target(), "mail.record/insert", payload)
 
     # ------------------------------------------------------
     # CONTROLLERS

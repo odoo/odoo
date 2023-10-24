@@ -33,6 +33,7 @@ from . import mail_link_preview
 from . import mail_message_reaction
 from . import mail_message_schedule
 from . import mail_message_subtype
+from . import mail_message_translation
 from . import mail_message
 from . import mail_mail
 from . import mail_tracking_value

@@ -16,6 +16,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
     Component,
+    markup,
     onMounted,
     onPatched,
     useChildSubEnv,
@@ -103,6 +104,7 @@ export class Message extends Component {
             expandOptions: false,
             originalEmail: false,
             emailHeaderOpen: false,
+            showTranslation: false,
         });
         this.root = useRef("root");
         this.hasTouch = hasTouch;
@@ -314,6 +316,22 @@ export class Message extends Component {
         return this.props.thread.id === "inbox";
     }
 
+    get translatable() {
+        return (
+            this.store.hasMessageTranslationFeature &&
+            this.env.inChatter &&
+            !this.message.isSelfAuthored
+        );
+    }
+
+    get translatedFromText() {
+        return _t("(Translated from: %(language)s)", { language: this.message.translationSource });
+    }
+
+    get translationFailureText() {
+        return _t("(Translation Failure: %(error)s)", { error: this.message.translationErrors });
+    }
+
     onMouseenter() {
         this.state.isHovered = true;
     }
@@ -476,5 +494,18 @@ export class Message extends Component {
         this.dialog.add(MessageReactionMenu, {
             message: this.props.message,
         });
+    }
+
+    async onClickToggleTranslation() {
+        if (!this.message.translationValue) {
+            const { error, lang_name, body } = await this.rpc("/mail/message/translate", {
+                message_id: this.message.id,
+            });
+            this.message.translationValue = body && markup(body);
+            this.message.translationSource = lang_name;
+            this.message.translationErrors = error;
+        }
+        this.state.showTranslation =
+            !this.state.showTranslation && Boolean(this.message.translationValue);
     }
 }

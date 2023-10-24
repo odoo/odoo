@@ -93,7 +93,15 @@
                                                         <button t-if="message.type === 'email'" class="o-mail-Message-originalEmailText d-block float-end p-1 mb-1 btn btn-link opacity-75 fst-italic" t-att-class="env.inChatWindow and isAlignedRight ? 'me-3' : 'ms-3'" t-esc="originalEmailText" t-on-click="() => this.state.originalEmail = !this.state.originalEmail"/>
                                                         <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div t-if="message.type === 'email'" t-ref="shadowBody"/>
+                                                        <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
+                                                        <p class="fst-italic text-muted small" t-if="state.showTranslation">
+                                                            <t t-if="message.translationSource" t-esc="translatedFromText"/>
+                                                        </p>
+                                                        <p class="fst-italic text-muted small" t-if="message.translationErrors">
+                                                            <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
+                                                            <t t-if="message.translationErrors" t-esc="translationFailureText"/>
+                                                        </p>
                                                         <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
