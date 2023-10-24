@@ -278,6 +278,7 @@ export class Wysiwyg extends Component {
         editorPlugins: [],
         useResponsiveFontSizes: true,
         showResponsiveFontSizesBadges: false,
+        showExtendedTextStylesOptions: false,
         getCSSVariableValue: weUtils.getCSSVariableValue,
         convertNumericToUnit: weUtils.convertNumericToUnit,
     };
@@ -456,6 +457,7 @@ export class Wysiwyg extends Component {
             foldSnippets: !!options.foldSnippets,
             useResponsiveFontSizes: options.useResponsiveFontSizes,
             showResponsiveFontSizesBadges: options.showResponsiveFontSizesBadges,
+            showExtendedTextStylesOptions: options.showExtendedTextStylesOptions,
             getCSSVariableValue: options.getCSSVariableValue,
             convertNumericToUnit: options.convertNumericToUnit,
         }, editorCollaborationOptions));

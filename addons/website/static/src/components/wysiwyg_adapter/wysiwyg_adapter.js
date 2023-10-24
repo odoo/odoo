@@ -378,6 +378,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             getUnremovableElements: this._getUnremovableElements.bind(this),
             direction: this.websiteService.currentWebsite.metadata.direction,
             showResponsiveFontSizesBadges: true,
+            showExtendedTextStylesOptions: true,
             ...options,
         });
     }
