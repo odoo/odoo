@@ -4,21 +4,6 @@ $o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
 $o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
 $o-wevent-color: $body-color;
 
-.o_wevent_theme_bg_base {
-    background-color: $o-wevent-bg-color-base !important;
-    color: $o-wevent-color;
-}
-
-.o_wevent_theme_bg_light {
-    background-color: $o-wevent-bg-color-light !important;
-    color: $o-wevent-color;
-}
-
-.o_wevent_theme_bg_dark {
-    background-color: $o-wevent-bg-color-dark !important;
-    color: $o-wevent-color;
-}
-
 .o_wevent_index, .o_wevent_event {
 
     // Simple colored tags according to assigned background color
@@ -73,34 +58,10 @@ $o-wevent-color: $body-color;
      */
 
     .o_wevent_index_topbar_filters {
-        .dropdown-toggle {
-            border: $border-width solid mix(map-get($theme-colors, 'primary'), map-get($grays, '400'));
-            @extend .o_wevent_theme_bg_light;
-            @include border-radius($dropdown-border-radius);
-            &:hover, &:focus {
-                border-color: map-get($theme-colors, 'primary');
-                color: map-get($theme-colors, 'primary');
-                text-decoration: none;
-            }
-            &:after {
-                margin-left: 1.2em;
-            }
-            .fa {
-                margin-right: .4em;
-                color: $o-wevent-color;
-            }
-        }
         .dropdown-menu {
-            margin-top: $navbar-padding-y;
-            min-width: 12rem;
             max-height: 250px;
             overflow-y: auto;
-            @extend .o_wevent_theme_bg_light;
         }
-    }
-
-    .o_wevent_event_searchbar_form > input {
-        @extend .o_wevent_theme_bg_light;
     }
 
     /*
@@ -112,39 +73,35 @@ $o-wevent-color: $body-color;
         .o_wevent_online_badge_unpublished{
             opacity: 0.4;
         }
+        .o_wesession_list_item{
+            margin: 1rem 0;
+            border: 1px solid;
+            border-left: 10px solid;
+        }
         // background color-based for new styling
-        .event_color_1 {
-            background-color: rgba(240, 96, 80, 0.2);
+        @for $size from 2 through length($o-colors) {
+            .event_color_#{$size - 1} {
+                &.event_track{
+                    $-bg: adjust-color(nth($o-colors, $size), $lightness: 40%, $saturation: 15%);
+                    @include o-print-color($-bg, background-color, bg-opacity);
+                    > div{
+                        border-top: 3px solid adjust-color(nth($o-colors, $size), $lightness: 10%, $saturation: 15%);
+                    }
+                }
+                &.o_wesession_list_item{
+                    border-color: adjust-color(nth($o-colors, $size), $lightness: 30%, $saturation: 15%);
+                    background-color: unset;
+                }
+            }
         }
-        .event_color_2 {
-            background-color: rgba(244, 164, 96, 0.2);
-        }
-        .event_color_3 {
-            background-color: rgba(247, 205, 31, 0.2);
-        }
-        .event_color_4 {
-            background-color: rgba(108,193,237,0.2);
-        }
-        .event_color_5 {
-            background-color: rgba(129,73,104,0.2);
-        }
-        .event_color_6 {
-            background-color: rgba(235,126,127,0.2);
-        }
-        .event_color_7 {
-            background-color: rgba(44,131,151,0.2);
-        }
-        .event_color_8 {
-            background-color: rgba(71,85,119,0.2);
-        }
-        .event_color_9 {
-            background-color: rgba(214,20,95,0.2);
-        }
-        .event_color_10 {
-            background-color: rgba(48,195,129,0.2);
-        }
-        .event_color_11 {
-            background-color: rgba(147,101,184,0.2);
+        .event_color_0 {
+            background-color: unset;
+            &.event_track{
+                border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+            }
+            &.o_wesession_list_item{
+                border-color: $o-wevent-bg-color-light;
+            }
         }
 
         .o_wevent_online_page_container {
@@ -154,27 +111,6 @@ $o-wevent-color: $body-color;
                 min-width: 64px;
                 img {
                     max-width: 96px;
-                }
-            }
-
-            // Left panel
-            .o_wevent_online_page_aside {
-                @extend .o_wevent_theme_bg_base;
-                // Left panel: content display
-                .o_wevent_online_page_aside_content {
-                    li:not(.nav-item) {
-                        border-bottom: 1px solid $border-color;
-                        &:first-child {
-                            border-top: 1px solid $border-color;
-                        }
-                        &:last-child {
-                            border-bottom: 0px;
-                        }
-                    }
-
-                    .o_wevent_online_page_aside_collapse:not(.collapsed) {
-                        transform: rotate(180deg);
-                    }
                 }
             }
         }

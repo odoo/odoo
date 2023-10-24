@@ -20,34 +20,19 @@
 .o_wevent_index {
     // Events List
     .o_wevent_events_list {
-        header {
-            a {
-                transition: all .25s ease-in-out;
-                &:hover, &:focus {
-                    transform: scale(1.05);
-                }
-            }
-        }
-        @include media-breakpoint-up(sm) {
-            #o_wevent_index_main_col article div.col {
-                min-width: 0;
-            }
-        }
         .opt_events_list_columns {
-            header {
+            .card-header {
                 height: 200px;
             }
         }
         .opt_events_list_rows {
-            @include media-breakpoint-down(md) {
-                header {
-                    height: 200px;
-                }
+            .card-header {
+                min-height: 130px;
             }
         }
         .o_wevent_badge_event {
-            @include o-position-absolute($top: 0, $left: 0);
-            @include border-start-radius(0);
+            @include o-position-absolute($top: 0, $right: 0);
+            @include border-end-radius(0);
             padding: ($spacer * .5) $card-spacer-x;
             transform: translateY(-50%);
         }
@@ -74,18 +59,11 @@
                 font-weight: $font-weight-bold;
                 text-transform: uppercase;
             }
+            &.left{
+                left: $card-spacer-x;
+            }
         }
-        .o_wevent_participating,
-        .o_wevent_unpublished {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            padding: $card-spacer-y $card-spacer-x;
-            text-align: right;
-        }
-        article {
-            background-color: $o-wevent-bg-color-base;
-            color: $o-wevent-color;
+        a {
             .card-body {
                 background-color: $o-wevent-bg-color-base !important;
                 color: $o-wevent-color;
