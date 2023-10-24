@@ -3519,7 +3519,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo3.move_raw_ids[1].quantity_done, 0, "Extra line Consumed qty not correctly zero-ed")
         self.assertEqual(mo3.state, 'done')
 
-    def test_exceeded_consumed_qty_and_duplicated_lines(self):
+    def test_exceeded_consumed_qty_and_duplicated_lines_01(self):
         """
         Two components C01, C02. C01 has the MTO route.
         MO with 1 x C01, 1 x C02, 1 x C02.
@@ -3562,6 +3562,45 @@ class TestMrpOrder(TestMrpCommon):
         p03_raws = mo.move_raw_ids.filtered(lambda m: m.product_id == product03)
         self.assertEqual(sum(p02_raws.mapped('quantity_done')), 1.5)
         self.assertEqual(sum(p03_raws.mapped('quantity_done')), 2)
+
+    def test_exceeded_consumed_qty_and_duplicated_lines_02(self):
+        """
+        One component C01, 2-steps manufacturing
+        MO with 1 x C01, 1 x C01
+        Process the MO and set a higher consumed qty for the first C01.
+        Ensure that the MO can still be processed and that the consumed quantities
+        are correct.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm'
+
+        finished, component = self.env['product.product'].create([{
+            'name': 'Product %s' % (i + 1),
+            'type': 'product',
+        } for i in range(2)])
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        mo_form.product_qty = 1
+        for _ in range(3):
+            with mo_form.move_raw_ids.new() as line:
+                line.product_id = component
+                line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
+
+        mo.move_raw_ids.quantity_done = 1
+        mo.move_raw_ids[1].move_line_ids.qty_done = 1.5
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+
+        compo_raws = mo.move_raw_ids.filtered(lambda m: m.product_id == component)
+        self.assertEqual(sum(compo_raws.mapped('quantity_done')), 3.5)
 
     def test_validation_mo_with_tracked_component(self):
         """
