@@ -37,7 +37,7 @@ overridden by modules), because:
 <template id="s_text_block_2nd" inherit_id="website.s_text_block" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_text_block</attribute>
-        <attribute name="class" add="pt40 pb40 o_colored_level" separator=" "/>
+        <attribute name="class" add="o_colored_level" separator=" "/>
     </xpath>
 </template>
 
@@ -47,7 +47,7 @@ overridden by modules), because:
 
 <template id="new_page_template_about_map_s_text_block_2nd" inherit_id="website.new_page_template_about_s_text_block_2nd" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pt40 pb40" remove="pt40 pb40 o_colored_level" separator=" "/>
+        <attribute name="class" remove="o_colored_level" separator=" "/>
     </xpath>
 </template>
 
@@ -101,7 +101,7 @@ overridden by modules), because:
 
 <template id="new_page_template_about_full_1_s_text_block_h1" inherit_id="website.new_page_template_about_s_text_block_h1" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pt40 pb40 pb40" remove="pb0" separator=" "/>
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
     </xpath>
 </template>
 
@@ -208,7 +208,7 @@ overridden by modules), because:
 
 <template id="new_page_template_landing_4_s_text_block_h2" inherit_id="website.new_page_template_landing_s_text_block_h2" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pb40 pb40 pt40" remove="pb0" separator=" "/>
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
     </xpath>
     <xpath expr="//h2" position="replace" mode="inner">About Us</xpath>
 </template>
@@ -251,7 +251,7 @@ overridden by modules), because:
 
 <template id="new_page_template_about_full_s_image_text" inherit_id="website.new_page_template_about_s_image_text" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt48 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
     <xpath expr="//h2" position="replace">
         <h2>Our Story</h2>
@@ -304,7 +304,7 @@ overridden by modules), because:
 
 <template id="new_page_template_gallery_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt48 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
 </template>
 
@@ -319,7 +319,7 @@ overridden by modules), because:
 
 <template id="new_page_template_pricing_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt48 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
 </template>
 
@@ -343,7 +343,7 @@ overridden by modules), because:
 
 <template id="new_page_template_about_full_s_text_image" inherit_id="website.new_page_template_about_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Our Goals</h2>
@@ -355,7 +355,7 @@ overridden by modules), because:
 
 <template id="new_page_template_landing_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Our Approach</h2>
@@ -367,7 +367,7 @@ overridden by modules), because:
 
 <template id="new_page_template_services_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Transform Your Brand</h2>
@@ -379,7 +379,7 @@ overridden by modules), because:
 
 <template id="new_page_template_team_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt56 pb56" separator=" "/>
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt32 pb32" separator=" "/>
     </xpath>
     <xpath expr="//h2|//h3" position="replace">
         <h2>Mich Stark, COO</h2>
@@ -398,14 +398,14 @@ overridden by modules), because:
 
 <template id="new_page_template_basic_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt0 pb0" separator=" "/>
+        <attribute name="class" add="o_colored_level" separator=" "/>
     </xpath>
     <xpath expr="//h1|//h2" position="replace"/>
 </template>
 
 <template id="new_page_template_about_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt0 pb0" separator=" "/>
+        <attribute name="class" add="o_colored_level" separator=" "/>
     </xpath>
     <xpath expr="//h1|//h2" position="replace">
         <h2 style="text-align: center;">Our Team</h2>
@@ -415,7 +415,7 @@ overridden by modules), because:
 
 <template id="new_page_template_team_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_colored_level pt0 pb0" separator=" "/>
+        <attribute name="class" add="o_colored_level" separator=" "/>
     </xpath>
     <xpath expr="//img" position="replace">
         <img alt="" src="/web/image/website.library_image_team" class="figure-img img-thumbnail padding-large"/>
@@ -427,7 +427,7 @@ overridden by modules), because:
 <template id="s_picture_only" inherit_id="website.new_page_template_s_picture" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="data-snippet">s_picture</attribute>
-        <attribute name="class" add="o_colored_level pt0 pb0" separator=" "/>
+        <attribute name="class" add="o_colored_level" separator=" "/>
     </xpath>
     <xpath expr="//h1|//h2" position="replace"/>
     <xpath expr="//p" position="replace"/>
@@ -537,13 +537,13 @@ overridden by modules), because:
 
 <template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_cc pt24 pb24 o_cc3 o_colored_level" separator=" "/>
+        <attribute name="class" add="o_cc3 o_colored_level" remove="o_cc2" separator=" "/>
     </xpath>
 </template>
 
 <template id="new_page_template_about_personal_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="o_cc pt0 o_cc3 o_colored_level" remove="pt24" separator=" "/>
+        <attribute name="class" add="pt0 o_cc3 o_colored_level" remove="o_cc2 pt24" separator=" "/>
     </xpath>
     <xpath expr="//h6" position="replace">
         <h6 style="text-align: center;">Clients</h6>
