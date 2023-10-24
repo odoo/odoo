@@ -888,8 +888,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(invoice.invoice_pdf_report_id)
         self.assertTrue(invoice.message_main_attachment_id)
 
-    def test_with_empty_mail_template(self):
-        """ Test you can use the send & print wizard without any mail template. """
+    def test_with_empty_mail_template_single(self):
+        """ Test you can use the send & print wizard without any mail template if and only if you are in single mode. """
         self.partner_a.email = "turlututu@tsointsoin"
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
@@ -899,6 +899,18 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print(allow_fallback_pdf=True)
         message = self.env['mail.message'].search([('model', '=', invoice._name), ('res_id', '=', invoice.id)], limit=1)
         self.assertRecordValues(message, [{'subject': custom_subject}])
+
+    def test_with_empty_mail_template_multi(self):
+        """ Test shouldn't be able to send email without mail template in multi mode. """
+        self.partner_a.email = "turlututu@tsointsoin"
+        invoice_1 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        invoice_2 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        custom_subject = "turlututu"
+        wizard = self.create_send_and_print((invoice_1 + invoice_2), mail_template_id=None, mail_subject=custom_subject)
+
+        with self.assertRaises(UserError):
+            wizard.action_send_and_print(allow_fallback_pdf=True)
 
     def test_with_draft_invoices(self):
         """ Use Send & Print wizard on draft invoice(s) should raise an error. """
