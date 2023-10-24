@@ -5,7 +5,6 @@ import uuid
 from datetime import datetime, timedelta
 from functools import wraps
 from inspect import Parameter, signature
-from werkzeug.exceptions import NotFound
 
 from odoo.tools import consteq, get_lang
 from odoo import _, api, fields, models
@@ -83,6 +82,7 @@ class MailGuest(models.Model):
         parts = token.split(self._cookie_separator)
         if len(parts) == 2:
             guest_id, guest_access_token = parts
+            # sudo: mail.guest: guests need sudo to read their access_token
             guest = self.browse(int(guest_id)).sudo().exists()
             if not guest or not guest.access_token or not consteq(guest.access_token, guest_access_token):
                 guest = self.env["mail.guest"]
@@ -92,7 +92,7 @@ class MailGuest(models.Model):
         """Returns the current guest record from the context, if applicable."""
         guest = self.env.context.get('guest')
         if isinstance(guest, self.pool['mail.guest']):
-            return guest.with_context(guest=guest)
+            return guest.sudo(False).with_context(guest=guest)
         return self.env['mail.guest']
 
     def _get_timezone_from_request(self, request):
@@ -129,20 +129,25 @@ class MailGuest(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
-        odoobot = self.env.ref('base.partner_root')
+        # sudo: res.partner - exposing OdooBot name and id
+        odoobot = self.env.ref('base.partner_root').sudo()
+        # sudo: mail.guest - guest reading their own id/name/channels
+        guest_sudo = self.sudo()
         return {
-            'channels': self.channel_ids._channel_info(),
+            'channels': guest_sudo.channel_ids.sudo(False)._channel_info(),
             'companyName': self.env.company.name,
             'currentGuest': {
-                'id': self.id,
-                'name': self.name,
+                'id': guest_sudo.id,
+                'name': guest_sudo.name,
                 'type': "guest",
             },
             'current_partner': False,
             'current_user_id': False,
             'current_user_settings': False,
+             # sudo: ir.config_parameter: safe to check for existence of tenor api key
             'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
+             # sudo: bus.bus: reading non-sensitive last id
             'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'menu_id': False,
             'needaction_inbox_counter': False,
@@ -171,7 +176,7 @@ class MailGuest(models.Model):
             guests_formatted_data[guest] = data
         return guests_formatted_data
 
-    def _find_or_create_for_channel(self, channel, name, country_id, timezone, add_as_member=True, post_joined_message=False):
+    def _find_or_create_for_channel(self, channel, name, country_id, timezone, post_joined_message=False):
         """Get a guest for the given channel. If there is no guest yet,
         create one.
 
@@ -183,8 +188,6 @@ class MailGuest(models.Model):
         :param post_joined_message: whether to post a message to the channel
             to notify that the guest joined
         """
-        if channel.group_public_id:
-            raise NotFound()
         guest = self._get_guest_from_context()
         if not guest:
             guest = self.create(
@@ -194,19 +197,14 @@ class MailGuest(models.Model):
                     "name": name,
                     "timezone": timezone,
                 }
-            )
-        if add_as_member:
-            channel = channel.with_context(guest=guest)
-            try:
-                channel.add_members(guest_ids=[guest.id], post_joined_message=post_joined_message)
-            except UserError:
-                raise NotFound()
+            ).sudo(False)
+        channel.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return guest
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
         that expects a guest will make use of it to authenticate the guest
-        through `_get_as_sudo_from_context` or `_get_as_sudo_from_context_or_raise`.
+        through `add_guest_to_context`.
         """
         self.ensure_one()
         expiration_date = datetime.now() + timedelta(days=365)
@@ -216,6 +214,7 @@ class MailGuest(models.Model):
             httponly=True,
             expires=expiration_date,
         )
+        request.update_context(guest=self.sudo(False))
 
     def _format_auth_cookie(self):
         """Format the cookie value for the given guest.

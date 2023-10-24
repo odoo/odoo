@@ -12,6 +12,7 @@ class MailMessage(models.Model):
         self.ensure_one()
         if self.env.user._is_public():
             guest = self.env["mail.guest"]._get_guest_from_context()
+            # sudo: mail.guest - current guest can read channels they are member of
             return guest and self.model == "discuss.channel" and self.res_id in guest.sudo().channel_ids.ids
         return super()._validate_access_for_current_persona(operation)
 

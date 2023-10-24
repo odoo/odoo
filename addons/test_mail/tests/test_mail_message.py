@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -8,11 +7,11 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
+from odoo.tests.common import tagged, users
 from odoo.tools import is_html_empty, mute_logger, formataddr
-from odoo.tests import tagged, users
 
 
-@tagged('mail_message')
+@tagged("mail_message", "post_install", "-at_install")
 class TestMessageValues(MailCommon):
 
     @classmethod
@@ -321,7 +320,7 @@ class TestMessageValues(MailCommon):
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
 
-@tagged('mail_message')
+@tagged("mail_message", "post_install", "-at_install")
 class TestMessageAccess(MailCommon):
 
     @classmethod

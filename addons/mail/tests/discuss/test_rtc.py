@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('RTC')
-class TestChannelInternals(MailCommon):
+@tagged("RTC", "post_install", "-at_install")
+class TestChannelRTC(MailCommon):
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -108,8 +106,7 @@ class TestChannelInternals(MailCommon):
             [
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
             ],
@@ -190,8 +187,7 @@ class TestChannelInternals(MailCommon):
             [
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
@@ -646,14 +642,12 @@ class TestChannelInternals(MailCommon):
             [
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "invited" (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new members (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new member (guest) (not asserted below)
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # channel joined for guest (not asserted below)
             ],

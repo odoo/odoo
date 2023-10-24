@@ -93,7 +93,9 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
+        thread = request.env[thread_model].search([("id", "=", thread_id)])
+        if not thread:
+            raise NotFound()
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []

@@ -1,13 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import timedelta
 from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
 
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.tests.common import tagged
 
 
+@tagged("post_install", "-at_install")
 class TestGetDiscussChannel(TestImLivechatCommon):
     def test_get_discuss_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).
@@ -139,13 +141,20 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         return discuss_channels
 
     def test_channel_not_pinned_for_operator_before_first_message(self):
-        channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'whatever', 'channel_id': self.livechat_channel.id})
-        operator_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
-        self.assertEqual(len(operator_channel_member), 1, "operator should be member of channel")
-        self.assertFalse(operator_channel_member.is_pinned, "channel should not be pinned for operator initially")
-        self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
-        self.assertTrue(operator_channel_member.is_pinned, "channel should be pinned for operator after visitor sent a message")
-        self.assertIn(channel_info['id'], operator_channel_member.partner_id._get_channels_as_member().ids, "channel should be fetched by operator on new page")
+        operator = self.operators[0]
+        params = {
+            "anonymous_name": "whatever",
+            "channel_id": self.livechat_channel.id,
+            "previous_operator_id": operator.partner_id.id
+        }
+        channel_id = self.make_jsonrpc_request("/im_livechat/get_session", params)["id"]
+        member_domain = [("channel_id", "=", channel_id), ("is_self", "=", True)]
+        member = self.env["discuss.channel.member"].with_user(operator).search(member_domain)
+        self.assertEqual(len(member), 1, "operator should be member of channel")
+        self.assertFalse(member.is_pinned, "channel should not be pinned for operator initially")
+        self.env["discuss.channel"].browse(channel_id).message_post(body="cc")
+        self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
+        self.assertIn(channel_id, [c["id"] for c in operator._init_messaging()["channels"]], "channel should be fetched by operator on new page")
 
     def test_operator_livechat_username(self):
         """Ensures the operator livechat_username is returned by `_channel_fetch_message`, which is

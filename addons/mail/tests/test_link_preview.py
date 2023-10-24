@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -9,10 +8,10 @@ import requests
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools import link_preview
-from odoo.tests import tagged
+from odoo.tests.common import tagged
 
 
-@tagged('mail_link_preview', 'mail_message')
+@tagged("mail_link_preview", "mail_message", "post_install", "-at_install")
 class TestLinkPreview(MailCommon):
 
     @classmethod
