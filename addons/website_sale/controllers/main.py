@@ -411,6 +411,13 @@ class WebsiteSale(http.Controller):
 
         products_prices = lazy(lambda: products._get_sales_prices(pricelist))
 
+        # Compute the sum of all product prices which will be displayed on the ecommerce products grid.
+        # Using this `checksum` to cache the template allows to takes into account all factors
+        # that influence the price of a product (product, pricelist, taxes, fiscal position, etc.).
+        # To manage the case where the sum of prices is the same in several situations,
+        # it is necessary to add this key to the existing cached keys.
+        checksum = sum([price['price_reduce'] for price in products_prices.values()])
+
         fiscal_position_id = website._get_current_fiscal_position_id(request.env.user.partner_id)
 
         values = {
@@ -438,6 +445,7 @@ class WebsiteSale(http.Controller):
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': tools.float_round,
             'fiscal_position_id': fiscal_position_id,
+            'checksum': checksum,
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price

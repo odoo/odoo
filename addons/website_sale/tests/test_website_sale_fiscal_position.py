@@ -86,3 +86,32 @@ class TestWebsiteSaleFiscalPosition(ProductCommon, HttpCaseWithUserPortal):
         #       the prices must not be those previously calculated for the portal user.
         #       Because the fiscal position differs from that of the public user.
         self.start_tour("/shop", 'website_sale_fiscal_position_public_tour', login="")
+
+    def test_shop_tax_change_products_template(self):
+        """
+            The `website_sale.products` template is computationally intensive
+            and therefore uses the cache.
+            The goal of this test is to check that this template
+            is up to date with tax changes.
+        """
+        # Set setting to display tax excluded on the website
+        config = self.env['res.config.settings'].create({})
+        config.show_line_subtotals_tax_selection = "tax_excluded"
+        config.execute()
+        tax_10 = self.env['account.tax'].create({
+            'name': '15% excl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': False,
+            'include_base_amount': False,
+        })
+        self.env["product.product"].create({
+            'name': "Super product",
+            'list_price': 100.00,
+            'taxes_id': [tax_10.id],
+            'website_published': True,
+        })
+        self.start_tour("/shop", 'website_sale_tax_change_tour_1', login="")
+        tax_10.price_include = True
+        self.start_tour("/shop", 'website_sale_tax_change_tour_2', login="")
