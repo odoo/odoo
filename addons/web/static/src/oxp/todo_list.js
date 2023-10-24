@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 import { TodoItem } from "./todo_item";

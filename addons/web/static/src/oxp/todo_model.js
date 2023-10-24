@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { reactive, useComponent, useState, useSubEnv } from "@odoo/owl";
+import { useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 let nextId = 1;
 
@@ -41,17 +42,6 @@ export class TodoListModel {
 }
 
 export function useTodoListModel() {
-    const component = useComponent();
-    if (!component.env.todoListModel) {
-        useSubEnv({
-            todoListModel: reactive(
-                new TodoListModel([
-                    {
-                        message: "Send email to John",
-                    },
-                ])
-            ),
-        });
-    }
-    return useState(component.env.todoListModel);
+    const todoService = useService("todo");
+    return useState(todoService.todoListModel);
 }
