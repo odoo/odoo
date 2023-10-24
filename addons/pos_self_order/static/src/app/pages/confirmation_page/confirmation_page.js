@@ -26,13 +26,14 @@ export class ConfirmationPage extends Component {
                 setTimeout(() => {
                     this.setDefautLanguage();
                 }, 5000);
+
+                setTimeout(() => {
+                    this.printer.print(OrderReceipt, {
+                        data: this.selfOrder.export_for_printing(this.selfOrder.currentOrder),
+                        formatCurrency: this.selfOrder.formatMonetary,
+                    });
+                }, 500);
             }
-            setTimeout(() => {
-                this.printer.print(OrderReceipt, {
-                    data: this.selfOrder.export_for_printing(this.selfOrder.currentOrder),
-                    formatCurrency: this.selfOrder.formatMonetary,
-                });
-            }, 500);
         });
 
         this.initOrder();
