@@ -16,37 +16,6 @@ class ResPartner(models.Model):
         copy=False,
     )
 
-    def _get_channels_as_member(self):
-        """Returns the channels of the partner."""
-        self.ensure_one()
-        channels = self.env["discuss.channel"]
-        # get the channels and groups
-        channels |= self.env["discuss.channel"].search(
-            [
-                ("channel_type", "in", ("channel", "group")),
-                ("channel_partner_ids", "in", [self.id]),
-            ]
-        )
-        # get the pinned direct messages (directly include whatsapp to avoid overrides)
-        channels |= self.env["discuss.channel"].search(
-            [
-                ("channel_type", "in", ["chat", "whatsapp"]),
-                (
-                    "channel_member_ids",
-                    "in",
-                    self.env["discuss.channel.member"]
-                    .sudo()
-                    ._search(
-                        [
-                            ("partner_id", "=", self.id),
-                            ("is_pinned", "=", True),
-                        ]
-                    ),
-                ),
-            ]
-        )
-        return channels
-
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
         """Returns partners matching search_term that can be invited to a channel.

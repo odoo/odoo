@@ -62,7 +62,8 @@ class IrAttachment(models.Model):
 
     def _delete_and_notify(self, message=None):
         if message:
-            message.write({})  # to make sure write_date on the message is updated
+            # sudo: mail.message - safe write just updating the date, because guests don't have the rights
+            message.sudo().write({})  # to make sure write_date on the message is updated
         self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
             'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else None
         }) for attachment in self)

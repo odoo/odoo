@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged("post_install", "-at_install")
 class TestResUsersSettings(MailCommon):
 
     @users('employee')

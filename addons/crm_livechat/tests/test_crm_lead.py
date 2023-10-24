@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests.common import users, HttpCase
+from odoo.tests.common import HttpCase, tagged, users
 
 
+@tagged("post_install", "-at_install")
 class TestLivechatLead(HttpCase, TestCrmCommon):
 
     @classmethod
@@ -59,17 +59,23 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
 
         # public + someone else: no customer (as they were anonymous)
-        channel.write({
+        # sudo: discuss.channel.member - removing non-self member for test setup purposes
+        channel.sudo().write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
+    @users('user_sales_leads')
+    def test_crm_lead_creation_portal(self):
         # portal: should be set as customer
-        channel = self.env['discuss.channel'].create({
-            'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.user_portal.partner_id.id)]
+        self.authenticate("user_portal", "user_portal")
+        channel_info = self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'Visitor',
+            'channel_id': self.livechat_channel.id,
+            'persisted': True,
         })
+        channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(

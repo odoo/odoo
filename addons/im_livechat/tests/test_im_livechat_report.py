@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
 
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.tests.common import tagged
 
 
+@tagged("post_install", "-at_install")
 class TestImLivechatReport(TestImLivechatCommon):
     def setUp(self):
         super().setUp()

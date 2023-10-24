@@ -15,8 +15,8 @@ from ..models.discuss.mail_guest import add_guest_to_context
 
 logger = logging.getLogger(__name__)
 
-class AttachmentController(http.Controller):
 
+class AttachmentController(http.Controller):
     def _make_zip(self, name, attachments):
         streams = (request.env['ir.binary']._get_stream_from(record, 'raw') for record in attachments)
         # TODO: zip on-the-fly while streaming instead of loading the
@@ -47,7 +47,9 @@ class AttachmentController(http.Controller):
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
+        thread = request.env[thread_model].search([("id", "=", thread_id)])
+        if not thread:
+            raise NotFound()
         if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
             raise AccessError(_("You are not allowed to upload attachments on this channel."))
         vals = {
@@ -65,11 +67,12 @@ class AttachmentController(http.Controller):
                     "res_model": "mail.compose.message",
                 }
             )
-        if thread.env.user.share:
+        if request.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
-            vals["access_token"] = thread.env["ir.attachment"]._generate_access_token()
+            vals["access_token"] = request.env["ir.attachment"]._generate_access_token()
         try:
-            attachment = thread.env["ir.attachment"].create(vals)
+            # sudo: ir.attachment - posting a new attachment on an accessible thread
+            attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
             attachmentData = attachment._attachment_format()[0]
             if attachment.access_token:
@@ -81,22 +84,23 @@ class AttachmentController(http.Controller):
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_attachment_delete(self, attachment_id, access_token=None):
-        attachment_sudo = request.env["ir.attachment"].browse(int(attachment_id)).sudo().exists()
-        guest = request.env["mail.guest"]._get_guest_from_context()
-        message_sudo = guest.env["mail.message"].sudo().search([("attachment_ids", "in", attachment_sudo.ids)], limit=1)
-        if not attachment_sudo:
+        attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
+        if not attachment:
             target = request.env.user.partner_id
             request.env["bus.bus"]._sendone(target, "ir.attachment/delete", {"id": attachment_id})
             return
+        message = request.env["mail.message"].search([("attachment_ids", "in", attachment.ids)], limit=1)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
-            attachment_sudo.sudo(False)._delete_and_notify(message_sudo)
+            attachment._delete_and_notify(message)
             return
         # For non-internal users 2 cases are supported:
         #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).
         #   - Either a valid access token is given: also verify the message is pending (because unfortunately in portal a token is also provided to guest for viewing others' attachments).
-        if message_sudo:
-            if not message_sudo.is_current_user_or_guest_author:
+        # sudo: ir.attachment: access is validated below with membership of message or access token
+        attachment_sudo = attachment.sudo()
+        if message:
+            if not message.is_current_user_or_guest_author:
                 raise NotFound()
         else:
             if (
@@ -107,7 +111,7 @@ class AttachmentController(http.Controller):
                 raise NotFound()
             if attachment_sudo.res_model != "mail.compose.message" or attachment_sudo.res_id != 0:
                 raise NotFound()
-        attachment_sudo._delete_and_notify(message_sudo)
+        attachment_sudo._delete_and_notify(message)
 
     @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
     def mail_attachment_get_zip(self, file_ids, zip_name, **kw):

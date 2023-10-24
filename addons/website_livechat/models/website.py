@@ -56,6 +56,7 @@ class Website(models.Model):
                         chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member.id), Command.create({'guest_id': current_guest.id})]})
                     if not current_guest:
                         channel_guest_member.guest_id._set_auth_cookie()
+                        chat_request_channel = chat_request_channel.with_context(guest=channel_guest_member.guest_id.sudo(False))
                 return {
                     "folded": False,
                     "id": chat_request_channel.id,

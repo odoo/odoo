@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
+
 from odoo import _
 from odoo.http import route, request
 from odoo.addons.mail.controllers.attachment import AttachmentController
@@ -11,7 +13,9 @@ class LivechatAttachmentController(AttachmentController):
     @route()
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
+        thread = request.env[thread_model].search([("id", "=", thread_id)])
+        if not thread:
+            raise NotFound()
         if (
             thread_model == "discuss.channel"
             and thread.channel_type == "livechat"

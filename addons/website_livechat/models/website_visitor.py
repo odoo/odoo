@@ -82,7 +82,8 @@ class WebsiteVisitor(models.Model):
             discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
             for channel in discuss_channels:
                 if not channel.livechat_visitor_id.partner_id:
-                    self.env['mail.guest']._find_or_create_for_channel(
+                    # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
+                    self.env['mail.guest'].sudo()._find_or_create_for_channel(
                         channel,
                         country_id=country.id,
                         name=_("Visitor #%d", channel.livechat_visitor_id.id),

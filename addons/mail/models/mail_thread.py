@@ -22,7 +22,6 @@ from email.message import EmailMessage
 from email import message_from_string
 from lxml import etree
 from werkzeug import urls
-from werkzeug.exceptions import NotFound
 from xmlrpc import client as xmlrpclib
 from markupsafe import Markup, escape
 
@@ -478,13 +477,6 @@ class MailThread(models.AbstractModel):
             raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
         if any(message.message_type != 'comment' for message in messages):
             raise exceptions.UserError(_("Only messages type comment can have their content updated"))
-
-    @api.model
-    def _get_from_context_or_raise(self, thread_id):
-        thread = self.search([["id", "=", thread_id]])
-        if not thread:
-            raise NotFound()
-        return thread
 
     # ------------------------------------------------------
     # TRACKING / LOG

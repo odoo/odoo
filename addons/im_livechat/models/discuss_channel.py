@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
 
 from markupsafe import Markup
@@ -29,6 +30,17 @@ class DiscussChannel(models.Model):
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
                          'Livechat Operator ID is required for a channel of type livechat.')]
 
+    def _compute_is_accessible(self):
+        super()._compute_is_accessible()
+        if self.env.user.has_group("im_livechat.im_livechat_group_manager"):
+            self.filtered(lambda channel: channel.channel_type == "livechat").is_accessible = True
+
+    def _search_is_accessible(self, operator, operand):
+        res = super()._search_is_accessible(operator, operand)
+        if self.env.user.has_group("im_livechat.im_livechat_group_manager"):
+            return expression.OR([res, [("channel_type", "=", "livechat")]])
+        return res
+
     @api.depends('message_ids')
     def _compute_duration(self):
         for record in self:
@@ -50,7 +62,8 @@ class DiscussChannel(models.Model):
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             if channel.chatbot_current_step_id:
-                channel_infos_dict[channel.id]["chatbot_script_id"] = channel.chatbot_current_step_id.chatbot_script_id.id
+                # sudo: chatbot.script.step - returning the current script of the channel
+                channel_infos_dict[channel.id]["chatbot_script_id"] = channel.chatbot_current_step_id.sudo().chatbot_script_id.id
             channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
             channel_infos_dict[channel.id]['anonymous_country'] = {
                 'code': channel.country_id.code,

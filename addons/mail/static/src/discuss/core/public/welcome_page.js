@@ -32,12 +32,6 @@ export class WelcomePage extends Component {
         if (this.store.guest) {
             await this.personaService.updateGuestName(this.store.self, this.state.userName.trim());
         }
-        if (this.props.data?.discussPublicViewData.addGuestAsMemberOnJoin) {
-            await this.rpc("/discuss/channel/add_guest_as_member", {
-                channel_id: this.props.data.channelData.id,
-                channel_uuid: this.props.data.channelData.uuid,
-            });
-        }
         this.props.proceed?.();
     }
 

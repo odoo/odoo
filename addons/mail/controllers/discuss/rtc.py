@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
@@ -23,7 +24,8 @@ class RtcController(http.Controller):
         guest = request.env["mail.guest"]._get_guest_from_context()
         notifications_by_session = defaultdict(list)
         for sender_session_id, target_session_ids, content in peer_notifications:
-            session_sudo = guest.env["discuss.channel.rtc.session"].sudo().browse(int(sender_session_id)).exists()
+            # sudo: discuss.channel.rtc.session - only keeping sessions matching the current user
+            session_sudo = request.env["discuss.channel.rtc.session"].sudo().browse(int(sender_session_id)).exists()
             if (
                 not session_sudo
                 or (session_sudo.guest_id and session_sudo.guest_id != guest)
@@ -45,11 +47,13 @@ class RtcController(http.Controller):
         if request.env.user._is_public():
             guest = request.env["mail.guest"]._get_guest_from_context()
             if guest:
+                # sudo: discuss.channel.rtc.session - only keeping sessions matching the current user
                 session = guest.env["discuss.channel.rtc.session"].sudo().browse(int(session_id)).exists()
                 if session and session.guest_id == guest:
                     session._update_and_broadcast(values)
                     return
             return
+        # sudo: discuss.channel.rtc.session - only keeping sessions matching the current user
         session = request.env["discuss.channel.rtc.session"].sudo().browse(int(session_id)).exists()
         if session and session.partner_id == request.env.user.partner_id:
             session._update_and_broadcast(values)
@@ -60,8 +64,11 @@ class RtcController(http.Controller):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
-        return channel_member_sudo._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
+            raise NotFound()
+        # sudo: discuss.channel.rtc.session - member of current user can join call
+        return member.sudo()._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
 
     @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -69,8 +76,11 @@ class RtcController(http.Controller):
         """Disconnects the current user from a rtc call and clears any invitation sent to that user on this channel
         :param int channel_id: id of the channel from which to disconnect
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
-        return channel_member_sudo._rtc_leave_call()
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
+            raise NotFound()
+        # sudo: discuss.channel.rtc.session - member of current user can leave call
+        return member.sudo()._rtc_leave_call()
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -79,8 +89,11 @@ class RtcController(http.Controller):
         :param member_ids: members whose invitation is to cancel
         :type member_ids: list(int) or None
         """
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
-        return channel_member_sudo.channel_id._rtc_cancel_invitations(member_ids=member_ids)
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
+            raise NotFound()
+        # sudo: discuss.channel.rtc.session - member of current user can cancel invitations
+        return member.sudo().channel_id._rtc_cancel_invitations(member_ids=member_ids)
 
     @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public")
     def audio_worklet_processor(self):
@@ -92,18 +105,22 @@ class RtcController(http.Controller):
             file_open("mail/static/src/worklets/audio_processor.js", "rb").read(),
             headers=[
                 ("Content-Type", "application/javascript"),
-                ("Cache-Control", "max-age=%s" % http.STATIC_CACHE),
+                ("Cache-Control", f"max-age={http.STATIC_CACHE}"),
             ],
         )
 
     @http.route("/discuss/channel/ping", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=int(channel_id))
+        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        if not member:
+            raise NotFound()
+        # sudo: discuss.channel.rtc.session - member of current user can access related sessions
+        channel_member_sudo = member.sudo()
         if rtc_session_id:
             domain = [
                 ("id", "=", int(rtc_session_id)),
-                ("channel_member_id", "=", channel_member_sudo.id),
+                ("channel_member_id", "=", member.id),
             ]
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         current_rtc_sessions, outdated_rtc_sessions = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)

@@ -1097,12 +1097,8 @@ class MailCase(MockEmail):
             }, {...}]
         """
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
-        if check_unique:
-            self.assertEqual(len(bus_notifs), len(channels))
         self.assertEqual(set(bus_notifs.mapped('channel')), set([json_dump(channel) for channel in channels]))
-
         notif_messages = [n.message for n in bus_notifs]
-
         for expected in message_items or []:
             for notification in notif_messages:
                 if json_dump(expected) == notification:
@@ -1110,7 +1106,8 @@ class MailCase(MockEmail):
             else:
                 raise AssertionError('No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s' %
                     (json_dump(expected), '\n'.join([n for n in notif_messages])))
-
+        if check_unique:
+            self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
 
     def assertNotified(self, message, recipients_info, is_complete=False):

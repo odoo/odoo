@@ -1157,6 +1157,7 @@ class TestMailgateway(MailCommon):
         test_channel = self.env['discuss.channel'].create({
             'name': 'Test',
             'channel_partner_ids': [(4, self.partner_1.id)],
+            'group_public_id': None,
         })
         self.fake_email.write({
             'model': 'discuss.channel',

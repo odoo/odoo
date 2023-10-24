@@ -77,15 +77,11 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_find_or_create_persona_for_channel` on `discuss.channel`.
      */
-    _mockDiscussChannel__findOrCreatePersonaForChannel(channelId, guestName, addAsMember = true) {
+    _mockDiscussChannel__findOrCreatePersonaForChannel(channelId, guestName) {
         if (this._mockDiscussChannelMember__getAsSudoFromContext(channelId)) {
             return;
         }
-        const guestId = this._mockMailGuest__findOrCreateForChannel(
-            channelId,
-            guestName,
-            addAsMember
-        );
+        const guestId = this._mockMailGuest__findOrCreateForChannel(channelId, guestName);
         this._mockMailGuest__setAuthCookie(guestId);
     },
 });
