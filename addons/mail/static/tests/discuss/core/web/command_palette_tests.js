@@ -27,11 +27,11 @@ QUnit.module("command palette", {
 QUnit.test("open the chatWindow of a user from the command palette", async () => {
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    // Switch to partners
-    await insertText(".o_command_palette_search input", "@", { replace: true });
+    await insertText(".o_command_palette_search input", "@");
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
-    await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow");
+    await contains(".o_command", { count: 2 });
+    await click(".o_command.focused", { text: "Mitchell Admin" });
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
 });
 
 QUnit.test("open the chatWindow of a channel from the command palette", async () => {
@@ -40,14 +40,10 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     pyEnv["discuss.channel"].create({ name: "project" });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    // Switch to channels
-    await insertText(".o_command_palette_search input", "#", { replace: true });
+    await insertText(".o_command_palette_search input", "#");
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
-    await contains(".o_command", { text: "general" });
-    await contains(".o_command", { text: "project" });
-
-    await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow");
+    await contains(".o_command", { count: 2 });
+    await click(".o_command.focused", { text: "general" });
     await contains(".o-mail-ChatWindow", { text: "general" });
 });
 
