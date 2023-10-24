@@ -58,10 +58,6 @@
                             <setting id="rounding_method" company_dependent="1" string="Rounding Method" help="How total tax amount is computed in orders and invoices" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
                                 <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
                             </setting>
-                            <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes"
-                                documentation="/applications/finance/accounting/taxation/taxes/taxcloud.html">
-                                <field name="module_account_taxcloud" widget="upgrade_boolean"/>
-                            </setting>
                             <setting id="avatax_settings" string="AvaTax" help="Automatically compute tax rates"
                                 documentation="/applications/finance/accounting/taxation/taxes/avatax.html">
                                 <field name="module_account_avatax" widget="upgrade_boolean"/>

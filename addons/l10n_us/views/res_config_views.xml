@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_us</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="rounding_method" position="after">
+                <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes"
+                    documentation="/applications/finance/accounting/taxation/taxes/taxcloud.html">
+                    <field name="module_l10n_us_taxcloud" widget="upgrade_boolean"/>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>
