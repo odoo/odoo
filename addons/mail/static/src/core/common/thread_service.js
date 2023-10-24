@@ -4,8 +4,6 @@ import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { markup } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -192,16 +190,9 @@ export class ThreadService {
                 after,
                 before,
             });
-            const messages = rawMessages.reverse().map((data) => {
-                if (data.parentMessage) {
-                    data.parentMessage.body = data.parentMessage.body
-                        ? markup(data.parentMessage.body)
-                        : data.parentMessage.body;
-                }
-                return this.store.Message.insert(
-                    Object.assign(data, { body: data.body ? markup(data.body) : data.body })
-                );
-            });
+            const messages = rawMessages
+                .reverse()
+                .map((data) => this.store.Message.insert(data, { html: true }));
             thread.isLoaded = true;
             return messages;
         } catch (e) {
@@ -300,15 +291,9 @@ export class ThreadService {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
-            thread.messages = messages.reverse().map((message) => {
-                if (message.parentMessage?.body) {
-                    message.parentMessage.body = markup(message.parentMessage.body);
-                }
-                return this.store.Message.insert({
-                    ...message,
-                    body: message.body ? markup(message.body) : message.body,
-                });
-            });
+            thread.messages = messages
+                .reverse()
+                .map((message) => this.store.Message.insert(message, { html: true }));
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
@@ -337,14 +322,7 @@ export class ThreadService {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
                 const thread = this.store.Thread.get({ model: "discuss.channel", id: preview.id });
-                const data = Object.assign(preview.last_message, {
-                    body: markup(preview.last_message.body),
-                });
-                const message = this.store.Message.insert({
-                    ...data,
-                    res_id: thread.id,
-                    model: thread.model,
-                });
+                const message = this.store.Message.insert(preview.last_message, { html: true });
                 if (!thread.isLoaded) {
                     thread.messages.push(message);
                     if (message.isNeedaction) {
@@ -717,13 +695,16 @@ export class ThreadService {
                 }
             }
             browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(recentEmojis));
-            tmpMsg = this.store.Message.insert({
-                ...tmpData,
-                body: markup(prettyContent),
-                res_id: thread.id,
-                model: thread.model,
-                temporary_id: tmpId,
-            });
+            tmpMsg = this.store.Message.insert(
+                {
+                    ...tmpData,
+                    body: prettyContent,
+                    res_id: thread.id,
+                    model: thread.model,
+                    temporary_id: tmpId,
+                },
+                { html: true }
+            );
             thread.messages.push(tmpMsg);
             thread.seen_message_id = tmpMsg.id;
         }
@@ -732,15 +713,10 @@ export class ThreadService {
         if (!data) {
             return;
         }
-        if (data.parentMessage) {
-            data.parentMessage.body = data.parentMessage.body
-                ? markup(data.parentMessage.body)
-                : data.parentMessage.body;
-        }
         if (data.id in this.store.Message.records) {
             data.temporary_id = null;
         }
-        const message = this.store.Message.insert(Object.assign(data, { body: markup(data.body) }));
+        const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
@@ -955,15 +931,7 @@ export class ThreadService {
         return {
             count,
             loadMore: messages.length === FETCH_LIMIT,
-            messages: messages.map((message) => {
-                message.body = markup(message.body);
-                if (message.parentMessage) {
-                    message.parentMessage.body = message.parentMessage.body
-                        ? markup(message.parentMessage.body)
-                        : message.parentMessage.body;
-                }
-                return this.store.Message.insert(message);
-            }),
+            messages: messages.map((message) => this.store.Message.insert(message, { html: true })),
         };
     }
 }

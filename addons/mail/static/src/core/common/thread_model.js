@@ -61,7 +61,7 @@ export class Thread extends Record {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @param {Object} data */

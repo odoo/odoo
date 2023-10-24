@@ -19,7 +19,7 @@ export class Attachment extends FileModelMixin(Record) {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        return super.insert(data);
+        return super.insert(...arguments);
     }
     static new(data) {
         /** @type {import("models").Attachment} */

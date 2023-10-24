@@ -10,7 +10,7 @@ export class LinkPreview extends Record {
     }
     /** @returns {import("models").LinkPreview} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @type {number} */
