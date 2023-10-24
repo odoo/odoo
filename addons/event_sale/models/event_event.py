@@ -32,7 +32,7 @@ class Event(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0)],
+            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0), ('state', '!=', 'cancel')],
             ['event_id', 'currency_id'],
             ['price_subtotal:sum'],
         )
