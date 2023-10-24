@@ -34,7 +34,7 @@ class Company(models.Model):
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Branches')
     all_child_ids = fields.One2many('res.company', 'parent_id', context={'active_test': False})
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)

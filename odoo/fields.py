@@ -1656,7 +1656,6 @@ class Monetary(Field):
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
-    unaccent = True
 
     def __init__(self, string=Default, **kwargs):
         # translate is either True, False, or a callable
@@ -3293,7 +3292,6 @@ class Properties(Field):
     column_type = ('jsonb', 'jsonb')
     copy = False
     prefetch = False
-    unaccent = True
     write_sequence = 10              # because it must be written after the definition field
 
     # the field is computed editable by design (see the compute method below)
