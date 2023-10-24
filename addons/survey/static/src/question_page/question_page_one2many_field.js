@@ -3,29 +3,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
-import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
-import { patch } from '@web/core/utils/patch';
+import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { useSubEnv } from "@odoo/owl";
-
-patch(X2ManyFieldDialog.prototype, {
-    /**
-     * Re-enable buttons after our error is thrown because blocking normal
-     * behavior is required to not close the dialog and stay in edition but
-     * the buttons are required to try and save again after changing form data.
-     *
-     * @override
-     */
-    async saveAndNew() {
-        const res = super.saveAndNew(...arguments);
-        if (this.record.resModel === 'survey.question') {
-            const btns = this.modalRef.el.querySelectorAll(".modal-footer button"); // see XManyFieldDialog.disableButtons
-            this.enableButtons(btns);
-        }
-        return res;
-    }
-});
-
 
 /**
  * For convenience, we'll prevent closing the question form dialog and
