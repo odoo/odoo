@@ -1735,6 +1735,7 @@
             - _cta_classes: CSS classes to append on the primary navigation button; default `None`.
             - _form_send_navigation: Whether the primary button serves as a submit button for a
                                      form; default `None`.
+            - hide_payment_button: Whether the payment button should be hidden; default: False.
         -->
         <!-- Checkout context:
             - website_sale_order: The current order.
@@ -1755,12 +1756,12 @@
                                    name="csrf_token"
                                    t-att-value="request.csrf_token()"
                                    t-nocache="The csrf token must always be up to date."/>
-                            <t t-call="payment.submit_button">
+                            <t t-if="not hide_payment_button" t-call="payment.submit_button">
                                 <t t-set="submit_button_label">Confirm Order</t>
                             </t>
                         </form>
                     </div>
-                    <t t-else="" t-call="payment.submit_button"/>
+                    <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
                 </t>
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
@@ -1771,7 +1772,7 @@
                     </a>
                 </t>
             </t>
-            <div t-attf-class="position-relative #{_form_send_navigation and 'd-flex d-lg-none' or 'd-flex'} w-100 justify-content-center align-items-center my-2 opacity-75">
+            <div t-if="not hide_payment_button" t-attf-class="position-relative #{_form_send_navigation and 'd-flex d-lg-none' or 'd-flex'} w-100 justify-content-center align-items-center my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
@@ -2088,6 +2089,7 @@
                 <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
             </t>
             <div class="col-12" t-if="errors">
+                <t t-set="hide_payment_button" t-value="True"/>
                 <t t-foreach="errors" t-as="error">
                     <div class="alert alert-danger" t-if="error" role="alert">
                         <h4>
@@ -2113,6 +2115,7 @@
                     <t t-call="payment.form"/>
                 </div>
                 <div t-else="" class="alert alert-warning">
+                    <t t-set="hide_payment_button" t-value="True"/>
                     <strong>No suitable payment option could be found.</strong><br/>
                     <div t-if="not request.env.is_admin()">
                         If you believe that it is an error, please contact the website administrator.
