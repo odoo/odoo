@@ -32,17 +32,17 @@ export class MessageReactionMenu extends Component {
         useExternalListener(document, "keydown", this.onKeydown);
         onExternalClick("root", () => this.props.close());
         useEffect(
-            (reactions) => {
-                const activeReaction = reactions.find(
+            () => {
+                const activeReaction = this.props.message.reactions.find(
                     ({ content }) => content === this.state.reaction.content
                 );
-                if (reactions.length === 0) {
+                if (this.props.message.reactions.length === 0) {
                     this.props.close();
                 } else if (!activeReaction) {
-                    this.state.reaction = reactions[0];
+                    this.state.reaction = this.props.message.reactions[0];
                 }
             },
-            () => [this.props.message.reactions]
+            () => [this.props.message.reactions.length]
         );
         onWillStart(async () => {
             const { emojis } = await loadEmoji();
