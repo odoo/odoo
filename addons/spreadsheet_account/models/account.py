@@ -112,23 +112,9 @@ class AccountMove(models.Model):
         for args in args_list:
             company_id = args["company_id"] or self.env.company.id
             domain = self._build_spreadsheet_formula_domain(args)
-            # remove this when _search always returns a Query object
-            if domain == expression.FALSE_DOMAIN:
-                results.append({"credit": 0, "debit": 0})
-                continue
             MoveLines = self.env["account.move.line"].with_company(company_id)
-            query = MoveLines._search(domain)
-            query_str, params = query.select(
-                "SUM(debit) AS debit", "SUM(credit) AS credit"
-            )
-            self.env.cr.execute(query_str, params)
-            line_values = self.env.cr.dictfetchone()
-            results.append(
-                {
-                    "credit": line_values["credit"] or 0,
-                    "debit": line_values["debit"] or 0,
-                }
-            )
+            [(debit, credit)] = MoveLines._read_group(domain, aggregates=['debit:sum', 'credit:sum'])
+            results.append({'debit': debit or 0, 'credit': credit or 0})
 
         return results
 
