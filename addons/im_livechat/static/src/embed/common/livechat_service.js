@@ -225,10 +225,12 @@ export class LivechatService {
     }
 
     async initializePersistedSession() {
-        await this.busService.updateContext({
-            ...this.busService.context,
-            guest_token: this.guestToken,
-        });
+        if (this.guestToken) {
+            await this.busService.updateContext({
+                ...this.busService.context,
+                guest_token: this.guestToken,
+            });
+        }
         if (this.busService.isActive) {
             this.busService.forceUpdateChannels();
         } else {
