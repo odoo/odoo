@@ -17,7 +17,8 @@ Allows customers to pay for their orders at a shop, instead of paying online.
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_picking/static/src/js/checkout_form.js'
+            'website_sale_picking/static/src/js/checkout_form.js',
+            'website_sale_picking/static/src/js/payment_button.js',
         ],
         'web.assets_tests': [
             'website_sale_picking/static/tests/tours/**/*.js'

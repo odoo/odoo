@@ -36,6 +36,7 @@
             'payment/static/src/js/checkout_form.js',
             'payment/static/src/js/express_checkout_form.js',
             'payment/static/src/js/manage_form.js',
+            'payment/static/src/js/payment_button.js',
             'payment/static/src/js/payment_form_mixin.js',
             'payment/static/src/js/post_processing.js',
             'payment/static/src/xml/payment_post_processing.xml',
