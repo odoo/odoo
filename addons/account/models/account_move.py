@@ -4227,6 +4227,24 @@ class AccountMove(models.Model):
         """ Handle Send & Print async processing.
         :param job_count: maximum number of jobs to process if specified.
         """
+        def get_account_notification(partner, moves, is_success):
+            return [
+                partner,
+                'account_notification',
+                {
+                    'type': 'success' if is_success else 'warning',
+                    'title': _('Invoices sent') if is_success else _('Invoices in error'),
+                    'message': _('Invoices sent successfully.') if is_success else _(
+                        "One or more invoices couldn't be processed."),
+                    'action_button': {
+                        'name': _('Open'),
+                        'action_name': _('Sent invoices') if is_success else _('Invoices in error'),
+                        'model': 'account.move',
+                        'res_ids': moves.ids,
+                    },
+                },
+            ]
+
         limit = job_count + 1
         to_process = self.env['account.move']._read_group(
             [('send_and_print_values', '!=', False)],
@@ -4250,7 +4268,27 @@ class AccountMove(models.Model):
                 else:
                     raise
 
+            # Retrieve res.partner that executed the Send & Print wizard
+            sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
+            sp_partners = self.env['res.partner'].browse(sp_partner_ids)
+            moves_map = {
+                partner: moves.filtered(lambda m: m.send_and_print_values['sp_partner_id'] == partner.id)
+                for partner in sp_partners
+            }
+
             self.env['account.move.send']._process_send_and_print(moves)
+
+            notifications = []
+            for partner, partner_moves in moves_map.items():
+                partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
+                if partner_moves_error:
+                    notifications.append(get_account_notification(partner, partner_moves_error, False))
+                partner_moves_success = partner_moves - partner_moves_error
+                if partner_moves_success:
+                    notifications.append(get_account_notification(partner, partner_moves_success, True))
+                partner_moves_error.send_and_print_values = False
+
+            self.env['bus.bus']._sendmany(notifications)
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()

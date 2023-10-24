@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from datetime import date
-from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import Command, fields
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, users, warmup
+from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import formataddr, mute_logger
 
@@ -581,7 +580,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # Process.
         results = wizard.action_send_and_print()
-        self.assertEqual(results['type'], 'ir.actions.act_window_close')
+        self.assertEqual(results['type'], 'ir.actions.client')
+        self.assertEqual(results['params']['next']['type'], 'ir.actions.act_window_close')
         self.assertRecordValues(wizard, [{'mode': 'invoice_multi'}])
 
         # Awaiting the CRON.
@@ -996,5 +996,35 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(invoices.invoice_pdf_report_id)
         self.assertEqual(invoices.mapped(lambda inv: bool(inv.send_and_print_values)), [True] * len(invoices))
         self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
-        self.assertEqual(len(invoices.invoice_pdf_report_id), 4)
-        self.assertEqual(invoices.mapped(lambda inv: inv.send_and_print_values), [False] * len(invoices))
+        self.assertTrue(all(invoice.invoice_pdf_report_id for invoice in invoices))
+        self.assertTrue(all(not invoice.send_and_print_values for invoice in invoices))
+
+    def test_cron_notifications(self):
+        invoice_success = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        invoice_error = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice_success + invoice_error)
+        wizard.checkbox_download = False
+        sp_partner = self.env.user.partner_id
+        wizard.action_send_and_print()
+
+        def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+            if invoice == invoice_error:
+                invoice_data['error'] = 'blblblbl'
+
+        self.assertTrue(invoice_success.send_and_print_values)
+        self.assertEqual(invoice_success.send_and_print_values.get('sp_partner_id'), sp_partner.id)
+
+        with patch(
+            'odoo.addons.account.wizard.account_move_send.AccountMoveSend._hook_invoice_document_before_pdf_report_render',
+            _hook_invoice_document_before_pdf_report_render,
+        ):
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
+
+        bus = self.env['bus.bus'].sudo().search(
+            [('channel', 'like', f'"res.partner",{sp_partner.id}')],
+            order='id desc',
+            limit=1,
+        )
+        self.assertEqual(json.loads(bus.message)['payload']['type'], 'success')
+        self.assertEqual(json.loads(bus.message)['payload']['action_button']['res_ids'], invoice_success.ids)
+        # FIXME @las I only manage to get the latest message, and not the previous one with the invoices in error T_T any idea ?
