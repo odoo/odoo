@@ -116,7 +116,7 @@ export class Store extends BaseStore {
         const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
             const thread = this.Thread.records[id];
-            if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
+            if (thread.model === "discuss.channel") {
                 channelIds.push(id);
             }
         }
