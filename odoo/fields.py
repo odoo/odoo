@@ -1839,6 +1839,7 @@ class _String(Field):
         : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
         """
         # assert (self.translate and self.store and record)
+        record._recompute_recordset([self.name])  # for stored computed translated fields
         context_key = record.env.cache_key(self)
         cache_value = record.env.cache.get(self, context_key, record._ids[0])
         if not (cache_value is None or isinstance(cache_value, TranslatedCacheValue)):
@@ -1905,8 +1906,6 @@ class _String(Field):
             if not new_terms:
                 new_translations_list.append({'en_US': value, lang: value})
                 continue
-            # _get_stored_translations can be refactored and prefetches translations for multi records,
-            # but it is really rare to write the same non-False/None/no-term value to multi records
             stored_translations = self._get_stored_translations(record)
             if not stored_translations:
                 new_translations_list.append({'en_US': value, lang: value})
