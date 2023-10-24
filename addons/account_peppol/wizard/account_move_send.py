@@ -42,7 +42,6 @@ class AccountMoveSend(models.TransientModel):
     def _compute_checkbox_ubl_cii_xml(self):
         # extends 'account_edi_ubl_cii'
         super()._compute_checkbox_ubl_cii_xml()
-
         for wizard in self:
             if wizard.checkbox_send_peppol and wizard.enable_ubl_cii_xml and not wizard.checkbox_ubl_cii_xml:
                 wizard.checkbox_ubl_cii_xml = True
@@ -111,6 +110,7 @@ class AccountMoveSend(models.TransientModel):
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 
+    @api.model
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # Overrides 'account'
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
