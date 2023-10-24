@@ -107,6 +107,10 @@ class AccountMoveSend(models.TransientModel):
 
         if all([self.checkbox_send_peppol, self.enable_peppol, self.enable_ubl_cii_xml, not self.checkbox_ubl_cii_xml]):
             self.checkbox_ubl_cii_xml = True
+        if self.checkbox_send_peppol and self.enable_peppol:
+            for move in self.move_ids:
+                if not move.peppol_move_state or move.peppol_move_state == 'ready':
+                    move.peppol_move_state = 'to_send'
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 

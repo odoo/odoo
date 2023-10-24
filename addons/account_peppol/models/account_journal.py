@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class AccountJournal(models.Model):
@@ -22,3 +22,14 @@ class AccountJournal(models.Model):
             ('company_id', 'in', self.company_id.ids),
         ])
         edi_users._peppol_get_message_status()
+
+    def action_peppol_ready_moves(self):
+        return {
+            'name': _("Peppol Ready invoices"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list',
+            'res_model': 'account.move',
+            'context': {
+                'search_default_peppol_ready': 1,
+            }
+        }

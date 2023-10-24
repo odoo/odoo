@@ -17,6 +17,9 @@
                             <div class="w-100">
                                 <a type="object" name="peppol_get_message_status" groups="account.group_account_invoice">Fetch Peppol invoice status</a>
                             </div>
+                            <div class="w-100">
+                                <a type="object" name="action_peppol_ready_moves" groups="account.group_account_invoice">Peppol ready invoices</a>
+                            </div>
                         </t>
                         <t t-elif="journal_type == 'purchase'">
                             <t t-if="record.is_peppol_journal.raw_value">
