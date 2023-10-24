@@ -47,6 +47,7 @@
                             resModel="resModel"
                             domain="getDomain()"
                             readonly="props.readonly or props.editInDialog"
+                            debugUpdate.bind="debugUpdate"
                             update.bind="update"
                             isDebugMode="!!env.debug"
                             className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
