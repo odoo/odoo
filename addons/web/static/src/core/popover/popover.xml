@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PopoverWowl" owl="1">
-        <div role="tooltip" class="o_popover"
+        <div role="tooltip" class="o_popover" t-ref="popper"
             t-att-class="props.popoverClass"
             t-on-popover-compute="compute"
         >

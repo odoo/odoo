@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useActiveElement } from "../ui/ui_service";
 import { usePosition } from "../position/position_hook";
 
 const { Component } = owl;
@@ -10,6 +11,7 @@ export class Popover extends Component {
             margin: 16,
             position: this.props.position,
         });
+        useActiveElement("popper");
     }
 }
 
