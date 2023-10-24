@@ -9,10 +9,7 @@
 
         <!-- Users -->
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[
-                Command.unlink(ref('group_project_manager')),
-                Command.link(ref('group_project_user'))
-            ]"/>
+            <field name="groups_id" eval="[(3, ref('project.group_project_manager'))]"/>
         </record>
 
         <!-- Groups : Add milestones feature by default -->

@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<odoo><data>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('event.group_event_manager'))]"/>
+        </record>
+    </data>
 
     <!-- Event -->
     <record id="event.event_0" model="event.event">
@@ -269,5 +274,4 @@
         <field name="seats_max">10</field>
         <field name="sequence">10</field>
     </record>
-
-</data></odoo>
+</odoo>

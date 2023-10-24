@@ -9,6 +9,10 @@ class TestFrontend(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
         self.env = self.env(user=self.env.ref('base.user_admin'))
+        self.env.ref('base.user_demo').write({
+            'groups_id': [(4, self.env.ref('point_of_sale.group_pos_manager').id)],
+        })
+
         account_obj = self.env['account.account']
 
         account_receivable = account_obj.create({'code': 'X1012',
