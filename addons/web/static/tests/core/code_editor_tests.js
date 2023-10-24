@@ -128,6 +128,27 @@ QUnit.module("Web Components", (hooks) => {
         assert.verifySteps(["Some Text"], "Value properly given to onChange");
     });
 
+    QUnit.test("onChange props not called when value props is updated", async (assert) => {
+        class Parent extends Component {
+            static components = { CodeEditor };
+            static template = xml`<CodeEditor value="state.value" onChange.bind="onChange" />`;
+            state = useState({ value: "initial value" });
+            onChange(value) {
+                assert.step(value || "__emptystring__");
+            }
+        }
+
+        const parent = await mount(Parent, target, { env });
+        await nextTick();
+        assert.strictEqual(target.querySelector(".ace_line").textContent, "initial value");
+
+        parent.state.value = "new value";
+        await nextTick();
+        await nextTick();
+        assert.strictEqual(target.querySelector(".ace_line").textContent, "new value");
+        assert.verifySteps([]);
+    });
+
     QUnit.test("Default value correctly set and updates", async (assert) => {
         const textA = "<div>\n<p>A Paragraph</p>\n</div>";
         const textB = "<div>\n<p>An Other Paragraph</p>\n</div>";
@@ -180,7 +201,7 @@ QUnit.module("Web Components", (hooks) => {
             "When the props is updated the value is correctly changed in the dom"
         );
 
-        assert.verifySteps([textB, textC], "Changes properly given to onChange");
+        assert.verifySteps([textB], "Changes properly given to onChange");
     });
 
     QUnit.test("Mode props update imports the mode", async (assert) => {
