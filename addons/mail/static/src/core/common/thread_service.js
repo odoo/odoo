@@ -191,9 +191,7 @@ export class ThreadService {
                 after,
                 before,
             });
-            const messages = rawMessages
-                .reverse()
-                .map((data) => this.store.Message.insert(data, { html: true }));
+            const messages = this.store.Message.insert(rawMessages.reverse(), { html: true });
             thread.isLoaded = true;
             return messages;
         } catch (e) {
@@ -292,9 +290,7 @@ export class ThreadService {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
-            thread.messages = messages
-                .reverse()
-                .map((message) => this.store.Message.insert(message, { html: true }));
+            thread.messages = this.store.Message.insert(messages.reverse(), { html: true });
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
@@ -968,7 +964,7 @@ export class ThreadService {
         return {
             count,
             loadMore: messages.length === FETCH_LIMIT,
-            messages: messages.map((message) => this.store.Message.insert(message, { html: true })),
+            messages: this.store.Message.insert(messages, { html: true }),
         };
     }
 }

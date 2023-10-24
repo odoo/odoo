@@ -15,7 +15,7 @@ export class ChatWindow extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").ChatWindow} */
+    /** @returns {import("models").ChatWindow|import("models").ChatWindow[]} */
     static insert() {
         return super.insert(...arguments);
     }

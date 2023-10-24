@@ -53,14 +53,8 @@ export class Thread extends Record {
         // Transform "Thread,<model> AND <id>" to "<model>_<id>""
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
-    /** @returns {import("models").Thread} */
+    /** @returns {import("models").Thread|import("models").Thread[]} */
     static insert(data) {
-        if (!("id" in data)) {
-            throw new Error("Cannot insert thread: id is missing in data");
-        }
-        if (!("model" in data)) {
-            throw new Error("Cannot insert thread: model is missing in data");
-        }
         return super.insert(...arguments);
     }
 

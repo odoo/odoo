@@ -46,7 +46,7 @@ export class Activity extends Record {
      * @param {Data} data
      * @param {Object} [param1]
      * @param {boolean} param1.broadcast
-     * @returns {import("models").Activity}
+     * @returns {import("models").Activity|import("models").Activity[]}
      */
     static insert(data, { broadcast = true } = {}) {
         return super.insert(...arguments);

@@ -12,7 +12,7 @@ export class Notification extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").Notification} */
+    /** @returns {import("models").Notification|import("models").Notification[]} */
     static insert(data) {
         return super.insert(...arguments);
     }
