@@ -977,3 +977,24 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(self.env['ir.attachment'].search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
         ]))
+
+    def test_send_and_print_cron(self):
+        """ Test the cron for generating """
+        invoice_1_1 = self.init_invoice("out_invoice", amounts=[1000], post=True, company=self.company_data['company'])
+        invoice_1_2 = self.init_invoice("out_invoice", amounts=[1000], post=True, company=self.company_data['company'])
+        wizard = self.create_send_and_print(invoice_1_1 + invoice_1_2)
+        wizard.checkbox_download = False
+        wizard.action_send_and_print()  # saves value on moves to be sent asynchronously
+
+        invoice_2_1 = self.init_invoice("out_invoice", amounts=[1000], post=True, company=self.company_data_2['company'])
+        invoice_2_2 = self.init_invoice("out_invoice", amounts=[1000], post=True, company=self.company_data_2['company'])
+        wizard_2 = self.create_send_and_print(invoice_2_1 + invoice_2_2)
+        wizard_2.checkbox_download = False
+        wizard_2.action_send_and_print()
+
+        invoices = invoice_1_1 + invoice_1_2 + invoice_2_1 + invoice_2_2
+        self.assertFalse(invoices.invoice_pdf_report_id)
+        self.assertEqual(invoices.mapped(lambda inv: bool(inv.send_and_print_values)), [True] * len(invoices))
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()  # force processing
+        self.assertEqual(len(invoices.invoice_pdf_report_id), 4)
+        self.assertEqual(invoices.mapped(lambda inv: inv.send_and_print_values), [False] * len(invoices))
