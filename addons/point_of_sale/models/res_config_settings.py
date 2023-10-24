@@ -105,6 +105,20 @@ class ResConfigSettings(models.TransientModel):
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
 
+    @api.model
+    def _keep_new_vals(self, pos_config, pos_fields_vals):
+        """ Keep vals in pos_fields_vals that are different than
+        pos_config's values.
+        """
+        new_vals = {}
+        for field, val in pos_fields_vals.items():
+            if pos_config._fields.get(field):
+                cache_value = pos_config._fields.get(field).convert_to_cache(val, pos_config)
+                record_value = pos_config._fields.get(field).convert_to_record(cache_value, pos_config)
+                if record_value != pos_config[field]:
+                    new_vals[field] = val
+        return new_vals
+
     @api.model_create_multi
     def create(self, vals_list):
         # STEP: Remove the 'pos' fields from each vals.
@@ -149,6 +163,7 @@ class ResConfigSettings(models.TransientModel):
         # STEP: Finally, we write the value of 'pos' fields to 'pos_config_id'.
         for pos_config_id, pos_fields_vals in pos_config_id_to_fields_vals_map.items():
             pos_config = self.env['pos.config'].browse(pos_config_id)
+            pos_fields_vals = self._keep_new_vals(pos_config, pos_fields_vals)
             pos_config.write(pos_fields_vals)
 
         return result
