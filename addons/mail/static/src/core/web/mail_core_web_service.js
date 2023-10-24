@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-
 import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -78,17 +76,17 @@ export class MailCoreWeb {
                     const originThread = message.originThread;
                     if (originThread && message.isNeedaction) {
                         originThread.message_needaction_counter--;
-                        removeFromArrayWithPredicate(
-                            originThread.needactionMessages,
-                            ({ id }) => id === messageId
-                        );
+                        originThread.needactionMessages.delete({ id: messageId });
                     }
                     // move messages from Inbox to history
                     const partnerIndex = message.needaction_partner_ids.find(
                         (p) => p === this.store.user?.id
                     );
-                    removeFromArray(message.needaction_partner_ids, partnerIndex);
-                    removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
+                    const index = message.needaction_partner_ids.indexOf(partnerIndex);
+                    if (index >= 0) {
+                        message.needaction_partner_ids.splice(index, 1);
+                    }
+                    inbox.messages.delete({ id: messageId });
                     const history = this.store.discuss.history;
                     history.messages.add(message);
                 }
