@@ -539,7 +539,7 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    send_and_print_values = fields.Json()
+    send_and_print_values = fields.Json(copy=False)
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
