@@ -89,10 +89,10 @@ class MailingSMSController(http.Controller):
             'unsubscribe_error': unsubscribe_error,
         })
 
-    @http.route('/r/<string:code>/s/<int:sms_sms_id>', type='http', auth="public")
-    def sms_short_link_redirect(self, code, sms_sms_id, **post):
-        if sms_sms_id:
-            trace_id = request.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', int(sms_sms_id))]).id
+    @http.route('/r/<string:code>/s/<int:sms_id_int>', type='http', auth="public")
+    def sms_short_link_redirect(self, code, sms_id_int, **post):
+        if sms_id_int:
+            trace_id = request.env['mailing.trace'].sudo().search([('sms_id_int', '=', int(sms_id_int))]).id
         else:
             trace_id = False
 

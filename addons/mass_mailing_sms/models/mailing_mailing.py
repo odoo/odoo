@@ -247,12 +247,6 @@ class Mailing(models.Model):
             if res_ids:
                 composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
                 composer._action_send_sms()
-
-            mailing.write({
-                'state': 'done',
-                'sent_date': fields.Datetime.now(),
-                'kpi_mail_required': not mailing.sent_date,
-                })
         return True
 
     # ------------------------------------------------------

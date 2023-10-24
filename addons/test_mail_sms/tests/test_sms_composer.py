@@ -43,12 +43,11 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 'numbers': ','.join(self.random_numbers),
             })
 
-            with self.mockSMSGateway():
+            with self.mockSMSGateway(sms_allow_unlink=True):
                 composer._action_send_sms()
 
-        # use sms.api directly, does not create sms.sms
-        self.assertNoSMS()
-        self.assertSMSIapSent(self.random_numbers_san, self._test_body)
+        for number in self.random_numbers_san:
+            self.assertSMS(self.env['res.partner'], number, 'pending', content=self._test_body, fields_values={'to_delete': True})
 
     def test_composer_comment_default(self):
         with self.with_user('employee'):
@@ -259,12 +258,11 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 'numbers': ','.join(self.random_numbers),
             })
 
-            with self.mockSMSGateway():
+            with self.mockSMSGateway(sms_allow_unlink=True):
                 composer._action_send_sms()
 
-        # use sms.api directly, does not create sms.sms
-        self.assertNoSMS()
-        self.assertSMSIapSent(self.random_numbers_san, self._test_body)
+        for number in self.random_numbers_san:
+            self.assertSMS(self.env['res.partner'], number, 'pending', content=self._test_body, fields_values={'to_delete': True})
 
     def test_composer_sending_with_no_number_field(self):
         test_record = self.env['mail.test.sms.partner'].create({'name': 'Test'})

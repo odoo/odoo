@@ -20,6 +20,8 @@ class MailingTraceReport(models.Model):
     email_from = fields.Char('From', readonly=True)
     # traces
     scheduled = fields.Integer(readonly=True)
+    processing = fields.Integer(readonly=True)
+    pending = fields.Integer(readonly=True)  # Used with SMS before a delivery report is received
     sent = fields.Integer(readonly=True)
     delivered = fields.Integer(readonly=True)
     error = fields.Integer(readonly=True)
@@ -59,8 +61,10 @@ class MailingTraceReport(models.Model):
             'mailing.state',
             'mailing.email_from',
             "COUNT(trace.id) as scheduled",
-            'COUNT(trace.sent_datetime) as sent',
-            "(COUNT(trace.id) - COUNT(trace.trace_status) FILTER (WHERE trace.trace_status IN ('error', 'bounce', 'cancel'))) as delivered",
+            "COUNT(trace.sent_datetime) as sent",
+            "(COUNT(trace.id) - COUNT(trace.trace_status) FILTER (WHERE trace.trace_status IN ('outgoing', 'pending', 'process', 'error', 'bounce', 'cancel'))) as delivered",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'process') as processing",
+            "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'pending') as pending",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'error') as error",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'bounce') as bounced",
             "COUNT(trace.trace_status) FILTER (WHERE trace.trace_status = 'cancel') as canceled",
