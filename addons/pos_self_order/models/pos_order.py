@@ -67,15 +67,13 @@ class PosOrder(models.Model):
             merged_tax_details[tax_id]['base'] += tax_obj['base']
         return list(merged_tax_details.values())
 
-    @api.model
-    def create_from_ui(self, orders, draft=False):
-        orders = super().create_from_ui(orders, draft)
-        order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
+    def _process_saved_order(self, draft):
+        res = super()._process_saved_order(draft)
 
         if self.env.context.get('from_self') is not True:
-            self._send_notification(order_ids)
+            self._send_notification(self)
 
-        return orders
+        return res
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -136,10 +134,6 @@ class PosOrder(models.Model):
             ],
             "tax_details": self._compute_tax_details(),
         }
-
-    def _send_order(self):
-        #This function is made to be overriden by pos_self_order_preparation_display
-        pass
 
     def get_standalone_self_order(self):
         orders = self.env['pos.order'].search([
