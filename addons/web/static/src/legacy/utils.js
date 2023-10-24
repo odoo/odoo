@@ -1,16 +1,6 @@
 /** @odoo-module **/
 
-import {
-    App,
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-    useEnv,
-    useRef,
-    useState,
-    xml,
-} from "@odoo/owl";
+import { App, Component, useState, xml } from "@odoo/owl";
 import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 
@@ -39,26 +29,6 @@ export function createWidgetParent(env) {
             }
         },
     };
-}
-
-export function useWidget(refName, widgetClass, params = []) {
-    const ref = useRef(refName);
-    const env = useEnv();
-
-    const parent = createWidgetParent(env);
-    const widget = new widgetClass(parent, ...params);
-
-    onWillStart(() => {
-        return widget._widgetRenderAndInsert(() => {});
-    });
-    onMounted(() => {
-        ref.el.append(widget.el);
-    });
-    onWillUnmount(() => {
-        widget.destroy();
-    });
-
-    return widget;
 }
 
 const rootTemplate = xml`<SubComp t-props="state"/>`;
