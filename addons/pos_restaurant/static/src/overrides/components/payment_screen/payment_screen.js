@@ -11,7 +11,7 @@ patch(PaymentScreen.prototype, {
         }
         // Take the first payment method as the main payment.
         const mainPayment = order.get_paymentlines()[0];
-        if (mainPayment.canBeAdjusted()) {
+        if (mainPayment && mainPayment.canBeAdjusted()) {
             return "TipScreen";
         }
         return super.nextScreen;

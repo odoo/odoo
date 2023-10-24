@@ -75,8 +75,10 @@ class PosSelfOrderController(http.Controller):
         # combo lines must be created after classic_line, as they need the classic line identifier
         lines = pos_config.env['pos.order.line'].create(classic_lines)
         lines += pos_config.env['pos.order.line'].create(combo_lines)
+
         order.write({
             'lines': lines,
+            'state': 'paid' if amount_total == 0 and pos_config.self_ordering_pay_after == 'each' else 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })

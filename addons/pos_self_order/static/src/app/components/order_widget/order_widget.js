@@ -58,6 +58,10 @@ export class OrderWidget extends Component {
             disabled = !kioskPayment && !isMobilePayment;
         }
 
+        if (this.selfOrder.currentOrder.amount_total === 0) {
+            label = _t("Order");
+        }
+
         return { label, disabled };
     }
 
