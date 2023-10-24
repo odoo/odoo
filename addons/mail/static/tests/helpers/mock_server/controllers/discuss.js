@@ -1,7 +1,10 @@
 /* @odoo-module */
 
+import { serializeDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
+
+const { DateTime } = luxon;
 
 patch(MockServer.prototype, {
     /**
@@ -45,6 +48,10 @@ patch(MockServer.prototype, {
                 around,
                 limit
             );
+        }
+        if (route === "/discuss/channel/mute") {
+            const { channel_id, minutes } = args;
+            return this._mockRouteDiscussChannelMute(channel_id, minutes);
         }
         if (route === "/discuss/channel/pinned_messages") {
             const { channel_id } = args;
@@ -264,6 +271,34 @@ patch(MockServer.prototype, {
             ...res,
             messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
         };
+    },
+    /**
+     * Simulates the `/discuss/channel/mute` route.
+     *
+     * @private
+     * @param {integer} channel_id
+     * @param {integer} minutes
+     */
+    _mockRouteDiscussChannelMute(channel_id, minutes) {
+        const member = this._mockDiscussChannelMember__getAsSudoFromContext(channel_id);
+        let mute_until_dt;
+        if (minutes === -1) {
+            mute_until_dt = serializeDateTime(DateTime.fromISO("9999-12-31T23:59:59"));
+        } else if (minutes) {
+            mute_until_dt = serializeDateTime(DateTime.now().plus({ minutes }));
+        } else {
+            mute_until_dt = false;
+        }
+        this.pyEnv["discuss.channel.member"].write([member.id], { mute_until_dt });
+        const channel_data = {
+            id: member.channel_id[0],
+            model: "discuss.channel",
+            mute_until_dt,
+        };
+        this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
+            Thread: channel_data,
+        });
+        return "dummy";
     },
     /**
      * Simulates the `/discuss/channel/notify_typing` route.
