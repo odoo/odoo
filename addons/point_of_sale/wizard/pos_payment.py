@@ -61,10 +61,10 @@ class PosMakePayment(models.TransientModel):
                 'payment_method_id': init_data['payment_method_id'][0],
             })
 
-        if order._is_pos_order_paid():
-            order.action_pos_order_paid()
-            order._create_order_picking()
-            order._compute_total_cost_in_real_time()
+        if order.state == 'draft' and order._is_pos_order_paid():
+            order._process_saved_order(False)
+            if order.state in {'paid', 'done', 'invoiced'}:
+                order._send_order()
             return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment()
