@@ -62,6 +62,12 @@ export class CodeEditor extends Component {
         onWillStart(async () => await loadBundle("web.ace_lib"));
 
         const sessions = {};
+        // The ace library triggers the "change" event even if the change is
+        // programmatic. Even worse, it triggers 2 "change" events in that case,
+        // one with the empty string, and one with the new value. We only want
+        // to notify the parent of changes done by the user, in the UI, so we
+        // use this flag to filter out noisy "change" events.
+        let ignoredAceChange = false;
         useEffect(
             (el) => {
                 if (!el) {
@@ -85,7 +91,7 @@ export class CodeEditor extends Component {
                 }
                 aceEditor.setValue(this.props.value);
                 session.on("change", () => {
-                    if (this.props.onChange) {
+                    if (this.props.onChange && !ignoredAceChange) {
                         this.props.onChange(this.aceEditor.getValue());
                     }
                 });
@@ -132,7 +138,9 @@ export class CodeEditor extends Component {
                 let session = sessions[sessionId];
                 if (session) {
                     if (session.getValue() !== value) {
+                        ignoredAceChange = true;
                         session.setValue(value);
+                        ignoredAceChange = false;
                     }
                 } else {
                     session = new window.ace.EditSession(value);
@@ -143,7 +151,7 @@ export class CodeEditor extends Component {
                         useSoftTabs: true,
                     });
                     session.on("change", () => {
-                        if (this.props.onChange) {
+                        if (this.props.onChange && !ignoredAceChange) {
                             this.props.onChange(this.aceEditor.getValue());
                         }
                     });
