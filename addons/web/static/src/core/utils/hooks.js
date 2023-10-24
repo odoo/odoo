@@ -36,12 +36,19 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @param {string} [params.refName] override the ref name "autofocus"
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will autofocus on mobile devices.
+ * @param {function} [params.condition] set a condition to check if the element fits the autofocus criteria.
  * @returns {Ref} the element reference
  */
-export function useAutofocus({ refName, selectAll, mobile } = {}) {
+export function useAutofocus({
+    refName,
+    selectAll,
+    mobile,
+    condition = () => {
+        return true;
+    },
+} = {}) {
     const comp = useComponent();
     const ref = useRef(refName || "autofocus");
-    const uiService = useService("ui");
 
     // Prevent autofocus in mobile
     if (!mobile && comp.env.isSmall) {
@@ -54,7 +61,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
     // LEGACY
     useEffect(
         (el) => {
-            if (el && (!uiService.activeElement || uiService.activeElement.contains(el))) {
+            if (el && condition?.(el)) {
                 el.focus();
                 if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
                     el.selectionEnd = el.value.length;
