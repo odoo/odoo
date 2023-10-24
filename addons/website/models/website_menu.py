@@ -47,7 +47,7 @@ class Menu(models.Model):
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
