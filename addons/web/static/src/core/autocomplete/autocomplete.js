@@ -4,7 +4,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { usePosition } from "@web/core/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export class AutoComplete extends Component {
