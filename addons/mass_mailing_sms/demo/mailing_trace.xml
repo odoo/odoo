@@ -37,7 +37,7 @@
         <field name="sms_number">+32465000003</field>
         <field name="model">res.partner</field>
         <field name="res_id" ref="base.res_partner_address_24"/>
-        <field name="trace_status">sent</field>
+        <field name="trace_status">pending</field>
         <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="write_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
@@ -48,7 +48,7 @@
         <field name="model">res.partner</field>
         <field name="res_id" ref="base.res_partner_address_33"/>
         <field name="trace_status">error</field>
-        <field name="failure_type">sms_server</field>
+        <field name="failure_type">sms_not_allowed</field>
         <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="write_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
@@ -58,7 +58,8 @@
         <field name="sms_number">123123</field>
         <field name="model">res.partner</field>
         <field name="res_id" ref="base.res_partner_address_33"/>
-        <field name="trace_status">bounce</field>
+        <field name="trace_status">error</field>
+        <field name="failure_type">sms_not_delivered</field>
         <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="write_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
@@ -68,8 +69,8 @@
         <field name="sms_number"></field>
         <field name="model">res.partner</field>
         <field name="res_id" ref="base.res_partner_address_34"/>
-        <field name="trace_status">error</field>
-        <field name="failure_type">sms_number_missing</field>
+        <field name="trace_status">bounce</field>
+        <field name="failure_type">sms_invalid_destination</field>
         <field name="sent_datetime" eval="False"/>
     </record>
 
@@ -123,7 +124,7 @@
         <field name="sms_number">+32456001111</field>
         <field name="model">mailing.contact</field>
         <field name="res_id" ref="mass_mailing_sms.mailing_contact_0_1"/>
-        <field name="trace_status">sent</field>
+        <field name="trace_status">pending</field>
         <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
     <record id="mailing_sms_1_trace_2" model="mailing.trace">
@@ -132,7 +133,7 @@
         <field name="sms_number">+32456001122</field>
         <field name="model">mailing.contact</field>
         <field name="res_id" ref="mass_mailing_sms.mailing_contact_0_2"/>
-        <field name="trace_status">sent</field>
+        <field name="trace_status">pending</field>
         <field name="sent_datetime" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
     <record id="mailing_sms_1_trace_3" model="mailing.trace">

@@ -4,11 +4,10 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import exceptions, tools
-from odoo.tests import common
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.models.sms_api import SmsApi
-from odoo.addons.sms.models.sms_sms import SmsSms
+from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
+from odoo.tests import common
 
 
 class MockSMS(common.BaseCase):
@@ -18,7 +17,7 @@ class MockSMS(common.BaseCase):
         self._clear_sms_sent()
 
     @contextmanager
-    def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None):
+    def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None, moderated=False):
         self._clear_sms_sent()
         sms_create_origin = SmsSms.create
         sms_send_origin = SmsSms._send
@@ -39,12 +38,8 @@ class MockSMS(common.BaseCase):
                     error = sim_error or (nbr_t_error and nbr_t_error.get(to_send['number']))
                     if error and error == 'credit':
                         res.update(credit=0, state='insufficient_credit')
-                    elif error and error == 'wrong_number_format':
-                        res.update(state='wrong_number_format')
-                    elif error and error == 'unregistered':
-                        res.update(state='unregistered')
-                    elif error and error == 'server_error':
-                        res.update(state='server_error')
+                    elif error and error in {'wrong_number_format', 'unregistered', 'server_error'}:
+                        res.update(state=error)
                     elif error and error == 'jsonrpc_exception':
                         raise exceptions.AccessError(
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
@@ -56,6 +51,35 @@ class MockSMS(common.BaseCase):
                             'body': to_send['content'],
                         })
                 return result
+            elif local_endpoint == '/iap/sms/3/send':
+                result = []
+                for message in params['messages']:
+                    for number in message["numbers"]:
+                        error = sim_error or (nbr_t_error and nbr_t_error.get(number['number']))
+                        if error == 'jsonrpc_exception':
+                            raise exceptions.AccessError(
+                                'The url that this service requested returned an error. '
+                                'Please contact the author of the app. '
+                                'The url it tried to contact was ' + local_endpoint
+                            )
+                        elif error == 'credit':
+                            error = 'insufficient_credit'
+                        res = {
+                            'uuid': number['uuid'],
+                            'state': error if error else 'success' if not moderated else 'processing',
+                            'credit': 1,
+                        }
+                        if error:
+                            # credit is only given if the amount is known
+                            res.update(credit=0)
+                        else:
+                            self._sms.append({
+                                'number': number['number'],
+                                'body': message['content'],
+                                'uuid': number['uuid'],
+                            })
+                        result.append(res)
+                return result
 
         def _sms_sms_create(model, *args, **kwargs):
             res = sms_create_origin(model, *args, **kwargs)
@@ -65,9 +89,7 @@ class MockSMS(common.BaseCase):
         def _sms_sms_send(records, unlink_failed=False, unlink_sent=True, raise_exception=False):
             if sms_allow_unlink:
                 return sms_send_origin(records, unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
-            else:
-                return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
-            return True
+            return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
 
         try:
             with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
@@ -81,7 +103,7 @@ class MockSMS(common.BaseCase):
         self._sms = []
         self._new_sms = self.env['sms.sms'].sudo()
 
-    def _clear_outoing_sms(self):
+    def _clear_outgoing_sms(self):
         """ As SMS gateway mock keeps SMS, we may need to remove them manually
         if there are several tests in the same tx. """
         self.env['sms.sms'].sudo().search([('state', '=', 'outgoing')]).unlink()
@@ -115,10 +137,6 @@ class SMSCase(MockSMS):
             raise NotImplementedError()
         return sms
 
-    def assertNoSMS(self):
-        """ Check no sms went through gateway during mock. """
-        self.assertTrue(len(self._new_sms) == 0)
-
     def assertSMSIapSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.
@@ -131,10 +149,6 @@ class SMSCase(MockSMS):
             self.assertTrue(bool(sent_sms), 'Number %s not found in %s' % (number, repr([s['number'] for s in self._sms])))
             if content is not None:
                 self.assertIn(content, sent_sms['body'])
-
-    def assertSMSSent(self, numbers, content=None):
-        """ Deprecated. Remove in 14.4 """
-        return self.assertSMSIapSent(numbers, content=content)
 
     def assertSMS(self, partner, number, status, failure_type=None,
                   content=None, fields_values=None):
@@ -158,7 +172,7 @@ class SMSCase(MockSMS):
             self.assertEqual(
                 sms_sms[fname], fvalue,
                 'SMS: expected %s for %s, got %s' % (fvalue, fname, sms_sms[fname]))
-        if status == 'sent':
+        if status == 'pending':
             self.assertSMSIapSent([sms_sms.number], content=content)
 
     def assertSMSCanceled(self, partner, number, failure_type, content=None, fields_values=None):
@@ -189,7 +203,7 @@ class SMSCase(MockSMS):
           :param recipients_info: list[{
             'partner': res.partner record (may be empty),
             'number': number used for notification (may be empty, computed based on partner),
-            'state': ready / sent / exception / canceled (sent by default),
+            'state': ready / pending / sent / exception / canceled (pending by default),
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
         """
@@ -212,7 +226,7 @@ class SMSCase(MockSMS):
         for recipient_info in recipients_info:
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
-            state = recipient_info.get('state', 'sent')
+            state = recipient_info.get('state', 'pending')
             if number is None and partner:
                 number = partner._phone_format()
 
@@ -220,14 +234,14 @@ class SMSCase(MockSMS):
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
 
-            if state not in ('sent', 'ready', 'canceled'):
+            if state not in {'process', 'sent', 'ready', 'canceled', 'pending'}:
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
-                if state == 'sent':
+                if state in {'process', 'pending', 'sent'}:
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
                     else:
-                        self.assertSMS(partner, number, 'sent', content=content)
+                        self.assertSMS(partner, number, state, content=content)
                 elif state == 'ready':
                     self.assertSMS(partner, number, 'outgoing', content=content)
                 elif state == 'exception':
@@ -277,3 +291,6 @@ class SMSCommon(MailCommon, SMSCase):
             'model_id': cls.env['ir.model']._get(model).id,
             'body': body if body else 'Dear {{ object.display_name }} this is an SMS.'
         })
+
+    def _make_webhook_jsonrpc_request(self, statuses):
+        return self.make_jsonrpc_request('/sms/status', {'message_statuses': statuses})
