@@ -124,12 +124,12 @@ class Property(models.Model):
             for record in self
         )
         r = super().write(values)
+        self.env.flush_all()
         if default_set:
             # DLE P44: test `test_27_company_dependent`
             # Easy solution, need to flush write when changing a property.
             # Maybe it would be better to be able to compute all impacted cache value and update those instead
             # Then clear_cache must be removed as well.
-            self.env.flush_all()
             self.env.registry.clear_cache()
         return r
 
