@@ -296,6 +296,16 @@ class Channel(models.Model):
             ]
             # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
             self.env['discuss.channel.member'].sudo().create(to_create)
+        notifications = []
+        for channel in self:
+            for group in channel.group_ids:
+                notifications.append((group, 'mail.record/insert', {
+                    'Thread': {
+                        **channel._channel_basic_info(),
+                        "is_pinned": True,
+                    }
+                }))
+        self.env["bus.bus"]._sendmany(notifications)
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
@@ -359,7 +369,10 @@ class Channel(models.Model):
                 user = member.partner_id.user_ids[0] if member.partner_id.user_ids else self.env['res.users']
                 if user:
                     notifications.append((member.partner_id, 'discuss.channel/joined', {
-                        'channel': member.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids)._channel_info()[0],
+                        'channel': {
+                            **member.channel_id._channel_basic_info(),
+                            "is_pinned": True,
+                        },
                         'invited_by_user_id': self.env.user.id,
                         'open_chat_window': open_chat_window,
                     }))
@@ -377,7 +390,7 @@ class Channel(models.Model):
                 guest = member.guest_id
                 if guest:
                     notifications.append((guest, 'discuss.channel/joined', {
-                        'channel': member.channel_id.with_context(guest=guest)._channel_info()[0],
+                        'channel': member.channel_id._channel_basic_info(),
                     }))
             notifications.append((channel, 'mail.record/insert', {
                 'Thread': {
@@ -712,6 +725,25 @@ class Channel(models.Model):
             self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
+    def _channel_basic_info(self):
+        self.ensure_one()
+        return {
+            'avatarCacheKey': self._get_avatar_cache_key(),
+            'channel_type': self.channel_type,
+            'memberCount': self.member_count,
+            'id': self.id,
+            'name': self.name,
+            'defaultDisplayMode': self.default_display_mode,
+            'description': self.description,
+            'uuid': self.uuid,
+            'is_editable': self.is_editable,
+            'group_based_subscription': bool(self.group_ids),
+            'create_uid': self.create_uid.id,
+            'authorizedGroupFullName': self.group_public_id.full_name,
+            'allow_public_upload': self.allow_public_upload,
+            'model': "discuss.channel",
+        }
+
     def _channel_info(self):
         """ Get the informations header for the current channels
             :returns a list of channels values
@@ -755,24 +787,7 @@ class Channel(models.Model):
             if (current_partner and member.partner_id == current_partner) or (current_guest and member.guest_id == current_guest):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
-            info = {
-                'avatarCacheKey': channel._get_avatar_cache_key(),
-                'channel_type': channel.channel_type,
-                'memberCount': channel.member_count,
-                'id': channel.id,
-                'name': channel.name,
-                'defaultDisplayMode': channel.default_display_mode,
-                'description': channel.description,
-                'uuid': channel.uuid,
-                'state': 'open',
-                'is_editable': channel.is_editable,
-                'is_minimized': False,
-                'group_based_subscription': bool(channel.group_ids),
-                'create_uid': channel.create_uid.id,
-                'authorizedGroupFullName': channel.group_public_id.full_name,
-                'allow_public_upload': channel.allow_public_upload,
-                'model': "discuss.channel",
-            }
+            info = channel._channel_basic_info()
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
