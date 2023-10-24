@@ -4,6 +4,7 @@ import io
 import zipfile
 import base64
 import json
+import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError
 
@@ -92,10 +93,9 @@ class SpreadsheetMixin(models.AbstractModel):
     def _get_file_content(self, file_path):
         if file_path.startswith('data:image/png;base64,'):
             return base64.b64decode(file_path.split(',')[1])
-        _, args = self.env['ir.http']._match(file_path)
+        match = re.match(r'/web/image/(\d+)', file_path)
         file_record = self.env['ir.binary']._find_record(
-            xmlid=args.get('xmlid'),
-            res_model=args.get('model', 'ir.attachment'),
-            res_id=args.get('id'),
+            res_model='ir.attachment',
+            res_id=int(match.group(1)),
         )
         return self.env['ir.binary']._get_stream_from(file_record).read()
