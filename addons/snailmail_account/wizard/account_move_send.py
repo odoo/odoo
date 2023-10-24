@@ -17,9 +17,9 @@ class AccountMoveSend(models.TransientModel):
     send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_extra_fields')
     send_by_post_readonly = fields.Boolean(compute='_compute_send_by_post_extra_fields')
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         # EXTENDS 'account'
-        values = super()._get_wizard_values(move)
+        values = super()._get_wizard_values()
         values['send_by_post'] = self.checkbox_send_by_post
         return values
 

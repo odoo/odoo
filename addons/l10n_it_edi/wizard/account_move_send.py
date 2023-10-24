@@ -26,9 +26,9 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
         help="Send the e-invoice XML to the Italian Tax Agency.")
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         # EXTENDS 'account'
-        values = super()._get_wizard_values(move)
+        values = super()._get_wizard_values()
         values['l10n_it_edi_checkbox_xml_export'] = self.l10n_it_edi_checkbox_xml_export
         values['l10n_it_edi_checkbox_send'] = self.l10n_it_edi_checkbox_send
         return values
