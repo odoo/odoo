@@ -10,7 +10,7 @@ export class DiscussAppCategory extends Record {
     }
     /** @returns {import("models").DiscussAppCategory} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @type {string} */

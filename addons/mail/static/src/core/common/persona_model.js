@@ -22,7 +22,7 @@ export class Persona extends Record {
     }
     /** @returns {import("models").Persona} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     update(data) {

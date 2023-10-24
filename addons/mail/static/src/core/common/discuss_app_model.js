@@ -39,7 +39,7 @@ export class DiscussApp extends Record {
     }
     /** @returns {import("models").DiscussApp} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     /** @type {'mailbox'|'all'|'channel'|'chat'|'livechat'} */

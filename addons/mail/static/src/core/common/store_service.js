@@ -2,11 +2,17 @@
 
 import { onChange } from "@mail/utils/common/misc";
 
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { modelRegistry, Record, RecordUses, RecordList } from "./record";
+
+/**
+ * Class of markup, useful to detect content that is markup and to
+ * automatically markup field during trusted insert
+ */
+const Markup = markup("").constructor;
 
 export class BaseStore extends Record {
     /**
@@ -25,7 +31,7 @@ export class BaseStore extends Record {
 export class Store extends BaseStore {
     /** @returns {import("models").Store} */
     static insert() {
-        return super.insert();
+        return super.insert(...arguments);
     }
 
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
@@ -172,8 +178,21 @@ export function makeStore(env) {
                         },
                         /** @param {Record} receiver */
                         set(target, name, val, receiver) {
-                            if (!(name in receiver._fields)) {
+                            if (name === "Model" || !(name in receiver.Model._fields)) {
                                 Reflect.set(target, name, val, receiver);
+                                return true;
+                            }
+                            if (Record.isAttr(receiver.Model._fields[name])) {
+                                if (
+                                    receiver.Model._fields[name].html &&
+                                    Record.trusted &&
+                                    typeof val === "string" &&
+                                    !(val instanceof Markup)
+                                ) {
+                                    Reflect.set(target, name, markup(val), receiver);
+                                } else {
+                                    Reflect.set(target, name, val, receiver);
+                                }
                                 return true;
                             }
                             /** @type {RecordList<Record>} */

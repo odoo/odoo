@@ -35,13 +35,16 @@ export class Message extends Record {
     }
     /** @returns {import("models").Message} */
     static insert(data) {
+        return super.insert(...arguments);
+    }
+    static _insert(data) {
         if (data.res_id) {
             this.store.Thread.insert({
                 model: data.model,
                 id: data.res_id,
             });
         }
-        return super.insert(data);
+        return super._insert(...arguments);
     }
 
     /** @param {Object} data */
@@ -89,7 +92,7 @@ export class Message extends Record {
 
     attachments = Record.many("Attachment", { inverse: "message" });
     author = Record.one("Persona");
-    body = Record.attr("");
+    body = Record.attr("", { html: true });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {string} */
     default_subject;

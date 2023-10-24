@@ -12,7 +12,7 @@ export class Follower extends Record {
     }
     /** @returns {import("models").Follower} */
     static insert(data) {
-        return super.insert(data);
+        return super.insert(...arguments);
     }
 
     followedThread = Record.one("Thread");

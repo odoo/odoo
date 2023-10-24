@@ -2,7 +2,7 @@
 
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -55,14 +55,16 @@ export class MailCoreCommon {
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {
                 payload.elements.map((message) => {
-                    this.store.Message.insert({
-                        ...message,
-                        body: markup(message.body),
-                        // implicit: failures are sent by the server at
-                        // initialization only if the current partner is
-                        // author of the message
-                        author: this.store.self,
-                    });
+                    this.store.Message.insert(
+                        {
+                            ...message,
+                            // implicit: failures are sent by the server at
+                            // initialization only if the current partner is
+                            // author of the message
+                            author: this.store.self,
+                        },
+                        { html: true }
+                    );
                 });
             });
             this.busService.subscribe("mail.message/toggle_star", (payload) => {
@@ -105,10 +107,7 @@ export class MailCoreCommon {
                 }
                 const { Message: messageData } = payload;
                 if (messageData) {
-                    this.store.Message.insert({
-                        ...messageData,
-                        body: messageData.body ? markup(messageData.body) : messageData.body,
-                    });
+                    this.store.Message.insert(messageData, { html: true });
                 }
             });
         });
