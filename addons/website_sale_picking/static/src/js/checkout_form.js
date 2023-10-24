@@ -16,7 +16,7 @@ publicWidget.registry.websiteSaleDelivery.include({
             this.warning.innerText = _t('If you believe that it is an error, please contact the website administrator.');
             boldMsg.classList.add('d-block');
             this.warning.prepend(boldMsg);
-            this.warning.classList.add('alert-warning', 'p-3', 'm-1', 'd-none');
+            this.warning.classList.add('alert-warning', 'p-3', 'm-1', 'd-none', 'onsite-warning');
 
             this.paymentOptionsContainer = document.querySelector('#payment_method');
             this.paymentOptionsContainer.querySelector('div.card').prepend(this.warning);
@@ -58,6 +58,9 @@ publicWidget.registry.websiteSaleDelivery.include({
         let atLeastOneOptionAvailable = false;
         for (let option of this.paymentOptions) {
             if (option.dataset.isOnsite && input.dataset.deliveryType !== 'onsite') {
+                if (option.checked) { // The payment option was selected.
+                    this._disablePayButton(); // Reset the submit button.
+                }
                 this._setEnablePaymentOption(option, false);
             } else{
                 if(option.dataset.isOnsite){
@@ -67,17 +70,13 @@ publicWidget.registry.websiteSaleDelivery.include({
             }
         }
 
-        // Jquery because the button does not behave nicely with vanilla dataset.
-        let $payButton = $('button[name="o_payment_submit_button"]');
-        let disabledReasons = $payButton.data('disabled_reasons') || {};
-        disabledReasons.noOptionAvailableOnsite = false;
-
         if (!atLeastOneOptionAvailable) {
             this.warning.classList.remove('d-none');
-            disabledReasons.noOptionAvailableOnsite = true;
-        } else if (this.paymentOptions.length === 1) {
-            $(this.paymentOptions[0]).click(); // Make sure the option is selected if that's the only one, because the input is hidden in that case.
+            this._disablePayButton();
         }
-        $payButton.data('disabled_reasons', disabledReasons);
-    }
+        else {
+            this._enableButton();
+        }
+    },
+
 });

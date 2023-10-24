@@ -141,7 +141,7 @@ odoo.define('payment.manage_form', require => {
                     // Fallback to the old id in case the template was not updated.
                     $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
                     $tokenCard.remove();
-                    this._disableButton(false);
+                    this._disableButton();
                 }).guardedCatch(error => {
                     error.event.preventDefault();
                     this._displayError(
