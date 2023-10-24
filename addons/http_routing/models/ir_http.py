@@ -10,7 +10,12 @@ import unicodedata
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
+<<<<<<< HEAD
 from werkzeug.exceptions import HTTPException, NotFound
+||||||| parent of 34219fd1ab79 (temp)
+=======
+from werkzeug._compat import wsgi_encoding_dance
+>>>>>>> 34219fd1ab79 (temp)
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -569,10 +574,109 @@ class IrHttp(models.AbstractModel):
                     werkzeug.exceptions.abort(redirect)
 
     @classmethod
+<<<<<<< HEAD
     def _frontend_pre_dispatch(cls):
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
             request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
+||||||| parent of 34219fd1ab79 (temp)
+    def _redirect(cls, location, code=303):
+        if request and request.db and getattr(request, 'is_frontend', False):
+            location = url_for(location)
+        return super()._redirect(location, code)
+
+    @classmethod
+    def reroute(cls, path):
+        if not hasattr(request, 'rerouting'):
+            request.rerouting = [request.httprequest.path]
+        if path in request.rerouting:
+            raise Exception("Rerouting loop is forbidden")
+        request.rerouting.append(path)
+        if len(request.rerouting) > cls.rerouting_limit:
+            raise Exception("Rerouting limit exceeded")
+        request.httprequest.environ['PATH_INFO'] = path
+        # void werkzeug cached_property. TODO: find a proper way to do this
+        for key in ('full_path', 'url', 'base_url'):
+            request.httprequest.__dict__.pop(key, None)
+        # since werkzeug 2.0 `path`` became an attribute and is not a cached property anymore
+        if hasattr(type(request.httprequest), 'path'): # cached property
+            request.httprequest.__dict__.pop('path', None)
+        else: # direct attribute
+            request.httprequest.path = '/' + path.lstrip('/')
+
+        return cls._dispatch()
+
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        super(IrHttp, cls)._postprocess_args(arguments, rule)
+
+        try:
+            _, path = rule.build(arguments)
+            assert path is not None
+        except odoo.exceptions.MissingError:
+            return cls._handle_exception(werkzeug.exceptions.NotFound())
+        except Exception as e:
+            return cls._handle_exception(e)
+
+        if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
+            if generated_path != current_path:
+                if request.lang != cls._get_default_lang():
+                    path = '/' + request.lang.url_code + path
+                if request.httprequest.query_string:
+                    path += '?' + request.httprequest.query_string.decode('utf-8')
+                return request.redirect(path, code=301)
+=======
+    def _redirect(cls, location, code=303):
+        if request and request.db and getattr(request, 'is_frontend', False):
+            location = url_for(location)
+        return super()._redirect(location, code)
+
+    @classmethod
+    def reroute(cls, path):
+        path = wsgi_encoding_dance(path)
+        if not hasattr(request, 'rerouting'):
+            request.rerouting = [request.httprequest.path]
+        if path in request.rerouting:
+            raise Exception("Rerouting loop is forbidden")
+        request.rerouting.append(path)
+        if len(request.rerouting) > cls.rerouting_limit:
+            raise Exception("Rerouting limit exceeded")
+        request.httprequest.environ['PATH_INFO'] = path
+        # void werkzeug cached_property. TODO: find a proper way to do this
+        for key in ('full_path', 'url', 'base_url'):
+            request.httprequest.__dict__.pop(key, None)
+        # since werkzeug 2.0 `path`` became an attribute and is not a cached property anymore
+        if hasattr(type(request.httprequest), 'path'): # cached property
+            request.httprequest.__dict__.pop('path', None)
+        else: # direct attribute
+            request.httprequest.path = '/' + path.lstrip('/')
+
+        return cls._dispatch()
+
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        super(IrHttp, cls)._postprocess_args(arguments, rule)
+
+        try:
+            _, path = rule.build(arguments)
+            assert path is not None
+        except odoo.exceptions.MissingError:
+            return cls._handle_exception(werkzeug.exceptions.NotFound())
+        except Exception as e:
+            return cls._handle_exception(e)
+
+        if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
+            if generated_path != current_path:
+                if request.lang != cls._get_default_lang():
+                    path = '/' + request.lang.url_code + path
+                if request.httprequest.query_string:
+                    path += '?' + request.httprequest.query_string.decode('utf-8')
+                return request.redirect(path, code=301)
+>>>>>>> 34219fd1ab79 (temp)
 
     @classmethod
     def _get_exception_code_values(cls, exception):

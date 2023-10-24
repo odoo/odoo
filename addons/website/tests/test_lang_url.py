@@ -99,6 +99,10 @@ class TestLangUrl(HttpCase):
         [anchor] = doc.xpath('//a[@id="foo"]')
         self.assertEqual(anchor.get('href'), 'http://]', 'The invalid IP URL must be left untouched')
 
+    def test_05_reroute_unicode(self):
+        res = self.url_open('/fr/привет')
+        self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of non latin-1 characters")
+
 
 @tagged('-at_install', 'post_install')
 class TestControllerRedirect(TestLangUrl):
