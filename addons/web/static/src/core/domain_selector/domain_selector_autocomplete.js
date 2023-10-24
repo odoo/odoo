@@ -54,9 +54,9 @@ class AutoCompleteWithSources extends Component {
             this.lastProm.abort(false);
         }
         this.lastProm = this.search(name, SEARCH_LIMIT + 1);
-        const nameGets = await this.lastProm;
-        const options = nameGets.map(([value, label]) => ({value, label: label ? label.split("\n")[0] : _t("Unnamed")}));
-        this.addNames(options);
+        const nameGets = (await this.lastProm).map(([id, label]) => ([id, label ? label.split("\n")[0] : _t("Unnamed")]));
+        this.addNames(nameGets);
+        const options = nameGets.map(([value, label]) => ({value, label}));
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({
                 label: _t("Search More..."),
