@@ -38,11 +38,9 @@ class ResUsers(models.Model):
     def _unsubscribe_from_non_public_channels(self):
         """This method un-subscribes users from group restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.
-        We do not un-subscribes users from public channels because in most common cases,
-        public channels are mailing list (e-mail based) and so users should always receive
-        updates from public channels until they manually un-subscribe themselves.
         """
         domain = [("partner_id", "in", self.partner_id.ids)]
+        # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
         current_cm.filtered(
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
@@ -50,8 +48,18 @@ class ResUsers(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
+        # 2 different queries because the 2 sub-queries together with OR are less efficient
+        channels = self.env["discuss.channel"].with_user(self)
+        channels += channels.search([("channel_type", "in", ("channel", "group")), ("is_member", "=", True)])
+        channels += channels.search(
+            [
+                ("channel_type", "not in", ("channel", "group")),
+                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
+            ]
+        )
         return {
-            'channels': self.partner_id._get_channels_as_member()._channel_info(),
-            'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
+            "channels": channels._channel_info(),
+            # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
+            "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             **super()._init_messaging(),
         }

@@ -1,17 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
-
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError
-
-discuss_channel_new_test_user = partial(mail_new_test_user, context={'discuss_channel_nosubscribe': False})
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tests.common import tagged
 
 
-class TestDiscussChannelMembers(MailCommon):
-
+@tagged("post_install", "-at_install")
+class TestDiscussChannelMember(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,27 +20,22 @@ class TestDiscussChannelMembers(MailCommon):
             'model': cls.secret_group._name,
             'res_id': cls.secret_group.id,
         })
+        cls.user_1 = mail_new_test_user(
+            cls.env, login="user_1", name="User 1", groups="base.group_user,mail.secret_group"
+        )
+        cls.user_2 = mail_new_test_user(
+            cls.env, login="user_2", name="User 2", groups="base.group_user,mail.secret_group"
+        )
+        cls.user_3 = mail_new_test_user(
+            cls.env, login="user_3", name="User 3", groups="base.group_user,mail.secret_group"
+        )
+        cls.user_portal = mail_new_test_user(
+            cls.env, login="user_portal", name="User Portal", groups="base.group_portal"
+        )
+        cls.user_public = mail_new_test_user(
+            cls.env, login="user_public", name="User Public", groups="base.group_public"
+        )
 
-        cls.user_1 = discuss_channel_new_test_user(
-            cls.env, login='user_1',
-            name='User 1',
-            groups='base.group_user,mail.secret_group')
-        cls.user_2 = discuss_channel_new_test_user(
-            cls.env, login='user_2',
-            name='User 2',
-            groups='base.group_user,mail.secret_group')
-        cls.user_3 = discuss_channel_new_test_user(
-            cls.env, login='user_3',
-            name='User 3',
-            groups='base.group_user,mail.secret_group')
-        cls.user_portal = discuss_channel_new_test_user(
-            cls.env, login='user_portal',
-            name='User Portal',
-            groups='base.group_portal')
-        cls.user_public = discuss_channel_new_test_user(
-            cls.env, login='user_ublic',
-            name='User Public',
-            groups='base.group_public')
 
         cls.group = cls.env['discuss.channel'].create({
             'name': 'Group',
@@ -163,8 +153,9 @@ class TestDiscussChannelMembers(MailCommon):
         with self.assertRaises(AccessError):
             channel_members.with_user(self.user_2).unlink()
 
-        # User 3 is in the group, they can kick user 1
-        channel_members.with_user(self.user_portal).unlink()
+        # User 3 is in the group, but not admin/owner, they can not kick user 1
+        with self.assertRaises(AccessError):
+            channel_members.with_user(self.user_portal).unlink()
 
     # ------------------------------------------------------------
     # GROUP BASED CHANNELS
@@ -219,10 +210,8 @@ class TestDiscussChannelMembers(MailCommon):
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.public_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id | self.user_2.partner_id)
 
-        # portal/public users still cannot join a public channel, should go through dedicated controllers
-        with self.assertRaises(AccessError):
-            self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
-        with self.assertRaises(AccessError):
+        self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
+        with self.assertRaises(ValidationError):  # public cannot join without having a guest
             self.public_channel.with_user(self.user_public).add_members(self.user_public.partner_id.ids)
 
     def test_channel_member_invite_with_guest(self):

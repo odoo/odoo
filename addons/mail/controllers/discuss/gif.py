@@ -2,6 +2,7 @@
 
 import requests
 import werkzeug.urls
+
 from odoo.http import request, route, Controller
 
 
@@ -15,6 +16,7 @@ class DiscussGifController(Controller):
 
     @route("/discuss/gif/search", type="json", auth="user")
     def search(self, search_term, locale="en", country="US", position=None):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
@@ -35,6 +37,7 @@ class DiscussGifController(Controller):
 
     @route("/discuss/gif/categories", type="json", auth="user")
     def categories(self, locale="en", country="US"):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
@@ -55,6 +58,7 @@ class DiscussGifController(Controller):
         request.env["discuss.gif.favorite"].create({"tenor_gif_id": tenor_gif_id})
 
     def _gif_posts(self, ids):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {

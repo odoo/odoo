@@ -3,7 +3,7 @@
 from requests.exceptions import HTTPError
 
 from odoo import Command, http
-from odoo.tests import tagged, HttpCase
+from odoo.tests.common import tagged, HttpCase
 from odoo.tools import file_open, mute_logger
 
 
@@ -11,7 +11,7 @@ from odoo.tools import file_open, mute_logger
 class TestToggleUpload(HttpCase):
     def test_upload_allowed(self):
         self.authenticate(None, None)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        channel = self.env["discuss.channel"].create({"name": "General", "group_public_id": None})
         guest = self.env["mail.guest"].create({"name": "Guest"})
         channel.write({"channel_member_ids": [Command.create({"guest_id": guest.id})]})
         self.assertFalse(channel.allow_public_upload)
@@ -31,7 +31,7 @@ class TestToggleUpload(HttpCase):
 
     def test_upload_denied(self):
         self.authenticate(None, None)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        channel = self.env["discuss.channel"].create({"name": "General", "group_public_id": None})
         guest = self.env["mail.guest"].create({"name": "Guest"})
         channel.write({"channel_member_ids": [Command.create({"guest_id": guest.id})]})
         self.assertFalse(channel.allow_public_upload)

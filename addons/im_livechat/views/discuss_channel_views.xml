@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <search string="Search history">
                     <field name="name" string="Participant"/>
-                    <filter name="filter_my_sessions" domain="[('channel_member_ids.partner_id.user_ids.id', 'in', [uid])]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('is_member', '=', True)]" string="My Sessions"/>
                     <separator/>
                     <filter name="filter_session_date" date="create_date" string="Session Date"/>
                     <separator/>

@@ -6,7 +6,6 @@ import re
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 
-
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
@@ -319,7 +318,6 @@ class Partner(models.Model):
 
     @api.model
     def _get_current_persona(self):
-        guest = self.env["mail.guest"]._get_guest_from_context()
-        if self.env.user._is_public() and guest:
-            return (self.env["res.partner"], guest)
+        if not self.env.user or self.env.user._is_public():
+            return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
         return (self.env.user.partner_id, self.env["mail.guest"])

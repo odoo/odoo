@@ -41,8 +41,9 @@ class MailMessage(models.Model):
                 if message_sudo.author_id.user_livechat_username:
                     del vals['author']['name']
                     vals['author']['user_livechat_username'] = message_sudo.author_id.user_livechat_username
+                # sudo: chatbot.script.step - checking whether the current message is from chatbot
                 if discuss_channel.chatbot_current_step_id \
-                        and message_sudo.author_id == discuss_channel.chatbot_current_step_id.chatbot_script_id.operator_partner_id:
+                        and message_sudo.author_id == discuss_channel.chatbot_current_step_id.sudo().chatbot_script_id.operator_partner_id:
                     chatbot_message_id = self.env['chatbot.message'].sudo().search([
                         ('mail_message_id', '=', message_sudo.id)], limit=1)
                     if chatbot_message_id.script_step_id:

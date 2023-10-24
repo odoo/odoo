@@ -36,8 +36,7 @@ class Users(models.Model):
     def _init_odoobot(self):
         self.ensure_one()
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        channel_info = self.env['discuss.channel'].channel_get([odoobot_id, self.partner_id.id])
-        channel = self.env['discuss.channel'].browse(channel_info['id'])
+        channel = self.env['discuss.channel'].channel_get([odoobot_id, self.partner_id.id])
         message = Markup("%s<br/>%s<br/><b>%s</b> <span class=\"o_odoobot_command\">:)</span>") % (
             _("Hello,"),
             _("Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features."),

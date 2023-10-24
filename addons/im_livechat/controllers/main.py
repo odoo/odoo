@@ -6,7 +6,9 @@ from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
 from odoo import http, tools, _, release
+from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools import replace_exceptions
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
@@ -192,12 +194,15 @@ class LivechatController(http.Controller):
                 'chatbot_script_id': chatbot_script.id if chatbot_script else None
             }
         channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
-        __, guest = channel._find_or_create_persona_for_channel(
-            guest_name=self._get_guest_name(),
-            country_code=request.geoip.country_code,
-            timezone=request.env['mail.guest']._get_timezone_from_request(request),
-            post_joined_message=False
-        )
+        with replace_exceptions(UserError, by=NotFound()):
+            # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
+            __, guest = channel.sudo()._find_or_create_persona_for_channel(
+                guest_name=self._get_guest_name(),
+                country_code=request.geoip.country_code,
+                timezone=request.env['mail.guest']._get_timezone_from_request(request),
+                post_joined_message=False
+            )
+        channel = channel.with_context(guest=guest)  # a new guest was possibly created
         if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
             channel._broadcast([channel.livechat_operator_id.id])
         channel_info = channel._channel_info()[0]
@@ -264,16 +269,19 @@ class LivechatController(http.Controller):
         if channel:
             channel._email_livechat_transcript(email)
 
-    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
+    @http.route("/im_livechat/visitor_leave_session", type="json", auth="public")
     @add_guest_to_context
     def visitor_leave_session(self, uuid):
-        """ Called when the livechat visitor leaves the conversation.
-         This will clean the chat request and warn the operator that the conversation is over.
-         This allows also to re-send a new chat request to the visitor, as while the visitor is
-         in conversation with an operator, it's not possible to send the visitor a chat request."""
-        discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)])
-        if not discuss_channel:
+        """Called when the livechat visitor leaves the conversation.
+        This will clean the chat request and warn the operator that the conversation is over.
+        This allows also to re-send a new chat request to the visitor, as while the visitor is
+        in conversation with an operator, it's not possible to send the visitor a chat request."""
+        # sudo: channel access is validated with uuid
+        channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", uuid)])
+        if not channel_sudo:
             return
-        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=discuss_channel.id)
-        channel_member_sudo._rtc_leave_call()
-        discuss_channel._close_livechat_session()
+        domain = [("channel_id", "=", channel_sudo.id), ("is_self", "=", True)]
+        member = request.env["discuss.channel.member"].search(domain)
+        # sudo: discuss.channel.rtc.session - member of current user can leave call
+        member.sudo()._rtc_leave_call()
+        channel_sudo._close_livechat_session()
