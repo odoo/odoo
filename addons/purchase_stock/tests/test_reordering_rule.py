@@ -879,8 +879,9 @@ class TestReorderingRule(TransactionCase):
 
         moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
-            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 0},
         ])
 
     def test_add_line_to_existing_draft_po(self):
