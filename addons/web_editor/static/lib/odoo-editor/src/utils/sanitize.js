@@ -217,7 +217,7 @@ class Sanitize {
 
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.innerText;
+                const linkLabel = node.innerText.replace(/\u200B/g, '');
                 const urlInfo = getUrlsInfosInString(linkLabel);
                 if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
                     node.setAttribute('href', urlInfo[0].url);
