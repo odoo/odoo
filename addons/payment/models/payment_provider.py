@@ -331,15 +331,24 @@ class PaymentProvider(models.Model):
         return providers
 
     def write(self, values):
-        # Handle provider disabling.
+        # Handle provider state changes.
+        deactivated_providers = self.env['payment.provider']
+        activated_providers = self.env['payment.provider']
         if 'state' in values:
             state_changed_providers = self.filtered(
                 lambda p: p.state not in ('disabled', values['state'])
             )  # Don't handle providers being enabled or whose state is not updated.
-            state_changed_providers._handle_state_change()
+            state_changed_providers._archive_linked_tokens()
+            if values['state'] == 'disabled':
+                deactivated_providers = state_changed_providers
+            else:  # 'enabled' or 'test'
+                activated_providers = self.filtered(lambda p: p.state == 'disabled')
 
         result = super().write(values)
         self._check_required_if_provider()
+
+        deactivated_providers._deactivate_unsupported_payment_methods()
+        activated_providers._activate_default_pms()
 
         return result
 
@@ -370,12 +379,32 @@ class PaymentProvider(models.Model):
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
 
-    def _handle_state_change(self):
+    def _archive_linked_tokens(self):
         """ Archive all the payment tokens linked to the providers.
 
         :return: None
         """
         self.env['payment.token'].search([('provider_id', 'in', self.ids)]).write({'active': False})
+
+    def _deactivate_unsupported_payment_methods(self):
+        """ Deactivate payment methods linked to only disabled providers.
+
+        :return: None
+        """
+        unsupported_pms = self.payment_method_ids.filtered(
+            lambda pm: all(p.state == 'disabled' for p in pm.provider_ids)
+        )
+        (unsupported_pms + unsupported_pms.brand_ids).active = False
+
+    def _activate_default_pms(self):
+        """ Activate the default payment methods of the provider.
+
+        :return: None
+        """
+        for provider in self:
+            pm_codes = provider._get_default_payment_method_codes()
+            pms = provider.with_context(active_test=False).payment_method_ids
+            (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes).active = True
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
@@ -656,3 +685,14 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return self.code
+
+    def _get_default_payment_method_codes(self):
+        """ Return the default payment methods for this provider.
+
+        Note: self.ensure_one()
+
+        :return: The default payment method codes.
+        :rtype: list
+        """
+        self.ensure_one()
+        return []

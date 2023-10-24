@@ -3,6 +3,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.payment_demo import const
+
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
@@ -36,3 +38,10 @@ class PaymentProvider(models.Model):
     def _check_provider_state(self):
         if self.filtered(lambda p: p.code == 'demo' and p.state not in ('test', 'disabled')):
             raise UserError(_("Demo providers should never be enabled."))
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'demo':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHOD_CODES
