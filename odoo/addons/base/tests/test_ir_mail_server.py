@@ -51,9 +51,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # TEMPORARY
-        for icp in {'mail.default.from', 'mail.catchall.alias', 'mail.bounce.alias', 'mail.catchall.domain', 'mail.default.from_filter'}:
-            cls.env['ir.config_parameter'].sudo().set_param(icp, False)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', False)
         cls._init_mail_servers()
         cls.default_bounce_address = 'CACA'
         cls.default_from_address = 'PROUT'
@@ -292,9 +290,38 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             )
 
     @mute_logger('odoo.models.unlink')
+    def test_mail_server_send_email_context_force(self):
+        """ Allow to force notifications_email / bounce_address from context
+        to allow higher-level apps to send values until end of mail stack
+        without hacking too much models. """
+        # custom notification / bounce email from context
+        context_server = self.env['ir.mail_server'].create({
+            'from_filter': 'context.example.com',
+            'name': 'context',
+            'smtp_host': 'test',
+        })
+        IrMailServer = self.env["ir.mail_server"].with_context(
+            domain_notifications_email="notification@context.example.com",
+            domain_bounce_address="bounce@context.example.com",
+        )
+        with self.mock_smtplib_connection():
+            mail_server, smtp_from = IrMailServer._find_mail_server(email_from='"Name" <test@unknown_domain.com>')
+            self.assertEqual(mail_server, context_server)
+            self.assertEqual(smtp_from, "notification@context.example.com")
+            smtp_session = IrMailServer.connect(smtp_from=smtp_from)
+            message = self._build_email(mail_from='"Name" <test@unknown_domain.com>')
+            IrMailServer.send_email(message, smtp_session=smtp_session)
+
+        self.assertEqual(len(self.emails), 1)
+        self.assertSMTPEmailsSent(
+            smtp_from="bounce@context.example.com",
+            message_from='"Name" <notification@context.example.com>',
+            from_filter=context_server.from_filter,
+        )
+
+    @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_IDNA(self):
         """ Test that the mail from / recipient envelop are encoded using IDNA """
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'ééééééé.com')
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
             self.env['ir.mail_server'].send_email(message)

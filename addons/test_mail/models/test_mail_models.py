@@ -25,8 +25,8 @@ class MailTestSimple(models.Model):
         _a = super()._notify_by_email_get_final_mail_values(*args, **kwargs)
         return _a
 
-    def _notify_by_email_get_headers(self):
-        headers = super()._notify_by_email_get_headers()
+    def _notify_by_email_get_headers(self, headers=None):
+        headers = super()._notify_by_email_get_headers(headers=headers)
         headers['X-Custom'] = 'Done'
         return headers
 
@@ -93,6 +93,16 @@ class MailTestGateway(models.Model):
         }
         defaults.update(custom_values or {})
         return super().message_new(msg_dict, custom_values=defaults)
+
+
+class MailTestGatewayCompany(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances, with a company field. """
+    _description = 'Simple Chatter Model for Mail Gateway with company'
+    _name = 'mail.test.gateway.company'
+    _inherit = ['mail.test.gateway']
+
+    company_id = fields.Many2one('res.company', 'Company')
 
 
 class MailTestGatewayGroups(models.Model):

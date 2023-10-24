@@ -121,6 +121,12 @@ class MailComposer(models.TransientModel):
     res_domain_user_id = fields.Many2one(
         'res.users', string='Responsible',
         help='Used as context used to evaluate composer domain')
+    record_alias_domain_id = fields.Many2one(
+        'mail.alias.domain', 'Alias Domain',
+        compute='_compute_record_environment', readonly=False, store=True)  # useful only in monorecord comment mode
+    record_company_id = fields.Many2one(
+        'res.company', 'Company',
+        compute='_compute_record_environment', readonly=False, store=True)  # useful only in monorecord comment mode
     record_name = fields.Char(
         'Record Name',
         compute='_compute_record_name', readonly=False, store=True)  # useful only in monorecord comment mode
@@ -386,6 +392,34 @@ class MailComposer(models.TransientModel):
                     composer.res_ids = f"{self.env.context['active_ids']}"
                 elif not active_res_ids and self.env.context.get('active_id'):
                     composer.res_ids = f"{[self.env.context['active_id']]}"
+
+    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids')
+    def _compute_record_environment(self):
+        """ In monorecord mode, fetch record company and the linked alias domain,
+        easing future processing notably at post and notification sending time.
+
+        In batch mode it makes no sense to compute a single company, it will be
+        dynamically generated. """
+        toreset = self.filtered(
+            lambda comp: (comp.record_company_id or comp.record_alias_domain_id) and comp.composition_batch
+        )
+        if toreset:
+            toreset.record_alias_domain_id = False
+            toreset.record_company_id = False
+
+        toupdate = self.filtered(
+            lambda comp: not comp.composition_batch
+        )
+        for composer in toupdate:
+            res_ids = composer._evaluate_res_ids()
+            if composer.model and len(res_ids) == 1:
+                record = self.env[composer.model].browse(res_ids)
+                composer.record_company_id = record._mail_get_companies(
+                    default=self.env.company
+                )[record.id]
+                composer.record_alias_domain_id = record._mail_get_alias_domains(
+                    default_company=self.env.company
+                )[record.id]
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain', 'res_ids')
     def _compute_record_name(self):
@@ -781,6 +815,8 @@ class MailComposer(models.TransientModel):
             STA - 'email_add_signature',
             STA - 'email_layout_xmlid',
             DYN - 'force_email_lang',  # notify parameter
+            STA - 'record_alias_domain_id',  # monorecord only
+            STA - 'record_company_id',  # monorecord only
 
         BOTH
             DYN - 'attachment_ids',
@@ -879,6 +915,8 @@ class MailComposer(models.TransientModel):
                 force_send=self.force_send,
                 mail_auto_delete=self.auto_delete,
                 model_description=model_description,
+                record_alias_domain_id=self.record_alias_domain_id.id,
+                record_company_id=self.record_company_id.id,
             )
         return values
 
@@ -899,6 +937,10 @@ class MailComposer(models.TransientModel):
         RecordsModel = self.env[self.model].with_prefetch(res_ids)
         email_mode = self.composition_mode == 'mass_mail'
 
+        # records values
+        companies = RecordsModel.browse(res_ids)._mail_get_companies(default=self.env.company)
+        alias_domains = RecordsModel.browse(res_ids)._mail_get_alias_domains(default_company=self.env.company)
+
         # langs, used currently only to propagate in comment mode for notification
         # layout translation
         langs = self._render_field('lang', res_ids)
@@ -916,13 +958,17 @@ class MailComposer(models.TransientModel):
                 'email_from': emails_from[res_id],
                 'scheduled_date': False,
                 'subject': subjects[res_id],
-                # some fields are specific to mail or message
+                # record-specific environment values (company, alias_domain)
+                'record_alias_domain_id': alias_domains[res_id].id,
+                'record_company_id': companies[res_id].id,
+                # some fields are specific to mail
                 **(
                     {
                         'body_html': bodies[res_id],
                         'res_id': res_id,
                     } if email_mode else {}
                 ),
+                # some fields are specific to message
                 **(
                     {
                         # notify parameter to force layout lang
@@ -952,7 +998,7 @@ class MailComposer(models.TransientModel):
 
         # Handle recipients. Without template, if no partner_ids is given, update
         # recipients using default recipients to be sure to notify someone
-        if not self.template_id and not self.partner_ids:
+        if not self.template_id and not self.partner_ids and email_mode:
             default_recipients = RecordsModel.browse(res_ids)._message_get_default_recipients()
             for res_id in res_ids:
                 mail_values_all[res_id].update(

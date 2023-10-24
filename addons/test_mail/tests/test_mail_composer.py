@@ -56,32 +56,32 @@ class TestMailComposer(MailCommon, TestRecipients):
         )
         cls.env.ref('mail.group_mail_template_editor').users -= cls.user_rendering_restricted
 
-        cls.test_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
             'name': 'TestRecord',
             'customer_id': cls.partner_1.id,
             'user_id': cls.user_employee_2.id,
         })
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
-            'mail.test.ticket', 2,
+            'mail.test.ticket.mc', 2,
             additional_values={'user_id': cls.user_employee_2.id},
         )
 
         cls.test_report, cls.test_report_2, cls.test_report_3 = cls.env['ir.actions.report'].create([
             {
                 'name': 'Test Report on Mail Test Ticket',
-                'model': 'mail.test.ticket',
+                'model': 'mail.test.ticket.mc',
                 'print_report_name': "'TestReport for %s' % object.name",
                 'report_type': 'qweb-pdf',
                 'report_name': 'test_mail.mail_test_ticket_test_template',
             }, {
                 'name': 'Test Report 2 on Mail Test Ticket',
-                'model': 'mail.test.ticket',
+                'model': 'mail.test.ticket.mc',
                 'print_report_name': "'TestReport2 for %s' % object.name",
                 'report_type': 'qweb-pdf',
                 'report_name': 'test_mail.mail_test_ticket_test_template_2',
             }, {
                 'name': 'Test Report 3 with variable data on Mail Test Ticket',
-                'model': 'mail.test.ticket',
+                'model': 'mail.test.ticket.mc',
                 'print_report_name': "'TestReport3 for %s' % object.name",
                 'report_type': 'qweb-pdf',
                 'report_name': 'test_mail.mail_test_ticket_test_variable_template',
@@ -100,7 +100,7 @@ class TestMailComposer(MailCommon, TestRecipients):
             'email_from': '{{ (object.user_id.email_formatted or user.email_formatted) }}',
             'lang': '{{ object.customer_id.lang }}',
             'mail_server_id': cls.mail_server_domain.id,
-            'model_id': cls.env['ir.model']._get('mail.test.ticket').id,
+            'model_id': cls.env['ir.model']._get('mail.test.ticket.mc').id,
             'reply_to': '{{ ctx.get("custom_reply_to") or "info@test.example.com" }}',
             'scheduled_date': '{{ (object.create_date or datetime.datetime(2022, 12, 26, 18, 0, 0)) + datetime.timedelta(days=2) }}',
         })
@@ -171,6 +171,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.partner_ids)
+        self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(composer_form.record_company_id, self.env.company)
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -181,6 +183,32 @@ class TestComposerForm(TestMailComposer):
                       'Check effective content')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertFalse(composer_form.subtype_is_log)
+
+    @users('employee')
+    def test_mail_composer_comment_mc(self):
+        """ Test values specific to multi-company setup, in comment mode, using
+        the Form tool. """
+        # add access to second company to avoid MC rules on ticket model
+        self.env.user.company_ids = [(4, self.company_2.id)]
+        test_record = self.test_record.with_env(self.env)
+        source_company = [
+            self.company_admin,
+            self.company_2,
+            self.env['res.company'],
+        ]
+        expected = [
+            (self.company_admin, self.mail_alias_domain),
+            (self.company_2, self.mail_alias_domain_c2),
+            (self.company_admin, self.mail_alias_domain),  # env company
+        ]
+        for company, (exp_company, exp_alias_domain) in zip(source_company, expected):
+            with self.subTest(cmopany=company):
+                test_record.write({'company_id': company.id})
+                composer_form = Form(self.env['mail.compose.message'].with_context(
+                    self._get_web_context(self.test_record, add_web=True)
+                ))
+                self.assertEqual(composer_form.record_alias_domain_id, exp_alias_domain)
+                self.assertEqual(composer_form.record_company_id, exp_company)
 
     @users('employee')
     def test_mail_composer_comment_attachments(self):
@@ -251,6 +279,8 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertEqual(composer_form.partner_ids[:], self.partner_1)
+        self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(composer_form.record_company_id, self.env.company)
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
@@ -283,6 +313,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -315,6 +347,8 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.force_send, 'MailComposer: batch record post use email queue for notifications')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -332,7 +366,7 @@ class TestComposerForm(TestMailComposer):
         when nothing is given as context. """
         composer_form = Form(self.env['mail.compose.message'].with_context(
             default_composition_mode='comment',
-            default_model='mail.test.ticket',
+            default_model='mail.test.ticket.mc',
             default_template_id=self.template.id,
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take composer value')
@@ -347,6 +381,8 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.partner_ids[:])
+        self.assertFalse(composer_form.record_alias_domain_id)
+        self.assertFalse(composer_form.record_company_id)
         self.assertFalse(composer_form.record_name)
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
@@ -375,6 +411,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -404,6 +442,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -437,6 +477,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -454,7 +496,7 @@ class TestComposerForm(TestMailComposer):
         when nothing is given as context. """
         composer_form = Form(self.env['mail.compose.message'].with_context(
             default_composition_mode='mass_mail',
-            default_model='mail.test.ticket',
+            default_model='mail.test.ticket.mc',
             default_template_id=self.template.id,
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take composer value')
@@ -470,6 +512,8 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
+        self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
+        self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
@@ -1253,7 +1297,7 @@ class TestComposerInternals(TestMailComposer):
                     new_partners.unlink()
 
 
-@tagged('mail_composer', 'multi_lang')
+@tagged('mail_composer', 'multi_lang', 'multi_company')
 class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
@@ -1262,11 +1306,18 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         """ Ensure class initial data to ease understanding """
         self.assertTrue(self.template.auto_delete)
 
+        self.assertEqual(len(self.test_record), 1)
+        self.assertEqual(self.test_record.user_id, self.user_employee_2)
+        self.assertEqual(self.test_record.message_partner_ids, self.partner_employee_2)
+        self.assertEqual(self.test_record[0].customer_id.lang, 'en_US')
+        self.assertEqual(self.test_record.company_id, self.company_admin)
+
         self.assertEqual(len(self.test_records), 2)
         self.assertEqual(self.test_records.user_id, self.user_employee_2)
         self.assertEqual(self.test_records.message_partner_ids, self.partner_employee_2)
         self.assertEqual(self.test_records[0].customer_id.lang, 'en_US')
         self.assertEqual(self.test_records[1].customer_id.lang, 'en_US')
+        self.assertEqual(self.test_records.company_id, self.company_admin)
 
         self.assertEqual(len(self.test_partners), 2)
 
@@ -1425,6 +1476,89 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertEqual(message.subject, self.test_record._message_compute_subject())
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertEqual(message.partner_ids, self.partner_1 | self.partner_2)
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_server_config(self):
+        """ Test various configuration to check behavior of outgoing mail
+        servers, notifications, .... """
+        # add access to second company to avoid MC rules on ticket model
+        self.env.user.company_ids = [(4, self.company_2.id)]
+
+        # initial data
+        self.assertEqual(self.env.company, self.company_admin)
+        self.assertEqual(self.user_admin.company_id, self.company_admin)
+
+        # update test configuration
+        test_records = self.test_records
+        test_companies = self.company_admin + self.company_2
+        self.company_2.alias_domain_id = self.mail_alias_domain
+        for company, record in zip(test_companies, test_records):
+            record.company_id = company.id
+
+        # various from / servers configuration
+        self.template.write({'mail_server_id': False})  # allow server archive
+        server_other = self.env['ir.mail_server'].sudo().create({
+            'name': 'Server Other',
+            'from_filter': 'test.othercompany.com',
+            'sequence': 4,
+            'smtp_encryption': 'none',
+            'smtp_host': 'smtp_host',
+        })
+        servers_all = self.mail_servers + server_other
+        for (emails_from, servers_active, mail_config), (exp_smtp_from_lst, exp_msg_from_lst, exp_from_filter) in zip(
+            [
+                (
+                    [f'user.from@{self.alias_domain}', 'user@other.domain.com'],
+                    self.env['ir.mail_server'],
+                    {'default_from': f'notifications@{self.alias_domain}', 'from_filter': self.alias_domain}
+                ),  # odoo-style configuration
+            ], [
+                (
+                    [f'{self.alias_bounce}@{self.alias_domain}', f'{self.alias_bounce}@{self.alias_domain}'],
+                    [f'"{self.env.user.name}" <user.from@{self.alias_domain}>', f'"{self.env.user.name}" <notifications@{self.alias_domain}>'],
+                    self.alias_domain
+                ),  # no spoof
+            ],
+        ):
+            with self.subTest(emails_from=emails_from,
+                              servers_active=servers_active):
+                # update servers
+                servers_all.active = False
+                if servers_active:
+                    servers_active.active = True
+                # update mail config
+                default_from = mail_config.get('default_from', self.default_from)
+                from_filter = mail_config.get('from_filter', self.default_from_filter)
+                self.mail_alias_domain.default_from = default_from
+                self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', from_filter)
+
+                for email_from, exp_smtp_from, exp_msg_from in zip(emails_from, exp_smtp_from_lst, exp_msg_from_lst):
+                    self.env.user.email = email_from
+
+                    # open a composer and run it in comment mode
+                    composer = Form(self.env['mail.compose.message'].with_context(
+                        default_composition_mode='comment',
+                        default_force_send=True,  # force sending emails directly to check SMTP
+                        default_model=test_records._name,
+                        default_res_ids=test_records.ids,
+                        # avoid successive tests issues with followers
+                        mail_create_nosubscribe=True,
+                    ))
+                    composer.body = 'Hello {{ object.name }}'
+                    composer.subject = 'My Subject'
+                    composer = composer.save()
+                    with self.mock_mail_gateway(mail_unlink_sent=False), \
+                         self.mock_mail_app():
+                        composer._action_send_mail()
+
+                    self.assertSMTPEmailsSent(
+                        smtp_from=exp_smtp_from,
+                        smtp_to_list=[self.partner_employee_2.email_normalized],
+                        emails_count=2,  # same on both records
+                        message_from=exp_msg_from,
+                        from_filter=exp_from_filter,
+                    )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
@@ -1760,6 +1894,110 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     self.assertEqual(set(message.attachment_ids.mapped('res_model')), set([test_record._name]))
                     self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(test_record.ids))
                     self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_wtpl_mc(self):
+        """ Test specific to multi-company environment, notably company propagation
+        or aliases. """
+        # add access to second company to avoid MC rules on ticket model
+        self.env.user.company_ids = [(4, self.company_2.id)]
+
+        # initial data
+        self.assertEqual(self.env.company, self.company_admin)
+        self.assertEqual(self.user_admin.company_id, self.company_admin)
+
+        attachment_data = self._generate_attachments_data(2, self.template._name, self.template.id)
+        email_to_1 = 'test.to.1@test.example.com'
+        self.template.write({
+            'auto_delete': False,  # keep sent emails to check content
+            'attachment_ids': [(0, 0, a) for a in attachment_data],
+            'email_from': False,  # use current user as author
+            'email_layout_xmlid': 'mail.test_layout',
+            'email_to': email_to_1,
+            'mail_server_id': False,  # let it find a server
+            'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
+        })
+        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        self.assertEqual(len(attachs), 2)
+
+        for batch, companies, expected_companies, expected_alias_domains in [
+            (False, self.company_admin, self.company_admin, self.mail_alias_domain),
+            (
+                True, self.company_admin + self.company_2, self.company_admin + self.company_2,
+                self.mail_alias_domain + self.mail_alias_domain_c2,
+            ),
+        ]:
+            with self.subTest(batch=batch,
+                              companies=companies):
+                # update test configuration
+                test_records = self.test_records if batch else self.test_record
+                for company, record in zip(companies, test_records):
+                    record.company_id = company.id
+
+                # open a composer and run it in comment mode
+                composer = Form(self.env['mail.compose.message'].with_context(
+                    default_composition_mode='comment',
+                    default_force_send=True,  # force sending emails directly to check SMTP
+                    default_model=test_records._name,
+                    default_res_ids=test_records.ids,
+                    default_template_id=self.template.id,
+                    # avoid successive tests issues with followers
+                    mail_create_nosubscribe=True,
+                )).save()
+                with self.mock_mail_gateway(mail_unlink_sent=False), \
+                     self.mock_mail_app():
+                    composer._action_send_mail()
+
+                new_partner = self.env['res.partner'].search([('email_normalized', '=', 'test.to.1@test.example.com')])
+                self.assertEqual(len(new_partner), 1)
+                # check output, company-specific values mainly for this test
+                for record, exp_company, exp_alias_domain in zip(
+                    test_records, expected_companies, expected_alias_domains
+                ):
+                    message = record.message_ids[0]
+                    for recipient in [self.partner_employee_2, new_partner, record.customer_id]:
+                        self.assertMailMail(
+                            recipient,
+                            'sent',
+                            author=self.partner_employee,
+                            mail_message=message,
+                            email_values={
+                                'headers': {
+                                    'Return-Path': f'{exp_alias_domain.bounce_email}',
+                                    'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                },
+                                'subject': f'TemplateSubject {record.name}',
+                            },
+                            fields_values={
+                                'headers': {
+                                    'Return-Path': f'{exp_alias_domain.bounce_email}',
+                                    'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                },
+                                'mail_server_id': self.env['ir.mail_server'],
+                                'record_alias_domain_id': exp_alias_domain,
+                                'record_company_id': exp_company,
+                                'subject': f'TemplateSubject {record.name}',
+                            },
+                        )
+                        # to check behavior of extract_rfc2822_addresses
+                        if recipient == new_partner:
+                            smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
+                        else:
+                            smtp_to_list = [recipient.email_normalized]
+                        if exp_alias_domain == self.mail_alias_domain:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=f'{self.default_from}@{self.alias_domain}',
+                                smtp_to_list=smtp_to_list,
+                                mail_server=self.mail_server_notification,
+                                emails_count=1,
+                            )
+                        else:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=exp_alias_domain.bounce_email,
+                                smtp_to_list=smtp_to_list,
+                                emails_count=1,
+                            )
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -2463,6 +2701,111 @@ class TestComposerResultsMass(TestMailComposer):
                             self.assertIn(exp_button_en, sent_mail['body'])
 
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_wtpl_mc(self):
+        """ Test specific to multi-company environment, notably company propagation
+        or aliases. """
+        # add access to second company to avoid MC rules on ticket model
+        self.env.user.company_ids = [(4, self.company_2.id)]
+
+        # initial data
+        self.assertEqual(self.env.company, self.company_admin)
+        self.assertEqual(self.user_admin.company_id, self.company_admin)
+
+        attachment_data = self._generate_attachments_data(2, self.template._name, self.template.id)
+        email_to_1 = 'test.to.1@test.example.com'
+        self.template.write({
+            'auto_delete': False,  # keep sent emails to check content
+            'attachment_ids': [(0, 0, a) for a in attachment_data],
+            'email_from': False,  # use current user as author
+            'email_layout_xmlid': 'mail.test_layout',
+            'email_to': email_to_1,
+            'mail_server_id': False,  # let it find a server
+            'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
+        })
+        attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
+        self.assertEqual(len(attachs), 2)
+
+        for companies, expected_companies, expected_alias_domains in [
+            (
+                self.company_admin + self.company_2,
+                self.company_admin + self.company_2,
+                self.mail_alias_domain + self.mail_alias_domain_c2,
+            ),
+        ]:
+            with self.subTest(companies=companies):
+                # update test configuration
+                test_records = self.test_records
+                for company, record in zip(companies, test_records):
+                    record.company_id = company.id
+
+                # open a composer and run it in comment mode
+                composer = Form(self.env['mail.compose.message'].with_context(
+                    default_composition_mode='mass_mail',
+                    default_force_send=True,  # force sending emails directly to check SMTP
+                    default_model=test_records._name,
+                    default_res_ids=test_records.ids,
+                    default_template_id=self.template.id,
+                    # avoid successive tests issues with followers
+                    mail_create_nosubscribe=True,
+                )).save()
+                with self.mock_mail_gateway(mail_unlink_sent=False), \
+                     self.mock_mail_app():
+                    composer._action_send_mail()
+
+                new_partner = self.env['res.partner'].search([('email_normalized', '=', 'test.to.1@test.example.com')])
+                self.assertEqual(len(new_partner), 1)
+                # check output, company-specific values mainly for this test
+                for record, exp_company, exp_alias_domain in zip(
+                    test_records, expected_companies, expected_alias_domains
+                ):
+                    # message copy is kept
+                    message = record.message_ids[0]
+                    recipients = record.customer_id + new_partner + self.partner_admin
+                    self.assertMailMail(
+                        record.customer_id + new_partner + self.partner_admin,
+                        'sent',
+                        author=self.partner_employee,
+                        mail_message=message,
+                        email_values={
+                            'headers': {
+                                'Return-Path': f'{exp_alias_domain.bounce_email}',
+                                'X-Odoo-Objects': f'{record._name}-{record.id}',
+                            },
+                            'subject': f'TemplateSubject {record.name}',
+                        },
+                        fields_values={
+                            'headers': {
+                                'Return-Path': f'{exp_alias_domain.bounce_email}',
+                                'X-Odoo-Objects': f'{record._name}-{record.id}',
+                            },
+                            'mail_server_id': self.env['ir.mail_server'],
+                            'record_alias_domain_id': exp_alias_domain,
+                            'record_company_id': exp_company,
+                            'subject': f'TemplateSubject {record.name}',
+                        },
+                    )
+                    for recipient in recipients:
+                        # to check behavior of extract_rfc2822_addresses
+                        if recipient == new_partner:
+                            smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
+                        else:
+                            smtp_to_list = [recipient.email_normalized]
+                        if exp_alias_domain == self.mail_alias_domain:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=f'{self.default_from}@{self.alias_domain}',
+                                smtp_to_list=smtp_to_list,
+                                mail_server=self.mail_server_notification,
+                                emails_count=1,
+                            )
+                        else:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=exp_alias_domain.bounce_email,
+                                smtp_to_list=smtp_to_list,
+                                emails_count=1,
+                            )
+
+    @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_recipients(self):
         """ Test various combinations of recipients: res_domain, active_id,
@@ -2581,7 +2924,7 @@ class TestComposerResultsMass(TestMailComposer):
 
         # 6: void is void: raise in comment mode, just don't send anything in mass mail mode
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            default_model='mail.test.ticket',
+            default_model='mail.test.ticket.mc',
             default_template_id=self.template.id
         ))
         composer = composer_form.save()
@@ -2592,7 +2935,7 @@ class TestComposerResultsMass(TestMailComposer):
 
         composer_form = Form(self.env['mail.compose.message'].with_context(
             default_composition_mode='mass_mail',
-            default_model='mail.test.ticket',
+            default_model='mail.test.ticket.mc',
             default_template_id=self.template.id
         ))
         composer = composer_form.save()
@@ -2780,9 +3123,12 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+
+        # remove alias so that _notify_get_reply_to will return the default value instead of alias
+        self.company_admin.write({
+            'alias_domain_id': False,
+        })
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            # remove alias so that _notify_get_reply_to will return the default value instead of alias
-            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
             composer.action_send_mail()
 
         for record in self.test_records:

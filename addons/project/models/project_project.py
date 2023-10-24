@@ -136,7 +136,6 @@ class Project(models.Model):
                                domain=[('state', 'not in', list(CLOSED_STATES))])
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
-    alias_enabled = fields.Boolean(string='Use Email Alias', compute='_compute_alias_enabled', readonly=False)
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
@@ -215,11 +214,6 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
     ]
 
-    @api.onchange('alias_enabled')
-    def _onchange_alias_name(self):
-        if not self.alias_enabled:
-            self.alias_name = False
-
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if (self.env.user.has_group('project.group_project_stages') and self.stage_id.company_id
@@ -229,10 +223,6 @@ class Project(models.Model):
                 order=f"sequence asc, {self.env['project.project.stage']._order}",
                 limit=1,
             ).id
-
-    def _compute_alias_enabled(self):
-        for project in self:
-            project.alias_enabled = bool(project.alias_email)
 
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
