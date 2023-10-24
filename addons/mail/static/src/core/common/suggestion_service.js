@@ -14,7 +14,7 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
-        this.personaService = services['mail.persona'];
+        this.personaService = services["mail.persona"];
     }
 
     getSupportedDelimiters(thread) {
@@ -51,7 +51,7 @@ export class SuggestionService {
             [],
             kwargs
         );
-        suggestedPartners.forEach((data) => this.store.Persona.insert(data));
+        this.store.Persona.insert(suggestedPartners);
     }
 
     /**
@@ -64,7 +64,7 @@ export class SuggestionService {
             [],
             { search: term }
         );
-        suggestedThreads.forEach((data) => this.store.Thread.insert(data));
+        this.store.Thread.insert(suggestedThreads);
     }
 
     /**

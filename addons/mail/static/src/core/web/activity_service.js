@@ -52,7 +52,7 @@ export class ActivityService {
         return action;
     }
 
-    async edit(activityId){
+    async edit(activityId) {
         return new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
@@ -74,16 +74,20 @@ export class ActivityService {
             active_model: resModel,
             active_ids: resIds,
             active_id: resIds[0],
-            ...((defaultActivityTypeId !== undefined) ? {
-                default_activity_type_id: defaultActivityTypeId,
-            } : {}),
+            ...(defaultActivityTypeId !== undefined
+                ? {
+                      default_activity_type_id: defaultActivityTypeId,
+                  }
+                : {}),
         };
         return new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
                     type: "ir.actions.act_window",
-                    name: (resIds && resIds.length > 1) ? _t("Schedule Activity On Selected Records") :
-                        _t("Schedule Activity"),
+                    name:
+                        resIds && resIds.length > 1
+                            ? _t("Schedule Activity On Selected Records")
+                            : _t("Schedule Activity"),
                     res_model: "mail.activity.schedule",
                     view_mode: "form",
                     views: [[false, "form"]],
@@ -105,7 +109,7 @@ export class ActivityService {
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
-                this.store.Activity.insert(data.payload, { broadcast: false });
+                this.store.Activity.insert(data.payload, { broadcast: false, html: true });
                 break;
             case "DELETE": {
                 const activity = this.store.Activity.insert(data.payload, { broadcast: false });

@@ -80,9 +80,7 @@ export class MessagePin {
             const messagesData = await this.rpcService("/discuss/channel/pinned_messages", {
                 channel_id: channel.id,
             });
-            messagesData.forEach((messageData) =>
-                this.store.Message.insert(messageData, { html: true })
-            );
+            this.store.Message.insert(messagesData, { html: true });
             channel.pinnedMessagesState = "loaded";
         } catch (e) {
             channel.pinnedMessagesState = "error";

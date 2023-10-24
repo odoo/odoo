@@ -53,15 +53,7 @@ export class ChannelInvitation extends Component {
         if (!results) {
             return;
         }
-        const Partners = results["partners"];
-        const selectablePartners = [];
-        for (const selectablePartner of Partners) {
-            const newPartner = this.store.Persona.insert({
-                type: "partner",
-                ...selectablePartner,
-            });
-            selectablePartners.push(newPartner);
-        }
+        const selectablePartners = this.store.Persona.insert(results.partners);
         this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,

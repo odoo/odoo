@@ -9,7 +9,6 @@ export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
     const suggestionService = useService("mail.suggestion");
-    const store = useState(useService("mail.store"));
     const self = {
         clearRawMentions() {
             comp.props.composer.mentionedChannels.length = 0;
@@ -110,9 +109,7 @@ export function useSuggestion() {
                 });
             }
             if (option.cannedResponse) {
-                comp.props.composer.cannedResponses.push(
-                    store.CannedResponse.insert(option.cannedResponse)
-                );
+                comp.props.composer.cannedResponses.push(option.cannedResponse);
             }
             self.clearSearch();
             comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;

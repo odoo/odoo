@@ -8,7 +8,7 @@ export class MessageReactions extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").MessageReactions} */
+    /** @returns {import("models").MessageReactions|import("models").MessageReactions[]} */
     static insert(data) {
         return super.insert(...arguments);
     }

@@ -29,7 +29,7 @@ export class BaseStore extends Record {
 }
 
 export class Store extends BaseStore {
-    /** @returns {import("models").Store} */
+    /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
         return super.insert(...arguments);
     }

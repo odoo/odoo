@@ -10,7 +10,7 @@ export class CannedResponse extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").CannedResponse} */
+    /** @returns {import("models").CannedResponse|import("models").CannedResponse[]} */
     static insert(data) {
         return super.insert(...arguments);
     }

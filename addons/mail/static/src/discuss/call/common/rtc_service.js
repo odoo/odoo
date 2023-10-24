@@ -1581,11 +1581,6 @@ export const rtcService = {
                 services["mail.user_settings"].setVolumes(payload);
             }
         });
-        services["bus_service"].subscribe("mail.record/insert", (payload) => {
-            if (payload.RtcSession) {
-                rtc.store.RtcSession.insert(payload.RtcSession);
-            }
-        });
         return rtc;
     },
 };

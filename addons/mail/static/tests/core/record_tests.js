@@ -74,10 +74,8 @@ QUnit.test("Assign & Delete on fields with inverses", async (assert) => {
     }).register();
     const store = await start();
     const thread = store.Thread.insert("General");
-    const john = store.Member.insert("John");
-    const marc = store.Member.insert("Marc");
-    const hello = store.Message.insert("hello");
-    const world = store.Message.insert("world");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    const [hello, world] = store.Message.insert(["hello", "world"]);
     // Assign on fields should adapt inverses
     Object.assign(thread, { composer: {}, members: [["ADD", john]], messages: [hello, world] });
     assert.ok(thread.composer);
@@ -132,8 +130,7 @@ QUnit.test("Computed relational field", async (assert) => {
     }).register();
     const store = await start();
     const thread = store.Thread.insert("General");
-    const john = store.Persona.insert("John");
-    const marc = store.Persona.insert("Marc");
+    const [john, marc] = store.Persona.insert(["John", "Marc"]);
     Object.assign(thread, { members: [john, marc] });
     assert.ok(thread.admin.eq(john));
     thread.members.delete(john);

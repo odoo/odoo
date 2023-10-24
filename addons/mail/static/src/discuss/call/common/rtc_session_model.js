@@ -10,7 +10,7 @@ export class RtcSession extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {number, import("models").RtcSession} */
+    /** @returns {import("models").RtcSession|import("models").RtcSession[]} */
     static insert(data) {
         return super.insert(...arguments);
     }

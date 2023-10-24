@@ -87,8 +87,6 @@ export class ActivityListPopover extends Component {
                 context: this.user.user_context,
             }
         );
-        for (const activityData of activitiesData) {
-            this.store.Activity.insert(activityData);
-        }
+        this.store.Activity.insert(activitiesData, { html: true });
     }
 }

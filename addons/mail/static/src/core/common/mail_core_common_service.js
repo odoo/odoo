@@ -26,7 +26,7 @@ export class MailCoreCommon {
             this.busService.subscribe("ir.attachment/delete", (payload) => {
                 const { id: attachmentId, message: messageData } = payload;
                 if (messageData) {
-                    this.store.Message.insert({ ...messageData });
+                    this.store.Message.insert(messageData);
                 }
                 const attachment = this.store.Attachment.get(attachmentId);
                 if (attachment) {
@@ -54,18 +54,13 @@ export class MailCoreCommon {
                 }
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {
-                payload.elements.map((message) => {
-                    this.store.Message.insert(
-                        {
-                            ...message,
-                            // implicit: failures are sent by the server at
-                            // initialization only if the current partner is
-                            // author of the message
-                            author: this.store.self,
-                        },
-                        { html: true }
-                    );
-                });
+                // implicit: failures are sent by the server at
+                // initialization only if the current partner is
+                // author of the message
+                this.store.Message.insert(
+                    payload.elements.map((data) => ({ ...data, author: this.store.self })),
+                    { html: true }
+                );
             });
             this.busService.subscribe("mail.message/toggle_star", (payload) => {
                 const { message_ids: messageIds, starred } = payload;
@@ -88,26 +83,8 @@ export class MailCoreCommon {
                 }
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
-                if (payload.Thread) {
-                    this.store.Thread.insert(payload.Thread);
-                }
-                if (payload.Persona) {
-                    const personas = Array.isArray(payload.Persona)
-                        ? payload.Persona
-                        : [payload.Persona];
-                    for (const persona of personas) {
-                        this.store.Persona.insert(persona);
-                    }
-                }
-                const { LinkPreview: linkPreviews } = payload;
-                if (linkPreviews) {
-                    for (const linkPreview of linkPreviews) {
-                        this.store.LinkPreview.insert(linkPreview);
-                    }
-                }
-                const { Message: messageData } = payload;
-                if (messageData) {
-                    this.store.Message.insert(messageData, { html: true });
+                for (const Model in payload) {
+                    this.store[Model].insert(payload[Model], { html: true });
                 }
             });
         });
