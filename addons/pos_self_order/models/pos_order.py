@@ -69,26 +69,22 @@ class PosOrder(models.Model):
 
     @api.model
     def create_from_ui(self, orders, draft=False):
-        old_order_ids = []
-
         for order in orders:
             if order['data'].get('server_id'):
                 server_id = order['data'].get('server_id')
-                old_order = self.env['pos.order'].browse(server_id).read(['id', 'take_away'])
-                old_order_ids.append(old_order[0])
+                old_order = self.env['pos.order'].browse(server_id)
+                if old_order.take_away:
+                    order['data']['take_away'] = old_order.take_away
 
-        orders = super().create_from_ui(orders, draft)
-        order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
+        return super().create_from_ui(orders, draft)
 
-        if old_order_ids:
-            for order in old_order_ids:
-                if order['take_away']:
-                    order_ids.filtered(lambda o: o.id == order['id']).write({'take_away': True})
+    def _process_saved_order(self, draft):
+        res = super()._process_saved_order(draft)
 
         if self.env.context.get('from_self') is not True:
-            self._send_notification(order_ids)
+            self._send_notification(self)
 
-        return orders
+        return res
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -153,10 +149,6 @@ class PosOrder(models.Model):
             } for payment in self.payment_ids],
             "tax_details": self._compute_tax_details(),
         }
-
-    def _send_order(self):
-        #This function is made to be overriden by pos_self_order_preparation_display
-        pass
 
     def get_standalone_self_order(self):
         orders = self.env['pos.order'].search([
