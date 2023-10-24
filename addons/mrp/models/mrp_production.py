@@ -2236,10 +2236,17 @@ class MrpProduction(models.Model):
             removed = self.env['stock.move.line'].search_count([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done'),
-                ('location_dest_id.scrap_location', '=', True)
+                ('location_id.scrap_location', '=', False),
+                ('location_dest_id.scrap_location', '=', True),
+            ])
+            unremoved = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done'),
+                ('location_id.scrap_location', '=', True),
+                ('location_dest_id.scrap_location', '=', False),
             ])
             # Either removed or unbuild
-            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
+            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed + unremoved == 0):
                 return True
         # Check presence of same sn in current production
         duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == lot)
