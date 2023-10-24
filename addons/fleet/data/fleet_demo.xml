@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-      <!--Users-->
-      <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]" />
-      </record>
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(3, ref('fleet.fleet_group_manager'))]"/>
+    </record>
 
         <record id="fleet_vehicle_state_ordered" model="fleet.vehicle.state">
             <field name="name">Ordered</field>

@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('im_livechat.im_livechat_group_manager'))]"/>
+        </record>
+    </data>
     <data>
         <record id="im_livechat_channel_rule_demo" model="im_livechat.channel.rule">
             <field name="regex_url">/im_livechat/</field>

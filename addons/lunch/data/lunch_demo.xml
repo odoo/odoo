@@ -90,7 +90,7 @@
 
         <record id="base.user_demo" model="res.users">
             <field name="last_lunch_location_id" ref="location_office_3"/>
-            <field name="groups_id" eval="[(4, ref('lunch.group_lunch_user'))]"/>
+            <field name="groups_id" eval="[(3, ref('lunch.group_lunch_manager'))]"/>
         </record>
 
         <record model="lunch.product.category" id="categ_pasta">

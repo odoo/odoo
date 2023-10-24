@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record model="res.users" id="base.user_demo">
-            <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('sales_team.group_sale_manager')),
+                (3, ref('sales_team.group_sale_salesman_all_leads'))]"/>
         </record>
 
         <record model="crm.team" id="team_sales_department">
