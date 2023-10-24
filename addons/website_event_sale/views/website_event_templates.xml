@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="registration_template" inherit_id="website_event.registration_template">
+<template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
     <!-- Change pricelist -->
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="after">
         <div id="o_wevent_tickets_pricelist" class="collapse show">
@@ -26,34 +26,36 @@
                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
             </t>
             <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                  class="badge text-bg-secondary fs-6"
                   t-field="ticket.price_reduce"
                   t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
             <span t-else=""
                   t-field="ticket.price_reduce_taxinc"
+                  class="badge text-bg-secondary fs-6"
                   t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
             <span itemprop="price" class="d-none" t-out="ticket.price"/>
             <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
         </t>
-        <span t-else="" class="fw-bold text-uppercase">Free</span>
+        <span t-else="" class="badge text-bg-secondary text-uppercase fs-6">Free</span>
     </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
         <t t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>
         <t t-set="lowest_price" t-value="min(all_prices)"/>
         <t t-set="highest_price" t-value="max(all_prices)"/>
         <t t-if="highest_price > 0">
-            <span class="text-dark">
+            <small class="text-muted">
                 From
                 <span t-out="lowest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 <t t-if="lowest_price != highest_price">
                     to
                     <span t-out="highest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </t>
-            </span>
+            </small>
         </t>
     </xpath>
     <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
-    <xpath expr="//div[hasclass('o_wevent_registration_single')]//h6" position="after">
-        <div class="px-2 text-dark d-flex align-items-center align-self-stretch">
+    <xpath expr="//div[hasclass('o_wevent_registration_single_select')]" position="before">
+        <div class="flex-md-grow-1 me-2 text-end">
             <t t-if="tickets.price">
                 <t t-if="(tickets.price - tickets.price_reduce) &gt;0 and website.pricelist_id.discount_policy == 'without_discount'">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
@@ -66,15 +68,17 @@
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </t>
                 <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                      class="badge text-bg-secondary fs-6"
                       t-field="tickets.price_reduce"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 <span t-else=""
+                      class="badge text-bg-secondary fs-6"
                       t-field="tickets.price_reduce_taxinc"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 <span itemprop="price" class="d-none" t-out="tickets.price"/>
                 <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
             </t>
-            <span t-else="" class="fw-bold text-uppercase">Free</span>
+            <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
         </div>
     </xpath>
 </template>
@@ -95,12 +99,6 @@
                 <span t-else="">Confirm Registration</span>
             </button>
         </t>
-    </xpath>
-</template>
-
-<template id="fold_register_details" inherit_id="website_event.fold_register_details" name="Fold ticket details">
-    <xpath expr="//div[@id='o_wevent_tickets_pricelist']" position="attributes">
-        <attribute name="class">collapse</attribute>
     </xpath>
 </template>
 
