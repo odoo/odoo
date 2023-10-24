@@ -7,10 +7,6 @@ class ProductDescriptionMixin(models.AbstractModel):
     _name = 'product.description.mixin'
     _description = 'Product description Mixin'
 
-    # This mixin uses a One2many field "product_custom_attribute_value_ids" which cannot be centralized in here
-    # as this class will not be instancied and thus, as the relation between a table and a non-existing one
-    # cannot exist, we need to add the field to all model that will use this mixin.
-
     product_id = fields.Many2one('product.product', 'Product')
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
@@ -30,6 +26,12 @@ class ProductDescriptionMixin(models.AbstractModel):
         string="Product Description",
         compute='_compute_product_description',
         store=True, readonly=False, precompute=True)
+    product_custom_attribute_value_ids = fields.One2many(
+        'product.attribute.custom.value', 'res_id',
+        string="Custom Values",
+        compute='_compute_custom_attribute_values',
+        store=True, readonly=False, precompute=True, copy=True,
+        domain=[('res_model', '=', 'mrp.production')])
 
     @api.depends('product_id')
     def _compute_no_variant_attribute_values(self):

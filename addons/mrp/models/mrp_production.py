@@ -246,12 +246,6 @@ class MrpProduction(models.Model):
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
-    product_custom_attribute_value_ids = fields.One2many(
-        'product.attribute.custom.value', 'res_id',
-        string="Custom Values",
-        compute='_compute_custom_attribute_values',
-        store=True, readonly=False, precompute=True, copy=True,
-        domain=[('res_model', '=', 'mrp.production')])
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
