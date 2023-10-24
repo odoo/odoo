@@ -628,7 +628,7 @@ class AccountMoveSend(models.TransientModel):
                 'close': True,  # close the wizard
             }
         else:
-            filename = next(iter(moves_data))._get_invoice_report_filename(extension='zip') if len(moves_data) == 1 else 'invoices.zip'
+            filename = next(iter(moves_data))._get_invoice_report_filename(extension='zip') if len(moves_data) == 1 else _('invoices') + '.zip'
             return {
                 'type': 'ir.actions.act_url',
                 'url': f"/account/export_zip_documents?{url_encode({'ids': attachment_ids, 'filename': filename})}",
