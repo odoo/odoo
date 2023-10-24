@@ -23,9 +23,9 @@ class AccountMoveSend(models.TransientModel):
     )
     account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')
 
-    def _get_wizard_values(self, move):
+    def _get_wizard_values(self):
         # EXTENDS 'account'
-        values = super()._get_wizard_values(move)
+        values = super()._get_wizard_values()
         values['send_peppol'] = self.checkbox_send_peppol
         return values
 
