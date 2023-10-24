@@ -70,7 +70,7 @@ class ProductTemplateAttributeValue(models.Model):
     @api.constrains('attribute_line_id', 'product_attribute_value_id')
     def _check_valid_values(self):
         for ptav in self:
-            if ptav.product_attribute_value_id not in ptav.attribute_line_id.value_ids:
+            if ptav.ptav_active and ptav.product_attribute_value_id not in ptav.attribute_line_id.value_ids:
                 raise ValidationError(_(
                     "The value %(value)s is not defined for the attribute %(attribute)s"
                     " on the product %(product)s.",
