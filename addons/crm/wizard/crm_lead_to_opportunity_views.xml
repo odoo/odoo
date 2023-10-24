@@ -10,7 +10,7 @@
                 </group>
                 <group string="Assign this opportunity to">
                     <field name="user_id" domain="[('share', '=', False)]"/>
-                    <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="team_id" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                 </group>
                 <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                     <field name="lead_id" invisible="1"/>
