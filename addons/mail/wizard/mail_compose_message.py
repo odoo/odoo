@@ -952,7 +952,7 @@ class MailComposer(models.TransientModel):
 
         # Handle recipients. Without template, if no partner_ids is given, update
         # recipients using default recipients to be sure to notify someone
-        if not self.template_id and not self.partner_ids:
+        if not self.template_id and not self.partner_ids and email_mode:
             default_recipients = RecordsModel.browse(res_ids)._message_get_default_recipients()
             for res_id in res_ids:
                 mail_values_all[res_id].update(
