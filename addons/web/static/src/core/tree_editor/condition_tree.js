@@ -335,7 +335,7 @@ function not(ast) {
         return { ...ast, value: !ast.value };
     }
     if (ast.type === 7 && COMPARATORS.includes(ast.op)) {
-        return { ...ast, op: TERM_OPERATORS_NEGATION_EXTENDED[ast.op] };
+        return { ...ast, op: TERM_OPERATORS_NEGATION_EXTENDED[ast.op] }; // do not use this if ast is within a domain context!
     }
     return { type: 6, op: "not", right: isBool(ast) ? ast.args[0] : ast };
 }
@@ -366,12 +366,14 @@ function isNot(ast) {
 function is(oneParamFunc, ast) {
     return (
         ast.type === 8 &&
-        ast.fn &&
         ast.fn.type === 5 &&
         ast.fn.value === oneParamFunc &&
-        ast.args &&
         ast.args.length === 1
     ); // improve condition?
+}
+
+function isSet(ast) {
+    return ast.type === 8 && ast.fn.type === 5 && ast.fn.value === "set" && ast.args.length <= 1;
 }
 
 function isBool(ast) {
@@ -382,6 +384,14 @@ function isValidPath(ast, options) {
     const getFieldDef = options.getFieldDef || (() => null);
     if (ast.type === 5) {
         return getFieldDef(ast.value) !== null;
+    }
+    return false;
+}
+
+function isX2Many(ast, options) {
+    if (isValidPath(ast, options)) {
+        const fieldDef = options.getFieldDef(ast.value); // safe: isValidPath has not returned null;
+        return ["many2many", "one2many"].includes(fieldDef.type);
     }
     return false;
 }
@@ -407,8 +417,9 @@ function _getConditionFromComparator(ast, options) {
 
     if (!isValidPath(left, options)) {
         if (operator in EXCHANGE) {
-            left = ast.right;
-            right = ast.left;
+            const temp = left;
+            left = right;
+            right = temp;
             operator = EXCHANGE[operator];
         } else {
             return null;
@@ -416,6 +427,60 @@ function _getConditionFromComparator(ast, options) {
     }
 
     return condition(left.value, operator, toValue(right));
+}
+
+function isValidPath2(ast, options) {
+    if (!ast) {
+        return null;
+    }
+    if ([4, 10].includes(ast.type) && ast.value.length === 1) {
+        return isValidPath(ast.value[0], options);
+    }
+    return isValidPath(ast, options);
+}
+
+function _getConditionFromIntersection(ast, options, negate = false) {
+    let left = ast.fn.obj.args[0];
+    let right = ast.args[0];
+
+    if (!left) {
+        return condition(negate ? 1 : 0, "=", 1);
+    }
+
+    // left/right exchange
+    if (isValidPath2(left, options) == isValidPath2(right, options)) {
+        return null;
+    }
+    if (!isValidPath2(left, options)) {
+        const temp = left;
+        left = right;
+        right = temp;
+    }
+
+    if ([4, 10].includes(left.type) && left.value.length === 1) {
+        left = left.value[0];
+    }
+
+    if (!right) {
+        return condition(left.value, negate ? "=" : "!=", false);
+    }
+
+    // try to extract the ast of an iterable
+    // we only make simple conversions here
+    if (isSet(right)) {
+        if (!right.args[0]) {
+            right = { type: 4, value: [] };
+        }
+        if ([4, 10].includes(right.args[0].type)) {
+            right = right.args[0];
+        }
+    }
+
+    if (![4, 10].includes(right.type)) {
+        return null;
+    }
+
+    return condition(left.value, negate ? "not in" : "in", toValue(right));
 }
 
 /**
@@ -438,6 +503,18 @@ function _leafFromAST(ast, options, negate = false) {
         return condition(astValue ? 1 : 0, "=", 1);
     }
 
+    if (
+        ast.type === 8 &&
+        ast.fn.type === 15 /** object lookup */ &&
+        isSet(ast.fn.obj) &&
+        ast.fn.key === "intersection"
+    ) {
+        const tree = _getConditionFromIntersection(ast, options, negate);
+        if (tree) {
+            return tree;
+        }
+    }
+
     if (ast.type === 7 && COMPARATORS.includes(ast.op)) {
         if (negate) {
             return _leafFromAST(not(ast), options);
@@ -448,7 +525,7 @@ function _leafFromAST(ast, options, negate = false) {
         }
     }
 
-    // no conclusive way to transform ast in a condition
+    // no conclusive/simple way to transform ast in a condition
     return complexCondition(formatAST(negate ? not(ast) : ast));
 }
 
@@ -560,6 +637,37 @@ function _expressionFromTree(tree, options, isRoot = false) {
     if (value === false && ["=", "!="].includes(operator)) {
         // true makes sense for non boolean fields?
         return formatAST(operator === "=" ? not(pathAST) : pathAST);
+    }
+
+    if (
+        pathAST.type === 5 &&
+        isValidPath(pathAST, options) &&
+        ["in", "not in"].includes(operator)
+    ) {
+        const setIteratorAST = isX2Many(pathAST, options) ? pathAST : { type: 4, value: [pathAST] };
+
+        const valueAST = toAST(value);
+        const otherIteratorAST = [4, 10].includes(valueAST.type)
+            ? valueAST
+            : { type: 4, value: [valueAST] };
+
+        const ast = {
+            type: 8,
+            fn: {
+                type: 15,
+                obj: {
+                    args: [setIteratorAST],
+                    type: 8,
+                    fn: {
+                        type: 5,
+                        value: "set",
+                    },
+                },
+                key: "intersection",
+            },
+            args: [otherIteratorAST],
+        };
+        return formatAST(operator === "not in" ? not(ast) : ast);
     }
 
     // add case true for boolean fields
