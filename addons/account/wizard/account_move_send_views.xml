@@ -80,6 +80,7 @@
                         </group>
                         <group>
                             <field name="mail_template_id"
+                                   required="mode == 'invoice_multi'"
                                    options="{'no_create': True, 'no_edit': True}"
                                    context="{'default_model': 'account.move'}"/>
                         </group>

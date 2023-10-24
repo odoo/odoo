@@ -653,6 +653,10 @@ class AccountMoveSend(models.TransientModel):
                                     proforma PDF report instead.
         """
         self.ensure_one()
+
+        if self.mode == 'invoice_multi' and self.checkbox_send_mail and not self.mail_template_id:
+            raise UserError(_('Please select a mail template to send multiple invoices.'))
+
         force_synchronous = force_synchronous or self.checkbox_download
         process_later = self.mode == 'invoice_multi' and not force_synchronous
         if process_later:
