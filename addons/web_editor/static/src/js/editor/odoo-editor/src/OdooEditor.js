@@ -316,6 +316,11 @@ export class OdooEditor extends EventTarget {
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
 
+        this._currentStep = {
+            selection: {},
+            mutations: [],
+        };
+
         this._setLinkZws();
 
         this._collabClientId = this.options.collaborationClientId;
@@ -1102,7 +1107,7 @@ export class OdooEditor extends EventTarget {
         if (!this._historyStepsActive) {
             return;
         }
-        this._setLinkZws();
+        this._resetLinkZws();
         this.sanitize();
         // check that not two unBreakables modified
         if (this._toRollback) {
@@ -1125,6 +1130,7 @@ export class OdooEditor extends EventTarget {
         if (this.options.onHistoryStep) {
             this.options.onHistoryStep(currentStep);
         }
+        this._setLinkZws();
         this._currentStep = {
             selection: {},
             mutations: [],
@@ -1809,15 +1815,14 @@ export class OdooEditor extends EventTarget {
                         link.firstElementChild.nodeName === 'IMG'
                     )
                 ) {
-                    link.prepend(this._createLinkZws('start'));
+                    this._insertLinkZws('start', link);
                     // Only add the ZWS at the end if the link is in selection.
                     if (link === linkInSelection) {
-                        link.append(this._createLinkZws('end'));
+                        this._insertLinkZws('end', link);
                         link.classList.add('o_link_in_selection');
                         didAddZwsInLinkInSelection = true;
                     }
-                    const zwsAfter = this._createLinkZws('after');
-                    link.after(zwsAfter);
+                    const zwsAfter = this._insertLinkZws('after', link);
                     if (!zwsAfter.parentElement || !zwsAfter.parentElement.isContentEditable) {
                         zwsAfter.remove();
                     }
@@ -2308,8 +2313,10 @@ export class OdooEditor extends EventTarget {
         }
     }
     _resetLinkZws(element = this.editable) {
+        this.observerUnactive('_resetLinkZws');
         element.querySelectorAll('[data-o-link-zws]').forEach(zws => zws.remove());
         element.querySelectorAll('.o_link_in_selection').forEach(link => link.classList.remove('o_link_in_selection'));
+        this.observerActive('_resetLinkZws');
     }
     _activateContenteditable() {
         this.observerUnactive('_activateContenteditable');
@@ -3267,13 +3274,22 @@ export class OdooEditor extends EventTarget {
         }
         this.observer.takeRecords();
     }
-    _createLinkZws(side) {
+    _insertLinkZws(side, link) {
+        this.observerUnactive('_insertLinkZws');
         const span = document.createElement('span');
         span.setAttribute('data-o-link-zws', side);
         if (side !== 'end') {
             span.setAttribute('contenteditable', 'false');
         }
         span.textContent = '\u200B';
+        if (side === 'start') {
+            link.prepend(span);
+        } else if (side === 'end') {
+            link.append(span);
+        } else if (side === 'after') {
+            link.after(span);
+        }
+        this.observerActive('_insertLinkZws');
         return span;
     }
 
@@ -3836,8 +3852,7 @@ export class OdooEditor extends EventTarget {
                 if (isAtEndOfLink) {
                     let afterZws = link.nextElementSibling;
                     if (!afterZws) {
-                        afterZws = this._createLinkZws('after');
-                        link.after(afterZws);
+                        afterZws = this._insertLinkZws('after', link);
                     }
                     setSelection(
                         afterZws.nextSibling || afterZws.parentElement,
