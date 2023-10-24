@@ -529,7 +529,7 @@
                                         column_invisible="1" readonly="1"
                                         groups="!mrp.group_mrp_configurator"/>
                                     <field name="product_tmpl_id" string="Product" readonly="0" domain="[('id', '!=', parent.product_tmpl_id)]"
-                                        widget="product_many2one"
+                                        widget="stock_product_many2one"
                                         groups="mrp.group_mrp_configurator"/>
                                     <field name="product_description" invisible="not is_configurable_product"/>
                                     <field name="product_custom_attribute_value_ids" column_invisible="1">
