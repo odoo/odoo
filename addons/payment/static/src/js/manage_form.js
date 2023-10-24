@@ -139,7 +139,7 @@ import { debounce } from "@web/core/utils/timing";
                     ).closest('div[name="o_payment_option_card"]');
                     $tokenCard.siblings(`#o_payment_token_inline_manage_form_${tokenId}`).remove();
                     $tokenCard.remove();
-                    this._disableButton(false);
+                    this._disableButton();
                 }).guardedCatch(error => {
                     error.event.preventDefault();
                     this._displayError(
