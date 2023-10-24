@@ -9,13 +9,19 @@ patch(OrderWidget.prototype, {
         const type = this.selfOrder.config.self_ordering_mode;
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
+        const order = this.selfOrder.currentOrder;
+        const isNoLine = order.lines.length === 0;
 
         if (type === "kiosk") {
             return super.buttonToShow;
         }
 
+        if (order.amount_total === 0 && !isNoLine) {
+            return { label: _t("Order"), disabled: false };
+        }
+
         if (mode === "each") {
-            return { label: buttonName, disabled: false };
+            return { label: buttonName, disabled: isNoLine };
         } else if (mode === "meal") {
             const order = this.selfOrder.currentOrder;
 
