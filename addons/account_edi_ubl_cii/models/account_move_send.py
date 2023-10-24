@@ -180,6 +180,7 @@ class AccountMoveSend(models.TransientModel):
         reader_buffer.close()
         writer_buffer.close()
 
+    @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
         # Adding the PDF to the XML
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
@@ -220,6 +221,7 @@ class AccountMoveSend(models.TransientModel):
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
         )
 
+    @api.model
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoice, invoice_data)
