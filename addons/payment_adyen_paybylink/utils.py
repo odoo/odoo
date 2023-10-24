@@ -12,14 +12,21 @@ def format_partner_address(partner):
     """
     STREET_FORMAT = '%(street_number)s/%(street_number2)s %(street_name)s'
     street_data = split_street_with_params(partner.street, STREET_FORMAT)
-    return {
+    if partner.country_id.code not in ["CA", "US", "GB"]:
+        stateOrProvince = partner.state_id.code or ''
+    else:
+        stateOrProvince = partner.state_id.code
+    address = {
         'city': partner.city,
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code,
+        'stateOrProvince': stateOrProvince,
         'postalCode': partner.zip,
         'street': street_data['street_name'],
         'houseNumberOrName': street_data['street_number'],
     }
+    if False in address.values():
+        raise ValueError("Address can't contain False values")
+    return address
 
 
 # The method is copy-pasted from `base_address_extended` with small modifications.
