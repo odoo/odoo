@@ -1490,20 +1490,17 @@ class AccountTaxRepartitionLine(models.Model):
     tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
 
     @api.model_create_multi
-    def create(self, vals):
-        tax_ids = list(set([line.get('tax_id') for line in vals])) # Sorted
-        taxes = self.env['account.tax'].search_fetch([('id', 'in', tax_ids)], ['name'], order='id ASC')
-        tax_dict = dict(zip(tax_ids, taxes))
-        for line in vals:
-            tax = tax_dict.get(line.get('tax_id'))
+    def create(self, vals_list):
+        tax_ids = [vals.get('tax_id') for vals in vals_list]
+        for tax in self.env['account.tax'].browse(tax_ids):
             if tax and tax.is_used:
-                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(tax.name))
+                raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", tax.name))
         return super().create(vals)
 
     def unlink(self):
         for repartition_line in self:
             if repartition_line.tax_id.is_used:
-                raise ValidationError(_("The tax named {} has already been used, you cannot add nor delete its tax repartition lines.").format(repartition_line.tax_id.name))
+                raise ValidationError(_("The tax named %s has already been used, you cannot add nor delete its tax repartition lines.", repartition_line.tax_id.name))
         return super().unlink()
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
