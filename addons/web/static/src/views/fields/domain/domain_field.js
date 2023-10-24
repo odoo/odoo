@@ -47,7 +47,7 @@ export class DomainField extends Component {
             facets: [],
         });
 
-        this.isDebugEdited = false;
+        this.debugDomain = null;
         onWillStart(() => {
             this.checkProps(); // not awaited
             if (this.props.isFoldable) {
@@ -55,8 +55,10 @@ export class DomainField extends Component {
             }
         });
         onWillUpdateProps((nextProps) => {
-            this.isDebugEdited = this.isDebugEdited && this.props.readonly === nextProps.readonly;
-            if (!this.isDebugEdited) {
+            if (this.debugDomain && this.props.readonly !== nextProps.readonly) {
+                this.debugDomain = null;
+            }
+            if (!this.debugDomain) {
                 this.checkProps(nextProps); // not awaited
             }
             if (nextProps.isFoldable) {
@@ -65,19 +67,20 @@ export class DomainField extends Component {
         });
 
         useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", async (ev) => {
-            if (this.isDebugEdited) {
+            if (this.debugDomain) {
                 const props = this.props;
-                ev.detail.proms.push(
-                    this.quickValidityCheck(props).then((isValid) => {
-                        if (isValid) {
-                            this.isDebugEdited = false; // will allow the count to be loaded if needed
-                        } else {
-                            this.state.isValid = false;
-                            this.state.recordCount = 0;
-                            props.record.setInvalidField(props.name);
-                        }
-                    })
-                );
+                const handleChanges = async () => {
+                    await props.record.update({ [props.name]: this.debugDomain });
+                    const isValid = await this.quickValidityCheck(props);
+                    if (isValid) {
+                        this.debugDomain = null; // will allow the count to be loaded if needed
+                    } else {
+                        this.state.isValid = false;
+                        this.state.recordCount = 0;
+                        props.record.setInvalidField(props.name);
+                    }
+                };
+                ev.detail.proms.push(handleChanges());
             }
         });
     }
@@ -232,8 +235,20 @@ export class DomainField extends Component {
     }
 
     update(domain, isDebugEdited = false) {
-        this.isDebugEdited = isDebugEdited;
-        return this.props.record.update({ [this.props.name]: domain });
+        if (!isDebugEdited) {
+            this.debugDomain = null;
+        }
+        this.props.record.update({ [this.props.name]: domain });
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+    }
+
+    debugUpdate(domain) {
+        const isDirty = domain !== this.getDomain();
+        this.debugDomain = isDirty ? domain : null;
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+        if (!this.props.record.isValid) {
+            this.props.record.resetFieldValidity(this.props.name);
+        }
     }
 
     fold() {

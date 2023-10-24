@@ -32,6 +32,7 @@ export class DomainSelector extends Component {
         isDebugMode: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
+        debugUpdate: { type: Function, optional: true },
     };
     static defaultProps = {
         isDebugMode: false,
@@ -165,6 +166,12 @@ export class DomainSelector extends Component {
 
     resetDomain() {
         this.props.update("[]");
+    }
+
+    onDomainInput(domain) {
+        if (this.props.debugUpdate) {
+            this.props.debugUpdate(domain);
+        }
     }
 
     onDomainChange(domain) {

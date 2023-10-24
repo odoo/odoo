@@ -6,6 +6,7 @@ import {
     clickDiscard,
     clickSave,
     editInput,
+    findElement,
     getFixture,
     makeDeferred,
     nextTick,
@@ -994,7 +995,78 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "quick check on save if domain has been edited via the  debug input",
+        "debug input editing sets the field as dirty even without a focus out",
+        async function (assert) {
+            serverData.models.partner.fields.display_name.default = "[]";
+            patchWithCleanup(odoo, {
+                debug: true,
+            });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner'}"/>
+                </form>`,
+                mockRPC: (route) => {
+                    if (route === "/web/domain/validate") {
+                        assert.step("validate domain");
+                        return true;
+                    }
+                },
+            });
+            await clickSave(target);
+            const debugInput = findElement(target, dsHelpers.SELECTORS.debugArea);
+            debugInput.value = "[['id', '=', False]]";
+            triggerEvent(debugInput, null, "input", {});
+            assert.containsOnce(target, ".o_form_button_save");
+            await clickSave(target);
+            assert.verifySteps(["validate domain"]);
+        }
+    );
+
+    QUnit.test(
+        "debug input corrections don't need a focus out to be saved",
+        async function (assert) {
+            serverData.models.partner.fields.display_name.default = "[]";
+            patchWithCleanup(odoo, {
+                debug: true,
+            });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner'}"/>
+                </form>`,
+                mockRPC: (route, { domain }) => {
+                    if (route === "/web/domain/validate") {
+                        if (domain.toString() === "id,=,1") {
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+            });
+            await clickSave(target);
+            const debugInput = findElement(target, dsHelpers.SELECTORS.debugArea);
+            debugInput.value = "[";
+            triggerEvent(debugInput, null, "input", {});
+            await clickSave(target);
+            assert.hasClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+            debugInput.value = "[('id', '=', 1)]";
+            triggerEvent(debugInput, null, "input", {});
+            await nextTick();
+            assert.containsNone(target, ".o_form_status_indicator span i.fa-warning");
+            assert.containsNone(target, ".o_form_button_save[disabled]");
+            assert.containsOnce(target, ".o_form_button_save");
+        }
+    );
+
+    QUnit.test(
+        "quick check on save if domain has been edited via the debug input",
         async function (assert) {
             patchWithCleanup(odoo, { debug: true });
             serverData.models.partner.fields.display_name.default = "[['id', '=', False]]";
