@@ -334,12 +334,18 @@ export class PeerToPeer {
                     );
                 }
             }
-            const baseMethod = baseNotificationMethods[notification.notificationName];
-            if (baseMethod) {
-                return baseMethod.call(this, notification);
-            }
-            if (this.options.onNotification) {
-                return this.options.onNotification(notification);
+            try {
+                const baseMethod = baseNotificationMethods[notification.notificationName];
+                if (baseMethod) {
+                    return baseMethod.call(this, notification);
+                }
+                if (this.options.onNotification) {
+                    return this.options.onNotification(notification);
+                }
+            } catch (error) {
+                console.groupCollapsed('=== ERROR: On notification in collaboration ===');
+                console.error(error);
+                console.groupEnd();
             }
         }
     }
@@ -578,8 +584,8 @@ export class PeerToPeer {
         );
     }
     /**
-     * Attempts a connection recovery by updating the tracks, which will start a new transaction:
-     * negotiationneeded -> offer -> answer -> ...
+     * Attempts a connection recovery by updating the tracks, which will start
+     * a new transaction: negotiationneeded -> offer -> answer -> ...
      *
      * @private
      * @param {Object} [param1]
