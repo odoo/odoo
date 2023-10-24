@@ -95,19 +95,65 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     @classmethod
     def _init_mail_gateway(cls):
         super()._init_mail_gateway()
+        # main company alias parameters
         cls.alias_domain = 'test.mycompany.com'
         cls.alias_catchall = 'catchall.test'
         cls.alias_bounce = 'bounce.test'
         cls.default_from = 'notifications.test'
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
-        cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
-        cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
-        cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].set_param('mail.default.from_filter', cls.default_from_filter)
+
+        # ensure global alias domain for tests: to ease tests, search or create
+        # the default test domains
+        cls.env['mail.alias.domain'].search([]).write({'sequence': 9999})
+        cls.mail_alias_domain = cls._init_alias_domain(cls.alias_domain, {
+            'bounce_alias': cls.alias_bounce,
+            'catchall_alias': cls.alias_catchall,
+            'company_ids': [(4, cls.env.ref('base.user_admin').company_id.id)],
+            'default_from': cls.default_from,
+            'name': cls.alias_domain,
+            'sequence': 1,
+        })
+        if cls._mc_enabled:
+            # alias domain specific to new company
+            cls.alias_bounce_c2 = 'bounce.c2'
+            cls.alias_catchall_c2 = 'catchall.c2'
+            cls.alias_default_from_c2 = 'notifications.c2'
+            cls.alias_domain_c2_name = 'test.mycompany2.com'
+            cls.mail_alias_domain_c2 = cls._init_alias_domain(cls.alias_domain_c2_name, {
+                'bounce_alias': cls.alias_bounce_c2,
+                'catchall_alias': cls.alias_catchall_c2,
+                'company_ids': [(4, cls.company_2.id)],
+                'default_from': cls.alias_default_from_c2,
+                'name': cls.alias_domain_c2_name,
+                'sequence': 2,
+            })
+
+            # alias domain specific to third company
+            cls.alias_bounce_c3 = 'bounce.c3'
+            cls.alias_catchall_c3 = 'catchall.c3'
+            cls.alias_default_from_c3 = 'notifications.c3'
+            cls.alias_domain_c3_name = 'test.mycompany3.com'
+            cls.mail_alias_domain_c3 = cls._init_alias_domain(cls.alias_domain_c3_name, {
+                'bounce_alias': cls.alias_bounce_c3,
+                'catchall_alias': cls.alias_catchall_c3,
+                'company_ids': [(4, cls.company_3.id)],
+                'default_from': cls.alias_default_from_c3,
+                'name': cls.alias_domain_c3_name,
+                'sequence': 3,
+            })
 
         # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}'))
+
+    @classmethod
+    def _init_alias_domain(cls, name, values):
+        alias_domain = cls.env['mail.alias.domain'].search([('name', '=', name)])
+        if alias_domain:
+            alias_domain.write(values)
+        else:
+            alias_domain = cls.env['mail.alias.domain'].create(values)
+        return alias_domain
 
     # ------------------------------------------------------------
     # GATEWAY TOOLS
@@ -1269,19 +1315,23 @@ class MailCommon(common.TransactionCase, MailCase):
         different companies. """
         cls._mc_enabled = True
 
-        # new company
+        # new companies
         cls.company_2 = cls.env['res.company'].create({
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
         })
         cls.company_3 = cls.env['res.company'].create({
-            'name': 'ELIT',
-        })
-        cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
-        cls.company_3 = cls.env['res.company'].create({
+            'country_id': cls.env.ref('base.be').id,
+            'currency_id': cls.env.ref('base.EUR').id,
             'email': 'company_3@test.example.com',
             'name': 'Company 3',
+        })
+        cls.user_admin.write({
+            'company_ids': [
+                (4, cls.company_2.id),
+                (4, cls.company_3.id),
+            ],
         })
 
         # employee specific to second company

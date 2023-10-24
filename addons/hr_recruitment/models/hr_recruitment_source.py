@@ -22,18 +22,19 @@ class RecruitmentSource(models.Model):
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
         medium = self.env.ref('utm.utm_medium_email')
-        for source in self:
+        for source in self.filtered(lambda s: not s.alias_id):
             vals = {
-                'alias_parent_thread_id': source.job_id.id,
-                'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
-                'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
-                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
                 'alias_defaults': {
                     'job_id': source.job_id.id,
                     'campaign_id': campaign.id,
                     'medium_id': medium.id,
                     'source_id': source.source_id.id,
                 },
+                'alias_domain_id': source.job_id.company_id.alias_domain_id.id or self.env.company.alias_domain_id.id,
+                'alias_model_id': self.env['ir.model']._get_id('hr.applicant'),
+                'alias_name': f"{source.job_id.alias_name or source.job_id.name}+{source.name}",
+                'alias_parent_thread_id': source.job_id.id,
+                'alias_parent_model_id': self.env['ir.model']._get_id('hr.job'),
             }
             source.alias_id = self.env['mail.alias'].create(vals)
 

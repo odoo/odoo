@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from lxml.builder import E
 from markupsafe import Markup
 
@@ -22,6 +23,51 @@ class BaseModel(models.AbstractModel):
     # FIELDS HELPERS
     # ------------------------------------------------------------
 
+    def _mail_get_alias_domains(self, default_company=False):
+        """ Return alias domain linked to each record in self. It is based
+        on the company (record's company, environment company) and fallback
+        on the first found alias domain if configuration is not correct.
+
+        :param <res.company> default_company: default company in case records
+          have no company (or no company field); defaults to env.company;
+
+        :return: for each record ID in self, found <mail.alias.domain>
+        """
+        record_companies = self._mail_get_companies(default=(default_company or self.env.company))
+
+        # prepare default alias domain, fetch only if necessary
+        default_domain = (default_company or self.env.company).alias_domain_id
+        all_companies = self.env['res.company'].browse({comp.id for comp in record_companies.values()})
+        # early optimization: search only if necessary
+        if not default_domain and any(not comp.alias_domain_id for comp in all_companies):
+            default_domain = self.env['mail.alias.domain'].search([], limit=1)
+
+        return {
+            record.id: (
+                record_companies[record.id].alias_domain_id or default_domain
+            )
+            for record in self
+        }
+
+    @api.model
+    def _mail_get_company_field(self):
+        return 'company_id' if 'company_id' in self else False
+
+    def _mail_get_companies(self, default=False):
+        """ Return company linked to each record in self.
+
+        :param <res.company> default: default value if no company field is found
+          or if it holds a void value. Defaults to a void recordset;
+
+        :return: for each record ID in self, found <res.company>
+        """
+        default_company = default or self.env['res.company']
+        company_fname = self._mail_get_company_field()
+        return {
+            record.id: (record[company_fname] or default_company) if company_fname else default_company
+            for record in self
+        }
+
     @api.model
     def _mail_get_partner_fields(self, introspect_fields=False):
         """ This method returns the fields to use to find the contact to link
@@ -33,7 +79,7 @@ class BaseModel(models.AbstractModel):
           res.partner model. This is used notably when partners are
           mandatory like in voip;
 
-        :return list: list of valid field names that can be used to retrieve
+        :return: list of valid field names that can be used to retrieve
           a partner (customer) on the record;
         """
         partner_fnames = [fname for fname in ('partner_id', 'partner_ids') if fname in self]
@@ -49,7 +95,7 @@ class BaseModel(models.AbstractModel):
 
         :param bool introspect_fields: see '_mail_get_partner_fields';
 
-        :return dict: for each record ID, a res.partner recordsets being default
+        :return: for each record ID, a res.partner recordsets being default
           customers to contact;
         """
         partner_fields = self._mail_get_partner_fields(introspect_fields=introspect_fields)
@@ -193,45 +239,52 @@ class BaseModel(models.AbstractModel):
         model = _records._name if _records and _records._name != 'mail.thread' else False
         res_ids = _records.ids if _records and model else []
         _res_ids = res_ids or [False]  # always have a default value located in False
+        _records_sudo = _records.sudo()
+        doc_names = {rec.id: rec.display_name for rec in _records_sudo} if res_ids else {}
 
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        result = dict.fromkeys(_res_ids, False)
-        result_email = dict()
-        doc_names = dict()
+        # group ids per company
+        if res_ids:
+            company_to_res_ids = defaultdict(list)
+            record_ids_to_company = _records_sudo._mail_get_companies(default=self.env.company)
+            for record_id, company in record_ids_to_company.items():
+                company_to_res_ids[company].append(record_id)
+        else:
+            company_to_res_ids = {self.env.company: _res_ids}
+            record_ids_to_company = {_res_id: self.env.company for _res_id in _res_ids}
 
-        if alias_domain:
-            if model and res_ids:
-                if not doc_names:
-                    doc_names = dict((rec.id, rec.display_name) for rec in _records)
+        # begin with aliases (independent from company, alias_domain_id on alias wins)
+        reply_to_email = {}
+        if model and res_ids:
+            mail_aliases = self.env['mail.alias'].sudo().search([
+                ('alias_domain_id', '!=', False),
+                ('alias_parent_model_id.model', '=', model),
+                ('alias_parent_thread_id', 'in', res_ids),
+                ('alias_name', '!=', False)
+            ])
+            # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
+            for alias in mail_aliases:
+                reply_to_email.setdefault(alias.alias_parent_thread_id, alias.alias_full_name)
 
-                mail_aliases = self.env['mail.alias'].sudo().search([
-                    ('alias_parent_model_id.model', '=', model),
-                    ('alias_parent_thread_id', 'in', res_ids),
-                    ('alias_name', '!=', False)])
-                # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-                for alias in mail_aliases:
-                    result_email.setdefault(alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain))
-
-            # left ids: use catchall
-            left_ids = set(_res_ids) - set(result_email)
-            if left_ids:
-                catchall = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
-                if catchall:
-                    result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
-
-            for res_id in result_email:
-                result[res_id] = self._notify_get_reply_to_formatted_email(
-                    result_email[res_id],
-                    doc_names.get(res_id) or '',
-                )
-
-        left_ids = set(_res_ids) - set(result_email)
+        # continue with company alias
+        left_ids = set(_res_ids) - set(reply_to_email)
         if left_ids:
-            result.update(dict((res_id, default) for res_id in left_ids))
+            for company, record_ids in company_to_res_ids.items():
+                # left ids: use catchall defined on company alias domain
+                if company.catchall_email:
+                    left_ids = set(record_ids) - set(reply_to_email)
+                    if left_ids:
+                        reply_to_email.update({rec_id: company.catchall_email for rec_id in left_ids})
 
-        return result
+        # compute name of reply-to ("Company Document" <alias@domain>)
+        reply_to_formatted = dict.fromkeys(_res_ids, default)
+        for res_id, record_reply_to in reply_to_email.items():
+            reply_to_formatted[res_id] = self._notify_get_reply_to_formatted_email(
+                record_reply_to, doc_names.get(res_id) or '', company=record_ids_to_company[res_id],
+            )
 
-    def _notify_get_reply_to_formatted_email(self, record_email, record_name):
+        return reply_to_formatted
+
+    def _notify_get_reply_to_formatted_email(self, record_email, record_name, company=False):
         """ Compute formatted email for reply_to and try to avoid refold issue
         with python that splits the reply-to over multiple lines. It is due to
         a bad management of quotes (missing quotes after refold). This appears
@@ -243,22 +296,27 @@ class BaseModel(models.AbstractModel):
         possible we return only the email and skip the formataddr which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
+
+        :param <res.company> company: if given, setup the company used to
+          complete name in formataddr. Otherwise fallback on 'company_id'
+          of self or environment company;
         """
         # address itself is too long for 78 chars limit: return only email
         if len(record_email) >= 78:
             return record_email
 
-        if 'company_id' in self and len(self.company_id) == 1:
-            company_name = self.sudo().company_id.name
-        else:
-            company_name = self.env.company.name
+        if not company:
+            if len(self) == 1:
+                company = self.sudo()._mail_get_companies(default=self.env.company)
+            else:
+                company = self.env.company
 
-        # try company_name + record_name, or record_name alone (or company_name alone)
-        name = f"{company_name} {record_name}" if record_name else company_name
+        # try company.name + record_name, or record_name alone (or company.name alone)
+        name = f"{company.name} {record_name}" if record_name else company.name
 
         formatted_email = tools.formataddr((name, record_email))
         if len(formatted_email) > 78:
-            formatted_email = tools.formataddr((record_name or company_name, record_email))
+            formatted_email = tools.formataddr((record_name or company.name, record_email))
         if len(formatted_email) > 78:
             formatted_email = record_email
         return formatted_email
@@ -316,14 +374,19 @@ class BaseModel(models.AbstractModel):
     # GATEWAY: NOTIFICATION
     # ------------------------------------------------------------
 
-    def _notify_by_email_get_headers(self):
-        """ Generate the email headers based on record """
+    def _notify_by_email_get_headers(self, headers=None):
+        """ Generate the email headers based on record. Each header not already
+        present in 'headers' will be added in it. """
+        headers = headers or {}
         if not self:
-            return {}
+            return headers
         self.ensure_one()
-        return {
-            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
-        }
+        headers['X-Odoo-Objects'] = f"{self._name}-{self.id}"
+        if 'Return-Path' not in headers:
+            company = self._mail_get_companies(default=self.env.company)[self.id]
+            if company.bounce_email:
+                headers['Return-Path'] = company.bounce_email
+        return headers
 
     # ------------------------------------------------------------
     # TOOLS

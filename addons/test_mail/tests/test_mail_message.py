@@ -221,16 +221,8 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias domain -> author
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
-
-        msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
-
-        # no alias catchall, no alias -> author
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
+        self.env.company.alias_domain_id = False
+        self.assertFalse(self.env.company.catchall_email)
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
@@ -249,8 +241,10 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-        # no alias domain -> author
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
+        # no alias domain, no company catchall -> author
+        self.alias_record.alias_domain_id = False
+        self.env.company.alias_domain_id = False
+        self.assertFalse(self.env.company.catchall_email)
 
         msg = self.Message.create({
             'model': 'mail.test.container',
@@ -260,9 +254,8 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-        # no catchall -> don't care, alias
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
+        # alias wins over company, hence no catchall is not an issue
+        self.alias_record.alias_domain_id = self.mail_alias_domain
 
         msg = self.Message.create({
             'model': 'mail.test.container',
@@ -467,7 +460,6 @@ class TestMessageAccess(MailCommon):
 
     def test_mail_message_access_create_reply(self):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'discuss.channel', 'res_id': self.private_group.id, 'body': 'Test', 'parent_id': self.message.id})
 

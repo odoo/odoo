@@ -33,7 +33,18 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting string="Use a Gmail Server" help="Send and receive emails through your Gmail account." documentation="https://console.developers.google.com/" invisible="not external_email_server_default">
+                        <setting id="email-alias-setting" string="Alias Domain"
+                                 help="Use different domains for your mail aliases"
+                                 company_dependent="1"
+                                 documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
+                            <span class="me-1">@</span>
+                            <field name="alias_domain_id" placeholder="e.g. domain.com"
+                                   options="{'no_create_edit': True}"/>
+                        </setting>
+                        <setting string="Use a Gmail Server"
+                                 help="Send and receive emails through your Gmail account."
+                                 documentation="https://console.developers.google.com/"
+                                 invisible="not external_email_server_default">
                             <field name="module_google_gmail"/>
                             <div class="content-group" invisible="not module_google_gmail" id="msg_module_google_gmail">
                                 <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
@@ -50,9 +61,6 @@
                                     <strong>Save</strong> this page and come back here to set up the feature.
                                 </div>
                             </div>
-                        </setting>
-                        <setting id="email-alias-setting" string="Alias Domain" help="Use a different domain for your mail aliases" documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
-                            <span>@<field name="alias_domain" placeholder='e.g. "mycompany.com"'/></span>
                         </setting>
                         <setting help="Add your twilio credentials for ICE servers">
                             <field name="use_twilio_rtc_servers"/>

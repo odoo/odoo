@@ -93,6 +93,12 @@ class Message(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
+    link_preview_ids = fields.One2many(
+        'mail.link.preview', 'message_id', string='Link Previews',
+        groups="base.group_erp_manager")
+    reaction_ids = fields.One2many(
+        'mail.message.reaction', 'message_id', string="Reactions",
+        groups="base.group_system")
     # Attachments are linked to a document through model / res_id and to the message through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
@@ -105,7 +111,8 @@ class Message(models.Model):
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
     record_name = fields.Char('Message Record Name') # display_name of the related document
-    link_preview_ids = fields.One2many('mail.link.preview', 'message_id', string='Link Previews', groups="base.group_erp_manager")
+    record_alias_domain_id = fields.Many2one('mail.alias.domain', 'Alias Domain', ondelete='set null')
+    record_company_id = fields.Many2one('res.company', 'Company', ondelete='set null')
     # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
@@ -167,7 +174,7 @@ class Message(models.Model):
     message_id = fields.Char('Message-Id', help='Message unique identifier', index='btree', readonly=True, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
-    # keep notification layout informations to be able to generate mail again
+    # send notification information (for resend / reschedule)
     email_layout_xmlid = fields.Char('Layout', copy=False)  # xml id of layout
     email_add_signature = fields.Boolean(default=True)
     # `test_adv_activity`, `test_adv_activity_full`, `test_message_assignation_inbox`,...
@@ -178,7 +185,6 @@ class Message(models.Model):
     # as the cache value for this inverse one2many is up-to-date.
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
-    reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
 
     @api.depends('body', 'subject')
     def _compute_description(self):
