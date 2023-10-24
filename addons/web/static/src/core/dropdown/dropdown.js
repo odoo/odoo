@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useBus, useService } from "@web/core/utils/hooks";
-import { usePosition } from "../position_hook";
+import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { localization } from "../l10n/localization";
 

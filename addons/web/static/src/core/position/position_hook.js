@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useThrottleForAnimation } from "./utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 import {
     EventBus,
     onWillDestroy,

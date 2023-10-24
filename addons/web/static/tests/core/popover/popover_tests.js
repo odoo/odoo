@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Popover } from "@web/core/popover/popover";
-import { usePosition } from "@web/core/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
 import { makeTestEnv } from "../../helpers/mock_env";

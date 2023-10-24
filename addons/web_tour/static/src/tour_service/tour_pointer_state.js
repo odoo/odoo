@@ -6,7 +6,7 @@ import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";
 import { getScrollParent } from "./tour_utils";
 
 /**
- * @typedef {import("@web/core/position_hook").Direction} Direction
+ * @typedef {import("@web/core/position/position_hook").Direction} Direction
  *
  * @typedef {"in" | "out-below" | "out-above" | "unknown"} IntersectionPosition
  *

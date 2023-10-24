@@ -7,7 +7,7 @@ import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { usePosition } from "@web/core/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export class NavigableList extends Component {

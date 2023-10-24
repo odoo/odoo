@@ -2,7 +2,7 @@
 
 import { Component } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { usePosition } from "@web/core/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class Popover extends Component {
