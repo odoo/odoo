@@ -1196,6 +1196,9 @@ class PosOrder(models.Model):
         """
         return self.mapped(self._export_for_ui) if self else []
 
+    def _send_order(self):
+        # This function is made to be overriden by pos_self_order_preparation_display
+        pass
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
