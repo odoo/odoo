@@ -262,6 +262,7 @@ export class OdooEditor extends EventTarget {
                 allowInlineAtRoot: false,
                 useResponsiveFontSizes: true,
                 showResponsiveFontSizesBadges: false,
+                showExtendedTextStylesOptions: false,
                 // TODO probably move `getCSSVariableValue` and
                 // `convertNumericToUnit` as odoo-editor utils to avoid this
                 getCSSVariableValue: () => null,
@@ -711,6 +712,10 @@ export class OdooEditor extends EventTarget {
     setupToolbar(toolbar) {
         this.toolbar = toolbar;
         this.autohideToolbar = this.options.autohideToolbar;
+        if (!this.options.showExtendedTextStylesOptions) {
+            this.toolbar.querySelectorAll("[data-extended-text-style]")
+                .forEach(el => el.classList.add("d-none"));
+        }
         this.bindExecCommand(this.toolbar);
         // Ensure anchors in the toolbar don't trigger a hash change.
         const toolbarAnchors = this.toolbar.querySelectorAll('a');
