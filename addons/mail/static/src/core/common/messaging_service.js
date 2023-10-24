@@ -84,9 +84,7 @@ export class Messaging {
         this.store.discuss.isActive =
             data.menu_id === this.router.current.hash?.menu_id ||
             this.router.hash?.action === "mail.action_discuss";
-        (data.shortcodes ?? []).forEach((code) => {
-            this.store.CannedResponse.insert(code);
-        });
+        this.store.CannedResponse.insert(data.shortcodes ?? []);
         this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
         this.store.initBusId = data.initBusId;
         this.store.odoobotOnboarding = data.odoobotOnboarding;
@@ -113,7 +111,7 @@ export class Messaging {
      * @return {import("models").Persona[]}
      */
     async searchPartners(searchStr = "", limit = 10) {
-        let partners = [];
+        const partners = [];
         const searchTerm = cleanTerm(searchStr);
         for (const localId in this.store.Persona.records) {
             const persona = this.store.Persona.records[localId];
@@ -135,9 +133,7 @@ export class Messaging {
                 searchTerm,
                 limit,
             ]);
-            partners = partnersData.map((data) =>
-                this.store.Persona.insert({ ...data, type: "partner" })
-            );
+            this.store.Persona.insert(partnersData);
         }
         return partners;
     }

@@ -33,7 +33,7 @@ export class Message extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").Message} */
+    /** @returns {import("models").Message|import("models").Message[]} */
     static insert(data) {
         return super.insert(...arguments);
     }

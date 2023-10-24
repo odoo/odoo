@@ -25,7 +25,7 @@ export class Failure extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").Failure} */
+    /** @returns {import("models").Failure|import("models").Failure[]} */
     static insert(data) {
         return super.insert(...arguments);
     }

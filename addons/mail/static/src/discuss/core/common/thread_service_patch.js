@@ -39,7 +39,7 @@ patch(ThreadService.prototype, {
                 channel_id: thread.id,
                 limit,
             });
-            const attachments = rawAttachments.map((a) => this.store.Attachment.insert(a));
+            const attachments = this.store.Attachment.insert(rawAttachments);
             if (attachments.length < limit) {
                 thread.areAttachmentsLoaded = true;
             }

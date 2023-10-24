@@ -680,12 +680,19 @@ export class Record {
     static attr(def, { html } = {}) {
         return [ATTR_SYM, { default: def, html }];
     }
-    /** @returns {Record} */
-    static insert(data, { html } = {}) {
+    /** @returns {Record|Record[]} */
+    static insert(data, options = {}) {
+        const isMulti = Array.isArray(data);
+        if (!isMulti) {
+            data = [data];
+        }
         const oldTrusted = Record.trusted;
-        Record.trusted = html ?? Record.trusted;
-        const res = this._insert(...arguments);
+        Record.trusted = options.html ?? Record.trusted;
+        const res = data.map((d) => this._insert(d, options));
         Record.trusted = oldTrusted;
+        if (!isMulti) {
+            return res[0];
+        }
         return res;
     }
     /** @returns {Record} */
