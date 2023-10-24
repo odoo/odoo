@@ -38,7 +38,7 @@ import re
 import uuid
 import warnings
 from collections import defaultdict, OrderedDict, deque
-from collections.abc import MutableMapping
+from collections.abc import Mapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -3822,8 +3822,6 @@ class BaseModel(metaclass=MetaModel):
         if not field_names:
             return []
 
-        cache = self.env.cache
-
         fields_to_fetch = []
         field_names_todo = deque(self.check_field_access_rights('read', field_names))
         field_names_done = {'id'}  # trick: ignore 'id'
@@ -3836,7 +3834,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if ignore_when_in_cache and not any(field.yield_cache_miss_ids(self)):
+            if ignore_when_in_cache and not field.has_cache_miss_ids(self):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
@@ -3906,7 +3904,7 @@ class BaseModel(metaclass=MetaModel):
             for field in column_fields:
                 values = next(column_values)
                 # store values in cache, but without overwriting
-                field.insert_cache_missing(fetched, values)
+                field.insert_cache(fetched, values)
 
         else:
             fetched = self.browse(query)
@@ -4400,7 +4398,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and any(field.yield_cache_miss_ids(real_recs)):
+                    if not field.store and field.has_cache_miss_ids(real_recs):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed
@@ -4833,7 +4831,7 @@ class BaseModel(metaclass=MetaModel):
             # if value in cache has not been updated by other_fields, remove it
             for record, field in cachetoclear:
                 context_key = record.env.cache_key(field)
-                if not (cache_value := self.env.cache.get(field, context_key, record._ids[0])) and cache_value is not api.NOTHING:
+                if not (cache_value := record._cache[field.name]) and cache_value is not api.NOTHING:
                     self.env.cache.remove(field, context_key, record._ids[0])
 
         # check Python constraints for stored fields
@@ -5976,7 +5974,7 @@ class BaseModel(metaclass=MetaModel):
                     # Be careful to not break `test_onchange_taxes_1`, `test_onchange_taxes_2`, `test_onchange_taxes_3`
                     # If you attempt to find a better solution
                     for inv_rec in inv_recs:
-                        if not cache.contains(invf, inv_rec.env.cache_key(invf), inv_rec.id):
+                        if invf.name not in inv_rec._cache:
                             val = invf.convert_to_cache(self, inv_rec, validate=False)
                             invf.set_cache(inv_rec, val)
                         else:
@@ -6277,7 +6275,7 @@ class BaseModel(metaclass=MetaModel):
         """
         self._recompute_recordset(fnames)
         fields_ = None if fnames is None else (self._fields[fname] for fname in fnames)
-        if self.env.cache.has_dirty_fields(self, fields_):
+        if self._has_dirty_fields(fields_):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
@@ -6587,7 +6585,7 @@ class BaseModel(metaclass=MetaModel):
             Return at most ``limit`` records.
         """
         ids = expand_ids(self.id, self._prefetch_ids)
-        ids = field.yield_cache_miss_ids(self.browse(ids))
+        ids = field.get_cache_miss_ids(self.browse(ids))
         if limit:
             ids = itertools.islice(ids, limit)
         # Those records are aimed at being either fetched, or computed.  But the
@@ -6596,6 +6594,25 @@ class BaseModel(metaclass=MetaModel):
         # compute methods are not invoked with a mix of real and new records for
         # the sake of code simplicity.
         return self.browse(ids)
+
+    def _has_dirty_fields(self, fields=None):
+        """ Return whether any of the given records has dirty fields.
+
+        :param fields: a collection of fields or ``None``; the value ``None`` is
+            interpreted as any field on ``records``
+        """
+        cache = self.env.cache
+        if fields is None:
+            return any(
+                not ids.isdisjoint(self._ids)
+                for field, ids in cache._dirty.items()
+                if field.model_name == self._name
+            )
+        else:
+            return any(
+                field in cache._dirty and not cache._dirty[field].isdisjoint(self._ids)
+                for field in fields
+            )
 
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
@@ -6714,7 +6731,7 @@ class BaseModel(metaclass=MetaModel):
                 # Don't force the recomputation of compute fields which are
                 # not stored as this is not really necessary.
                 if field.recursive:
-                    recursively_marked = records & records.browse(field._cache(self.env))
+                    recursively_marked = records & records.browse(field.get_cache_mapping(self.env))
                 self.env.cache.invalidate([(field, records._ids)])
             # recursively trigger recomputation of field's dependents
             if field.recursive:
@@ -6771,7 +6788,7 @@ class BaseModel(metaclass=MetaModel):
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')
                 if new_records:
-                    cache_records = model.browse(field._cache(self.env))
+                    cache_records = model.browse(field.get_cache_mapping(self.env))
                     records |= cache_records.filtered(lambda r: set(r[field.name]._ids) & set(self._ids))
 
             yield from records._modified_triggers(subtree)
@@ -6950,7 +6967,7 @@ collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
 collections.abc.Sequence.register(BaseModel)
 
-class RecordCache(MutableMapping):
+class RecordCache(Mapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
     __slots__ = ['_record']
 
@@ -6962,7 +6979,7 @@ class RecordCache(MutableMapping):
         """ Return whether `record` has a cached value for field ``name``. """
         field = self._record._fields[name]
         env = self._record.env
-        return env.cache.contains(field, env.cache_key(field), self._record._ids[0])
+        return env.cache.contains(field, env.cache_key(field), self._record._ids)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
@@ -6970,16 +6987,10 @@ class RecordCache(MutableMapping):
         env = self._record.env
         return env.cache.get(field, env.cache_key(field), self._record._ids[0])
 
-    def __setitem__(self, name, value):
-        raise NotImplementedError("RecordCache is read-only")
-
-    def __delitem__(self, name):
-        raise NotImplementedError("RecordCache is read-only")
-
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
         for name, field in self._record._fields.items():
-            if name != 'id' and self._record._ids[0] in field._cache(self._record.env):
+            if name != 'id' and self._record._ids[0] in field.get_cache_mapping(self._record.env):
                 yield name
 
     def __len__(self):

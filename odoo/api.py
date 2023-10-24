@@ -940,13 +940,24 @@ class Cache:
         """ Return the field cache of the given field for modifying it. """
         return self._data[field].setdefault(context, {})
 
-    def contains(self, field, context, id_, validator=None):
-        """ Return whether ``record`` has a value for ``field``. """
+    def contains(self, field, context, ids, validator=None):
+        """ Return whether all ids for field are cached
+
+        :param validator: a function to check if the cache value is valid
+            validator(value)
+            if not provided, the validator will be logically equivalent to
+            lambda value: True
+        """
         field_cache = self._get_field_cache(field, context)
-        if id_ not in field_cache:
-            return False
         if validator:
-            return validator(field_cache[id_])
+            for id_ in ids:
+                value = field_cache.get(id_, NOTHING)
+                if value is NOTHING or not validator(value):
+                    return False
+        else:
+            for id_ in ids:
+                if id_ not in field_cache:
+                    return False
         return True
 
     def contains_field(self, field):
@@ -968,6 +979,10 @@ class Cache:
             the update
         :param check_dirty: whether updating a dirty field without making it
             dirty must raise an exception
+        :param setter: a function to set the cache
+            setter(field_cache, id_, value)
+            if not provided, the setter will be logically equivalent to
+            dict.__setitem__
         """
         field_cache = self._set_field_cache(field, context)
         if setter:
@@ -994,6 +1009,10 @@ class Cache:
             the update
         :param check_dirty: whether updating a dirty field without making it
             dirty must raise an exception
+        :param updater: a function to update the cache
+            updater(field_cache, id_, value)
+            if not provided, the updater will be logically equivalent to
+            dict.__setitem__
         """
         field_cache = self._set_field_cache(field, context)
         if updater:
@@ -1012,15 +1031,6 @@ class Cache:
             if dirty_ids and not dirty_ids.isdisjoint(ids):
                 _logger.error("cache.update() removing flag dirty on %s.%s", str(ids), field.name, stack_info=True)
 
-    def insert_missing(self, field, context, ids, values, inserter=None):
-        """ Set the values of ``field`` for the records in ``records`` that
-        don't have a value yet.  In other words, this does not overwrite
-        existing values in cache.
-        """
-        if inserter is None:
-            inserter = dict.setdefault
-        self.update(field, context, ids, values, dirty=False, check_dirty=False, updater=inserter)
-
     def remove(self, field, context, id_):
         """ Remove the value of ``field`` for ``record``. """
         assert id_ not in self._dirty.get(field, ())
@@ -1028,7 +1038,17 @@ class Cache:
         field_cache.pop(id_, NOTHING)
 
     def get_values(self, field, context, ids, getter=None, on_cache_miss=None):
-        """ Return the cached values of ``field`` for ``records``. """
+        """ Return the cached values of ``field`` for ``records``.
+
+        :param getter: a function to get the value from cache value
+            getter(field_cache, id_, default)
+            if not provided, the getter will logically be equivalent to
+            lambda field_cache, _id, default: field_cache.get(_id, NOTHING)
+        :param on_cache_miss: a function to return value if cache miss
+            on_cache_miss(field_cache, id_)
+            if not provided, the on_cache_miss will be logically equivalent to
+            lambda field_cache, id_: NOTHING
+        """
         field_cache = self._get_field_cache(field, context) if on_cache_miss is None else self._set_field_cache(field, context)
         if getter is None:
             getter = dict.get
@@ -1044,27 +1064,36 @@ class Cache:
                     yield value
 
     def get_ids_different_from(self, field, context, ids, value, cmp=operator.ne):
-        """ Return the subset of ``records`` that has not ``value`` for ``field``. """
+        """ Return the subset of ``records`` that has not ``value`` for ``field``.
+
+        :param cmp: a cmp function to return if the cache value is the same as value
+            on_cache_miss(cache_value, value)
+            if not provided, the on_cache_miss will be logically equivalent to
+            operator.ne
+        """
         field_cache = self._get_field_cache(field, context)
-        ids_ = []
-        for id_ in ids:
-            val = field_cache.get(id_, NOTHING)
-            if val is NOTHING or cmp(val, value):
-                ids_.append(id_)
-        return ids_
+        return [
+            id_
+            for id_ in ids
+            if (value_ := field_cache.get(id_, NOTHING)) is NOTHING or cmp(value_, value)
+        ]
 
     def get_missing_ids(self, field, context, ids, validator=None):
-        """ Return the ids of ``records`` that have no value for ``field``. """
+        """ Return the ids of ``records`` that have no value for ``field``.
+
+        :param validator: a function to check if the cache value is valid
+            validator(value)
+            if not provided, the validator will be logically equivalent to
+            lambda value: True
+        """
         field_cache = self._get_field_cache(field, context)
         if validator:
-            for record_id in ids:
-                cache_value = field_cache.get(record_id, NOTHING)
-                if cache_value is NOTHING or not validator(cache_value):
-                    yield record_id
-        else:
-            for record_id in ids:
-                if record_id not in field_cache:
-                    yield record_id
+            return [
+                id_
+                for id_ in ids
+                if (value := field_cache.get(id_, NOTHING)) is NOTHING or not validator(value)
+            ]
+        return [id_ for id_ in ids if id_ not in field_cache]
 
     def get_dirty_fields(self):
         """ Return the fields that have dirty records in cache. """
@@ -1073,24 +1102,6 @@ class Cache:
     def get_dirty_ids(self, field):
         """ Return the records that for which ``field`` is dirty in cache. """
         return self._dirty.get(field, ())
-
-    def has_dirty_fields(self, records, fields=None):  # TODO: cwg
-        """ Return whether any of the given records has dirty fields.
-
-        :param fields: a collection of fields or ``None``; the value ``None`` is
-            interpreted as any field on ``records``
-        """
-        if fields is None:
-            return any(
-                not ids.isdisjoint(records._ids)
-                for field, ids in self._dirty.items()
-                if field.model_name == records._name
-            )
-        else:
-            return any(
-                field in self._dirty and not self._dirty[field].isdisjoint(records._ids)
-                for field in fields
-            )
 
     def clear_dirty_field(self, field):
         """ Make the given field clean on all records, and return the ids of the

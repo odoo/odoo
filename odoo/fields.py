@@ -1200,7 +1200,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 record._fetch_field(self)
             context_key = record.env.cache_key(self)
             validator = self._get_translation_validator(self._lang(record.env)) if self.translate else None
-            if not env.cache.contains(self, context_key, record.id, validator=validator):
+            if not env.cache.contains(self, context_key, record._ids, validator=validator):
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
                     _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1272,37 +1272,7 @@ class Field(MetaField('DummyField', (object,), {})):
         This method is meant to be used internally and has very little benefit
         over a simple call to `~odoo.models.BaseModel.mapped()` on a recordset.
         """
-        if self.name == 'id':
-            # not stored in cache
-            return list(records._ids)
-
-        if self.compute and self.store:
-            # process pending computations
-            self.recompute(records)
-
-        # retrieve values in cache, and fetch missing ones
-        def on_cache_miss(field_cache, record_id):
-            # It is important to construct a 'remaining' recordset with the
-            # _prefetch_ids of the original recordset, in order to prefetch as
-            # many records as possible. If not done this way, scenarios such as
-            # [rec.line_ids.mapped('name') for rec in recs] would generate one
-            # query per record in `recs`!
-            record = records.__class__(records.env, (record_id,), records._prefetch_ids)
-            return self._get(record)
-        getter = dict.get
-        if self.translate:
-            lang = self._lang(records.env)
-
-            def _getter(field_cache, record_id, default):
-                cache_value = field_cache.get(record_id, default)
-                if (cache_value is not default and cache_value is not None and
-                        not isinstance(cache_value, TranslatedCacheValue) and lang not in cache_value):
-                    return default
-                return cache_value
-            getter = _getter
-        context_key = records.env.cache_key(self)
-        vals = records.env.cache.get_values(self, context_key, records._ids, getter=getter, on_cache_miss=on_cache_miss)
-
+        vals = self.get_cache_values(records)
         return self.convert_to_record_multi(vals, records)
 
     def __set__(self, records, value):
@@ -1424,9 +1394,42 @@ class Field(MetaField('DummyField', (object,), {})):
         return determine(self.search, records, operator, value)
 
     # cache operations
-    def _cache(self, env):
-        # return logical readonly cache dict
-        return env.cache._get_field_cache(self, env.cache_key(self))
+    def get_cache_mapping(self, env):
+        return env.cache._get_field_cache(self, env.cache_key(self)).keys().mapping
+
+    def get_cache_values(self, records):
+        """ return cache values and fetch missing ones"""
+        if self.name == 'id':
+            # not stored in cache
+            return list(records._ids)
+
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(records)
+
+        # retrieve values in cache, and fetch missing ones
+        def on_cache_miss(field_cache, record_id):
+            # It is important to construct a 'remaining' recordset with the
+            # _prefetch_ids of the original recordset, in order to prefetch as
+            # many records as possible. If not done this way, scenarios such as
+            # [rec.line_ids.mapped('name') for rec in recs] would generate one
+            # query per record in `recs`!
+            record = records.__class__(records.env, (record_id,), records._prefetch_ids)
+            return self._get(record)
+        getter = dict.get
+        if self.translate:
+            lang = self._lang(records.env)
+
+            def _getter(field_cache, record_id, default):
+                cache_value = field_cache.get(record_id, default)
+                if (cache_value is not default and cache_value is not None and
+                        not isinstance(cache_value, TranslatedCacheValue) and lang not in cache_value):
+                    return default
+                return cache_value
+            getter = _getter
+        context_key = records.env.cache_key(self)
+        vals = records.env.cache.get_values(self, context_key, records._ids, getter=getter, on_cache_miss=on_cache_miss)
+        return vals
 
     def set_cache(self, record, value, dirty=False, check_dirty=True):
         # when storing the value of a content dependent(binary) field, it will be stored once under the context value
@@ -1449,13 +1452,18 @@ class Field(MetaField('DummyField', (object,), {})):
             # in order to ease the retrieval of those values to flush them
             env.cache.update(self, None, records._ids, values, dirty=False, check_dirty=False)
 
-    def insert_cache_missing(self, records, values):
+    def insert_cache(self, records, values):
+        """ insert missing cache values without marking cache dirty """
         context_key = records.env.cache_key(self)
-        records.env.cache.insert_missing(self, context_key, records._ids, values)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
 
-    def yield_cache_miss_ids(self, records):
+    def get_cache_miss_ids(self, records):
         context_key = records.env.cache_key(self)
-        yield from records.env.cache.get_missing_ids(self, context_key, records._ids)
+        return records.env.cache.get_missing_ids(self, context_key, records._ids)
+
+    def has_cache_miss_ids(self, records):
+        context_key = records.env.cache_key(self)
+        return not records.env.cache.contains(self, context_key, records._ids)
 
 
 class Boolean(Field):
@@ -1508,7 +1516,7 @@ class Integer(Field):
 
     def _update(self, records, value):
         # special case, when an integer field is used as inverse for a one2many
-        self.update_cache(records, itertools.repeat(value.id or 0))  #TODO cwg: check again
+        self.update_cache(records, itertools.repeat(value.id or 0))
 
     def convert_to_export(self, value, record):
         if value or value == 0:
@@ -1966,20 +1974,25 @@ class _String(Field):
         if check_dirty and dirty and context_key is not None:
             env.cache.update(self, None, records._ids, values, dirty=False, check_dirty=False, updater=updater)
 
-    def insert_cache_missing(self, records, values):
+    def insert_cache(self, records, values):
         context_key = records.env.cache_key(self)
         if self.translate:
             prefetch_langs = records.env.context.get('prefetch_langs')
             lang = None if prefetch_langs else self._lang(records.env)
-            inserter = self._get_missing_translation_inserter(prefetch_langs, lang)
+            inserter = self._get_translation_inserter(prefetch_langs, lang)
         else:
-            inserter = None
-        records.env.cache.insert_missing(self, context_key, records._ids, values, inserter=inserter)
+            inserter = dict.setdefault
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=inserter)
 
-    def yield_cache_miss_ids(self, records):
+    def get_cache_miss_ids(self, records):
         context_key = records.env.cache_key(self)
         validator = self._get_translation_validator(self._lang(records.env)) if self.translate else None
-        yield from records.env.cache.get_missing_ids(self, context_key, records._ids, validator=validator)
+        return records.env.cache.get_missing_ids(self, context_key, records._ids, validator=validator)
+
+    def has_cache_miss_ids(self, records):
+        context_key = records.env.cache_key(self)
+        validator = self._get_translation_validator(self._lang(records.env)) if self.translate else None
+        return not records.env.cache.contains(self, context_key, records._ids, validator=validator)
 
     # cache hooks
     @staticmethod
@@ -1994,8 +2007,8 @@ class _String(Field):
 
     @staticmethod
     @lru_cache(maxsize=256)  # 256 > 89 languages * 2
-    def _get_missing_translation_inserter(prefetch_langs, lang):
-        # for translated field, the cache_value must not be dirty
+    def _get_translation_inserter(prefetch_langs, lang):
+        # the dirty translated cache_value should already been flushed before insert
         if prefetch_langs:
             def inserter(field_cache, _id, value):
                 field_cache[_id] = None if value is None else TranslatedCacheValue(value)
@@ -2585,7 +2598,7 @@ class Binary(Field):
         }
 
         context_key = records.env.cache_key(self)
-        records.env.cache.insert_missing(self, context_key, records._ids, map(data.get, records._ids))
+        records.env.cache.update(self, context_key, records._ids, map(data.get, records._ids), check_dirty=False, updater=dict.setdefault)
 
     def create(self, record_values):
         assert self.attachment
@@ -3189,7 +3202,7 @@ class Many2one(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        self.update_cache(records, itertools.repeat(self.convert_to_cache(value, records, validate=False)))  #TODO cwg: check again
+        self.update_cache(records, itertools.repeat(self.convert_to_cache(value, records, validate=False)))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
@@ -4320,7 +4333,7 @@ class _RelationalMulti(_Relational):
             cache = records.env.cache
             context_key = records.env.cache_key(self)
             for record in records:
-                if cache.contains(self, context_key, record.id):
+                if cache.contains(self, context_key, record._ids):
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(self, context_key, record._ids[0], val)
             records.modified([self.name])
@@ -4601,7 +4614,7 @@ class One2many(_RelationalMulti):
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
         context_key = records.env.cache_key(self)
-        records.env.cache.insert_missing(self, context_key, records._ids, values)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
@@ -4986,7 +4999,7 @@ class Many2many(_RelationalMulti):
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
         context_key = records.env.cache_key(self)
-        records.env.cache.insert_missing(self, context_key, records._ids, values)
+        records.env.cache.update(self, context_key, records._ids, values, check_dirty=False, updater=dict.setdefault)
 
     def write_real(self, records_commands_list, create=False):
         # records_commands_list = [(records, commands), ...]
@@ -5007,7 +5020,7 @@ class Many2many(_RelationalMulti):
             # is not in cache: one that actually checks access rules for
             # records, and the other one fetching the actual data. We use
             # `self.read` instead to shortcut the first query.
-            missing_ids = list(self.yield_cache_miss_ids(records))
+            missing_ids = self.get_cache_miss_ids(records)
             if missing_ids:
                 self.read(records.browse(missing_ids))
 

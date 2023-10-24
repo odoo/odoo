@@ -3561,7 +3561,7 @@ class TestMany2oneReference(common.TransactionCase):
         reference.res_model = record._name
 
         # the model field 'res_model' is not in database yet
-        self.assertTrue(self.env.cache.has_dirty_fields(reference, [type(reference).res_model]))
+        self.assertTrue(reference._has_dirty_fields([type(reference).res_model]))
 
         # searching on the one2many should flush the field 'res_model'
         records = record.search([('model_ids.create_date', '!=', False)])

@@ -1417,7 +1417,6 @@ class SaleOrder(models.Model):
 
     def _track_finalize(self):
         """ Override of `mail` to prevent logging changes when the SO is in a draft state. """
-        state_field = self._fields['state']
         if (len(self) == 1
             # The method _track_finalize is sometimes called too early or too late and it
             # might cause a desynchronization with the cache, thus this condition is needed.

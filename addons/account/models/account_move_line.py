@@ -1322,7 +1322,7 @@ class AccountMoveLine(models.Model):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
-            move_ids = {id_ for id_ in field._cache(self.env).values() if id_}
+            move_ids = {id_ for id_ in field.get_cache_mapping(self.env).values() if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_model(fnames, flush)

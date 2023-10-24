@@ -121,8 +121,9 @@ class Property(models.Model):
         ) or any(
             # changing a fallback value
             not record.res_id and any(
-                record[fname] != self._fields[fname].convert_to_record(self._fields[fname].convert_to_cache(value, self), self)
+                record[fname] != field.convert_to_record(field.convert_to_cache(value, self), self)
                 for fname, value in values.items()
+                if (field := self._fields[fname])
             )
             for record in self
         )

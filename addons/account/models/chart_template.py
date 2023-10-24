@@ -88,7 +88,7 @@ class AccountChartTemplate(models.AbstractModel):
         # We assume that the field is always computed for all the modules at once (by this function)
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
-            self.env['ir.module.module'].browse(field._cache(self.env))
+            self.env['ir.module.module'].browse(field.get_cache_mapping(self.env))
             or self.env['ir.module.module'].search([])
         )
 

@@ -254,11 +254,9 @@ class HrEmployeePrivate(models.Model):
         for fname in field_names:
             field = self._fields[fname]
             public_field = public._fields[fname]
-            # no cache miss should be promised
-            values = self.env.cache.get_values(public_field, public.env.cache_key(public_field), public._ids)
+            values = public_field.get_cache_values(public)
             if field.translate:
                 values = [(value.copy() if value else None) for value in values]
-            # TODO: check Property and x2many fields deepcopy?
             field.update_cache(self, values)
 
     @api.model
