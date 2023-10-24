@@ -6,7 +6,7 @@ import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import {makeDeferred, patchWithCleanup, triggerHotkey} from "@web/../tests/helpers/utils";
+import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
@@ -315,7 +315,6 @@ QUnit.test("base rendering when chatter has no record", async () => {
     await contains(".o-mail-Message-body", { text: "Creating a new record..." });
     await contains("button", { count: 0, text: "Load More" });
     await contains(".o-mail-Message-actions");
-    await contains(".o-mail-Message-actions i", { count: 0 });
 });
 
 QUnit.test("base rendering when chatter has attachments", async () => {
@@ -755,11 +754,11 @@ QUnit.test(
         const wizardOpened = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action, options) {
-                if (action.res_model === 'res.partner') {
+                if (action.res_model === "res.partner") {
                     return super.doAction(action, options);
-                } else if (action.res_model === 'mail.activity.schedule') {
+                } else if (action.res_model === "mail.activity.schedule") {
                     assert.step("mail.activity.schedule");
-                    assert.equal(action.context.active_model, 'res.partner');
+                    assert.equal(action.context.active_model, "res.partner");
                     assert.ok(Number(action.context.active_id));
                     options.onClose();
                     wizardOpened.resolve();
@@ -771,9 +770,7 @@ QUnit.test(
         await openFormView("res.partner");
         await click("button", { text: "Activities" });
         await wizardOpened;
-        assert.verifySteps([
-            "mail.activity.schedule",
-        ]);
+        assert.verifySteps(["mail.activity.schedule"]);
     }
 );
 

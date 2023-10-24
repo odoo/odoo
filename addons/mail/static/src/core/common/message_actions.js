@@ -90,6 +90,14 @@ messageActionsRegistry
                 url: "mail/attachment/zip",
             }),
         sequence: 55,
+    })
+    .add("toggle-translation", {
+        condition: (component) => component.translatable,
+        icon: (component) =>
+            `fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
+        title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
+        onClick: (component) => component.onClickToggleTranslation(),
+        sequence: 100,
     });
 
 function transformAction(component, id, action) {

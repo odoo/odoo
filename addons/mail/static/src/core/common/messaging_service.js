@@ -92,6 +92,7 @@ export class Messaging {
         this.store.odoobotOnboarding = data.odoobotOnboarding;
         this.isReady.resolve(data);
         this.store.isMessagingReady = true;
+        this.store.hasMessageTranslationFeature = data.hasMessageTranslationFeature;
     }
 
     updateImStatusRegistration() {

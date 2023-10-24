@@ -35,6 +35,7 @@ patch(MockServer.prototype, {
                 userSettings.id
             ),
             hasGifPickerFeature: true,
+            hasMessageTranslationFeature: true,
             initBusId: this.lastBusNotificationId,
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),

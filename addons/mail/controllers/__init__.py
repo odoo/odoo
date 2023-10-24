@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import attachment
+from . import google_translate
 from . import guest
 from . import link_preview
 from . import mail
