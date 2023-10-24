@@ -25,7 +25,7 @@ export const BUILTINS = {
                 if (value instanceof Array) {
                     return !!value.length;
                 }
-                return true;
+                return Object.keys(value).length !== 0;
         }
         return true;
     },
