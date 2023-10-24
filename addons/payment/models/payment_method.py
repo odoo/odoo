@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, Command
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -164,6 +165,20 @@ class PaymentMethod(models.Model):
                     ('payment_method_id', 'in', (self + self.brand_ids).ids),
                 ])  # Fix `active_test` in the context forwarded by the view.
                 linked_tokens.active = False
+
+        # Prevent enabling a payment method if it is not linked to an enabled provider.
+        if values.get('active'):
+            for pm in self:
+                primary_pm = pm if pm.is_primary else pm.primary_payment_method_id
+                if (
+                    not primary_pm.active  # Don't bother for already enabled payment methods.
+                    and all(p.state == 'disabled' for p in primary_pm.provider_ids)
+                ):
+                    raise UserError(_(
+                        "This payment method needs a partner in crime; you should enable a payment"
+                        " provider supporting this method first."
+                    ))
+
         return super().write(values)
 
     # === BUSINESS METHODS === #

@@ -89,7 +89,7 @@
         <field name="name">payment.method.tree</field>
         <field name="model">payment.method</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="not active">
+            <tree multi_edit="True" decoration-muted="not active">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active" widget="boolean_toggle"/>
@@ -130,6 +130,10 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" string="Name"/>
+                <filter name="available_pms"
+                        string="Available methods"
+                        domain="[('provider_ids.state', '!=', 'disabled')]"
+                />
             </search>
         </field>
     </record>
@@ -138,12 +142,8 @@
         <field name="name">Payment Methods</field>
         <field name="res_model">payment.method</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[
-            ('is_primary', '=', True),
-            ('provider_ids.state', '!=', 'disabled')
-        ]
-        </field>
-        <field name="context">{'active_test': False}</field>
+        <field name="domain">[('is_primary', '=', True)]</field>
+        <field name="context">{'active_test': False, 'search_default_available_pms': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No payment methods found for your payment providers.
