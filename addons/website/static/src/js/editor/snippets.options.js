@@ -2259,23 +2259,6 @@ options.registry.HeaderLayout = options.registry.WebsiteLevelColor.extend({
     }
 });
 
-options.registry.HeaderExtraElts = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        // TODO Remove in master.
-        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
-        signInOptionEl.dataset.noPreview = 'true';
-    },
-});
-
 options.registry.HeaderNavbar = options.Class.extend({
     /**
      * Particular case: we want the option to be associated on the header navbar
