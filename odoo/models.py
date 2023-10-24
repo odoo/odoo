@@ -2823,7 +2823,7 @@ class BaseModel(metaclass=MetaModel):
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
             if len(sql_field_langs) == 1:
                 return sql_field_langs[0]
-            return SQL(f"COALESCE({', '.join('%s' for _ in sql_field_langs)})", *sql_field_langs)
+            return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
 
         elif field.type == 'properties' and property_name:
             return self._field_properties_to_sql(alias, fname, property_name, query)
@@ -3619,13 +3619,12 @@ class BaseModel(metaclass=MetaModel):
             if not stored_translations:
                 return False
             old_translations = {
-                (_k := f'_{k}'): stored_translations.get(_k, v)
-                for k, v in stored_translations.items()
-                if not k.startswith('_')
+                lang: stored_translations.get(f'_{lang}', val)
+                for lang, val in stored_translations.items()
+                if not lang.startswith('_')
             }
             for lang, translation in translations.items():
-                _lang = '_' + lang
-                old_value = old_translations.get(_lang) or old_translations.get('_en_US')
+                old_value = old_translations.get(lang) or old_translations.get('en_US')
                 if digest:
                     old_terms = field.get_trans_terms(old_value)
                     old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
@@ -3635,7 +3634,7 @@ class BaseModel(metaclass=MetaModel):
                         if key in old_terms_digested2value
                     }
                 stored_translations[lang] = field.translate(translation.get, old_value)
-                stored_translations.pop(_lang, None)
+                stored_translations.pop(f'_{lang}', None)
             field.set_cache(self, stored_translations, dirty=True)
 
         # the following write is incharge of
@@ -5482,29 +5481,26 @@ class BaseModel(metaclass=MetaModel):
                 if not old_stored_translations:
                     continue
                 lang = self.env.lang or 'en_US'
-                if not callable(field.translate):
+                if field.translate is True:
                     new.update_field_translations(name, {
                         k: v for k, v in old_stored_translations.items() if k in valid_langs and k != lang
                     })
                 else:
-                    _lang = '_' + lang
-                    _value = {
-                        (_k := f'_{k}'): old_stored_translations.get(_k, v)
+                    old_translations = {
+                        k: old_stored_translations.get(f'_{k}', v)
                         for k, v in old_stored_translations.items()
-                        if not k.startswith('_')
+                        if k in valid_langs
                     }
-                    # {lang: {old_term: new_term}}
-                    translations = defaultdict(dict)
                     # {from_lang_term: {lang: to_lang_term}
                     translation_dictionary = field.get_translation_dictionary(
-                        _value.pop(_lang, _value['_en_US']),
-                        _value
+                        old_translations.pop(lang, old_translations['en_US']),
+                        old_translations
                     )
+                    # {lang: {old_term: new_term}}
+                    translations = defaultdict(dict)
                     for from_lang_term, to_lang_terms in translation_dictionary.items():
-                        for _lang, to_lang_term in to_lang_terms.items():
-                            lang = _lang[1:]
-                            if lang in valid_langs:
-                                translations[lang][from_lang_term] = to_lang_term
+                        for lang, to_lang_term in to_lang_terms.items():
+                            translations[lang][from_lang_term] = to_lang_term
                     new.update_field_translations(name, translations)
 
     @api.returns('self', lambda value: value.id)
