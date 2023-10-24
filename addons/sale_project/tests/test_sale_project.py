@@ -278,3 +278,56 @@ class TestSaleProject(TransactionCase):
         sale_order.action_confirm()
         self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")
         self.assertNotIn(default_task, sale_order.tasks_ids, "SO should link to the default task from the context")
+
+
+    def test_include_archived_projects_in_stat_btn_related_view(self):
+        """Checks if the project stat-button action includes both archived and active projects."""
+        # Setup
+        project_A = self.env['project.project'].create({'name': 'Project_A'})
+        project_B = self.env['project.project'].create({'name': 'Project_B'})
+
+        product_A = self.env['product.product'].create({
+            'name': 'product A',
+            'list_price': 1.0,
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id':project_A.id,
+        })
+        product_B = self.env['product.product'].create({
+            'name': 'product B',
+            'list_price': 2.0,
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id':project_B.id,
+        })
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine.create({
+            'name': product_A.name,
+            'product_id': product_A.id,
+            'product_uom_qty': 10,
+            'price_unit': product_A.list_price,
+            'order_id': sale_order.id,
+        })
+        SaleOrderLine.create({
+            'name': product_B.name,
+            'product_id': product_B.id,
+            'product_uom_qty': 10,
+            'price_unit': product_B.list_price,
+            'order_id': sale_order.id,
+        })
+
+        # Check if button action includes both projects BEFORE archivization
+        action = sale_order.action_view_project_ids()
+        self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects.")
+
+        # Check if button action includes both projects AFTER archivization
+        project_B.write({'active': False})
+        action = sale_order.action_view_project_ids()
+        self.assertEqual(len(action['domain'][0][2]), 2, "Domain should contain 2 projects. (one archived, one not)")
