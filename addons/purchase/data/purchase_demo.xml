@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <record id="base.user_demo" model="res.users">
-            <field eval="[(3, ref('group_purchase_manager')), (4, ref('group_purchase_user'))]" name="groups_id"/>
+            <field name="groups_id" eval="[(3, ref('purchase.group_purchase_manager'))]"/>
         </record>
 
         <record id="base.res_partner_1" model="res.partner">
