@@ -35,18 +35,24 @@ const { onMounted, onPatched, onWillPatch, onWillUnmount, useComponent } = owl;
  */
 export function useAutofocus(params = {}) {
     const comp = useComponent();
+    const { services } = comp.env;
+
+    let uiService = undefined;
+    if ("ui" in services) {
+        uiService = useService("ui");
+    }
+
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return () => {};
     }
 
-    const uiService = useService("ui");
     const selector = params.selector || "[autofocus]";
     let forceFocusCount = 0;
     useEffect(
         function autofocus() {
             const target = comp.el.querySelector(selector);
-            if (target && uiService.activeElement.contains(target)) {
+            if (target && (!uiService?.activeElement || uiService.activeElement.contains(target))) {
                 target.focus();
                 if (["INPUT", "TEXTAREA"].includes(target.tagName) && target.type !== 'number') {
                     const inputEl = target;
