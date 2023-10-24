@@ -11,9 +11,9 @@ import { POPOVER_SYMBOL, PopoverController } from "./popover_controller";
  *   popoverClass?: string;
  *   animation?: Boolean;
  *   arrow?: Boolean;
- *   position?: import("@web/core/position_hook").Options["position"];
+ *   position?: import("@web/core/position/position_hook").Options["position"];
  *   fixedPosition?: boolean;
- *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
+ *   onPositioned?: import("@web/core/position/position_hook").PositionEventHandler;
  * }} PopoverServiceAddOptions
  */
 
