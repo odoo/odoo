@@ -7,19 +7,10 @@
         padding: 0;
     }
 
-    // Ensure width for size coherency
-    &:not(.btn-link) {
-        min-width: 100px;
-    }
-
     i {
-        &.fa-bell {
-            color: gold;
-            -webkit-text-stroke-width: 0.5px;
-            -webkit-text-stroke-color: black;
-        }
-        &.fa-bell-o {
-            color: black;
+        &.fa-bell,&.fa-bell-o {
+            color: $o-gray-600;
+            -webkit-text-stroke-color: $o-gray-600;
         }
     }
 }
@@ -134,7 +125,6 @@
                     width: 100%;
                     position: absolute;
                     top: 0;
-                    border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
                 }
                 &::after {
                     content: "";

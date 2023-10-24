@@ -9,10 +9,12 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
         'click .o_search_tag .btn': '_onTagRemove',
         'click .o_dropdown_reset_tags': '_onTagReset',
         'change .o_wevent_event_tags_form input': '_onTagAdd',
+        'change .o_wevent_event_tags_mobile_form input': '_onTagAddMobile',
     },
 
     start: function () {
         this.form = this.$el.find('.o_wevent_event_tags_form');
+        this.mobileForm = this.$el.find('.o_wevent_event_tags_mobile_form');
         return this._super.apply(this, arguments);
     },
 
@@ -27,6 +29,10 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
 
     _onTagAdd: function () {
         this.form.submit();
+    },
+
+    _onTagAddMobile: function () {
+        this.mobileForm.submit();
     },
 
     _onTagRemove: function (event) {
