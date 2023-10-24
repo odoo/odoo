@@ -43,6 +43,7 @@ class ResCompany(models.Model):
     account_peppol_migration_key = fields.Char(string="Migration Key")
     account_peppol_phone_number = fields.Char(
         string='Phone number (for validation)',
+        compute='_compute_account_peppol_phone_number', store=True, readonly=False,
         help='You will receive a verification code to this phone number',
     )
     account_peppol_proxy_state = fields.Selection(
@@ -73,7 +74,7 @@ class ResCompany(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
-    def _sanitize_peppol_phone_number(self):
+    def _sanitize_peppol_phone_number(self, phone_number=None):
         self.ensure_one()
 
         error_message = _(
@@ -84,7 +85,10 @@ class ResCompany(models.Model):
         if not phonenumbers:
             raise ValidationError(error_message)
 
-        phone_number = self.account_peppol_phone_number
+        phone_number = phone_number or self.account_peppol_phone_number
+        if not phone_number:
+            return
+
         if not phone_number.startswith('+'):
             phone_number = f'+{phone_number}'
 
@@ -170,6 +174,17 @@ class ResCompany(models.Model):
         for company in self:
             if not company.account_peppol_contact_email:
                 company.account_peppol_contact_email = company.email
+
+    @api.depends('phone')
+    def _compute_account_peppol_phone_number(self):
+        for company in self:
+            if not company.account_peppol_phone_number:
+                try:
+                    # precompute only if it's a valid phone number
+                    company._sanitize_peppol_phone_number(company.phone)
+                    company.account_peppol_phone_number = company.phone
+                except ValidationError:
+                    continue
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
