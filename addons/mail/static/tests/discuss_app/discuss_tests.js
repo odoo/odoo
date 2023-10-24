@@ -1836,3 +1836,62 @@ QUnit.test("Escape key should focus the composer if it's not focused", async () 
     triggerHotkey("escape");
     await contains(".o-mail-Composer-input:focus");
 });
+
+QUnit.test("Notification settings: basic rendering", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("[title='Notification Settings']");
+    await contains("button", { text: "All Messages" });
+    await contains("button", { text: "Mentions Only" });
+    await contains("button", { text: "Nothing" });
+    await click("[title='Mute Channel']");
+    await contains("[title='For 15 minutes']");
+    await contains("[title='For 1 hour']");
+    await contains("[title='For 3 hours']");
+    await contains("[title='For 8 hours']");
+    await contains("[title='For 24 hours']");
+    await contains("[title='Until I turn it back on']");
+});
+
+QUnit.test("Notification settings: mute channel will change the style of sidebar", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
+    await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", {
+        text: "Mario Party",
+        count: 0,
+    });
+    await click("[title='Notification Settings']");
+    await click("[title='Mute Channel']");
+    await click("[title='For 15 minutes']");
+    await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
+    await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", { text: "Mario Party" });
+});
+
+QUnit.test("Notification settings: mute/unmute channel works correctly", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("[title='Notification Settings']");
+    await click("[title='Mute Channel']");
+    await click("[title='For 15 minutes']");
+    await click("[title='Notification Settings']");
+    await contains("span", { text: "Unmute Channel" });
+    await click("button", { text: "Unmute Channel" });
+    await click("[title='Notification Settings']");
+    await contains("span", { text: "Unmute Channel" });
+});

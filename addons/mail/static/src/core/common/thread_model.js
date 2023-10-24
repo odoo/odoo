@@ -92,6 +92,8 @@ export class Thread extends Record {
                 "status",
                 "group_based_subscription",
                 "last_interest_dt",
+                "custom_notifications",
+                "mute_until_dt",
                 "is_editable",
                 "defaultDisplayMode",
             ]);
@@ -250,6 +252,10 @@ export class Thread extends Record {
     last_interest_dt;
     /** @type {Boolean} */
     is_editable;
+    /** @type {false|'mentions'|'no_notif'} */
+    custom_notifications = false;
+    /** @type {String} */
+    mute_until_dt;
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -493,6 +499,13 @@ export class Thread extends Record {
             return undefined;
         }
         return deserializeDateTime(this.last_interest_dt);
+    }
+
+    get muteUntilDateTime() {
+        if (!this.mute_until_dt) {
+            return undefined;
+        }
+        return deserializeDateTime(this.mute_until_dt);
     }
 
     /** @param {import("models").Persona} persona */

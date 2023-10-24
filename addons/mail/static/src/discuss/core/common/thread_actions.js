@@ -4,6 +4,7 @@ import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
+import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
 import { useComponent } from "@odoo/owl";
 
@@ -11,6 +12,45 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 threadActionsRegistry
+    .add("notification-settings", {
+        condition(component) {
+            return component.thread?.model === "discuss.channel" && !component.props.chatWindow;
+        },
+        setup(action) {
+            const component = useComponent();
+            if (!component.props.chatWindow) {
+                action.popover = usePopover(NotificationSettings, {
+                    onClose: () => action.close(),
+                    position: "bottom-end",
+                    fixedPosition: true,
+                    popoverClass: action.panelOuterClass,
+                });
+            }
+        },
+        open(component, action) {
+            action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
+                hasSizeConstraints: true,
+                thread: component.thread,
+            });
+        },
+        close(component, action) {
+            action.popover?.close();
+        },
+        component: NotificationSettings,
+        icon(component) {
+            return component.thread.muteUntilDateTime
+                ? "fa fa-fw text-danger fa-bell-slash"
+                : "fa fa-fw fa-bell";
+        },
+        iconLarge(component) {
+            return component.thread.muteUntilDateTime
+                ? "fa fa-fw fa-lg text-danger fa-bell-slash"
+                : "fa fa-fw fa-lg fa-bell";
+        },
+        name: _t("Notification Settings"),
+        sequence: 5,
+        toggle: true,
+    })
     .add("attachments", {
         condition: (component) =>
             component.thread?.hasAttachmentPanel &&

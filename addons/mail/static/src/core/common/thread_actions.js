@@ -111,9 +111,15 @@ function transformAction(component, id, action) {
             return action.disabledCondition?.(component);
         },
         /** Icon for the button this action. */
-        icon: action.icon,
+        get icon() {
+            return typeof action.icon === "function" ? action.icon(component) : action.icon;
+        },
         /** Large icon for the button this action. */
-        iconLarge: action.iconLarge ?? action.icon,
+        get iconLarge() {
+            return typeof action.iconLarge === "function"
+                ? action.iconLarge(component)
+                : action.iconLarge ?? action.icon;
+        },
         /** Unique id of this action. */
         id,
         /** States whether this action is currently active. */

@@ -175,6 +175,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'general',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': False,
                     'state': 'open',
                     'uuid': self.channel_general.uuid,
@@ -224,6 +226,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 1,
                     'name': 'public channel 1',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_public_1._channel_last_message_ids()),
                     'state': 'open',
                     'uuid': self.channel_channel_public_1.uuid,
@@ -273,6 +277,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'public channel 2',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_public_2._channel_last_message_ids()),
                     'state': 'open',
                     'uuid': self.channel_channel_public_2.uuid,
@@ -322,6 +328,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'group restricted channel 1',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_group_1._channel_last_message_ids()),
                     'state': 'open',
                     'uuid': self.channel_channel_group_1.uuid,
@@ -371,6 +379,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'group restricted channel 2',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_group_2._channel_last_message_ids()),
                     'state': 'open',
                     'uuid': self.channel_channel_group_2.uuid,
@@ -443,6 +453,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': '',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_message_id': False,
                     'seen_partners_info': [
                         {
@@ -529,6 +541,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test14',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
@@ -615,6 +629,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test15',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
@@ -701,6 +717,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test2',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
@@ -787,6 +805,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test3',
                     'rtcSessions': [('ADD', [])],
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'seen_partners_info': [
                         {
                             'fetched_message_id': False,
@@ -870,6 +890,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'last_interest_dt': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'message_needaction_counter': 0,
                     'name': 'test1 Ernest Employee',
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('ADD', [])],
                     'seen_partners_info': [
@@ -948,6 +970,8 @@ class TestDiscussFullPerformance(HttpCase):
                     'last_interest_dt': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'message_needaction_counter': 0,
                     'name': 'anon 2 Ernest Employee',
+                    "custom_notifications": False,
+                    'mute_until_dt': False,
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('ADD', [])],
                     'seen_partners_info': [
