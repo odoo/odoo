@@ -31,25 +31,23 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was already on`,
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-            extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
             run: function () {}, // it's a check
         }]);
     }
     else {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was off`,
-            trigger: 'span.o_wetrack_js_reminder_text:contains("Set Favorite")',
+            trigger: 'div.o_wetrack_js_reminder i.fa-bell-o',
             run: function () {}, // it's a check
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
                 content: "Set Favorite",
-                trigger: 'span.o_wetrack_js_reminder_text',
+                trigger: 'div.o_wetrack_js_reminder',
                 run: 'click',
             }, {
                 content: `Check Favorite for ${talkName} is now on`,
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-                extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
                 run: function () {}, // it's a check
             }]);
         }
@@ -82,8 +80,11 @@ var registerSteps = [{
     content: 'Go on Register',
     trigger: 'a.btn-primary:contains("Register")',
 }, {
+    content: 'Open ticket modal',
+    trigger: 'button.btn-primary:contains("Register")',
+}, {
     content: "Select 2 units of 'Standard' ticket type",
-    trigger: '#o_wevent_tickets_collapse .row:has(.o_wevent_registration_multi_select:contains("Free")) select',
+    trigger: '.o_wevent_ticket_selector select',
     run: 'text 2',
 }, {
     content: "Click on 'Register' button",
@@ -119,7 +120,7 @@ var registerSteps = [{
     trigger: 'a:contains("register to your favorites talks now")',
     run: 'click',
 },  {
-    trigger: 'h1:contains("Book your talks")',
+    trigger: 'h4:contains("Book your talks")',
     run: function() {},
 }];
 
@@ -139,7 +140,7 @@ var browseTalksSteps = [{
     trigger: 'a:contains("Talks")',
 }, {
     content: 'Check we are on the talk list page',
-    trigger: 'h1:contains("Book your talks")',
+    trigger: 'h4:contains("Book your talks")',
     run: function () {} // check
 }];
 
@@ -148,7 +149,7 @@ var browseMeetSteps = [{
     trigger: 'a:contains("Community")',
 }, {
     content: 'Check we are on the community page',
-    trigger: 'span:contains("Join a room")',
+    trigger: 'h3:contains("Join a room")',
     run: function () {} // check
 }];
 

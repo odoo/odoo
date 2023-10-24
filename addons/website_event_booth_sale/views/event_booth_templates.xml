@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
-        <xpath expr="//h5[@name='booth_category_name']" position="after">
+        <xpath expr="//label//span[hasclass('booth_category_price')]" position="replace">
             <t t-if="booth_category.price">
                 <t t-if="(booth_category.price - booth_category.price_reduce) &gt; 0 and website.pricelist_id.discount_policy == 'without_discount'">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
@@ -14,14 +14,14 @@
                          t-field="booth_category.price_incl"
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </t>
-                <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                      t-field="booth_category.price_reduce" class="fw-normal text-muted"
+                <h5 t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                      t-field="booth_category.price_reduce"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                <span t-else=""
-                      t-field="booth_category.price_reduce_taxinc" class="fw-normal text-muted"
+                <h5 t-else=""
+                      t-field="booth_category.price_reduce_taxinc"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
             </t>
-            <span t-else="" class="fw-normal text-muted">Free</span>
+            <h5 t-else="">Free</h5>
         </xpath>
         <xpath expr="//input[@name='booth_category_id']" position="attributes">
             <attribute name="t-att-data-price">
@@ -33,13 +33,11 @@
                 ) or '0'
             </attribute>
         </xpath>
-        <xpath expr="//div[@name='booth_registration_submit']" position="before">
-            <div class="row o_wbooth_booth_total_price d-none">
-                <div class="col-sm-2 offset-sm-1">
-                    <span class="fw-bold">Total</span>
-                </div>
-                <div class="col-sm-6">
-                    <span class="fw-bold" t-out="float(0)"
+        <xpath expr="//button[hasclass('o_wbooth_registration_submit')]" position="before">
+            <div class="o_wbooth_booth_total_price d-none pb-3 text-end">
+                <div class="fw-bold">
+                    <span>Total</span>
+                    <span t-out="float(0)"
                           t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </div>
             </div>

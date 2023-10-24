@@ -35,9 +35,17 @@ function checkPriceEvent(eventName, price) {
             trigger: `.o_wevent_events_list a:contains(${eventName})`,
         },
         {
+            content: "Open the ticket picking modal",
+            trigger: `button:contains("Register")`,
+        },
+        {
             content: "Verify Price",
             trigger: `.oe_currency_value:contains(${price})`,
             run: function () {}, // it's a check
+        },
+        {
+            content: "Open the ticket picking modal",
+            trigger: `.modal-content button:contains("Close")`,
         },
     ]
 }
