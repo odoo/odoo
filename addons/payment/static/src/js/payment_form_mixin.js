@@ -29,9 +29,6 @@
             } else {
                 this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it
             }
-            // When a module wants to activate the button,
-            // it must test its conditions and then call this bus.
-            core.bus.on('enableButton', this, this._enableButton);
         },
 
         //--------------------------------------------------------------------------
@@ -39,25 +36,14 @@
         //--------------------------------------------------------------------------
 
         /**
-         * Disable the submit button.
-         *
-         * The icons are updated to either show that an action is processing or that the button is
-         * not ready, depending on the value of `showLoadingAnimation`.
+         * Disable the payment button.
          *
          * @private
-         * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown
-         * @return {undefined}
+         * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown.
+         * @return {void}
          */
-        _disableButton(showLoadingAnimation = true) {
-            const $submitButton = $('button[name="o_payment_submit_button"]');
-            const iconClass = $submitButton.data('icon-class');
-            $submitButton.attr('disabled', true);
-            if (showLoadingAnimation) {
-                $submitButton.find('i').removeClass(iconClass);
-                $submitButton.prepend(
-                    '<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>'
-                );
-            }
+        _disableButton(showLoadingAnimation = false) {
+            core.bus.trigger('disablePaymentButton', showLoadingAnimation);
         },
 
         /**
@@ -134,23 +120,13 @@
         },
 
         /**
-         * Check if the submit button can be enabled and do it if so.
-         *
-         * The icons are updated to show that the button is ready.
+         * Enable the payment button.
          *
          * @private
-         * @return {boolean} Whether the button was enabled.
+         * @return {void}
          */
         _enableButton: function () {
-            if (this._isButtonReady()) {
-                const $submitButton = this.$('button[name="o_payment_submit_button"]');
-                const iconClass = $submitButton.data('icon-class');
-                $submitButton.attr('disabled', false);
-                $submitButton.find('i').addClass(iconClass);
-                $submitButton.find('span.o_loader').remove();
-                return true;
-            }
-            return false;
+            core.bus.trigger('enablePaymentButton');
         },
 
         /**
@@ -277,28 +253,6 @@
             const $tokenizeCheckboxes = this.$('input[name="o_payment_save_as_token"]');
             $submitButton.addClass('d-none');
             $tokenizeCheckboxes.closest('label').addClass('d-none');
-        },
-
-        /**
-         * Verify that the submit button is ready to be enabled.
-         *
-         * For a module to support a custom behavior for the submit button, it must override this
-         * method and only return true if the result of this method is true and if nothing prevents
-         * enabling the submit button for that custom behavior.
-         *
-         * @private
-         *
-         * @return {boolean} Whether the submit button can be enabled
-         */
-        _isButtonReady: function () {
-            const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
-            if ($checkedRadios.length === 1) {
-                const checkedRadio = $checkedRadios[0];
-                const flow = this._getPaymentFlowFromRadio(checkedRadio);
-                return flow !== 'token' || this.txContext.allowTokenSelection;
-            } else {
-                return false;
-            }
         },
 
         /**
@@ -547,7 +501,7 @@
             this._showInputs();
 
             // Disable the submit button while building the content
-            this._disableButton(false);
+            this._disableButton();
 
             // Unfold and prepare the inline form of selected payment option
             this._displayInlineForm(checkedRadio);
