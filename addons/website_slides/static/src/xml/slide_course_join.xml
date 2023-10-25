@@ -13,18 +13,18 @@
     </t>
 
     <t t-name="slide.course.join.popupContent">
-        <t t-if="widget.invitePreview">
+        <div t-if="widget.invitePreview">
             Please <a t-attf-href="/slides/#{channelId}/identify?invite_partner_id=#{widget.invitePartnerId}&amp;invite_hash=#{widget.inviteHash}">
             <t t-if="widget.isPartnerWithoutUser">create an account</t><t t-else="">login</t>
             </a> to join this course
-        </t>
-        <t t-else="">
+        </div>
+        <div t-else="">
             <t t-if="errorSignupAllowed">
                 Please <a t-attf-href="/web/login?redirect=#{courseUrl}">login</a> or <a t-attf-href="/web/signup?redirect=#{courseUrl}">create an account</a> to join this course
             </t>
             <t t-else="">
                 Please <a t-attf-href="/web/login?redirect=#{courseUrl}">login</a> to join this course
             </t>
-        </t>
+        </div>
     </t>
 </templates>
