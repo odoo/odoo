@@ -70,6 +70,9 @@ $o-cw-popup-avatar-size: 16px;
         }
     }
 // ===============  Generate color classes ===============
+    .card-header {
+        padding-left: 2px;
+    }
 }
 
 @for $i from 1 through length($o-colors-complete) {
@@ -94,7 +97,6 @@ $o-cw-popup-avatar-size: 16px;
         }
 
         .card-header {
-            padding-left: 2px;
             border-color: mix($card-border-color, $color-subtle);
         }
     }
