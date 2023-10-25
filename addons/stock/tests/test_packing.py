@@ -1519,3 +1519,104 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
+
+    def test_package_selection(self):
+        """
+        Test that the package selection is correct when using the least_package_strategy:
+        - Pack 1 -> 10 unit, PAck 2 -> 10 unit, Pack 3 -> 20 unit
+        - SO 1 -> 20 unit, SO 2 -> 10 unit, SO 3 -> 10 unit
+        SO 1 should be in Pack 3, SO 2 in Pack 1 and SO 3 in Pack 2
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+        })
+
+        # Set the removal strategy to 'least_packages'
+        least_package_strategy = self.env['product.removal'].search(
+            [('method', '=', 'least_packages')])
+        product.categ_id.removal_strategy_id = least_package_strategy.id
+        # Create three packages with different quantities: 10, 10 and 20
+        pack_1 = self.env['stock.quant.package'].create({
+            'name': 'Pack 1',
+            'quant_ids': [(0, 0, {
+                'product_id': product.id,
+                'quantity': 10,
+                'location_id': self.stock_location.id,
+            })],
+        })
+        pack_2 = self.env['stock.quant.package'].create({
+            'name': 'Pack 2',
+            'quant_ids': [(0, 0, {
+                'product_id': product.id,
+                'quantity': 10,
+                'location_id': self.stock_location.id,
+            })],
+        })
+        pack_3 = self.env['stock.quant.package'].create({
+            'name': 'Pack 3',
+            'quant_ids': [(0, 0, {
+                'product_id': product.id,
+                'quantity': 20,
+                'location_id': self.stock_location.id,
+            })],
+        })
+        # Create a quant without package to include none element in the selection of the package
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'quantity': 5,
+            'location_id': self.stock_location.id,
+        })
+        # Check that the total quantity of the product is 40
+        self.assertEqual(product.qty_available, 45)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking.id,
+            'product_uom_qty': 20,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking.action_confirm()
+        self.assertEqual(move.move_line_ids.result_package_id, pack_3)
+
+        picking_02 = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move_02 = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_02.id,
+            'product_uom_qty': 10,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_02.action_confirm()
+        self.assertEqual(move_02.move_line_ids.result_package_id, pack_1)
+
+        picking_03 = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move_03 = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_03.id,
+            'product_uom_qty': 10,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_03.action_confirm()
+        self.assertEqual(move_03.move_line_ids.result_package_id, pack_2)

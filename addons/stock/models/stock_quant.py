@@ -605,16 +605,20 @@ class StockQuant(models.Model):
         self._cr.execute(query_str, params)
         qty_by_package = self._cr.fetchall()
 
-        pkg_found = False
         # Items that do not belong to a package are added individually to the list, any empty packages get removed.
-        for idx, elem in enumerate(qty_by_package):
+        pkg_found = False
+        new_qty_by_package = []
+        none_elements = []
+
+        for elem in qty_by_package:
             if elem[0] is None:
-                del qty_by_package[idx]
-                qty_by_package.extend([(None, 1) for _ in range(int(elem[1]))])
-            elif elem[1] == 0:
-                del qty_by_package[idx]
-            else:
+                none_elements.extend([(None, 1) for _ in range(int(elem[1]))])
+            elif elem[1] != 0:
+                new_qty_by_package.append(elem)
                 pkg_found = True
+
+        new_qty_by_package.extend(none_elements)
+        qty_by_package = new_qty_by_package
 
         if not pkg_found:
             return domain
