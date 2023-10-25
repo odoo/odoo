@@ -107,15 +107,19 @@
         margin-left: -$border-width;
     }
 
-    .oe_stat_button, > div > button {
+    .oe_stat_button, 
+    .oe_stat_button > button {
         border-radius: 0;
     }
 
-    .oe_stat_button:first-child, div:first-child > button {
+    > .oe_stat_button:first-child, 
+    > div:first-child > .oe_stat_button {
         @include border-start-radius($border-radius);
     }
 
-    .oe_stat_button:last-child, div:last-child > button {
+    > button.oe_stat_button:last-child, 
+    > div:last-child > .oe_stat_button, 
+    > div.oe_stat_button:last-child > button {
         @include border-end-radius($border-radius);
     }
 
