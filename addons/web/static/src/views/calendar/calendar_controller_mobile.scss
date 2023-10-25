@@ -10,14 +10,15 @@
 
     .o_calendar_container {
         .o_other_calendar_panel {
-            padding: 8px 16px;
-
+            padding: 0 map-get($spacers, 2);
             .fa-filter {
                 min-height: 1.59rem;
                 line-height: 1.59rem;
             }
 
             > .o_filter {
+                padding: map-get($spacers, 2) 0;
+
                 > span > span {
                     font-size: x-small;
                     &:nth-child(1) {
