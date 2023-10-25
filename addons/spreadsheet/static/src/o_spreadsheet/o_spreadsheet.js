@@ -19395,7 +19395,7 @@
                 left: `${x - 1}px`,
                 border: `1px solid ${color}`,
                 "background-color": color,
-                opacity: this.props.active ? "opacity:1 !important" : undefined,
+                opacity: this.props.active ? "1 !important" : undefined,
             });
         }
     }
@@ -39377,11 +39377,19 @@
             }
         }
         getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = new Set();
+            for (const zone of this.gridSelection.zones) {
+                for (const { col, row } of positions(zone)) {
+                    if (this.getters.isRowHidden(sheetId, row) || this.getters.isColHidden(sheetId, col)) {
+                        continue; // Skip hidden cells
+                    }
+                    const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (evaluatedCell.type !== CellValueType.empty) {
+                        cells.add(evaluatedCell);
+                    }
+                }
+            }
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -45525,9 +45533,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.19';
-    __info__.date = '2023-10-19T15:26:28.048Z';
-    __info__.hash = '79980d5';
+    __info__.version = '16.2.20';
+    __info__.date = '2023-10-25T10:10:10.061Z';
+    __info__.hash = '25a402d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
