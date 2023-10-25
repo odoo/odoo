@@ -72,6 +72,7 @@ export function pivotTimeAdapter(groupAggregate) {
  * @property {(normalizedValue: string, step: number) => string} increment
  * @property {(normalizedValue: string, locale: Object) => string} formatValue
  * @property {(locale: Object) => string} getFormat
+ * @property {(normalizedValue: string) => string | number} toCellValue
  */
 
 /**
@@ -102,6 +103,9 @@ const dayAdapter = {
     formatValue(normalizedValue, locale) {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
         return formatValue(value, { locale, format: this.getFormat(locale) });
+    },
+    toCellValue(normalizedValue) {
+        return toNumber(normalizedValue, DEFAULT_LOCALE);
     },
 };
 
@@ -134,6 +138,9 @@ const weekAdapter = {
         const [week, year] = normalizedValue.split("/");
         return sprintf(_t("W%(week)s %(year)s"), { week, year });
     },
+    toCellValue(normalizedValue) {
+        return this.formatValue(normalizedValue);
+    },
 };
 
 /**
@@ -162,6 +169,9 @@ const monthAdapter = {
     formatValue(normalizedValue, locale) {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
         return formatValue(value, { locale, format: this.getFormat(locale) });
+    },
+    toCellValue(normalizedValue) {
+        return toNumber(normalizedValue, DEFAULT_LOCALE);
     },
 };
 
@@ -193,6 +203,9 @@ const quarterAdapter = {
         const [quarter, year] = normalizedValue.split("/");
         return sprintf(_t("Q%(quarter)s %(year)s"), { quarter, year });
     },
+    toCellValue(normalizedValue) {
+        return this.formatValue(normalizedValue);
+    },
 };
 /**
  * @type {PivotTimeAdapter}
@@ -212,6 +225,9 @@ const yearAdapter = {
     },
     formatValue(normalizedValue, locale) {
         return formatValue(normalizedValue, { locale, format: "0" });
+    },
+    toCellValue(normalizedValue) {
+        return normalizedValue;
     },
 };
 
@@ -246,6 +262,12 @@ function falseHandlerDecorator(adapter) {
                 return _t("None");
             }
             return adapter.formatValue(normalizedValue, locale);
+        },
+        toCellValue(normalizedValue) {
+            if (normalizedValue === false) {
+                return _t("None");
+            }
+            return adapter.toCellValue(normalizedValue);
         },
     };
 }
