@@ -3,7 +3,7 @@
     'name': 'Austria - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['at'],
-    'version': '3.0',
+    'version': '3.1',
     'author': 'WT-IO-IT GmbH, Wolfgang Taferner (https://www.wt-io-it.at)',
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
