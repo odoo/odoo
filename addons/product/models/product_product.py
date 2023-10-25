@@ -101,8 +101,6 @@ class ProductProduct(models.Model):
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
     write_date = fields.Datetime(compute='_compute_write_date', store=True)
-    # Properties
-    product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
