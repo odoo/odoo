@@ -300,7 +300,7 @@
                             'default_product_id': parent.product_id,
                         }"/>
                     <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"
-                        placeholder="Write your SN/LN one by one or copy paste a list."
+                        placeholder="e.g. SN001020"
                         column_invisible="parent.has_tracking == 'none' or not parent.show_lots_text"
                         readonly="package_level_id and parent.picking_type_entire_packs"/>
                     <field name="location_dest_id"
