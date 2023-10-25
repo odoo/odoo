@@ -45,32 +45,33 @@ class AccountBalance(models.Model):
 
         for line in move_lines:
             analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
-            analytic_partner_id = analytic_info.partner_id if analytic_info else False
-            partner_name = analytic_partner_id.name if analytic_info else False
-            analytic_account_id = analytic_info.account_id if analytic_info else False
-            analytic_account_name = analytic_account_id.name if analytic_info else False
+            analytic_account_id = analytic_info.account_id if analytic_info else ""
+            analytic_account_name = analytic_account_id.name if analytic_info else ""
+            analytic_account_amount = analytic_info.amount if analytic_info else "",
+            partner_id = line.partner_id.id if line.partner_id else ""
             partner_type = None
-            if analytic_partner_id:
-                partner = analytic_partner_id
+            if line.partner_id:
+                partner = line.partner_id
                 if partner.customer_rank > 0 and partner.supplier_rank > 0:
                     partner_type = 'Customer/Vendor'
                 elif partner.customer_rank > 0:
                     partner_type = 'Customer'
                 elif partner.supplier_rank > 0:
                     partner_type = 'Vendor'
-                else:
-                    partner_type = ''
+
+            else:
+                partner_type = ""
 
             ledger_data.append({
                 'date': line.date,
                 'debit': line.debit,
                 'credit': line.credit,
                 'account_root_id': line.account_root_id.id,
-                'analytic_move_id': analytic_info.id if analytic_info else False,
-                'analytic_account_amount': analytic_info.amount if analytic_info else False,
+                'analytic_move_id': analytic_info.id,
+                'analytic_account_amount': analytic_account_amount,
                 'analytic_account_name': analytic_account_name,
-                'partner_name': partner_name if analytic_info else False,
-                'partner_type': partner_type if analytic_partner_id else False,
+                'partner_id': partner_id,
+                'partner_type': partner_type,
 
             })
 
