@@ -135,6 +135,9 @@ export class QWebPlugin {
     }
     _selectQwebNode(editor) {
         editor.addDomListener(editor.document, 'selectionchange', e => {
+            if (!e.target?.getSelection) {
+                return;
+            }
             const selection = e.target.getSelection();
             const qwebNode = selection.anchorNode && closestElement(selection.anchorNode, '[t-field],[t-esc],[t-out]');
             if (qwebNode){
