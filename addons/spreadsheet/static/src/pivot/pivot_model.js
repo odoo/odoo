@@ -293,13 +293,16 @@ export class SpreadsheetPivotModel extends PivotModel {
     }
 
     /**
-     * Get the label the given field-value
+     * Get the value of a field
+     *
+     * @example
+     * getGroupByCellValue("stage_id", 42) // "Won"
      *
      * @param {string} groupFieldString Name of the field
-     * @param {string} groupValueString Value of the group by
-     * @returns {string}
+     * @param {string | number} groupValueString Value of the group by
+     * @returns {string | number}
      */
-    getGroupByDisplayLabel(groupFieldString, groupValueString, locale = DEFAULT_LOCALE) {
+    getGroupByCellValue(groupFieldString, groupValueString) {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
             return "";
         }
@@ -307,12 +310,8 @@ export class SpreadsheetPivotModel extends PivotModel {
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
         if (this._isDateField(field)) {
-            // TODO include this parsing to the pivot time adapters and extend it to other time periods
-            if (value && aggregateOperator === "day") {
-                return toNumber(value, DEFAULT_LOCALE);
-            }
             const adapter = pivotTimeAdapter(aggregateOperator);
-            return adapter.formatValue(value, locale);
+            return adapter.toCellValue(value);
         }
         if (field.relation) {
             const label = this.metadataRepository.getRecordDisplayName(field.relation, value);
