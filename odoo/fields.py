@@ -3433,7 +3433,7 @@ class Properties(Field):
         if isinstance(value, str):
             value = json.loads(value)
 
-        if isinstance(value, (dict, bool)):
+        if isinstance(value, dict):
             # don't need to write on the container definition
             return super().write(records, value)
 
