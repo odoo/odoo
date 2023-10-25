@@ -73,7 +73,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
                     if (!text) {
                         break;
                     }
-                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
+                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
                     lastUL = false;
                     break;
                 case "h3":
@@ -86,7 +86,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
                         if (!lastUL) {
                             lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
                         }
-                        $("<li class='nav-item'>").append($('<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>').text(text)).appendTo(lastUL);
+                        $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo(lastUL);
                     }
                     break;
             }
