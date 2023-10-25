@@ -595,6 +595,10 @@ QUnit.test("basic rendering of message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        name: "Demo",
+    });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "<p>body</p>",
@@ -607,9 +611,9 @@ QUnit.test("basic rendering of message", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-Message-content", { text: "body" });
     await contains(
-        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128']`
+        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128']`
     );
-    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author", {
+    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author.cursor-pointer", {
         text: "Demo",
     });
     await contains(
