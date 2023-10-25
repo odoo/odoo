@@ -146,28 +146,6 @@ QUnit.test("create method: several records", async (assert) => {
     });
 });
 
-QUnit.test("nameGet method", async (assert) => {
-    const [query, rpc] = makeFakeRPC();
-    serviceRegistry.add("rpc", rpc);
-    const env = await makeTestEnv();
-    const context = { complete: true };
-    await env.services.orm.nameGet("sale.order", [2, 5], { context });
-    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read");
-    assert.deepEqual(query.params, {
-        args: [[2, 5], ["display_name"]],
-        kwargs: {
-            context: {
-                complete: true,
-                lang: "en",
-                tz: "taht",
-                uid: 7,
-            },
-        },
-        method: "read",
-        model: "sale.order",
-    });
-});
-
 QUnit.test("read method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
@@ -309,7 +287,9 @@ QUnit.test("test readGroup method removes duplicate values from groupby", async 
         { offset: 1 }
     );
     assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read_group");
-    assert.deepEqual(query.params.kwargs.groupby, ["date_order:month"],
+    assert.deepEqual(
+        query.params.kwargs.groupby,
+        ["date_order:month"],
         "Duplicate values should be removed from groupby"
     );
 });
