@@ -162,7 +162,7 @@ export class FormCompiler extends ViewCompiler {
                 );
             }
             if (child.tagName === "field") {
-                child.classList.add("d-inline-block", "mb-0");
+                child.classList.add("d-inline-block", "mb-0", "z-index-0");
             }
             append(mainSlot, this.compileNode(child, params, false));
             append(buttonBox, mainSlot);
