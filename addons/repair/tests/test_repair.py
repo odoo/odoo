@@ -280,15 +280,10 @@ class TestRepair(common.TransactionCase):
                 # state == done
                 # move_ids with qty_done (LOWER or HIGHER than) product_uom_qty MUST NOT be splitted
         # Any line with qty_done < product_uom_qty => Warning
-        end_action = repair.action_repair_end()
-        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
-        warn_uncomplete_wizard = Form(
-            self.env['repair.warn.uncomplete.move']
-            .with_context(**end_action['context'])
-            ).save()
+        self.assertTrue(repair.has_uncomplete_moves)
         # LineB : no serial => ValidationError
         with self.assertRaises(ValidationError) as err:
-            warn_uncomplete_wizard.action_validate()
+            repair.action_repair_end()
         self.assertIn("Serial number is required for operation lines", err.exception.args[0])
 
         # LineB with lots
