@@ -92,7 +92,17 @@ export class RecordList extends Array {
                 if (name === "length") {
                     return receiver.data.length;
                 }
-                return Reflect.get(target, name, receiver);
+                if (
+                    typeof name === "symbol" ||
+                    Object.keys(target).includes(name) ||
+                    Object.prototype.hasOwnProperty.call(target.constructor.prototype, name)
+                ) {
+                    return Reflect.get(target, name, receiver);
+                } else {
+                    // Attempt an unimplemented array method call
+                    const array = [...receiver];
+                    return array[name].bind(array);
+                }
             },
             /** @param {RecordList<R>} receiver */
             set(target, name, val, receiver) {
@@ -167,13 +177,6 @@ export class RecordList extends Array {
         }
         return r3;
     }
-    /**
-     * @param {number} index
-     * @returns {R}
-     */
-    at(index) {
-        return this.store.get(this.data.at(index));
-    }
     /** @param {R[]} records */
     push(...records) {
         for (const val of records) {
@@ -225,60 +228,9 @@ export class RecordList extends Array {
         }
         return this.data.length;
     }
-    /**
-     * @param {(a: R, b: R) => boolean} func
-     * @returns {R[]}
-     */
-    map(func) {
-        return this.data.map((localId) => func(this.store.get(localId)));
-    }
-    /**
-     * @param {(a: R, b: R) => boolean} predicate
-     * @returns {R[]}
-     */
-    filter(predicate) {
-        return this.data
-            .filter((localId) => predicate(this.store.get(localId)))
-            .map((localId) => this.store.get(localId));
-    }
-    /** @param {(a: R, b: R) => boolean} predicate */
-    some(predicate) {
-        return this.data.some((localId) => predicate(this.store.get(localId)));
-    }
-    /** @param {(a: R, b: R) => boolean} predicate */
-    every(predicate) {
-        return this.data.every((localId) => predicate(this.store.get(localId)));
-    }
-    /**
-     * @param {(a: R, b: R) => boolean} predicate
-     * @returns {R}
-     */
-    find(predicate) {
-        return this.store.get(this.data.find((localId) => predicate(this.store.get(localId))));
-    }
-    /** @param {(a: R, b: R) => boolean} predicate */
-    findIndex(predicate) {
-        return this.data.findIndex((localId) => predicate(this.store.get(localId)));
-    }
     /** @param {R} record */
     indexOf(record) {
         return this.data.indexOf(record?.localId);
-    }
-    /** @param {R} record */
-    includes(record) {
-        return this.data.includes(record.localId);
-    }
-    /** @param {(acc: any, r: R) => any} fn */
-    reduce(fn, init) {
-        return this.data.reduce((acc, localId) => fn(acc, this.store.get(localId)), init);
-    }
-    /**
-     * @param {number} [start]
-     * @param {number} [end]
-     * @returns {R[]}
-     */
-    slice(start, end) {
-        return this.data.slice(start, end).map((localId) => this.store.get(localId));
     }
     /**
      * @param {number} [start]
@@ -287,7 +239,9 @@ export class RecordList extends Array {
      */
     splice(start, deleteCount, ...newRecords) {
         const oldRecords = this.slice(start, start + deleteCount);
-        this.data.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
+        const list = this.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
+        list.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
+        this.data = list;
         for (const r of oldRecords) {
             r.__uses__.delete(this);
             const { inverse, onDelete } = this.owner.Model._fields[this.name];
