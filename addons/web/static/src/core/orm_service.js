@@ -146,22 +146,6 @@ export class ORM {
     /**
      * @param {string} model
      * @param {number[]} ids
-     * @param {any} [kwargs={}]
-     * @returns {Promise<[number, string][]>}
-     */
-    nameGet(model, ids, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
-        if (!ids.length) {
-            return Promise.resolve([]);
-        }
-        return this.call(model, "read", [ids, ["display_name"]], kwargs).then(
-            (data) => data && data.map(({ id, display_name }) => [id, display_name])
-        );
-    }
-
-    /**
-     * @param {string} model
-     * @param {number[]} ids
      * @param {string[]} fields
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}

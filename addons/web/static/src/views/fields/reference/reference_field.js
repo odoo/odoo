@@ -179,13 +179,13 @@ export class ReferenceField extends Component {
             const { specialDataCaches, orm } = props.record.model;
             const key = `__reference__name_get-${recordData}`;
             if (!specialDataCaches[key]) {
-                specialDataCaches[key] = orm.nameGet(resModel, [resId]);
+                specialDataCaches[key] = orm.read(resModel, [resId], ["display_name"]);
             }
             const result = await specialDataCaches[key];
             return {
                 resId,
                 resModel,
-                displayName: result[0][1],
+                displayName: result[0].display_name,
             };
         }
         return false;
