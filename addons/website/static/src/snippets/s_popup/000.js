@@ -2,7 +2,6 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";
-import dom from "@web/legacy/js/core/dom";
 import {throttleForAnimation} from "@web/core/utils/timing";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 
@@ -281,7 +280,7 @@ const noBackdropPopupWidget = publicWidget.Widget.extend({
         // When there is no backdrop the element with the scrollbar is
         // '.modal-content' (see comments in CSS).
         const modalContent = this.el.querySelector('.modal-content');
-        const isOverflowing = dom.hasScrollableContent(modalContent);
+        const isOverflowing = $(modalContent).hasScrollableContent();
         const modalInstance = window.Modal.getInstance(this.el);
         if (isOverflowing) {
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
