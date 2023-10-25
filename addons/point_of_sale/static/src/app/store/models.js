@@ -1530,7 +1530,10 @@ export class Order extends PosModel {
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
                 this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
-            headerData: this.pos.getReceiptHeaderData(),
+            headerData: {
+                ...this.pos.getReceiptHeaderData(),
+                trackingNumber: this.trackingNumber,
+            },
         };
     }
     // This function send order change to printer
