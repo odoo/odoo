@@ -130,15 +130,16 @@
                             <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday"/>
                             <field name="stop_date" invisible="1" />
                             <field name="stop" invisible="1" />
-                            <div class="d-flex gap-2" colspan="2">
+                            <label for="duration" class="fw-bold text-900 opacity-100"/>
+                            <div class="d-flex gap-2">
                                 <div class="d-flex align-items-start" invisible="allday">
-                                    <label for="duration" class="pe-2 fw-bold text-900" invisible="allday"/>
                                     <field name="duration" widget="float_time" string="Duration" class="oe_inline pe-2" readonly="(id and recurrency) or not user_can_edit"/>
                                     <span> hours</span>
                                 </div>
-                                <div>
-                                    <label for="allday" class="pe-2 fw-bold text-900"/>
-                                    <field name="allday" class="oe_inline" force_save="1" readonly="not user_can_edit" colspan="1"/>
+                                <span invisible="allday" style="white-space: pre;"> or </span>
+                                <div class="d-flex gap-2">
+                                    <label for="allday" class=""/>
+                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" readonly="not user_can_edit"/>
                                 </div>
                             </div>
                             <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
@@ -148,41 +149,38 @@
                             <field name="rrule_type" invisible="1" />
                             <field name="recurrency" />
                             <field name="rrule_type_ui" class="w-auto" invisible="not recurrency" required="recurrency"/>
-                            <div invisible="not recurrency" colspan="2">
-                                <div class="o_row" invisible="rrule_type_ui != 'custom'">
-                                    <label for="interval" class="fw-bold text-900"/>
-                                    <field name="interval" string="Repeat every" class="oe_inline w-auto" />
-                                    <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
-                                </div>
+                            <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
+                            <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
+                                <field name="interval" string="Repeat every" class="oe_inline w-auto" />
+                                <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
                             </div>
-                            <div class="d-flex gap-0" colspan="2" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">
-                                <span class="fw-bold pe-3">Repeat on</span>
-                                <widget name="calendar_week_days" />
-                            </div>
+                            <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
+                            <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')"><widget name="calendar_week_days" /></div>
                             <field name="recurrence_id" invisible="1" />
 
-                            <div class="d-flex gap-2" colspan="2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
-                                <label string="Day of Month" for="month_by" />
-                                <field name="month_by" nolabel="1" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
-                                <field name="day" nolabel="1"
+                            <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
+                            <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
+                                <field name="month_by" nolabel="1" class="oe_inline w-auto" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
+                                <field name="day" nolabel="1" class="oe_inline w-auto"
                                     required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'date'"
                                     invisible="month_by != 'date'"
                                 />
-                                <field name="byday" string="The" nolabel="1"
+                                <field name="byday" string="The" class="oe_inline w-auto" nolabel="1"
                                     required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
                                     invisible="month_by != 'day'"
                                 />
-                                <field name="weekday" nolabel="1"
+                                <field name="weekday" nolabel="1" class="oe_inline w-auto"
                                     required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
                                     invisible="month_by != 'day'"
                                 />
                             </div>
-                            <div class="d-flex gap-2" colspan="2" invisible="not recurrency">
-                                <label string="Until" for="end_type" class="fw-bold text-900"/>
+                            <label string="Until" for="end_type" class="fw-bold text-900" invisible="not recurrency"/>
+                            <div class="d-flex gap-2" invisible="not recurrency">
                                 <field name="end_type" class="oe_inline w-auto" nolabel="1" required="recurrency"/>
                                 <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency"/>
                                 <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'"
                                     required="recurrency and end_type == 'end_date'"
+                                    placeholder="e.g: 12/31/2023"
                                 />
                             </div>
 
@@ -364,7 +362,7 @@
                 <field name="display_description" invisible="1"/>
                 <field name="description" invisible="not display_description" options="{'icon': 'fa fa-bars'}"/>
                 <field name="privacy" invisible="1"/>
-                <field name="res_model_name" invisible="not res_model_name" 
+                <field name="res_model_name" invisible="not res_model_name"
                        options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag'}"/>
