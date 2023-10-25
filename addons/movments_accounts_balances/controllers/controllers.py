@@ -45,6 +45,8 @@ class AccountBalance(models.Model):
 
         for line in move_lines:
             analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
+            analytic_partner_id = analytic_info.partner_id if analytic_info else False
+            partner_name = analytic_partner_id.name if analytic_info else False
             analytic_account_id = analytic_info.account_id if analytic_info else ""
             analytic_account_name = analytic_account_id.name if analytic_info else ""
             analytic_account_amount = analytic_info.amount if analytic_info else "",
