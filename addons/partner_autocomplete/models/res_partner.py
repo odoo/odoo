@@ -12,7 +12,44 @@ from odoo import api, fields, models, tools, _
 _logger = logging.getLogger(__name__)
 
 PARTNER_AC_TIMEOUT = 5
-
+# This list is the counterpart to what is used in the Odoo module `directory_service` in the
+# file `autocomplete_company_sync.py`. They don't need to be a perfect match. The client can
+# already anticipatorily sync VAT numbers that aren't supported upstream, but will be. In
+# this case, the upstream `directory_service` will process them, mark them as unsupported,
+# and keep their records in a dormant state until support is added for those VAT formats.
+SUPPORTED_VAT_PREFIXES = {'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI',
+                          'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
+                          'PT', 'RO', 'SE', 'SI', 'SK', 'XI', 'EU'}
+VAT_COUNTRY_MAPPING = {
+    'AT': 'AT',  # Austria
+    'BE': 'BE',  # Belgium
+    'BG': 'BG',  # Bulgaria
+    'CY': 'CY',  # Cyprus
+    'CZ': 'CZ',  # Czech Republic
+    'DE': 'DE',  # Germany
+    'DK': 'DK',  # Denmark
+    'EE': 'EE',  # Estonia
+    'EL': 'GR',  # Greece
+    'ES': 'ES',  # Spain
+    'FI': 'FI',  # Finland
+    'FR': 'FR',  # France
+    'HR': 'HR',  # Croatia
+    'HU': 'HU',  # Hungary
+    'IE': 'IE',  # Ireland
+    'IT': 'IT',  # Italy
+    'LT': 'LT',  # Lithuania
+    'LU': 'LU',  # Luxembourg
+    'LV': 'LV',  # Latvia
+    'MT': 'MT',  # Malta
+    'NL': 'NL',  # Netherlands
+    'PL': 'PL',  # Poland
+    'PT': 'PT',  # Portugal
+    'RO': 'RO',  # Romania
+    'SE': 'SE',  # Sweden
+    'SI': 'SI',  # Slovenia
+    'SK': 'SK',  # Slovakia
+    'XI': 'GB',  # United Kingdom (Northern Ireland)
+}
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -133,22 +170,21 @@ class ResPartner(models.Model):
         else:
             return []
 
-    @api.model
-    def _is_company_in_europe(self, country_code):
-        country = self.env['res.country'].search([('code', '=ilike', country_code)])
-        if country:
-            country_id = country.id
-            europe = self.env.ref('base.europe')
-            if not europe:
-                europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
-            if not europe or country_id not in europe.country_ids.ids:
-                return False
-        return True
-
     def _is_vat_syncable(self, vat):
+        if not vat:
+            return False
         vat_country_code = vat[:2]
         partner_country_code = self.country_id.code if self.country_id else ''
-        return self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code) or self.check_gst_in(vat)
+
+        # Check if the VAT prefix is supported and corresponds to the partner's country or no country is set
+        is_vat_supported = vat_country_code in SUPPORTED_VAT_PREFIXES and \
+            (partner_country_code == VAT_COUNTRY_MAPPING.get(vat_country_code) or not partner_country_code)
+
+        is_gst = self.check_gst_in(vat)
+        is_partner_in_india = partner_country_code == self.env.ref('base.in').code or not partner_country_code
+        is_country_not_united_states = partner_country_code != self.env.ref('base.us').code
+
+        return (is_vat_supported and is_country_not_united_states) or (is_gst and is_partner_in_india)
 
     def check_gst_in(self, vat):
         # reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
@@ -160,7 +196,7 @@ class ResPartner(models.Model):
                 r'\d{2}[a-zA-Z]{4}[a-zA-Z0-9]\d{4}[a-zA-Z][1-9A-Za-z][DK][0-9a-zA-Z]',  # TDS GSTIN
                 r'\d{2}[a-zA-Z]{5}\d{4}[a-zA-Z][1-9A-Za-z]C[0-9a-zA-Z]'  # TCS GSTIN
             ]
-            return any(re.compile(rx).match(vat) for rx in all_gstin_re)
+            return any(re.match(rx, vat) for rx in all_gstin_re)
         return False
 
     def _is_synchable(self):
