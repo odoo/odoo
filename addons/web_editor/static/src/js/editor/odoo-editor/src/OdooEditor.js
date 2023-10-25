@@ -3161,7 +3161,20 @@ export class OdooEditor extends EventTarget {
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
+<<<<<<< HEAD
 
+||||||| parent of 078add078b92 (temp)
+        if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
+            this._positionToolbar();
+        }
+=======
+        // Remove the animate button appended in the website.
+        const animateButton = this.toolbar.querySelector('.oe-floating .o_we_animate_text');
+        animateButton && animateButton.remove();
+        if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
+            this._positionToolbar();
+        }
+>>>>>>> 078add078b92 (temp)
         // Hide create-link button if selection spans several blocks, always
         // hide on media elements.
         const range = getDeepRange(this.editable, { sel, correctTripleClick: true });
