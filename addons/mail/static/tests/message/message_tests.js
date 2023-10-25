@@ -599,14 +599,20 @@ QUnit.test("basic rendering of message", async (assert) => {
     assert.containsOnce($, ".o-mail-Message:contains(body)");
     const $message = $(".o-mail-Message:contains(body)");
     assert.containsOnce($message, ".o-mail-Message-sidebar");
-    assert.containsOnce($message, ".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
+    assert.containsOnce(
+        $message,
+        ".o-mail-Message-sidebar .o-mail-Message-avatarContainer img.cursor-pointer"
+    );
     assert.hasAttrValue(
         $message.find(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img"),
         "data-src",
         url(`/discuss/channel/${channelId}/partner/${partnerId}/avatar_128`)
     );
     assert.containsOnce($message, ".o-mail-Message-header");
-    assert.containsOnce($message, ".o-mail-Message-header .o-mail-Message-author:contains(Demo)");
+    assert.containsOnce(
+        $message,
+        ".o-mail-Message-header .o-mail-Message-author:contains(Demo).cursor-pointer"
+    );
     assert.containsOnce($message, ".o-mail-Message-header .o-mail-Message-date");
     assert.hasAttrValue(
         $message.find(".o-mail-Message-header .o-mail-Message-date"),
