@@ -323,10 +323,10 @@ export class PropertyValue extends Component {
      * @returns {array} [record id, record name]
      */
     async _nameGet(recordId) {
-        const result = await this.orm.nameGet(this.props.comodel, [recordId], {
+        const result = await this.orm.read(this.props.comodel, [recordId], ["display_name"], {
             context: this.props.context,
         });
-        return result[0];
+        return [result[0].id, result[0].display_name];
     }
 }
 
