@@ -23517,7 +23517,7 @@
                 left: `${x - 1}px`,
                 border: `1px solid ${color}`,
                 "background-color": color,
-                opacity: this.props.active ? "opacity:1 !important" : undefined,
+                opacity: this.props.active ? "1 !important" : undefined,
             });
         }
     }
@@ -43557,11 +43557,19 @@
             }
         }
         getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = new Set();
+            for (const zone of this.gridSelection.zones) {
+                for (const { col, row } of positions(zone)) {
+                    if (this.getters.isRowHidden(sheetId, row) || this.getters.isColHidden(sheetId, col)) {
+                        continue; // Skip hidden cells
+                    }
+                    const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (evaluatedCell.type !== CellValueType.empty) {
+                        cells.add(evaluatedCell);
+                    }
+                }
+            }
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -46145,6 +46153,7 @@
     css /* scss */ `
   .o-border-selector {
     padding: 4px;
+    background-color: white;
   }
   .o-divider {
     border-right: 1px solid #e0e2e4;
@@ -46505,6 +46514,7 @@
     line-height: 1.2;
     font-size: 13px;
     font-weight: 500;
+    background-color: #fff;
 
     .o-topbar-top {
       border-bottom: 1px solid ${SEPARATOR_COLOR};
@@ -50761,9 +50771,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.10';
-    __info__.date = '2023-10-19T15:28:18.011Z';
-    __info__.hash = 'bc7546f';
+    __info__.version = '16.4.11';
+    __info__.date = '2023-10-25T10:11:51.923Z';
+    __info__.hash = 'ae96a3e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
