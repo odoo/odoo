@@ -77,7 +77,7 @@ export class PivotDataSource extends OdooViewsDataSource {
         if (domainArgs.at(-2) === "measure") {
             return this.getMeasureDisplayName(domainArgs.at(-1));
         }
-        return this._model.getGroupByDisplayLabel(
+        return this._model.getGroupByCellValue(
             domainArgs.at(-2),
             this._model.getLastPivotGroupValue(domainArgs)
         );
