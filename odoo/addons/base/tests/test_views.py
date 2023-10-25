@@ -3930,6 +3930,10 @@ class TestValidationTools(common.BaseCase):
             view_validation.get_expression_field_names("(datetime.datetime.combine(context_today(), datetime.time(x,y,z)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')"),
             {'x', 'y', 'z'},
         )
+        self.assertEqual(
+            view_validation.get_expression_field_names("set(field).intersection([1, 2])"),
+            {'field'},
+        )
 
 class TestAccessRights(common.TransactionCase):
 
