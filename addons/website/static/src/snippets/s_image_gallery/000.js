@@ -12,6 +12,14 @@ const GalleryWidget = publicWidget.Widget.extend({
         'click img': '_onClickImg',
     },
 
+    /**
+     * @override
+     */
+    start() {
+        this._super(...arguments);
+        this.originalSources = [...this.el.querySelectorAll("img")].map(img => img.getAttribute("src"));
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -24,13 +32,23 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
-        if (this.$modal || ev.currentTarget.matches("a > img")) {
+        const clickedEl = ev.currentTarget;
+        if (this.$modal || clickedEl.matches("a > img")) {
             return;
         }
         var self = this;
-        var $cur = $(ev.currentTarget);
 
-        var $images = $cur.closest('.s_image_gallery').find('img');
+        let imageEls = this.el.querySelectorAll("img");
+        const currentImageEl = clickedEl.closest("img");
+        const currentImageIndex = [...imageEls].indexOf(currentImageEl);
+        // We need to reset the images to their original source because it might
+        // have been changed by a mouse event (e.g. "hover effect" animation).
+        imageEls = [...imageEls].map((el, i) => {
+            const cloneEl = el.cloneNode(true);
+            cloneEl.src = this.originalSources[i];
+            return cloneEl;
+        });
+
         var size = 0.8;
         var dimensions = {
             min_width: Math.round(window.innerWidth * size * 0.9),
@@ -41,12 +59,10 @@ const GalleryWidget = publicWidget.Widget.extend({
             height: Math.round(window.innerHeight * size)
         };
 
-        var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
-
-        const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
+        const milliseconds = this.el.dataset.interval || false;
         this.$modal = $(renderToElement('website.gallery.slideshow.lightbox', {
-            images: $images.get(),
-            index: $images.index($img),
+            images: imageEls,
+            index: currentImageIndex,
             dim: dimensions,
             interval: milliseconds || 0,
             id: uniqueId("slideshow_"),
