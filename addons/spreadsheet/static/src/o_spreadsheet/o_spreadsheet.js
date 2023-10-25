@@ -20477,7 +20477,7 @@
                 left: `${x - 1}px`,
                 border: `1px solid ${color}`,
                 "background-color": color,
-                opacity: this.props.active ? "opacity:1 !important" : undefined,
+                opacity: this.props.active ? "1 !important" : undefined,
             });
         }
     }
@@ -41549,11 +41549,19 @@
             }
         }
         getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = new Set();
+            for (const zone of this.gridSelection.zones) {
+                for (const { col, row } of positions(zone)) {
+                    if (this.getters.isRowHidden(sheetId, row) || this.getters.isColHidden(sheetId, col)) {
+                        continue; // Skip hidden cells
+                    }
+                    const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (evaluatedCell.type !== CellValueType.empty) {
+                        cells.add(evaluatedCell);
+                    }
+                }
+            }
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -43218,6 +43226,7 @@
     css /* scss */ `
   .o-border-selector {
     padding: 4px;
+    background-color: white;
   }
   .o-divider {
     border-right: 1px solid #e0e2e4;
@@ -47785,9 +47794,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.14';
-    __info__.date = '2023-10-19T15:27:20.911Z';
-    __info__.hash = '7b90b3d';
+    __info__.version = '16.3.15';
+    __info__.date = '2023-10-25T10:10:53.039Z';
+    __info__.hash = 'fb7c4dd';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
