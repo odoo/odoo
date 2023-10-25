@@ -21,13 +21,7 @@ export class MailCoreWeb {
     setup() {
         this.messagingService.isReady.then(() => {
             this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
-                // implicit: failures are sent by the server at
-                // initialization only if the current partner is
-                // author of the message
-                this.store.Message.insert(
-                    messages.map((m) => ({ ...m, author: this.store.user })),
-                    { html: true }
-                );
+                this.store.Message.insert(messages, { html: true });
                 this.store.failures.sort((f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id);
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {

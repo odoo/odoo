@@ -49,13 +49,7 @@ export class MailCoreCommon {
                 }
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {
-                // implicit: failures are sent by the server at
-                // initialization only if the current partner is
-                // author of the message
-                this.store.Message.insert(
-                    payload.elements.map((data) => ({ ...data, author: this.store.self })),
-                    { html: true }
-                );
+                this.store.Message.insert(payload.elements, { html: true });
             });
             this.busService.subscribe("mail.message/toggle_star", (payload) => {
                 const { message_ids: messageIds, starred } = payload;
