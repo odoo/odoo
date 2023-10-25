@@ -39041,11 +39041,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = new Set();
+            for (const zone of this.gridSelection.zones) {
+                for (const { col, row } of positions(zone)) {
+                    if (this.getters.isRowHidden(sheetId, row) || this.getters.isColHidden(sheetId, col)) {
+                        continue; // Skip hidden cells
+                    }
+                    const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (evaluatedCell.type !== CellValueType.empty) {
+                        cells.add(evaluatedCell);
+                    }
+                }
+            }
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -44426,9 +44434,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.24';
-    __info__.date = '2023-10-19T15:25:38.108Z';
-    __info__.hash = '1b9e9d0';
+    __info__.version = '16.1.25';
+    __info__.date = '2023-10-25T10:07:58.129Z';
+    __info__.hash = '708e3d8';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

@@ -841,7 +841,7 @@
   <t t-name="o-spreadsheet-Border" owl="1">
     <div
       class="o-border"
-      t-on-mousedown="onMouseDown"
+      t-on-mousedown.prevent="onMouseDown"
       t-att-style="style"
       t-att-class="{
           'o-moving': props.isMoving,
@@ -856,7 +856,7 @@
   <t t-name="o-spreadsheet-Corner" owl="1">
     <div
       class="o-corner"
-      t-on-mousedown="onMouseDown"
+      t-on-mousedown.prevent="onMouseDown"
       t-att-style="style"
       t-att-class="{
           'o-resizing': props.isResizing,
@@ -3323,7 +3323,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.1.24';
-  __info__.date = '2023-10-19T15:25:40.901Z';
-  __info__.hash = '1b9e9d0';
+  __info__.version = '16.1.25';
+  __info__.date = '2023-10-25T10:08:02.186Z';
+  __info__.hash = '708e3d8';
 -->
