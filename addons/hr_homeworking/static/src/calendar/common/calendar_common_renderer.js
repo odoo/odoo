@@ -93,7 +93,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     onDayRender(info){
         const parsedDate = DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.scale === 'week' || this.props.model.scale === 'day'){
-            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] o_worklocation_text`)
+            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_worklocation_text`)
             const line = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_worklocation_line`)
             if (!button || !line)
                 return;
