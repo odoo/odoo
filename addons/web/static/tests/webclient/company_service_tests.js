@@ -7,12 +7,14 @@ import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { patchWithCleanup } from "../helpers/utils";
+import { fieldService } from "@web/core/field_service";
 
 const serviceRegistry = registry.category("services");
 
 QUnit.module("company service");
 
 QUnit.test("reload webclient when updating a res.company", async (assert) => {
+    serviceRegistry.add("field", fieldService);
     serviceRegistry.add("company", companyService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("action", {
@@ -37,6 +39,7 @@ QUnit.test("reload webclient when updating a res.company", async (assert) => {
 QUnit.test(
     "do not reload webclient when updating a res.company, but there is an error",
     async (assert) => {
+        serviceRegistry.add("field", fieldService);
         serviceRegistry.add("company", companyService);
         serviceRegistry.add("orm", ormService);
         serviceRegistry.add("action", {
@@ -74,6 +77,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
         },
     });
 
+    serviceRegistry.add("field", fieldService);
     serviceRegistry.add("company", companyService);
 
     Object.assign(browser.location, { hash: "cids=3-1" });

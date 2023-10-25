@@ -15,6 +15,7 @@ import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switc
 import { companyService } from "@web/webclient/company_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
+import { fieldService } from "@web/core/field_service";
 
 const serviceRegistry = registry.category("services");
 let target;
@@ -51,6 +52,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
             current_company: 1,
         });
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("field", fieldService);
         serviceRegistry.add("company", companyService);
         serviceRegistry.add("hotkey", hotkeyService);
     });

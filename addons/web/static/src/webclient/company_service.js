@@ -52,8 +52,9 @@ function getCompanyIdsFromBrowser(hash) {
 }
 
 export const companyService = {
-    dependencies: ["user", "router", "action"],
-    start(env, { user, router, action }) {
+    dependencies: ["user", "router", "action", "orm", "field"],
+    async: ["setCompanies"],
+    start(env, { user, router, action, orm, field }) {
         const allowedCompanies = session.user_companies.allowed_companies;
         const disallowedAncestorCompanies = session.user_companies.disallowed_ancestor_companies;
         const allowedCompaniesWithAncestors = {
@@ -103,8 +104,12 @@ export const companyService = {
              * @param {boolean} [includeChildCompanies=true] - If true, will also
              * log into each child of each companyIds (default is true)
              */
-            setCompanies(companyIds, includeChildCompanies = true) {
+            async setCompanies(companyIds, includeChildCompanies = true) {
                 const newCompanyIds = companyIds.length ? companyIds : [activeCompanyIds[0]];
+
+                const currentModel = router.current.hash.model;
+                const currentId = router.current.hash.id;
+                const currentMenu = router.current.hash.menu_id;
 
                 function addCompanies(companyIds) {
                     for (const companyId of companyIds) {
@@ -115,6 +120,21 @@ export const companyService = {
                     }
                 }
 
+                let stayOnCurrentPage = true;
+
+                if (currentModel && currentId && 'company_id' in await field.loadFields(currentModel)) {
+                    try {
+                        await orm.call(
+                            currentModel,
+                            "check_access_rule",
+                            [currentId, "read"],
+                            { context: { allowed_company_ids: newCompanyIds } },
+                        );
+                    } catch {
+                        stayOnCurrentPage = false;
+                    }
+                }
+
                 if (includeChildCompanies) {
                     addCompanies(
                         companyIds.flatMap((companyId) => allowedCompanies[companyId].child_ids)
@@ -122,7 +142,13 @@ export const companyService = {
                 }
 
                 const cidsHash = formatCompanyIds(newCompanyIds, CIDS_HASH_SEPARATOR);
-                router.pushState({ cids: cidsHash }, { lock: true });
+                
+                if (stayOnCurrentPage) {
+                    router.pushState({ cids: cidsHash }, { lock: true });
+                }
+                else {
+                    router.pushState({ cids: cidsHash, menu_id: currentMenu }, { replace: true });
+                }
                 cookie.set("cids", formatCompanyIds(newCompanyIds));
                 browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
             },
