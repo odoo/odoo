@@ -135,7 +135,7 @@ export function getConsumeEventType(element, runCommand) {
  * @param {Node} n2
  * @returns {Node[]}
  */
-function getDifferentParents(n1, n2) {
+export function getDifferentParents(n1, n2) {
     const parents = [n2];
     while (parents[0].parentNode) {
         const parent = parents[0].parentNode;
@@ -168,7 +168,7 @@ export function getScrollParent(element) {
  * @param {boolean} canBubbleAndBeCanceled
  * @param {PointerEventInit} [additionalParams]
  */
-const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additionalParams) => {
+export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additionalParams) => {
     const eventInit = {
         bubbles: canBubbleAndBeCanceled,
         cancelable: canBubbleAndBeCanceled,
