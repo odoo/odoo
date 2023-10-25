@@ -67,11 +67,6 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
 
     def setUp(self):
         super(TestMessagePostCommon, self).setUp()
-        # send tracking and messages + patch registry to simulate a ready environment
-        # purpose is to avoid nondeterministic tests, notably because tracking is
-        # accumulated and sent at flush -> we want to test only the result of a
-        # given test, not setup + test
-        self.flush_tracking()
         # see ``_message_auto_subscribe_notify``
         self.patch(self.env.registry, 'ready', True)
 

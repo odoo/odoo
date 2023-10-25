@@ -62,7 +62,6 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
         super(TestMultiCompanySetup, self).setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
-        self.flush_tracking()
 
     @users('employee_c2')
     @mute_logger('odoo.addons.base.models.ir_rule')

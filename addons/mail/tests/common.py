@@ -687,6 +687,13 @@ class MailCase(MockEmail):
         'no_reset_password': True,
     }
 
+    def setUp(self):
+        super().setUp()
+        # purpose is to avoid nondeterministic tests, notably because tracking is
+        # accumulated and sent at flush -> we want to test only the result of a
+        # given test, not setup + test
+        self.flush_tracking()
+
     @classmethod
     def _reset_mail_context(cls, record):
         return record.with_context(
