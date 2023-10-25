@@ -13,16 +13,10 @@ $o-portal-mobile-toolbar-border: $border-color;
 $o-portal-mobile-toolbar-bg: $gray-200;
 
 // Portal Tables
-$o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
-$o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
-$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
-$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
-
-// Portal custom bg color
-$o-portal-bg-color: desaturate($gray-200, 100%);
-
-// Check if portal uses default colors
-$o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
+$o-portal-table-th-pt: map-get($spacers, 1) !default;
+$o-portal-table-th-pb: map-get($spacers, 1) !default;
+$o-portal-table-td-pt: map-get($spacers, 2) !default;
+$o-portal-table-td-pb: map-get($spacers, 2) !default;
 
 // Frontend general
 body {
@@ -241,15 +235,6 @@ img, .media_iframe_video, .o_image {
     background-color: #149F2C;
 }
 
-// Portal specific
-// ===  Page custom bg ===
-// To be applied to all portal pages if bg-color is white (default).
-@if ($o-portal-use-default-colors) {
-    #wrapwrap.o_portal {
-        @include o-bg-color($o-portal-bg-color, $with-extras: false);
-    }
-}
-
 .o_portal {
     .breadcrumb {
         @extend %o-portal-breadcrumbs;
@@ -271,10 +256,6 @@ img, .media_iframe_video, .o_image {
             padding-right: 0;
             @extend %o-portal-breadcrumbs;
         }
-
-        @if ($o-portal-use-default-colors) {
-            background-color: white!important;
-        }
     }
 
     .o_portal_my_doc_table {
@@ -289,10 +270,6 @@ img, .media_iframe_video, .o_image {
             padding-bottom: $o-portal-table-td-pb;
             max-width: 10rem;
 
-        }
-
-        tr:last-child td {
-            padding-bottom: $o-portal-table-td-pb * 1.5;
         }
 
         td, th {
@@ -341,19 +318,12 @@ img, .media_iframe_video, .o_image {
         }
 
         .fa {
-            @include o-position-absolute(0, $left: 0);
             line-height: $line-height-base;
+            color: $o-gray-500;
 
-            + span, + div, + a {
+            + span, + div {
                 display: block;
-                // FontAwesome '.fa-fw' fixed-with + margin
-                padding-left: 1.28571429em + 0.5em;
             }
-        }
-
-        span[itemprop="email"] {
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
     }
 }
@@ -364,32 +334,7 @@ img, .media_iframe_video, .o_image {
     background-repeat: no-repeat;
 }
 
-.o_portal_contact_img {
-    width: 2.3em;
-    height: 2.3em;
-    object-fit: cover;
-}
-
 .o_portal_sidebar {
-    #sidebar_content.card {
-        border-left: 0;
-        border-bottom: 0;
-
-        > div.card-body {
-            border-left: $border-width solid $border-color;
-        }
-
-        > ul > li {
-            border-left: $border-width solid $border-color;
-            margin-bottom: -1px;
-        }
-
-        > div.card-footer {
-            border-left: $border-width solid $border-color;
-            border-bottom: $border-width solid $border-color;
-        }
-    }
-
     .o_portal_html_view {
         overflow: hidden;
         background: white;
@@ -413,10 +358,8 @@ img, .media_iframe_video, .o_image {
 .o_portal_chatter {
     padding: 10px;
 
-    .o_portal_chatter_avatar {
-        width: 45px;
-        height: 45px;
-        margin-right: 1rem;
+    .o_portal_chatter_avatar{
+        --Avatar-size: 45px;
     }
 
     .o_portal_chatter_header {
@@ -473,25 +416,24 @@ img, .media_iframe_video, .o_image {
     }
 
     .o_portal_message_internal_off {
-        .btn-danger {
+        .o_portal_chatter_visibility_on {
             display: none;
         }
     }
 
     .o_portal_message_internal_on {
-        .btn-success {
+        .o_portal_chatter_visibility_off {
             display: none;
         }
     }
 }
 
 .o_portal_security_body {
-    margin-right: auto;
-    margin-left: auto;
-
-    max-width: map-get($container-max-widths, sm);
     section {
-        margin-top: map-get($spacers, 4);
+        margin-top: map-get($spacers, 5);
+        border-top: $border-width solid $border-color;
+        padding-top: map-get($spacers, 4);
+
         form.oe_reset_password_form {
             max-width: initial;
             margin: initial;

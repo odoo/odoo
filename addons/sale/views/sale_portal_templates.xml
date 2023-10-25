@@ -19,18 +19,28 @@
     </template>
 
     <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+            <t t-set="portal_alert_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_alert_category" position="inside">
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Quotations</t>
-                <t t-set="url" t-value="'/my/quotes'"/>
+                <t t-set="bg_color" t-value="'alert alert-primary'"/>
                 <t t-set="placeholder_count" t-value="'quotation_count'"/>
+                <t t-set="title">Quotations to review</t>
+                <t t-set="url" t-value="'/my/quotes'"/>
+                <t t-set="show_count" t-value="True"/>
             </t>
+        </div>
+        <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
                 <t t-set="title">Sales Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
+                <t t-set="text">Follow, view or pay your orders</t>
                 <t t-set="placeholder_count" t-value="'order_count'"/>
             </t>
-        </xpath>
+        </div>
     </template>
 
     <template id="portal_my_quotations" name="My Quotations">
@@ -40,6 +50,9 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Quotations</t>
             </t>
+            <div t-if="not quotations" class="alert alert-warning" role="alert">
+                There are currently no quotations for your account.
+            </div>
             <t t-if="quotations" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
@@ -56,9 +69,9 @@
                         <td class="text-end"><span t-field="quotation.date_order"/></td>
                         <td class="text-end"><span t-field="quotation.validity_date"/></td>
                         <td class="text-center">
-                            <span t-if="quotation.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
+                            <span t-if="quotation.state == 'cancel'" class="badge rounded-pill text-bg-danger">
                                 <i class="fa fa-fw fa-remove"/> Cancelled</span>
-                            <span t-if="quotation.is_expired" class="badge rounded-pill text-bg-secondary">
+                            <span t-if="quotation.is_expired" class="badge rounded-pill text-bg-danger">
                                 <i class="fa fa-fw fa-clock-o"/> Expired</span>
                         </td>
                         <td class="text-end">
@@ -67,7 +80,6 @@
                     </tr>
                 </t>
             </t>
-            <p t-else="">There are currently no quotations for your account.</p>
         </t>
     </template>
 
@@ -76,8 +88,11 @@
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">Sales Orders</t>
+                <t t-set="title">Your Orders</t>
             </t>
+            <div t-if="not orders" class="alert alert-warning" role="alert">
+                There are currently no sales orders for your account.
+            </div>
             <t t-if="orders" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
@@ -118,40 +133,38 @@
                 <t t-call="portal.portal_back_in_edit_mode"/>
             </t>
 
-            <div class="row mt16 o_portal_sale_sidebar">
+            <div class="row mt-3 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
-                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                    <t t-set="classes" t-value="'d-print-none col-lg-3 col-xl-4'"/>
 
                     <t t-set="title">
-                        <h2 class="mb-0"><b t-field="sale_order.amount_total" data-id="total_amount"/> </h2>
+                        <h2 t-field="sale_order.amount_total" data-id="total_amount"/>
                     </t>
                     <t t-set="entries">
-                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <li class="list-group-item d-grid align-content-start">
-                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary mb8" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+                        <div class="d-flex flex-column gap-4">
+                            <div class="d-flex flex-column gap-1 order-md-last order-lg-first">
+                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary d-block" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'mb8 %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
+                                <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'d-block %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
-                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                    <div class="btn-group flex-grow-1 mb-1">
-                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
-                                    </div>
+                                <div class="o_download_pdf">
+                                    <a class="btn btn-secondary o_print_btn o_portal_invoice_print d-block" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
                                 </div>
-                            </li>
+                            </div>
 
-                            <li class="navspy list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                            <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
                                 <ul class="nav flex-column bs-sidenav"></ul>
-                            </li>
+                            </div>
 
                             <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
-                                <li t-if="sale_order.validity_date" class="list-group-item">
-                                    <small><b class="text-muted">This offer expires on</b></small>
+                                <div t-if="sale_order.validity_date">
+                                    <small><b>This offer expires on</b></small>
                                     <div t-field="sale_order.validity_date"></div>
-                                </li>
-                                <li t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
+                                </div>
+                                <div t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
@@ -167,34 +180,29 @@
                                         <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0" data-id="total_untaxed"/>
                                         <small>(<span t-field="sale_order.amount_total" data-id="total_amount"/> Incl. tax)</small>
                                     </t>
-                                </li>
+                                </div>
                             </t>
 
-                            <li t-if="sale_order.user_id" class="list-group-item flex-grow-1">
-                                <div class="small mb-1">
-                                    <strong class="text-muted">Salesperson</strong>
-                                </div>
-                                <div class="row flex-nowrap">
-                                    <div class="col flex-grow-0 pe-2">
-                                        <img class="rounded-circle mr4 float-start o_portal_contact_img"
-                                            t-att-src="image_data_uri(sale_order.user_id.avatar_1024)"
-                                            alt="Contact"/>
-                                    </div>
-                                    <div class="col ps-0" style="min-width: 150px">
-                                        <span t-field="sale_order.user_id"
-                                            t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
-                                        <a href="#discussion" class="small">
-                                            <i class="fa fa-comment"></i> Send message
-                                        </a>
+                            <div t-if="sale_order.user_id">
+                                <h6><small class="text-muted">Your contact</small></h6>
+                                <div class="o_portal_contact_details d-flex flex-column gap-2">
+                                    <div class="d-flex justify-content-start align-items-center gap-2">
+                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(sale_order.user_id.avatar_1024)" alt="Contact"/>
+                                        <div>
+                                            <h6 class="mb-0" t-out="sale_order.user_id.name"/>
+                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
+                                            Send message
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </t>
                 </t>
 
                 <!-- Page content -->
-                <div id="quote_content" class="col-12 col-lg justify-content-end">
+                <div id="quote_content" class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
 
                     <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept">
@@ -362,12 +370,12 @@
                     </div>
 
                     <!-- main content -->
-                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
+                    <div t-attf-class="#{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
                         <div t-call="#{sale_order._get_name_portal_content_view()}"/>
                     </div>
 
                     <!-- bottom actions -->
-                    <div t-if="sale_order._has_to_be_signed() or sale_order._has_to_be_paid()" class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                    <div t-if="sale_order._has_to_be_signed() or sale_order._has_to_be_paid()" class="d-flex justify-content-center gap-1 d-print-none">
 
                         <t t-if="sale_order._has_to_be_signed()">
                             <div class="col-sm-auto mt8">
@@ -388,8 +396,9 @@
                     </div>
 
                     <!-- chatter -->
-                    <div id="sale_order_communication" class="mt-4">
-                        <h2>History</h2>
+                    <hr/>
+                    <div id="sale_order_communication">
+                        <h4>History</h4>
                         <t t-call="portal.message_thread"/>
                     </div>
                 </div><!-- // #quote_content -->
@@ -404,14 +413,14 @@
     -->
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
         <!-- Intro -->
-        <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+        <div id="introduction" t-attf-class="#{'border-bottom-0 pt-0 pb-3 bg-white' if report_type == 'html' else ''}">
           <h2 class="my-0">
                 <t t-out="sale_order.type_name"/>
                 <em t-out="sale_order.name"/>
             </h2>
         </div>
 
-        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+        <div>
             <!-- Informations -->
             <div id="informations">
                 <div t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
@@ -468,27 +477,27 @@
                 <div t-if="invoices" class="row">
                     <div class="col">
                         <strong class="d-block mb-1">Invoices</strong>
-                        <ul class="list-group mb-4">
+                        <ul class="list-group mb-4 d-flex gap-3">
                             <t t-foreach="invoices" t-as="i">
                                 <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
                                 <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
-                                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                <li class="d-flex flex-column align-items-start">
                                     <div>
                                         <a t-att-href="report_url">
                                             <span t-out="i.name"/>
                                         </a>
-                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
+                                        <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge text-bg-success small orders_label_text_align">
+                                            <i class="fa fa-fw fa-check"/> <b>Paid</b>
+                                        </span>
+                                        <span t-elif="authorized_tx_ids" class="badge text-bg-success small orders_label_text_align">
+                                            <i class="fa fa-fw fa-check"/> <b>Authorized</b>
+                                        </span>
+                                        <span t-else="" class="badge text-bg-primary small orders_label_text_align fw-normal">
+                                            <i class="fa fa-fw fa-clock-o"/>Waiting Payment
+                                        </span>
                                     </div>
-                                    <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-check"/> <b>Paid</b>
-                                    </span>
-                                    <span t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-check"/> <b>Authorized</b>
-                                    </span>
-                                    <span t-else="" class="small badge text-bg-info orders_label_text_align">
-                                        <i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b>
-                                    </span>
-                                </div>
+                                    <div class="d-lg-inline-block small">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
+                                </li>
                             </t>
                         </ul>
                     </div>
@@ -498,20 +507,18 @@
             <section id="details" style="page-break-inside: auto;" class="mt32">
                 <t t-if="product_documents">
                     <h3 id="details">Documents</h3>
-                    <hr class="mt-0 mb-1"/>
-
-                    <div class="row">
+                    <div class="d-flex flex-grow-1 flex-wrap gap-1 mb32">
                         <t t-foreach="product_documents" t-as="document_sudo">
-                            <div class="col-lg-2 col-md-3 col-sm-6">
-                                <div class="mb-2 position-relative text-center">
+                            <div class="bg-light p-2 rounded">
+                                <div class="position-relative text-center">
                                     <t t-set="attachment_sudo" t-value="document_sudo.ir_attachment_id"/>
                                     <t t-set="target" t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"/>
-                                    <a t-att-href="sale_order.get_portal_url('/document/' + str(document_sudo.id))" t-att-target="target">
+                                    <a t-att-href="sale_order.get_portal_url('/document/' + str(document_sudo.id))" t-att-target="target" class="d-flex flex-row">
                                         <div class="o_image"
                                                 t-att-title="attachment_sudo.name"
                                                 t-att-data-mimetype="attachment_sudo.mimetype"
                                                 t-attf-data-src="/web/image/#{attachment_sudo.id}/100x80?access_token=#{attachment_sudo.access_token}"/>
-                                        <div class="o_portal_product_document" t-out="attachment_sudo.name"/>
+                                        <div class="o_portal_product_document align-self-center" t-out="attachment_sudo.name"/>
                                     </a>
                                 </div>
                             </div>
@@ -612,10 +619,8 @@
                     </table>
                 </div>
 
-                <div id="total" class="row" name="total" style="page-break-inside: avoid;">
-                    <div class="col-xs-7 col-md-5 ms-auto">
-                        <t t-call="sale.sale_order_portal_content_totals_table"/>
-                    </div>
+                <div id="total" name="total" style="page-break-inside: avoid;">
+                    <t t-call="sale.sale_order_portal_content_totals_table"/>
                 </div>
             </section>
 
@@ -631,7 +636,6 @@
 
             <section t-if="not is_html_empty(sale_order.note)" id="terms" class="mt-5">
                 <h3 class="">Terms &amp; Conditions</h3>
-                <hr class="mt-0 mb-1"/>
                 <t t-if="sale_order.terms_type == 'html'">
                     <!-- Note is plain text. This ensures a clickable link  -->
                     <t t-set="tc_url" t-value="'%s/terms' % (sale_order.get_base_url())"/>
