@@ -969,7 +969,7 @@ class Cache(object):
             return cache_value
         except KeyError:
             if default is NOTHING:
-                raise CacheMiss(record, field)
+                raise CacheMiss(record, field) from None
             return default
 
     def set(self, record, field, value, dirty=False, check_dirty=True):

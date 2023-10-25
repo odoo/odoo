@@ -1935,7 +1935,7 @@ class IrModelAccess(models.Model):
                 group_info=group_info,
                 resolution_info=resolution_info)
 
-            raise AccessError(msg)
+            raise AccessError(msg) from None
 
         return has_access
 
