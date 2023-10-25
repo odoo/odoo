@@ -16,7 +16,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         this.paymentContext.shippingInfoRequired = !!this.paymentContext['shippingInfoRequired'];
         const expressCheckoutForms = this._getExpressCheckoutForms();
         for (const expressCheckoutForm of expressCheckoutForms) {
-            let providerData = {};
+            const providerData = {};
             Object.assign(providerData, expressCheckoutForm.dataset);
             providerData.paymentMethodsAvailable = JSON.parse(providerData.paymentMethodsAvailable);
             await this._prepareExpressCheckoutForm(providerData);
@@ -86,6 +86,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         this.paymentContext.amount = parseFloat(newAmount);
         this.paymentContext.minorAmount = parseInt(newMinorAmount);
     },
+
 });
 
 export const paymentExpressCheckoutForm = publicWidget.registry.PaymentExpressCheckoutForm;

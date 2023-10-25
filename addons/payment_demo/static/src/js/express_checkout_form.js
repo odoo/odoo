@@ -24,9 +24,9 @@ paymentExpressCheckoutForm.include({
     },
 
     /**
-     * Prepare the express checkout form of Stripe for direct payment.
+     * Prepare the express checkout form of Demo.
      *
-     * @override method from payment.express_form
+     * @override method from @payment/js/express_checkout_form
      * @private
      * @param {Object} providerData - The provider-specific data.
      * @return {void}
@@ -45,7 +45,6 @@ paymentExpressCheckoutForm.include({
         this.paymentContext.paymentMethodId = providerData.paymentMethodsAvailable.find(
             pm => pm.code === 'demo'
         )?.id;
-
         if (this.paymentContext.paymentMethodId) {
             document.querySelector(
                 `#o_demo_express_checkout_container_${providerData.providerId}`

@@ -2,17 +2,15 @@
 <odoo>
 
     <template id="payment.express_checkout" name="Payment Express Checkout">
-        <!-- Variables description:
-            - providers: The payment providers compatible with the current transaction.
+        <!-- Parameters description:
             - reference_prefix: The custom prefix to compute the full transaction reference.
             - amount: The amount to pay.
             - minor_amount: The amount to pay in the minor units of its currency.
-            - currency: The currency of the transaction, as a `res.currency` record.
+            - currency: The currency of the payment, as a `res.currency` record.
+            - providers_sudo: The compatible providers, as a sudoed `payment.provider` recordset.
+            - payment_methods_sudo: The compatible payment methods, as a sudoed `payment.method`
+                                    recordset.
             - merchant_name: The merchant name.
-            - payment_access_token: The access token used to authenticate the partner. Since this
-                                    template is loaded in the shopping cart, this parameter is
-                                    called `payment_access_token` to prevent mixing up with the
-                                    `access_token` used for abandoned carts.
             - shipping_info_required: Whether the shipping information is required or not.
             - transaction_route: The route used to create a transaction when the user clicks Pay.
             - shipping_address_update_route: The route where available carriers are computed based
@@ -20,6 +18,10 @@
                                              Optional.
             - express_checkout_route: The route where the billing and shipping information are sent.
             - landing_route: The route the user is redirected to after the transaction.
+            - payment_access_token: The access token used to authenticate the partner. Since this
+                                    template is loaded in the shopping cart, this parameter is
+                                    called `payment_access_token` to prevent mixing up with the
+                                    `access_token` used for abandoned carts.
         -->
         <form name="o_payment_express_checkout_form" class="container"
               t-att-data-reference-prefix="reference_prefix"
