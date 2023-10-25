@@ -50,7 +50,7 @@
             </div>
 
             <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex justify-content-end p-3 gap-3 bg-view border-top">
-                <button t-if="showQtyButtons and !props.onValidate" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
+                <button t-if="showQtyButtons and !props.onValidate" class="btn btn-primary btn-lg" t-att-class="{ 'disabled': this.isEveryValueSelected() }" t-on-click="addToCart">Add to cart</button>
             </div>
         </div>
     </t>

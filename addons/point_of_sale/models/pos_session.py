@@ -2243,7 +2243,7 @@ class PosSession(models.Model):
             'models_data': self.get_onboarding_data(),
             'successful': allowed,
         }
-    
+
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 

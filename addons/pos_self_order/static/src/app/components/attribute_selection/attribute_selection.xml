@@ -6,12 +6,14 @@
                 <div class="d-flex flex-column">
                     <div t-foreach="this.props.product.attributes" t-as="attribute" t-key="attribute.id">
                         <h2 t-out="attribute.name"/>
-                        <div class="row g-2 g-md-3 g-xl-4 justify-content-between justify-content-md-start row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 row-cols-xxl-6 mb-5">
+                        <div class="row g-2 g-md-3 g-xl-4 justify-content-between justify-content-md-start mb-5 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 row-cols-xxl-6"
+                            t-ref="attribute_grid_{{attribute.id}}">
                             <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
                                 <div class="col">
                                     <label t-attf-for="{{ attribute.id }}_{{ value.id }}"
                                             t-attf-class="self_order_attribute_selection_option {{ this.isChecked(attribute, value) ? 'text-bg-primary border-primary active' : '' }}
-                                            d-flex align-items-center justify-content-center h-100 rounded border ratio ratio-16x9">
+                                            d-flex align-items-center justify-content-center h-100 rounded border ratio ratio-16x9"
+                                            t-ref="value_{{attribute.id}}_{{value.id}}">
                                         <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 p-4 text-center">
                                             <span t-out="value.name"/>
                                             <span t-if="shouldShowPriceExtra(value)">
