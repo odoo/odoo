@@ -318,7 +318,7 @@ var SnippetEditor = Widget.extend({
         // right border as it interferes with proper scrolling. (e.g. modal)
         const handleEReadonlyEl = this.$el[0].querySelector('.o_handle.e.readonly');
         if (handleEReadonlyEl) {
-            handleEReadonlyEl.style.width = dom.hasScrollableContent(targetEl) ? 0 : '';
+            handleEReadonlyEl.style.width = $(targetEl).hasScrollableContent() ? 0 : '';
         }
     },
     /**
@@ -3569,7 +3569,7 @@ var SnippetsMenu = Widget.extend({
         // Don't scroll if $el is added to a visible popup that does not fill
         // the page (otherwise the page would scroll to a random location).
         const modalEl = $el[0].closest('.modal');
-        if (modalEl && !dom.hasScrollableContent(modalEl)) {
+        if (modalEl && !$(modalEl).hasScrollableContent()) {
             return;
         }
         return dom.scrollTo($el[0], {extraOffset: 50, $scrollable: $scrollable});
