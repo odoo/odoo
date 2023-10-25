@@ -676,6 +676,61 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "4/14/2016");
     });
 
+    QUnit.test("PIVOT.HEADER week are correctly formatted at evaluation", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="week" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getEvaluatedCell(model, "B1").format, undefined);
+        assert.strictEqual(getEvaluatedCell(model, "B1").value, "W15 2016");
+        assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "W15 2016");
+    });
+
+    QUnit.test("PIVOT.HEADER month are correctly formatted at evaluation", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getEvaluatedCell(model, "B1").format, "mmmm yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "B1").value, 42461);
+        assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "April 2016");
+    });
+
+    QUnit.test(
+        "PIVOT.HEADER quarter are correctly formatted at evaluation",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="quarter" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+            });
+            assert.strictEqual(getEvaluatedCell(model, "B1").format, undefined);
+            assert.strictEqual(getEvaluatedCell(model, "B1").value, "Q2 2016");
+            assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "Q2 2016");
+        }
+    );
+
+    QUnit.test("PIVOT.HEADER year are correctly formatted at evaluation", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="year" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getEvaluatedCell(model, "B1").format, "0");
+        assert.strictEqual(getEvaluatedCell(model, "B1").value, 2016);
+        assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "2016");
+    });
+
     QUnit.test(
         "PIVOT.HEADER formulas are correctly formatted at evaluation",
         async function (assert) {
