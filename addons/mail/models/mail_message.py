@@ -1135,6 +1135,7 @@ class Message(models.Model):
         the message was successfully sent or if an exception or bounce occurred.
         """
         return [{
+            'author': {'id': message.author_id.id, 'type': "partner"} if message.author_id else False,
             'id': message.id,
             'res_id': message.res_id,
             'model': message.model,
