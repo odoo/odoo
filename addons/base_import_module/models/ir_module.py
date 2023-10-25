@@ -25,6 +25,10 @@ class IrModule(models.Model):
     _inherit = "ir.module.module"
 
     imported = fields.Boolean(string="Imported Module")
+    module_type = fields.Selection([
+        ('official', 'Official Apps'),
+        ('industries', 'Industries'),
+    ], default='official')
 
     def _get_modules_to_load_domain(self):
         # imported modules are not expected to be loaded as regular modules

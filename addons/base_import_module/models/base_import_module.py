@@ -13,6 +13,8 @@ class BaseImportModule(models.TransientModel):
     state = fields.Selection([('init', 'init'), ('done', 'done')], string='Status', readonly=True, default='init')
     import_message = fields.Text()
     force = fields.Boolean(string='Force init', help="Force init mode even if installed. (will update `noupdate='1'` records)")
+    with_demo = fields.Boolean(string='Import demo data of module')
+    modules_dependencies = fields.Text()
 
     def import_module(self):
         self.ensure_one()
