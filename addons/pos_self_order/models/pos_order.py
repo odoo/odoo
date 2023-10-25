@@ -47,7 +47,7 @@ class PosOrder(models.Model):
 
     def _compute_tax_details(self):
         self.ensure_one()
-        taxes = sum([line.tax_ids.compute_all(line.price_unit, quantity=line.qty, product=line.product_id)['taxes']
+        taxes = sum([line.tax_ids.with_company(self.company_id).compute_all(line.price_unit, quantity=line.qty, product=line.product_id)['taxes']
                for line in self.lines], [])
         tax_percetanges = {tax['id']: tax['amount'] for tax in self.env['account.tax'].search([]).read(['amount'])}
         merged_tax_details = {}

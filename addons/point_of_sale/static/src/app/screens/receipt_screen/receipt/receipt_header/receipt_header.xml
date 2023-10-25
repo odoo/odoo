@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.ReceiptHeader">
         <img t-attf-src="/web/image?model=res.company&amp;id={{props.data.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
         <br/>
-        <h1 class="text-center" style="font-size: 100px" t-if="props.data.trackingNumber" t-esc="props.data.trackingNumber" />
+        <h1 class="text-center" style="font-size: 100px" t-if="props.data.trackingNumber and props.data.bigTrackingNumber" t-esc="props.data.trackingNumber" />
         <div class="pos-receipt-contact">
             <!-- contact address -->
             <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
@@ -17,8 +17,11 @@
             <div t-if="props.data.company.website" t-esc="props.data.company.website" />
             <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
             <div t-if="props.data.cashier" class="cashier">
-                    <div>--------------------------------</div>
-                    <div>Served by <t t-esc="props.data.cashier" /></div>
+                <div>--------------------------------</div>
+                <div>Served by <t t-esc="props.data.cashier" /></div>
+            </div>
+            <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
+                Order: <t t-esc="props.data.trackingNumber" />
             </div>
         </div>
         <br /><br />
