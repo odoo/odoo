@@ -654,8 +654,18 @@ class AccountEdiCommon(models.AbstractModel):
                 ('type_tax_use', '=', journal.type),
                 ('amount', '=', amount),
             ]
-            tax_excl = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
-            tax_incl = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
+            most_relevant_tax = self.env['account.move.line'].search([
+                ('partner_id', '=', invoice_line_form.partner_id.id),
+                ('account_id', '=', invoice_line_form.account_id.id),
+                ('tax_ids', '!=', False),
+            ], order='id desc', limit=1).tax_ids.filtered_domain(domain)
+            if most_relevant_tax and most_relevant_tax.price_include:
+                tax_incl = most_relevant_tax
+            elif most_relevant_tax:
+                tax_excl = most_relevant_tax
+            else:
+                tax_excl = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
+                tax_incl = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
             if tax_excl:
                 inv_line_vals['taxes'].append(tax_excl)
             elif tax_incl:
