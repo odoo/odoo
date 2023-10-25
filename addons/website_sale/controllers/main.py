@@ -423,7 +423,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             url = "/shop/category/%s" % slug(category)
 
-        pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
+        pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
         products = search_product[offset:offset + ppg]
 
