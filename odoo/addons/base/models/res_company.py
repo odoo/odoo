@@ -396,16 +396,13 @@ class Company(models.Model):
         return self.browse(self.__accessible_branches())
 
     def _all_branches_selected(self):
-        """Return whether or all the branches of the main company are selected.
+        """Return whether or all the branches of the companies in self are selected.
 
         Is ``True`` if all the branches, and only those, are selected.
-        Can be used when some actions only make sense for a whole company regardless of the
+        Can be used when some actions only make sense for whole companies regardless of the
         branches.
         """
-        return (
-            len(self.env.companies.root_id) == 1
-            and self.env.companies == self.env['res.company'].sudo().search([('id', 'child_of', self.env.company.root_id.ids)])
-        )
+        return self == self.sudo().search([('id', 'child_of', self.root_id.ids)])
 
     def action_all_company_branches(self):
         self.ensure_one()
