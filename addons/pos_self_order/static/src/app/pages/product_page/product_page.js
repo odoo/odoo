@@ -28,6 +28,7 @@ export class ProductPage extends Component {
             qty: 1,
             customer_note: "",
             product: this.props.product,
+            selectedValues: this.env.selectedValues,
         });
 
         this.initState();
@@ -147,5 +148,9 @@ export class ProductPage extends Component {
 
     get showQtyButtons() {
         return this.props.product.self_order_available;
+    }
+
+    isValueSelected() {
+        return Object.values(this.state.selectedValues).find((value) => !value) == false;
     }
 }
