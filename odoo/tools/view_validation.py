@@ -39,6 +39,7 @@ IGNORED_IN_EXPRESSION = {
     'float',
     'str',
     'unicode',
+    'set',
 }
 
 
