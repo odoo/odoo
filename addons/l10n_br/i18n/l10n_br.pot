@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.1alpha1+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 12:22+0000\n"
 "PO-Revision-Date: 2023-01-03 12:22+0000\n"
@@ -74,23 +74,12 @@ msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__tax_discount
-#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template__tax_discount
 msgid "Discount this Tax in Price"
 msgstr ""
 
 #. module: l10n_br
-#: model:account.report.line,name:l10n_br.tax_report_ipi_extrada_com
-msgid "Purchase with Credit Recovery"
-msgstr ""
-
-#. module: l10n_br
-#: model:account.report.line,name:l10n_br.tax_report_ipi_extrada_tributada
-msgid "Purchase taxed at a zero rate"
-msgstr ""
-
-#. module: l10n_br
 #: model:ir.model,name:l10n_br.model_account_fiscal_position
-msgid "Fiscal position"
+msgid "Fiscal Position"
 msgstr ""
 
 #. module: l10n_br
@@ -229,40 +218,22 @@ msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position__l10n_br_fp_type__internal
-#: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position_template__l10n_br_fp_type__internal
-msgid "Internal market"
+msgid "Internal"
 msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_fiscal_position__l10n_br_fp_type
-#: model:ir.model.fields,field_description:l10n_br.field_account_fiscal_position_template__l10n_br_fp_type
 msgid "Interstate Fiscal Position Type"
 msgstr ""
 
 #. module: l10n_br
-#. odoo-python
-#: code:addons/l10n_br/models/res_partner.py:0
-#, python-format
-msgid "Invalid CNPJ. Make sure that all the typs are entered correctly."
-msgstr ""
-
-#. module: l10n_br
-#. odoo-python
-#: code:addons/l10n_br/models/res_partner.py:0
-#, python-format
-msgid "Invalid CNPJ. Make sure that the CNPJ is a 14 digits number."
-msgstr ""
-
-#. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__amount_mva
-#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template__amount_mva
 msgid "MVA Percent"
 msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,help:l10n_br.field_account_tax__tax_discount
-#: model:ir.model.fields,help:l10n_br.field_account_tax_template__tax_discount
-msgid "Mark it for (ICMS, PIS and etc.)."
+msgid "Mark it for (ICMS, PIS e etc.)."
 msgstr ""
 
 #. module: l10n_br
@@ -285,14 +256,7 @@ msgid "Natural Persons Register."
 msgstr ""
 
 #. module: l10n_br
-#: model:account.report.line,name:l10n_br.tax_report_cofins_oper_bas
-#: model:account.report.line,name:l10n_br.tax_report_pis_oper_tri_basica
-msgid "Taxable Transaction with Basic Rate"
-msgstr ""
-
-#. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position__l10n_br_fp_type__interstate
-#: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position_template__l10n_br_fp_type__interstate
 msgid "Other interstate"
 msgstr ""
 
@@ -312,15 +276,24 @@ msgid "PIS tax"
 msgstr ""
 
 #. module: l10n_br
+#: model:account.report.line,name:l10n_br.tax_report_ipi_extrada_tributada
+msgid "Purchase taxed at a zero rate"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.report.line,name:l10n_br.tax_report_ipi_extrada_com
+msgid "Purchase with Credit Recovery"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__base_reduction
-#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template__base_reduction
-msgid "Reduction"
+msgid "Redution"
 msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_res_partner__l10n_br_isuf_code
 #: model:ir.model.fields,field_description:l10n_br.field_res_users__l10n_br_isuf_code
-msgid "SUFRAM code"
+msgid "SUFRAMA code"
 msgstr ""
 
 #. module: l10n_br
@@ -331,20 +304,19 @@ msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position__l10n_br_fp_type__ss_nnm
-#: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position_template__l10n_br_fp_type__ss_nnm
 msgid "South/Southeast selling to North/Northeast/Midwest"
 msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,help:l10n_br.field_res_company__l10n_br_nire_code
-msgid "State Commercial Identification Number. Should contain 11 types."
+msgid "State Commercial Identification Number. Should contain 11 digits."
 msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,help:l10n_br.field_res_company__l10n_br_ie_code
 #: model:ir.model.fields,help:l10n_br.field_res_partner__l10n_br_ie_code
 #: model:ir.model.fields,help:l10n_br.field_res_users__l10n_br_ie_code
-msgid "State Tax Identification Number. Should contain 9-14 types."
+msgid "State Tax Identification Number. Should contain 9-14 digits."
 msgstr ""
 
 #. module: l10n_br
@@ -358,13 +330,9 @@ msgid "Tax Report"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_fiscal_position_template
-msgid "Template for Tax Position"
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_template
-msgid "Templates for Taxes"
+#: model:account.report.line,name:l10n_br.tax_report_cofins_oper_bas
+#: model:account.report.line,name:l10n_br.tax_report_pis_oper_tri_basica
+msgid "Taxable Transaction with Basic Rate"
 msgstr ""
 
 #. module: l10n_br
@@ -380,7 +348,5 @@ msgstr ""
 #. module: l10n_br
 #: model:ir.model.fields,help:l10n_br.field_account_tax__amount_mva
 #: model:ir.model.fields,help:l10n_br.field_account_tax__base_reduction
-#: model:ir.model.fields,help:l10n_br.field_account_tax_template__amount_mva
-#: model:ir.model.fields,help:l10n_br.field_account_tax_template__base_reduction
-msgid "A decimal percentage in % between 0-1."
+msgid "Um percentual decimal em % entre 0-1."
 msgstr ""
