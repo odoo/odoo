@@ -146,6 +146,14 @@ def exec_pg_command_pipe(name, *args):
 # File paths
 #----------------------------------------------------------
 
+def filter_path(file_path, filter_ext=('',)):
+    normalized_path = os.path.normpath(os.path.normcase(file_path))
+
+    if filter_ext and not normalized_path.lower().endswith(filter_ext):
+        raise ValueError("Unsupported file: " + file_path)
+    return normalized_path
+
+
 def file_path(file_path, filter_ext=('',), env=None):
     """Verify that a file exists under a known `addons_path` directory and return its full path.
 
@@ -166,12 +174,10 @@ def file_path(file_path, filter_ext=('',), env=None):
     root_path = os.path.abspath(config['root_path'])
     addons_paths = odoo.addons.__path__ + [root_path]
     if env and hasattr(env.transaction, '__file_open_tmp_paths'):
-        addons_paths += env.transaction.__file_open_tmp_paths
+        # only accessing the temporary directory
+        addons_paths = env.transaction.__file_open_tmp_paths
     is_abs = os.path.isabs(file_path)
-    normalized_path = os.path.normpath(os.path.normcase(file_path))
-
-    if filter_ext and not normalized_path.lower().endswith(filter_ext):
-        raise ValueError("Unsupported file: " + file_path)
+    normalized_path = filter_path(file_path, filter_ext=filter_ext)
 
     # ignore leading 'addons/' if present, it's the final component of root_path, but
     # may sometimes be included in relative paths
@@ -232,23 +238,39 @@ def file_open_temporary_directory(env):
 
     Examples::
 
-        >>> with odoo.tools.file_open_temporary_directory(self.env) as module_dir:
+        >>> with odoo.tools.file_open_temporary_directory(self.env) as manager:
         ...    with zipfile.ZipFile('foo.zip', 'r') as z:
-        ...        z.extract('foo/__manifest__.py', module_dir)
-        ...    with odoo.tools.file_open('foo/__manifest__.py', env=self.env) as f:
+        ...        z.extract('foo/__manifest__.py', manager.tmp_path)
+        ...    with manager.file_open('foo/__manifest__.py') as f:
         ...        manifest = f.read()
 
     :param env: environment for which the temporary directory is created.
     :return: the absolute path to the created temporary directory
     """
-    assert not hasattr(env.transaction, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
-    with tempfile.TemporaryDirectory() as module_dir:
+    with tempfile.TemporaryDirectory() as tmp_path:
+        assert not hasattr(env.transaction, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
         try:
-            env.transaction.__file_open_tmp_paths = (module_dir,)
-            yield module_dir
+            env.transaction.__file_open_tmp_paths = (tmp_path,)
+            yield FileOpenManager(tmp_path, env)
         finally:
             del env.transaction.__file_open_tmp_paths
 
+
+class FileOpenManager:
+
+    def __init__(self, tmp_path, env):
+        self.env = env
+        self.tmp_path = tmp_path
+
+    def file_open(self, name, mode="r", filter_ext=None):
+        if any(letter in mode for letter in 'aw+') and 'x' not in mode:
+            # creating a new file should only check the existance of the parent
+            dirname, filename = os.path.split(name)
+            path = os.path.join(file_path(dirname, env=self.env), filename)
+            path = filter_path(path, filter_ext=filter_ext)
+            open(path, 'a').close()
+
+        return file_open(name=name, mode=mode, filter_ext=filter_ext, env=self.env)
 
 #----------------------------------------------------------
 # iterables
