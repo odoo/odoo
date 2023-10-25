@@ -6,9 +6,9 @@ import platform
 import psutil
 import unittest
 
+from odoo.api import NOTHING
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.exceptions import CacheMiss
-from odoo.tests.common import TransactionCase
+
 
 
 class TestRecordCache(TransactionCaseWithUserDemo):
@@ -23,14 +23,14 @@ class TestRecordCache(TransactionCaseWithUserDemo):
 
         def check1(record, field, value):
             # value is None means no value in cache
-            self.assertEqual(cache.contains(record, field), value is not None)
-            try:
-                self.assertEqual(cache.get(record, field), value)
+            context_key = record.env.cache_key(field)
+            self.assertEqual(cache.contains(field, context_key, record.id), value is not None)
+            cache_value = cache.get(field, context_key, record._ids[0])
+            if cache_value is not NOTHING:
+                self.assertEqual(cache_value, value)
                 self.assertIsNotNone(value)
-            except CacheMiss:
-                self.assertIsNone(value)
-            self.assertEqual(field in cache.get_fields(record), value is not None)
-            self.assertEqual(record in cache.get_records(record, field), value is not None)
+            self.assertEqual(field.name in record._cache, value is not None)
+            self.assertEqual(record.id in cache._get_field_cache(field, context_key), value is not None)
 
         def check(record, name_val, ref_val):
             """ check the values of fields 'name' and 'ref' on record. """
@@ -48,41 +48,41 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         check(bar1, None, None)
         check(bar2, None, None)
 
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [1, 2])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1, 2])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo1 + bar1)._ids), [1, 2])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo2 + bar2)._ids), [1, 2])
 
         # set values in one environment only
-        cache.set(foo1, name, 'FOO1_NAME')
-        cache.set(foo1, ref, 'FOO1_REF')
-        cache.set(bar1, name, 'BAR1_NAME')
-        cache.set(bar1, ref, 'BAR1_REF')
+        cache.set(name, foo1.env.cache_key(name), foo1.id, 'FOO1_NAME')
+        cache.set(ref, foo1.env.cache_key(ref), foo1.id, 'FOO1_REF')
+        cache.set(name, bar1.env.cache_key(name), bar1.id, 'BAR1_NAME')
+        cache.set(ref, bar1.env.cache_key(ref), bar1.id, 'BAR1_REF')
         check(foo1, 'FOO1_NAME', 'FOO1_REF')
         check(foo2, 'FOO1_NAME', 'FOO1_REF')
         check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, 'BAR1_NAME', 'BAR1_REF')
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo1 + bar1)._ids), [])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo2 + bar2)._ids), [])
 
         # set values in both environments
-        cache.set(foo2, name, 'FOO2_NAME')
-        cache.set(foo2, ref, 'FOO2_REF')
-        cache.set(bar2, name, 'BAR2_NAME')
-        cache.set(bar2, ref, 'BAR2_REF')
+        cache.set(name, foo2.env.cache_key(name), foo2.id, 'FOO2_NAME')
+        cache.set(ref, foo2.env.cache_key(ref), foo2.id, 'FOO2_REF')
+        cache.set(name, bar2.env.cache_key(name), bar2.id, 'BAR2_NAME')
+        cache.set(ref, bar2.env.cache_key(ref), bar2.id, 'BAR2_REF')
         check(foo1, 'FOO2_NAME', 'FOO2_REF')
         check(foo2, 'FOO2_NAME', 'FOO2_REF')
         check(bar1, 'BAR2_NAME', 'BAR2_REF')
         check(bar2, 'BAR2_NAME', 'BAR2_REF')
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo1 + bar1)._ids), [])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo2 + bar2)._ids), [])
 
         # remove value in one environment
-        cache.remove(foo1, name)
+        cache.remove(name, foo1.env.cache_key(name), foo1.id)
         check(foo1, None, 'FOO2_REF')
         check(foo2, None, 'FOO2_REF')
         check(bar1, 'BAR2_NAME', 'BAR2_REF')
         check(bar2, 'BAR2_NAME', 'BAR2_REF')
-        self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [1])
-        self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo1 + bar1)._ids), [1])
+        self.assertCountEqual(cache.get_missing_ids(name, foo1.env.cache_key(name), (foo2 + bar2)._ids), [1])
 
         # partial invalidation
         cache.invalidate([(name, None), (ref, foo1.ids)])
@@ -107,8 +107,9 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         NB_RECORDS = 100000
         MAX_MEMORY = 100
 
-        cache = self.env.cache
-        model = self.env['res.partner']
+        env = self.env
+        cache = env.cache
+        model = env['res.partner']
         records = [model.new() for index in range(NB_RECORDS)]
 
         process = psutil.Process(os.getpid())
@@ -120,8 +121,9 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         ]
         for name in char_names:
             field = model._fields[name]
+            context_key = env.cache_key(field)
             for record in records:
-                cache.set(record, field, 'test')
+                cache.set(field, context_key, record._ids[0], 'test')
 
         mem_usage = process.memory_info().rss - rss0
         self.assertLess(

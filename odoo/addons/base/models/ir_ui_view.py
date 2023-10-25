@@ -214,7 +214,7 @@ actual arch.
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
-    @api.depends_context('read_arch_from_file', 'lang', 'edit_translations')
+    @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -628,8 +628,8 @@ actual arch.
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
-        self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
-        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
+        type(self).inherit_id.update_cache(views, [row[1] for row in rows])
+        type(self).mode.update_cache(views, [row[2] for row in rows])
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.

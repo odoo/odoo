@@ -441,8 +441,8 @@ class AccountMoveLine(models.Model):
     def _compute_display_type(self):
         for line in self.filtered(lambda l: not l.display_type):
             # avoid cyclic dependencies with _compute_account_id
-            account_set = self.env.cache.contains(line, line._fields['account_id'])
-            tax_set = self.env.cache.contains(line, line._fields['tax_line_id'])
+            account_set = 'account_id' in line._cache
+            tax_set = 'tax_line_id' in line._cache
             line.display_type = (
                 'tax' if tax_set and line.tax_line_id else
                 'payment_term' if account_set and line.account_id.account_type in ['asset_receivable', 'liability_payable'] else
@@ -1302,8 +1302,7 @@ class AccountMoveLine(models.Model):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
-            lines = self.env.cache.get_records(self, field)
-            move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
+            move_ids = {id_ for id_ in field.get_cache_mapping(self.env).values() if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_model(fnames, flush)
@@ -1311,8 +1310,7 @@ class AccountMoveLine(models.Model):
     def invalidate_recordset(self, fnames=None, flush=True):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
-            field = self._fields['move_id']
-            move_ids = {id_ for id_ in self.env.cache.get_values(self, field) if id_}
+            move_ids = {id_ for record in self if (id_ := record._cache.get('move_id'))}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_recordset(fnames, flush)

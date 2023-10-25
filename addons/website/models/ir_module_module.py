@@ -199,21 +199,26 @@ class IrModuleModule(models.Model):
             if dst_mname != new_rec._name:
                 continue
             old_field = old_rec._fields[src_fname]
-            old_translations = {
-                lang: value
-                for lang, value in old_field._get_stored_translations(old_rec).items()
-                if lang in valid_langs
-            }
-            if not old_translations:
+            old_stored_translations = old_field._get_stored_translations(old_rec)
+            if not old_stored_translations:
                 continue
-            if not callable(old_field.translate):
-                if old_rec[src_fname] == new_rec[dst_fname]:
-                    new_rec.update_field_translations(dst_fname, old_translations)
+            if old_field.translate is True:
+                if old_rec[src_fname] != new_rec[dst_fname]:
+                    continue
+                new_rec.update_field_translations(dst_fname, {
+                    k: v for k, v in old_stored_translations.items() if k in valid_langs and k != cur_lang
+                })
             else:
-                old_translation_lang = old_translations.get(cur_lang) or old_translations.get('en_US')
+                old_translations = {
+                    k: old_stored_translations.get(f'_{k}', v)
+                    for k, v in old_stored_translations.items()
+                    if k in valid_langs
+                }
                 # {from_lang_term: {lang: to_lang_term}
-                translation_dictionary = old_field.get_translation_dictionary(old_translation_lang, {
-                    lang: value for lang, value in old_translations.items() if lang != cur_lang})
+                translation_dictionary = old_field.get_translation_dictionary(
+                    old_translations.pop(cur_lang, old_translations['en_US']),
+                    old_translations
+                )
                 # {lang: {old_term: new_term}
                 translations = defaultdict(dict)
                 for from_lang_term, to_lang_terms in translation_dictionary.items():
@@ -529,7 +534,7 @@ class IrModuleModule(models.Model):
             for lang in langs_update:
                 specific_arch_db[lang] = field.translate(
                     lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
-            cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
+            field.set_cache(View.browse(specific_id), specific_arch_db, dirty=True)
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:

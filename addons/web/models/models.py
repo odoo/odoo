@@ -964,7 +964,7 @@ class Base(models.AbstractModel):
                         field.convert_to_cache(line[field_name], new_line, validate=False)
                         for new_line, line in zip(new_lines, lines)
                     ]
-                    cache.update(new_lines, field, line_values)
+                    field.update_cache(new_lines, line_values)
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that

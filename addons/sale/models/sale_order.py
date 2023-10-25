@@ -1408,7 +1408,7 @@ class SaleOrder(models.Model):
         if (len(self) == 1
             # The method _track_finalize is sometimes called too early or too late and it
             # might cause a desynchronization with the cache, thus this condition is needed.
-            and self.env.cache.contains(self, self._fields['state']) and self.state == 'draft'):
+            and 'state' in self._cache and self.state == 'draft'):
             self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
             self.env.flush_all()
             return

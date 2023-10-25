@@ -80,18 +80,6 @@ class AccessError(UserError):
     """
 
 
-class CacheMiss(KeyError):
-    """Missing value(s) in cache.
-
-    .. admonition:: Example
-
-        When you try to read a value in a flushed cache.
-    """
-
-    def __init__(self, record, field):
-        super().__init__("%r.%s" % (record, field.name))
-
-
 class MissingError(UserError):
     """Missing record(s).
 
