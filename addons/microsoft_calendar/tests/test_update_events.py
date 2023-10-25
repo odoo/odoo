@@ -5,12 +5,14 @@ import logging
 import pytz
 from unittest.mock import patch, ANY
 
+from odoo import Command
+
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future, patch_api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -1296,7 +1298,7 @@ class TestUpdateEvents(TestCommon):
         self.assertFalse(self.env.user.microsoft_synchronization_stopped)
 
         # Simulate upgrade of a simple event to recurrent event (forbidden).
-        simple_event = self.env['calendar.event'].create(self.simple_event_values)
+        simple_event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
         with self.assertRaises(UserError):
             simple_event.write({
                 'recurrency': True,
@@ -1314,3 +1316,59 @@ class TestUpdateEvents(TestCommon):
 
         # Assert that no patch call was made due to the recurrence update forbiddance.
         mock_patch.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'delete')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_changing_event_organizer_to_another_user(self, mock_insert, mock_delete, mock_get_events):
+        """
+        Allow editing the event organizer to another user only if the proposed organizer have its Odoo Calendar synced.
+        The current event is deleted and then recreated with the new organizer.
+        An event with organizer as user A (self.organizer_user) will have its organizer changed to user B (self.attendee_user).
+        """
+        # Create event with organizer as user A and only the organizer as attendee.
+        self.assertTrue(self.env['calendar.event'].with_user(self.attendee_user)._check_microsoft_sync_status())
+        self.simple_event_values['user_id'] = self.organizer_user.id
+        self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id])]
+        event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+
+        # Deactivate user B's calendar synchronization. Try changing the event organizer to user B.
+        # A ValidationError must be thrown because user B's calendar is not synced.
+        self.attendee_user.microsoft_synchronization_stopped = True
+        with self.assertRaises(ValidationError):
+            event.with_user(self.organizer_user).write({'user_id': self.attendee_user.id})
+
+        # Activate user B's calendar synchronization and try again without listing user B as an attendee.
+        # Another ValidationError must be thrown.
+        self.attendee_user.microsoft_synchronization_stopped = False
+        with self.assertRaises(ValidationError):
+            event.with_user(self.organizer_user).write({'user_id': self.attendee_user.id})
+
+        # Set mock return values for the event re-creation.
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_get_events.return_value = ([], None)
+
+        # Change the event organizer: user B (the organizer) is synced and now listed as an attendee.
+        event.ms_universal_event_id = "test_id_for_event"
+        event.ms_organizer_event_id = "test_id_for_organizer"
+        event.with_user(self.organizer_user).write({
+            'user_id': self.attendee_user.id,
+            'partner_ids': [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])]
+        })
+        new_event = self.env["calendar.event"].search([("id", ">", event.id)])
+        self.call_post_commit_hooks()
+        new_event.invalidate_recordset()
+
+        # Ensure that the event was deleted and recreated with the new organizer and the organizer listed as attendee.
+        mock_delete.assert_any_call(
+            event.ms_organizer_event_id,
+            token=mock_get_token(self.attendee_user),
+            timeout=ANY,
+        )
+        self.assertEqual(len(new_event), 1, "A single event should be created after updating the organizer.")
+        self.assertEqual(new_event.user_id, self.attendee_user,
+                         "The event organizer must be user B (self.attendee_user) after the event organizer update.")
+        self.assertTrue(self.attendee_user.partner_id.id in new_event.partner_ids.ids,
+                        "User B (self.attendee_user) should be listed as attendee after the event organizer update.")
