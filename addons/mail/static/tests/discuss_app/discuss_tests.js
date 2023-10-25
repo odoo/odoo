@@ -1950,3 +1950,42 @@ QUnit.test(
         assert.verifySteps(["Second RPC"]);
     }
 );
+
+QUnit.test("Newly created chat should be at the top of the direct message list", async () => {
+    const pyEnv = await startServer();
+    const [userId1, userId2] = pyEnv["res.users"].create([
+        { name: "Jerry Golay" },
+        { name: "Albert" }
+    ]);
+    const [partnerId1] = pyEnv["res.partner"].create([
+        {
+            name: "Albert",
+            user_ids: [userId2],
+        },
+        {
+            name: "Jerry Golay",
+            user_ids: [userId1],
+        }
+    ]);
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                is_pinned: true,
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: pyEnv.currentPartnerId,
+            }),
+            Command.create({ partner_id: partnerId1 }),
+        ],
+        channel_type: "chat",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussCategory-add[title='Start a conversation']");
+    await insertText(".o-discuss-ChannelSelector input", "Jer");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Jerry Golay",
+        before: [".o-mail-DiscussCategoryItem", { text: "Albert" }]
+    });
+});

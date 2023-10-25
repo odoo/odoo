@@ -566,11 +566,13 @@ export class ThreadService {
         const data = await this.orm.call("discuss.channel", "channel_get", [], {
             partners_to: [id],
         });
-        return this.insert({
+        const thread = this.insert({
             ...data,
             model: "discuss.channel",
             type: "chat",
         });
+        this.sortChannels();
+        return thread;
     }
 
     executeCommand(thread, command, body = "") {
