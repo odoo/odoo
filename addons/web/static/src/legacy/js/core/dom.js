@@ -140,13 +140,6 @@ var dom = {
         return $results;
     },
     /**
-     * @param {HTMLElement} el
-     * @returns {boolean}
-     */
-    hasScrollableContent(el) {
-        return $(el).hasScrollableContent();
-    },
-    /**
      * Protects a function which is to be used as a handler by preventing its
      * execution for the duration of a previous call to it (including async
      * parts of that call).
