@@ -44,7 +44,7 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <field name="category_id" position="after">
-                <field name="l10n_ar_afip_responsibility_type_id" invisible="'AR' not in fiscal_country_codes"/>
+                <field name="l10n_ar_afip_responsibility_type_id"/>
             </field>
             <filter name="salesperson" position="before">
                 <filter string="AFIP Responsibility Type" name="l10n_ar_afip_responsibility_type_id_filter" context="{'group_by': 'l10n_ar_afip_responsibility_type_id'}"/>
