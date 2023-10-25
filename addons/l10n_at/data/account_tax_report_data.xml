@@ -13,6 +13,49 @@
             </record>
         </field>
         <field name="line_ids">
+            <record id="tax_report_line_l10n_at_non_tva_sale_report_title" model="account.report.line">
+                <field name="name">3. Aufschlüsselung für die Zusammenfassende Meldung (ZM)</field>
+                <field name="sequence" eval="5"/>
+                <field name="aggregation_formula">(AT_ZM_IGL.balance + AT_ZM_IGL3.balance + AT_ZM_DL.balance)</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_igl" model="account.report.line">
+                        <field name="name">Innergemeinschaftliche Lieferungen</field>
+                        <field name="code">AT_ZM_IGL</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_l10n_at_tva_line_3_zm_igl_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AT_ZM_IGL</field>
+                            </record>
+                        </field>
+                        <field name="sequence" eval="10"/>
+                    </record>
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_igl3" model="account.report.line">
+                        <field name="name">Innergemeinschaftliche Lieferungen (Dreiecksgeschäfte)</field>
+                        <field name="code">AT_ZM_IGL3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_l10n_at_tva_line_3_zm_igl3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AT_ZM_IGL3</field>
+                            </record>
+                        </field>
+                        <field name="sequence" eval="20"/>
+                    </record>
+                    <record id="tax_report_line_l10n_at_tva_line_3_zm_dl" model="account.report.line">
+                        <field name="name">Grenzüberschreitende Dienstleistungen (Sonstige Leistungen)</field>
+                        <field name="code">AT_ZM_DL</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_l10n_at_tva_line_3_zm_dl_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AT_ZM_DL</field>
+                            </record>
+                        </field>
+                        <field name="sequence" eval="30"/>
+                    </record>
+                </field>
+            </record>
             <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.report.line">
                 <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
                 <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance)</field>
