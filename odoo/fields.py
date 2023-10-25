@@ -1200,7 +1200,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 record._fetch_field(self)
             context_key = record.env.cache_key(self)
             validator = self._get_translation_validator(self._lang(record.env)) if self.translate else None
-            if not env.cache.contains(self, context_key, record._ids, validator=validator):
+            if not env.cache.contains(self, context_key, record._ids[0], validator=validator):
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
                     _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1459,11 +1459,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def get_cache_miss_ids(self, records):
         context_key = records.env.cache_key(self)
-        return records.env.cache.get_missing_ids(self, context_key, records._ids)
-
-    def has_cache_miss_ids(self, records):
-        context_key = records.env.cache_key(self)
-        return not records.env.cache.contains(self, context_key, records._ids)
+        yield from records.env.cache.get_missing_ids(self, context_key, records._ids)
 
 
 class Boolean(Field):
@@ -1987,12 +1983,7 @@ class _String(Field):
     def get_cache_miss_ids(self, records):
         context_key = records.env.cache_key(self)
         validator = self._get_translation_validator(self._lang(records.env)) if self.translate else None
-        return records.env.cache.get_missing_ids(self, context_key, records._ids, validator=validator)
-
-    def has_cache_miss_ids(self, records):
-        context_key = records.env.cache_key(self)
-        validator = self._get_translation_validator(self._lang(records.env)) if self.translate else None
-        return not records.env.cache.contains(self, context_key, records._ids, validator=validator)
+        yield from records.env.cache.get_missing_ids(self, context_key, records._ids, validator=validator)
 
     # cache hooks
     @staticmethod
@@ -4333,7 +4324,7 @@ class _RelationalMulti(_Relational):
             cache = records.env.cache
             context_key = records.env.cache_key(self)
             for record in records:
-                if cache.contains(self, context_key, record._ids):
+                if cache.contains(self, context_key, record._ids[0]):
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(self, context_key, record._ids[0], val)
             records.modified([self.name])
@@ -5020,7 +5011,7 @@ class Many2many(_RelationalMulti):
             # is not in cache: one that actually checks access rules for
             # records, and the other one fetching the actual data. We use
             # `self.read` instead to shortcut the first query.
-            missing_ids = self.get_cache_miss_ids(records)
+            missing_ids = list(self.get_cache_miss_ids(records))
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
@@ -5314,15 +5305,15 @@ class PrefetchMany2one:
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        context_key = records.env.cache_key(self.field)
-        ids = self.record.env.cache.get_values(self.field, context_key, records._ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids = env.cache.get_values(self.field, context_key, self.record._prefetch_ids)
         return unique(id_ for id_ in ids if id_ is not None and id_ is not NOTHING)
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        context_key = records.env.cache_key(self.field)
-        ids = self.record.env.cache.get_values(self.field, context_key, records._ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids = env.cache.get_values(self.field, context_key, reversed(self.record._prefetch_ids))
         return unique(id_ for id_ in ids if id_ is not None and id_ is not NOTHING)
 
 
@@ -5335,15 +5326,15 @@ class PrefetchX2many:
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        context_key = records.env.cache_key(self.field)
-        ids_list = self.record.env.cache.get_values(self.field, context_key, records._ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids_list = env.cache.get_values(self.field, context_key, self.record._prefetch_ids)
         return unique(id_ for ids in ids_list if ids is not NOTHING for id_ in ids)
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        context_key = records.env.cache_key(self.field)
-        ids_list = self.record.env.cache.get_values(self.field, context_key, records._ids)
+        env = self.record.env
+        context_key = env.cache_key(self.field)
+        ids_list = env.cache.get_values(self.field, context_key, reversed(self.record._prefetch_ids))
         return unique(id_ for ids in ids_list if ids is not NOTHING for id_ in ids)
 
 

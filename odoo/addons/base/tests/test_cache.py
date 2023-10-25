@@ -24,7 +24,7 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         def check1(record, field, value):
             # value is None means no value in cache
             context_key = record.env.cache_key(field)
-            self.assertEqual(cache.contains(field, context_key, record._ids), value is not None)
+            self.assertEqual(cache.contains(field, context_key, record.id), value is not None)
             cache_value = cache.get(field, context_key, record._ids[0])
             if cache_value is not NOTHING:
                 self.assertEqual(cache_value, value)

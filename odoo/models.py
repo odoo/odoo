@@ -3834,7 +3834,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if ignore_when_in_cache and not field.has_cache_miss_ids(self):
+            if ignore_when_in_cache and not any(field.get_cache_miss_ids(self)):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
@@ -4398,7 +4398,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and field.has_cache_miss_ids(real_recs):
+                    if not field.store and any(field.get_cache_miss_ids(real_recs)):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed
@@ -6979,7 +6979,7 @@ class RecordCache(Mapping):
         """ Return whether `record` has a cached value for field ``name``. """
         field = self._record._fields[name]
         env = self._record.env
-        return env.cache.contains(field, env.cache_key(field), self._record._ids)
+        return env.cache.contains(field, env.cache_key(field), self._record._ids[0])
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """

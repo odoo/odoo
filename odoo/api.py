@@ -940,24 +940,13 @@ class Cache:
         """ Return the field cache of the given field for modifying it. """
         return self._data[field].setdefault(context, {})
 
-    def contains(self, field, context, ids, validator=None):
-        """ Return whether all ids for field are cached
-
-        :param validator: a function to check if the cache value is valid
-            validator(value)
-            if not provided, the validator will be logically equivalent to
-            lambda value: True
-        """
+    def contains(self, field, context, id_, validator=None):
+        """ Return whether ``record`` has a value for ``field``. """
         field_cache = self._get_field_cache(field, context)
+        if id_ not in field_cache:
+            return False
         if validator:
-            for id_ in ids:
-                value = field_cache.get(id_, NOTHING)
-                if value is NOTHING or not validator(value):
-                    return False
-        else:
-            for id_ in ids:
-                if id_ not in field_cache:
-                    return False
+            return validator(field_cache[id_])
         return True
 
     def contains_field(self, field):
@@ -1088,12 +1077,14 @@ class Cache:
         """
         field_cache = self._get_field_cache(field, context)
         if validator:
-            return [
-                id_
-                for id_ in ids
-                if (value := field_cache.get(id_, NOTHING)) is NOTHING or not validator(value)
-            ]
-        return [id_ for id_ in ids if id_ not in field_cache]
+            for id_ in ids:
+                value = field_cache.get(id_, NOTHING)
+                if value is NOTHING or not validator(value):
+                    yield id_
+        else:
+            for id_ in ids:
+                if id_ not in field_cache:
+                    yield id_
 
     def get_dirty_fields(self):
         """ Return the fields that have dirty records in cache. """
