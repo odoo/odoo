@@ -571,6 +571,16 @@
     }
 }
 
+.o_calendar_renderer .fc-view {
+    .fc-event:not(.o_event_dot):not(.fc-dragging) {
+        &.o_cw_custom_highlight, &.o_calendar_popover_open {
+            box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
+            z-index: 2; // for the shadow to go over the events below
+        }
+    }
+}
+
+
 // ===============  Generate color classes ===============
 @for $i from 1 through length($o-colors-complete) {
     $color: nth($o-colors-complete, $i);
@@ -584,11 +594,6 @@
             &.fc-event:not(.o_event_dot):not(.fc-dragging) {
                 color: color-contrast($color-subtle);
                 border-color: tint-color($color, 50%);
-
-                &.o_cw_custom_highlight, &.o_calendar_popover_open {
-                    box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
-                    z-index: 2; // for the shadow to go over the events below
-                }
             }
         }
     }

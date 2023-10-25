@@ -24,86 +24,95 @@
     }
 }
 
+.o_calendar_renderer .fc-event {
+    &:not(.o_event_dot) {
+        --o-overlay-opacity: .5;
+
+        &.o_attendee_status_active {
+            --o-bg-opacity: 1;
+        }
+
+        &.o_attendee_status_tentative, &.o_event_hatched {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_alone,
+        &.o_attendee_status_needsAction {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_declined {
+            --o-bg-opacity: 0;
+        }
+
+        &.o_attendee_status_tentative, &.o_event_hatched {
+            .fc-bg {
+                background: repeating-linear-gradient(
+                    45deg,
+                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3),
+                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3) 10px,
+                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 10px,
+                    RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 20px
+                ) !important;
+            }
+        }
+    }
+
+    &.o_event_dot {
+        --o-overlay-opacity: .25;
+
+        display: flex;
+        align-items: center;
+        gap: map-get($spacers, 1 );
+        border: none;
+        background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
+
+        &:before {
+            z-index: 2;
+            display: inline-block;
+            font-family: Fontawesome;
+            color: var(--o-event-bg, #{$info});
+            content: '\f111'; // fa-circle
+        }
+
+        &.o_attendee_status_needsAction, &.o_event_hatched {
+            &:before {
+                content: "\f1db"; // fa-circle-thin
+            }
+        }
+
+        &.o_attendee_status_tentative:before {
+            content: "\f059"; // fa-question-circle
+        }
+
+        &.o_attendee_status_declined:before {
+            content: "\f05e"; // fa-ban
+        }
+
+        &.o_attendee_status_alone {
+            content: "\f06a"; // fa-exclamation-circle
+        }
+
+        &:hover {
+            --o-bg-opacity: 1;
+        }
+    }
+
+    &.o_attendee_status_declined, &.o_event_striked {
+        .fc-content {
+            text-decoration: line-through;
+        }
+    }
+}
+
 @for $-i from 1 through length($o-colors-complete) {
     $-color: nth($o-colors-complete, $-i);
     $-color-subtle: mix($o-white, $-color, 85%);
 
     .o_calendar_renderer .fc-event.o_calendar_color_#{$-i - 1} {
-        &:not(.o_event_dot) {
-            --o-overlay-opacity: .5;
-
-            &.o_attendee_status_active {
-                --o-bg-opacity: 1;
-            }
-
-            &.o_attendee_status_tentative, &.o_event_hatched {
-                --o-bg-opacity: .5;
-
-                .fc-bg {
-                    background: repeating-linear-gradient(
-                        45deg,
-                        rgba($-color, .3),
-                        rgba($-color, .3) 10px,
-                        rgba($-color, .6) 10px,
-                        rgba($-color, .6) 20px
-                    ) !important;
-                }
-            }
-
-            &.o_attendee_status_alone,
-            &.o_attendee_status_needsAction {
-                --o-bg-opacity: .5;
-            }
-
-            &.o_attendee_status_declined {
-                --o-bg-opacity: 0;
-            }
-        }
-
-        &.o_event_dot {
-            --o-overlay-opacity: .25;
-
-            display: flex;
-            align-items: center;
-            gap: map-get($spacers, 1 );
-            border: none;
-            background-color: rgba($-color-subtle, var(--o-bg-opacity));
-
-            &:before {
-                content:'\f111'; // fa-circle
-                display: inline-block;
-                z-index: 2;
-                font-family: Fontawesome;
-                color: $-color;
-            }
-
-            &.o_attendee_status_needsAction, &.o_event_hatched {
-                &:before {
-                    content: "\f1db"; // fa-circle-thin
-                }
-            }
-
-            &.o_attendee_status_tentative:before {
-                content: "\f059"; // fa-question-circle
-            }
-
-            &.o_attendee_status_declined:before {
-                content: "\f05e"; // fa-ban
-            }
-
-            &.o_attendee_status_alone {
-                content: "\f06a"; // fa-exclamation-circle
-            }
-
-            &:hover {
-                --o-bg-opacity: 1;
-            }
-        }
-
-        &.o_attendee_status_declined, &.o_event_striked {
-            .fc-content {
-                text-decoration: line-through;
-            }
-        }
+        --o-event-bg: #{$-color};
+        --o-event-bg-rgb: #{to-rgb($-color)};
+        --o-event-bg--subtle: #{$-color-subtle};
+        --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
     }
 }
