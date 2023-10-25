@@ -201,6 +201,7 @@ async function createPeers(peers) {
             },
             _getNewPtp() {
                 const ptp = this._super(...arguments);
+                ptp.options.onRequest.get_client_avatar = () => '';
 
                 patch(ptp, "web_editor_peer_to_peer", {
                     removeClient(peerId) {
