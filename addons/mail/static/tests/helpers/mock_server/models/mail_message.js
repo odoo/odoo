@@ -387,6 +387,7 @@ patch(MockServer.prototype, {
                 notifications.map((notification) => notification.id)
             );
             return {
+                author: message.author_id ? { id: message.author_id, type: "partner" } : false,
                 body: message.body,
                 date: message.date,
                 id: message.id,
