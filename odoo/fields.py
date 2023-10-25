@@ -1159,99 +1159,100 @@ class Field(MetaField('DummyField', (object,), {})):
 
         try:
             value = env.cache.get(record, self)
-
+            return self.convert_to_record(value, record)
         except KeyError:
-            # behavior in case of cache miss:
-            #
-            #   on a real record:
-            #       stored -> fetch from database (computation done above)
-            #       not stored and computed -> compute
-            #       not stored and not computed -> default
-            #
-            #   on a new record w/ origin:
-            #       stored and not (computed and readonly) -> fetch from origin
-            #       stored and computed and readonly -> compute
-            #       not stored and computed -> compute
-            #       not stored and not computed -> default
-            #
-            #   on a new record w/o origin:
-            #       stored and computed -> compute
-            #       stored and not computed -> new delegate or default
-            #       not stored and computed -> compute
-            #       not stored and not computed -> default
-            #
-            if self.store and record.id:
-                # real record: fetch from database
-                recs = record._in_cache_without(self)
-                try:
-                    recs._fetch_field(self)
-                except AccessError:
-                    if len(recs) == 1:
-                        raise
-                    record._fetch_field(self)
-                if not env.cache.contains(record, self):
-                    raise MissingError("\n".join([
-                        _("Record does not exist or has been deleted."),
-                        _("(Record: %s, User: %s)") % (record, env.uid),
-                    ]))
-                value = env.cache.get(record, self)
+            pass
+        # behavior in case of cache miss:
+        #
+        #   on a real record:
+        #       stored -> fetch from database (computation done above)
+        #       not stored and computed -> compute
+        #       not stored and not computed -> default
+        #
+        #   on a new record w/ origin:
+        #       stored and not (computed and readonly) -> fetch from origin
+        #       stored and computed and readonly -> compute
+        #       not stored and computed -> compute
+        #       not stored and not computed -> default
+        #
+        #   on a new record w/o origin:
+        #       stored and computed -> compute
+        #       stored and not computed -> new delegate or default
+        #       not stored and computed -> compute
+        #       not stored and not computed -> default
+        #
+        if self.store and record.id:
+            # real record: fetch from database
+            recs = record._in_cache_without(self)
+            try:
+                recs._fetch_field(self)
+            except AccessError:
+                if len(recs) == 1:
+                    raise
+                record._fetch_field(self)
+            if not env.cache.contains(record, self):
+                raise MissingError("\n".join([
+                    _("Record does not exist or has been deleted."),
+                    _("(Record: %s, User: %s)", record, env.uid),
+                ])) from None
+            value = env.cache.get(record, self)
 
-            elif self.store and record._origin and not (self.compute and self.readonly):
-                # new record with origin: fetch from origin
-                value = self.convert_to_cache(record._origin[self.name], record)
-                env.cache.set(record, self, value)
+        elif self.store and record._origin and not (self.compute and self.readonly):
+            # new record with origin: fetch from origin
+            value = self.convert_to_cache(record._origin[self.name], record)
+            env.cache.set(record, self, value)
 
-            elif self.compute:
-                # non-stored field or new record without origin: compute
-                if env.is_protected(self, record):
-                    value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.set(record, self, value)
-                else:
-                    recs = record if self.recursive else record._in_cache_without(self)
-                    try:
-                        self.compute_value(recs)
-                    except (AccessError, MissingError):
-                        self.compute_value(record)
-                    try:
-                        value = env.cache.get(record, self)
-                    except CacheMiss:
-                        if self.readonly and not self.store:
-                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
-                        # fallback to null value if compute gives nothing
-                        value = self.convert_to_cache(False, record, validate=False)
-                        env.cache.set(record, self, value)
-
-            elif self.type == 'many2one' and self.delegate and not record.id:
-                # parent record of a new record: new record, with the same
-                # values as record for the corresponding inherited fields
-                def is_inherited_field(name):
-                    field = record._fields[name]
-                    return field.inherited and field.related.split('.')[0] == self.name
-
-                parent = record.env[self.comodel_name].new({
-                    name: value
-                    for name, value in record._cache.items()
-                    if is_inherited_field(name)
-                })
-                # in case the delegate field has inverse one2many fields, this
-                # updates the inverse fields as well
-                record._update_cache({self.name: parent}, validate=False)
-                value = env.cache.get(record, self)
-
-            else:
-                # non-stored field or stored field on new record: default value
+        elif self.compute: #pylint: disable=using-constant-test
+            # non-stored field or new record without origin: compute
+            if env.is_protected(self, record):
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
-                defaults = record.default_get([self.name])
-                if self.name in defaults:
-                    # The null value above is necessary to convert x2many field
-                    # values. For instance, converting [(Command.LINK, id)]
-                    # accesses the field's current value, then adds the given
-                    # id. Without an initial value, the conversion ends up here
-                    # to determine the field's value, and generates an infinite
-                    # recursion.
-                    value = self.convert_to_cache(defaults[self.name], record)
+            else:
+                recs = record if self.recursive else record._in_cache_without(self)
+                try:
+                    self.compute_value(recs)
+                except (AccessError, MissingError):
+                    self.compute_value(record)
+                try:
+                    value = env.cache.get(record, self)
+                except CacheMiss:
+                    if self.readonly and not self.store:
+                        raise ValueError(f"Compute method failed to assign {record}.{self.name}") from None
+                    # fallback to null value if compute gives nothing
+                    value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
+
+        elif self.type == 'many2one' and self.delegate and not record.id:
+            # parent record of a new record: new record, with the same
+            # values as record for the corresponding inherited fields
+            def is_inherited_field(name):
+                field = record._fields[name]
+                return field.inherited and field.related.split('.')[0] == self.name
+
+            parent = record.env[self.comodel_name].new({
+                name: value
+                for name, value in record._cache.items()
+                if is_inherited_field(name)
+            })
+            # in case the delegate field has inverse one2many fields, this
+            # updates the inverse fields as well
+            record._update_cache({self.name: parent}, validate=False)
+            value = env.cache.get(record, self)
+
+        else:
+            # non-stored field or stored field on new record: default value
+            value = self.convert_to_cache(False, record, validate=False)
+            env.cache.set(record, self, value)
+            defaults = record.default_get([self.name])
+            if self.name in defaults:
+                # The null value above is necessary to convert x2many field
+                # values. For instance, converting [(Command.LINK, id)]
+                # accesses the field's current value, then adds the given
+                # id. Without an initial value, the conversion ends up here
+                # to determine the field's value, and generates an infinite
+                # recursion.
+                value = self.convert_to_cache(defaults[self.name], record)
+                env.cache.set(record, self, value)
 
         return self.convert_to_record(value, record)
 
