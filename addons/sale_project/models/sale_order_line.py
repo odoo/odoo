@@ -109,7 +109,7 @@ class SaleOrderLine(models.Model):
         # Do not generate task/project when expense SO line, but allow
         # generate task with hours=0.
         for line in lines:
-            if line.state == 'sale' and not line.is_expense and not self._context.get('skip_task_generation'):
+            if line.state == 'sale' and not line.is_expense:
                 has_task = bool(line.task_id)
                 line.sudo()._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
