@@ -28,7 +28,7 @@ QUnit.test("Sent", async () => {
         res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-check");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Sent" });
@@ -53,7 +53,7 @@ QUnit.test("Canceled", async () => {
         res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-trash-o");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Canceled" });
@@ -78,7 +78,7 @@ QUnit.test("Pending", async () => {
         res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailNotificationPopover i.fa-clock-o");
     await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Awaiting Dispatch" });
@@ -103,6 +103,7 @@ QUnit.test("No Price Available", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
+    const def = makeDeferred();
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
@@ -111,16 +112,18 @@ QUnit.test("No Price Available", async (assert) => {
                 args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
+                def.resolve();
             }
         },
     });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError .modal-body", {
         text: "The country to which you want to send the letter is not supported by our service.",
     });
     await click("button", { text: "Cancel letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
+    await def;
     assert.verifySteps(["cancel_letter"]);
 });
 
@@ -143,6 +146,7 @@ QUnit.test("Credit Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
+    const def = makeDeferred();
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
@@ -151,10 +155,11 @@ QUnit.test("Credit Error", async (assert) => {
                 args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
+                def.resolve();
             }
         },
     });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError p", {
         text: "The letter could not be sent due to insufficient credits on your IAP account.",
@@ -162,6 +167,7 @@ QUnit.test("Credit Error", async (assert) => {
     await contains("button", { text: "Cancel letter" });
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
+    await def;
     assert.verifySteps(["send_letter"]);
 });
 
@@ -184,6 +190,7 @@ QUnit.test("Trial Error", async (assert) => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
+    const def = makeDeferred();
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
@@ -192,10 +199,11 @@ QUnit.test("Trial Error", async (assert) => {
                 args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
+                def.resolve();
             }
         },
     });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
     await contains(".o-snailmail-SnailmailError p", {
         text: "You need credits on your IAP account to send a letter.",
@@ -203,11 +211,11 @@ QUnit.test("Trial Error", async (assert) => {
     await contains("button", { text: "Cancel letter" });
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
+    await def;
     assert.verifySteps(["send_letter"]);
 });
 
 QUnit.test("Format Error", async (assert) => {
-    const openFormatErrorActionDef = makeDeferred();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -227,22 +235,22 @@ QUnit.test("Format Error", async (assert) => {
         res_partner_id: partnerId,
     });
     const { env, openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
+    const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
             assert.strictEqual(action, "snailmail.snailmail_letter_format_error_action");
             assert.strictEqual(options.additionalContext.message_id, messageId);
-            openFormatErrorActionDef.resolve();
+            def.resolve();
         },
     });
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await openFormatErrorActionDef;
+    await def;
     assert.verifySteps(["do_action"]);
 });
 
 QUnit.test("Missing Required Fields", async (assert) => {
-    const openRequiredFieldsActionDef = makeDeferred();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -261,16 +269,17 @@ QUnit.test("Missing Required Fields", async (assert) => {
         message_id: messageId,
     });
     const { env, openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
+    const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
             assert.strictEqual(action, "snailmail.snailmail_letter_missing_required_fields_action");
             assert.strictEqual(options.additionalContext.default_letter_id, snailMailLetterId1);
-            openRequiredFieldsActionDef.resolve();
+            def.resolve();
         },
     });
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await openRequiredFieldsActionDef;
+    await def;
     assert.verifySteps(["do_action"]);
 });
