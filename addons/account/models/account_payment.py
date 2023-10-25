@@ -128,6 +128,12 @@ class AccountPayment(models.Model):
         check_company=True,
     )
 
+    # == Reimbursement fields ==
+    reimbursed_payment_id = fields.Many2one('account.payment')
+    reimbursement_payment_ids = fields.One2many('account.payment', 'reimbursed_payment_id')
+    reimbursements_count = fields.Integer(compute='_compute_reimbursements_count', store=True)
+    is_fully_reimbursed = fields.Boolean(compute='_compute_is_fully_reimbursed', store=True)
+
     # == Stat buttons ==
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
@@ -704,6 +710,16 @@ class AccountPayment(models.Model):
         """ To override in order to change the title displayed on the payment receipt report """
         self.payment_receipt_title = _('Payment Receipt')
 
+    @api.depends('reimbursement_payment_ids')
+    def _compute_reimbursements_count(self):
+        for payment in self:
+            payment.reimbursements_count = len(payment.reimbursement_payment_ids) or 0
+
+    @api.depends('reimbursement_payment_ids')
+    def _compute_is_fully_reimbursed(self):
+        for payment in self.filtered("reimbursement_payment_ids"):
+            payment.is_fully_reimbursed = sum(payment.reimbursement_payment_ids.mapped("amount")) == payment.amount
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -1129,6 +1145,44 @@ class AccountPayment(models.Model):
             'res_id': self.move_id.id,
         }
 
+    def button_open_reimbursements(self):
+        """ Opens reimbursements linked to a payment.
+            :return: An action opening a payment tree view
+        """
+        self.ensure_one()
+        payment_ids = self.reimbursement_payment_ids or self.env['account.payment']
+        action = {
+            'name': f"{self.ref}'s Reimbursements",
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'context': {'create': False},
+            'view_mode': 'list,form',
+            'target': 'current',
+            'domain': [('id', 'in', payment_ids.ids)],
+        }
+        if self.reimbursements_count == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': payment_ids.id,
+            })
+        return action
+
+    def button_open_repaid_payment(self):
+        """ Opens reimbursed payment linked to a reimbursement
+            :return: An action opening a payment form view
+        """
+        self.ensure_one()
+        reimbursed_id = self.reimbursed_payment_id or self.env['account.payment']
+        return {
+            'name': _("Reimbursed Payment"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'context': {'create': False},
+            'view_mode': 'form',
+            'target': 'current',
+            'res_id': reimbursed_id.id,
+        }
+
     def action_open_destination_journal(self):
         ''' Redirect the user to this destination journal.
         :return:    An action on account.move.
@@ -1145,6 +1199,23 @@ class AccountPayment(models.Model):
             'res_id': self.destination_journal_id.id,
         }
         return action
+
+    def action_repay(self):
+        """ Opens the account.reimbursement wizard to reimburse the selected payments.
+            :return: An action opening the account.reimbursement wizard.
+        """
+        return {
+            'name': _('Reimburse Payment'),
+            'res_model': 'account.reimbursement',
+            'view_mode': 'form',
+            'context': {
+                'active_model': 'account.payment',
+                'active_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves
 # a lot of SQL queries

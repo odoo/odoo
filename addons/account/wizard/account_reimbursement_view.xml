@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="view_account_reimbursement_form" model="ir.ui.view">
+            <field name="name">account.reimbursement.form</field>
+            <field name="model">account.reimbursement</field>
+            <field name="arch" type="xml">
+                <form string="Reimbursement">
+                     <!-- Invisible fields -->
+                    <field name="payment_id" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
+                    <field name="available_payment_method_line_ids" invisible="1"/>
+                    <field name="available_partner_bank_ids" invisible="1"/>
+                    <field name="partner_type" invisible="1"/>
+                    <field name="already_repaid_amount" invisible="1"/>
+                    <field name="total_amount_to_reimburse" invisible="1"/>
+
+                    <div class="alert text-muted">
+                        <field name="reimbursement_message" invisible="already_repaid_amount"/>
+                        <field name="partially_repaid_message" invisible="not already_repaid_amount"/>
+                    </div>
+                    <group>
+                        <group name="group1">
+                            <label for="amount"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <field name="reimbursement_date"/>
+                            <field name="communication"/>
+                            <field name="payment_type"/>
+
+                        </group>
+                        <group name="group2">
+                            <field name="journal_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="partner_bank_id" string="Customer Bank Account"
+                                        invisible="partner_type != 'customer' or payment_type == 'inbound'"/>
+
+                                <field name="partner_bank_id" string="Vendor Bank Account"
+                                        invisible="partner_type != 'supplier' or payment_type == 'inbound'"/>
+
+                                <field name="partner_bank_id" string="Company Bank Account"
+                                        invisible="payment_type == 'outbound'"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Pay Back" name="reimburse_payments" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+
+</odoo>
