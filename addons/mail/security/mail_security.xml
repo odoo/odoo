@@ -23,8 +23,6 @@
                                 ('group_public_id', 'in', user.groups_id.ids)
                 ]
             </field>
-            <field name="perm_create" eval="False"/><!-- create follows access rules (allowed for internal and system) -->
-            <field name="perm_unlink" eval="False"/><!-- unlink follows access rules (allowed for system) -->
         </record>
 
         <record id="ir_rule_discuss_channel_group_system" model="ir.rule">
