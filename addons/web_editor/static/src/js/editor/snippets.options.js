@@ -4395,11 +4395,10 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         // Check linked widgets: force their value and simulate a notification
+        // It is possible that we don't have the widget, we continue because a
+        // reload might be needed. For example, change template header without
+        // being on a website.page (e.g: /shop).
         const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
-        if (linkedWidgets.length !== ev.data.triggerWidgetsNames.length) {
-            console.warn('Missing widget to trigger');
-            return;
-        }
         let i = 0;
         const triggerWidgetsValues = ev.data.triggerWidgetsValues;
         for (const linkedWidget of linkedWidgets) {
