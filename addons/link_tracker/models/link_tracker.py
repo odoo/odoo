@@ -17,6 +17,8 @@ LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'l
 
 _logger = logging.getLogger(__name__)
 
+LINK_TRACKER_MIN_CODE_LENGTH = 3
+
 
 class LinkTracker(models.Model):
     """ Link trackers allow users to wrap any URL into a short URL that can be
@@ -296,7 +298,7 @@ class LinkTrackerCode(models.Model):
 
     @api.model
     def _get_random_code_strings(self, n=1):
-        size = 3
+        size = LINK_TRACKER_MIN_CODE_LENGTH
         while True:
             code_propositions = [
                 ''.join(random.choices(string.ascii_letters + string.digits, k=size))
