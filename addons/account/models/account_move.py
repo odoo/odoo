@@ -5249,27 +5249,11 @@ class AccountMoveLine(models.Model):
                     continue
 
                 sequence = len(exchange_diff_move_vals['line_ids'])
+                exchange_vals_0 = self._prepare_exchange_vals_0(line, sequence, exchange_line_account)
+                exchange_vals_1 = self._prepare_exchange_vals_1(line, sequence, exchange_line_account)
                 exchange_diff_move_vals['line_ids'] += [
-                    (0, 0, {
-                        'name': _('Currency exchange rate difference'),
-                        'debit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
-                        'credit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
-                        'amount_currency': -line.amount_residual_currency,
-                        'account_id': line.account_id.id,
-                        'currency_id': line.currency_id.id,
-                        'partner_id': line.partner_id.id,
-                        'sequence': sequence,
-                    }),
-                    (0, 0, {
-                        'name': _('Currency exchange rate difference'),
-                        'debit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
-                        'credit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
-                        'amount_currency': line.amount_residual_currency,
-                        'account_id': exchange_line_account.id,
-                        'currency_id': line.currency_id.id,
-                        'partner_id': line.partner_id.id,
-                        'sequence': sequence + 1,
-                    }),
+                    (0, 0, exchange_vals_0),
+                    (0, 0, exchange_vals_1),
                 ]
 
                 to_reconcile.append((line, sequence))
@@ -5518,6 +5502,30 @@ class AccountMoveLine(models.Model):
         self.env['account.partial.reconcile'].create(partials_vals_list)
 
         return exchange_move
+
+    def _prepare_exchange_vals_0(self, line, sequence, exchange_line_account):
+        return {
+            'name': _('Currency exchange rate difference'),
+            'debit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
+            'credit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
+            'amount_currency': -line.amount_residual_currency,
+            'account_id': line.account_id.id,
+            'currency_id': line.currency_id.id,
+            'partner_id': line.partner_id.id,
+            'sequence': sequence,
+            }
+
+    def _prepare_exchange_vals_1(self, line, sequence, exchange_line_account):
+        return {
+            'name': _('Currency exchange rate difference'),
+            'debit': line.amount_residual if line.amount_residual > 0.0 else 0.0,
+            'credit': -line.amount_residual if line.amount_residual < 0.0 else 0.0,
+            'amount_currency': line.amount_residual_currency,
+            'account_id': exchange_line_account.id,
+            'currency_id': line.currency_id.id,
+            'partner_id': line.partner_id.id,
+            'sequence': sequence + 1,
+            }
 
     def reconcile(self):
         ''' Reconcile the current move lines all together.
