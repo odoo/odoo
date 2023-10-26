@@ -14,5 +14,6 @@ patch(Thread.prototype, "discuss/message_pin/common", {
         if (oeType === "pin-menu") {
             this.env.pinMenu?.open();
         }
+        await this._super(...arguments);
     },
 });
