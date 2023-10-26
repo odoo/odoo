@@ -505,3 +505,40 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertEqual(po1.order_line[0].price_unit, 100)
         self.assertEqual(po1.order_line[0].discount, 30)
+
+    def test_discount_po_line_vendorpricelist_2(self):
+        """ Checks if a discount is set on a PO line from the vendor pricelist and then the quantity
+        is set lower than the vendor condition, the discount doesn't stay on the PO line.
+        """
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_b.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 10,
+            'price': 100,
+            'discount': 10,
+        })
+        purchase_order = Form(self.env['purchase.order'])
+        purchase_order.partner_id = self.partner_a
+        with purchase_order.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            # First, check discount set manually doesn't disappear when the qty is edited.
+            po_line.discount = 2.5
+            po_line.product_qty = 5
+            self.assertEqual(po_line.discount, 2.5)
+            # Now, update the line quantity and the PO vendor to use the vendor's price.
+            po_line.product_qty = 10
+        purchase_order.partner_id = self.partner_b
+        purchase_order = purchase_order.save()
+        # The PO line has enough quantity, it should use the vendor information.
+        self.assertEqual(purchase_order.order_line[0].price_unit, 100, "Vendor's price")
+        self.assertEqual(purchase_order.order_line[0].discount, 10, "Discount from the vendor")
+        self.assertEqual(purchase_order.order_line[0].price_subtotal, 900)
+        # Decreases the PO line quantity.
+        purchase_order = Form(purchase_order)
+        with purchase_order.order_line.edit(0) as po_line:
+            po_line.product_qty = 5
+        purchase_order = purchase_order.save()
+        # The PO line has not enough quantity, it should use the standard product cost.
+        self.assertEqual(purchase_order.order_line[0].price_unit, 800, "Standard price")
+        self.assertEqual(purchase_order.order_line[0].discount, 0, "No discount by default")
+        self.assertEqual(purchase_order.order_line[0].price_subtotal, 4000)
