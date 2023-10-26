@@ -231,6 +231,7 @@ patch(Order.prototype, {
         const result = super.export_for_printing(...arguments);
         if (this.get_partner()) {
             result.loyaltyStats = this.getLoyaltyPoints();
+            result.partner = this.get_partner();
         }
         result.new_coupon_info = this.new_coupon_info;
         return result;
@@ -858,7 +859,7 @@ patch(Order.prototype, {
                     }
                 }
             }
-            const res = (points || program.program_type === 'coupons') ? [{ points }] : [];
+            const res = points || program.program_type === "coupons" ? [{ points }] : [];
             if (splitPoints.length) {
                 res.push(...splitPoints);
             }
@@ -1358,9 +1359,12 @@ patch(Order.prototype, {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
-                const appliedRules = appliedRulesIds !== undefined
-                    ? reward.program_id.rules.filter(rule => appliedRulesIds.includes(rule.id))
-                    : reward.program_id.rules;
+                const appliedRules =
+                    appliedRulesIds !== undefined
+                        ? reward.program_id.rules.filter((rule) =>
+                              appliedRulesIds.includes(rule.id)
+                          )
+                        : reward.program_id.rules;
                 let factor = 0;
                 let orderPoints = 0;
                 for (const rule of appliedRules) {
