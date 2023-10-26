@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_ids']//field[@name='acc_number']" position="after">
-                <field name="l10n_mx_edi_clabe"/>
+                <field name="l10n_mx_edi_clabe" optional="hide"/>
             </xpath>
         </field>
     </record>
