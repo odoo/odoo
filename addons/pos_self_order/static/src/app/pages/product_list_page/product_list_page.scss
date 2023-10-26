@@ -1,6 +1,6 @@
 .navbar-container {
     .category-item, .search-button {
-        min-width: calc(3.5rem + 2vw);
+        width: calc(3.5rem + 2vw);
     }
 
     .category-item {
@@ -15,6 +15,10 @@
                 outline: 1px solid $o-action;
                 border-radius: 0.25rem;
             }
+        }
+
+        .category-name {
+            word-break: break-all;
         }
     }
 }
