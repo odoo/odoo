@@ -7,6 +7,7 @@ import psycopg2
 import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from psycopg2 import sql
 
 import odoo
 from odoo import api, fields, models, _
@@ -16,6 +17,9 @@ _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.get_manifest('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
+
+# custom function to call instead of default PostgreSQL's `pg_notify`
+ODOO_NOTIFY_FUNCTION = os.getenv('ODOO_NOTIFY_FUNCTION', 'pg_notify')
 
 
 class BadVersion(Exception):
@@ -515,7 +519,8 @@ class ir_cron(models.Model):
         ir_cron modification and on trigger creation (regardless of call_at)
         """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
+            query = sql.SQL("SELECT {}('cron_trigger', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+            cr.execute(query, [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
 
