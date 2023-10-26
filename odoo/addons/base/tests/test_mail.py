@@ -435,7 +435,7 @@ class TestEmailTools(BaseCase):
             'deboulonneur@example.com',
             'deboulonneur@example.comdéboulonneur',
             False,
-            '@example.com',  # funny
+            False,  # need fix over 'getadresses'
             'deboulonneur.😊@example.com',
             'déboulonneur@examplé.com',
             'DéBoulonneur@examplé.com',
@@ -445,7 +445,7 @@ class TestEmailTools(BaseCase):
             f'"{format_name}" <deboulonneur@example.com>',
             f'"{format_name}" <deboulonneur@example.comdéboulonneur>',
             f'"{format_name}" <@>',
-            f'"{format_name}" <@example.com>',
+            f'"{format_name}" <@>',
             f'"{format_name}" <deboulonneur.😊@example.com>',
             f'"{format_name}" <déboulonneur@examplé.com>',
             f'"{format_name}" <DéBoulonneur@examplé.com>',
@@ -455,7 +455,7 @@ class TestEmailTools(BaseCase):
             f'{format_name_ascii} <deboulonneur@example.com>',
             f'{format_name_ascii} <deboulonneur@example.xn--comdboulonneur-ekb>',
             f'{format_name_ascii} <@>',
-            f'{format_name_ascii} <@example.com>',
+            f'{format_name_ascii} <@>',
             f'{format_name_ascii} <deboulonneur.😊@example.com>',
             f'{format_name_ascii} <déboulonneur@xn--exampl-gva.com>',
             f'{format_name_ascii} <DéBoulonneur@xn--exampl-gva.com>',
@@ -478,24 +478,52 @@ class TestEmailTools(BaseCase):
             ('"john@gmail.com"<johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting
             ('"<jg>" <johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting with brackets
             ('@gmail.com', ['@gmail.com']),  # no left-part
-            # TFR cases
+            # '@domain' corner cases -- all those return a '@gmail.com' (or equivalent)
+            # email address when going through 'getaddresses'
             # - multi @
-            ('fr@ncois.th@notgmail.com', ['@notgmail.com']),
-            ('f@r@nc.gz,ois@notgmail.com', ['@nc.gz', 'ois@notgmail.com']),
-            ('@notgmail.com esteban_gnole@coldmail.com@notgmail.com', ['@notgmail.com']),
+            ('fr@ncois.th@notgmail.com', ['fr@ncois.th']),
+            ('f@r@nc.gz,ois@notgmail.com', ['r@nc.gz', 'ois@notgmail.com']),  # still failing, but differently from 'getaddresses' alone
+            ('@notgmail.com esteban_gnole@coldmail.com@notgmail.com', ['esteban_gnole@coldmail.com']),
             # - multi emails (with invalid)
-            ('Ivan@dezotos.com Cc iv.an@notgmail.com', ['@notgmail.com']),
-            ('ivan-dredi@coldmail.com ivan.dredi@notgmail.com', ['@notgmail.com']),
-            ('@notgmail.com ivan@coincoin.com.ar jeanine@coincoin.com.ar', ['@coincoin.com.ar']),
-            ('@notgmail.com whoareyou@youhou.com.   ivan.dezotos@notgmail.com', ['@notgmail.com']),
-            ('francois@nc.gz CC: ois@notgmail.com ivan@dezotos.com', ['francois@nc.gzCC', '@dezotos.com']),
-            ('francois@nc.gz CC: ois@notgmail.com,ivan@dezotos.com', ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com']),
+            (
+                'Ivan@dezotos.com Cc iv.an@notgmail.com',
+                ['Ivan@dezotos.com', 'iv.an@notgmail.com']
+            ),
+            (
+                'ivan-dredi@coldmail.com ivan.dredi@notgmail.com',
+                ['ivan-dredi@coldmail.com', 'ivan.dredi@notgmail.com']
+            ),
+            (
+                '@notgmail.com ivan@coincoin.com.ar jeanine@coincoin.com.ar',
+                ['ivan@coincoin.com.ar', 'jeanine@coincoin.com.ar']
+            ),
+            (
+                '@notgmail.com whoareyou@youhou.com.   ivan.dezotos@notgmail.com',
+                ['whoareyou@youhou.com', 'ivan.dezotos@notgmail.com']
+            ),
+            (
+                'francois@nc.gz CC: ois@notgmail.com ivan@dezotos.com',
+                ['francois@nc.gz', 'ois@notgmail.com', 'ivan@dezotos.com']
+            ),
+            (
+                'francois@nc.gz CC: ois@notgmail.com,ivan@dezotos.com',
+                ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com']
+            ),
             # - separated with '/''
-            ('ivan.plein@dezotos.com / ivan.plu@notgmail.com', ['@notgmail.com']),
-            ('@notgmail.com ivan.parfois@notgmail.com/ ivan.souvent@notgmail.com', ['@notgmail.com']),
+            (
+                'ivan.plein@dezotos.com / ivan.plu@notgmail.com',
+                ['ivan.plein@dezotos.com', 'ivan.plu@notgmail.com']
+            ),
+            (
+                '@notgmail.com ivan.parfois@notgmail.com/ ivan.souvent@notgmail.com',
+                ['ivan.parfois@notgmail.com', 'ivan.souvent@notgmail.com']
+            ),
             # - separated with '-''
-            ('ivan@dezotos.com - ivan.dezotos@notgmail.com', ['@notgmail.com']),
-            ('car.pool@notgmail.com - co (TAMBO) Registration car.warsh@notgmail.com', ['@notgmail.com']),
+            ('ivan@dezotos.com - ivan.dezotos@notgmail.com', ['ivan@dezotos.com', 'ivan.dezotos@notgmail.com']),
+            (
+                'car.pool@notgmail.com - co (TAMBO) Registration car.warsh@notgmail.com',
+                ['car.pool@notgmail.com', 'car.warsh@notgmail.com']
+            ),
         ]
         for source, expected in cases:
             with self.subTest(source=source):
@@ -533,7 +561,7 @@ class TestEmailTools(BaseCase):
             # multi
             ['deboulonneur@example.com'],
             ['deboulonneur@example.com', 'deboulonneur2@example.com'],
-            ['@example.com'],  # funny one
+            ['deboulonneur@example.com', 'deboulonneur2@example.com'],  # need fix over 'getadresses'
             # format / misc
             ['deboulonneur@example.com'],
             ['"Super Déboulonneur" <deboulonneur@example.com>', '"Super Déboulonneur 2" <deboulonneur2@example.com>'],
