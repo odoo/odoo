@@ -76,8 +76,8 @@ export class ImageCrop extends Component {
         this._cropperClosed = true;
         if (this.$cropperImage) {
             this.$cropperImage.cropper('destroy');
-            this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
-            this.document.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
+            this.elRef.el.ownerDocument.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+            this.elRef.el.ownerDocument.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
@@ -175,8 +175,9 @@ export class ImageCrop extends Component {
         this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
-        this.document.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
-        this.document.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
+        // We need to add event listeners to the owner document of the widget.
+        this.elRef.el.ownerDocument.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+        this.elRef.el.ownerDocument.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
     }
     /**
      * Updates the DOM image with cropped data and associates required
@@ -302,7 +303,7 @@ export class ImageCrop extends Component {
      * @param {MouseEvent} ev
      */
     _onDocumentMousedown(ev) {
-        if (document.body.contains(ev.target) && this.$(ev.target).length === 0) {
+        if (this.elRef.el.ownerDocument.body.contains(ev.target) && this.$(ev.target).length === 0) {
             return this._closeCropper();
         }
     }
