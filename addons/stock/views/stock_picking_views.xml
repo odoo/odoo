@@ -264,7 +264,6 @@
                             name="detailed_operations"
                             invisible="not show_operations">
                             <field name="move_line_ids_without_package"
-                                   invisible="not show_reserved"
                                    readonly="not show_operations or state == 'cancel' or (state == 'done' and is_locked)"
                                    context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                             <field name="package_level_ids_details"
