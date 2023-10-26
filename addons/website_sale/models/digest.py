@@ -16,11 +16,11 @@ class Digest(models.Model):
             raise AccessError(_("Do not have access, skip this data for user's digest email"))
 
         self._calculate_company_based_kpi(
-            'sale.order',
+            'sale.report',
             'kpi_website_sale_total_value',
-            date_field='date_order',
+            date_field='date',
             additional_domain=[('state', 'not in', ['draft', 'cancel', 'sent']), ('website_id', '!=', False)],
-            sum_field='amount_total',
+            sum_field='price_subtotal',
         )
 
     def _compute_kpis_actions(self, company, user):
