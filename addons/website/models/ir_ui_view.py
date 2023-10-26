@@ -510,7 +510,7 @@ class View(models.Model):
             if 'email_to' not in form_values.keys():
                 continue
             elif not form_values['email_to'].attrib.get('value'):
-                form_values['email_to'].attrib['value'] = self.env.company.email
+                form_values['email_to'].attrib['value'] = self.env.company.email or ''
             has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
             value = form_values['email_to'].attrib['value'] + (':email_cc' if has_cc else '')
             hash_value = hmac(self.sudo().env, 'website_form_signature', value)
