@@ -25,7 +25,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
                 if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         if 'order_count' in counters:
-            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner)) \
+            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner), limit=1) \
                 if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         return values
@@ -33,7 +33,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def _prepare_quotations_domain(self, partner):
         return [
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
+            ('state', '=', 'sent')
         ]
 
     def _prepare_orders_domain(self, partner):
