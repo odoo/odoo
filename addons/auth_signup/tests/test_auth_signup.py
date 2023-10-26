@@ -51,7 +51,7 @@ class TestAuthSignupFlow(HttpCase):
             # Check if an email is sent to the new userw
             new_user = self.env['res.users'].search([('name', '=', name)])
             self.assertTrue(new_user)
-            mail = self.env['mail.message'].search([('message_type', '=', 'email'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
+            mail = self.env['mail.message'].search([('message_type', '=', 'email_outgoing'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
             self.assertTrue(mail, "The new user must be informed of his registration")
 
     def test_compute_signup_url(self):
