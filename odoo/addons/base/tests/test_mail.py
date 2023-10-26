@@ -477,9 +477,29 @@ class TestEmailTools(BaseCase):
             ("'(ss)' <123@gmail.com>, 'foo' <foo@bar>", ['123@gmail.com', 'foo@bar']),  # comma + single-quoting
             ('"john@gmail.com"<johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting
             ('"<jg>" <johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting with brackets
+            ('@gmail.com', ['@gmail.com']),  # no left-part
+            # TFR cases
+            # - multi @
+            ('fr@ncois.th@notgmail.com', ['@notgmail.com']),
+            ('f@r@nc.gz,ois@notgmail.com', ['@nc.gz', 'ois@notgmail.com']),
+            ('@notgmail.com esteban_gnole@coldmail.com@notgmail.com', ['@notgmail.com']),
+            # - multi emails (with invalid)
+            ('Ivan@dezotos.com Cc iv.an@notgmail.com', ['@notgmail.com']),
+            ('ivan-dredi@coldmail.com ivan.dredi@notgmail.com', ['@notgmail.com']),
+            ('@notgmail.com ivan@coincoin.com.ar jeanine@coincoin.com.ar', ['@coincoin.com.ar']),
+            ('@notgmail.com whoareyou@youhou.com.   ivan.dezotos@notgmail.com', ['@notgmail.com']),
+            ('francois@nc.gz CC: ois@notgmail.com ivan@dezotos.com', ['francois@nc.gzCC', '@dezotos.com']),
+            ('francois@nc.gz CC: ois@notgmail.com,ivan@dezotos.com', ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com']),
+            # - separated with '/''
+            ('ivan.plein@dezotos.com / ivan.plu@notgmail.com', ['@notgmail.com']),
+            ('@notgmail.com ivan.parfois@notgmail.com/ ivan.souvent@notgmail.com', ['@notgmail.com']),
+            # - separated with '-''
+            ('ivan@dezotos.com - ivan.dezotos@notgmail.com', ['@notgmail.com']),
+            ('car.pool@notgmail.com - co (TAMBO) Registration car.warsh@notgmail.com', ['@notgmail.com']),
         ]
-        for text, expected in cases:
-            self.assertEqual(email_split(text), expected, 'email_split is broken')
+        for source, expected in cases:
+            with self.subTest(source=source):
+                self.assertEqual(email_split(source), expected)
 
     def test_email_split_and_format(self):
         """ Test 'email_split_and_format', notably in case of multi encapsulation
@@ -527,16 +547,16 @@ class TestEmailTools(BaseCase):
                 self.assertEqual(email_split_and_format(source), expected)
 
     def test_email_formataddr(self):
-        email = 'joe@example.com'
+        email_base = 'joe@example.com'
         email_idna = 'joe@examplé.com'
         cases = [
             # (name, address),          charsets            expected
-            (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
-            (('joe', email),            ['ascii', 'utf-8'], '"joe" <joe@example.com>'),
-            (('joe doe', email),        ['ascii', 'utf-8'], '"joe doe" <joe@example.com>'),
-            (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
-            (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
-            (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
+            (('', email_base),          ['ascii', 'utf-8'], 'joe@example.com'),
+            (('joe', email_base),       ['ascii', 'utf-8'], '"joe" <joe@example.com>'),
+            (('joe doe', email_base),   ['ascii', 'utf-8'], '"joe doe" <joe@example.com>'),
+            (('joe"doe', email_base),   ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
+            (('joé', email_base),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
+            (('joé', email_base),       ['utf-8'],          '"joé" <joe@example.com>'),
             (('', email_idna),          ['ascii'],          'joe@xn--exampl-gva.com'),
             (('', email_idna),          ['utf-8'],          'joe@examplé.com'),
             (('joé', email_idna),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@xn--exampl-gva.com>'),
