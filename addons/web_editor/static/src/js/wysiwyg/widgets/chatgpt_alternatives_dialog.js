@@ -40,6 +40,7 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
             }],
             messages: [],
             alternativesMode: '',
+            messagesInProgress: 0,
             currentBatchId: null,
         });
         this._generationIndex = 0;
@@ -52,20 +53,20 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
 
     switchAlternativesMode(ev) {
         this.state.alternativesMode = ev.currentTarget.getAttribute('data-mode');
-        this.state.messages = [];
-        this._generateAlternatives();
+        this._generateAlternatives(1);
     }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    async _generateAlternatives() {
+    async _generateAlternatives(numberOfAlternatives = this.props.numberOfAlternatives) {
+        this.state.messagesInProgress = numberOfAlternatives;
         const batchId = new Date().getTime();
         this.state.currentBatchId = batchId;
         let wasError = false;
         let messageIndex = 0;
-        while (!wasError && messageIndex < this.props.numberOfAlternatives && this.state.currentBatchId === batchId) {
+        while (!wasError && messageIndex < numberOfAlternatives && this.state.currentBatchId === batchId) {
             this._generationIndex += 1;
             let query = messageIndex ? 'Write one alternative version of the original text.' : 'Try again another single version of the original text.';
             if (this.state.alternativesMode && !messageIndex) {
@@ -85,10 +86,12 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                             content,
                         });
                     }
-                    this.state.messages.push({
+                    this.state.messages.unshift({
                         author: 'assistant',
                         text: alternative,
                         isError,
+                        batchId,
+                        mode: this.state.alternativesMode,
                     });
                 }
             }).catch(() => {
@@ -98,9 +101,11 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                 }
             });
             messageIndex += 1;
+            this.state.messagesInProgress -= 1;
             if (wasError) {
                 break;
             }
         }
+        this.state.messagesInProgress = 0;
     }
 }
