@@ -113,7 +113,7 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
                     <t t-set="title">
-                        <h2 class="mb-0">
+                        <h2>
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
                         </h2>
@@ -121,14 +121,14 @@
                     </t>
 
                     <t t-set="entries">
-                        <div class="d-flex flex-wrap align-items-end align-items-lg-center gap-4 mt-3">
+                        <div class="d-flex flex-column gap-4">
                             <div class="flex-basis-100 flex-basis-sm-50 flex-basis-lg-100 order-1 order-lg-0">
-                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap gap-1">
-                                    <div class="btn-group flex-grow-1">
-                                        <a class="btn btn-secondary btn-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
+                                    <div class="flex-grow-1">
+                                        <a class="btn btn-secondary d-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
                                     </div>
-                                    <div class="btn-group flex-grow-1">
-                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                                    <div class="flex-grow-1">
+                                        <a class="btn btn-secondary d-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                     </div>
                                 </div>
                             </div>

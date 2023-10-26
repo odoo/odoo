@@ -143,15 +143,17 @@
                     </t>
                     <t t-set="entries">
                         <div class="d-flex flex-column gap-4">
-                            <div class="d-flex flex-column gap-1 order-md-last order-lg-first" id="sale_order_sidebar_button">
+                            <div class="d-flex flex-column gap-2" id="sale_order_sidebar_button">
                                 <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary d-block" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
                                 <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'d-block %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
-                                <div class="o_download_pdf">
-                                    <a class="btn btn-secondary o_print_btn o_portal_invoice_print d-block" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
+                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
+                                    <div class="flex-grow-1">
+                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print d-block" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -421,8 +423,8 @@
                 </h2>
             </div>
         </div>
-        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}" id="content">
-            <div id="informations" class="row mt-4">
+        <div id="content">
+            <div id="informations" class="row">
                 <span id="transaction_info">
                     <div t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
                         t-att-data-order-id="sale_order.id">
@@ -434,7 +436,7 @@
                     </div>
                 </span>
                 <!-- Information -->
-                <div id="sale_info" class="col-12 col-lg-5 mb-3 mb-lg-0">
+                <div id="sale_info" class="col-12 col-lg-5 mb-4">
                     <span id="sale_info_title">
                         <h5 class="mb-1">Sale Information</h5>
                         <hr class="my-0"/>
@@ -459,7 +461,7 @@
                 </div>
 
                 <!-- ======  Customer Information  ====== -->
-                <div id="customer_info" class="col-12 col-lg-5 offset-lg-1">
+                <div id="customer_info" class="col-12 col-lg-7 mb-4">
                     <h5 class="mb-1">
                         <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
                             Invoicing and Shipping Address
@@ -486,9 +488,9 @@
                         <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
                     </span>
                 </div>
-                <div id="sale_invoices" class="col-12 col-lg-5 mb-3 mb-lg-0">
+                <div id="sale_invoices" t-if="invoices and state in ['sale', 'cancel']">
                     <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
-                    <t t-if="invoices and state in ['sale', 'cancel']">
+                    <div class="col-12 col-lg-5 mb-4">
                         <h5 class="mb-1">Invoices</h5>
                         <hr class="my-0"/>
                         <table>
@@ -516,11 +518,11 @@
                                 </t>
                             </tbody>
                         </table>
-                    </t>
+                    </div>
                 </div>
             </div>
 
-            <section id="details" style="page-break-inside: auto;" class="mt32">
+            <section id="details" style="page-break-inside: auto;">
                 <t t-if="product_documents">
                     <h3 id="details">Documents</h3>
                     <div class="d-flex flex-grow-1 flex-wrap gap-1 mb32">
