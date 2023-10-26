@@ -86,7 +86,7 @@ export class Message extends Component {
         "messageSearch?",
         "className?",
         "showDates?",
-        "isFirstMessage?"
+        "isFirstMessage?",
     ];
     static template = "mail.Message";
 
@@ -102,7 +102,7 @@ export class Message extends Component {
             isHovered: false,
             isClicked: false,
             expandOptions: false,
-            originalEmail: false,
+            originalFormat: false,
             emailHeaderOpen: false,
             showTranslation: false,
         });
@@ -137,13 +137,13 @@ export class Message extends Component {
                 if (!this.shadowRoot) {
                     return;
                 }
-                if (this.state.originalEmail) {
+                if (this.state.originalFormat) {
                     this.shadowRoot.removeChild(this.shadowStyle);
                 } else {
                     this.shadowRoot.insertBefore(this.shadowStyle, this.shadowRoot.firstChild);
                 }
             },
-            () => [this.state.originalEmail]
+            () => [this.state.originalFormat]
         );
         onPatched(() => {
             if (this.props.highlighted && this.root.el) {
@@ -385,12 +385,6 @@ export class Message extends Component {
             last_message_id: previousMessageId,
             allow_older: true,
         });
-    }
-
-    get originalEmailText() {
-        return this.state.originalEmail
-            ? _t("Don't show Original Email")
-            : _t("Show Original Email");
     }
 
     /**
