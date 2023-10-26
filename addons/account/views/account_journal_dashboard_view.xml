@@ -335,7 +335,7 @@
                                         <t t-out="dashboard.number_waiting"/> Unpaid Invoices
                                     </a>
                                     <a type="object" name="open_action" t-if="journal_type == 'purchase'"
-                                    context="{'action_name': 'action_open_payment_items', 'search_default_purchases': '1'}">
+                                    context="{'action_name': 'action_open_purchase_payment_items', 'search_default_purchases': '1'}">
                                         <t t-out="dashboard.number_waiting"/> Bills to Pay
                                     </a>
                                 </div>
@@ -349,7 +349,7 @@
                                         <span><t t-out="dashboard.number_late"/> Late Invoices</span>
                                     </a>
                                     <a type="object" t-if="journal_type == 'purchase'" name="open_action"
-                                    context="{'action_name': 'action_open_payment_items', 'search_default_purchases': '1', 'search_default_late': '1'}">
+                                    context="{'action_name': 'action_open_purchase_payment_items', 'search_default_purchases': '1', 'search_default_late': '1'}">
                                         <span><t t-out="dashboard.number_late"/> Late Bills</span>
                                     </a>
                                 </div>

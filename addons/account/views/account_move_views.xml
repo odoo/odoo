@@ -1689,19 +1689,36 @@
             </field>
         </record>
 
-        <record id="action_open_payment_items" model="ir.actions.act_window">
+        <record id="action_open_sale_payment_items" model="ir.actions.act_window">
             <field name="name">Amounts to Settle</field>
             <field name="res_model">account.move.line</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
             <field name="context">{'search_default_group_by_partner':1, 'expand':1}</field>
-            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle
                 </p><p>
-                    Cool, it looks like you don't have anything to pay either for vendor bills or for customer credit notes.
+                    Cool, it looks like you don't have any customer credit notes to pay.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_open_purchase_payment_items" model="ir.actions.act_window">
+            <field name="name">Amounts to Settle</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_move_line_payment_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
+            <field name="context">{'search_default_group_by_partner':1, 'expand':1}</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'purchase')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Amounts to settle
+                </p><p>
+                    Cool, it looks like you don't have any vendor bills to pay.
                 </p>
             </field>
         </record>
