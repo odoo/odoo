@@ -66,7 +66,9 @@ export class AutoresizeInput extends Component {
     }
 
     onValidate() {
-        this.props.onValidate(this.state.value);
+        if (this.state.value !== this.props.value) {
+            this.props.onValidate(this.state.value);
+        }
         this.state.value = this.props.value;
     }
 
