@@ -3402,7 +3402,7 @@ class AccountMove(models.Model):
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
                 ))
-            if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
+            if invoice.company_id.country_id != self.env.ref('base.it') and float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
                 raise UserError(_(
                     "You cannot validate an invoice with a negative total amount. "
                     "You should create a credit note instead. "
