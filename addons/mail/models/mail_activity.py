@@ -218,6 +218,9 @@ class MailActivity(models.Model):
             valid = super(MailActivity, self)._filter_access_rules(operation)
             if valid and valid == self:
                 return self
+        elif operation == 'read':
+            # Not in the ACL otherwise it would break the custom _search method
+            valid = self.sudo().filtered_domain([('user_id', '=', self.env.uid)])
         else:
             valid = self.env[self._name]
         return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules')
@@ -228,6 +231,8 @@ class MailActivity(models.Model):
             valid = super(MailActivity, self)._filter_access_rules_python(operation)
             if valid and valid == self:
                 return self
+        elif operation == 'read':
+            valid = self.sudo().filtered_domain([('user_id', '=', self.env.uid)])
         else:
             valid = self.env[self._name]
         return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules_python')
@@ -413,14 +418,17 @@ class MailActivity(models.Model):
             f'"{self._table}"."id"',
             f'"{self._table}"."res_model"',
             f'"{self._table}"."res_id"',
+            f'"{self._table}"."user_id"',
         )
         self.env.cr.execute(query_str, params)
         rows = self.env.cr.fetchall()
 
         # group res_ids by model, and determine accessible records
+        # Note: the user can read all activities assigned to him (see at the end of the method)
         model_ids = defaultdict(set)
-        for _id, res_model, res_id in rows:
-            model_ids[res_model].add(res_id)
+        for __, res_model, res_id, user_id in rows:
+            if user_id != self.env.uid:
+                model_ids[res_model].add(res_id)
 
         allowed_ids = defaultdict(set)
         for res_model, res_ids in model_ids.items():
@@ -433,8 +441,8 @@ class MailActivity(models.Model):
 
         activities = self.browse(
             id_
-            for id_, res_model, res_id in rows
-            if res_id in allowed_ids[res_model]
+            for id_, res_model, res_id, user_id in rows
+            if user_id == self.env.uid or res_id in allowed_ids[res_model]
         )
         return activities._as_query(order)
 
