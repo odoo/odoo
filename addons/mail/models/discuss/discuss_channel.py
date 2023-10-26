@@ -464,11 +464,11 @@ class Channel(models.Model):
           and use;
         """
         # get values from msg_vals or from message if msg_vals doen't exists
-        message_type = msg_vals.get('message_type', 'email') if msg_vals else message.message_type
+        message_type = msg_vals.get('message_type', 'comment') if msg_vals else message.message_type
         pids = msg_vals.get('partner_ids', []) if msg_vals else message.partner_ids.ids
 
-        # notify only user input (comment or incoming emails)
-        if message_type not in ('comment', 'email'):
+        # notify only user input (comment or incoming / outgoing emails)
+        if message_type not in ('comment', 'email', 'email_outgoing'):
             return []
         # notify only mailing lists or if mentioning recipients
         if not pids:
