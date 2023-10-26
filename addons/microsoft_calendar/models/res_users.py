@@ -178,3 +178,12 @@ class User(models.Model):
 
     def pause_microsoft_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", True)
+
+    @api.model
+    def check_calendar_credentials(self):
+        res = super().check_calendar_credentials()
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        client_id = get_param('microsoft_calendar_client_id')
+        client_secret = get_param('microsoft_calendar_client_secret')
+        res['microsoft_calendar'] = bool(client_id and client_secret)
+        return res
