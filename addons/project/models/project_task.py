@@ -1567,6 +1567,7 @@ class Task(models.Model):
             'search_view_ref': 'project.project_sharing_project_task_view_search',
         }).action_open_parent_task()
         action['views'] = [(self.env.ref('project.project_sharing_project_task_view_form').id, 'form')]
+        action['search_view_id'] = self.env.ref("project.project_sharing_project_task_view_search").id
         return action
 
     # ------------
