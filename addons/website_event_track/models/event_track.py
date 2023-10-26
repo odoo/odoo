@@ -10,6 +10,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
 from odoo.tools.translate import _, html_translate
+from odoo.exceptions import UserError
 
 
 class Track(models.Model):
@@ -273,8 +274,11 @@ class Track(models.Model):
     def _compute_end_date(self):
         for track in self:
             if track.date:
-                delta = timedelta(minutes=60 * track.duration)
-                track.date_end = track.date + delta
+                try:
+                    delta = timedelta(minutes=60 * track.duration)
+                    track.date_end = track.date + delta
+                except OverflowError:
+                    raise UserError(_("The entered duration creates a date too far into the future."))
             else:
                 track.date_end = False
 
