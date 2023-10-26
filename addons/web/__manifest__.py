@@ -115,8 +115,6 @@ This module provides the core of the Odoo Web Client.
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/utils.js',
-
             'web/static/src/legacy/xml/base.xml',
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
@@ -218,7 +216,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/public/datetime_picker_widget.js',
             'web/static/src/libs/pdfjs.js',
 
-            'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',

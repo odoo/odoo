@@ -127,8 +127,6 @@
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/utils.js',
-
             'mrp_subcontracting/static/src/subcontracting_portal/*',
             'web/static/src/start.js',
         ],
