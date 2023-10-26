@@ -102,9 +102,10 @@ class AccountMoveSend(models.TransientModel):
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
         if invoice_data.get('l10n_it_edi_checkbox_xml_export') and invoice._l10n_it_edi_ready_for_xml_export():
             if errors := invoice._l10n_it_edi_export_data_check():
-                message = _("Errors occured while creating the e-invoice file.")
-                message += "\n- " + "\n- ".join(errors)
-                invoice_data['error'] = message
+                invoice_data['error'] = {
+                    'error_title': _("Errors occurred while creating the e-invoice file:"),
+                    'errors': errors,
+                }
 
     @api.model
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
