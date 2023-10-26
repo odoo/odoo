@@ -8,7 +8,6 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
@@ -678,7 +677,6 @@ function makeActionManager(env) {
                 if (!this.isMounted) {
                     reject(error);
                 }
-                cleanDomFromBootstrap();
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
@@ -775,7 +773,6 @@ function makeActionManager(env) {
         };
         let nextDialog = null;
         if (action.target === "new") {
-            cleanDomFromBootstrap();
             const actionDialogProps = {
                 ActionComponent: ControllerComponent,
                 actionProps: controller.props,
@@ -796,7 +793,6 @@ function makeActionManager(env) {
                     if (onClose) {
                         onClose();
                     }
-                    cleanDomFromBootstrap();
                 },
             });
             nextDialog = {

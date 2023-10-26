@@ -178,8 +178,6 @@
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web/static/src/legacy/utils.js',
-
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',

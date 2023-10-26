@@ -157,7 +157,6 @@
             'web/static/src/legacy/js/**/*',
             ('remove', 'web/static/src/legacy/js/libs/**/*'),
             ('remove', 'web/static/src/legacy/js/public/**/*'),
-            'web/static/src/legacy/utils.js',
             'web/static/src/search/**/*',
             'web/static/src/views/fields/field_tooltip.js',
             'web/static/src/views/fields/field.js',

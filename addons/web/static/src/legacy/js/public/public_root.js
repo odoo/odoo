@@ -7,8 +7,6 @@ import { registry } from '@web/core/registry';
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
-import { createWidgetParent } from "../../utils";
-
 import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -322,7 +320,7 @@ export async function createPublicRoot(RootWidget) {
     await startServices(env);
     Component.env = env;
     await env.services.public_component.mountComponents();
-    const publicRoot = new RootWidget(createWidgetParent(env), env);
+    const publicRoot = new RootWidget(null, env);
     const app = new App(MainComponentsContainer, {
         templates,
         env,
