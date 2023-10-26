@@ -59,3 +59,7 @@ class Users(models.Model):
             res.insert(0, meetings_systray)
 
         return res
+
+    @api.model
+    def check_calendar_credentials(self):
+        return {}
