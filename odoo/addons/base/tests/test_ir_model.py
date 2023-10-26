@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase, HttpCase, tagged
+from odoo.tests.common import Form, TransactionCase, HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
 
@@ -423,6 +423,17 @@ class TestIrModel(TransactionCase):
                          "Should have the monetary field in the created ir.model")
         self.assertEqual(monetary_field.currency_field, "x_good_currency",
                          "The currency field in monetary should have x_good_currency as name")
+
+    def test_new_ir_model_fields_related(self):
+        """Check that related field are handled correctly on new field"""
+        with self.debug_mode():
+            form = Form(
+                self.env['ir.model.fields'].with_context(
+                    default_model_id=self.bananas_model.id
+                )
+            )
+            form.related = 'id'
+            self.assertEqual(form.ttype, 'integer')
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):
