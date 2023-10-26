@@ -549,13 +549,25 @@ def email_split_tuples(text):
 
     if not text:
         return []
-    return list(map(_parse_based_on_spaces, [
+
+    # found valid pairs, filtering out failed parsing
+    valid_pairs = [
         (addr[0], addr[1]) for addr in getaddresses([text])
         # getaddresses() returns '' when email parsing fails, and
         # sometimes returns emails without at least '@'. The '@'
         # is strictly required in RFC2822's `addr-spec`.
         if addr[1] and '@' in addr[1]
-    ]))
+    ]
+    # corner case: returning '@gmail.com'-like email (see test_email_split)
+    if any(pair[1].startswith('@') for pair in valid_pairs):
+        filtered = [
+            found_email for found_email in email_re.findall(text)
+            if found_email and not found_email.startswith('@')
+        ]
+        if filtered:
+            valid_pairs = [('', found_email) for found_email in filtered]
+
+    return list(map(_parse_based_on_spaces, valid_pairs))
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
