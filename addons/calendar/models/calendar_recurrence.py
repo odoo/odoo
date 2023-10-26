@@ -391,14 +391,9 @@ class RecurrenceRule(models.Model):
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
-        if rule._bymonthday:
+        if rule._bymonthday and data['rrule_type'] == 'monthly':
             data['day'] = list(rule._bymonthday)[0]
             data['month_by'] = 'date'
-            data['rrule_type'] = 'monthly'
-
-        # Repeat yearly but for odoo it's monthly, take same information as monthly but interval is 12 times
-        if rule._bymonth:
-            data['interval'] *= 12
 
         if data.get('until'):
             data['end_type'] = 'end_date'
