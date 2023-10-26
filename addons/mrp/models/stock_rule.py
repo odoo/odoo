@@ -160,7 +160,6 @@ class StockRule(models.Model):
         mo_values = {
             'origin': origin,
             'product_id': product_id.id,
-            'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
             'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
             'location_src_id': self.picking_type_id.default_location_src_id.id,

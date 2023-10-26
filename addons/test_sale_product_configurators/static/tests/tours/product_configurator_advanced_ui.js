@@ -41,20 +41,20 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "PA4", "PAV9", "Custom 3", "select"),
     configuratorTourUtils.assertProductNameContains("Custom, White, PAV9, PAV5, PAV1"),
 {
-    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Steel)"))',
+    trigger: 'table.o_product_configurator_table_optional tr:has(td>div[name="o_product_configurator_name"] h5:contains("Conference Chair (TEST) (Steel)"))',
     run: function () {
         const el = queryFirst(
-            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
+            'table.o_product_configurator_table_optional tr:has(td>div[name="o_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_product_configurator_img"]>img'
         );
         optionVariantImage = el?.getAttribute("src");
     }
 },
     configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
 {
-    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)"))',
+    trigger: 'table.o_product_configurator_table_optional tr:has(td>div[name="o_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)"))',
     run: function () {
         const el = queryFirst(
-            'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img'
+            'table.o_product_configurator_table_optional tr:has(td>div[name="o_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_product_configurator_img"]>img'
         );
         let newVariantImage = el?.getAttribute("src");
         if (newVariantImage !== optionVariantImage) {
