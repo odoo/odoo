@@ -12,11 +12,12 @@
         height: $o-mail-Discuss-headerHeight;
     }
 
-    .o-mail-ChatWindow-command {
-        color: inherit !important;
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
+}
+
+.o-mail-ChatWindow-command {
+    color: inherit !important;
+    &:hover, &.o-active {
+        background-color: rgba(0, 0, 0, 0.05);
     }
 }
 

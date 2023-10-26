@@ -15,7 +15,7 @@
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
             <t t-if="threadActions.actions.length > 3">
-                <Dropdown position="'bottom-start'" onStateChanged="state => this.onActionsMenuStateChanged(state)" togglerClass="`o-mail-ChatWindow-command d-flex btn align-items-center text-truncate p-0 p-1 ${ !ui.isSmall ? 'ms-2' : '' }`" menuClass="'d-flex flex-column py-0'" class="'d-flex text-truncate'" disabled="state.editingName" title="actionsMenuTitleText">
+                <Dropdown position="'bottom-start'" onStateChanged="state => this.onActionsMenuStateChanged(state)" togglerClass="`o-mail-ChatWindow-command d-flex btn align-items-center text-truncate p-0 p-1 ${ !ui.isSmall ? 'ms-2' : '' } ${state.actionsMenuOpened ? 'o-active' : ''}`" menuClass="'d-flex flex-column py-0'" class="'d-flex text-truncate'" disabled="state.editingName" title="actionsMenuTitleText">
                     <t t-set-slot="toggler">
                         <t t-call="mail.ChatWindow.headerContent"/>
                     </t>
