@@ -136,7 +136,8 @@
 
     <t t-name="web.DateTimePicker">
         <div
-            class="o_datetime_picker d-flex flex-column gap-2 p-2 p-lg-3 user-select-none"
+            class="o_datetime_picker d-flex flex-column gap-2 user-select-none"
+            t-att-class="!isLastPrecisionLevel ? 'p-2 p-lg-3' : ''"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
         >
             <nav class="o_datetime_picker_header btn-group">
