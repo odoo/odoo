@@ -2856,19 +2856,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 <template id="website.header_social_links_no_color" inherit_id="website.header_social_links" name="Header Social Links - No Color" primary="True">
     <xpath expr="//div[hasclass('s_social_media')]" position="attributes">
-        <attribute name="class" remove="" add="no_icon_color" separator=" "/>
-    </xpath>
-    <xpath expr="//a[hasclass('s_social_media_facebook')]" position="attributes">
-        <attribute name="class" remove="" add="text-reset" separator=" "/>
-    </xpath>
-    <xpath expr="//a[hasclass('s_social_media_twitter')]" position="attributes">
-        <attribute name="class" remove="" add="text-reset" separator=" "/>
-    </xpath>
-    <xpath expr="//a[hasclass('s_social_media_linkedin')]" position="attributes">
-        <attribute name="class" remove="" add="text-reset" separator=" "/>
-    </xpath>
-    <xpath expr="//a[hasclass('s_social_media_instagram')]" position="attributes">
-        <attribute name="class" remove="" add="text-reset" separator=" "/>
+        <attribute name="class" remove="" add="no_icon_color text-reset" separator=" "/>
     </xpath>
 </template>
 
