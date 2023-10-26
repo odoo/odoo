@@ -62,11 +62,19 @@ var SmsWidget = FieldTextEmojis.extend({
      * @private
      */
     _compute: function () {
-        var content = this._getValue();
+        const content = this._getValueForSmsCounts();
         this.encoding = this._extractEncoding(content);
         this.nbrChar = content.length;
         this.nbrChar += (content.match(/\n/g) || []).length;
         this.nbrSMS = this._countSMS(this.nbrChar, this.encoding);
+    },
+
+    _getValueForSmsCounts: function () {
+        return this._getValue();
+    },
+
+    _getNbrCharExplanationTemplate: function () {
+        return _t("%s characters, fits in %s SMS (%s) ");
     },
 
     /**
@@ -122,8 +130,8 @@ var SmsWidget = FieldTextEmojis.extend({
      * @private
      */
     _renderSMSInfo: function () {
-        var string = _.str.sprintf(_t('%s characters, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
-        var $span = $('<span>', {
+        const string = _.str.sprintf(this._getNbrCharExplanationTemplate(), this.nbrChar, this.nbrSMS, this.encoding);
+        const $span = $('<span>', {
             'class': 'text-muted o_sms_count',
         });
         $span.text(string);
@@ -134,9 +142,9 @@ var SmsWidget = FieldTextEmojis.extend({
      * Update widget SMS information with re-computed info about length, ...
      * @private
      */
-    _updateSMSInfo: function ()  {
+    _updateSMSInfo: function () {
         this._compute();
-        var string = _.str.sprintf(_t('%s characters, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding);
+        const string = _.str.sprintf(this._getNbrCharExplanationTemplate(), this.nbrChar, this.nbrSMS, this.encoding);
         this.$('.o_sms_count').text(string);
     },
 
