@@ -1668,6 +1668,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'express_checkout_route': self._express_checkout_route,
             'landing_route': '/shop/payment/validate',
+            'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
         })
         if request.website.is_public_user():
             payment_form_values['partner_id'] = -1

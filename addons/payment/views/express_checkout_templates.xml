@@ -2,13 +2,15 @@
 <odoo>
 
     <template id="payment.express_checkout" name="Payment Express Checkout">
-        <!-- Variables description:
-            - providers: The payment providers compatible with the current transaction.
+        <!-- Parameters description:
             - reference_prefix: The custom prefix to compute the full transaction reference.
             - amount: The amount to pay.
             - minor_amount: The amount to pay in the minor units of its currency.
-            - currency: The currency of the transaction, as a `res.currency` record.
+            - currency: The currency of the payment, as a `res.currency` record.
+            - providers_sudo: The compatible providers, as a sudoed `payment.provider` recordset.
             - merchant_name: The merchant name.
+            - payment_method_unknown_id: The ID of the "Unknown" payment method record, to use as
+                                         the generic express checkout method.
             - payment_access_token: The access token used to authenticate the partner. Since this
                                     template is loaded in the shopping cart, this parameter is
                                     called `payment_access_token` to prevent mixing up with the
@@ -20,6 +22,10 @@
                                              Optional.
             - express_checkout_route: The route where the billing and shipping information are sent.
             - landing_route: The route the user is redirected to after the transaction.
+            - payment_access_token: The access token used to authenticate the partner. Since this
+                                    template is loaded in the shopping cart, this parameter is
+                                    called `payment_access_token` to prevent mixing up with the
+                                    `access_token` used for abandoned carts.
         -->
         <form name="o_payment_express_checkout_form" class="container"
               t-att-data-reference-prefix="reference_prefix"
@@ -29,6 +35,7 @@
               t-att-data-currency-name="currency.name.lower()"
               t-att-data-merchant-name="merchant_name"
               t-att-data-partner-id="partner_id"
+              t-att-data-payment-method-unknown-id="payment_method_unknown_id"
               t-att-data-access-token="payment_access_token"
               t-att-data-shipping-info-required="shipping_info_required"
               t-att-data-transaction-route="transaction_route"
@@ -36,15 +43,12 @@
               t-att-data-express-checkout-route="express_checkout_route"
               t-att-data-landing-route="landing_route"
         >
-            <t t-foreach="providers_sudo" t-as="provider_sudo">
-                <t t-set="express_checkout_form_xml_id"
-                   t-value="provider_sudo.express_checkout_form_view_id.xml_id"
-                />
-                <t t-if="express_checkout_form_xml_id">
-                    <t t-call="{{express_checkout_form_xml_id}}">
-                        <t t-set="provider_sudo" t-value="provider_sudo"/>
-                    </t>
-                </t>
+            <t t-set="provider_sudo" t-value="providers_sudo[0]"/>
+            <t t-set="express_checkout_form_xml_id"
+               t-value="provider_sudo.express_checkout_form_view_id.xml_id"
+            />
+            <t t-if="express_checkout_form_xml_id">
+                <t t-call="{{express_checkout_form_xml_id}}"/>
             </t>
         </form>
     </template>
