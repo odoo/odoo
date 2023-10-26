@@ -23,7 +23,6 @@ patch(SelfOrder.prototype, {
     ) {
         const baseUrl = session.base_url;
         const order = this.currentOrder;
-        const tableIdentifier = this.table?.identifier;
         let exitRouteUrl = baseUrl;
 
         if (exitRoute) {
@@ -34,10 +33,6 @@ patch(SelfOrder.prototype, {
             }
 
             exitRouteUrl += `?access_token=${this.access_token}`;
-
-            if (tableIdentifier) {
-                exitRouteUrl += `&table_identifier=${tableIdentifier}`;
-            }
         }
 
         const exit = encodeURIComponent(exitRouteUrl);

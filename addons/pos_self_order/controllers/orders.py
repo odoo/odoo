@@ -78,7 +78,7 @@ class PosSelfOrderController(http.Controller):
 
         order.write({
             'lines': lines,
-            'state': 'paid' if amount_total == 0 and pos_config.self_ordering_pay_after == 'each' else 'draft',
+            'state': 'paid' if amount_total == 0 else 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })

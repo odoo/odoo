@@ -18,6 +18,8 @@ from odoo.tools import file_open, split_every
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
+    _ALLOWED_PAYMENT_METHODS = ['adyen', 'stripe']
+
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
 
@@ -144,6 +146,11 @@ class PosConfig(models.Model):
                 pos_config_id.self_ordering_mode = 'mobile'
 
         return pos_config_ids
+
+    def _get_allowed_payment_methods(self):
+        if self.self_ordering_mode == 'kiosk':
+            return self.payment_method_ids.filtered(lambda p: p.use_payment_terminal in self._ALLOWED_PAYMENT_METHODS)
+        return []
 
     def write(self, vals):
         for record in self:
@@ -333,7 +340,7 @@ class PosConfig(models.Model):
     def _get_self_ordering_data(self):
         self.ensure_one()
         payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal in ['adyen', 'stripe'] or p.is_online_payment).read(payment_search_params['search_params']['fields'])
+        payment_methods = self._get_allowed_payment_methods().read(payment_search_params['search_params']['fields'])
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
 
         return {
