@@ -39,6 +39,7 @@ The following topics are covered by this module:
     ],
     'demo': ['data/repair_demo.xml'],
     'post_init_hook': '_create_warehouse_data',
+    'uninstall_hook': 'uninstall_hook',
     'installable': True,
     'application': True,
     'license': 'LGPL-3',

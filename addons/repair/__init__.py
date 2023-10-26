@@ -16,3 +16,10 @@ def _create_warehouse_data(env):
         picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
         if picking_type_vals:
             warehouse.write(picking_type_vals)
+
+def uninstall_hook(env):
+    #clean-up sequences at uninstall
+    sequence_ids = env["stock.warehouse"].search([
+        ('repair_type_id', '!=', False)
+    ]).mapped('repair_type_id.sequence_id.id')
+    env['ir.sequence'].browse(sequence_ids).unlink()
