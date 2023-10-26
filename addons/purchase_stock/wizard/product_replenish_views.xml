@@ -10,11 +10,6 @@
                 <div class="o_row">
                     <field name="show_vendor" invisible="1"/>
                     <field name="supplier_id" invisible="not show_vendor" required="show_vendor" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_open': 1, 'no_create': 1}"/>
-                    <button name="action_stock_replenishment_info"
-                        type="object"
-                        title="Show Vendor"
-                        icon="fa-info-circle"
-                        invisible="not show_vendor"/>
                 </div>
             </xpath>
         </field>
