@@ -107,16 +107,16 @@ export class GraphRenderer extends Component {
      */
     customTooltip(data, metaData, tooltipModel) {
         const { measure, measures, disableLinking, mode } = metaData;
-        this.rootRef.el.style.cursor = "";
+        this.containerRef.el.style.cursor = "";
         this.removeTooltips();
         if (tooltipModel.opacity === 0 || tooltipModel.dataPoints.length === 0) {
             return;
         }
         if (!disableLinking && mode !== "line") {
-            this.rootRef.el.style.cursor = "pointer";
+            this.containerRef.el.style.cursor = "pointer";
         }
         const chartAreaTop = this.chart.chartArea.top;
-        const viewContentTop = this.rootRef.el.getBoundingClientRect().top;
+        const viewContentTop = this.containerRef.el.getBoundingClientRect().top;
         const innerHTML = renderToString("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
