@@ -510,6 +510,8 @@ export class SelfOrder extends Reactive {
                 header: this.config.receipt_header,
                 company: this.company,
                 trackingNumber: order.trackingNumber,
+                pickingService: this.config.self_ordering_service_mode,
+                tableTracker: order.table_stand_number ?? false,
             },
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
