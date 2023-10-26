@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import "@mail/../tests/helpers/mock_server/models/discuss_channel"; // ensure mail overrides are applied first
+import { Command } from "@mail/../tests/helpers/command";
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -81,7 +82,12 @@ patch(MockServer.prototype, {
         if (this._mockDiscussChannelMember__getAsSudoFromContext(channelId)) {
             return;
         }
-        const guestId = this._mockMailGuest__findOrCreateForChannel(channelId, guestName);
+        const guestId =
+            this._mockMailGuest__getGuestFromContext()?.id ??
+            this.pyEnv["mail.guest"].create({ name: guestName });
+        this.pyEnv["discuss.channel"].write([channelId], {
+            channel_member_ids: [Command.create({ guest_id: guestId })],
+        });
         this._mockMailGuest__setAuthCookie(guestId);
     },
 });

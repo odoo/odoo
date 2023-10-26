@@ -6,6 +6,7 @@ import json
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -82,14 +83,16 @@ class WebsiteVisitor(models.Model):
             discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
             for channel in discuss_channels:
                 if not channel.livechat_visitor_id.partner_id:
-                    # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
-                    self.env['mail.guest'].sudo()._find_or_create_for_channel(
-                        channel,
-                        country_id=country.id,
-                        name=_("Visitor #%d", channel.livechat_visitor_id.id),
-                        post_joined_message=False,
-                        timezone=visitor.timezone
+                    # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
+                    guest = self.env["mail.guest"].sudo().create(
+                        {
+                            "country_id": country.id,
+                            "lang": get_lang(channel.env).code,
+                            "name": _("Visitor #%d", channel.livechat_visitor_id.id),
+                            "timezone": visitor.timezone,
+                        }
                     )
+                    channel.add_members(guest_ids=guest.ids, post_joined_message=False)
             # Open empty chatter to allow the operator to start chatting with the visitor.
             channel_members = self.env['discuss.channel.member'].sudo().search([
                 ('partner_id', '=', self.env.user.partner_id.id),
