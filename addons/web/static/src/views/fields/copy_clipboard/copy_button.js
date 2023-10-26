@@ -35,7 +35,11 @@ export class CopyButton extends Component {
             write = (value) => browser.navigator.clipboard.write(value);
         }
         try {
-            await write(this.props.content);
+            let content = this.props.content;
+            if (typeof this.props.content === 'function') {
+                content = this.props.content();
+            }
+            await write(content);
         } catch (error) {
             return browser.console.warn(error);
         }
