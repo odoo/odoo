@@ -2,11 +2,9 @@
 <odoo>
 
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
-        <xpath expr="//div//h2[@data-id='total_amount']" position="after">
-            <div t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale'" class="flex-grow-1 w-100 mb-2">
-                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
-                    <a class="btn btn-primary w-100" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
-                </div>
+        <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
+            <div t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale'" class="flex-grow-1">
+                <a class="btn btn-secondary d-block w-100" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
             </div>
         </xpath>
     </template>
@@ -91,7 +89,7 @@
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
-            <li t-if="invoice.timesheet_count > 0" class="list-group-item flex-grow-1 border-0">
+            <div t-if="invoice.timesheet_count > 0" class="flex-grow-1 border-0">
                 <div class="btn-toolbar flex-sm-nowrap justify-content-center">
                     <div class="btn-group mb-1">
                         <t t-set="search_value" t-value="invoice.name"/>
@@ -100,7 +98,7 @@
                            target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value">View Timesheets</a>
                     </div>
                 </div>
-            </li>
+            </div>
         </xpath>
     </template>
 
