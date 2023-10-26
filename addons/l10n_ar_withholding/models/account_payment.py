@@ -19,6 +19,6 @@ class AccountPayment(models.Model):
         for pay in self.with_context(
                 skip_account_move_synchronization=True, check_move_validity=False, skip_invoice_sync=True, dynamic_unlink=True):
             pay.line_ids.filtered('tax_line_id').unlink()
-            pay.line_ids.filtered('tax_ids').tax_ids.unlink()
+            pay.line_ids.filtered('tax_ids').unlink()
         res = super()._synchronize_to_moves(changed_fields)
         return res

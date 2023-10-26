@@ -12,11 +12,14 @@
                             <field name="withholding_sequence_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
+                            <field name="manual_wth" column_invisible="True"/>
                             <field name="tax_id" domain="[('l10n_ar_withholding_payment_type', '=', parent.partner_type), ('company_id', '=', company_id)]" options="{'no_open': True, 'no_create': True}"/>
                             <field name="name" readonly="withholding_sequence_id"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
-                            <field name="manual_wth" optional="hide"/>
+                            <field name="factor"/>
+                            <field name="base_factor"/>
+
                         </tree>
                     </field>
                     <group colspan="2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
@@ -25,9 +28,9 @@
                         <field name="l10n_ar_net_amount" nolabel="1" />
                         <field name="l10n_ar_require_recompute_witholding" invisible="True"/>
                         <p colspan="2" invisible=" not l10n_ar_require_recompute_witholding" class="alert alert-warning" role="alert">
-                            Please adjust the total amount of the payment or withholding bases so that the net amount matches with the amount of the check.
+                            If you want to get a simulation from Odoo on the base amounts click the button "Simulate Computation", but be aware that manual intervention may be needed
                             <button type="object" class="oe_link p-0 align-baseline" colspan="2" name="wizard_recompute_witholding">
-                            You can also calculate it automatically by clicking here.
+                            Simulate Computation.
                             </button>
                         </p>
                     </group>

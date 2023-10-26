@@ -29,10 +29,19 @@ class AccountPaymentRegister(models.TransientModel):
         supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))
         for rec in supplier_recs:
             taxes = rec._get_withholding_tax()
-            rec.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
+            rec.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0, 'manual_wth': False}) for x in taxes]
         (self - supplier_recs).l10n_ar_withholding_ids = False
 
     def _compute_amount_from_latam_check(self):
+        for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
+            total_factor_percent = 1.0
+            for line in wizard.l10n_ar_withholding_ids:
+                total_factor_percent -= line.factor
+            conversion_rate = wizard._get_conversion_rate()
+            withholding_net_amount = min(wizard.l10n_latam_check_id.amount, wizard.source_amount * conversion_rate)
+            wizard.amount = withholding_net_amount / total_factor_percent + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
+
+    def _o_compute_amount_from_latam_check(self):
         for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
             simulated_wizard = self.env['account.payment.register'].with_context(active_model='account.move.line', active_ids=wizard.line_ids.ids).new()
             simulated_wizard.currency_id = wizard.l10n_latam_check_id.currency_id

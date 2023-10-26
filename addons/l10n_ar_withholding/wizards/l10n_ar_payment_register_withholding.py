@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -14,11 +15,14 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
     company_id = fields.Many2one(related='payment_register_id.company_id')
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number')
-    tax_id = fields.Many2one('account.tax', check_company=True,  required=True)
+    tax_id = fields.Many2one('account.tax', check_company=True, required=True)
     withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
-    base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
+    base_amount = fields.Monetary(compute='_compute_base_amount', store=True, readonly=False,
+                                  required=True)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
-    manual_wth = fields.Boolean()
+    manual_wth = fields.Boolean(default = True)
+    factor = fields.Float(digits=(16, 6))
+    base_factor = fields.Float(compute='_compute_base_amount', store=True, digits=(16, 6))
 
     @api.depends('tax_id', 'payment_register_id.line_ids', 'payment_register_id.amount', 'payment_register_id.currency_id')
     def _compute_base_amount(self):
@@ -30,14 +34,19 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
                 rec.base_amount = 0.0
                 continue
             base_amount = rec._get_base_amount(base_lines, factor)
-            if base_amount and not rec.manual_wth:
+            if base_amount:
                 rec.base_amount = base_amount
+                rec.base_factor = rec.base_amount / rec.payment_register_id.amount
+            elif rec.base_factor:
+                rec.base_amount = rec.payment_register_id.amount * rec.base_factor
+
         # Only supplier compute base tax
         (self - supplier_recs).base_amount = 0.0
 
     @api.onchange('base_amount')
     def _onchange_base_amount(self):
         self.manual_wth = True
+        self.base_factor = self.base_amount / self.payment_register_id.amount
 
     def _get_base_amount(self, base_lines, factor):
         conversion_rate = self.payment_register_id._get_conversion_rate()
@@ -65,10 +74,12 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
         tax_repartition_line_id = taxes_res['taxes'][0]['tax_repartition_line_id']
         return tax_amount, tax_account_id, tax_repartition_line_id
 
-    @api.depends('tax_id', 'base_amount')
+    @api.depends('base_amount')
     def _compute_amount(self):
         for line in self:
             if not line.tax_id:
                 line.amount = 0.0
+                line.factor = 0.0
             else:
                 line.amount, dummy, dummy = line._tax_compute_all_helper()
+                line.factor = line.amount / self.payment_register_id.amount

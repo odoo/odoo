@@ -8,7 +8,6 @@
     'countries': ['ar'],
     'category': 'Accounting/Localizations',
     'depends': [
-        'account',
         'l10n_ar',
         'l10n_latam_check',
     ],
