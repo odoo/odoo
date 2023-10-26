@@ -92,6 +92,13 @@ export class LandingPage extends Component {
 
     start() {
         if (
+            this.draftOrder.length > 0 &&
+            this.selfOrder.config.self_ordering_pay_after === "each"
+        ) {
+            return;
+        }
+
+        if (
             this.selfOrder.config.self_ordering_takeaway &&
             this.selfOrder.currentOrder.take_away === null
         ) {
