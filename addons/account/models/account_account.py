@@ -843,8 +843,7 @@ class AccountGroup(models.Model):
             prefix = group.code_prefix_start and str(group.code_prefix_start)
             if prefix and group.code_prefix_end != group.code_prefix_start:
                 prefix += '-' + str(group.code_prefix_end)
-            name = (prefix and (prefix + ' ') or '') + group.name
-            group.display_name = name
+            group.display_name = ' '.join(filter(None, [prefix, group.name]))
 
 
     @api.model

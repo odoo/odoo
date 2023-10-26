@@ -19,4 +19,4 @@ class PeopleSeniority(models.Model):
     @api.depends('name')
     def _compute_display_name(self):
         for seniority in self:
-            seniority.display_name = seniority.name.replace('_', ' ').title()
+            seniority.display_name = (seniority.name or '').replace('_', ' ').title()
