@@ -117,4 +117,4 @@ class CalendarController(http.Controller):
     @http.route('/calendar/check_credentials', type='json', auth='user')
     def check_calendar_credentials(self):
         # method should be overwritten by sync providers
-        return {}
+        return request.env['res.users'].check_calendar_credentials()
