@@ -2272,14 +2272,14 @@ class MailThread(models.AbstractModel):
             return True
 
         model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self._fallback_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name, msg_vals=msg_vals)
+        model_id = self._fallback_lang().env['ir.model']._get(model) if model else self.env['ir.model']
+        recipients_groups_data = self._notify_classify_recipients(partners_data, model_description, msg_vals=msg_vals, model_id=model_id)
 
         if not recipients_groups_data:
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
-        template_values = self._notify_prepare_template_context(message, msg_vals, model_description=model_description) # 10 queries
+        template_values = self._notify_prepare_template_context(message, msg_vals, model_description=model_description, model_id=model_id) # 10 queries
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
@@ -2406,7 +2406,7 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.model
-    def _notify_prepare_template_context(self, message, msg_vals, model_description=False, mail_auto_delete=True):
+    def _notify_prepare_template_context(self, message, msg_vals, model_description=False, mail_auto_delete=True, model_id=None):
         # compute send user and its related signature
         signature = ''
         user = self.env.user
@@ -2414,7 +2414,6 @@ class MailThread(models.AbstractModel):
         model = msg_vals.get('model') if msg_vals else message.model
         add_sign = msg_vals.get('add_sign') if msg_vals else message.add_sign
         subtype_id = msg_vals.get('subtype_id') if msg_vals else message.subtype_id.id
-        message_id = message.id
         record_name = msg_vals.get('record_name') if msg_vals else message.record_name
         author_user = user if user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
         # trying to use user (self.env.user) instead of browing user_ids if he is the author will give a sudo user,
@@ -2424,7 +2423,7 @@ class MailThread(models.AbstractModel):
             if add_sign:
                 signature = user.signature
         elif add_sign and author.name:
-                signature = Markup("<p>-- <br/>%s</p>") % author.name
+            signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         # company value should fall back on env.company if:
         # - no company_id field on record
@@ -2444,7 +2443,9 @@ class MailThread(models.AbstractModel):
             if template and template.lang:
                 lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
 
-        if not model_description and model:
+        if model_id:
+            model_description = model_id.with_context(lang=lang).display_name
+        elif not model_id and model:
             model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
 
         tracking = []
@@ -2598,7 +2599,7 @@ class MailThread(models.AbstractModel):
             )
         ]
 
-    def _notify_classify_recipients(self, recipient_data, model_name, msg_vals=None):
+    def _notify_classify_recipients(self, recipient_data, model_name, msg_vals=None, model_id=None):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
@@ -2647,6 +2648,7 @@ class MailThread(models.AbstractModel):
         for lang, lang_groups in groups_by_lang.items():
             for group_name, group_func, group_data in lang_groups:
                 context = {'lang': lang}
+                model_name = (model_id.with_context(lang=lang).display_name or model_name) if model_id else model_name
                 if model_name:
                     view_title = _('View %s', model_name)
                 else:

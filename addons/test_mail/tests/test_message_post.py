@@ -5,7 +5,7 @@ import base64
 
 from unittest.mock import patch
 
-from odoo import tools
+from odoo import _, tools
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
@@ -111,7 +111,6 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         template_values = self.test_record._notify_prepare_template_context(self.test_message, {})
         self.assertEqual(template_values['signature'], '')
 
-    @users('employee')
     def test_notify_mail_translate_group_actions(self):
         def _notify_get_groups(self, *args, **kwargs):
             return [
@@ -121,6 +120,8 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                     {'actions': [{'url': '/some/url', 'title': _('TestMailTestActionTitle')}]}
                 )
             ]
+
+        # add code and field translations for es
         self.env['res.lang'].sudo()._activate_lang('es_ES')
         self.env['ir.translation'].create({
             'src': 'TestMailTestActionTitle',
@@ -132,6 +133,20 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             'res_id': 0,
             'state': 'translated',
         })
+        self.env['ir.translation'].create({
+            'src': 'View %s',
+            'value': 'Vista %s',
+            'type': 'code',
+            'name': 'addons/mail/models/mail_thread.py',
+            'module': 'mail',
+            'lang': 'es_ES',
+            'res_id': 0,
+            'state': 'translated',
+        })
+        TestModel = self.env['ir.model']._get('mail.test.simple')
+        TestModel.name = 'Simple Chatter Model'
+        TestModel.with_context(lang='es_ES').name = 'Modelo de chat sencillo'
+
         follower_users = self.env['res.users'].sudo().create([
             {'login': 'TestTRanslateGroupActions1', 'name': 'Johny English', 'lang': 'en_US'},
             {'login': 'TestTRanslateGroupActions2', 'name': 'Julio Spanish', 'lang': 'es_ES'}
@@ -143,10 +158,12 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             with self.mock_mail_gateway(mail_unlink_sent=False):
                 self.test_record.message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
 
-        self.assertIn('TestMailTestActionTitle',
-                      self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[0].partner_id).body_html)
-        self.assertIn('TestMailTestActionTitleSpanish',
-                      self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[1].partner_id).body_html)
+        english_mail_body = self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[0].partner_id).body_html
+        spanish_mail_body = self._new_mails.filtered(lambda mail: mail.recipient_ids == follower_users[1].partner_id).body_html
+        self.assertIn('TestMailTestActionTitle', english_mail_body)
+        self.assertIn('TestMailTestActionTitleSpanish', spanish_mail_body)
+        self.assertIn('View Simple Chatter Model', english_mail_body)
+        self.assertIn('Vista Modelo de chat sencillo', spanish_mail_body)
 
     @users('employee')
     def test_notify_prepare_template_context_company_value(self):
