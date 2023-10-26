@@ -651,6 +651,24 @@ class TestJavascriptAssetsBundle(FileTouchable):
     </body>
 </html>""" % format_data))
 
+class TestXMLAssetsBundle(FileTouchable):
+
+    def _get_asset(self, bundle, rtl=False, debug_assets=False):
+        files, _ = self.env['ir.qweb']._get_asset_content(bundle)
+        return AssetsBundle(bundle, files, env=self.env, debug_assets=debug_assets, rtl=rtl)
+
+    def test_01_broken_xml(self):
+        """ Checks that a bundle don't try hard to parse broken xml, and returns a comprehensive
+        error message.
+        """
+        self.bundle = self._get_asset('test_assetsbundle.broken_xml')
+
+        # there shouldn't be any test_assetsvundle.invalid_xml template.
+        # there should be an parsing_error template with the parsing error message.
+        self.assertEqual(self.bundle.xml(),
+                         '<t t-name="parsing_error"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t>',
+                         "the parsing error should be shown")
+
 
 @tagged('-at_install', 'post_install')
 class TestAssetsBundleInBrowser(HttpCase):

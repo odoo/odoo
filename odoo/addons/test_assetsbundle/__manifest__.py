@@ -59,6 +59,9 @@
         'test_assetsbundle.lazy_test_component': [
             'test_assetsbundle/static/tests/lazy_test_component/**/*',
         ],
+        'test_assetsbundle.broken_xml': [
+            'test_assetsbundle/static/invalid_src/xml/invalid_xml.xml',
+        ],
     },
     'license': 'LGPL-3',
 }
