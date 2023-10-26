@@ -44,7 +44,7 @@ QUnit.test("receive and display simple notification with specific type", async (
         message: "simple notification",
         type: "info",
     });
-    await contains(".o_notification.border-info");
+    await contains(".o_notification:has(.o_notification_bar.bg-info)");
 });
 
 QUnit.test("receive and display simple notification as sticky", async () => {

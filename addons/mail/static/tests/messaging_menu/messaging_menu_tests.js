@@ -100,7 +100,7 @@ QUnit.test("respond to notification prompt (denied)", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o_notification.border-warning", {
+    await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
         text: "Odoo will not send notifications on this device.",
     });
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
@@ -113,7 +113,7 @@ QUnit.test("respond to notification prompt (granted)", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o_notification.border-success", {
+    await contains(".o_notification:has(.o_notification_bar.bg-success)", {
         text: "Odoo will send notifications on this device!",
     });
 });

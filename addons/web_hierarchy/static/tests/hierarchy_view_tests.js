@@ -1023,7 +1023,7 @@ QUnit.module("Views", (hooks) => {
             ["Albert", "GeorgesAlbert", "JosephineAlbert"]
         );
         assert.containsOnce(target, ".o_notification");
-        assert.containsOnce(target, ".o_notification.border-danger");
+        assert.containsOnce(target, ".o_notification_bar.bg-danger");
 
         assert.verifySteps([]);
     });
@@ -1062,7 +1062,7 @@ QUnit.module("Views", (hooks) => {
             ["Albert", "GeorgesAlbert", "JosephineAlbert"]
         );
         assert.containsOnce(target, ".o_notification");
-        assert.containsOnce(target, ".o_notification.border-danger");
+        assert.containsOnce(target, ".o_notification_bar.bg-danger");
 
         await click(target, ".o_hierarchy_node_button.btn-primary");
         assert.containsN(target, ".o_hierarchy_row", 3);
@@ -1083,7 +1083,7 @@ QUnit.module("Views", (hooks) => {
             ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"]
         );
         assert.containsN(target, ".o_notification", 2);
-        assert.containsN(target, ".o_notification.border-danger", 2);
+        assert.containsN(target, ".o_notification_bar.bg-danger", 2);
 
         const rows = target.querySelectorAll(".o_hierarchy_row");
         await dragAndDrop(
@@ -1097,7 +1097,7 @@ QUnit.module("Views", (hooks) => {
             ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"]
         );
         assert.containsN(target, ".o_notification", 3);
-        assert.containsN(target, ".o_notification.border-danger", 3);
+        assert.containsN(target, ".o_notification_bar.bg-danger", 3);
 
         assert.verifySteps([]);
     });

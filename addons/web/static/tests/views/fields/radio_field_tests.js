@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_notification_content").innerHTML,
             "<ul><li>Product</li></ul>"
         );
-        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
+        assert.hasClass(target.querySelector(".o_notification_bar"), "bg-danger");
     });
 
     QUnit.test("fieldradio change value by onchange", async function (assert) {

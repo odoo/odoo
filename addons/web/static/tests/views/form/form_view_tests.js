@@ -6074,7 +6074,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(form.env.services.router.current.hash.id, 1);
         await click(target.querySelector(".o_pager_next"));
 
-        assert.containsOnce(target, ".o_notification.border-danger");
+        assert.containsOnce(target, ".o_notification_bar.bg-danger");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.strictEqual(form.env.services.router.current.hash.id, 1);
@@ -6239,7 +6239,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_notification_content").innerHTML,
             "<ul><li>Foo</li></ul>"
         );
-        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
+        assert.hasClass(target.querySelector(".o_notification_bar"), "bg-danger");
 
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
         assert.containsNone(target, ".o_field_invalid");
@@ -11093,7 +11093,7 @@ QUnit.module("Views", (hooks) => {
             "qux field should have the invalid value"
         );
         assert.hasClass(target.querySelector("[name=qux]"), "o_field_invalid");
-        assert.containsOnce(target, ".o_notification .text-danger");
+        assert.containsOnce(target, ".o_notification_bar.bg-danger");
         assert.containsOnce(target, ".o_form_editable .o_field_invalid[name=qux]");
         assert.verifySteps(["get_views", "onchange"]);
     });

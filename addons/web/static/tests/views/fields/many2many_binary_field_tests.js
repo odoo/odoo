@@ -308,6 +308,6 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_notification_content").textContent,
             "Error on file: bad_file.txt"
         );
-        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
+        assert.hasClass(target.querySelector(".o_notification_bar"), "bg-danger");
     });
 });
