@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase, HttpCase, tagged
+from odoo.tests.common import Form, TransactionCase, HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
 
@@ -325,6 +325,17 @@ class TestIrModel(TransactionCase):
         self.assertEqual(record._rec_name, None)
         self.assertEqual(self.registry.field_depends[type(record).display_name], ())
         self.assertEqual(record.display_name, f"x_bananas,{record.id}")
+
+    def test_new_ir_model_fields_related(self):
+        """Check that related field are handled correctly on new field"""
+        with self.debug_mode():
+            form = Form(
+                self.env['ir.model.fields'].with_context(
+                    default_model_id=self.bananas_model.id
+                )
+            )
+            form.related = 'id'
+            self.assertEqual(form.ttype, 'integer')
 
 
 @tagged('test_eval_context')
