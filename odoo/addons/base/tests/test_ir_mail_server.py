@@ -53,8 +53,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', False)
         cls._init_mail_servers()
-        cls.default_bounce_address = 'CACA'
-        cls.default_from_address = 'PROUT'
 
     def test_assert_base_values(self):
         self.assertFalse(self.env['ir.mail_server']._get_default_bounce_address())
