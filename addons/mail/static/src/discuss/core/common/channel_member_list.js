@@ -4,7 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 
-import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart, useState, onWillRender } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -24,6 +24,10 @@ export class ChannelMemberList extends Component {
             if (nextProps.thread.channelMembers.length === 0) {
                 this.threadService.fetchChannelMembers(nextProps.thread);
             }
+        });
+        onWillRender(() => {
+            this.onlineMembers = this.props.thread.onlineMembers;
+            this.offlineMembers = this.props.thread.offlineMembers;
         });
     }
 
