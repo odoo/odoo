@@ -925,8 +925,11 @@ class XMLAsset(WebAsset):
         except AssetError as e:
             return u"console.error(%s);" % json.dumps(to_text(e))
 
-        parser = etree.XMLParser(ns_clean=True, recover=True, remove_comments=True)
-        root = etree.parse(io.BytesIO(content.encode('utf-8')), parser=parser).getroot()
+        parser = etree.XMLParser(ns_clean=True, remove_comments=True, resolve_entities=False)
+        try:
+            root = etree.fromstring(content.encode('utf-8'), parser=parser)
+        except etree.XMLSyntaxError as e:
+            return f'<t t-name="parsing_error"><parsererror>Invalid XML template: {self.url} \n {e.msg} </parsererror></t>'
         if root.tag in ('templates', 'template'):
             return ''.join(etree.tostring(el, encoding='unicode') for el in root)
         return etree.tostring(root, encoding='unicode')
