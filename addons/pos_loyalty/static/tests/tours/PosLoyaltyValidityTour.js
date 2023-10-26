@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
 
             // Not valid -> date
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
-            PosLoyalty.checkNoClaimableRewards(),
+            PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.finalizeOrder("Cash", "20"),
         ].flat(),
 });
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
 
             // Not valid -> usage
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
-            PosLoyalty.checkNoClaimableRewards(),
+            PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.finalizeOrder("Cash", "20"),
         ].flat(),
 });

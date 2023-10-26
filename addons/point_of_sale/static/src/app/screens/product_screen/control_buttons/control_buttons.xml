@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ControlButtons">
+        <div t-attf-class="flex-{{props.wrapped ? 'wrap' : 'column'}}" class="control-buttons d-flex bg-300 border-bottom">
+            <button t-if="pos.fiscal_positions.length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
+                <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
+                title="Set fiscal position" />
+                <t t-if="currentOrder?.fiscal_position" t-esc="currentOrder.fiscal_position.display_name" />
+                <t t-else="">Tax</t>
+            </button>
+            <button class="o_pricelist_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPricelist()">
+                <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
+                <t t-if="currentOrder?.pricelist" t-esc="currentOrder.pricelist.display_name" />
+                <t t-else="">Pricelist</t>
+            </button>
+            <OrderlineNoteButton/>
+            <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickRefund()">
+                <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
+                Refund
+            </button>
+            <button class="btn btn-light rounded-0 fw-bolder" t-on-click="onClickSave">
+                <i class="fa fa-upload" role="img" aria-label="Save" title="Save" />
+                Save
+            </button>
+        </div>
+    </t>
+</templates>

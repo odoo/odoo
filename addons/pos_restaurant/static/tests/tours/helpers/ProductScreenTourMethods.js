@@ -1,57 +1,8 @@
 /** @odoo-module */
 
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
-import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 
-export function clickSplitBillButton() {
-    return [
-        {
-            content: "click split bill button",
-            trigger: ".control-buttons .control-button.order-split",
-        },
-    ];
-}
-export function clickTransferButton() {
-    return [
-        {
-            content: "click transfer button",
-            trigger: '.control-buttons .control-button span:contains("Transfer")',
-        },
-    ];
-}
-export function clickNoteButton() {
-    return [
-        {
-            content: "click note button",
-            trigger: '.control-buttons .control-button span:contains("Internal Note")',
-        },
-    ];
-}
-export function clickPrintBillButton() {
-    return [
-        {
-            content: "click print bill button",
-            trigger: ".control-buttons .control-button.order-printbill",
-        },
-        Dialog.confirm(),
-    ];
-}
-export function clickSubmitButton() {
-    return [
-        {
-            content: "click print bill button",
-            trigger: '.control-buttons .control-button span:contains("Order")',
-        },
-    ];
-}
-export function clickGuestButton() {
-    return [
-        {
-            content: "click guest button",
-            trigger: '.control-buttons .control-button span:contains("Guests")',
-        },
-    ];
-}
 export function clickOrderButton() {
     return [
         {
@@ -75,11 +26,11 @@ export function orderlineIsToSkip(name) {
         productName: name,
     });
 }
-export function guestNumberIs(numberInString) {
+export function guestNumberIs(num) {
     return [
         {
-            content: `guest number is ${numberInString}`,
-            trigger: `.control-buttons .control-button span.control-button-number:contains(${numberInString})`,
+            content: `guest number is ${num}`,
+            trigger: ProductScreen.controlButtonTrigger("Dine-in Guests") + `:contains(${num})`,
             run: function () {}, // it's a check
         },
     ];

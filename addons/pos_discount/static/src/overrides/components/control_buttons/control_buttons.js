@@ -1,21 +1,13 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { useService } from "@web/core/utils/hooks";
+import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { patch } from "@web/core/utils/patch";
 
-export class DiscountButton extends Component {
-    static template = "pos_discount.DiscountButton";
-
-    setup() {
-        this.pos = usePos();
-        this.dialog = useService("dialog");
-    }
-    async click() {
+patch(ControlButtons.prototype, {
+    async clickDiscount() {
         this.dialog.add(NumberPopup, {
             title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
@@ -25,8 +17,7 @@ export class DiscountButton extends Component {
                 this.apply_discount(val);
             },
         });
-    }
-
+    },
     async apply_discount(pc) {
         const order = this.pos.get_order();
         const lines = order.get_orderlines();
@@ -40,7 +31,6 @@ export class DiscountButton extends Component {
             });
             return;
         }
-
         // Remove existing discounts
         lines
             .filter((line) => line.get_product() === product)
@@ -85,13 +75,5 @@ export class DiscountButton extends Component {
                 });
             }
         }
-    }
-}
-
-ProductScreen.addControlButton({
-    component: DiscountButton,
-    condition: function () {
-        const { module_pos_discount, discount_product_id } = this.pos.config;
-        return module_pos_discount && discount_product_id;
     },
 });

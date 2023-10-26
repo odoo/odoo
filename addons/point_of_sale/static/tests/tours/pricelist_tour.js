@@ -134,7 +134,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content: "verify default pricelist is set",
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content: "verify pricelist changed",
@@ -183,7 +183,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content:
@@ -218,7 +218,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content: "select fixed pricelist",
@@ -264,7 +264,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content: "select public pricelist",
@@ -279,7 +279,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             },
             {
                 content: "click pricelist button",
-                trigger: ".control-button.o_pricelist_button",
+                trigger: ".control-buttons button.o_pricelist_button",
             },
             {
                 content: "select fixed pricelist",
