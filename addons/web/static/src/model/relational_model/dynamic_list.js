@@ -176,6 +176,21 @@ export class DynamicList extends DataPoint {
         });
     }
 
+    toggleSelection() {
+        return this.model.mutex.exec(() => {
+            if (this.selection.length === this.records.length) {
+                this.records.forEach((record) => {
+                    record._toggleSelection(false);
+                });
+                this.isDomainSelected = false;
+            } else {
+                this.records.forEach((record) => {
+                    record._toggleSelection(true);
+                });
+            }
+        });
+    }
+
     unarchive(isSelected) {
         return this.model.mutex.exec(() => this._toggleArchive(isSelected, false));
     }

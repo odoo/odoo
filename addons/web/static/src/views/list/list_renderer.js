@@ -1801,16 +1801,7 @@ export class ListRenderer extends Component {
         if (!this.canSelectRecord) {
             return;
         }
-        if (list.selection.length === list.records.length) {
-            list.records.forEach((record) => {
-                record.toggleSelection(false);
-                list.selectDomain(false);
-            });
-        } else {
-            list.records.forEach((record) => {
-                record.toggleSelection(true);
-            });
-        }
+        return list.toggleSelection();
     }
 
     toggleRecordSelection(record, ev) {
