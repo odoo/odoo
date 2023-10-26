@@ -19,4 +19,4 @@ class PeopleRole(models.Model):
 
     def _compute_display_name(self):
         for role in self:
-            role.display_name = role.name.replace('_', ' ').title()
+            role.display_name = (role.name or '').replace('_', ' ').title()
