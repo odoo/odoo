@@ -12,6 +12,7 @@ from odoo import tools, models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
+LINK_TRACKER_MIN_CODE_LENGTH = 3
 URL_MAX_SIZE = 10 * 1024 * 1024
 
 
@@ -273,7 +274,7 @@ class LinkTrackerCode(models.Model):
 
     @api.model
     def _get_random_code_strings(self, n=1):
-        size = 3
+        size = LINK_TRACKER_MIN_CODE_LENGTH
         while True:
             code_propositions = [
                 ''.join(random.choices(string.ascii_letters + string.digits, k=size))
