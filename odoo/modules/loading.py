@@ -505,7 +505,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
         # check that all installed modules have been loaded by the registry
         Module = env['ir.module.module']
-        modules = Module.search(Module._get_modules_to_load_domain(), order='name')
+        modules = Module.search_fetch(Module._get_modules_to_load_domain(), ['name'], order='name')
         missing = [name for name in modules.mapped('name') if name not in graph]
         if missing:
             _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
