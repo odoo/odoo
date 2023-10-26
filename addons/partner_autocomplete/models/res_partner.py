@@ -21,33 +21,7 @@ SUPPORTED_VAT_PREFIXES = {'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 
                           'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL',
                           'PT', 'RO', 'SE', 'SI', 'SK', 'XI', 'EU'}
 VAT_COUNTRY_MAPPING = {
-    'AT': 'AT',  # Austria
-    'BE': 'BE',  # Belgium
-    'BG': 'BG',  # Bulgaria
-    'CY': 'CY',  # Cyprus
-    'CZ': 'CZ',  # Czech Republic
-    'DE': 'DE',  # Germany
-    'DK': 'DK',  # Denmark
-    'EE': 'EE',  # Estonia
     'EL': 'GR',  # Greece
-    'ES': 'ES',  # Spain
-    'FI': 'FI',  # Finland
-    'FR': 'FR',  # France
-    'HR': 'HR',  # Croatia
-    'HU': 'HU',  # Hungary
-    'IE': 'IE',  # Ireland
-    'IT': 'IT',  # Italy
-    'LT': 'LT',  # Lithuania
-    'LU': 'LU',  # Luxembourg
-    'LV': 'LV',  # Latvia
-    'MT': 'MT',  # Malta
-    'NL': 'NL',  # Netherlands
-    'PL': 'PL',  # Poland
-    'PT': 'PT',  # Portugal
-    'RO': 'RO',  # Romania
-    'SE': 'SE',  # Sweden
-    'SI': 'SI',  # Slovenia
-    'SK': 'SK',  # Slovakia
     'XI': 'GB',  # United Kingdom (Northern Ireland)
 }
 
@@ -178,13 +152,12 @@ class ResPartner(models.Model):
 
         # Check if the VAT prefix is supported and corresponds to the partner's country or no country is set
         is_vat_supported = vat_country_code in SUPPORTED_VAT_PREFIXES and \
-            (partner_country_code == VAT_COUNTRY_MAPPING.get(vat_country_code) or not partner_country_code)
+            (partner_country_code == VAT_COUNTRY_MAPPING.get(vat_country_code, vat_country_code) or not partner_country_code)
 
-        is_gst = self.check_gst_in(vat)
-        is_partner_in_india = partner_country_code == self.env.ref('base.in').code or not partner_country_code
-        is_country_not_united_states = partner_country_code != self.env.ref('base.us').code
+        is_gst_supported = self.check_gst_in(vat) and \
+            partner_country_code == self.env.ref('base.in').code or not partner_country_code
 
-        return (is_vat_supported and is_country_not_united_states) or (is_gst and is_partner_in_india)
+        return is_vat_supported or is_gst_supported
 
     def check_gst_in(self, vat):
         # reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
