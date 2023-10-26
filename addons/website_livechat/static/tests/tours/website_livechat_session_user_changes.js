@@ -13,18 +13,18 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text Hello",
+            run: "text Hello!",
         },
         {
             trigger: ".o-mail-Composer-input",
             run: function () {
-                $("o-mail-Composer-input").trigger(
-                    $.Event("keydown", { key: "Enter" })
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
         {
-            trigger: ".o-mail-Message-content:contains('Hello')",
+            trigger: ".o-mail-Message-content:contains('Hello!')",
         },
         {
             trigger: "a:contains(Sign in)",
@@ -73,18 +73,18 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text Hello",
+            run: "text Hello!",
         },
         {
             trigger: ".o-mail-Composer-input",
             run: function () {
-                $(".o-mail-Composer-input").trigger(
-                    $.Event("keydown", { key: "Enter" })
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
         {
-            trigger: ".o-mail-Message-content:contains('Hello')",
+            trigger: ".o-mail-Message-content:contains('Hello!')",
         },
         {
             trigger: "header#top a:contains(Mitchell Admin)",

@@ -90,7 +90,7 @@ export class LivechatService {
                 prevOdooVersion !== currOdooVersion ||
                 (this.sessionCookie && visitorUid !== userId)
             ) {
-                this.leaveSession();
+                this.leaveSession({ notifyServer: false });
             }
             browser.localStorage.setItem(ODOO_VERSION_KEY, currOdooVersion);
         }
