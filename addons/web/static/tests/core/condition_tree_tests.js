@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Domain } from "@web/core/domain";
+import { evaluateExpr } from "@web/core/py_js/py";
 import {
     complexCondition,
     condition,
@@ -300,7 +302,7 @@ QUnit.test("expressionFromTree", function (assert) {
         },
         {
             expressionTree: condition("foo", "in", []),
-            result: `set([foo]).intersection([])`,
+            result: `foo in []`,
         },
         {
             expressionTree: condition(expression("expr"), "in", []),
@@ -308,11 +310,11 @@ QUnit.test("expressionFromTree", function (assert) {
         },
         {
             expressionTree: condition("foo", "in", [1]),
-            result: `set([foo]).intersection([1])`,
+            result: `foo in [1]`,
         },
         {
             expressionTree: condition("foo", "in", 1),
-            result: `set([foo]).intersection([1])`,
+            result: `foo in [1]`,
         },
         {
             expressionTree: condition("y", "in", []),
@@ -324,7 +326,7 @@ QUnit.test("expressionFromTree", function (assert) {
         },
         {
             expressionTree: condition("y", "in", 1),
-            result: `"y" in 1`,
+            result: `"y" in [1]`,
         },
         {
             expressionTree: condition("foo_ids", "not in", []),
@@ -340,15 +342,15 @@ QUnit.test("expressionFromTree", function (assert) {
         },
         {
             expressionTree: condition("foo", "not in", []),
-            result: `not set([foo]).intersection([])`,
+            result: `foo not in []`,
         },
         {
             expressionTree: condition("foo", "not in", [1]),
-            result: `not set([foo]).intersection([1])`,
+            result: `foo not in [1]`,
         },
         {
             expressionTree: condition("foo", "not in", 1),
-            result: `not set([foo]).intersection([1])`,
+            result: `foo not in [1]`,
         },
         {
             expressionTree: condition("y", "not in", []),
@@ -360,7 +362,7 @@ QUnit.test("expressionFromTree", function (assert) {
         },
         {
             expressionTree: condition("y", "not in", 1),
-            result: `"y" not in 1`,
+            result: `"y" not in [1]`,
         },
     ];
     for (const { expressionTree, result, extraOptions } of toTest) {
@@ -755,7 +757,7 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         },
         {
             expression: `set([foo]).intersection([1, 2])`,
-            result: `set([foo]).intersection([1, 2])`,
+            result: `foo in [1, 2]`,
         },
         {
             expression: `set().intersection([foo])`,
@@ -763,7 +765,7 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         },
         {
             expression: `set([1, 2]).intersection([foo])`,
-            result: `set([foo]).intersection([1, 2])`,
+            result: `foo in [1, 2]`,
         },
         {
             expression: `not set([foo]).intersection()`,
@@ -771,7 +773,7 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         },
         {
             expression: `not set([foo]).intersection([1, 2])`,
-            result: `not set([foo]).intersection([1, 2])`,
+            result: `foo not in [1, 2]`,
         },
         {
             expression: `not set().intersection([foo])`,
@@ -779,7 +781,7 @@ QUnit.test("expressionFromTree . treeFromExpression", function (assert) {
         },
         {
             expression: `not set([1, 2]).intersection([foo])`,
-            result: `not set([foo]).intersection([1, 2])`,
+            result: `foo not in [1, 2]`,
         },
     ];
     for (const { expression, result, extraOptions } of toTest) {
@@ -818,5 +820,72 @@ QUnit.test("expressionFromDomain", function (assert) {
     for (const { domain, result, extraOptions } of toTest) {
         const o = { ...options, ...extraOptions };
         assert.deepEqual(expressionFromDomain(domain, o), result);
+    }
+});
+
+QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", function (assert) {
+    const options = {
+        getFieldDef: (name) => {
+            if (name === "foo") {
+                return {}; // any field
+            }
+            if (name === "foo_ids") {
+                return { type: "many2many" };
+            }
+            return null;
+        },
+    };
+
+    const record = { foo: 1, foo_ids: [1, 2], uid: 7, expr: "abc" };
+
+    function toBool(val) {
+        if (val instanceof Set) {
+            return Boolean(val.size);
+        }
+        if (Array.isArray(val)) {
+            return Boolean(val.length);
+        }
+        if (val === null) {
+            return false;
+        }
+        if (typeof val === "object") {
+            return Boolean(Object.keys(val).length);
+        }
+        return Boolean(val);
+    }
+
+    const toTest = [
+        condition("foo", "=", false),
+        condition("foo", "=", false, true),
+        condition("foo", "!=", false),
+        condition("foo", "!=", false, true),
+        condition("y", "=", false),
+        condition("foo", "between", [1, 3]),
+        condition("foo", "between", [1, expression("uid")], true),
+        condition("foo_ids", "in", []),
+        condition("foo_ids", "in", [1]),
+        condition("foo_ids", "in", 1),
+        condition("foo", "in", []),
+        condition(expression("expr"), "in", []),
+        condition("foo", "in", [1]),
+        condition("foo", "in", 1),
+        condition("y", "in", []),
+        condition("y", "in", [1]),
+        condition("y", "in", 1),
+        condition("foo_ids", "not in", []),
+        condition("foo_ids", "not in", [1]),
+        condition("foo_ids", "not in", 1),
+        condition("foo", "not in", []),
+        condition("foo", "not in", [1]),
+        condition("foo", "not in", 1),
+        condition("y", "not in", []),
+        condition("y", "not in", [1]),
+        condition("y", "not in", 1),
+    ];
+    for (const tree of toTest) {
+        assert.strictEqual(
+            toBool(evaluateExpr(expressionFromTree(tree, options), record)),
+            new Domain(domainFromTree(tree)).contains(record)
+        );
     }
 });
