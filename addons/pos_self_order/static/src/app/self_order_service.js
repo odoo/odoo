@@ -561,7 +561,7 @@ export class SelfOrder extends Reactive {
             amount_tax: order.amount_tax,
             total_without_tax: order.amount_total - order.amount_tax,
             total_paid: order.amount_paid,
-            paymentlines: [{ name: "Bank", amount: order.amount_total }],
+            paymentlines: order.payment_lines,
             change: 0,
             tax_details: order.tax_details,
             name: order.pos_reference,
