@@ -29,7 +29,7 @@ export class ConfirmationPage extends Component {
 
                 setTimeout(() => {
                     this.printer.print(OrderReceipt, {
-                        data: this.selfOrder.export_for_printing(this.selfOrder.currentOrder),
+                        data: this.selfOrder.export_for_printing(this.confirmedOrder),
                         formatCurrency: this.selfOrder.formatMonetary,
                     });
                 }, 500);
