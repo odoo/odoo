@@ -87,7 +87,7 @@ export function areSimilarElements(node, node2) {
  * @returns {String|null}
  */
 function deduceURLfromLabel(link) {
-    const label = link.innerText.trim();
+    const label = link.innerText.trim().replaceAll('\u200B', '');
     // Check first for e-mail.
     let match = label.match(EMAIL_REGEX);
     if (match) {
