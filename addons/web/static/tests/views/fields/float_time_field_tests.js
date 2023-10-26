@@ -146,7 +146,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_notification_content").innerHTML,
             "<ul><li>Qux</li></ul>"
         );
-        assert.hasClass(target.querySelector(".o_notification"), "border-danger");
+        assert.hasClass(target.querySelector(".o_notification_bar"), "bg-danger");
         assert.hasClass(target.querySelector(".o_field_float_time[name=qux]"), "o_field_invalid");
 
         await editInput(target.querySelector(".o_field_float_time[name=qux] input"), null, "6.5");
