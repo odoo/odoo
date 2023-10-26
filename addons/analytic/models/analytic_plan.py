@@ -110,7 +110,8 @@ class AccountAnalyticPlan(models.Model):
         return project_plan.id, other_plans.ids
 
     def _get_all_plans(self):
-        return map(self.browse, self.__get_all_plans())
+        project_plan_id, other_plan_ids = self.__get_all_plans()
+        return self.browse(project_plan_id), self.browse(other_plan_ids).sorted('sequence')
 
     def _column_name(self):
         self.ensure_one()
@@ -213,7 +214,7 @@ class AccountAnalyticPlan(models.Model):
                 "applicability": plan._get_applicability(**kwargs) if plan in root_plans else 'optional',
                 "all_account_count": plan.all_account_count
             }
-            for plan in root_plans + forced_plans
+            for plan in (root_plans + forced_plans).sorted('sequence')
         ]
 
     def _get_applicability(self, **kwargs):
