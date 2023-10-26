@@ -1002,6 +1002,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     dependentEl.dataset.visibilityDependency = value;
                 }
             }
+
+            if (!previewMode) {
+                // As the field label changed, the list of available visibility
+                // dependencies needs to be updated in order to not propose a
+                // field that would create a circular dependency.
+                this.rerender = true;
+            }
         }
     },
     /**
