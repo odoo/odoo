@@ -96,7 +96,7 @@ class TestMessageController(HttpCase):
         message_format1 = res2.json()["result"]
         self.assertEqual(
             message_format1["attachments"],
-            json.loads(json.dumps(self.attachments[0]._attachment_format(), default=date_utils.json_default)),
+            json.loads(json.dumps(self.attachments[0]._discuss_format(), default=date_utils.json_default)),
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
@@ -138,8 +138,13 @@ class TestMessageController(HttpCase):
         self.assertEqual(res4.status_code, 200)
         message_format2 = res4.json()["result"]
         self.assertEqual(
+<<<<<<< HEAD
             message_format2["attachments"],
             json.loads(json.dumps(self.attachments.sorted("id")._attachment_format(), default=date_utils.json_default)),
+=======
+            message_format2["attachment_ids"],
+            json.loads(json.dumps(self.attachments.sorted("id")._discuss_format(), default=date_utils.json_default)),
+>>>>>>> 1134cd037de6 ([IMP] mail: rename formatting methods)
             "guest should be allowed to add attachment with token when updating message",
         )
         # test message update: own attachment ok
@@ -159,8 +164,13 @@ class TestMessageController(HttpCase):
         self.assertEqual(res5.status_code, 200)
         message_format3 = res5.json()["result"]
         self.assertEqual(
+<<<<<<< HEAD
             message_format3["attachments"],
             json.loads(json.dumps(self.attachments.sorted("id")._attachment_format(), default=date_utils.json_default)),
+=======
+            message_format3["attachment_ids"],
+            json.loads(json.dumps(self.attachments.sorted("id")._discuss_format(), default=date_utils.json_default)),
+>>>>>>> 1134cd037de6 ([IMP] mail: rename formatting methods)
             "guest should be allowed to add own attachment without token when updating message",
         )
 

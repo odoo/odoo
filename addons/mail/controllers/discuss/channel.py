@@ -126,4 +126,4 @@ class ChannelController(http.Controller):
         if before:
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
-        return request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")._attachment_format()
+        return request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")._discuss_format()

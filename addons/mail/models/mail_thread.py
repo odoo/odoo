@@ -3050,7 +3050,7 @@ class MailThread(models.AbstractModel):
           * create inbox notifications for users;
           * send bus notifications;
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3066,7 +3066,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         """
         bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
@@ -3099,7 +3099,7 @@ class MailThread(models.AbstractModel):
                                  **kwargs):
         """ Method to send emails notifications linked to a message.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3115,7 +3115,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :param bool mail_auto_delete: delete notification emails once sent;
 
@@ -3241,23 +3241,24 @@ class MailThread(models.AbstractModel):
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
-        of recipients informations. Purpose of this method is to group them by
+        of recipients information. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
         @_notify_get_recipients_classify) and lang. Each group is linked to
         an evaluation context to render the notification layout.
 
-        :param message: ``mail.message`` record to notify;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
         :param list recipients_data: see ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
 
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
-        :param str force_email_lang: when no specific lang is found this is the
-          default lang to use notably to compute model name or translate access
-          buttons;
+        :param str force_email_lang: whe no no specific lang is found this is the
+          default lang used when rendering content, used notably to compute model
+          name or translate access buttons;
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
@@ -3322,9 +3323,9 @@ class MailThread(models.AbstractModel):
                                                    force_email_lang=False):
         """ Prepare rendering context for notification email.
 
-        Signature: if asked a default signature is computed based on author. Either
-        it has an user and we use the user's signature. Either we do not find any
-        user and we compute a default one based on the author's name.
+        Signature: if asked a default signature is computed based on author. If
+        it has an user we use the user's signature. Otherwise we compute a default
+        one based on the author's name.
 
         Company: either there is one defined on the record (company_id field set
         with a value), either we use env.company. A new parameter allows to force
@@ -3337,13 +3338,13 @@ class MailThread(models.AbstractModel):
         notification layout in the same language as the email content. A new
         parameter allows to force its value.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
         :param str force_email_lang: lang used when rendering content, used
           notably to compute model name or translate access buttons;
@@ -3532,6 +3533,126 @@ class MailThread(models.AbstractModel):
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values
+
+    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
+        """ Method to send cloud notifications for every mention of a partner
+        and every direct message. We have to take into account the risk of
+        duplicated notifications in case of a mention in a channel of `chat` type.
+
+        :param message: ``mail.message`` record to notify;
+        :param recipients_data: list of recipients information (based on res.partner
+          records), formatted like
+            [{'active': partner.active;
+              'id': id of the res.partner being recipient to notify;
+              'groups': res.group IDs if linked to a user;
+              'notif': 'inbox', 'email', 'sms' (SMS App);
+              'share': partner.partner_share;
+              'type': 'customer', 'portal', 'user;'
+             }, {...}].
+          See ``MailThread._notify_get_recipients``;
+        :param msg_vals: dictionary of values used to create the message. If given it
+          may be used to access values related to ``message`` without accessing it
+          directly. It lessens query count in some optimized use cases by avoiding
+          access message content in db;
+        """
+        msg_vals = dict(msg_vals or {})
+        partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
+        if not partner_ids:
+            return
+
+        partner_devices_sudo = self.env['mail.partner.device'].sudo()
+        devices = partner_devices_sudo.search([
+            ('partner_id', 'in', partner_ids)
+        ])
+        if not devices:
+            return
+
+        ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
+        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
+        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
+        if not vapid_private_key or not vapid_public_key:
+            _logger.warning("Missing web push vapid keys !")
+            return
+
+        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload = self._truncate_payload(payload)
+        if len(devices) < MAX_DIRECT_PUSH:
+            session = Session()
+            devices_to_unlink = set()
+            for device in devices:
+                try:
+                    push_to_end_point(
+                        base_url=self.get_base_url(),
+                        device={
+                            'id': device.id,
+                            'endpoint': device.endpoint,
+                            'keys': device.keys
+                        },
+                        payload=json.dumps(payload),
+                        vapid_private_key=vapid_private_key,
+                        vapid_public_key=vapid_public_key,
+                        session=session,
+                    )
+                except DeviceUnreachableError:
+                    devices_to_unlink.add(device.id)
+                except Exception as e:  # pylint: disable=broad-except
+                    # Avoid blocking the whole request just for a notification
+                    _logger.error('An error occurred while contacting the endpoint: %s', e)
+
+            # clean up obsolete devices
+            if devices_to_unlink:
+                devices_list = list(devices_to_unlink)
+                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
+
+        else:
+            self.env['mail.notification.web.push'].sudo().create([{
+                'user_device': device.id,
+                'payload': json.dumps(payload),
+            } for device in devices])
+            self.env.ref('mail.ir_cron_web_push_notification')._trigger()
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        """ Returns dictionary containing message information for a browser device.
+        This info will be delivered to a browser device via its recorded endpoint.
+        REM: It is having a limit of 4000 bytes (4kb)
+        """
+        if msg_vals:
+            author_id = [msg_vals.get('author_id')]
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = msg_vals.get('model')
+            title = msg_vals.get('record_name') or msg_vals.get('subject')
+            res_id = msg_vals.get('res_id')
+            body = msg_vals.get('body')
+            if not model and body:
+                model, res_id = self._extract_model_and_id(msg_vals)
+        else:
+            author_id = message.author_id.ids
+            author_name = self.env['res.partner'].browse(author_id).name
+            model = message.model
+            title = message.record_name or message.subject
+            res_id = message.res_id
+            body = message.body
+
+        icon = '/web/static/img/odoo-icon-192x192.png'
+
+        if author_name:
+            title = "%s: %s" % (author_name, title)
+            icon = "/web/image/res.users/%d/avatar_128" % author_id[0]
+
+        payload = {
+            'title': title,
+            'options': {
+                'icon': icon,
+                'data': {
+                    'model': model if model else '',
+                    'res_id': res_id if res_id else '',
+                }
+            }
+        }
+        payload['options']['body'] = tools.html2plaintext(body)
+        payload['options']['body'] += self._generate_tracking_message(message)
+
+        return payload
 
     def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """ Compute recipients to notify based on subtype and followers. This
@@ -3832,6 +3953,9 @@ class MailThread(models.AbstractModel):
 
         return link
 
+    # Notify tools and helpers
+    # ------------------------------------------------------------
+
     @api.model
     def _encode_link(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
@@ -3840,12 +3964,78 @@ class MailThread(models.AbstractModel):
         return hm
 
     @api.model
+    def _extract_model_and_id(self, msg_vals):
+        """
+        Return the model and the id when is present in a link (HTML)
+
+        :param msg_vals: see :meth:`._notify_thread_by_web_push`
+
+        :return: a dict empty if no matches and a dict with these keys if match : model and res_id
+        """
+        regex = r"<a.+model=(?P<model>[\w.]+).+res_id=(?P<id>\d+).+>[\s\w\/\\.]+<\/a>"
+        matches = re.finditer(regex, msg_vals['body'])
+
+        for match in matches:
+            return match['model'], match['id']
+        return None, None
+
+    def _extract_partner_ids_for_notifications(self, message, msg_vals, recipients_data):
+        notif_pids = []
+        no_inbox_pids = []
+        for recipient in recipients_data:
+            if recipient['active']:
+                notif_pids.append(recipient['id'])
+                if recipient['notif'] != 'inbox':
+                    no_inbox_pids.append(recipient['id'])
+
+        if not notif_pids:
+            return []
+
+        msg_sudo = message.sudo()
+        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
+        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
+        # never send to author and to people outside Odoo (email), except comments
+        pids = set()
+        if msg_type == 'comment':
+            pids = set(notif_pids) - set(author_id)
+        elif msg_type in ('notification', 'user_notification', 'email'):
+            pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
+        return list(pids)
+
+    @api.model
     def _get_model_description(self, model_name):
         if not model_name:
             return False
         if not 'lang' in self.env.context:
             raise ValueError(_('At this point lang should be correctly set'))
         return self.env['ir.model']._get(model_name).display_name  # one query for display name
+
+    @api.model
+    def _generate_tracking_message(self, message, return_line='\n'):
+        """
+        Format the tracking values like in the chatter
+        :param message: current mail.message record
+        :param return_line: type of return line
+        :return: a string with the new text if there is one or more tracking value
+        """
+        tracking_message = ''
+        if message.subtype_id and message.subtype_id.description:
+            tracking_message = return_line + message.subtype_id.description + return_line
+
+        for value in message.sudo().tracking_value_ids.filtered(lambda tracking: not tracking.field_groups):
+            if value.field_id.ttype == 'boolean':
+                old_value = str(bool(value.old_value_integer))
+                new_value = str(bool(value.new_value_integer))
+            else:
+                old_value = value.old_value_char if value.old_value_char else str(value.old_value_integer)
+                new_value = value.new_value_char if value.new_value_char else str(value.new_value_integer)
+
+            tracking_message += value.field_id.field_description + ': ' + old_value
+            if old_value != new_value:
+                tracking_message += ' → ' + new_value
+            tracking_message += return_line
+
+        return tracking_message
 
     def _is_thread_message(self, msg_vals=None):
         """ Tool method to compute thread validity in notification methods.
@@ -3857,6 +4047,21 @@ class MailThread(models.AbstractModel):
         res_model = msg_vals['model'] if 'model' in msg_vals else self._name
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else (self.ids[0] if self.ids else False)
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
+
+    def _truncate_payload(self, payload):
+        """
+        Check the payload limit of 4096 bytes to avoid 413 error return code.
+        If the payload is too big, we trunc the body value.
+        :param dict payload: Current payload to trunc
+        :return: The truncate payload;
+        """
+        payload_length = len(str(payload).encode())
+        body = payload['options']['body']
+        body_length = len(body)
+        if payload_length > 4096:
+            body_max_length = 4096 - payload_length - body_length
+            payload['options']['body'] = body.encode()[:body_max_length].decode(errors="ignore")
+        return payload
 
     # ------------------------------------------------------
     # FOLLOWERS API
@@ -4201,7 +4406,7 @@ class MailThread(models.AbstractModel):
             'Message': {
                 'id': message.id,
                 'body': message.body,
-                'attachments': message.attachment_ids.sorted("id")._attachment_format(),
+                'attachments': message.attachment_ids.sorted("id")._discuss_format(),
                 'pinned_at': message.pinned_at,
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message.partner_ids],
                 'write_date': message.write_date,
@@ -4252,7 +4457,7 @@ class MailThread(models.AbstractModel):
         if 'activities' in request_list:
             res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
         if 'attachments' in request_list:
-            res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
+            res['attachments'] = self._get_mail_thread_data_attachments()._discuss_format()
         if 'followers' in request_list:
             res['followersCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),
@@ -4277,205 +4482,3 @@ class MailThread(models.AbstractModel):
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
         return res
-
-    def _extract_partner_ids_for_notifications(self, message, msg_vals, recipients_data):
-        notif_pids = []
-        no_inbox_pids = []
-        for recipient in recipients_data:
-            if recipient['active']:
-                notif_pids.append(recipient['id'])
-                if recipient['notif'] != 'inbox':
-                    no_inbox_pids.append(recipient['id'])
-
-        if not notif_pids:
-            return []
-
-        msg_sudo = message.sudo()
-        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
-        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
-        # never send to author and to people outside Odoo (email), except comments
-        pids = set()
-        if msg_type == 'comment':
-            pids = set(notif_pids) - set(author_id)
-        elif msg_type in ('notification', 'user_notification', 'email'):
-            pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
-        return list(pids)
-
-    def _truncate_payload(self, payload):
-        """
-        Check the payload limit of 4096 bytes to avoid 413 error return code.
-        If the payload is too big, we trunc the body value.
-        :param dict payload: Current payload to trunc
-        :return: The truncate payload;
-        """
-        payload_length = len(str(payload).encode())
-        body = payload['options']['body']
-        body_length = len(body)
-        if payload_length > 4096:
-            body_max_length = 4096 - payload_length - body_length
-            payload['options']['body'] = body.encode()[:body_max_length].decode(errors="ignore")
-        return payload
-
-    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Method to send cloud notifications for every mention of a partner
-        and every direct message. We have to take into account the risk of
-        duplicated notifications in case of a mention in a channel of `chat` type.
-
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
-        """
-
-        msg_vals = dict(msg_vals or {})
-        partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
-        if not partner_ids:
-            return
-
-        partner_devices_sudo = self.env['mail.partner.device'].sudo()
-        devices = partner_devices_sudo.search([
-            ('partner_id', 'in', partner_ids)
-        ])
-        if not devices:
-            return
-
-        ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
-        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
-        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
-        if not vapid_private_key or not vapid_public_key:
-            _logger.warning("Missing web push vapid keys !")
-            return
-
-        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
-        payload = self._truncate_payload(payload)
-        if len(devices) < MAX_DIRECT_PUSH:
-            session = Session()
-            devices_to_unlink = set()
-            for device in devices:
-                try:
-                    push_to_end_point(
-                        base_url=self.get_base_url(),
-                        device={
-                            'id': device.id,
-                            'endpoint': device.endpoint,
-                            'keys': device.keys
-                        },
-                        payload=json.dumps(payload),
-                        vapid_private_key=vapid_private_key,
-                        vapid_public_key=vapid_public_key,
-                        session=session,
-                    )
-                except DeviceUnreachableError:
-                    devices_to_unlink.add(device.id)
-                except Exception as e:  # pylint: disable=broad-except
-                    # Avoid blocking the whole request just for a notification
-                    _logger.error('An error occurred while contacting the endpoint: %s', e)
-
-            # clean up obsolete devices
-            if devices_to_unlink:
-                devices_list = list(devices_to_unlink)
-                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
-
-        else:
-            self.env['mail.notification.web.push'].sudo().create([{
-                'user_device': device.id,
-                'payload': json.dumps(payload),
-            } for device in devices])
-            self.env.ref('mail.ir_cron_web_push_notification')._trigger()
-
-    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
-        """ Returns dictionary containing message information for a browser device.
-        This info will be delivered to a browser device via its recorded endpoint.
-        REM: It is having a limit of 4000 bytes (4kb)
-        """
-        if msg_vals:
-            author_id = [msg_vals.get('author_id')]
-            author_name = self.env['res.partner'].browse(author_id).name
-            model = msg_vals.get('model')
-            title = msg_vals.get('record_name') or msg_vals.get('subject')
-            res_id = msg_vals.get('res_id')
-            body = msg_vals.get('body')
-            if not model and body:
-                model, res_id = self._extract_model_and_id(msg_vals)
-        else:
-            author_id = message.author_id.ids
-            author_name = self.env['res.partner'].browse(author_id).name
-            model = message.model
-            title = message.record_name or message.subject
-            res_id = message.res_id
-            body = message.body
-
-        icon = '/web/static/img/odoo-icon-192x192.png'
-
-        if author_name:
-            title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.users/%d/avatar_128" % author_id[0]
-
-        payload = {
-            'title': title,
-            'options': {
-                'icon': icon,
-                'data': {
-                    'model': model if model else '',
-                    'res_id': res_id if res_id else '',
-                }
-            }
-        }
-        payload['options']['body'] = tools.html2plaintext(body)
-        payload['options']['body'] += self._generate_tracking_message(message)
-
-        return payload
-
-    @api.model
-    def _extract_model_and_id(self, msg_vals):
-        """
-        Return the model and the id when is present in a link (HTML)
-
-        :param msg_vals: see :meth:`._notify_thread_by_web_push`
-
-        :return: a dict empty if no matches and a dict with these keys if match : model and res_id
-        """
-        regex = r"<a.+model=(?P<model>[\w.]+).+res_id=(?P<id>\d+).+>[\s\w\/\\.]+<\/a>"
-        matches = re.finditer(regex, msg_vals['body'])
-
-        for match in matches:
-            return match['model'], match['id']
-        return None, None
-
-    @api.model
-    def _generate_tracking_message(self, message, return_line='\n'):
-        """
-        Format the tracking values like in the chatter
-        :param message: current mail.message record
-        :param return_line: type of return line
-        :return: a string with the new text if there is one or more tracking value
-        """
-        tracking_message = ''
-        if message.subtype_id and message.subtype_id.description:
-            tracking_message = return_line + message.subtype_id.description + return_line
-
-        for value in message.sudo().tracking_value_ids.filtered(lambda tracking: not tracking.field_groups):
-            if value.field_id.ttype == 'boolean':
-                old_value = str(bool(value.old_value_integer))
-                new_value = str(bool(value.new_value_integer))
-            else:
-                old_value = value.old_value_char if value.old_value_char else str(value.old_value_integer)
-                new_value = value.new_value_char if value.new_value_char else str(value.new_value_integer)
-
-            tracking_message += value.field_id.field_description + ': ' + old_value
-            if old_value != new_value:
-                tracking_message += ' → ' + new_value
-            tracking_message += return_line
-
-        return tracking_message

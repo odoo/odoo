@@ -74,7 +74,7 @@ class AttachmentController(http.Controller):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
-            attachmentData = attachment._attachment_format()[0]
+            attachmentData = attachment._discuss_format()[0]
             if attachment.access_token:
                 attachmentData["accessToken"] = attachment.access_token
         except AccessError:

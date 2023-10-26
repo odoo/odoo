@@ -10,6 +10,11 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class ThreadController(http.Controller):
+
+    # ------------------------------------------------------------
+    # MAIN THREAD / CHATTER API
+    # ------------------------------------------------------------
+
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
@@ -26,49 +31,6 @@ class ThreadController(http.Controller):
         if not request.env.user._is_public():
             res["messages"].set_message_done()
         return {**res, "messages": res["messages"].message_format()}
-
-    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
-    def mail_thread_partner_from_email(self, emails):
-        partners = [
-            {"id": partner.id, "name": partner.name, "email": partner.email}
-            for partner in request.env["res.partner"]._find_or_create_from_emails(emails)
-        ]
-        return partners
-
-    @http.route("/mail/read_subscription_data", methods=["POST"], type="json", auth="user")
-    def read_subscription_data(self, follower_id):
-        """Computes:
-        - message_subtype_data: data about document subtypes: which are
-            available, which are followed if any"""
-        request.env["mail.followers"].check_access_rights("read")
-        follower = request.env["mail.followers"].sudo().browse(follower_id)
-        follower.ensure_one()
-        request.env[follower.res_model].check_access_rights("read")
-        record = request.env[follower.res_model].browse(follower.res_id)
-        record.check_access_rule("read")
-        # find current model subtypes, add them to a dictionary
-        subtypes = record._mail_get_message_subtypes()
-        followed_subtypes_ids = set(follower.subtype_ids.ids)
-        subtypes_list = [
-            {
-                "name": subtype.name,
-                "res_model": subtype.res_model,
-                "sequence": subtype.sequence,
-                "default": subtype.default,
-                "internal": subtype.internal,
-                "followed": subtype.id in followed_subtypes_ids,
-                "parent_model": subtype.parent_id.res_model,
-                "id": subtype.id,
-            }
-            for subtype in subtypes
-        ]
-        return sorted(
-            subtypes_list,
-            key=lambda it: (it["parent_model"] or "", it["res_model"] or "", it["internal"], it["sequence"]),
-        )
-
-    def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -126,3 +88,64 @@ class ThreadController(http.Controller):
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
         return message_sudo.message_format()[0]
+
+    # HELPERS / TOOLS
+    # ------------------------------------------------------------
+
+    def _get_allowed_message_post_params(self):
+        return {
+            "attachment_ids",
+            "body",
+            "message_type",
+            "partner_ids",
+            "subtype_xmlid",
+            "parent_id"
+        }
+
+    # ------------------------------------------------------------
+    # FOLLOWERS
+    # ------------------------------------------------------------
+
+    @http.route("/mail/read_subscription_data", methods=["POST"], type="json", auth="user")
+    def read_subscription_data(self, follower_id):
+        """Computes:
+        - message_subtype_data: data about document subtypes: which are
+            available, which are followed if any"""
+        request.env["mail.followers"].check_access_rights("read")
+        follower = request.env["mail.followers"].sudo().browse(follower_id)
+        follower.ensure_one()
+        request.env[follower.res_model].check_access_rights("read")
+        record = request.env[follower.res_model].browse(follower.res_id)
+        record.check_access_rule("read")
+        # find current model subtypes, add them to a dictionary
+        subtypes = record._mail_get_message_subtypes()
+        followed_subtypes_ids = set(follower.subtype_ids.ids)
+        subtypes_list = [
+            {
+                "name": subtype.name,
+                "res_model": subtype.res_model,
+                "sequence": subtype.sequence,
+                "default": subtype.default,
+                "internal": subtype.internal,
+                "followed": subtype.id in followed_subtypes_ids,
+                "parent_model": subtype.parent_id.res_model,
+                "id": subtype.id,
+            }
+            for subtype in subtypes
+        ]
+        return sorted(
+            subtypes_list,
+            key=lambda it: (it["parent_model"] or "", it["res_model"] or "", it["internal"], it["sequence"]),
+        )
+
+    # ------------------------------------------------------------
+    # CUSTOMER TOOLS / HELPERS
+    # ------------------------------------------------------------
+
+    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
+    def mail_thread_partner_from_email(self, emails):
+        partners = [
+            {"id": partner.id, "name": partner.name, "email": partner.email}
+            for partner in request.env["res.partner"]._find_or_create_from_emails(emails)
+        ]
+        return partners

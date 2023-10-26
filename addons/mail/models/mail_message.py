@@ -923,7 +923,7 @@ class Message(models.Model):
                 'author': author,
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
+                'attachments': sorted(message_sudo.attachment_ids._discuss_format(), key=lambda a: a["id"]),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'reactions': reaction_groups,
