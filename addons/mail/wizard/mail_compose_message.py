@@ -412,7 +412,7 @@ class MailComposer(models.TransientModel):
         )
         for composer in toupdate:
             res_ids = composer._evaluate_res_ids()
-            if composer.model and len(res_ids) == 1:
+            if composer.model in self.env and len(res_ids) == 1:
                 record = self.env[composer.model].browse(res_ids)
                 composer.record_company_id = record._mail_get_companies(
                     default=self.env.company
