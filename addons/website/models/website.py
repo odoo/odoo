@@ -702,7 +702,8 @@ class Website(models.Model):
                     rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
-            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+            page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
+                              xpath="(//div[hasclass('oe_structure')])[last()]")
 
         # Configure the images
         images = custom_resources.get('images', {})
