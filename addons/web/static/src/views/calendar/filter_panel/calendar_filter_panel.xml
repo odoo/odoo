@@ -5,7 +5,7 @@
         <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
             <t t-if="section.filters.length gt 0">
                 <div
-                    class="o_calendar_filter d-flex flex-column gap-1 mt-4"
+                    class="o_calendar_filter d-flex flex-column gap-1 mt-4 mb-2"
                     t-att-class="{'o-calendar-filter-panel--section-collapsed': isSectionCollapsed(section)}"
                     t-att-data-name="section.fieldName"
                 >
