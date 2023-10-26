@@ -966,10 +966,10 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
                 (datetime(2020, 6, 11, 16), datetime(2020, 6, 11, 17)),
             ])
             # set to custom because a yearly recurrence, becomes a monthly recurrence every 12 months
-            self.assertEqual(event.rrule_type_ui, 'custom')
+            self.assertEqual(event.rrule_type_ui, 'yearly')
             self.assertEqual(event.count, 2)
-            self.assertEqual(event.interval, 12)
-            self.assertEqual(event.rrule_type, 'monthly')
+            self.assertEqual(event.interval, 1)
+            self.assertEqual(event.rrule_type, 'yearly')
 
     def test_attendees_state_after_update(self):
         """ Ensure that after the organizer updates a recurrence, the attendees state will be pending and current user accepted. """

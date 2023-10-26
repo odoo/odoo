@@ -209,8 +209,6 @@ class MicrosoftEvent(abc.Set):
         }
         rrule_type = type_dict.get(pattern['type'], pattern['type'])
         interval = pattern['interval']
-        if rrule_type == 'yearly':
-            interval *= 12
         result = {
             'rrule_type': rrule_type,
             'end_type': end_type_dict.get(range['type'], False),
