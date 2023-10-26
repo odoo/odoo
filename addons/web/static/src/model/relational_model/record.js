@@ -233,6 +233,11 @@ export class Record extends DataPoint {
         return this._setInvalidField(fieldName);
     }
 
+    async resetFieldValidity(fieldName) {
+        this.dirty = true;
+        return this._resetFieldValidity(fieldName);
+    }
+
     switchMode(mode) {
         return this.model.mutex.exec(() => this._switchMode(mode));
     }
@@ -1074,6 +1079,10 @@ export class Record extends DataPoint {
             });
         }
         this._invalidFields.add(fieldName);
+    }
+
+    _resetFieldValidity(fieldName) {
+        this._invalidFields.delete(fieldName);
     }
 
     _switchMode(mode) {
