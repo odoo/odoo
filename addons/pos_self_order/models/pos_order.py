@@ -143,6 +143,10 @@ class PosOrder(models.Model):
                 }
                 for line in self.lines
             ],
+            "payment_lines": [{
+                "name": payment.payment_method_id.name,
+                "amount": payment.amount
+            } for payment in self.payment_ids],
             "tax_details": self._compute_tax_details(),
         }
 
