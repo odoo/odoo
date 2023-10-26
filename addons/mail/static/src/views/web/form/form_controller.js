@@ -7,6 +7,10 @@ import { x2ManyCommands } from "@web/core/orm_service";
 patch(FormController.prototype, {
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
+        this.env.bus.trigger("MAIL:RELOAD-CHATTER", {
+            model: nextConfiguration.resModel,
+            id: nextConfiguration.resId,
+        });
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;

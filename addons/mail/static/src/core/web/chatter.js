@@ -29,7 +29,7 @@ import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -157,23 +157,14 @@ export class Chatter extends Component {
             this.scrollPosition.restore();
         });
         onPatched(this.scrollPosition.restore);
+        useBus(this.env.bus, "MAIL:RELOAD-CHATTER", ({ detail }) => {
+            // Only reload chatter if the model is the same.
+            if (detail.model === this.props.threadModel) {
+                this.load(detail.id, ["followers", "attachments", "suggestedRecipients"], false);
+            }
+        });
         onWillUpdateProps((nextProps) => {
-            this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
-            if (nextProps.threadId === false) {
-                this.state.composerType = false;
-            }
-            this.attachmentUploader.thread = this.threadService.getThread(
-                nextProps.threadModel,
-                nextProps.threadId
-            );
-            if (this.onNextUpdate) {
-                if (!this.onNextUpdate(nextProps)) {
-                    this.onNextUpdate = null;
-                }
-            }
-            if (nextProps.threadId) {
-                this.closeSearch();
-            }
+            this.refresh(nextProps.threadModel, nextProps.threadId);
         });
         useEffect(
             () => {
@@ -212,7 +203,8 @@ export class Chatter extends Component {
                     );
                 } else {
                     this.state.showAttachmentLoading = false;
-                    this.state.isAttachmentBoxOpened = this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0;
+                    this.state.isAttachmentBoxOpened =
+                        this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0;
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
@@ -271,21 +263,46 @@ export class Chatter extends Component {
     /**
      * @param {number} threadId
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
+     * @param {boolean} refresh
+     * Fetch data for the thread according to the request list.
      */
     load(
         threadId = this.props.threadId,
-        requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
+        requestList = ["followers", "attachments", "messages", "suggestedRecipients"],
+        refresh = true
     ) {
         const { threadModel } = this.props;
-        this.state.thread = this.threadService.getThread(threadModel, threadId);
-        this.scrollPosition.model = this.state.thread?.scrollPosition;
+        const thread = this.threadService.getThread(threadModel, threadId);
+        if (refresh) {
+            this.refresh(threadModel, threadId);
+        }
         if (!threadId) {
             return;
         }
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.threadService.fetchData(this.state.thread, requestList);
+        this.threadService.fetchData(thread, requestList);
+    }
+
+    /**
+     * @param {string} threadModel
+     * @param {number} threadId
+     * Visually refresh the chatter.
+     */
+    refresh(threadModel = this.props.threadModel, threadId = this.props.threadId) {
+        this.state.thread = this.threadService.getThread(threadModel, threadId);
+        this.scrollPosition.model = this.state.thread?.scrollPosition;
+        if (threadId === false) {
+            this.state.composerType = false;
+        }
+        this.attachmentUploader.thread = this.state.thread;
+        if (this.onNextUpdate?.({ threadId, threadModel }) ?? false) {
+            this.onNextUpdate = null;
+        }
+        if (threadId) {
+            this.closeSearch();
+        }
     }
 
     async _follow(threadModel, threadId) {
