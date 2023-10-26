@@ -212,7 +212,6 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventClick(info) {
         this.click(info);
-        info.el.classList.toggle("o_calendar_popover_open");
     }
     onEventRender(info) {
         const { el, event } = info;
