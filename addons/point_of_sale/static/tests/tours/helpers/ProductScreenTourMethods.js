@@ -130,10 +130,17 @@ export function clickRefund() {
             trigger: ".mobile-more-button",
             mobile: true,
         },
-        {
-            trigger: '.control-button:contains("Refund")',
-        },
+        controlButton("Refund"),
     ];
+}
+export function controlButtonTrigger(name = "") {
+    return `.control-buttons button:contains("${name}")`;
+}
+export function controlButton(name) {
+    return {
+        content: `click ${name} button`,
+        trigger: controlButtonTrigger(name),
+    };
 }
 export function selectPriceList(name) {
     return inLeftSide([
@@ -392,10 +399,7 @@ export function addCustomerNote(note) {
                 trigger: ".mobile-more-button",
                 mobile: true,
             },
-            {
-                content: "click customer note button",
-                trigger: '.control-buttons .control-button span:contains("Customer Note")',
-            },
+            controlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),
         ].flat()

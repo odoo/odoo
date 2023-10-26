@@ -107,7 +107,7 @@ export function clickControlButton(name) {
     return [
         ProductScreen.clickReview(),
         {
-            trigger: `.ticket-screen .control-button:contains("${name}")`,
+            trigger: `.ticket-screen ${ProductScreen.controlButtonTrigger(name)}`,
         },
     ];
 }
@@ -183,7 +183,7 @@ export function filterIs(name) {
 export function invoicePrinted() {
     return [
         {
-            trigger: '.ticket-screen .control-button:contains("Reprint Invoice")',
+            trigger: ProductScreen.controlButtonTrigger("Reprint Invoice"),
             run: () => {},
         },
     ];
