@@ -157,6 +157,7 @@
 
                 > span {
                     gap: map-get($spacers, 1);
+                    margin-left: map-get($spacers, 1);
                     margin-bottom: map-get($spacers, 1);
                 }
                 .o_cw_day_number {
@@ -201,7 +202,6 @@
                 > span {
                     display: flex;
                     align-items: center;
-                    margin-left: map-get($spacers, 1);
                 }
 
                 &.fc-today {
@@ -427,7 +427,7 @@
             }
 
             .fc-event {
-
+                padding: 0 map-get($spacers, 1);
                 @include media-breakpoint-up(lg) {
                     margin: 0 3px 2px;
                 }
@@ -596,6 +596,7 @@
             &.fc-bgevent, &:not(.o_event_dot) .fc-bg {
                 background-color: $color-subtle;
             }
+
             &.fc-event:not(.o_event_dot):not(.fc-dragging) {
                 color: color-contrast($color-subtle);
                 border-color: tint-color($color, 50%);
