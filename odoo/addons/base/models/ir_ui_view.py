@@ -1627,16 +1627,16 @@ actual arch.
                     if key == 'group_by':  # only in context
                         if not isinstance(val_ast, ast.Str):
                             msg = _(
-                                '"group_by" value must be a string %(attribute)s=%(value)r',
-                                attribute=attr, value=expr,
+                                '"group_by" value must be a string context=%(value)r',
+                                value=expr,
                             )
                             self._raise_view_error(msg, node)
                         group_by = val_ast.s
                         fname = group_by.split(':')[0]
                         if fname not in name_manager.model._fields:
                             msg = _(
-                                'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
-                                field=fname, attribute=attr, value=expr,
+                                'Unknown field "%(field)s" in "group_by" value in context=%(value)r',
+                                field=fname, value=expr,
                             )
                             self._raise_view_error(msg, node)
                     else:
