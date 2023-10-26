@@ -12,6 +12,7 @@ PAYMENT_METHODS_MAPPING = {
     'becs_direct_debit': 'au_becs_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
+    'unknown': 'card',  # For express checkout.
 }
 
 # Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.
