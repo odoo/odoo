@@ -32,6 +32,7 @@
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                <field name="application_count" optional="hide" string="Other Applications"/>
             </tree>
         </field>
     </record>
@@ -86,7 +87,7 @@
                     </button>
                     <button name="action_applications_email"
                             class="oe_stat_button"
-                            icon="fa-pencil"
+                            icon="fa-copy"
                             type="object"
                             context="{'active_test': False}"
                             attrs="{'invisible': [('application_count', '=' , 0)]}">
@@ -323,6 +324,7 @@
                 <field name="activity_state" />
                 <field name="refuse_reason_id" />
                 <field name="application_status" />
+                <field name="application_count"/>
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
@@ -367,6 +369,12 @@
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
+                                        <a name="action_applications_email" class="me-2" type="object" t-if="record.application_count.raw_value">
+                                            <span title='Other Applications'>
+                                                <i class='fa fa-fw fa-copy' role="img" aria-label="Other Applications"/>
+                                                <t t-out="record.application_count.raw_value"/>
+                                            </span>
+                                        </a>
                                         <a name="action_open_attachments" type="object">
                                             <span title='Documents'><i class='fa fa-paperclip' role="img" aria-label="Documents"/>
                                                 <t t-esc="record.attachment_number.raw_value"/>
