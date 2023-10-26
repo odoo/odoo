@@ -23,16 +23,9 @@ export class PaymentPage extends Component {
         });
 
         onWillStart(async () => {
-            const type = this.selfOrder.config.self_ordering_mode;
             const paymentMethods = this.selfOrder.pos_payment_methods;
 
-            if (paymentMethods.length === 0 && type === "kiosk") {
-                await this.selfOrder.sendDraftOrderToServer();
-                this.router.navigate("confirmation", {
-                    orderAccessToken: this.selfOrder.currentOrder.access_token,
-                    screenMode: "pay",
-                });
-            } else if (paymentMethods.length === 1 && type === "kiosk") {
+            if (paymentMethods.length === 1) {
                 this.selectMethod(this.selfOrder.pos_payment_methods[0].id);
             }
         });
@@ -52,6 +45,8 @@ export class PaymentPage extends Component {
         return this.selfOrder.pos_payment_methods.find((p) => p.id === this.state.paymentMethodId);
     }
 
+    // this function will be override by pos_online_payment_self_order module
+    // in mobile is the only available payment method
     async startPayment() {
         this.selfOrder.paymentError = false;
         try {
