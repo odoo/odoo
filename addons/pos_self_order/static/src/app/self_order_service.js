@@ -42,7 +42,6 @@ export class SelfOrder extends Reactive {
         this.productsGroupedByCategory = {};
         this.lastEditedProductId = null;
         this.attributeValueById = {};
-        this.eatingLocation = "in"; // (in, out) in by default because out can be disabled in the config
         this.currentProduct = 0;
         this.attributeById = {};
         this.priceLoading = false;
@@ -62,13 +61,67 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    async confirmOrder() {
+        const payAfter = this.config.self_ordering_pay_after;       // each, meal
+        const device = this.config.self_ordering_mode;              // kiosk, mobile
+        const service = this.config.self_ordering_service_mode;     // table, counter
+        const paymentMethods = this.pos_payment_methods;            // Stripe, Adyen, Online
+        const order = this.currentOrder;
+
+        // Stand number page will recall this function after the stand number is set
+        if (service === "table" && !order.take_away && device === "kiosk" && !order.table_stand_number) {
+            this.router.navigate("stand_number");
+            return;
+        }
+
+        // if the amount is 0, we don't need to go to the payment page
+        // this directive works for both mode each and meal
+        if (order.amount_total === 0 && order.lines.length > 0) {
+            await this.sendDraftOrderToServer();
+            this.router.navigate("confirmation", {
+                orderAccessToken: order.access_token,
+                screenMode: "order",
+            });
+            return;
+        }
+
+        // When no payment methods redirect to confirmation page
+        // the client will be able to pay at counter
+        if (paymentMethods.length === 0) {
+            let screenMode = "pay";
+
+            if (!order.isSavedOnServer) {
+                await this.sendDraftOrderToServer();
+                screenMode = payAfter === "meal" ? "order" : "pay";
+            }
+
+            this.router.navigate("confirmation", {
+                orderAccessToken: order.access_token,
+                screenMode: screenMode,
+            });
+        } else {
+            // In meal mode, first time the customer validate his order, we send it to the server
+            // and we redirect him to the confirmation page, the next time he validate his order
+            // if the order is already saved on the server, we redirect him to the payment page
+            // In each mode, we redirect the customer to the payment page directly
+            if (payAfter === "meal" && !order.isSavedOnServer) {
+                await this.sendDraftOrderToServer();
+                this.router.navigate("confirmation", {
+                    orderAccessToken: order.access_token,
+                    screenMode: "order",
+                });
+            } else {
+                this.router.navigate("payment");
+            }
+        }
+    }
+
     get currentOrder() {
-        if (this.editedOrder) {
+        if (this.editedOrder && this.editedOrder.state === "draft") {
             return this.editedOrder;
         }
 
         const existingOrder = this.orders.find((o) => o.state === "draft");
-
         if (!existingOrder) {
             const newOrder = new Order({
                 pos_config_id: this.pos_config_id,

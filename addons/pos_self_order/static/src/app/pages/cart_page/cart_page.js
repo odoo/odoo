@@ -51,9 +51,6 @@ export class CartPage extends Component {
         const orderingMode = this.selfOrder.config.self_ordering_service_mode;
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
-        const mode = this.selfOrder.config.self_ordering_pay_after;
-        const order = this.selfOrder.currentOrder;
-        const isPaymentMethod = this.selfOrder.pos_payment_methods.length > 0;
 
         if (this.sendInProgress || !this.selfOrder.verifyCart()) {
             return;
@@ -64,33 +61,9 @@ export class CartPage extends Component {
             return;
         }
 
-        // in case of no payment methods available -> pay at cashier
-        if (!isPaymentMethod) {
-            let screenMode = "pay";
-
-            if (!order.isSavedOnServer) {
-                this.sendInProgress = true;
-                await this.selfOrder.sendDraftOrderToServer();
-                this.sendInProgress = false;
-                screenMode = mode === "meal" ? "order" : "pay";
-            }
-
-            this.router.navigate("confirmation", {
-                orderAccessToken: order.access_token,
-                screenMode: screenMode,
-            });
-            return;
-        }
-
-        if (orderingMode === "table" && !takeAway) {
-            if (type === "kiosk") {
-                this.router.navigate("stand_number");
-            } else {
-                this.router.navigate("payment");
-            }
-        } else {
-            this.router.navigate("payment");
-        }
+        this.sendInProgress = true;
+        await this.selfOrder.confirmOrder();
+        this.sendInProgress = false;
     }
 
     selectTable(table) {
