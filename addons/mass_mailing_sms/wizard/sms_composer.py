@@ -3,7 +3,7 @@
 
 import werkzeug.urls
 
-from odoo import _, Command, fields, models
+from odoo import _, api, Command, fields, models
 
 
 class SMSComposer(models.TransientModel):
@@ -24,6 +24,10 @@ class SMSComposer(models.TransientModel):
             '/sms/%s/%s' % (self.mailing_id.id, trace_code)
         )
 
+    @api.model
+    def _get_unsubscribe_info(self, url):
+        return _('STOP SMS: %(unsubscribe_url)s', unsubscribe_url=url)
+
     def _prepare_mass_sms_trace_values(self, record, sms_values):
         trace_code = self.env['mailing.trace']._get_random_code()
         trace_values = {
@@ -43,7 +47,8 @@ class SMSComposer(models.TransientModel):
             trace_values['trace_status'] = 'cancel'
         else:
             if self.mass_sms_allow_unsubscribe:
-                sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', _('STOP SMS: %s', self._get_unsubscribe_url(record.id, trace_code, sms_values['number'])))
+                stop_sms = self._get_unsubscribe_info(self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
+                sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', stop_sms)
         return trace_values
 
     def _get_optout_record_ids(self, records, recipients_info):
