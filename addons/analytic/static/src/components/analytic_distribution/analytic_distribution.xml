@@ -30,7 +30,7 @@
                     <thead>
                         <tr class="border-bottom">
                             <th t-foreach="allPlans" t-as="plan" t-key="plan.id">
-                                <span t-out="plan.name"/>(<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)
+                                <span t-out="plan.name"/> (<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)
                             </th>
                             <th t-out="'Percentage'" class="numeric_column_width"/>
                             <th t-if="valueColumnEnabled" class="numeric_column_width" t-out="props.record.fields[props.amount_field].string"/>
