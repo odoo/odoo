@@ -71,11 +71,10 @@ class AccountMoveSend(models.TransientModel):
         if invoice_data.get('l10n_es_edi_facturae_xml') and invoice._l10n_es_edi_facturae_get_default_enable():
             xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
             if errors:
-                invoice_data['error'] = "".join([
-                    _("Errors occured while creating the EDI document (format: %s):", "Facturae"),
-                    "\n",
-                    "<p><li>" + "</li><li>".join(errors) + "</li></p>",
-                ])
+                invoice_data['error'] = {
+                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", "Facturae"),
+                    'errors': errors,
+                }
             else:
                 invoice_data['l10n_es_edi_facturae_attachment_values'] = {
                     'name': invoice._l10n_es_edi_facturae_get_filename(),
