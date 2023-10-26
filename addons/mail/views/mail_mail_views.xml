@@ -124,9 +124,14 @@
                     <filter name="sent" string="Sent" domain="[('state','=','sent')]"/>
                     <filter name="exception" string="Failed" domain="[('state','=','exception')]"/>
                     <separator/>
-                    <filter name="type_email" string="Email" domain="[('message_type','=','email')]"/>
-                    <filter name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
-                    <filter name="type_notification" string="Notification" domain="[('message_type','=','notification')]"/>
+                    <filter name="filter_type_email_outgoing" string="Outgoing Email"
+                            domain="[('message_type','=','email_outgoing')]"/>
+                    <filter name="filter_type_email" string="Incoming Email"
+                            domain="[('message_type','=','email')]"/>
+                    <filter name="filter_type_comment" string="Comment"
+                            domain="[('message_type','=','comment')]"/>
+                    <filter name="filter_type_notification" string="Notification"
+                            domain="[('message_type','=','notification')]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="author_id"/>
                         <field name="recipient_ids"/>

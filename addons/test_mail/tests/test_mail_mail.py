@@ -627,6 +627,11 @@ class TestMailMail(MailCommon):
 
             self.send_email_mocked.side_effect = _send_current
 
+    def test_mail_mail_values_misc(self):
+        """ Test various values on mail.mail, notably default values """
+        msg = self.env['mail.mail'].create({})
+        self.assertEqual(msg.message_type, 'email_outgoing', 'Mails should have outgoing email type by default')
+
 @tagged('mail_mail', 'mail_server')
 class TestMailMailServer(MailCommon):
 

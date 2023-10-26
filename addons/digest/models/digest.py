@@ -81,7 +81,7 @@ class Digest(models.Model):
             ('create_date', '>=', start),
             ('create_date', '<', end),
             ('subtype_id', '=', self.env.ref('mail.mt_comment').id),
-            ('message_type', 'in', ('comment', 'email')),
+            ('message_type', 'in', ('comment', 'email', 'email_outgoing')),
         ])
 
     @api.onchange('periodicity')
