@@ -10,6 +10,7 @@ export class LinkDialog extends Link {
     static props = {
         ...Link.props,
         focusField: { type: String, optional: true },
+        close: { type: Function },
         onClose: { type: Function },
         onSave: { type: Function },
     };
