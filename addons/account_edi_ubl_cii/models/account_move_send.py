@@ -99,11 +99,10 @@ class AccountMoveSend(models.TransientModel):
 
             # Failed.
             if errors:
-                invoice_data['error'] = "".join([
-                    _("Errors occured while creating the EDI document (format: %s):", builder._description),
-                    "\n",
-                    "<p><li>" + "</li><li>".join(errors) + "</li></p>",
-                ])
+                invoice_data['error'] = {
+                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", builder._description),
+                    'errors': errors,
+                }
                 invoice_data['error_but_continue'] = True
             else:
                 invoice_data['ubl_cii_xml_attachment_values'] = {
