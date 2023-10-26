@@ -101,9 +101,10 @@ QUnit.module('Product Pricelist Report', {
         // existing quantity can not be added.
         await click(addQtyButton);
         let notificationElement = document.body.querySelector('.o_notification_manager .o_notification');
+        let notificationElementBar = document.body.querySelector('.o_notification_manager .o_notification .o_notification_bar');
         assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
             "Quantity already present (1).", "Existing Quantity can not be added");
-        assert.hasClass(notificationElement, "border-info");
+        assert.hasClass(notificationElementBar, "bg-info");
 
         // adding few more quantities to check.
         await editInput(inputElement, '', 2);
@@ -121,10 +122,11 @@ QUnit.module('Product Pricelist Report', {
         await editInput(inputElement, '', 4);
         await click(addQtyButton);
         notificationElement = document.body.querySelector('.o_notification_manager .o_notification:nth-child(2)');
+        notificationElementBar = document.body.querySelector('.o_notification_manager .o_notification:nth-child(2) .o_notification_bar');
         assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
             "At most 5 quantities can be displayed simultaneously. Remove a selected quantity to add others.",
             "Can not add more then 5 quantities");
-        assert.hasClass(notificationElement, "border-warning");
+        assert.hasClass(notificationElementBar, "bg-warning");
 
         assert.verifySteps([
             'pricelist_changed',

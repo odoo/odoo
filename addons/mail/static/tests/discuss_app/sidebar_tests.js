@@ -1078,7 +1078,7 @@ QUnit.test("Unpinning chat should display notification", async () => {
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await contains(".o_notification.border-info", {
+    await contains(".o_notification:has(.o_notification_bar.bg-info)", {
         text: "You unpinned your conversation with Mitchell Admin",
     });
 });

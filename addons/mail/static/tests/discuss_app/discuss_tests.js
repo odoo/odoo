@@ -362,7 +362,7 @@ QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FO
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message:not(.o-selected)");
-    await contains(".o_notification.border-info", { text: 'Message posted on "Refactoring"' });
+    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: 'Message posted on "Refactoring"' });
     openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "Hello" });
@@ -1342,7 +1342,7 @@ QUnit.test("Channel is added to discuss after invitation", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o_notification.border-info", { text: "You have been invited to #General" });
+    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "You have been invited to #General" });
 });
 
 QUnit.test("select another mailbox", async () => {
@@ -1456,7 +1456,7 @@ QUnit.test(
         await contains(".o-mail-Composer-send:disabled");
         // Try to send message
         triggerHotkey("Enter");
-        await contains(".o_notification.border-warning", {
+        await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
             text: "Please wait while the file is uploading.",
         });
     }

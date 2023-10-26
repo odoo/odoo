@@ -3,16 +3,16 @@
 // The notification just add overlays.
 
 .o_notification_manager {
-    @include o-position-absolute($o-navbar-height * 1.15, map-get($spacers, 2), $left: calc(100vw - #{$o-notification-max-width}));
+    @include o-position-absolute($top: $o-navbar-height * 1.15, $right: $o-notification-margin, $left: $o-notification-margin);
     z-index: $o-notification-zindex;
 
-    .o_notification {
-        border-left-width: $o-notification-border-left-width !important; // Overrides border-[x] utility classes
-        box-shadow: $o-notification-shadow;
+    @include media-breakpoint-up(sm) {
+        left: auto;
+        width: $o-notification-max-width-sm;
     }
 
-    .o_notification_close {
-        @include o-position-absolute(0, 0);
+    .o_notification_bar {
+        width: $o-notification-bar-width;
     }
 }
 
