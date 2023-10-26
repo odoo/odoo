@@ -58,6 +58,7 @@ insertRecords("res.partner", [
         display_name: "Public user",
         id: TEST_USER_IDS.publicPartnerId,
         is_public: true,
+        name: "Public user",
     },
     {
         display_name: "Your Company, Mitchell Admin",
