@@ -2297,8 +2297,9 @@ class Datetime(Field):
         return self.from_string(value)
 
     def convert_to_display_name(self, value, record):
-        assert record, 'Record expected'
-        return Datetime.to_string(Datetime.context_timestamp(record, Datetime.from_string(value)))
+        if not value:
+            return False
+        return Datetime.to_string(Datetime.context_timestamp(record, value))
 
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).

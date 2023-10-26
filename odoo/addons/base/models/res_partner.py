@@ -137,7 +137,7 @@ class PartnerCategory(models.Model):
             names = []
             current = category
             while current:
-                names.append(current.name)
+                names.append(current.name or "")
                 current = current.parent_id
             category.display_name = ' / '.join(reversed(names))
 

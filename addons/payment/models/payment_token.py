@@ -158,6 +158,9 @@ class PaymentToken(models.Model):
         """
         self.ensure_one()
 
+        if not self.create_date:
+            return ''
+
         padding_length = max_length - len(self.payment_details or '')
         if not self.payment_details:
             create_date_str = self.create_date.strftime('%Y/%m/%d')
