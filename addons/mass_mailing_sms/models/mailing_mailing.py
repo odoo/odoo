@@ -3,7 +3,10 @@
 
 import logging
 
+from urllib.parse import urljoin
+
 from odoo import api, fields, models, _
+from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -29,7 +32,7 @@ class Mailing(models.Model):
     # 'sms_subject' should have the same helper as 'subject' field when 'mass_mailing_sms' installed.
     # otherwise 'sms_subject' will get the old helper from 'mass_mailing' module.
     # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
-    # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
+    # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).
     sms_subject = fields.Char(
         'Title', related='subject',
         readonly=False, translate=False,
@@ -313,6 +316,39 @@ class Mailing(models.Model):
             res[mailing.id] = body
         res.update(super(Mailing, self - sms_mailings).convert_links())
         return res
+
+    def get_sms_link_replacements_placeholders(self):
+        """Get placeholders for replaced links in sms widget for accurate computation of sms counts.
+
+        Reminders and assumptions:
+          * Links wille be transformed to the format "[base_url]/r/[link_tracker_code]/s/[sms_id]".
+          * unsubscribe is formatted as: "\nSTOP SMS : [base_url]/sms/[mailing_id]/[trace_code]".
+
+        :return: Character counts used for links, formatted as `{link: str, unsubscribe: str}`.
+        """
+        if self:
+            self.ensure_one()
+
+        self.check_access_rights('write')
+
+        max_sms = self.env['sms.sms'].sudo().search_read([], ['id'], order='id desc', limit=1)
+        sms_id_length = max(len(str(max_sms[0]['id'])), 5) if max_sms else 5  # Assumes a mailing won't be more than 10⁵ sms at once
+        max_code = self.env['link.tracker.code'].sudo().search_read([], ['code'], order='id DESC', limit=1)
+        code_length = len(max_code[0]['code']) + 1 if max_code else LINK_TRACKER_MIN_CODE_LENGTH
+
+        if self.id:
+            mailing_id_placeholder_length = len(str(self.id))
+        else:
+            max_mailing = self.env['mailing.mailing'].sudo().search_read([], ['id'], order='id DESC', limit=1)
+            mailing_id_placeholder_length = len(str(max_mailing[0]['id'] + 1)) if max_mailing else 1
+        mailing_id_placeholder = 'x' * mailing_id_placeholder_length
+
+        base_url = self.get_base_url()
+        opt_out_url = urljoin(base_url, f"sms/{mailing_id_placeholder}/{'x' * self.env['mailing.trace'].CODE_SIZE}")
+        return {
+            'link': urljoin(base_url, f"r/{'x' * code_length}/s/{'x' * sms_id_length}"),
+            'unsubscribe': f"\n{self.env['sms.composer']._get_unsubscribe_info(opt_out_url)}"
+        }
 
     # ------------------------------------------------------
     # A/B Test Override
