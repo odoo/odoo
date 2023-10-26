@@ -6,7 +6,9 @@ import {
     click,
     clickSave,
     editInput,
+    findElement,
     getFixture,
+    nextTick,
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
@@ -73,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
             "The value should be rendered in human readable format (k, M, G, T)."
         );
     });
-    
+
     QUnit.test("human readable format 3", async function (assert) {
         await makeView({
             type: "form",
@@ -156,6 +158,35 @@ QUnit.module("Fields", (hooks) => {
             "The new value should be saved and displayed properly."
         );
     });
+
+    QUnit.test(
+        "no need to focus out of the input to save the record after correcting an invalid input",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+
+            const input = findElement(target, ".o_field_widget[name=int_field] input");
+            assert.strictEqual(input.value, "10");
+
+            input.value = "a";
+            triggerEvent(input, null, "input", {});
+            assert.strictEqual(input.value, "a");
+            await clickSave(target);
+            assert.containsOnce(target, ".o_form_status_indicator span i.fa-warning");
+            assert.containsOnce(target, ".o_form_button_save[disabled]");
+            input.value = "1";
+            triggerEvent(input, null, "input", {});
+            await nextTick();
+            assert.containsNone(target, ".o_form_status_indicator span i.fa-warning");
+            assert.containsNone(target, ".o_form_button_save[disabled]");
+            assert.containsOnce(target, ".o_form_button_save");
+        }
+    );
 
     QUnit.test("rounded when using formula in form view", async function (assert) {
         await makeView({
