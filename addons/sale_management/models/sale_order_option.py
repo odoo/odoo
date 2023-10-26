@@ -144,7 +144,7 @@ class SaleOrderOption(models.Model):
 
         sale_order = self.order_id
 
-        if sale_order.state not in ['draft', 'sent']:
+        if not sale_order._can_be_edited_on_portal():
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
