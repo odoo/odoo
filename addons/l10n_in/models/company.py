@@ -6,6 +6,7 @@ class ResCompany(models.Model):
 
     l10n_in_upi_id = fields.Char(string="UPI Id")
     l10n_in_active_audit_trail = fields.Boolean(string="Audit Trail", default=False, help="Once you activate audit trail it can't be deactivated.")
+    l10n_in_display_sign_on_invoice = fields.Boolean(string="Authorised Signature on Invoice")
 
     def write(self, vals):
         if 'l10n_in_active_audit_trail' in vals:

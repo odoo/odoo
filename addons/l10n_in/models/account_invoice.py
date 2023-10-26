@@ -33,6 +33,8 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
+    l10n_in_user_posting_move = fields.Many2one("res.users", "User who confirmed the invoice")
+
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
@@ -81,6 +83,8 @@ class AccountMove(models.Model):
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
+            # Keep track of the person confirming the invoice in order to add their signature
+            move.l10n_in_user_posting_move = move.write_uid
             if not move.company_id.state_id:
                 msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
                 "Set the address of your company (Don't forget the State field)", move.company_id.name)

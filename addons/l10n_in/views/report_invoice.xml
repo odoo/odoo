@@ -58,6 +58,18 @@
             </h2>
         </xpath>
 
-    </template>
+        <xpath expr="//div[@id='right-elements']" position="inside">
+            <div class="row">
+                <div class="col-6">
+                    <div t-if="o.move_type == 'out_invoice' and o.state != 'draft' and o.company_id.l10n_in_display_sign_on_invoice and not is_html_empty(o.invoice_user_id.signature)" t-out="o.l10n_in_user_posting_move.signature"/>
+                </div>
+            </div>
+        </xpath>
 
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <xpath expr="//div[@name='comment']" position="move"/>
+            <xpath expr="//div[@id='payment_communication']" position="move"/>
+        </xpath>
+
+    </template>
 </odoo>
