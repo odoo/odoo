@@ -290,6 +290,9 @@ const UserValueWidget = Widget.extend({
             this.illustrationEl = document.createElement('i');
             this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
         }
+        if (this.options.dataAttributes.reload) {
+            this.options.dataAttributes.noPreview = "true";
+        }
     },
     /**
      * @override
