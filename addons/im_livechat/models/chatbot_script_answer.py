@@ -28,10 +28,12 @@ class ChatbotScriptAnswer(models.Model):
             return super()._compute_display_name()
 
         for answer in self:
-            answer_message = answer.script_step_id.message.replace('\n', ' ')
-            shortened_message = textwrap.shorten(answer_message, width=26, placeholder=" [...]")
-
-            answer.display_name = f"{shortened_message}: {answer.name}"
+            if answer.script_step_id:
+                answer_message = answer.script_step_id.message.replace('\n', ' ')
+                shortened_message = textwrap.shorten(answer_message, width=26, placeholder=" [...]")
+                answer.display_name = f"{shortened_message}: {answer.name}"
+            else:
+                answer.display_name = answer.name
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
