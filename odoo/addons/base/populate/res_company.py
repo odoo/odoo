@@ -17,10 +17,12 @@ class Partner(models.Model):
     }
 
     def _populate_factories(self):
+        last_id = self.env["res.company"].search([], order="id desc", limit=1).id
+
         # remaining: paperformat_id, parent_id, partner_id, favicon, font, report_header, external_report_layout_id, report_footer
         ref = self.env.ref
         def get_name(values=None, counter=0, **kwargs):
-            return 'company_%s_%s' % (counter, self.env['res.currency'].browse(values['currency_id']).name)
+            return 'company_%s_%s' % (last_id + counter + 1, self.env['res.currency'].browse(values['currency_id']).name)
         return [
             ('name', populate.constant('company_{counter}')),
             ('sequence', populate.randint(0, 100)),

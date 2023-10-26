@@ -16,6 +16,8 @@ class Users(models.Model):
     _populate_dependencies = ["res.partner"]
 
     def _populate_factories(self):
+        last_id = self.env["res.users"].search([], order="id desc", limit=1).id
+
         partner_ids = list(self.env.registry.populated_models["res.partner"])
 
         def get_partner_id(random=None, **kwargs):
@@ -23,10 +25,17 @@ class Users(models.Model):
             partner_ids.remove(partner_id)
             return partner_id
 
+        def compute_login(values=None, counter=0, **kwargs):
+            return f'user_login_{last_id + counter + 1}'
+
+        def compute_name(values=None, counter=0, **kwargs):
+            return f'user_{last_id + counter + 1}'
+
         return [
             ("active", populate.cartesian([True, False], [0.9, 0.1])),
             ("partner_id", populate.compute(get_partner_id)),
-            ("login", populate.constant("user_login_{counter}")),
+            ('login', populate.compute(compute_login)),
+            ('name', populate.compute(compute_name)),
         ]
 
     def _populate(self, scale):
