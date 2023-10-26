@@ -35,7 +35,7 @@ class ResetMicrosoftAccount(models.TransientModel):
 
         if self.delete_policy in ('delete_microsoft', 'delete_both'):
             for event in non_recurring_events:
-                event._microsoft_delete(event._get_organizer(), event.ms_organizer_event_id, timeout=3)
+                event._microsoft_delete(event._get_organizer(), event.microsoft_id, timeout=3)
 
         if self.sync_policy == 'all':
             events.with_context(dont_notify=True).update({
