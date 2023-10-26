@@ -123,7 +123,7 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "group_failing", "member", "read", False),
             ("user", "group_failing", "member", "write", False),
             ("user", "group_failing", "member", "unlink", False),
-            ("user", "group_failing", "outside", "create", True),
+            ("user", "group_failing", "outside", "create", False),
             ("user", "group_failing", "outside", "read", False),
             ("user", "group_failing", "outside", "write", False),
             ("user", "group_failing", "outside", "unlink", False),
