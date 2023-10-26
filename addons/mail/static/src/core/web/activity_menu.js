@@ -31,8 +31,13 @@ export class ActivityMenu extends Component {
         this.sortActivityGroups();
     }
 
+    /**
+     * Sort by model ID ASC but always place the activity group for "mail.activity" model at the end (other activities).
+     */
     sortActivityGroups() {
-        this.store.activityGroups.sort((g1, g2) => g1.id - g2.id);
+        const getSortId = (activityGroup) =>
+            activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
+        this.store.activityGroups.sort((g1, g2) => getSortId(g1) - getSortId(g2));
     }
 
     onBeforeOpen() {
@@ -55,7 +60,12 @@ export class ActivityMenu extends Component {
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
         };
-        let domain = [["activity_user_id", "=", this.userId]];
+        let domain;
+        if (group.model !== "mail.activity") {
+            domain = [["activity_user_id", "=", this.userId]];
+        } else {
+            domain = [["id", "in", group.activity_ids]];
+        }
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }

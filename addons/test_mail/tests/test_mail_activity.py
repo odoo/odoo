@@ -141,6 +141,26 @@ class TestActivityRights(TestActivityCommon):
                     'test_mail.mail_act_test_todo',
                     user_id=self.user_admin.id)
 
+        test_activity.user_id = self.user_employee
+        test_activity.flush_recordset()
+
+        # user can read activities assigned to him even if he has no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            found = self.env['mail.activity'].with_user(self.user_employee).search(
+                [('id', '=', test_activity.id)])
+            self.assertEqual(found, test_activity)
+            found.read(['summary'])
+
+        # user can read_group activities assigned to him even if he has no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+                [('id', '=', test_activity.id)],
+                ['summary'],
+                ['summary'],
+            )
+            self.assertEqual(1, read_group_result[0]['summary_count'])
+            self.assertEqual('Summary', read_group_result[0]['summary'])
+
 
 @tests.tagged('mail_activity')
 class TestActivityFlow(TestActivityCommon):
