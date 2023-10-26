@@ -3,6 +3,7 @@
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click as clickContains, contains } from "@web/../tests/utils";
 
 QUnit.module("pinned messages");
 
@@ -115,13 +116,7 @@ QUnit.test("Jump to message", async (assert) => {
     assert.isVisible($(".o-mail-Message:contains(Hello world!)"));
 });
 
-QUnit.test("Jump to message from notification", async (assert) => {
-    // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView() {
-            return this._super(true);
-        },
-    });
+QUnit.test("Jump to message from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -139,10 +134,13 @@ QUnit.test("Jump to message from notification", async (assert) => {
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message:eq(0) [title='Expand']");
-    await click(".dropdown-item:contains(Pin)");
-    await click(".modal-footer button:contains(pin it)");
-    await click(".o_mail_notification a:contains(message)");
-    await nextTick();
-    assert.isVisible($(".o-mail-Message:contains(Hello world!)"));
+    await clickContains(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await clickContains(".dropdown-item", { text: "Pin" });
+    await clickContains(".modal-footer button", { text: "Yeah, pin it!" });
+    await contains(".o_mail_notification");
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+    // Clicking on the link on the "User pinned a message to this channel"
+    // notification should highlight the pinned message.
+    await clickContains(".o_mail_notification a", { text: "message" });
+    await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
 });
