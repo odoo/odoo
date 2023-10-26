@@ -639,13 +639,7 @@ function _expressionFromTree(tree, options, isRoot = false) {
         return formatAST(operator === "=" ? not(pathAST) : pathAST);
     }
 
-    if (
-        pathAST.type === 5 &&
-        isValidPath(pathAST, options) &&
-        ["in", "not in"].includes(operator)
-    ) {
-        const setIteratorAST = isX2Many(pathAST, options) ? pathAST : { type: 4, value: [pathAST] };
-
+    if (pathAST.type === 5 && isX2Many(pathAST, options) && ["in", "not in"].includes(operator)) {
         const valueAST = toAST(value);
         const otherIteratorAST = [4, 10].includes(valueAST.type)
             ? valueAST
@@ -656,7 +650,7 @@ function _expressionFromTree(tree, options, isRoot = false) {
             fn: {
                 type: 15,
                 obj: {
-                    args: [setIteratorAST],
+                    args: [pathAST],
                     type: 8,
                     fn: {
                         type: 5,
@@ -670,13 +664,18 @@ function _expressionFromTree(tree, options, isRoot = false) {
         return formatAST(operator === "not in" ? not(ast) : ast);
     }
 
+    let valueAST = toAST(value);
+    if (["in", "not in"].includes(operator) && ![4, 10].includes(valueAST.type)) {
+        valueAST = { type: 4, value: [valueAST] };
+    }
+
     // add case true for boolean fields
 
     return formatAST({
         type: 7,
         op,
         left: pathAST,
-        right: toAST(value),
+        right: valueAST,
     });
 }
 
