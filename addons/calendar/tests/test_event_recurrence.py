@@ -932,6 +932,8 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
                 (datetime(2019, 6, 23, 16), datetime(2019, 6, 23, 17)),
                 (datetime(2019, 6, 24, 16, 0), datetime(2019, 6, 24, 17)),
             ])
+            self.assertEqual(event.rrule_type_ui, 'daily')
+            self.assertEqual(event.count, 2)
 
     def test_recurring_ui_options_monthly(self):
         with Form(self.env['calendar.event']) as calendar_form:
@@ -947,6 +949,8 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
                 (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
                 (datetime(2019, 7, 11, 16), datetime(2019, 7, 11, 17)),
             ])
+            self.assertEqual(event.rrule_type_ui, 'monthly')
+            self.assertEqual(event.count, 2)
 
     def test_recurring_ui_options_yearly(self):
         with Form(self.env['calendar.event']) as calendar_form:
@@ -961,3 +965,8 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
                 (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
                 (datetime(2020, 6, 11, 16), datetime(2020, 6, 11, 17)),
             ])
+            # set to custom because a yearly recurrence, becomes a monthly recurrence every 12 months
+            self.assertEqual(event.rrule_type_ui, 'custom')
+            self.assertEqual(event.count, 2)
+            self.assertEqual(event.interval, 12)
+            self.assertEqual(event.rrule_type, 'monthly')
