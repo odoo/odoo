@@ -4,16 +4,26 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.3\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 05:10+0000\n"
-"PO-Revision-Date: 2023-05-30 05:10+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 21:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__access_token
+msgid "Access Token"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:res.groups,name:spreadsheet_dashboard.group_dashboard_manager
+msgid "Admin"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -42,19 +52,28 @@ msgid "Configuration"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_share
+msgid "Copy of a shared dashboard"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_uid
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_date
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__create_date
 msgid "Created on"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
+#: model:ir.module.category,name:spreadsheet_dashboard.dashboard_management
 msgid "Dashboard"
 msgstr ""
 
@@ -76,7 +95,13 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__display_name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__display_name
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__excel_export
+msgid "Excel Export"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -102,18 +127,21 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__id
 msgid "ID"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_uid
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_date
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -132,6 +160,7 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__name
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__name
 msgid "Name"
 msgstr ""
 
@@ -152,11 +181,6 @@ msgid ""
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_project
-msgid "Project"
-msgstr ""
-
-#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
 msgid "Sales"
 msgstr ""
@@ -168,17 +192,24 @@ msgid "Sequence"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_project
+msgid "Services"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard
 msgid "Spreadsheet Dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__spreadsheet_data
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__spreadsheet_data
 msgid "Spreadsheet Data"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__spreadsheet_binary_data
 msgid "Spreadsheet file"
 msgstr ""
 
@@ -189,7 +220,18 @@ msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__thumbnail
 msgid "Thumbnail"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
+msgid "URL"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.module.category,description:spreadsheet_dashboard.dashboard_management
+msgid "User access level for Dashboard module"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -202,4 +244,11 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
 #, python-format
 msgid "You cannot delete %s as it is used in another module."
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
+#, python-format
+msgid "You don't have access to this dashboard. "
 msgstr ""
