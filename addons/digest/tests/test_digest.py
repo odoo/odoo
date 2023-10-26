@@ -21,7 +21,7 @@ class TestDigest(TestDigestCommon):
         # clean messages
         cls.env['mail.message'].search([
             ('subtype_id', '=', cls.env.ref('mail.mt_comment').id),
-            ('message_type', 'in', ['comment', 'email']),
+            ('message_type', 'in', ('comment', 'email', 'email_outgoing')),
         ]).unlink()
         cls._setup_messages()
 

@@ -90,7 +90,7 @@ class TestAPI(MailCommon, TestRecipients):
         )
 
         # cannot edit notifications
-        for message_type in ['notification', 'user_notification', 'email']:
+        for message_type in ['notification', 'user_notification', 'email', 'email_outgoing', 'auto_comment']:
             message.sudo().write({'message_type': message_type})
             with self.assertRaises(exceptions.UserError):
                 ticket_record._message_update_content(

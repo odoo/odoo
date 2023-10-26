@@ -416,7 +416,7 @@ class TestMailgateway(MailCommon):
         message = self.env['mail.message'].create({
             'body': '<p>test</p>',
             'email_from': f'author-partner@{self.alias_domain}',  # email sent by author who also has an alias with their email
-            'message_type': 'email',
+            'message_type': 'email_outgoing',
             'model': test_record._name,
             'res_id': test_record.id,
         })
@@ -1873,7 +1873,7 @@ class TestMailgateway(MailCommon):
         message = self.env['mail.message'].create({
             'body': '<p>test</p>',
             'email_from': self.email_from,
-            'message_type': 'email',
+            'message_type': 'email_outgoing',
             'model': None,
             'res_id': None,
         })

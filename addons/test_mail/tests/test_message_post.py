@@ -1515,7 +1515,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'auto_delete': True,
                     'is_internal': False,
                     'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
-                    'message_type': 'email',
+                    'message_type': 'email_outgoing',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'subtype_id': self.env['mail.message.subtype'],
@@ -1555,7 +1555,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'auto_delete': False,
                     'is_internal': False,
                     'is_notification': False,  # no to_delete -> no keep_log
-                    'message_type': 'email',
+                    'message_type': 'email_outgoing',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'recipient_ids': test_record.customer_id,

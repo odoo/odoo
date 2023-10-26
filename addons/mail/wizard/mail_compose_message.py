@@ -887,7 +887,7 @@ class MailComposer(models.TransientModel):
             'author_id': self.author_id.id,
             'mail_activity_type_id': self.mail_activity_type_id.id,
             'mail_server_id': self.mail_server_id.id,
-            'message_type': 'email' if email_mode else self.message_type,
+            'message_type': 'email_outgoing' if email_mode else self.message_type,
             'parent_id': self.parent_id.id,
             'record_name': False if email_mode else self.record_name,
             'reply_to_force_new': self.reply_to_force_new,

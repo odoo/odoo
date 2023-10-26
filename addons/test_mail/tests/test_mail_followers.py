@@ -356,7 +356,7 @@ class AdvancedFollowersTest(MailCommon):
 
     def test_auto_subscribe_post_email(self):
         """ People posting an email are automatically added as followers """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='email')
+        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='email_outgoing')
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
 
     def test_auto_subscribe_not_on_notification(self):

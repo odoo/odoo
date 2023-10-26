@@ -202,8 +202,8 @@ class Task(models.Model):
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working Hours to Close', digits=(16, 2), store=True, group_operator="avg")
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working Days to Assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
-    # customer portal: include comment and incoming emails in communication history
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    # customer portal: include comment and (incoming/outgoing) emails in communication history
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment', 'email_outgoing'])])
     allow_milestones = fields.Boolean(related='project_id.allow_milestones')
     milestone_id = fields.Many2one(
         'project.milestone',

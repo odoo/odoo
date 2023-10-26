@@ -312,6 +312,10 @@ class TestMessageValues(MailCommon):
         self.assertNotIn('mail.test.container', msg.message_id.split('@')[0])
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
+    def test_mail_message_values_misc(self):
+        """ Test various values on mail.message, notably default values """
+        msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
+        self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
 
 @tagged("mail_message", "post_install", "-at_install")
 class TestMessageAccess(MailCommon):
