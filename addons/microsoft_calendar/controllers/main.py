@@ -68,12 +68,3 @@ class MicrosoftCalendarController(CalendarController):
             }
 
         return {"status": "success"}
-
-    @http.route()
-    def check_calendar_credentials(self):
-        res = super().check_calendar_credentials()
-        get_param = request.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('microsoft_calendar_client_id')
-        client_secret = get_param('microsoft_calendar_client_secret')
-        res['microsoft_calendar'] = bool(client_id and client_secret)
-        return res
