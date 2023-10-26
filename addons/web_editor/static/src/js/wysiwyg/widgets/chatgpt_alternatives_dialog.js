@@ -28,15 +28,15 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
             selectedMessage: null,
             conversationHistory: [{
                 role: 'system',
-                content: 'You are a helpful assistant, your goal is to help the user write alternatives to their text.',
-            },
-            {
-                role: 'user',
-                content:  'Consider the following text : \n' + this.props.originalText,
-            },
-            {
-                role: 'assistant',
-                content: 'Thanks for this text, what do you need me to do with it?',
+                content: 'The user wrote the following text:\n' +
+                    '<generated_text>' + this.props.originalText + '</generated_text>\n' +
+                    'Your goal is to help the user write alternatives to that text.\n' +
+                    'Conditions:\n' +
+                    '- You must respect the format (wrapping the alternative between <generated_text> and </generated_text>)\n' +
+                    '- Do not write HTML\n' +
+                    '- You must suggest one and only one alternative per answer\n' +
+                    '- Your answer must be different every time, never repeat yourself\n' +
+                    '- You must respect whatever extra conditions the user gives you\n',
             }],
             messages: [],
             alternativesMode: '',
@@ -66,8 +66,8 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
             if (this.state.alternativesMode && !messageIndex) {
                 query += ` Make it more ${this.state.alternativesMode} than your last answer.`;
             }
-            query += messageIndex ? '' : 'The original text was : \n' + this.props.originalText;
             await this._generate(query, (content, isError) => {
+                const alternative = content.replace(/.*<generated_text>/, '').replace(/<\/generated_text>.*/, '');
                 if (isError) {
                     wasError = true;
                 } else {
@@ -79,11 +79,11 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                         content,
                     });
                 }
-                this.state.messages = [...this.state.messages, {
+                this.state.messages.push({
                     author: 'assistant',
-                    text: content,
+                    text: alternative,
                     isError,
-                }];
+                });
             }).catch(() => {
                 wasError = true;
                 this.state.messages = [];
