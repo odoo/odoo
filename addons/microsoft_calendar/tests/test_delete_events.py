@@ -25,7 +25,7 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_delete_simple_event_from_odoo_organizer_calendar(self, mock_delete):
-        event_id = self.simple_event.ms_organizer_event_id
+        event_id = self.simple_event.microsoft_id
 
         self.simple_event.with_user(self.organizer_user).unlink()
         self.call_post_commit_hooks()
@@ -40,7 +40,7 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_delete_simple_event_from_odoo_attendee_calendar(self, mock_delete):
-        event_id = self.simple_event.ms_organizer_event_id
+        event_id = self.simple_event.microsoft_id
 
         self.simple_event.with_user(self.attendee_user).unlink()
         self.call_post_commit_hooks()
@@ -55,7 +55,7 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_archive_simple_event_from_odoo_organizer_calendar(self, mock_delete):
-        event_id = self.simple_event.ms_organizer_event_id
+        event_id = self.simple_event.microsoft_id
 
         self.simple_event.with_user(self.organizer_user).write({'active': False})
         self.call_post_commit_hooks()
@@ -71,7 +71,7 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_archive_simple_event_from_odoo_attendee_calendar(self, mock_delete):
-        event_id = self.simple_event.ms_organizer_event_id
+        event_id = self.simple_event.microsoft_id
 
         self.simple_event.with_user(self.attendee_user).write({'active': False})
         self.call_post_commit_hooks()
@@ -101,7 +101,7 @@ class TestDeleteEvents(TestCommon):
         self.assertFalse(all(e.active for e in several_simple_events))
 
         mock_delete.assert_has_calls([
-            call(e.ms_organizer_event_id, token=ANY, timeout=ANY)
+            call(e.microsoft_id, token=ANY, timeout=ANY)
             for e in several_simple_events
         ])
 
@@ -110,7 +110,7 @@ class TestDeleteEvents(TestCommon):
         """
         In his Outlook calendar, the organizer cannot delete the event, he can only cancel it.
         """
-        event_id = self.simple_event.ms_organizer_event_id
+        event_id = self.simple_event.microsoft_id
         mock_get_events.return_value = (
             MicrosoftEvent([{
                 "id": event_id,
@@ -140,7 +140,7 @@ class TestDeleteEvents(TestCommon):
     def test_delete_one_event_from_recurrence_from_odoo_calendar(self, mock_delete):
         # arrange
         idx = 2
-        event_id = self.recurrent_events[idx].ms_organizer_event_id
+        event_id = self.recurrent_events[idx].microsoft_id
 
         # act
         self.recurrent_events[idx].with_user(self.organizer_user).unlink()
@@ -160,7 +160,7 @@ class TestDeleteEvents(TestCommon):
 
         # arrange
         idx = 0
-        event_id = self.recurrent_events[idx].ms_organizer_event_id
+        event_id = self.recurrent_events[idx].microsoft_id
 
         # act
         self.recurrent_events[idx].with_user(self.organizer_user).unlink()
@@ -258,7 +258,7 @@ class TestDeleteEvents(TestCommon):
         # arrange
         mock_get_events.return_value = (
             MicrosoftEvent([{
-                "id": self.recurrence.ms_organizer_event_id,
+                "id": self.recurrence.microsoft_id,
                 "@removed": {"reason": "deleted"}
             }]),
             None
@@ -286,7 +286,7 @@ class TestDeleteEvents(TestCommon):
             return
         # arrange
         idx = 0
-        event_id = self.recurrent_events[idx].ms_organizer_event_id
+        event_id = self.recurrent_events[idx].microsoft_id
 
         # act
         self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('self_only')

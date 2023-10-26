@@ -167,7 +167,7 @@ class TestCreateEvents(TestCommon):
         recurrence.invalidate_recordset()
 
         # assert
-        self.assertEqual(recurrence.ms_organizer_event_id, event_id)
+        self.assertEqual(recurrence.microsoft_id, event_id)
         self.assertEqual(recurrence.ms_universal_event_id, event_iCalUId)
         self.assertEqual(recurrence.need_sync_m, False)
 
@@ -213,7 +213,7 @@ class TestCreateEvents(TestCommon):
         # assert
         mock_insert.assert_not_called()
 
-        self.assertEqual(recurrence.ms_organizer_event_id, False)
+        self.assertEqual(recurrence.microsoft_id, False)
         self.assertEqual(recurrence.ms_universal_event_id, False)
         self.assertEqual(recurrence.need_sync_m, False)
 
@@ -344,7 +344,7 @@ class TestCreateEvents(TestCommon):
                              "Event creation must happen before last_sync_date")
 
         # Assert that the local event did not get synced after synchronization restart.
-        self.assertEqual(event.ms_organizer_event_id, False,
+        self.assertEqual(event.microsoft_id, False,
                          "Event should not be synchronized while sync is paused.")
         self.assertEqual(event.ms_universal_event_id, False,
                          "Event should not be synchronized while sync is paused.")
@@ -376,7 +376,7 @@ class TestCreateEvents(TestCommon):
         event.invalidate_recordset()
 
         # Assert that the event got synchronized with Microsoft (through mock).
-        self.assertEqual(event.ms_organizer_event_id, "123")
+        self.assertEqual(event.microsoft_id, "123")
         self.assertEqual(event.ms_universal_event_id, "456")
 
         # Assert that the Microsoft Insert was called once.
