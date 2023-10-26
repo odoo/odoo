@@ -84,9 +84,9 @@ export class DiscussSidebarCategories extends Component {
     filteredThreads(category) {
         return category.threads.filter((thread) => {
             return (
-                (thread.is_pinned || thread.group_based_subscription) &&
+                (["channel", "group"].includes(thread.type) || thread.is_pinned) &&
                 (!this.state.quickSearchVal ||
-                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
+                    cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
