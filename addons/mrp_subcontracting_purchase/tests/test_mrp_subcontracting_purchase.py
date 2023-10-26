@@ -310,32 +310,66 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
+        purchase_comps = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,  # can be any partner
+            'order_line': [
+                Command.create({
+                    'name': self.comp1.name,
+                    'product_id': self.comp1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.finished.uom_id.id,
+                    'price_unit': 10,
+                }),
+                Command.create({
+                    'name': self.comp2.name,
+                    'product_id': self.comp2.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.finished.uom_id.id,
+                    'price_unit': 10,
+                })
+            ],
+        })
+        # recieving comp products will set their invetory valuation (creates SVLs)
+        purchase_comps.button_confirm()
+        purchase_comps.picking_ids.move_ids.picked = True
+        purchase_comps.picking_ids.button_validate()
+
         purchase = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
             'order_line': [Command.create({
                 'name': self.finished.name,
                 'product_id': self.finished.id,
-                'product_qty': 10,
+                'product_uom_qty': 1,
                 'product_uom': self.finished.uom_id.id,
-                'price_unit': 1,
+                'price_unit': 100,
             })],
         })
+        # validate subcontractor resupply
         purchase.button_confirm()
-        # receive product
+        resupply_picks = purchase._get_subcontracting_resupplies()
+        resupply_picks.move_ids.picked = True
+        resupply_picks.button_validate()
+        # receive subcontracted product (MO will be done)
         receipt = purchase.picking_ids
         receipt.move_ids.picked = True
         receipt.button_validate()
         # create bill
         purchase.action_create_invoice()
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase.order_line.id)])
-        # add 0.5 per unit ( 0.5 x 10 ) = 5 extra valuation
-        aml.price_unit = 1.5
+        # add 50 per unit ( 50 x 1 ) = 50 extra valuation
+        aml.price_unit = 150
         aml.move_id.invoice_date = Date.today()
         aml.move_id.action_post()
         svl = aml.stock_valuation_layer_ids
         self.assertEqual(len(svl), 1)
-        self.assertEqual(svl.value, 5)
+        self.assertEqual(svl.value, 50)
         # check for the automated inventory valuation
         account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
         self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
-        self.assertEqual(account_move_credit_line.credit, 5)
+        self.assertEqual(account_move_credit_line.credit, 50)
+        # Total value of subcontracted product = 150 new price + components (10 + 10)
+        self.assertEqual(self.finished.total_value, 170)
+        self.assertEqual(self.finished.standard_price, 170)
