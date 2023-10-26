@@ -55,7 +55,7 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
         ev.preventDefault();
         const prompt = this.state.prompt;
         this.state.messages.push({ author: 'user', text: prompt });
-        const datetime = new Date();
+        const datetime = new Date().getTime();
         const conversation = { role: 'user', content: prompt };
         this.state.conversationHistory.push(conversation);
         this.state.messages.push({ author: 'assistant', datetime });
