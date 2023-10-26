@@ -177,31 +177,6 @@ class MailGuest(models.Model):
             guests_formatted_data[guest] = data
         return guests_formatted_data
 
-    def _find_or_create_for_channel(self, channel, name, country_id, timezone, post_joined_message=False):
-        """Get a guest for the given channel. If there is no guest yet,
-        create one.
-
-        :param channel: channel to add the guest to
-        :param guest_name: name of the guest
-        :param country_id: country of the guest
-        :param timezone: timezone of the guest
-        :param add_as_member: whether to add the guest as a member of the channel
-        :param post_joined_message: whether to post a message to the channel
-            to notify that the guest joined
-        """
-        guest = self._get_guest_from_context()
-        if not guest:
-            guest = self.create(
-                {
-                    "country_id": country_id,
-                    "lang": get_lang(channel.env).code,
-                    "name": name,
-                    "timezone": timezone,
-                }
-            ).sudo(False)
-        channel.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
-        return guest
-
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
         that expects a guest will make use of it to authenticate the guest

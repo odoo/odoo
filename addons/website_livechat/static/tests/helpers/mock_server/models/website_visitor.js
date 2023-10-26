@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Command } from "@mail/../tests/helpers/command";
+
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
@@ -26,7 +28,10 @@ patch(MockServer.prototype, {
                 livechat_operator_id: this.pyEnv.currentPartnerId,
             });
             if (!visitor.partner_id) {
-                this._mockMailGuest__findOrCreateForChannel(livechatId, `Visitor #${visitor.id}`);
+                const guestId = this.pyEnv["mail.guest"].create({ name: `Visitor #${visitor.id}` });
+                this.pyEnv["discuss.channel"].write([livechatId], {
+                    channel_member_ids: [Command.create({ guest_id: guestId })],
+                });
             }
             // notify operator
             this.pyEnv["bus.bus"]._sendone(
