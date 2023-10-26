@@ -12,7 +12,7 @@ import { PropertyValue } from "./property_value";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { reposition } from "@web/core/position/position_hook";
+import { reposition } from "@web/core/position/utils";
 import { archParseBoolean } from "@web/views/utils";
 import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";

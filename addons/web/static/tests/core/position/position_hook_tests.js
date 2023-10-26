@@ -36,7 +36,7 @@ const TARGET_STYLE = {
 let container;
 
 /**
- * @param {import("@web/core/position/position_hook").Options} popperOptions
+ * @param {import("@web/core/position/position_hook").UsePositionOptions} popperOptions
  * @returns {Component}
  */
 function getTestComponent(popperOptions = {}, target = document.createElement("div")) {
