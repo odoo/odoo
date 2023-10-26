@@ -213,7 +213,7 @@ class AccountAnalyticPlan(models.Model):
                 "applicability": plan._get_applicability(**kwargs) if plan in root_plans else 'optional',
                 "all_account_count": plan.all_account_count
             }
-            for plan in root_plans + forced_plans
+            for plan in (root_plans + forced_plans).sorted('sequence')
         ]
 
     def _get_applicability(self, **kwargs):
