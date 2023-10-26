@@ -62,6 +62,48 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    async confirmOrder() {
+        const payAfter = this.config.self_ordering_pay_after; // each, meal
+        const device = this.config.self_ordering_mode; // kiosk, mobile
+        const service = this.config.self_ordering_service_mode; // table, ocunter
+        const paymentMethods = this.pos_payment_methods;
+        const order = this.currentOrder;
+
+        // Confirm page
+        if (paymentMethods.length === 0) {
+            let screenMode = "pay";
+
+            if (service === "table" && !order.take_away && device === "kiosk") {
+                this.router.navigate("stand_number");
+                return;
+            }
+
+            if (!order.isSavedOnServer) {
+                await this.sendDraftOrderToServer();
+                screenMode = payAfter === "meal" ? "order" : "pay";
+            }
+
+            this.router.navigate("confirmation", {
+                orderAccessToken: order.access_token,
+                screenMode: screenMode,
+            });
+        } else {
+            if (payAfter === "meal" && !order.isSavedOnServer) {
+                await this.sendDraftOrderToServer();
+                this.router.navigate("confirmation", {
+                    orderAccessToken: order.access_token,
+                    screenMode: "order",
+                });
+            } else if (payAfter === "meal" && order.isSavedOnServer) {
+                this.router.navigate("payment");
+            } else if (service === "table" && !order.take_away && device === "kiosk") {
+                this.router.navigate("stand_number");
+            } else {
+                this.router.navigate("payment");
+            }
+        }
+    }
+
     get currentOrder() {
         if (this.editedOrder) {
             return this.editedOrder;

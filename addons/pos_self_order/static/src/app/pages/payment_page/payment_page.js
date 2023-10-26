@@ -23,17 +23,24 @@ export class PaymentPage extends Component {
         });
 
         onWillStart(async () => {
-            const type = this.selfOrder.config.self_ordering_mode;
             const paymentMethods = this.selfOrder.pos_payment_methods;
+            const payAfter = this.selfOrder.config.self_ordering_pay_after; // each, meal
+            const order = this.selfOrder.currentOrder;
 
-            if (paymentMethods.length === 0 && type === "kiosk") {
-                await this.selfOrder.sendDraftOrderToServer();
-                this.router.navigate("confirmation", {
-                    orderAccessToken: this.selfOrder.currentOrder.access_token,
-                    screenMode: "pay",
-                });
-            } else if (paymentMethods.length === 1 && type === "kiosk") {
+            if (paymentMethods.length === 1) {
                 this.selectMethod(this.selfOrder.pos_payment_methods[0].id);
+            } else if (paymentMethods.length === 0) {
+                let screenMode = "pay";
+
+                if (!order.isSavedOnServer) {
+                    await this.selfOrder.sendDraftOrderToServer();
+                    screenMode = payAfter === "meal" ? "order" : "pay";
+                }
+
+                this.router.navigate("confirmation", {
+                    orderAccessToken: order.access_token,
+                    screenMode: screenMode,
+                });
             }
         });
     }

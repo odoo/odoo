@@ -14,6 +14,10 @@ patch(PosStore.prototype, {
 
 patch(Order.prototype, {
     defaultTableNeeded(options) {
-        return super.defaultTableNeeded(...arguments) && !this.name.includes("Kiosk") && !this.name.includes("Self-Order");
+        return (
+            super.defaultTableNeeded(...arguments) &&
+            !this.name.includes("Kiosk") &&
+            !this.name.includes("Self-Order")
+        );
     },
 });
