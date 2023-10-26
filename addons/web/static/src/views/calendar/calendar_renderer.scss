@@ -51,6 +51,11 @@
             background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
         }
 
+        &:not(.o_event_dot):not(.fc-dragging).o_cw_custom_highlight {
+            box-shadow: 0px 8px 8px -7px rgba(0, 0, 0, 0.2);
+            z-index: 2; // for the shadow to go over the events below
+        }
+
         .fc-bg {
             transition: $transition-base;
         }
@@ -297,7 +302,7 @@
                     box-shadow: 0 0 0 1px $o-view-background-color;
                 }
 
-                &.o_cw_custom_highlight:not(.fc-dragging), &.o_calendar_popover_open:not(.fc-dragging)  {
+                &.o_cw_custom_highlight:not(.fc-dragging) {
                     z-index: $zindex-modal !important;
                     right: 0px !important;
                     left: 0px !important;
