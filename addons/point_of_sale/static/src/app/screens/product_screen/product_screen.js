@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { ControlButtonsMixin } from "@point_of_sale/app/utils/control_buttons_mixin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
@@ -8,22 +7,25 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons_popup";
 import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc_service";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import {
+    ControlButtons,
+    ControlButtonsPopup,
+} from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 
-export class ProductScreen extends ControlButtonsMixin(Component) {
+export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
     static components = {
         ActionpadWidget,
@@ -33,6 +35,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         CategorySelector,
         Input,
         ProductCard,
+        ControlButtons,
     };
     static numpadActionName = _t("Payment");
 
@@ -393,7 +396,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.reset();
     }
     displayAllControlPopup() {
-        this.dialog.add(ControlButtonPopup, {
+        this.dialog.add(ControlButtonsPopup, {
             controlButtons: this.controlButtons,
         });
     }

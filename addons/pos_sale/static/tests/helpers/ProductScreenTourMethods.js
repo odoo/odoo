@@ -3,14 +3,6 @@
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
-export function clickQuotationButton() {
-    return [
-        {
-            content: "click quotation button",
-            trigger: ".o_sale_order_button",
-        },
-    ];
-}
 export function selectFirstOrder() {
     return [
         {

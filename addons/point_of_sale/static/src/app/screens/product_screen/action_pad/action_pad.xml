@@ -6,20 +6,7 @@
             <button class="button mobile-more-button btn btn-secondary flex-fill border-bottom" t-if="ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
                 <span>More...</span>
             </button>
-            <button class="button set-partner btn btn-light rounded-0 py-2 flex-shrink-1 fw-bolder"
-                    t-on-click="() => this.pos.selectPartner()">
-                <div class="d-flex justify-content-center align-items-center ">
-                    <span class="d-flex justify-content-center align-items-center rounded-circle me-2 text-bg-dark" t-if="!ui.isSmall">
-                        <i class="fa fa-user" role="img" aria-label="Customer" title="Customer" />
-                    </span>
-                    <div t-if="props.partner" class="text-truncate fw-bolder text-action">
-                        <t t-esc="props.partner.name" />
-                    </div>
-                    <div t-else="fw-bolder">
-                        Customer
-                    </div>
-                </div>
-            </button>
+            <SelectPartnerButton partner="props.partner"/>
             <button class="pay validation pay-order-button btn-primary"
                 t-attf-class="{{getMainButtonClasses()}}" 
                 t-att-class="{ 'with-more-button': props.onClickMore and ui.isSmall }" 

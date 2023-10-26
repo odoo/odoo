@@ -1,22 +1,95 @@
-/** @odoo-module **/
+/** @odoo-module */
 
+import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component } from "@odoo/owl";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { patch } from "@web/core/utils/patch";
 
-export class RewardButton extends Component {
-    static template = "pos_loyalty.RewardButton";
-
-    setup() {
-        this.pos = usePos();
-        this.notification = useService("pos_notification");
-        this.dialog = useService("dialog");
-    }
-
+patch(ControlButtons.prototype, {
+    _getEWalletRewards(order) {
+        return order
+            .getClaimableRewards()
+            .filter(({ reward }) => reward.program_id.program_type == "ewallet");
+    },
+    _getEWalletPrograms() {
+        return this.pos.programs.filter((p) => p.program_type == "ewallet");
+    },
+    async onClickWallet() {
+        const order = this.pos.get_order();
+        const eWalletPrograms = this._getEWalletPrograms();
+        const orderTotal = order.get_total_with_tax();
+        const eWalletRewards = this._getEWalletRewards(order);
+        if (orderTotal < 0 && eWalletPrograms.length >= 1) {
+            let selectedProgram = null;
+            if (eWalletPrograms.length == 1) {
+                selectedProgram = eWalletPrograms[0];
+            } else {
+                selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
+                    title: _t("Refund with eWallet"),
+                    list: eWalletPrograms.map((program) => ({
+                        id: program.id,
+                        item: program,
+                        label: program.name,
+                    })),
+                });
+            }
+            if (selectedProgram) {
+                const eWalletProduct = this.pos.db.get_product_by_id(
+                    selectedProgram.trigger_product_ids[0]
+                );
+                this.pos.addProductFromUi(eWalletProduct, {
+                    price: -orderTotal,
+                    merge: false,
+                    eWalletGiftCardProgram: selectedProgram,
+                });
+            }
+        } else if (eWalletRewards.length >= 1) {
+            let eWalletReward = null;
+            if (eWalletRewards.length == 1) {
+                eWalletReward = eWalletRewards[0];
+            } else {
+                eWalletReward = await makeAwaitable(this.dialog, SelectionPopup, {
+                    title: _t("Use eWallet to pay"),
+                    list: eWalletRewards.map(({ reward, coupon_id }) => ({
+                        id: reward.id,
+                        item: { reward, coupon_id },
+                        label: `${reward.description} (${reward.program_id.name})`,
+                    })),
+                });
+            }
+            if (eWalletReward) {
+                const result = order._applyReward(
+                    eWalletReward.reward,
+                    eWalletReward.coupon_id,
+                    {}
+                );
+                if (result !== true) {
+                    // Returned an error
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Error"),
+                        body: result,
+                    });
+                }
+                order._updateRewards();
+            }
+        }
+    },
+    async clickPromoCode() {
+        this.dialog.add(TextInputPopup, {
+            title: _t("Enter Code"),
+            startingValue: "",
+            placeholder: _t("Gift card or Discount code"),
+            getPayload: (code) => {
+                code = code.trim();
+                if (code !== "") {
+                    this.pos.get_order().activateCode(code);
+                }
+            },
+        });
+    },
     /**
      * If rewards are the same, prioritize the one from freeProductRewards.
      * Make sure that the reward is claimable first.
@@ -29,9 +102,9 @@ export class RewardButton extends Component {
             }
         }
         return freeProductRewards.concat(result);
-    }
+    },
 
-    _getPotentialRewards() {
+    getPotentialRewards() {
         const order = this.pos.get_order();
         // Claimable rewards excluding those from eWallet programs.
         // eWallet rewards are handled in the eWalletButton.
@@ -48,14 +121,7 @@ export class RewardButton extends Component {
         return discountRewards.concat(
             this._mergeFreeProductRewards(freeProductRewards, potentialFreeProductRewards)
         );
-    }
-
-    _isDisabled() {}
-
-    hasClaimableRewards() {
-        return this._getPotentialRewards().length > 0;
-    }
-
+    },
     /**
      * Applies the reward on the current order, if multiple products can be claimed opens a popup asking for which one.
      *
@@ -97,10 +163,9 @@ export class RewardButton extends Component {
             order._updateRewards();
             return result;
         }
-    }
-
-    async click() {
-        const rewards = this._getPotentialRewards();
+    },
+    async clickRewards() {
+        const rewards = this.getPotentialRewards();
         if (rewards.length >= 1) {
             const rewardsList = rewards.map((reward) => ({
                 id: reward.reward.id,
@@ -120,12 +185,5 @@ export class RewardButton extends Component {
                 },
             });
         }
-    }
-}
-
-ProductScreen.addControlButton({
-    component: RewardButton,
-    condition: function () {
-        return this.pos.programs.length > 0;
     },
 });

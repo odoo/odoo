@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_discount.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//OrderlineNoteButton" position="after">
+            <button t-if="pos.config.module_pos_discount and pos.config.discount_product_id"
+                class="js_discount btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickDiscount()">
+                <i class="fa fa-tag me-1"/>Discount
+            </button>
+        </xpath>
+    </t>
+</templates>

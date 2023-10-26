@@ -79,7 +79,7 @@ export function useAsyncLockedMethod(method) {
         }
         try {
             called = true;
-            await method.call(component, ...args);
+            return await method.call(component, ...args);
         } finally {
             called = false;
         }

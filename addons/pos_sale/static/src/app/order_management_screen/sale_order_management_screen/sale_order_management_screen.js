@@ -6,7 +6,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { ControlButtonsMixin } from "@point_of_sale/app/utils/control_buttons_mixin";
 import { Orderline } from "@point_of_sale/app/store/models";
 
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
@@ -28,7 +27,7 @@ function getId(fieldVal) {
     return fieldVal && fieldVal[0];
 }
 
-export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
+export class SaleOrderManagementScreen extends Component {
     static storeOnOrder = false;
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "pos_sale.SaleOrderManagementScreen";

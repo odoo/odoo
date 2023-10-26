@@ -23,8 +23,8 @@
             <attribute name="t-if">!this.swapButton</attribute>
         </xpath>
 
-        <!-- Replace the customer button by the payment button, the customer button will be added in the mixins -->
-        <xpath expr="//button[hasclass('set-partner')]" position="after">
+        <!-- Replace the customer button by the payment button, the customer button will be added in the control buttons -->
+        <xpath expr="//SelectPartnerButton" position="after">
             <button t-if="this.swapButton"
                 t-on-click="() => pos.get_order().pay()" 
                 class="button pay-order-button btn btn-lg rounded-0" 
@@ -34,7 +34,7 @@
                 Payment
             </button>
         </xpath>
-        <xpath expr="//button[hasclass('set-partner')]" position="attributes">
+        <xpath expr="//SelectPartnerButton" position="attributes">
             <attribute name="t-if">!this.swapButton</attribute>
         </xpath>
     </t>

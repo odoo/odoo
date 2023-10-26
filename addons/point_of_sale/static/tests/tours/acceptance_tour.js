@@ -27,7 +27,7 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "set fiscal position",
-            trigger: ".control-button.o_fiscal_position_button",
+            trigger: ".control-buttons button.o_fiscal_position_button",
         },
         {
             content: "choose fiscal position " + fp_name + " to add to the order",
@@ -41,7 +41,7 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "the fiscal position " + fp_name + " has been set to the order",
-            trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
+            trigger: `.control-buttons button.o_fiscal_position_button:contains("${fp_name}")`,
             run: function () {},
         },
         {

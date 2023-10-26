@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { useService } from "@web/core/utils/hooks";
 
-export class OrderlineCustomerNoteButton extends Component {
-    static template = "point_of_sale.OrderlineCustomerNoteButton";
+export class OrderlineNoteButton extends Component {
+    static template = "point_of_sale.OrderlineNoteButton";
     static defaultProps = {
         icon: "fa fa-sticky-note",
         label: _t("Customer Note"),
@@ -32,7 +31,3 @@ export class OrderlineCustomerNoteButton extends Component {
         });
     }
 }
-
-ProductScreen.addControlButton({
-    component: OrderlineCustomerNoteButton,
-});

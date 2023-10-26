@@ -23,39 +23,17 @@ export function selectRewardLine(rewardName) {
 }
 export function enterCode(code) {
     return [
-        {
-            content: "open code input dialog",
-            trigger: '.control-button:contains("Enter Code")',
-        },
+        ProductScreen.controlButton("Enter Code"),
         TextInputPopup.inputText(code),
         Dialog.confirm(),
     ];
 }
-export function resetActivePrograms() {
-    return [
-        {
-            content: "open code input dialog",
-            trigger: '.control-button:contains("Reset Programs")',
-        },
-    ];
-}
-export function clickRewardButton() {
-    return [
-        {
-            content: "open reward dialog",
-            trigger: '.control-button:contains("Reward")',
-        },
-    ];
-}
 export function clickEWalletButton(text = "eWallet") {
-    return [{ trigger: `.control-button:contains("${text}")` }];
+    return [{ trigger: ProductScreen.controlButtonTrigger(text) }];
 }
 export function claimReward(rewardName) {
     return [
-        {
-            content: "open reward dialog",
-            trigger: '.control-button:contains("Reward")',
-        },
+        ProductScreen.controlButton("Reward"),
         {
             content: "select reward",
             // There should be description because a program always has a name.
@@ -86,21 +64,12 @@ export function hasRewardLine(rewardName, amount, qty) {
 export function orderTotalIs(total_str) {
     return [Order.hasTotal(total_str)];
 }
-export function checkNoClaimableRewards() {
-    return [
-        {
-            content: "check that no reward can be claimed",
-            trigger: ".control-button:contains('Reward'):not(.highlight)",
-            run: function () {}, // it's a check
-        },
-    ];
-}
 export function isRewardButtonHighlighted(isHighlighted) {
     return [
         {
             trigger: isHighlighted
-                ? '.control-button.highlight:contains("Reward")'
-                : '.control-button:contains("Reward"):not(:has(.highlight))',
+                ? '.control-buttons button.highlight:contains("Reward")'
+                : '.control-buttons button:contains("Reward"):not(:has(.highlight))',
             run: function () {}, // it's a check
         },
     ];
@@ -109,8 +78,8 @@ export function eWalletButtonState({ highlighted, text = "eWallet" }) {
     return [
         {
             trigger: highlighted
-                ? `.control-button.highlight:contains("${text}")`
-                : `.control-button:contains("${text}"):not(:has(.highlight))`,
+                ? `.control-buttons button.highlight:contains("${text}")`
+                : `.control-buttons button:contains("${text}"):not(:has(.highlight))`,
             run: function () {}, // it's a check
         },
     ];
