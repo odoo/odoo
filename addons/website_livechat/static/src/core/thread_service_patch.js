@@ -15,10 +15,9 @@ patch(ThreadService.prototype, "website_livechat", {
         }
     },
     /**
-     * @param {import('@mail/core/persona_model').Persona} persona
-     * @param {import("@mail/core/thread_model").Thread} [thread]
+     * @param {{ persona: import("@mail/core/persona_model").Persona, thread: import("@mail/core/thread_model").Thread }}
      */
-    avatarUrl(persona, thread) {
+    avatarUrl({ persona, thread }) {
         if (persona?.type === "visitor" && thread?.id) {
             return persona.partner
                 ? `/discuss/channel/${encodeURIComponent(thread.id)}/partner/${encodeURIComponent(
@@ -26,6 +25,6 @@ patch(ThreadService.prototype, "website_livechat", {
                   )}/avatar_128`
                 : DEFAULT_AVATAR;
         }
-        return this._super(persona, thread);
+        return this._super(...arguments);
     },
 });

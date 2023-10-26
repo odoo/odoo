@@ -1030,6 +1030,7 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
         name: "Demo",
         im_status: "offline",
     });
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
@@ -1041,7 +1042,7 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
     await openDiscuss();
 
     assert.containsOnce($, ".o-mail-DiscussCategoryItem img");
-    assert.containsOnce($, `img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`);
+    assert.containsOnce($, `img[data-src$='/web/image/res.partner/${partnerId}/avatar_128?unique=${encodeURIComponent(partner.write_date)}']`);
 });
 
 QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async (assert) => {

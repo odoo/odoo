@@ -94,7 +94,7 @@ export class MessagingMenu extends Component {
         return {
             body: _t("Enable desktop notifications to chat"),
             displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
-            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            iconSrc: this.threadService.avatarUrl({ persona: this.store.odoobot }),
             partner: this.store.odoobot,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",

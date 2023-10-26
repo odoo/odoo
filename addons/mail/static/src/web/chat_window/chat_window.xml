@@ -19,7 +19,7 @@
                 <i class="oi oi-arrow-left"/>
             </div>
             <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !store.isSmall, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
-                <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+                <img class="rounded" t-att-src="threadService.avatarUrl({ thread })" alt="Thread Image"/>
             </div>
             <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread" className="'me-1'"/>
             <span class="o-mail-ChatWindow-name text-truncate fw-bold" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{

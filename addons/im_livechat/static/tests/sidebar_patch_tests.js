@@ -231,6 +231,7 @@ QUnit.test("Smiley face avatar for an anonymous livechat item", async (assert) =
 QUnit.test("Partner profile picture for livechat item linked to a partner", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jean" });
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", partnerId]])[0];
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -241,9 +242,9 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual(
-        $(".o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem img")[0].dataset.src,
-        `/web/image/res.partner/${partnerId}/avatar_128`
+    assert.containsOnce(
+        $,
+        `.o-mail-DiscussCategory-livechat + .o-mail-DiscussCategoryItem img[data-src$='/web/image/res.partner/${partnerId}/avatar_128?unique=${encodeURIComponent(partner.write_date)}']`
     );
 });
 

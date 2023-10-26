@@ -1077,39 +1077,60 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/persona_model").Persona} persona
-     * @param {import("@mail/core/thread_model").Thread} [thread]
+     * @param {{ persona: import("@mail/core/persona_model").Persona, thread: import("@mail/core/thread_model").Thread }}
      */
-    avatarUrl(persona, thread) {
-        if (!persona) {
-            return DEFAULT_AVATAR;
-        }
-        if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
-            this.personaService.fetchIsCompany(persona);
-        }
-        if (thread?.model === "discuss.channel") {
-            if (persona.type === "partner") {
-                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
+    avatarUrl({ persona, thread }) {
+        if (thread && !persona) {
+            if (thread.type === "channel" || thread.type === "group") {
+                return url(
+                    `/discuss/channel/${thread.id}/avatar_128`,
+                    assignDefined({}, { unique: thread.channel?.avatarCacheKey })
+                );
             }
-            if (persona.type === "guest") {
-                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
+            if (thread.type === "chat") {
+                return url(
+                    `/web/image/res.partner/${thread.chatPartnerId}/avatar_128`,
+                    assignDefined({}, { unique: thread.channel?.avatarCacheKey })
+                );
+            }
+            if (thread.correspondent && !thread.correspondent.is_public) {
+                return url(
+                    `/web/image/res.partner/${thread.correspondent.id}/avatar_128`,
+                    assignDefined({}, { unique: thread.channel?.avatarCacheKey })
+                );
+            }
+            if (this.module_icon) {
+                return this.module_icon;
             }
         }
-        if (persona.type === "partner" && persona?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.id,
-                model: "res.partner",
-            });
-            return avatar;
-        }
-        if (persona.user?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.user.id,
-                model: "res.users",
-            });
-            return avatar;
+        if (persona) {
+            if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
+                this.personaService.fetchIsCompany(persona);
+            }
+            if (thread?.model === "discuss.channel") {
+                if (persona.type === "partner") {
+                    return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
+                }
+                if (persona.type === "guest") {
+                    return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
+                }
+            }
+            if (persona.type === "partner" && persona.id) {
+                const avatar = url("/web/image", {
+                    field: "avatar_128",
+                    id: persona.id,
+                    model: "res.partner",
+                });
+                return avatar;
+            }
+            if (persona.user?.id) {
+                const avatar = url("/web/image", {
+                    field: "avatar_128",
+                    id: persona.user.id,
+                    model: "res.users",
+                });
+                return avatar;
+            }
         }
         return DEFAULT_AVATAR;
     }

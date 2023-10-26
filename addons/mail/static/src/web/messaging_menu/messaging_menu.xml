@@ -82,7 +82,7 @@
                     counter="thread.isChatChannel ? thread.message_unread_counter : thread.hasNeedactionMessages ? thread.message_needaction_counter : undefined"
                     datetime="message?.datetime"
                     displayName="thread.displayName"
-                    iconSrc="thread.imgUrl"
+                    iconSrc="threadService.avatarUrl({ thread })"
                     hasMarkAsReadButton="thread.isUnread"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"

@@ -26,9 +26,9 @@ export class MessageInReply extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(
-            this.message.parentMessage.author,
-            this.props.message.parentMessage.originThread
-        );
+        return this.threadService.avatarUrl({
+            persona: this.message.parentMessage.author,
+            thread: this.props.message.parentMessage.originThread
+        });
     }
 }
