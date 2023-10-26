@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from markupsafe import Markup
 from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models, modules, tools, Command
@@ -299,6 +300,34 @@ class AccountMoveSend(models.TransientModel):
             else:
                 wizard.mail_attachments_widget = []
 
+    @api.model
+    def _format_error_text(self, error):
+        """ Format the error that can be either a dict (complex format needed) or a string (simple format) into a
+        regular string.
+
+        :param error: the error to format.
+        :return: a text formatted error.
+        """
+        if isinstance(error, dict):
+            errors = '\n- '.join(error['errors'])
+            return f"{error['error_title']}\n- {errors}" if errors else error['error_title']
+        else:
+            return error
+
+    @api.model
+    def _format_error_html(self, error):
+        """ Format the error that can be either a dict (complex format needed) or a string (simple format) into a
+        valid html format.
+
+        :param error: the error to format.
+        :return: a html formatted error.
+        """
+        if isinstance(error, dict):
+            errors = Markup().join(Markup("<li>%s</li>") % error for error in error['errors'])
+            return Markup("%s<ul>%s</ul>") % (error['error_title'], errors)
+        else:
+            return error
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -389,9 +418,9 @@ class AccountMoveSend(models.TransientModel):
         for move, move_data in moves_data.items():
             error = move_data['error']
             if allow_raising:
-                raise UserError(error)
+                raise UserError(self._format_error_text(error))
 
-            move.with_context(no_new_invoice=True).message_post(body=error)
+            move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
 
     @api.model
     def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
