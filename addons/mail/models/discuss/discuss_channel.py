@@ -721,7 +721,7 @@ class Channel(models.Model):
             return []
         channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-        rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel()
+        rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()
