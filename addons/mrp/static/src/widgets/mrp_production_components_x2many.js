@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { StockMoveX2ManyField, MovesListRenderer } from "@stock/views/picking_form/stock_move_one2many";
+import { StockMoveX2ManyField, stockMoveX2ManyField, MovesListRenderer } from "@stock/views/picking_form/stock_move_one2many";
 
 export class MrpProductionComponentsListRenderer extends MovesListRenderer  {
     getCellClass(column, record) {
@@ -14,10 +13,16 @@ export class MrpProductionComponentsListRenderer extends MovesListRenderer  {
     }
 }
 
+export class MrpProductionComponentsX2ManyField extends StockMoveX2ManyField {}
+MrpProductionComponentsX2ManyField.components = {
+    ...StockMoveX2ManyField.components,
+    ListRenderer: MrpProductionComponentsListRenderer,
+};
+
 export const mrpProductionComponentsX2ManyField = {
-    ...x2ManyField,
-    component: StockMoveX2ManyField ,
-    additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_many2many"],
+    ...stockMoveX2ManyField,
+    component: MrpProductionComponentsX2ManyField,
+    additionalClasses: [...StockMoveX2ManyField.additionalClasses || [], "o_field_many2many"],
 };
 
 registry.category("fields").add("mrp_production_components_x2many", mrpProductionComponentsX2ManyField);
