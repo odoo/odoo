@@ -273,6 +273,7 @@ export class Rtc {
      */
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSession = undefined;
+        channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
             this.clear();
             this.soundEffectsService.play("channel-leave");
@@ -442,6 +443,7 @@ export class Rtc {
                  */
                 this.updateActiveSession(session, payload.type);
                 session.videoStreams.delete(payload.type);
+                session.updateStreamState(payload.type, false);
                 break;
             }
         }
@@ -634,12 +636,11 @@ export class Rtc {
         };
         peerConnection.ontrack = ({ transceiver, track }) => {
             this.log(session, `received ${track.kind} track`);
-            const videoType = this.getVideoType(session.peerConnection, transceiver);
-            this.updateStream(session, track, {
-                mute: this.state.selfSession.isDeaf,
-                videoType,
+            this.handleRemoteTrack({
+                session,
+                track,
+                type: this.getTransceiverType(session.peerConnection, transceiver),
             });
-            this.updateActiveSession(session, videoType, { addVideo: true });
         };
         const dataChannel = peerConnection.createDataChannel("notifications", {
             negotiated: true,
@@ -686,10 +687,25 @@ export class Rtc {
     }
 
     /**
+     * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+     * @param {MediaStreamTrack} track
+     * @param {"audio" | "screen" | "camera"} type
+     * @param {boolean} active false if the track is muted/disabled
+     */
+    async handleRemoteTrack({ session, track, type, active = true }) {
+        session.updateStreamState(type, active);
+        await this.updateStream(session, track, {
+            mute: this.state.selfSession.isDeaf,
+            videoType: type,
+        });
+        this.updateActiveSession(session, type, { addVideo: true });
+    }
+
+    /**
      * @param {RTCPeerConnection} peerConnection
      * @param {RTCRtpTransceiver} transceiver
      */
-    getVideoType(peerConnection, transceiver) {
+    getTransceiverType(peerConnection, transceiver) {
         const transceivers = peerConnection.getTransceivers();
         return ORDERED_TRANSCEIVER_NAMES[transceivers.indexOf(transceiver)];
     }
@@ -904,6 +920,7 @@ export class Rtc {
         session.audioError = undefined;
         session.videoError = undefined;
         session.isTalking = false;
+        session.mainVideoStreamType = undefined;
         this.removeVideoFromSession(session);
         session.dataChannel?.close();
         delete session.dataChannel;
@@ -1291,7 +1308,7 @@ export class Rtc {
         }
         if (!track && trackKind !== "audio") {
             this.notify([session], "trackChange", {
-                type: this.getVideoType(session.peerConnection, transceiver),
+                type: this.getTransceiverType(session.peerConnection, transceiver),
             });
         }
     }
@@ -1457,37 +1474,33 @@ export class Rtc {
     /**
      * @param {RtcSession} session
      * @param {"screen"|"camera"} [videoType]
+     * @param {Object} [parm2]
+     * @param {boolean} [parm2.addVideo]
      */
     updateActiveSession(session, videoType, { addVideo = false } = {}) {
         const activeRtcSession = this.state.channel.activeRtcSession;
         if (addVideo) {
             if (videoType === "screen") {
                 this.state.channel.activeRtcSession = session;
-                session.mainVideoStream = session.videoStreams.get("screen");
+                session.mainVideoStreamType = videoType;
                 return;
             }
-            if (activeRtcSession && session.videoStreams.size && !session.mainVideoStream) {
-                session.mainVideoStream = session.videoStreams.get("camera");
+            if (activeRtcSession && session.hasVideo && !session.isMainVideoStreamActive) {
+                session.mainVideoStreamType = videoType;
             }
             return;
         }
         if (!activeRtcSession || activeRtcSession.notEq(session)) {
             return;
         }
-        if (activeRtcSession.mainVideoStream) {
-            const activeVideoType =
-                activeRtcSession.videoStreams.get("screen") === session.mainVideoStream
-                    ? "screen"
-                    : "camera";
-            if (videoType === activeVideoType) {
-                session.mainVideoStream = undefined;
+        if (activeRtcSession.isMainVideoStreamActive) {
+            if (videoType === session.mainVideoStreamType) {
                 if (videoType === "screen") {
                     this.state.channel.activeRtcSession = undefined;
+                } else {
+                    session.mainVideoStreamType = "screen";
                 }
             }
-        }
-        if (!activeRtcSession.mainVideoStream && videoType === "screen") {
-            session.mainVideoStream = undefined;
         }
     }
 
@@ -1581,6 +1594,19 @@ export const rtcService = {
                 services["mail.user_settings"].setVolumes(payload);
             }
         });
+        services["bus_service"].subscribe(
+            "discuss.channel.rtc.session/update_and_broadcast",
+            (payload) => {
+                const { data, channelId } = payload;
+                /**
+                 * If this event comes from the channel of the current call, information is shared in real time
+                 * through the peer to peer connection. So we do not use this less accurate broadcast.
+                 */
+                if (channelId !== rtc.state.channel?.id) {
+                    rtc.store.RtcSession.insert(data);
+                }
+            }
+        );
         return rtc;
     },
 };

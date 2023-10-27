@@ -22,12 +22,18 @@ export class RtcSession extends Record {
     }
 
     // Server data
+    /** @type {boolean} */
     channelMember = Record.one("ChannelMember", { inverse: "rtcSession" });
+    /** @type {boolean} */
     isCameraOn;
-    id;
-    isDeaf;
-    isSelfMuted;
+    /** @type {boolean} */
     isScreenSharingOn;
+    /** @type {number} */
+    id;
+    /** @type {boolean} */
+    isDeaf;
+    /** @type {boolean} */
+    isSelfMuted;
     // Client data
     /** @type {HTMLAudioElement} */
     audioElement;
@@ -46,8 +52,8 @@ export class RtcSession extends Record {
     videoComponentCount = 0;
     /** @type {Map<'screen'|'camera', MediaStream>} */
     videoStreams = new Map();
-    /** @type {MediaStream} */
-    mainVideoStream;
+    /** @type {string} */
+    mainVideoStreamType;
     // RTC stats
     connectionState;
     localCandidateType;
@@ -66,6 +72,26 @@ export class RtcSession extends Record {
 
     get isMute() {
         return this.isSelfMuted || this.isDeaf;
+    }
+
+    get mainVideoStream() {
+        return this.isMainVideoStreamActive && this.videoStreams.get(this.mainVideoStreamType);
+    }
+
+    get isMainVideoStreamActive() {
+        if (!this.mainVideoStreamType) {
+            return false;
+        }
+        return this.mainVideoStreamType === "camera" ? this.isCameraOn : this.isScreenSharingOn;
+    }
+
+    get hasVideo() {
+        return this.isScreenSharingOn || this.isCameraOn;
+    }
+
+    getStream(type) {
+        const isActive = type === "camera" ? this.isCameraOn : this.isScreenSharingOn;
+        return isActive && this.videoStreams.get(type);
     }
 
     get partnerId() {
@@ -108,6 +134,18 @@ export class RtcSession extends Record {
             this.audioError = undefined;
         } catch (error) {
             this.audioError = error.name;
+        }
+    }
+
+    /**
+     * @param {"audio" | "camera" | "screen"} type
+     * @param {boolean} state
+     */
+    updateStreamState(type, state) {
+        if (type === "camera") {
+            this.isCameraOn = state;
+        } else if (type === "screen") {
+            this.isScreenSharingOn = state;
         }
     }
 

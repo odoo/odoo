@@ -60,9 +60,13 @@ class MailRtcSession(models.Model):
             of the change.
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
-        self.write({key: values[key] for key in valid_values if key in valid_values})
-        session_data = self._mail_rtc_session_format()
-        self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'RtcSession': session_data})
+        self.write({key: values[key] for key in valid_values if key in values})
+        session_data = self._mail_rtc_session_format(extra=True)
+        self.env["bus.bus"]._sendone(
+            self.channel_id,
+            "discuss.channel.rtc.session/update_and_broadcast",
+            {"data": session_data, "channelId": self.channel_id.id},
+        )
 
     @api.autovacuum
     def _gc_inactive_sessions(self):
@@ -95,29 +99,31 @@ class MailRtcSession(models.Model):
                 payload_by_target[target]['notifications'].append(content)
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
-    def _mail_rtc_session_format(self, fields=None):
+    def _mail_rtc_session_format(self, extra=False):
         self.ensure_one()
-        if not fields:
-            fields = {'id': True, 'channelMember': {'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}, 'isCameraOn': True, 'isDeaf': True, 'isSelfMuted': True, 'isScreenSharingOn': True}
-        vals = {}
-        if 'id' in fields:
-            vals['id'] = self.id
-        if 'channelMember' in fields:
-            vals['channelMember'] = self.channel_member_id._discuss_channel_member_format(fields=fields.get('channelMember')).get(self.channel_member_id)
-        if 'isCameraOn' in fields:
-            vals['isCameraOn'] = self.is_camera_on
-        if 'isDeaf' in fields:
-            vals['isDeaf'] = self.is_deaf
-        if 'isSelfMuted' in fields:
-            vals['isSelfMuted'] = self.is_muted
-        if 'isScreenSharingOn' in fields:
-            vals['isScreenSharingOn'] = self.is_screen_sharing_on
+        vals = {
+            "id": self.id,
+            "channelMember": self.channel_member_id._discuss_channel_member_format(
+                fields={
+                    "id": True,
+                    "channel": {},
+                    "persona": {"partner": {"id", "name", "im_status"}, "guest": {"id", "name", "im_status"}},
+                }
+            ).get(self.channel_member_id),
+        }
+        if extra:
+            vals.update({
+                "isCameraOn": self.is_camera_on,
+                "isDeaf": self.is_deaf,
+                "isSelfMuted": self.is_muted,
+                "isScreenSharingOn": self.is_screen_sharing_on,
+            })
         return vals
 
-    def _mail_rtc_session_format_by_channel(self):
+    def _mail_rtc_session_format_by_channel(self, extra=False):
         data = {}
         for rtc_session in self:
-            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format())
+            data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format(extra=extra))
         return data
 
     @api.model

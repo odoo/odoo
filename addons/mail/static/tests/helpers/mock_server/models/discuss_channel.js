@@ -718,7 +718,8 @@ patch(MockServer.prototype, {
                     "ADD",
                     (channel.rtc_session_ids || []).map((rtcSessionId) =>
                         this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
-                            rtcSessionId
+                            rtcSessionId,
+                            { extra: true }
                         )
                     ),
                 ],
