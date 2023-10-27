@@ -23,7 +23,7 @@
                         <em t-else="">Generating <t t-out="state.messagesInProgress"/> alternatives...</em>
                     </p>
                 </div>
-                <t t-foreach="state.messages" t-as="message" t-key="message_index">
+                <t t-foreach="[...state.messages].reverse()" t-as="message" t-key="message.id">
                     <t t-if="message.isError">
                         <div class="list-group-item o-chatgpt-alternative border-danger bg-danger o-message-error"
                             t-att-class="{ 'text-muted': state.currentBatchId != message.batchId }">
@@ -33,10 +33,10 @@
                     <t t-else="">
                         <button type="button" class="list-group-item list-group-item-action o-chatgpt-alternative"
                             t-on-click="selectMessage"
-                            t-att-data-message-index="message_index"
+                            t-att-data-message-id="message.id"
                             t-att-class="{
-                                active: state.selectedMessage == message_index,
-                                'text-muted': state.currentBatchId != message.batchId,
+                                active: state.selectedMessageId == message.id,
+                                'text-muted': state.selectedMessageId != message.id and state.currentBatchId != message.batchId,
                             }">
                             <span t-if="message.mode" class="badge bg-secondary float-end"><t t-out="props.alternativesModes[message.mode]"/></span>
                             <t t-out="formatContent(message.text)"/>
@@ -49,7 +49,7 @@
         <!-- FOOTER -->
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-on-click="_confirm"
-                t-att-disabled="typeof state.selectedMessage !== 'number'">Insert</button>
+                t-att-disabled="typeof state.selectedMessageId !== 'number'">Insert</button>
             <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
         </t>
     </Dialog>

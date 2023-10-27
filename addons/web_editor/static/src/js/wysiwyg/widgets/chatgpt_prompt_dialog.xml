@@ -30,7 +30,7 @@
                                     <div class="position-relative text-break mb-0 py-2 px-3 align-self-start rounded-end-3 rounded-bottom-3 o-chatgpt-message">
                                         <!-- INSERT BUTTON -->
                                         <button t-if="message.author === 'assistant' and 'text' in message and message.isError !== true"
-                                            t-att-data-message-index="message_index"
+                                            t-att-data-message-id="message.id"
                                             class="o-message-insert d-block float-end p-1 mb-1 btn btn-info opacity-75 fst-italic ms-3"
                                             t-on-click="insertMessage">Insert</button>
                                         <div class="d-inline">

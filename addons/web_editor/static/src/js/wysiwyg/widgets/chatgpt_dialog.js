@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, markup } from "@odoo/owl";
+import { Component, useState, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { escape } from "@web/core/utils/strings";
@@ -18,6 +18,7 @@ export class ChatGPTDialog extends Component {
 
     setup() {
         this.rpc = useService('rpc');
+        this.state = useState({ selectedMessageId: null });
     }
 
     //--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ export class ChatGPTDialog extends Component {
     //--------------------------------------------------------------------------
 
     selectMessage(ev) {
-        this.state.selectedMessage = +ev.currentTarget.getAttribute('data-message-index');
+        this.state.selectedMessageId = +ev.currentTarget.getAttribute('data-message-id');
     }
     insertMessage(ev) {
         this.selectMessage(ev);
@@ -91,7 +92,7 @@ export class ChatGPTDialog extends Component {
     _confirm() {
         try {
             this.props.close();
-            const text = this.state.messages[this.state.selectedMessage]?.text;
+            const text = this.state.messages.find(message => message.id === this.state.selectedMessageId)?.text;
             this.props.insert(this._postprocessGeneratedContent(text || ''));
         } catch (e) {
             this.props.close();

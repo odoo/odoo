@@ -25,7 +25,7 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     setup() {
         super.setup();
         this.state = useState({
-            selectedMessage: null,
+            ...this.state,
             conversationHistory: [{
                 role: 'system',
                 content: 'The user wrote the following text:\n' +
@@ -86,12 +86,13 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                             content,
                         });
                     }
-                    this.state.messages.unshift({
+                    this.state.messages.push({
                         author: 'assistant',
                         text: alternative,
                         isError,
                         batchId,
                         mode: this.state.alternativesMode,
+                        id: new Date().getTime(),
                     });
                 }
             }).catch(() => {
