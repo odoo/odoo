@@ -47,6 +47,12 @@ patch(Order.prototype, {
     defaultTableNeeded(options) {
         return !this.tableId && !options.json && this.pos.table;
     },
+    export_for_printing() {
+        return {
+            ...super.export_for_printing(...arguments),
+            set_tip_after_payment: this.pos.config.set_tip_after_payment,
+        };
+    },
 });
 
 patch(Orderline.prototype, {
