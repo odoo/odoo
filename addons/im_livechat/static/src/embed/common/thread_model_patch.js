@@ -10,9 +10,9 @@ import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 patch(Thread, {
-    insert(data) {
+    _insert(data) {
         const isUnknown = !this.get(data);
-        const thread = super.insert(...arguments);
+        const thread = super._insert(...arguments);
         const livechatService = this.env.services["im_livechat.livechat"];
         if (thread.type === "livechat" && isUnknown) {
             onChange(

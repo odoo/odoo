@@ -6,8 +6,8 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread, {
-    insert(data) {
-        const thread = super.insert(data);
+    _insert(data) {
+        const thread = super._insert(...arguments);
         if (thread.type === "livechat") {
             if (data?.operator_pid) {
                 thread.operator = {
