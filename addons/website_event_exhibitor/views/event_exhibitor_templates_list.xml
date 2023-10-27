@@ -120,12 +120,12 @@
 <template id="exhibitors_main" name="Exhibitors: Main Display">
     <!-- No exhibitors -->
     <div t-if="not sponsor_categories" class="col-12 text-center">
-        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <div t-call="website_event.event_empty_events_svg" class="mt-4"/>
         <h2>No exhibitor found.</h2>
         <p t-if="search_key">We could not find any exhibitor matching your search for: <strong t-out="search_key"/>.</p>
         <p t-else="">We could not find any exhibitor at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
-            <a class="btn o_wevent_cta" target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
+            <a class="o_btn_enterprise btn" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
                 <span class="fa fa-plus me-1"/> Add Exhibitors
             </a>
         </div>
