@@ -1450,17 +1450,24 @@ export class Wysiwyg extends Component {
                 const end = insertedNodes?.length && closestElement(insertedNodes[insertedNodes.length - 1]);
                 if (start && end) {
                     const divContainer = this.odooEditor.editable.parentElement;
-                    let [parent, left] = [start.offsetParent, start.offsetLeft];
+                    let [parent, left, top] = [start.offsetParent, start.offsetLeft, start.offsetTop - start.scrollTop];
                     while (parent && !parent.contains(divContainer)) {
                         left += parent.offsetLeft;
+                        top += parent.offsetTop - parent.scrollTop;
                         parent = parent.offsetParent;
+                    }
+                    let [endParent, endTop] = [end.offsetParent, end.offsetTop - end.scrollTop];
+                    while (endParent && !endParent.contains(divContainer)) {
+                        endTop += endParent.offsetTop - endParent.scrollTop;
+                        endParent = endParent.offsetParent;
                     }
                     const div = document.createElement('div');
                     div.classList.add('o-chatgpt-content');
-                    div.style.left = `${left - 10}px`;
-                    div.style.top = `${start.offsetTop - 10}px`;
-                    div.style.width = `${Math.max(start.clientWidth, end.clientWidth) + 20}px`;
-                    div.style.height = `${end.offsetTop + end.clientHeight - start.offsetTop + 20}px`;
+                    const FRAME_PADDING = 3;
+                    div.style.left = `${left - FRAME_PADDING}px`;
+                    div.style.top = `${top - FRAME_PADDING}px`;
+                    div.style.width = `${Math.max(start.offsetWidth, end.offsetWidth) + (FRAME_PADDING * 2)}px`;
+                    div.style.height = `${endTop + end.offsetHeight - top + (FRAME_PADDING * 2)}px`;
                     divContainer.prepend(div);
                     setTimeout(() => div.remove(), 2000);
                 }
