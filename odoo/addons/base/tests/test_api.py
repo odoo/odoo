@@ -225,6 +225,15 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(partner.with_context(lang='nl_NL').env.lang, None, 'Inactive lang context lang should have None env.lang')
         self.assertEqual(partner.with_context(lang='Dummy').env.lang, None, 'Ilegal lang context should have None env.lang')
 
+    def test_56_environment_uid_origin(self):
+        """Check the expected behavior of `env.uid_origin`"""
+        user_demo = self.env.ref('base.user_demo')
+        user_admin = self.env.ref('base.user_admin')
+        self.assertEqual(self.env.uid_origin, None)
+        self.assertEqual(self.env['base'].with_user(user_demo).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_demo).with_user(user_admin).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_admin).with_user(user_demo).env.uid_origin, user_admin.id)
+
     @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
