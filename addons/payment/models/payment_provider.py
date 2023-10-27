@@ -332,25 +332,23 @@ class PaymentProvider(models.Model):
 
     def write(self, values):
         # Handle provider state changes.
-        providers_by_state_change = {}
+        deactivated_providers = self.env['payment.provider']
+        activated_providers = self.env['payment.provider']
         if 'state' in values:
+            state_changed_providers = self.filtered(
+                lambda p: p.state not in ('disabled', values['state'])
+            )  # Don't handle providers being enabled or whose state is not updated.
+            state_changed_providers._archive_linked_tokens()
             if values['state'] == 'disabled':
-                providers_by_state_change['disabled'] = self.filtered(
-                    lambda p: p.state != 'disabled'
-                )
+                deactivated_providers = state_changed_providers
             else:  # 'enabled' or 'test'
-                providers_by_state_change['activated'] = self.filtered(
-                    lambda p: p.state == 'disabled'
-                )
+                activated_providers = self.filtered(lambda p: p.state == 'disabled')
 
         result = super().write(values)
         self._check_required_if_provider()
 
-        if 'disabled' in providers_by_state_change:
-            providers_by_state_change['disabled']._archive_linked_tokens()
-            providers_by_state_change['disabled']._deactivate_unsupported_payment_methods()
-        elif 'activated' in providers_by_state_change:
-            providers_by_state_change['activated']._activate_default_pms()
+        deactivated_providers._deactivate_unsupported_payment_methods()
+        activated_providers._activate_default_pms()
 
         return result
 
