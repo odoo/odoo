@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 from ast import literal_eval
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
@@ -625,6 +625,10 @@ class StockQuant(TransactionCase):
         """ Check that the Closest location strategy correctly applies when you have multiple lot received
         at different locations for a tracked product.
         """
+        # Enable multi-locations to be able to set an origin location for delivery
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [Command.link(grp_multi_loc.id)]})
+
         closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
         self.stock_location.removal_strategy_id = closest_strategy
         lot1 = self.env['stock.lot'].create({
@@ -638,14 +642,22 @@ class StockQuant(TransactionCase):
             'company_id': self.env.company.id,
         })
         in_date = datetime.now()
-        # Add a product from lot1 in stock_location/subloc2
-        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc2, 1.0, lot_id=lot1, in_date=in_date)
-        # Add a product from lot2 in stock_location/subloc3
-        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot2, in_date=in_date)
-        # Require one unit of the product
-        quants = self.env['stock.quant']._get_reserve_quantity(self.product_serial, self.stock_location, 1)
-        # Default removal strategy is 'Closest location', so lot1 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
-        self.assertEqual(quants[0][0].lot_id.id, lot1.id)
+        # Add a product from lot1 in stock_location/subloc3
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot1, in_date=in_date)
+        # Add a product from lot2 in stock_location/subloc2
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc2, 1.0, lot_id=lot2, in_date=in_date)
+        # Require one unit of the product for a delivery
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+            picking_form.location_id = self.stock_location
+            with picking_form.move_ids_without_package.new() as move_form:
+                move_form.product_id = self.product_serial
+                move_form.product_uom_qty = 1
+            picking = picking_form.save()
+        picking.action_confirm()
+
+        # Default removal strategy is 'Closest location', so lot2 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
+        self.assertEqual(picking.move_ids.lot_ids.id, lot2.id)
 
     def test_closest_removal_strategy_untracked(self):
         """ Check that the Closest location strategy correctly applies when you have multiple products received
