@@ -13,8 +13,8 @@
                     <t t-set="source" t-value="move._get_source_document()"/>
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
-                            <div t-out="move.product_id.display_name"/>
-                            <div t-if="source" t-out="source.name"/>
+                            <span t-out="move.product_id.display_name">Product Display Name</span> <br/>
+                            <span t-if="source" t-out="source.name">Source Name</span>
                             <div class="address"
                                 t-if="move.picking_id and move.picking_id.partner_id"
                                 t-field="move.picking_id.partner_id"
@@ -48,15 +48,15 @@
                         <t t-foreach="docs" t-as="doc">
                             <div class="p-2">
                                 <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
-                                    <t t-esc="doc.display_name"/>
+                                    <span t-out="doc.display_name">Demo Display Name</span>
                                 </a>
-                                <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}"/>
-                                <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}"/>
+                                <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}">Display Name</span>
+                                <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}">Andrwep</span>
                             </div>
                         </t>
                     </t>
                     <t t-else="">
-                        <span t-esc="reason"/>
+                        <span t-out="reason">Reason</span>
                     </t>
                 </h3>
             </div>
@@ -65,21 +65,22 @@
                     <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
-                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}"/>
+                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
                                 <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                                <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id" t-out="source[0].display_name"/>
+                                <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id">
+                                    <span t-out="source[0].display_name">DEMO_SOURCE_DISPLAY_NAME</span>
+                                </a>
                                 <span t-if="len(source) > 1">
-                                    (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id" t-out="source[1].display_name"/>)
+                                    (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id">
+                                    <span t-out="source[1].display_name">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
                                 </span>
                                 <span t-if="source[0]._name == 'stock.picking' and source[0].partner_id">:
-                                    <a name="source_link" href="#"
-                                        t-att-res-model="source[0].partner_id._name"
-                                        t-att-res-id="source[0].partner_id.id"
-                                        view-type="form"
-                                        t-out="source[0].partner_id.name"/>
+                                    <a name="source_link" href="#" t-att-res-model="source[0].partner_id._name" t-att-res-id="source[0].partner_id.id" view-type="form">
+                                        <span t-out="source[0].partner_id.name">DEMO_PARTNER_NAME</span>
+                                    </a>
                                 </span>
                             </th>
-                            <th>Expected Delivery: <t t-esc="sources_to_formatted_scheduled_date[source]"/></th>
+                            <th>Expected Delivery: <span t-out="sources_to_formatted_scheduled_date[source]">DEMO_DATE</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,11 +89,11 @@
                             <!-- don't print non-assigned lines when printing pdf -->
                             <tr t-if="line['is_assigned']">
                                 <td>
-                                    <t t-esc="line['product']['display_name']"/>
+                                    <span t-out="line['product']['display_name']">DEMO_PRODUCT_DISPLAY_NAME</span>
                                 </td>
                                 <td>
-                                    <t t-esc="line['quantity']"/>
-                                    <t groups="uom.group_uom" t-esc="line['uom']"/>
+                                    <span t-out="line['quantity']">DEMO_QUANTITY</span>
+                                    <span groups="uom.group_uom" t-out="line['uom']">DEMO_UOM</span>
                                 </td>
                             </tr>
                         </t>
