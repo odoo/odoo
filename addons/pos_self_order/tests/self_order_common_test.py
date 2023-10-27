@@ -23,6 +23,15 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
             ],
         })
+        cls.pos_admin = cls.env['res.users'].create({
+            'name': 'POS Admin',
+            'login': 'pos_admin',
+            'password': 'pos_admin',
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+        })
 
     def _add_tax_to_product_from_different_company(self):
         new_company = self.env['res.company'].create({

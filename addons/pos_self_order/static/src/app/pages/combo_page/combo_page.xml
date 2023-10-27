@@ -89,7 +89,7 @@
                                     onerror="this.remove()"/>
                             </div>
                             <div>
-                                <strong class="fs-4" t-esc="combo.product.name"/>
+                                <span class="fs-4" t-esc="combo.product.name"/>
                                 <ul t-if="getAttributeSelected(combo.product)">
                                     <li t-foreach="getAttributeSelected(combo.product)" t-as="attribute" t-key="attribute.id">
                                         <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
