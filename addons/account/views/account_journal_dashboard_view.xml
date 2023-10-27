@@ -74,16 +74,7 @@
                                         <a t-if="journal_type == 'cash'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_view_bank_statement_tree', 'search_default_journal': True}">Cash Registers</a>
                                     </div>
                                     <div>
-                                        <a role="menuitem" type="object" name="open_collect_money">Cust. Payments</a>
-                                    </div>
-                                    <div>
-                                        <a role="menuitem" type="object" name="open_spend_money">Vendor Payments</a>
-                                    </div>
-                                    <div>
-                                        <a role="menuitem" type="object" name="open_transfer_money">Internal Transfers</a>
-                                    </div>
-                                    <div>
-                                        <a role="menuitem" type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}">Journal Items</a>
+                                        <a role="menuitem" type="object" name="open_payments_action">Payments</a>
                                     </div>
                                 </div>
 
@@ -91,25 +82,17 @@
                                     <h5 class="o_kanban_card_manage_title">
                                         <span role="separator">New</span>
                                     </h5>
+                                    <div t-if="journal_type == 'bank'" name="bank_new_actions">
+                                        <a role="menuitem" type="object" name="action_new_transaction" groups="account.group_account_invoice">New Transaction</a>
+                                    </div>
                                     <div name="bank_customer_payment">
-                                        <a role="menuitem" type="object" name="create_customer_payment">Cust. Payment</a>
+                                        <a role="menuitem" type="object" name="create_customer_payment">Customer Payment</a>
                                     </div>
                                     <div>
                                         <a role="menuitem" type="object" name="create_supplier_payment">Vendor Payment</a>
                                     </div>
-                                    <div>
-                                        <a role="menuitem" type="object" name="create_internal_transfer">Internal Transfer</a>
-                                    </div>
                                 </div>
 
-                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
-                                    <h5 class="o_kanban_card_manage_title">
-                                        <span role="separator">Reconciliation</span>
-                                    </h5>
-                                    <div>
-                                        <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': ['|', ('match_journal_ids', '=', False), ('match_journal_ids', 'in', [id])]}" groups="account.group_account_manager">Reconciliation Models</a>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- For purchase and sale -->
@@ -241,12 +224,13 @@
                             - If there are statements to reconcile, a link to reconcile them -->
                         <div id="dashboard_bank_cash_left" class="col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left">
                             <t t-if="journal_type == 'bank'">
-                                <t t-if="dashboard.bank_statements_source == 'undefined' or dashboard.bank_statements_source == 'online_sync'">
+                                <t t-if="['undefined', 'online_sync'].includes(dashboard.bank_statements_source)">
                                     <button name="action_configure_bank_journal" type="object" class="btn btn-primary" groups="account.group_account_invoice">Connect</button>
                                 </t>
                                 <div id="transactions" class="d-flex mt-3 mt-sm-0" style="gap: 5px;">
                                     <div name="bank_journal_cta" class="w-100">
-                                        <div name="bank_journal_transactions" class="w-100 d-flex" style="gap: 5px;">
+                                        <div t-if="['undefined', 'file_import'].includes(dashboard.bank_statements_source)"
+                                             name="bank_journal_transactions" class="w-100 d-flex" style="gap: 5px;">
                                             <a id="create_transaction" name="action_new_transaction" type="object" groups="account.group_account_invoice">New Transaction</a>
                                         </div>
                                     </div>
