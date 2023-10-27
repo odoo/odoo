@@ -330,6 +330,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave.date_from, datetime(2019, 5, 6, 6, 0, 0), "It should have been localized in the Employee timezone")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 15, 0, 0), "It should have been localized in the Employee timezone")
 
+    def test_trigger_compute_allowed_employees(self):
+        """
+        The compute method of allowed_employee_ids should be triggered upon
+        form creation.
+        """
+        leave_form = Form(self.env['hr.leave'])
+        self.assertGreater(len(leave_form.allowed_employee_ids.ids), 0)
+
     def test_number_of_hours_display(self):
         # Test that the field number_of_hours_dispay doesn't change
         # after time off validation, as it takes the attendances
