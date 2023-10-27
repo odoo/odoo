@@ -60,12 +60,15 @@ export class ActivityMenu extends Component {
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
         };
-        let domain;
-        if (group.model !== "mail.activity") {
-            domain = [["activity_user_id", "=", this.userId]];
-        } else {
-            domain = [["id", "in", group.activity_ids]];
+        if (group.model === "mail.activity") {
+            this.action.doAction("mail.mail_activity_without_access_action", {
+                additionalContext: {
+                    active_ids: group.activity_ids,
+                },
+            });
+            return;
         }
+        let domain = [["activity_user_id", "=", this.userId]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }
