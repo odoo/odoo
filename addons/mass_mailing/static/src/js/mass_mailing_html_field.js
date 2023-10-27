@@ -93,7 +93,7 @@ export class MassMailingHtmlField extends HtmlField {
         this._pendingCommitChanges = (async () => {
             const codeViewEl = this._getCodeViewEl();
             if (codeViewEl) {
-                this.wysiwyg.setValue(codeViewEl.value);
+                this.wysiwyg.setValue(this._getCodeViewValue(codeViewEl));
             }
 
             if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
@@ -249,7 +249,7 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.odooEditor.observerActive();
 
             if ($codeview.hasClass('d-none')) {
-                this.wysiwyg.setValue($codeview.val());
+                this.wysiwyg.setValue(this._getCodeViewValue($codeview[0]));
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
@@ -445,6 +445,24 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframe &&
             this.wysiwyg.$iframe.contents().find('textarea.o_codeview')[0];
         return codeView && !codeView.classList.contains('d-none') && codeView;
+    }
+    /**
+     * The .o_mail_wrapper_td element is where snippets can be dropped into.
+     * This getter wraps the codeview value in such element in case it got
+     * removed during edition in the codeview, in order to preserve the snippets
+     * dropping functionality.
+     */
+    _getCodeViewValue(codeViewEl) {
+        const editable = this.wysiwyg.$editable[0];
+        const initialDropZone = editable.querySelector('.o_mail_wrapper_td');
+        if (initialDropZone) {
+            const parsedHtml = new DOMParser().parseFromString(codeViewEl.value, "text/html");
+            if (!parsedHtml.querySelector('.o_mail_wrapper_td')) {
+                initialDropZone.replaceChildren(...parsedHtml.body.childNodes);
+                return editable.innerHTML;
+            }
+        }
+        return codeViewEl.value;
     }
     /**
      * This method will take the model in argument and will hide all mailing template

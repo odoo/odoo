@@ -87,18 +87,6 @@ const MassMailingWysiwyg = Wysiwyg.extend({
         }
     },
 
-    /**
-     * @override
-     */
-     setValue: function (currentValue) {
-        const initialDropZone = this.$editable[0].querySelector('.o_mail_wrapper_td');
-        const parsedHtml = new DOMParser().parseFromString(currentValue, "text/html");
-        if (initialDropZone && !parsedHtml.querySelector('.o_mail_wrapper_td')) {
-            initialDropZone.replaceChildren(...parsedHtml.body.childNodes);
-        } else {
-            this._super(...arguments);
-        }
-    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
