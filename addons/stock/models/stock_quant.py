@@ -741,7 +741,7 @@ class StockQuant(models.Model):
         if removal_strategy == 'lifo':
             reverse = True
         elif removal_strategy == 'closest':
-            key = lambda q: (q.location_id, -q.id)
+            key = lambda q: (q.location_id.complete_name, -q.id)
         return key, reverse
 
     def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
@@ -770,7 +770,7 @@ class StockQuant(models.Model):
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-        if self:
+        if self.ids:
             sort_key = self._get_removal_strategy_sort_key(removal_strategy)
             res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
         else:
