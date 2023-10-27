@@ -767,22 +767,15 @@ class account_journal(models.Model):
         action['domain'] = (action['domain'] or []) + [('journal_id', '=', self.id)]
         return action
 
-    def open_spend_money(self):
-        return self.open_payments_action('outbound')
-
-    def open_collect_money(self):
-        return self.open_payments_action('inbound')
-
-    def open_transfer_money(self):
-        return self.open_payments_action('transfer')
-
     def open_payments_action(self, payment_type, mode='tree'):
         if payment_type == 'outbound':
             action_ref = 'account.action_account_payments_payable'
         elif payment_type == 'transfer':
             action_ref = 'account.action_account_payments_transfer'
-        else:
+        elif payment_type == 'inbound':
             action_ref = 'account.action_account_payments'
+        else:
+            action_ref = 'account.action_account_all_payments'
         action = self.env['ir.actions.act_window']._for_xml_id(action_ref)
         action['context'] = dict(ast.literal_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
         if payment_type == 'transfer':
@@ -866,7 +859,3 @@ class account_journal(models.Model):
     def create_supplier_payment(self):
         """return action to create a supplier payment"""
         return self.open_payments_action('outbound', mode='form')
-
-    def create_internal_transfer(self):
-        """return action to create a internal transfer"""
-        return self.open_payments_action('transfer', mode='form')
