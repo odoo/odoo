@@ -4,8 +4,7 @@ import { RATING } from "@im_livechat/embed/core/livechat_service";
 import { TranscriptSender } from "@im_livechat/embed/feedback_panel/transcript_sender";
 
 import { Component, useState } from "@odoo/owl";
-
-import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
@@ -26,12 +25,12 @@ export class FeedbackPanel extends Component {
     RATING = RATING;
 
     setup() {
-        this.session = session;
         this.state = useState({
             step: this.STEP.RATING,
             rating: null,
             feedback: "",
         });
+        this.url = url;
     }
 
     /**
