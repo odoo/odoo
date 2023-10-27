@@ -7,7 +7,7 @@
             </div>
             <div class="order-content flex-grow-1 overflow-auto pb-4">
                 <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">
-                    <div t-if="!line.combo_parent_uuid" class="py-2 py-lg-4 px-3 bg-view border-bottom">
+                    <div t-if="!line.combo_parent_uuid" class="product-card-item py-2 py-lg-4 px-3 bg-view border-bottom">
                         <t t-set="childLines" t-value="getChildLines(line)"/>
                         <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id]"/>
 

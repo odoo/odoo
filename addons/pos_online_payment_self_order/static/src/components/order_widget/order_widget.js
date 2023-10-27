@@ -10,6 +10,8 @@ patch(OrderWidget.prototype, {
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
         const order = this.selfOrder.currentOrder;
+        const takeAway = order.take_away;
+        const service = this.selfOrder.config.self_ordering_service_mode;
         const isNoLine = order.lines.length === 0;
 
         if (type === "kiosk") {
@@ -41,8 +43,10 @@ patch(OrderWidget.prototype, {
                             disabled: true,
                         };
                     } else {
+                        const label =
+                            takeAway || service === "counter" ? _t("Pay at cashier") : _t("Pay");
                         return {
-                            label: _t("Pay at cashier"),
+                            label: label,
                             disabled: false,
                         };
                     }
