@@ -523,20 +523,20 @@ class Channel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-
-        message_format_values = message.message_format()[0]
-        bus_notifications = self._channel_message_notifications(message, message_format_values)
+        message_format = message.message_format()[0]
+        if "temporary_id" in self.env.context:
+            message_format["temporary_id"] = self.env.context["temporary_id"]
         # Last interest and is_pinned are updated for a channel when posting a message.
         # So a notification is needed to update UI, and it should come before the
         # notification of the message itself to ensure the channel automatically opens.
-        bus_notifications.insert(0, [self, 'discuss.channel/last_interest_dt_changed', {
-            'id': self.id,
-            'isServerPinned': True,
-            'last_interest_dt': fields.Datetime.now(),
-        }])
-        # sudo: bus.bus - sending on safe channel (target channel or partner)
-        self.env['bus.bus'].sudo()._sendmany(bus_notifications)
-        if self.is_chat or self.channel_type == 'group':
+        payload = {"id": self.id, "isServerPinned": True, "last_interest_dt": fields.Datetime.now()}
+        bus_notifications = [
+            (self, "discuss.channel/last_interest_dt_changed", payload),
+            (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
+        ]
+        # sudo: bus.bus - sending on safe channel (discuss.channel)
+        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
+        if self.is_chat or self.channel_type == "group":
             self._notify_thread_by_web_push(message, rdata, msg_vals, **kwargs)
         return rdata
 
@@ -624,23 +624,6 @@ class Channel(models.Model):
                 )
                 for channel_info in user_channels._channel_info():
                     notifications.append((partner, 'mail.record/insert', {"Thread": channel_info}))
-        return notifications
-
-    def _channel_message_notifications(self, message, message_format=False):
-        """ Generate the bus notifications for the given message
-            :param message : the mail.message to sent
-            :returns list of bus notifications (tuple (bus_channe, message_content))
-        """
-        message_format = dict(message_format or message.message_format()[0])
-        if 'temporary_id' in self.env.context:
-            message_format['temporary_id'] = self.env.context['temporary_id']
-        notifications = []
-        for channel in self:
-            payload = {
-                'id': channel.id,
-                'message': message_format,
-            }
-            notifications.append((channel, 'discuss.channel/new_message', payload))
         return notifications
 
     # ------------------------------------------------------------
