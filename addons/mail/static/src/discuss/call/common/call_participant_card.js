@@ -119,20 +119,16 @@ export class CallParticipantCard extends Component {
         }
         if (this.rtcSession) {
             const channel = this.rtcSession.channel;
+            this.rtcSession.mainVideoStreamType = this.props.cardData.type;
             if (this.rtcSession.eq(channel.activeRtcSession) && !this.props.inset) {
                 channel.activeRtcSession = undefined;
-                this.rtcSession.mainVideoStream = undefined;
+                this.rtcSession.mainVideoStreamType = undefined;
             } else {
                 const activeRtcSession = channel.activeRtcSession;
-                const mainVideoStream = this.rtcSession.mainVideoStream;
+                const currentMainVideoType = this.rtcSession.mainVideoStreamType;
                 channel.activeRtcSession = this.rtcSession;
-                this.rtcSession.mainVideoStream = this.props.cardData.videoStream;
                 if (this.props.inset && activeRtcSession) {
-                    const videoType =
-                        activeRtcSession.videoStreams.get("camera") === mainVideoStream
-                            ? "camera"
-                            : "screen";
-                    this.props.inset(activeRtcSession, videoType);
+                    this.props.inset(activeRtcSession, currentMainVideoType);
                 }
             }
             return;
