@@ -611,4 +611,60 @@ QUnit.module("Tour service", (hooks) => {
             assert.containsNone(target, ".o_tour_pointer");
         }
     );
+
+    QUnit.test(
+        "tour pointer should be rendered correctly on an element present inside an iframe",
+        async function (assert) {
+            registry.category("web_tour.tours").add("tour2", {
+                sequence: 15,
+                steps: [
+                    {
+                        content: "Button inside an iframe",
+                        trigger: "iframe #demo-button",
+                        position: "bottom",
+                    },
+                ],
+            });
+            const env = await makeTestEnv({});
+            const { Component: TourPointerContainer, props: tourPointerProps } = registry
+                .category("main_components")
+                .get("TourPointerContainer");
+
+            class Root extends Component {
+                static components = { TourPointerContainer };
+                static template = xml/*html*/ `
+                <t>
+                    <div id="container" style="display: flex; align-items:center; justify-content: center;
+                                                margin: 25px; height: 450px; width: 450px; background-color: DodgerBlue;
+                                                border: 3px solid black;">
+                        <iframe
+                            srcdoc="&lt;button id='demo-button' &gt; Test Button &lt;/button&gt;"
+                            style="height: 200px; width: 200px; background-color: grey; border: 2px solid black;">
+                        </iframe>
+                    </div>
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+                </t>
+            `;
+            }
+
+            await mount(Root, target, { env, props: { tourPointerProps } });
+            env.services.tour_service.startTour("tour2", { mode: "manual" });
+            await mock.advanceTime(750);
+            assert.containsOnce($("*"), ".o_tour_pointer .o_tour_pointer_tip");
+            assert.containsOnce($("iframe").contents(), "#demo-button");
+
+            // Check the expected position
+            const iframe = target.querySelector("iframe");
+            const { top: iframeTop } = iframe.getBoundingClientRect();
+            const { bottom: btnBottom } = iframe.contentDocument
+                .querySelector("#demo-button")
+                .getBoundingClientRect();
+            const { top: tourPointerTop } = target
+                .querySelector(".o_tour_pointer_tip")
+                .getBoundingClientRect();
+
+            // The margin (equal to 6) is added below, which is passed when calling the reposition function.
+            assert.strictEqual(Math.floor(iframeTop + btnBottom + 6), Math.floor(tourPointerTop));
+        }
+    );
 });
