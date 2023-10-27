@@ -10,6 +10,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, makeDeferred, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, createFile, focus, insertText, scroll } from "@web/../tests/utils";
+import { Deferred } from "@web/core/utils/concurrency";
 
 QUnit.module("discuss");
 
@@ -39,21 +40,40 @@ QUnit.test("can change the thread name of #general [REQUIRE FOCUS]", async (asse
         channel_type: "channel",
         create_uid: pyEnv.currentUserId,
     });
+    const def = new Deferred();
     const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (route === "/web/dataset/call_kw/discuss.channel/channel_rename") {
                 assert.step(route);
+                def.resolve();
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
     await contains("input.o-mail-Discuss-threadName", { value: "general" });
     await insertText("input.o-mail-Discuss-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "special" });
     await contains("input.o-mail-Discuss-threadName", { value: "special" });
+    await def;
     assert.verifySteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+});
+
+QUnit.test("can active change thread from messaging menu", async (assert) => {
+    const pyEnv = await startServer();
+    const [, teamId] = pyEnv["discuss.channel"].create([
+        { name: "general", channel_type: "channel" },
+        { name: "team", channel_type: "channel" },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(teamId);
+    await contains(".o-mail-DiscussSidebar-item", { text: "general" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "team" });
+    await click(".o_main_navbar i[aria-label='Messages']");
+    await click(".o-mail-DiscussSidebar-item", { text: "general" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "general" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "team" });
 });
 
 QUnit.test("can change the thread description of #general [REQUIRE FOCUS]", async (assert) => {
@@ -64,14 +84,16 @@ QUnit.test("can change the thread description of #general [REQUIRE FOCUS]", asyn
         description: "General announcements...",
         create_uid: pyEnv.currentUserId,
     });
+    const def = new Deferred();
     const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (route === "/web/dataset/call_kw/discuss.channel/channel_change_description") {
                 assert.step(route);
+                def.resolve();
             }
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
     await contains("input.o-mail-Discuss-threadDescription", {
         value: "General announcements...",
@@ -83,6 +105,7 @@ QUnit.test("can change the thread description of #general [REQUIRE FOCUS]", asyn
     await contains("input.o-mail-Discuss-threadDescription", {
         value: "I want a burger today!",
     });
+    await def;
     assert.verifySteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
 });
 
