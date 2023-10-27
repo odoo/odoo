@@ -19,8 +19,8 @@ export class HrPresenceStatus extends Component {
     get classNames() {
         const classNames = ["fa"];
         classNames.push(
-            `fa-${this.props.tag === "small" ? "fw" : "2x"}`,
             this.icon,
+            "fa-fw",
             "o_button_icon",
             "hr_presence",
             "align-middle",
