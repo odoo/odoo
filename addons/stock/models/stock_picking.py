@@ -517,6 +517,7 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
+    # To remove in Master
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
 
@@ -529,17 +530,10 @@ class Picking(models.Model):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
 
-    @api.depends('move_ids.product_uom_qty', 'move_ids.quantity')
+    @api.depends()
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
-        for picking in self:
-            if picking.state in ['draft', 'done', 'cancel']:
-                continue
-            if any(float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding) for m in picking.move_ids):
-                picking.show_set_qty_button = True
-            elif any(not float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in picking.move_ids):
-                picking.show_clear_qty_button = True
 
     def _compute_has_tracking(self):
         for picking in self:
@@ -1174,9 +1168,6 @@ class Picking(models.Model):
                 }
             }
         return True
-
-    def action_clear_quantities_to_zero(self):
-        self.move_ids.filtered(lambda m: not m.picked)._do_unreserve()
 
     def _pre_action_done_hook(self):
         for picking in self:

@@ -72,8 +72,6 @@
                 <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="is_wave" invisible="1"/>
-                <field name="show_set_qty_button" invisible="1"/>
-                <field name="show_clear_qty_button" invisible="1"/>
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
@@ -82,8 +80,6 @@
                         invisible="state != 'in_progress' or not show_check_availability"/>
                     <button name="action_done" string="Validate" type="object"
                         invisible="state != 'in_progress' or not show_check_availability"/>
-                    <button name="action_clear_quantities_to_zero" string="Clear quantities" type="object"
-                        invisible="not show_clear_qty_button"/>
                     <button name="action_assign" string="Check Availability" type="object"
                         invisible="state != 'draft' or not show_check_availability"/>
                     <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object"/>
