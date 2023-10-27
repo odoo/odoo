@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.tools import float_round
 import datetime
 
 class HrAttendance(http.Controller):
@@ -19,12 +20,12 @@ class HrAttendance(http.Controller):
                 'id': employee.id,
                 'employee_name': employee.name,
                 'employee_avatar': employee.image_1920,
-                'hours_today': employee.hours_today,
-                'total_overtime': employee.total_overtime,
-                'last_attendance_worked_hours': employee.last_attendance_worked_hours,
+                'hours_today': float_round(employee.hours_today, precision_digits=2),
+                'total_overtime': float_round(employee.total_overtime, precision_digits=2),
+                'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
-                'hours_previously_today': employee.hours_previously_today,
+                'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
                 'kiosk_delay': employee.company_id.attendance_kiosk_delay * 1000,
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
                                'check_out': employee.last_attendance_id.check_out},
