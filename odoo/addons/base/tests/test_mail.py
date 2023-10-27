@@ -583,7 +583,7 @@ class TestEmailTools(BaseCase):
             # formatted input
             ('Robert <robert@notgmail.com>', ['robert@notgmail.com']),
             ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
-            ('"robert@notgmail.com" <robert@notgmail.com>', ['"robert@notgmail.com"', 'robert@notgmail.com']),
+            ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
             # accents
             ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
