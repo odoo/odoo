@@ -499,9 +499,21 @@
             background: transparent;
             margin-top: $o-we-sidebar-content-field-spacing;
             padding: 0 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-            grid-template-areas: "typo typo style colors" "size align list link" "options options options options" "options2 options2 options2 options2";
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            grid-template-rows: minmax($o-we-sidebar-content-field-height, auto) minmax($o-we-sidebar-content-field-height, auto) auto auto ;
+            grid-template-areas:
+                "typo typo style style colors"
+                "size align list list link"
+                "ai animate animate hilight hilight"
+                "options options options options options"
+                "options2 options2 options2 options2 options2"
+                "options3 options3 options3 options3 options3";
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows:
+                minmax($o-we-sidebar-content-field-height, auto)
+                minmax($o-we-sidebar-content-field-height, auto)
+                minmax($o-we-sidebar-content-field-height, auto)
+                auto
+                auto
+                auto;
             row-gap: $o-we-sidebar-content-field-spacing;
             column-gap: $o-we-sidebar-content-field-multi-spacing;
             width: 100%;
@@ -626,8 +638,12 @@
                     }
                 }
 
-                & + we-customizeblock-option {
+                & ~ we-customizeblock-option {
                     grid-area: options2;
+
+                    & ~ we-customizeblock-option {
+                        grid-area: options3;
+                    }
                 }
             }
 
@@ -721,6 +737,20 @@
                         }
                     }
                 }
+            }
+
+            #chatgpt {
+                grid-area: ai;
+
+                span {
+                    margin-left: 5px;
+                }
+            }
+            #animate {
+                grid-area: animate;
+            }
+            #highlight {
+                grid-area: hilight;
             }
 
             .dropdown-menu.colorpicker-menu {
