@@ -74,8 +74,9 @@ class PosSelfOrderController(http.Controller):
                 classic_lines.append(line)
 
         # combo lines must be created after classic_line, as they need the classic line identifier
-        lines = pos_config.env['pos.order.line'].create(classic_lines)
-        lines += pos_config.env['pos.order.line'].create(combo_lines)
+        # use user admin to avoid access rights issues
+        lines = pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(classic_lines)
+        lines += pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(combo_lines)
 
         order.write({
             'lines': lines,
