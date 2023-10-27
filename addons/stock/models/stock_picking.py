@@ -1662,7 +1662,7 @@ class Picking(models.Model):
             wizard = self.env['product.label.layout'].create({
                 'product_ids': pickings.move_ids.product_id.ids,
                 'move_ids': pickings.move_ids.ids,
-                'picking_quantity': 'picking',
+                'move_quantity': 'move',
                 'print_format': pickings.picking_type_id.product_label_format,
             })
             action = wizard.process()
@@ -1675,7 +1675,7 @@ class Picking(models.Model):
             for print_format in pickings_print_lot_label.picking_type_id.mapped("lot_label_format"):
                 pickings = pickings_by_print_formats.get(print_format)
                 wizard = self.env['lot.label.layout'].create({
-                    'picking_ids': pickings.ids,
+                    'move_line_ids': pickings.move_line_ids.ids,
                     'label_quantity': 'lots' if '_lots' in print_format else 'units',
                     'print_format': '4x12' if '4x12' in print_format else 'zpl',
                 })
