@@ -4022,8 +4022,8 @@ var SnippetsMenu = Widget.extend({
             <we-input class="o_we_user_value_widget w-100 mx-1">
                 <div>
                     <input type="text" autocomplete="chrome-off" value="${snippetName}" class="text-start"/>
-                    <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"/>
-                    <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"/>
+                    <we-button class="o_we_confirm_btn o_we_text_success fa fa-check" title="${confirmText}"></we-button>
+                    <we-button class="o_we_cancel_btn o_we_text_danger fa fa-times" title="${cancelText}"></we-button>
                 </div>
             </we-input>
         `);
@@ -4081,7 +4081,8 @@ var SnippetsMenu = Widget.extend({
      */
     _onMouseUp(ev) {
         const snippetEl = ev.target.closest('.oe_snippet');
-        if (snippetEl) {
+        if (snippetEl && !snippetEl.querySelector(".o_we_already_dragging")
+                    && !ev.target.matches(".o_rename_btn")) {
             this._showSnippetTooltip($(snippetEl));
         }
     },
