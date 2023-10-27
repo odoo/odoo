@@ -53,7 +53,7 @@ export function useInputField(params) {
      * On blur, we consider the field no longer dirty, even if it were to be invalid.
      * However, if the field is invalid, the new value will not be committed to the model.
      */
-    function onChange(ev) {
+    async function onChange(ev) {
         if (isDirty) {
             isDirty = false;
             let isInvalid = false;
@@ -69,15 +69,12 @@ export function useInputField(params) {
 
             if (!isInvalid) {
                 pendingUpdate = true;
-                Promise.resolve(
-                    component.props.record.update({ [component.props.name]: val })
-                ).then(() => {
-                    pendingUpdate = false;
-                });
-                lastSetValue = ev.target.value;
-            }
+                lastSetValue = inputRef.el.value;
 
-            component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                await component.props.record.update({ [component.props.name]: val });
+                pendingUpdate = false;
+                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+            }
         }
     }
     function onKeydown(ev) {
