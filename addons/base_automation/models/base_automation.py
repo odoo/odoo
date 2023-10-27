@@ -892,10 +892,10 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done={})
 
         # retrieve all the automation rules to run based on a timed condition
-        eval_context = self._get_eval_context()
         for automation in self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)]):
             _logger.info("Starting time-based automation rule `%s`.", automation.name)
             last_run = fields.Datetime.from_string(automation.last_run) or datetime.datetime.utcfromtimestamp(0)
+            eval_context = automation._get_eval_context()
 
             # retrieve all the records that satisfy the automation's condition
             domain = []

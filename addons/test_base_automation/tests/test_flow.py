@@ -855,6 +855,24 @@ if env.context.get('old_values', None):  # on write
         lead.unlink()
         self.assertEqual(called_count, 1)
 
+    def test_004_check_method(self):
+        model = self.env["ir.model"]._get("base.automation.lead.test")
+        TIME_TRIGGERS = [
+           'on_time',
+           'on_time_created',
+           'on_time_updated',
+        ]
+        self.env["base.automation"].search([('trigger', 'in', TIME_TRIGGERS)]).active = False
+
+        automation = self.env["base.automation"].create({
+            "name": "Cron BaseAuto",
+            "trigger": "on_time",
+            "model_id": model.id,
+        })
+        self.assertFalse(automation.last_run)
+        self.env["base.automation"]._check(False)
+        self.assertTrue(automation.last_run)
+
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
