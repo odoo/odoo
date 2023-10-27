@@ -1188,7 +1188,7 @@ class Picking(models.Model):
         """
         return _(
             'You cannot validate a transfer if no quantities are reserved. '
-            'To force the transfer, switch in edit mode and encode the done quantities.'
+            'To force the transfer, encode quantities.'
         )
 
     def _action_generate_backorder_wizard(self, show_transfers=False):
