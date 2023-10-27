@@ -4,7 +4,7 @@ import { importRecordsItem } from "@base_import/import_records/import_records";
 
 import { registry } from "@web/core/registry";
 
-import { click, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
+import { click, getFixture, selectDropdownItem, triggerHotkey } from "@web/../tests/helpers/utils";
 import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
@@ -98,6 +98,20 @@ QUnit.module("Base Import Tests", (hooks) => {
             assert.containsNone(target, ".o_import_menu");
         }
     );
+
+    QUnit.test("cog menu should open with alt+u shortcut", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree/>',
+            config: {
+                actionType: "ir.actions.act_window",
+            },
+        });
+        await triggerHotkey("alt+u");
+        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+    });
 
     QUnit.test("import in cog menu dropdown in kanban", async function (assert) {
         assert.expect(3);
