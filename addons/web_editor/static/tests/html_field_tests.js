@@ -100,6 +100,65 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.equal(mediaDialog.props.resId, 2);
     });
 
+    QUnit.test("QWeb plugin select t-field", async (assert) => {
+        serverData.models.partner.fields.m2o = { type: "many2one", relation: "partner" };
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `<span t-field='myfield'><span class="insideoftfield">demo</span></span>`
+        }];
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="m2o" />
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+
+        // Manually add a t-field in the form
+        // to be able to test that we don't trigger the same behavior
+        // as if we were inside the html field
+        const form = target.querySelector(".o_form_view");
+        const span = document.createElement("span");
+        span.setAttribute("t-field", "bogus");
+        span.innerHTML = `<span class="insidebogus">bogus</span>`;
+        form.appendChild(span);
+
+        const sel = document.getSelection();
+        sel.removeAllRanges();
+        let range = new Range();
+        range.setStart(target.querySelector(".insideoftfield"), 0);
+        sel.addRange(range);
+        await nextTick();
+        assert.strictEqual(sel.anchorNode, target.querySelector(".o_field_html p"));
+        sel.removeAllRanges();
+
+        range = new Range();
+        range.setStart(target.querySelector(".insidebogus"), 0);
+        sel.addRange(range);
+        await nextTick();
+        assert.strictEqual(sel.anchorNode, target.querySelector(".insidebogus"));
+
+        // Dispatch an invalid event to make sure nothing crashes
+        // It is hard to test this, but the issue was, in firefox, the target
+        // was used in the handler, and was the input which did not have some function
+        // In chrome, it worked fine, as selectionchange's target was always the document
+        const customEvent = new CustomEvent("selectionchange", { bubbles: true });
+        Object.defineProperties(customEvent, {
+            target: {
+                value: null,
+            },
+            currentTarget: {
+                value: null,
+            },
+        })
+        target.querySelector(".o_field_many2one input").dispatchEvent(customEvent);
+    })
+
     QUnit.module('Sandboxed Preview');
 
     QUnit.test("complex html is automatically in sandboxed preview mode", async (assert) => {
