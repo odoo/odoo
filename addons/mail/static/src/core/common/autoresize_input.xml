@@ -10,6 +10,7 @@
         t-att-title="state.value"
         t-model="state.value"
         t-on-keydown="onKeydownInput"
+        t-on-blur="() => this.props.onValidate(this.state.value)"
         t-ref="input"
         type="text"
     />
