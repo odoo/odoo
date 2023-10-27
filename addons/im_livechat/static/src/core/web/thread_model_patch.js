@@ -6,8 +6,8 @@ import { assignIn } from "@mail/utils/common/misc";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread, {
-    insert(data) {
-        const thread = super.insert(data);
+    _insert(data) {
+        const thread = super._insert(...arguments);
         if (thread.type === "livechat") {
             assignIn(thread, data, ["anonymous_name", "anonymous_country"]);
             this.store.discuss.livechat.threads.add(thread);
