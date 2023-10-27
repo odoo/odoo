@@ -1110,4 +1110,58 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, "[name='display_name'] input");
         }
     );
+
+    QUnit.test(
+        "edit a char field should display the status indicator buttons without flickering",
+        async function (assert) {
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.onchanges = {
+                foo() {},
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, { method }) {
+                    if (method === "onchange") {
+                        assert.step("onchange");
+                        await def;
+                    }
+                },
+            });
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons.invisible",
+                "form view is not dirty"
+            );
+
+            await click(target, ".o_data_cell");
+            await editInput(target, "[name='foo'] input", "a");
+            assert.verifySteps(["onchange"]);
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons:not(.invisible)",
+                "form view is dirty"
+            );
+
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons:not(.invisible)",
+                "form view is dirty"
+            );
+        }
+    );
 });
