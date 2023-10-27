@@ -24,6 +24,7 @@ class IrActions(models.Model):
     _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True)
     type = fields.Char(string='Action Type', required=True)
@@ -175,6 +176,7 @@ class IrActionsActWindow(models.Model):
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     @api.constrains('res_model', 'binding_model_id')
     def _check_model(self):
@@ -316,6 +318,7 @@ class IrActionsActWindowView(models.Model):
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
     _order = 'sequence,id'
+    _allow_sudo_commands = False
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
@@ -335,6 +338,7 @@ class IrActionsActWindowclose(models.Model):
     _description = 'Action Window Close'
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.act_window_close')
 
@@ -352,6 +356,7 @@ class IrActionsActUrl(models.Model):
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.act_url')
@@ -389,6 +394,7 @@ class IrActionsServer(models.Model):
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _order = 'sequence,name'
+    _allow_sudo_commands = False
 
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the action is triggered
@@ -663,6 +669,7 @@ class IrActionsServer(models.Model):
 class IrServerObjectLines(models.Model):
     _name = 'ir.server.object.lines'
     _description = 'Server Action value mapping'
+    _allow_sudo_commands = False
 
     server_id = fields.Many2one('ir.actions.server', string='Related Server Action', ondelete='cascade')
     col1 = fields.Many2one('ir.model.fields', string='Field', required=True, ondelete='cascade')
@@ -733,6 +740,7 @@ class IrActionsTodo(models.Model):
     _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
     _order = "sequence, id"
+    _allow_sudo_commands = False
 
     action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
     sequence = fields.Integer(default=10)
@@ -819,6 +827,7 @@ class IrActionsActClient(models.Model):
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.client')
