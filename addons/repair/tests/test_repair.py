@@ -468,6 +468,7 @@ class TestRepair(common.TransactionCase):
         for repair in return_picking.repair_ids:
             self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
             self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
+            self.assertEqual(repair.picking_type_id, return_picking.picking_type_id.warehouse_id.repair_type_id)
 
     def test_repair_compute_product_uom(self):
         repair = self.env['repair.order'].create({
