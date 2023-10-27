@@ -290,7 +290,7 @@ class MaintenanceRequest(models.Model):
         for request in self:
             if request.equipment_id:
                 request.user_id = request.equipment_id.technician_user_id or request.equipment_id.category_id.technician_user_id
-            if request.user_id and request.company.id not in request.user_id.company_ids.ids:
+            if request.user_id and request.company_id.id not in request.user_id.company_ids.ids:
                 request.user_id = False
 
     @api.depends('maintenance_type')
