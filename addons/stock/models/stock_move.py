@@ -108,7 +108,8 @@ class StockMove(models.Model):
              "* Done: The product has been transferred and the transfer has been confirmed.")
     picked = fields.Boolean(
         'Picked', compute='_compute_picked', inverse='_inverse_picked',
-        store=True, readonly=False, copy=False, default=False)
+        store=True, readonly=False, copy=False, default=False,
+        help="This checkbox is just indicative, it doesn't validate or generate any product moves.")
 
     # used to record the product cost set by the user during a picking confirmation (when costing
     # method used is 'average price' or 'real'). Value given in company currency and in product uom.
