@@ -403,7 +403,7 @@ class ReportMoOverview(models.AbstractModel):
         else:
             replenish_data = self._get_replenishments_from_forecast(production, replenish_data)
         for count, move_raw in enumerate(production.move_raw_ids):
-            if production.state == 'done' and float_is_zero(move_raw.quantity_done, precision_rounding=move_raw.product_uom.rounding):
+            if production.state == 'done' and float_is_zero(move_raw.quantity, precision_rounding=move_raw.product_uom.rounding):
                 # If a product wasn't consumed in the MO by the time it is done, no need to display it on the final Overview.
                 continue
             component_index = f"{current_index}{count}"
