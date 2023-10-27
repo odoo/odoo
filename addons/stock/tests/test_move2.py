@@ -2433,7 +2433,7 @@ class TestStockUOM(TestStockCommon):
             'location_dest_id': self.stock_location
         })
         picking_in.action_confirm()
-        picking_in.action_clear_quantities_to_zero()
+        picking_in.do_unreserve()
 
         self.assertEqual(move.product_uom_qty, 60.00, 'Wrong T_GT quantity')
         self.assertEqual(move.product_qty, 134400.00, 'Wrong T_LBS quantity')
