@@ -25,7 +25,8 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 
-import { contains, focus, scroll } from "@web/../tests/utils";
+import { contains, focus, insertText as webInsertText, scroll } from "@web/../tests/utils";
+import { Deferred } from "@web/core/utils/concurrency";
 
 QUnit.module("discuss");
 
@@ -48,62 +49,79 @@ QUnit.test("sanity check", async (assert) => {
     ]);
 });
 
-QUnit.test("can change the thread name of #general", async (assert) => {
+QUnit.test("can change the thread name of #general [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
+        create_uid: pyEnv.currentPartnerId,
     });
+    const def = new Deferred();
     const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (route === "/web/dataset/call_kw/discuss.channel/channel_rename") {
                 assert.step(route);
+                def.resolve();
             }
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce($, "input.o-mail-Discuss-threadName");
-    const $name = $("input.o-mail-Discuss-threadName");
-
-    click($name).catch(() => {});
-    assert.strictEqual($name.val(), "general");
-    await editInput(document.body, "input.o-mail-Discuss-threadName", "special");
-    await triggerEvent(document.body, "input.o-mail-Discuss-threadName", "keydown", {
-        key: "Enter",
-    });
-    assert.strictEqual($name.val(), "special");
+    await contains(".o-mail-Composer-input:focus");
+    await contains("input.o-mail-Discuss-threadName", { value: "general" });
+    await webInsertText("input.o-mail-Discuss-threadName", "special", { replace: true });
+    triggerHotkey("Enter");
+    await contains(".o-mail-DiscussCategoryItem", { text: "special" });
+    await contains("input.o-mail-Discuss-threadName", { value: "special" });
+    await def;
     assert.verifySteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
 });
 
-QUnit.test("can change the thread description of #general", async (assert) => {
+QUnit.test("can active change thread from messaging menu", async (assert) => {
+    const pyEnv = await startServer();
+    const [, teamId] = pyEnv["discuss.channel"].create([
+        { name: "general", channel_type: "channel" },
+        { name: "team", channel_type: "channel" },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(teamId);
+    await contains(".o-mail-DiscussCategoryItem", { text: "general" });
+    await contains(".o-mail-DiscussCategoryItem.o-active", { text: "team" });
+    await click(".o_main_navbar i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(general)");
+    await contains(".o-mail-DiscussCategoryItem.o-active", { text: "general" });
+    await contains(".o-mail-DiscussCategoryItem", { text: "team" });
+});
+
+QUnit.test("can change the thread description of #general [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
         description: "General announcements...",
+        create_uid: pyEnv.currentPartnerId,
     });
+    const def = new Deferred();
     const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (route === "/web/dataset/call_kw/discuss.channel/channel_change_description") {
                 assert.step(route);
+                def.resolve();
             }
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce($, "input.o-mail-Discuss-threadDescription");
-    const $description = $("input.o-mail-Discuss-threadDescription");
-
-    click($description).then(() => {});
-    assert.strictEqual($description.val(), "General announcements...");
-    await editInput(
-        document.body,
-        "input.o-mail-Discuss-threadDescription",
-        "I want a burger today!"
-    );
-    await triggerEvent(document.body, "input.o-mail-Discuss-threadDescription", "keydown", {
-        key: "Enter",
+    await contains(".o-mail-Composer-input:focus");
+    await contains("input.o-mail-Discuss-threadDescription", {
+        value: "General announcements...",
     });
-    assert.strictEqual($description.val(), "I want a burger today!");
+    await insertText("input.o-mail-Discuss-threadDescription:enabled", "I want a burger today!", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await contains("input.o-mail-Discuss-threadDescription", {
+        value: "I want a burger today!",
+    });
+    await def;
     assert.verifySteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
 });
 
@@ -1955,7 +1973,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     const pyEnv = await startServer();
     const [userId1, userId2] = pyEnv["res.users"].create([
         { name: "Jerry Golay" },
-        { name: "Albert" }
+        { name: "Albert" },
     ]);
     const [partnerId1] = pyEnv["res.partner"].create([
         {
@@ -1965,7 +1983,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
         {
             name: "Jerry Golay",
             user_ids: [userId1],
-        }
+        },
     ]);
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -1986,6 +2004,6 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussCategoryItem", {
         text: "Jerry Golay",
-        before: [".o-mail-DiscussCategoryItem", { text: "Albert" }]
+        before: [".o-mail-DiscussCategoryItem", { text: "Albert" }],
     });
 });
