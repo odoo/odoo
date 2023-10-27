@@ -4,6 +4,25 @@ import options from 'web_editor.snippets.options';
 
 options.registry.WebsiteEvent.include({
 
+    /**
+     * @override
+     */
+    async start() {
+        const res = await this._super(...arguments);
+        // Only need for one RPC request as the option will be destroyed if a
+        // change is made.
+        const rpcData = await this._rpc({
+            model: 'event.event',
+            method: 'read',
+            args: [
+                [this.eventId],
+                ['meeting_room_allow_creation'],
+            ],
+        });
+        this.meetingRoomAllowCreation = rpcData[0]['meeting_room_allow_creation'];
+        return res;
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -13,12 +32,17 @@ options.registry.WebsiteEvent.include({
      */
     allowRoomCreation(previewMode, widgetValue, params) {
         this._rpc({
-            model: this.modelName,
+            model: "event.event",
             method: 'write',
-            args: [[this.eventId], {
-                meeting_room_allow_creation: widgetValue
-            }],
-        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+            args: [
+                [this.eventId], {
+                    meeting_room_allow_creation: widgetValue && widgetValue !== "",
+                }
+            ],
+        }).then(() => this.trigger_up('request_save', {
+            reload: true,
+            optionSelector: this.data.selector
+        }));
     },
 
     //--------------------------------------------------------------------------
@@ -31,7 +55,7 @@ options.registry.WebsiteEvent.include({
     async _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'allowRoomCreation': {
-                return this._getRpcData('meeting_room_allow_creation');
+                return this.meetingRoomAllowCreation;
             }
         }
         return this._super(...arguments);
