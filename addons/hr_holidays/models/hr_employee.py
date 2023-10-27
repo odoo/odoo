@@ -324,6 +324,14 @@ class HrEmployee(models.Model):
             'title': bh.name,
         }, public_holidays))
 
+    @api.model
+    def get_allocation_requests_amount(self):
+        employee = self._get_contextual_employee()
+        return self.env['hr.leave.allocation'].search_count([
+            ('employee_id', '=', employee.id),
+            ('state', '=', 'confirm'),
+        ])
+
     def _get_public_holidays(self, date_start, date_end):
         domain = [
             ('resource_id', '=', False),
