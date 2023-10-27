@@ -106,3 +106,40 @@ class TestReturnPicking(TestStockCommon):
         picking2.move_ids.picked = True
         picking2.button_validate()
         self.assertFalse(self.env['stock.quant']._gather(product_serial, customer_location, lot_id=serial1))
+
+    def test_return_location(self):
+        """ test default return location are taken into account
+        """
+        # Make a delivery
+        wh_stock = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, wh_stock, 100)
+
+        delivery_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move = self.MoveObj.create({
+            'name': "OUT move",
+            'product_id':self.productA.id,
+            'product_uom_qty': 1,
+            'picking_id': delivery_picking.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move.quantity = 1
+        delivery_picking.button_validate()
+
+        # Setup default location
+        return_location = self.env['stock.location'].create({
+            'name': 'return internal',
+            'usage': 'internal',
+            'return_location' : True
+        })
+        delivery_picking.picking_type_id.default_location_return_id = return_location
+
+        # Create return
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery_picking.id, active_model='stock.picking').create({})
+        res = return_wizard.create_returns()
+        return_picking = self.PickingObj.browse(res["res_id"])
+        self.assertEqual(return_picking.location_dest_id, return_location)
