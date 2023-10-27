@@ -10,7 +10,7 @@ import { markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 threadService.dependencies.push(
     "im_livechat.livechat",
@@ -177,13 +177,11 @@ patch(ThreadService.prototype, "im_livechat", {
         const isFromOperator =
             author && author.id !== this.livechatService.options.current_partner_id;
         if (isFromOperator) {
-            return `${session.origin}/im_livechat/operator/${
-                author?.id ?? thread.operator.id
-            }/avatar`;
+            return url(`/im_livechat/operator/${author?.id ?? thread.operator.id}/avatar`);
         } else if (author) {
-            return `${session.origin}/web/image/res.partner/${author.id}/avatar_128`;
+            return url(`/web/image/res.partner/${author.id}/avatar_128`);
         } else {
-            return `${session.origin}/mail/static/src/img/smiley/avatar.jpg`;
+            return url("/mail/static/src/img/smiley/avatar.jpg");
         }
     },
 
