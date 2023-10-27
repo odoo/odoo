@@ -46,6 +46,7 @@ class ir_cron(models.Model):
     _name = "ir.cron"
     _order = 'cron_name'
     _description = 'Scheduled Actions'
+    _allow_sudo_commands = False
 
     ir_actions_server_id = fields.Many2one(
         'ir.actions.server', 'Server action',
@@ -516,6 +517,7 @@ class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
     _rec_name = 'cron_id'
+    _allow_sudo_commands = False
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()
