@@ -16,3 +16,8 @@ class StockQuant(models.Model):
         if removal_strategy == 'fefo':
             return domain, 'removal_date, in_date, id'
         return super()._get_removal_strategy_domain_order(domain, removal_strategy, qty)
+
+    def _get_removal_strategy_sort_key(self, removal_strategy):
+        if removal_strategy == 'fefo':
+            return lambda q: (q.removal_date, q.in_date, q.id), False
+        return super()._get_removal_strategy_sort_key(removal_strategy)
