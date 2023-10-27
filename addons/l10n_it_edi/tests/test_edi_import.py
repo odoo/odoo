@@ -5,6 +5,7 @@ import uuid
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -45,15 +46,34 @@ class TestItEdiImport(TestItEdi):
         """ Test a sample e-invoice file from
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml
         """
-        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+        invoices = self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 5.0,
             'amount_tax': 1.1,
             'invoice_line_ids': [{
                 'quantity': 5.0,
                 'price_unit': 1.0,
+                'debit': 5.0,
             }],
         }])
+        invoices._post()
+
+    def test_receive_negative_vendor_bill(self):
+        """ Same vendor bill as test_receive_vendor_bill but negative unit price """
+        invoices = self._assert_import_invoice('IT01234567890_FPR02.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': -5.0,
+            'amount_tax': -1.1,
+            'invoice_line_ids': [{
+                'quantity': 5.0,
+                'price_unit': -1.0,
+                'credit': 5.0,
+            }],
+        }])
+        with self.assertRaises(UserError):
+            invoices._post()
 
     def test_receive_signed_vendor_bill(self):
         """ Test a signed (P7M) sample e-invoice file from
