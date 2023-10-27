@@ -1758,7 +1758,7 @@ export class Wysiwyg extends Component {
             e.preventDefault();
             e.stopImmediatePropagation();
             e.stopPropagation();
-            switch (e.target.id) {
+            switch (e.currentTarget.id) {
                 case 'create-link':
                     this.toggleLinkTools();
                     break;
