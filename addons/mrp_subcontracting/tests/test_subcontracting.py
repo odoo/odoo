@@ -718,6 +718,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.quantity_done = qty
             subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
             self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+            self.assertEqual(move.product_uom_qty, quantities[0])
 
         picking_receipt.button_validate()
         self.assertEqual(move.product_uom_qty, quantities[-1])
@@ -743,6 +744,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move.quantity_done = qty
             subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
             self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+            self.assertEqual(move.product_uom_qty, qty)
 
         picking_receipt.button_validate()
         self.assertEqual(move.product_uom_qty, quantities[-1])
