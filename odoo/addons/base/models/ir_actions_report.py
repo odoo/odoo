@@ -86,6 +86,7 @@ class IrActionsReport(models.Model):
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
