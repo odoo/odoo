@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
         run: 'text Lot',
     },
     {trigger: ".ui-menu-item > a:contains('Product Lot')"},
+    {trigger: ".btn-primary[name=action_confirm]"},
     {trigger: ".fa-list"},
     {trigger: "h4:contains('Stock move')"},
     {trigger: '.o_field_x2many_list_row_add > a'},
@@ -40,7 +41,7 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
             }
         }
     },
-    {trigger: ".btn-secondary[name=button_validate]"},
+    {trigger: ".btn-primary[name=button_validate]"},
     {
         trigger: ".o_control_panel_actions button:contains('Traceability')",
         isCheck: true,
@@ -54,6 +55,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
         run: 'text Serial',
     },
     {trigger: ".ui-menu-item > a:contains('Product Serial')"},
+    {trigger: ".btn-primary[name=action_confirm]"},
     {trigger: ".fa-list"},
     {trigger: "h4:contains('Stock move')"},
     {trigger: '.o_widget_generate_serials > button'},
@@ -96,7 +98,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
             }
         }
     },
-    {trigger: ".btn-secondary[name=button_validate]"},
+    {trigger: ".btn-primary[name=button_validate]"},
     {
         trigger: ".o_control_panel_actions button:contains('Traceability')",
         isCheck: true,
