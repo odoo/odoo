@@ -32,6 +32,7 @@ class IrAttachment(models.Model):
         return [{
             'filename': name,
             'content': content,
+            'attachment': self,
             'xml_tree': xml_move_tree,
             'type': 'l10n_it_edi',
             'sort_weight': 11,
