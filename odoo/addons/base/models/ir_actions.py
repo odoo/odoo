@@ -52,6 +52,7 @@ class IrActions(models.Model):
     _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
@@ -222,6 +223,7 @@ class IrActionsActWindow(models.Model):
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     @api.constrains('res_model', 'binding_model_id')
     def _check_model(self):
@@ -355,6 +357,7 @@ class IrActionsActWindowView(models.Model):
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
     _order = 'sequence,id'
+    _allow_sudo_commands = False
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
@@ -374,6 +377,7 @@ class IrActionsActWindowclose(models.Model):
     _description = 'Action Window Close'
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.act_window_close')
 
@@ -391,6 +395,7 @@ class IrActionsActUrl(models.Model):
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _order = 'name'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
@@ -446,6 +451,7 @@ class IrActionsServer(models.Model):
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _order = 'sequence,name'
+    _allow_sudo_commands = False
 
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: environment on which the action is triggered
@@ -1018,6 +1024,7 @@ class IrActionsTodo(models.Model):
     _description = "Configuration Wizards"
     _rec_name = 'action_id'
     _order = "sequence, id"
+    _allow_sudo_commands = False
 
     action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
     sequence = fields.Integer(default=10)
@@ -1094,6 +1101,7 @@ class IrActionsActClient(models.Model):
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _order = 'name'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.client')
 

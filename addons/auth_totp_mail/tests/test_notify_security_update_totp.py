@@ -42,7 +42,7 @@ class TestNotifySecurityUpdateTotp(TestNotifySecurityUpdate):
         # now remove the key using the user's relationship
         with self.mock_mail_gateway():
             self.env['auth_totp.device'].flush_model()
-            self.env.user.write({'totp_trusted_device_ids': [(5, 0)]})
+            self.env.user.sudo(False)._revoke_all_devices()
 
         self.assertMailMailWEmails(recipients, 'outgoing', fields_values={
             'subject': 'Security Update: Device Removed',

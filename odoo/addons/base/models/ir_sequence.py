@@ -95,6 +95,7 @@ class IrSequence(models.Model):
     _name = 'ir.sequence'
     _description = 'Sequence'
     _order = 'name'
+    _allow_sudo_commands = False
 
     def _get_number_next_actual(self):
         '''Return number from ir_sequence row when no_gap implementation,
@@ -319,6 +320,7 @@ class IrSequenceDateRange(models.Model):
     _name = 'ir.sequence.date_range'
     _description = 'Sequence Date Range'
     _rec_name = "sequence_id"
+    _allow_sudo_commands = False
 
     def _get_number_next_actual(self):
         '''Return number from ir_sequence row when no_gap implementation,
