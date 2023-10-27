@@ -30,6 +30,17 @@ export class BooleanField extends Component {
     }
 }
 
+export class ListBooleanField extends BooleanField {
+    static template = "web.ListBooleanField";
+
+    async onClick() {
+        if (!this.props.readonly) {
+            const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
+            await this.props.record.update(changes);
+        }
+    }
+}
+
 export const booleanField = {
     component: BooleanField,
     displayName: _t("Checkbox"),
@@ -37,4 +48,15 @@ export const booleanField = {
     isEmpty: () => false,
 };
 
+export const listBooleanField = {
+    ...booleanField,
+    component: ListBooleanField,
+    extractProps(fieldInfo, dynamicInfo) {
+        return {
+            readonly: dynamicInfo.readonly,
+        };
+    },
+};
+
 registry.category("fields").add("boolean", booleanField);
+registry.category("fields").add("list.boolean", listBooleanField);
