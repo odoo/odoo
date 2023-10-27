@@ -243,7 +243,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         # Mimic the extra cost on the po line
         picking_receipt.move_ids.price_unit = 50
         picking_receipt.action_confirm()
-        picking_receipt.action_clear_quantities_to_zero()
+        picking_receipt.do_unreserve()
 
         # We should be able to call the 'record_components' button
         self.assertTrue(picking_receipt.display_action_record_components)

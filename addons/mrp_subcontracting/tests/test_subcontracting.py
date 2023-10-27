@@ -890,7 +890,7 @@ class TestSubcontractingTracking(TransactionCase):
             move.quantity = nb_finished_product
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
-        picking_receipt.action_clear_quantities_to_zero()
+        picking_receipt.do_unreserve()
 
         # We shouldn't be able to call the 'record_components' button
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
@@ -1331,7 +1331,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         # Receive
         for quantity in quantities:
             # Receive <quantity> finished products
-            picking_receipt.action_clear_quantities_to_zero()
+            picking_receipt.do_unreserve()
             Form(self.env['stock.assign.serial'].with_context(
                 default_move_id=picking_receipt.move_ids[0].id,
                 default_next_serial_number=self.env['stock.lot']._get_next_serial(picking_receipt.company_id, picking_receipt.move_ids[0].product_id) or 'sn#1',
@@ -1361,7 +1361,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             move.product_uom_qty = quantity
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
-        picking_receipt.action_clear_quantities_to_zero()
+        picking_receipt.do_unreserve()
         # Receive finished products
         Form(self.env['stock.assign.serial'].with_context(
             default_move_id=picking_receipt.move_ids[0].id,
