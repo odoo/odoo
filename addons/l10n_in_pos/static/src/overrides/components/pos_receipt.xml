@@ -19,7 +19,7 @@
 
     <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//Orderline" position="inside">
-            <t t-if="line.l10n_in_hsn_code and pos.company.country and pos.company.country.code == 'IN'">
+            <t t-if="line.l10n_in_hsn_code and props.data.headerData.company.country?.code === 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
                     <t t-esc="line.l10n_in_hsn_code"/>

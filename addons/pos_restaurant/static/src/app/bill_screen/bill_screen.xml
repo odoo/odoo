@@ -21,7 +21,7 @@
                     </div>
                     <div class="pos-receipt-container text-center">
                         <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
-                            <OrderReceipt data="pos.get_order().export_for_printing()" formatCurrency="env.utils.formatCurrency" />
+                            <OrderReceipt data="{...pos.get_order().export_for_printing(), isBill: isBill}" formatCurrency="env.utils.formatCurrency" />
                         </div>
                     </div>
                 </div>
