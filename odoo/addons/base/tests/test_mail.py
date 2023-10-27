@@ -10,6 +10,7 @@ import threading
 
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_normalize, email_split, email_split_and_format,
@@ -575,6 +576,20 @@ class TestEmailTools(BaseCase):
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
                     self.assertEqual(formataddr(pair, charset), expected)
+
+    def test_extract_rfc2822_addresses(self):
+        cases = [
+            ('robert@notgmail.com', ['robert@notgmail.com']),
+            # formatted input
+            ('Robert <robert@notgmail.com>', ['robert@notgmail.com']),
+            ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
+            ('"robert@notgmail.com" <robert@notgmail.com>', ['"robert@notgmail.com"', 'robert@notgmail.com']),
+            # accents
+            ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
+        ]
+        for source, expected in cases:
+            with self.subTest(source=source):
+                self.assertEqual(extract_rfc2822_addresses(source), expected)
 
 
 class EmailConfigCase(SavepointCase):
