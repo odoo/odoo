@@ -78,6 +78,7 @@ class ModuleCategory(models.Model):
     _name = "ir.module.category"
     _description = "Application"
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Name', required=True, translate=True, index=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
@@ -152,6 +153,7 @@ class Module(models.Model):
     _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
     _order = 'application desc,sequence,name'
+    _allow_sudo_commands = False
 
     @api.model
     def get_views(self, views, options=None):
@@ -953,6 +955,7 @@ class ModuleDependency(models.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
     _log_access = False  # inserts are done manually, create and write uid, dates are always null
+    _allow_sudo_commands = False
 
     # the dependency name
     name = fields.Char(index=True)
@@ -995,6 +998,7 @@ class ModuleDependency(models.Model):
 class ModuleExclusion(models.Model):
     _name = "ir.module.module.exclusion"
     _description = "Module exclusion"
+    _allow_sudo_commands = False
 
     # the exclusion name
     name = fields.Char(index=True)

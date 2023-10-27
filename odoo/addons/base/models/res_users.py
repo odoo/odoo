@@ -131,6 +131,7 @@ class Groups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
     users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
@@ -277,6 +278,7 @@ class Users(models.Model):
     _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
+    _allow_sudo_commands = False
 
     def _check_company_domain(self, companies=None):
         return [('company_ids', 'in', models.to_company_ids(companies))] if companies else []
@@ -933,8 +935,8 @@ class Users(models.Model):
             user.write({
                 'login': f'__deleted_user_{user.id}_{time.time()}',
                 'password': '',
-                'api_key_ids': Command.clear(),
             })
+            user.api_key_ids._remove()
 
             res_users_deletion_values.append({
                 'user_id': user.id,
@@ -2063,6 +2065,7 @@ class APIKeys(models.Model):
     _name = 'res.users.apikeys'
     _description = 'Users API Keys'
     _auto = False # so we can have a secret column
+    _allow_sudo_commands = False
 
     name = fields.Char("Description", required=True, readonly=True)
     user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
