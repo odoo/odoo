@@ -1536,6 +1536,26 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
 
+    @api.model
+    def open_pending_requests(self):
+        user_employee = self.env.user.employee_id
+        employee = self.env['hr.employee']._get_contextual_employee()
+        context = {'search_default_second_approval': True}
+        domain = []
+        if employee != user_employee:
+            view_name = 'hr_holidays.hr_leave_allocation_view_tree'
+            context.update({'search_default_employee_id': employee.id})
+        else:
+            view_name = 'hr_holidays.hr_leave_allocation_view_tree_my'
+            domain = [('employee_id', '=', employee.id)]
+        return {
+            'name': _('Allocation Requests'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.leave.allocation',
+            'views': [[self.env.ref(view_name).id, 'list']],
+            'domain': domain,
+            'context': context,
+        }
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------
