@@ -11,6 +11,7 @@ export class MovesListRenderer extends ListRenderer {
             cols.push({
                 type: 'opendetailsop',
                 id: `column_detailOp_${cols.length}`,
+                column_invisible: 'parent.state=="draft"',
             });
         }
         return cols;
@@ -27,6 +28,18 @@ export class StockMoveX2ManyField extends X2ManyField {
 
     get isMany2Many() {
         return false;
+    }
+
+
+
+    async openRecord(record) {
+        if (this.canOpenRecord) {
+            const dirty = await record.isDirty();
+            if (dirty && 'quantity' in record._changes) {
+                await record.model.root.save({ reload: true });
+            }
+        }
+        return super.openRecord(record);
     }
 }
 
