@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { onExternalClick } from "@mail/utils/common/hooks";
-
 import { Component, useRef, useState, onWillUpdateProps, onMounted } from "@odoo/owl";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
@@ -34,12 +32,6 @@ export class AutoresizeInput extends Component {
                 this.state.value = nextProps.value;
             }
         });
-        onExternalClick("input", async (ev, { downTarget }) => {
-            if (downTarget === this.inputRef.el) {
-                return;
-            }
-            this.onValidate();
-        });
         useAutoresize(this.inputRef);
         onMounted(() => {
             if (this.props.autofocus) {
@@ -55,22 +47,12 @@ export class AutoresizeInput extends Component {
     onKeydownInput(ev) {
         switch (ev.key) {
             case "Enter":
-                this.onValidate();
                 this.inputRef.el.blur();
                 break;
             case "Escape":
-                this.onDiscard();
+                this.state.value = this.props.value;
                 this.inputRef.el.blur();
                 break;
         }
-    }
-
-    onValidate() {
-        this.props.onValidate(this.state.value);
-        this.state.value = this.props.value;
-    }
-
-    onDiscard() {
-        this.state.value = this.props.value;
     }
 }
