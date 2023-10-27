@@ -156,7 +156,8 @@
                     <button string="Print Labels" type="object" name="action_open_label_type"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="k"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
+                    <field name="state" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
+                    <field name="state" widget="statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done"/>
                     <button name="action_cancel" invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting')" string="Cancel" groups="base.group_user" type="object" data-hotkey="x"/>
                 </header>
                 <sheet>

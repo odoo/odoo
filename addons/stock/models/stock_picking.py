@@ -635,6 +635,7 @@ class Picking(models.Model):
         - Ready: if the picking is ready to be sent so if:
           - (a) all quantities are reserved or if
           - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
+          - (c) it's an incoming picking
         - Done: if the picking is done.
         - Cancelled: if the picking is cancelled
         '''
@@ -663,11 +664,14 @@ class Picking(models.Model):
                 else:
                     picking.state = 'done'
             else:
-                relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking_id])._get_relevant_state_among_moves()
-                if relevant_move_state == 'partially_available':
+                if picking.location_id.should_bypass_reservation() and all(m.procure_method == 'make_to_stock' for m in picking.move_ids):
                     picking.state = 'assigned'
                 else:
-                    picking.state = relevant_move_state
+                    relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking_id])._get_relevant_state_among_moves()
+                    if relevant_move_state == 'partially_available':
+                        picking.state = 'assigned'
+                    else:
+                        picking.state = relevant_move_state
 
     @api.depends('move_ids.state', 'move_ids.date', 'move_type')
     def _compute_scheduled_date(self):

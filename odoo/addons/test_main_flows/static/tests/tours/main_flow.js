@@ -700,7 +700,7 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('OP/')"),
 },
 ...stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm quotation")),
 ...stepUtils.statusbarButtonsSteps('Receive Products', _t("Receive Product"), ".o_statusbar_status .dropdown-toggle:contains('Purchase Order')"),
-...stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".o_statusbar_status .dropdown-toggle:contains('Ready')"),
+...stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".o_statusbar_status:contains('Ready')"),
 {
     trigger: ".o_back_button, .breadcrumb-item:not('.active'):last",
     content: _t('go back to the purchase order'),
