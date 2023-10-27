@@ -1271,7 +1271,7 @@ class MailThread(models.AbstractModel):
             else:
                 # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
                 partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
-                thread_root = thread_root.with_context(mail_create_nosubscribe=not partner_from_found)
+                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not partner_from_found)
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:

@@ -3050,23 +3050,75 @@ class AccountMove(models.Model):
     def _extend_with_attachments(self, attachments, new=False):
         """Main entry point to extend/enhance invoices with attachments.
 
-        Either coming from the chatter or the journal. It will unwrap all
-        attachments by priority then try to decode until it succeed.
+        Either coming from:
+        - The chatter when the user drops an attachment on an existing invoice.
+        - The journal when the user drops one or multiple attachments from the dashboard.
+        - The server mail alias when an alias is configured on the journal.
 
-        :returns: True if at least one document is successfully imported
+        It will unwrap all attachments by priority then try to decode until it succeed.
+
+        :param attachments: A recordset of ir.attachment.
+        :param new:         Indicate if the current invoice is a fresh one or an existing one.
+        :returns:           True if at least one document is successfully imported
         """
-        success = False
+        def close_file(file_data):
+            if file_data.get('on_close'):
+                file_data['on_close']()
 
-        # sorted by priority
-        for file_data in attachments._unwrap_edi_attachments():
-            if not success and (decoder := self._get_edi_decoder(file_data, new=new)):
+        def add_file_data_results(file_data, invoice):
+            passed_file_data_list.append(file_data)
+            attachment = file_data.get('attachment')
+            if attachment:
+                if attachments_by_invoice[attachment]:
+                    attachments_by_invoice[attachment] |= invoice
+                else:
+                    attachments_by_invoice[attachment] = invoice
+
+        file_data_list = attachments._unwrap_edi_attachments()
+        attachments_by_invoice = {
+            attachment: None
+            for attachment in attachments
+        }
+        invoices = self
+        current_invoice = self
+        passed_file_data_list = []
+        for file_data in file_data_list:
+
+            # The invoice has already been decoded by an embedded file.
+            if attachments_by_invoice.get(file_data['attachment']):
+                add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
+                close_file(file_data)
+                continue
+
+            # When receiving an xml plus a pdf, since both are representing the same invoice, both needs
+            # to be linked to the same invoice.
+            if (
+                passed_file_data_list
+                and passed_file_data_list[-1]['filename'] != file_data['filename']
+                and passed_file_data_list[-1]['sort_weight'] != file_data['sort_weight']
+            ):
+                add_file_data_results(file_data, invoices[-1])
+                close_file(file_data)
+                continue
+
+            if passed_file_data_list and not new:
+                add_file_data_results(file_data, invoices[-1])
+                close_file(file_data)
+                continue
+
+            decoder = self._get_edi_decoder(file_data, new=new)
+            if decoder:
                 try:
                     with self.env.cr.savepoint():
-                        with self._get_edi_creation() as invoice:
+                        with current_invoice._get_edi_creation() as invoice:
                             # pylint: disable=not-callable
                             success = decoder(invoice, file_data, new)
-                        if success:
+                        if success or file_data['type'] == 'pdf':
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
+
+                            invoices |= invoice
+                            current_invoice = self.env['account.move']
+                            add_file_data_results(file_data, invoice)
 
                 except RedirectWarning:
                     raise
@@ -3076,11 +3128,11 @@ class AccountMove(models.Model):
                         file_data['filename'],
                         decoder.__name__
                     )
-                finally:
-                    if file_data.get('on_close'):
-                        file_data['on_close']()
 
-        return success
+            passed_file_data_list.append(file_data)
+            close_file(file_data)
+
+        return attachments_by_invoice
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
@@ -4487,7 +4539,29 @@ class AccountMove(models.Model):
 
         # As we are coming from the mail, we assume that ONE of the attachments
         # will enhance the invoice thanks to EDI / OCR / .. capabilities
-        self._extend_with_attachments(attachments, new=False)
+        results = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
+        attachments_per_invoice = defaultdict(self.env['ir.attachment'].browse)
+        for attachment, invoices in results.items():
+            invoices = invoices or self
+            for invoice in invoices:
+                attachments_per_invoice[invoice] |= attachment
+
+        for invoice, attachments in attachments_per_invoice.items():
+            if invoice == self:
+                invoice.attachment_ids = attachments.ids
+                new_message.attachment_ids = attachments.ids
+                message_values.update({'res_id': self.id, 'attachment_ids': [Command.link(attachment.id) for attachment in attachments]})
+                super(AccountMove, invoice)._message_post_after_hook(new_message, message_values)
+            else:
+                sub_new_message = new_message.copy({'attachment_ids': attachments.ids})
+                sub_message_values = {
+                    **message_values,
+                    'res_id': invoice.id,
+                    'attachment_ids': [Command.link(attachment.id) for attachment in attachments],
+                }
+                invoice.attachment_ids = attachments.ids
+                invoice.message_ids = [Command.set(sub_new_message.id)]
+                super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
 
         return res
 
