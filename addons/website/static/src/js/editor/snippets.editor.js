@@ -605,7 +605,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @param {Event} ev
      */
     _onAnimateTextClick(ev) {
-        const target = ev.target;
+        const target = ev.currentTarget;
         this._handleTextOptions(target, [
             this._getOptionTextClass(target),
             "o_animate",
@@ -625,7 +625,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @param {Event} ev
      */
     _onTextHighlightClick(ev) {
-        const target = ev.target;
+        const target = ev.currentTarget;
         this._handleTextOptions(target, [
             this._getOptionTextClass(target),
             "o_text_highlight_underline",
