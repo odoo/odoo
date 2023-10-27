@@ -614,9 +614,9 @@ class TestEmailTools(BaseCase):
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
             # formatted input containing email
-            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com']),
+            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com']),
             ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
-            ('"robert@notgmail.com" <robert@notgmail.com>', ['"robert@notgmail.com"', 'robert@notgmail.com']),
+            ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
             # accents
             ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
