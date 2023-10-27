@@ -31,6 +31,18 @@
                     Invoice after delivery, based on quantities delivered, not ordered.
                 </div>
             </field>
+            <group name="description" position="after">
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" string="Warning"/>
+                        <field name="sale_line_warn_msg"
+                               string="Message"
+                               placeholder="Type a message..."
+                               invisible="sale_line_warn == 'no-message'"
+                               required="sale_line_warn != 'no-message'"/>
+                    </group>
+                </t>
+            </group>
         </field>
     </record>
 
@@ -57,16 +69,6 @@
                     </div>
                 </button>
             </div>
-            <group name="description" position="after">
-                <t groups="sales_team.group_sale_salesman">
-                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
-                        <field name="sale_line_warn" nolabel="1" colspan="2"/>
-                        <field name="sale_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
-                                readonly="sale_line_warn == 'no-message'"
-                                required="sale_line_warn != 'no-message'"/>
-                    </group>
-                </t>
-            </group>
         </field>
     </record>
 
@@ -91,17 +93,6 @@
                     </div>
                 </button>
             </div>
-            <group name="description" position="after">
-                <t groups="sales_team.group_sale_salesman">
-                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
-                        <field name="sale_line_warn" string="Warning"/>
-                        <field name="sale_line_warn_msg" string="Message" placeholder="Type a message..."
-                                invisible="sale_line_warn == 'no-message'"
-                                readonly="sale_line_warn == 'no-message'"
-                                required="sale_line_warn != 'no-message'"/>
-                    </group>
-                </t>
-            </group>
         </field>
     </record>
 
