@@ -715,14 +715,20 @@ textarea.o_codeview {
     min-height: 400px;
 }
 
+@keyframes fade {
+    0%,100% { opacity: 0 }
+    30%,70% { opacity: 1 }
+  }
 .o-chatgpt-content {
     position: absolute;
-    background-color: lightgreen;
-    opacity: 0.3;
+    background: rgba(1, 186, 210, 0.5);
+    opacity: 0;
     animation: fade 1.5s ease-in-out;
-    border: dashed 5px green;
     z-index: 1;
+    outline: 2px dashed #01bad2;
+    outline-offset: -2px;
 }
+
 .o-prompt-input {
     position: relative;
     // see .o-mail-Composer-input
