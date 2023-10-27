@@ -1982,7 +1982,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                         )
                         # to check behavior of extract_rfc2822_addresses
                         if recipient == new_partner:
-                            smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
+                            smtp_to_list = ['test.to.1@test.example.com', 'test.to.1@test.example.com']
                         else:
                             smtp_to_list = [recipient.email_normalized]
                         if exp_alias_domain == self.mail_alias_domain:
@@ -2788,7 +2788,7 @@ class TestComposerResultsMass(TestMailComposer):
                     for recipient in recipients:
                         # to check behavior of extract_rfc2822_addresses
                         if recipient == new_partner:
-                            smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
+                            smtp_to_list = ['test.to.1@test.example.com', 'test.to.1@test.example.com']
                         else:
                             smtp_to_list = [recipient.email_normalized]
                         if exp_alias_domain == self.mail_alias_domain:
