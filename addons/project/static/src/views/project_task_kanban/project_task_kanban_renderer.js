@@ -4,12 +4,17 @@ import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
+import { onWillStart } from "@odoo/owl";
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     setup() {
         super.setup();
         this.action = useService('action');
+        const user = useService("user");
 
+        onWillStart(async () => {
+            this.isProjectManager = await user.hasGroup('project.group_project_manager');
+        });
     }
 
     get canMoveRecords() {
@@ -33,7 +38,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     }
 
     canCreateGroup() {
-        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage) || this.props.list.isGroupedByPersonalStages;
+        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage && this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
     }
 
     isProjectTasksContext() {
