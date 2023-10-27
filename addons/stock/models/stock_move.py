@@ -1774,7 +1774,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 precision_rounding=rounding,
                 rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
-            extra_move = self.copy(default=extra_move_vals).with_context(avoid_putaway_rules=True)
+            self = self.with_context(avoid_putaway_rules=True, extra_move_mode=True)
+            extra_move = self.copy(default=extra_move_vals)
             return extra_move.with_context(merge_extra=True, do_not_unreserve=True)._action_confirm(merge_into=self)
         return self
 
