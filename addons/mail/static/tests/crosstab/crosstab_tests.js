@@ -56,7 +56,7 @@ QUnit.test("Delete starred message updates counter", async (assert) => {
 QUnit.test("Thread rename", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
@@ -72,7 +72,7 @@ QUnit.test("Thread rename", async (assert) => {
 QUnit.test("Thread description update", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
