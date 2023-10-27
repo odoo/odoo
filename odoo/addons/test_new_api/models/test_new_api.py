@@ -1459,7 +1459,9 @@ class ComputeMember(models.Model):
 
 class User(models.Model):
     _name = _description = 'test_new_api.user'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     group_ids = fields.Many2many('test_new_api.group')
     group_count = fields.Integer(compute='_compute_group_count', store=True)
 
@@ -1471,7 +1473,9 @@ class User(models.Model):
 
 class Group(models.Model):
     _name = _description = 'test_new_api.group'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     user_ids = fields.Many2many('test_new_api.user')
 
 
