@@ -156,7 +156,7 @@ class LoyaltyProgram(models.Model):
     def _compute_is_nominative(self):
         for program in self:
             program.is_nominative = program.applies_on == 'both' or\
-                (program.program_type == 'ewallet' and program.applies_on == 'future')
+                (program.program_type in ['ewallet', 'next_order_coupons'] and program.applies_on == 'future')
 
     @api.depends('program_type')
     def _compute_is_payment_program(self):
