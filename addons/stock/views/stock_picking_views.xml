@@ -139,8 +139,6 @@
                 <field name="has_packages" invisible="1"/>
                 <field name="picking_type_entire_packs" invisible="1"/>
                 <field name="use_create_lots" invisible="1"/>
-                <field name="show_set_qty_button" invisible="1"/>
-                <field name="show_clear_qty_button" invisible="1"/>
                 <field name="company_id" invisible="1"/>
 
                 <header>
@@ -148,7 +146,6 @@
                     <button name="action_assign" invisible="not show_check_availability" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
                     <button name="button_validate" invisible="state in ('draft', 'confirmed', 'done', 'cancel')" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" invisible="state in ('waiting', 'assigned', 'done', 'cancel')" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
-                    <button name="action_clear_quantities_to_zero" invisible="not show_clear_qty_button" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <widget name="signature" string="Sign" highlight="1"
                             invisible="not id or picking_type_code != 'outgoing' or state != 'done'"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>

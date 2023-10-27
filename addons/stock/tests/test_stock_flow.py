@@ -2213,12 +2213,10 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(move_a.quantity, 10)
         self.assertEqual(move_b.quantity, 10)
 
-        # test clear qty button without manual change
-        self.assertTrue(picking_in.show_clear_qty_button)
-        picking_in.action_clear_quantities_to_zero()
+        # test unreserve button without manual change
+        picking_in.do_unreserve()
         self.assertEqual(move_a.quantity, 0)
         self.assertEqual(move_b.quantity, 0)
-        self.assertFalse(picking_in.show_clear_qty_button)
 
         # test set qty button with manual change
         move_a.quantity = 5

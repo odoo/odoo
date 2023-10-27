@@ -788,7 +788,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _do_unreserve(self):
         moves_to_unreserve = OrderedSet()
         for move in self:
-            if move.state == 'cancel' or (move.state == 'done' and move.scrapped):
+            if move.state == 'cancel' or (move.state == 'done' and move.scrapped) or move.picked:
                 # We may have cancelled move in an open picking in a "propagate_cancel" scenario.
                 # We may have done move in an open picking in a scrap scenario.
                 continue
