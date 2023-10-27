@@ -76,7 +76,7 @@ class StockMove(models.Model):
                     move._auto_record_components(delta_qty)
                     to_set_moves -= move
                 elif float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) < 0 and not move.picking_id.immediate_transfer:
-                    move._reduce_subcontract_order_qty(abs(delta_qty))
+                    move.with_context(transfer_qty=True)._reduce_subcontract_order_qty(abs(delta_qty))
         if to_set_moves:
             super(StockMove, to_set_moves)._quantity_done_set()
 
@@ -312,8 +312,17 @@ class StockMove(models.Model):
     def _reduce_subcontract_order_qty(self, quantity_to_remove):
         self.ensure_one()
         productions = self.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
+        wip_production = productions[0] if self._context.get('transfer_qty') and len(productions) > 1 else self.env['mrp.production']
+
+        # Transfer removed qty to WIP production
+        if wip_production:
+            self.env['change.production.qty'].with_context(skip_activity=True).create({
+                'mo_id': wip_production.id,
+                'product_qty': wip_production.product_uom_qty + quantity_to_remove
+            }).change_prod_qty()
+
         # Cancel productions until reach new_quantity
-        for production in productions:
+        for production in (productions - wip_production):
             if quantity_to_remove >= production.product_qty:
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
