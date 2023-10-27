@@ -373,6 +373,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     invalidation or recomputing fields.
     """
 
+    _allow_sudo_commands = True
+    """Allow One2many and Many2many Commands targeting this model in an environment using `sudo()` or `with_user()`.
+    By disabling this flag, security-sensitive models protect themselves
+    against malicious manipulation of One2many or Many2many fields
+    through an environment using `sudo` or a more priviledged user.
+    """
+
     # default values for _transient_vacuum()
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
@@ -5084,6 +5091,8 @@ Fields:
         if not isinstance(flag, bool):
             _logger.warning("deprecated use of sudo(user), use with_user(user) instead", stack_info=True)
             return self.with_user(flag)
+        if flag == self.env.su:
+            return self
         return self.with_env(self.env(su=flag))
 
     def with_user(self, user):
