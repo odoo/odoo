@@ -403,14 +403,14 @@
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0"/>
                                     <!-- TODO put forecast back -->
                                     <field name="forecast_availability" string="Forecast" widget="forecast_widget"/>
-                                    <field name="quantity" string="Reserved"
+                                    <field name="quantity" string="Quantity"
                                         decoration-success="product_uom_qty - quantity &gt; 0.0001"
                                         decoration-warning="quantity - product_uom_qty &gt; 0.0001"
                                         column_invisible="parent.state == 'draft'"
                                         readonly="has_tracking != 'none'"
                                         force_save="1" widget="mrp_consumed"/>
                                     <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="show"/>
+                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="hide"/>
                                     <field name="manual_consumption" column_invisible="True" force_save="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
