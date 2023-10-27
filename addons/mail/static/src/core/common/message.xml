@@ -90,12 +90,8 @@
                                                             }" t-ref="body">
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
-                                                        <button t-if="message.type === 'email'" class="o-mail-Message-originalFormat float-end p-1 mb-1 btn btn-link opacity-75 fst-italic" t-att-class="env.inChatWindow and isAlignedRight ? 'me-3' : 'ms-3'" t-on-click="() => this.state.originalFormat = !this.state.originalFormat">
-                                                            <t t-if="state.originalFormat">Show Custom Format</t>
-                                                            <t t-else="">Show Original Format</t>
-                                                        </button>
                                                         <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
-                                                        <div t-if="message.type === 'email'" t-ref="shadowBody"/>
+                                                        <div t-if="message.type and message.type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                                                         <p class="fst-italic text-muted small" t-if="state.showTranslation">
