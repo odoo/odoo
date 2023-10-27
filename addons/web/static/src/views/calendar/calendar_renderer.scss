@@ -1,6 +1,7 @@
 .o_calendar_renderer {
     --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
     --o-cw-border-color: #{lighten($border-color, 5%)};
+    --o_cw_day_number-color: #{$o-view-background-color};
 
     background-color: $o-view-background-color;
     grid-area: cal;
@@ -203,7 +204,7 @@
                     color: $primary;
                     .o_cw_day_number {
                         position:relative;
-                        color: $o-view-background-color;
+                        color: var(--o_cw_day_number-color);
 
                         &:before {
                             content: '';
