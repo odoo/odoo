@@ -414,6 +414,15 @@ class TestHtmlTools(BaseCase):
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
+    def test_email_domain_normalize(self):
+        cases = [
+            ("Test.Com", "test.com", "Should have normalized domain"),
+            ("email@test.com", False, "Domain is not valid, should return False"),
+            (False, False, "Domain is not valid, should retunr False"),
+        ]
+        for source, expected, msg in cases:
+            self.assertEqual(email_domain_normalize(source), expected, msg)
+
     def test_email_normalize(self):
         """ Test 'email_normalize'. Note that it is built on 'email_split' so
         some use cases are already managed in 'test_email_split(_and_format)'
@@ -598,22 +607,23 @@ class TestEmailTools(BaseCase):
                     self.assertEqual(formataddr(pair, charset), expected)
 
     def test_extract_rfc2822_addresses(self):
-        tests = [
+        cases = [
             ('"Admin" <admin@example.com>', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <demo@test.com>', ['admin@example.com', 'demo@test.com']),
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+            # formatted input containing email
             ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com']),
+            ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
+            ('"robert@notgmail.com" <robert@notgmail.com>', ['"robert@notgmail.com"', 'robert@notgmail.com']),
+            # accents
+            ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
 
-        for (rfc2822_email, expected) in tests:
-            self.assertEqual(extract_rfc2822_addresses(rfc2822_email), expected)
-
-    def test_email_domain_normalize(self):
-        self.assertEqual(email_domain_normalize("Test.Com"), "test.com", "Should have normalized the domain")
-        self.assertEqual(email_domain_normalize("email@test.com"), False, "The domain is not valid, should return False")
-        self.assertEqual(email_domain_normalize(False), False, "The domain is not valid, should return False")
+        for source, expected in cases:
+            with self.subTest(source=source):
+                self.assertEqual(extract_rfc2822_addresses(source), expected)
 
 
 class EmailConfigCase(TransactionCase):
