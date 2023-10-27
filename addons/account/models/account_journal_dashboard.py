@@ -565,8 +565,9 @@ class account_journal(models.Model):
             ('journal_id', 'in', self.ids),
             ('move_id.payment_state', 'in', ('not_paid', 'partial')),
             ('date_maturity', '!=', False),
-            ('amount_residual', '!=', False),
+            ('amount_residual', '<', 0),
             ('parent_state', '=', 'posted'),
+            ('journal_id.type', '=', 'purchase'),
         ])
 
     def _get_late_payment_query(self):
@@ -575,8 +576,9 @@ class account_journal(models.Model):
             ('journal_id', 'in', self.ids),
             ('move_id.payment_state', 'in', ('not_paid', 'partial')),
             ('date_maturity', '<', fields.Date.context_today(self)),
-            ('amount_residual', '!=', False),
+            ('amount_residual', '<', 0),
             ('parent_state', '=', 'posted'),
+            ('journal_id.type', '=', 'purchase'),
         ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
