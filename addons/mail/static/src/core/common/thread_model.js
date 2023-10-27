@@ -487,9 +487,8 @@ export class Thread extends Record {
     }
 
     get videoCount() {
-        return Object.values(this._store.RtcSession.records).filter(
-            (session) => session.videoStreams.size
-        ).length;
+        return Object.values(this._store.RtcSession.records).filter((session) => session.hasVideo)
+            .length;
     }
 
     get lastInterestDateTime() {
