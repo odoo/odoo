@@ -367,8 +367,10 @@ class LoyaltyProgram(models.Model):
             domain = rule._get_valid_product_domain()
             if domain:
                 rule_products[rule] = products.filtered_domain(domain)
-            else:
+            elif not domain and rule.program_type != "gift_card":
                 rule_products[rule] = products
+            else:
+                continue
         return rule_products
 
     def action_open_loyalty_cards(self):

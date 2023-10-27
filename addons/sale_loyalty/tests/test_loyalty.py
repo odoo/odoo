@@ -397,3 +397,36 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, promotion_program)
         self.assertEqual(order.amount_total, 90)
+
+    def test_gift_card_program_without_product(self):
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [],
+        })
+
+        giftcard_program = self.env['loyalty.program'].create([{
+            'name': 'Gift Card Program',
+            'program_type': 'gift_card',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+            })],
+        }])
+
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_A.id,
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, giftcard_program)
+
+        self.assertEqual(giftcard_program.coupon_count, 0)
