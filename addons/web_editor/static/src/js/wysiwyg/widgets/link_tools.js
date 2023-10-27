@@ -159,7 +159,7 @@ export class LinkTools extends Link {
         super._setSelectOptionFromLink(...arguments);
         const link = this.$link[0];
         const customStyleProps = ['color', 'background-color', 'background-image', 'border-width', 'border-style', 'border-color'];
-        const shapeClasses = ['btn-outline-primary', 'btn-outline-secondary', 'btn-fill-primary', 'btn-fill-secondary', 'rounded-circle', 'flat'];
+        const shapeClasses = ['btn-outline-primary', 'btn-outline-secondary', 'btn-fill-primary', 'btn-fill-secondary', 'flat'];
         if (customStyleProps.some(s => link.style[s]) || shapeClasses.some(c => link.classList.contains(c))) {
             // Force custom style if style or shape exists on the link.
             const customOption = this.$el[0].querySelector('[name="link_style_color"] we-button[data-value="custom"]');

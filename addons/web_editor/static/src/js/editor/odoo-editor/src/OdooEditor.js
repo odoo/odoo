@@ -730,7 +730,7 @@ export class OdooEditor extends EventTarget {
             if (fontSizeInput && ev.target.closest('#font-size .dropdown-toggle')) {
                 // If the click opened the font size dropdown, select the input content.
                 fontSizeInput.select();
-            } else if (!this.isSelectionInEditable()) {
+            } else if (!this.isSelectionInEditable() && !this.isSelectionInMassMailingToolbar()) {
                 // Otherwise, if we lost the selection in the editable, restore it.
                 this.historyResetLatestComputedSelection(true);
             }
@@ -4121,6 +4121,20 @@ export class OdooEditor extends EventTarget {
             const focusElement = closestElement(selection.focusNode);
             return anchorElement && anchorElement.isContentEditable && focusElement && focusElement.isContentEditable &&
                 this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+        } else {
+            return false;
+        }
+    }
+    /**
+     * Returns true if the current selection is inside the toolbar of massmailing.
+     *
+     * @param {Object} [selection]
+     * @returns {boolean}
+     */
+    isSelectionInMassMailingToolbar(selection) {
+        selection = selection || this.document.getSelection();
+        if (selection && selection.anchorNode && selection.focusNode && this.toolbar.ownerDocument && this.document === this.toolbar.ownerDocument) {
+            return this.toolbar.contains(selection.anchorNode) && this.toolbar.contains(selection.focusNode);
         } else {
             return false;
         }
