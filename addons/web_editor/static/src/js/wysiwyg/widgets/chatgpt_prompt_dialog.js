@@ -21,6 +21,7 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
         this.assistantAvatarUrl = `${browser.location.origin}/web_editor/static/src/img/odoobot_transparent.png`;
         this.userAvatarUrl = `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(session.uid)}`;
         this.state = useState({
+            ...this.state,
             prompt: this.props.initialPrompt,
             conversationHistory: [{
                 role: 'system',
@@ -55,10 +56,10 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
         ev.preventDefault();
         const prompt = this.state.prompt;
         this.state.messages.push({ author: 'user', text: prompt });
-        const datetime = new Date().getTime();
+        const messageId = new Date().getTime();
         const conversation = { role: 'user', content: prompt };
         this.state.conversationHistory.push(conversation);
-        this.state.messages.push({ author: 'assistant', datetime });
+        this.state.messages.push({ author: 'assistant', id: messageId });
         this.state.prompt = '';
         this._generate(prompt, (content, isError) => {
             if (isError) {
@@ -68,8 +69,13 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
                 // There was no error, add the response to the history.
                 this.state.conversationHistory.push({ role: 'assistant', content });
             }
-            const messageIndex = this.state.messages.findIndex(m => m.datetime === datetime);
-            this.state.messages[messageIndex] = { author: 'assistant', text: content, isError };
+            const messageIndex = this.state.messages.findIndex(m => m.id === messageId);
+            this.state.messages[messageIndex] = {
+                author: 'assistant',
+                text: content,
+                isError,
+                id: messageId,
+            };
             this._unfreezeInput();
         });
     }
