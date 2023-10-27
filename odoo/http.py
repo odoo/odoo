@@ -1977,7 +1977,11 @@ class Application:
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+        # HTTP_X_FORWARDED_HOST not exists in environ object on some proxy server like Nginx Proxy Manager
+        # so need to check HTTP_X_FORWARDED_PROTO or HTTP_X_FORWARDED_SCHEME instead
+        if odoo.tools.config['proxy_mode'] and (
+            environ.get("HTTP_X_FORWARDED_HOST") or environ.get("HTTP_X_FORWARDED_PROTO") or environ.get("HTTP_X_FORWARDED_SCHEME")
+        ):
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
