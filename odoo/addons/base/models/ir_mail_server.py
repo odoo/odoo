@@ -89,6 +89,7 @@ class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _description = 'Mail Server'
     _order = 'sequence'
+    _allow_sudo_commands = False
 
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
