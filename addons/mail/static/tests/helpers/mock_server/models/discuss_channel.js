@@ -688,7 +688,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
             let is_editable;
             switch (channel.channel_type) {
                 case "channel":
-                    is_editable = channel.create_uid === this.pyEnv.currentPartnerId;
+                    is_editable = channel.create_uid === this.pyEnv.currentUserId;
                     break;
                 case "group":
                     is_editable = memberOfCurrentUser;

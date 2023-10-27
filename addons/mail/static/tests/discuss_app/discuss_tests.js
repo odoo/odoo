@@ -54,7 +54,7 @@ QUnit.test("can change the thread name of #general [REQUIRE FOCUS]", async (asse
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
     });
     const def = new Deferred();
     const { openDiscuss } = await start({
@@ -98,7 +98,7 @@ QUnit.test("can change the thread description of #general [REQUIRE FOCUS]", asyn
         name: "general",
         channel_type: "channel",
         description: "General announcements...",
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
     });
     const def = new Deferred();
     const { openDiscuss } = await start({
@@ -1334,7 +1334,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
-            create_uid: pyEnv.currentPartnerId,
+            create_uid: pyEnv.currentUserId,
             name: "General",
         });
         const { openDiscuss } = await start({
