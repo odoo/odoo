@@ -1782,6 +1782,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Na produktu %s nemůžete přiřadit hodnotu %s k atributu %s, protože se "
+"neshodují."
 
 #. module: product
 #. odoo-python
@@ -2264,7 +2266,7 @@ msgstr "Ceník výrobků"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "Hledání pravidel cen produktů"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2416,7 +2418,7 @@ msgstr "Prodejní popis"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Záznam prodejní mřížky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2768,6 +2770,9 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Toto nastavení atributů, hodnot a výjimek produktů by nevedlo k žádné možné "
+"variantě. Archivujte nebo přímo odstraňte svůj produkt, pokud je to "
+"zamýšlené."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2803,6 +2808,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Tato přesnost zaokrouhlení je vyšší než přesnost desetinných míst (%s číslic).\n"
+"To může způsobit nesrovnalosti ve výpočtech.\n"
+"Nastavte prosím přesnost mezi %s a 1. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2825,7 +2833,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Třímístná pohovka s lehátkem v ocelově šedé barvě"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -3051,12 +3059,12 @@ msgstr "Dodavatelé"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr ""
+msgstr "Titul: Virtual Home Staging"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
-msgstr ""
+msgstr "Virtuální interiérový design"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -3075,7 +3083,7 @@ msgstr "Objemová měrná jednotka"
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Štítek měrné jednotky objemu"
 
 #. module: product
 #. odoo-python
@@ -3132,7 +3140,7 @@ msgstr "Štítek měrné jednotky hmotnosti"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "Bílá"
 
 #. module: product
 #. odoo-python
@@ -3180,6 +3188,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Režim vytváření variant atributu %s nemůžete měnit, protože se používá v "
+"následujících produktech: %s"
 
 #. module: product
 #. odoo-python
@@ -3204,7 +3214,7 @@ msgstr "Produkt nelze změnit na hodnotu %s nastavenou na produktu %s."
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "Hodnotu nelze změnit na hodnotu %s nastavenou na produktu %s."
 
 #. module: product
 #. odoo-python
@@ -3245,6 +3255,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Nemůžete smazat atribut %s, protože se používá v následujících produktech:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3282,6 +3294,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
+"Nemůžete smazat hodnotu %s, protože byla použita v některých produktech."
 
 #. module: product
 #. odoo-python
@@ -3291,6 +3304,7 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr ""
+"Pravidlo ceníku nelze vypnout, prosím smažte jej nebo archivujte jeho ceník."
 
 #. module: product
 #. odoo-python
@@ -3298,7 +3312,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr ""
+msgstr "Tento atribut %s nelze přesunout z produktu %s k produktu %s."
 
 #. module: product
 #. odoo-python
@@ -3330,6 +3344,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat produkt pro vše, co prodáváte nebo nakupujete,\n"
+"                ať už jde o fyzický produkt, spotřební materiál nebo službu.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3339,6 +3357,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat jak produkt pro vše, co prodáváte, ať už jde o fyzický produkt, spotřební\n"
+"                materiál nebo službu, kterou nabízíte zákazníkům.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #. odoo-python
