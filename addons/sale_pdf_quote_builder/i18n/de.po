@@ -1,0 +1,165 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+# 
+# Translators:
+# Larissa Manderfeld, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and 'Angebot - %s' % (object.name)) or "
+"'Auftrag - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales customer.\n"
+"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"Confirmed order: the document will be sent to and accessible by customers.\n"
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "Only PDF documents can be attached inside a quote."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "PDF Quote Builder"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "PDF Quote builder"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+msgid "Product Document"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Products descriptions are pdf documents you can add directly on products.\n"
+"                            To do so, go on a product, find the \"product documents\" button, then add a\n"
+"                            new pdf document with a visibility set as \"Inside Quotes\". For each product\n"
+"                            in the quote, if the product has an \"inside quotes\" document, this document\n"
+"                            will be added after header pages and before the quotation details."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation\n"
+"                            with more information about your company, your products and your services.\n"
+"                            The pdf of your quotes will be built by putting together header pages,\n"
+"                            product descriptions, details of the quote and then the footer pages."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Quotation Template"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
+msgid "Sale Footer Name"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
+msgid "Sale Header Name"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Some information specific to the quote (customer name, quotation reference, ... )\n"
+"                            can be injected in these documents using pdf forms.\n"
+"                            Refer to the documentation to know more about this feature."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
+msgid "Visible at"
+msgstr ""

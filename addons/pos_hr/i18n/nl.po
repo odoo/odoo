@@ -1,44 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Allowed Employees"
-msgstr "Toegestane werknemers"
+msgid "Advanced rights"
+msgstr "Geavanceerde rechten"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr "Alle werknemers"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Basic rights"
+msgstr "Basisrechten"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
-msgstr "Kassamedewerker"
+msgstr "Kassière"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Change Cashier"
-msgstr "Wijzig kassamedewerker"
+msgstr "Wijzig kassière"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -61,49 +71,82 @@ msgid "Employee: %s - PoS Config(s): %s \n"
 msgstr "Werknemer: %s - kassa configuratie(s): %s \n"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "Employees with access"
-msgstr "Werknemers met toegang"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "Employees with basic access"
+msgstr "Werknemers met basistoegang"
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "If left empty, all employees can log in to the PoS session"
-msgstr "Indien leeggelaten kunen alle werknemers aanmelden in de kassa sessie"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "Employees with manager access"
+msgstr "Werknemers met managertoegang"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr ""
+"Als deze optie leeg blijft kunnen alle werknemers inloggen op het "
+"kassasysteem"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "If left empty, only Odoo users have extended rights in PoS"
+msgstr ""
+"Indien deze optie leeg blijft hebben alleen Odoo gebruikers uitgebreide "
+"rechten in het kassasysteem"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Foutief wachtwoord"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/HeaderLockButton.xml:0
+#: code:addons/pos_hr/static/src/app/header_lock_button/header_lock_button.xml:0
+#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Lock"
 msgstr "Blokkeer"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr "Log in op"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "No employee"
+msgstr "Geen werknemer"
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Password?"
-msgstr ""
+msgstr "Wachtwoord?"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
-msgid "Person who uses the cash register. It can be a reliever, a student or an interim employee."
-msgstr "Persoon die het kassaregister gebruikt. Het kan een helper, een student of een interim werknemer zijn."
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr ""
+"Persoon die het kassaregister gebruikt. Het kan een helper, een student of "
+"een interim werknemer zijn."
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#, python-format
+msgid "Please try again."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -118,37 +161,41 @@ msgstr "Kassaorders"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "Kassaorders-rapport"
+msgstr "Kassaorders rapport"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Kassasessie"
+msgstr "Kassa sessie"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Scan je badge"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr "Selecteer kassamedewerker"
+msgstr "Selecteer kassière"
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
-msgid "You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n"
-msgstr "Je kunt geen werknemer verwijderen die gebruikt wordt in een actieve kassasessie, sluit de sessie(s) eerst af:\n"
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+"Je kunt geen werknemer verwijderen die gebruikt wordt in een actieve "
+"kassasessie, sluit de sessie(s) eerst af:\n"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "or"
 msgstr "of"

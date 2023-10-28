@@ -1,31 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* rating
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
-# Alexandra Jubert, 2022
+# Wil Odoo, 2023
 # Jolien De Paepe, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
 msgid "# Ratings"
 msgstr "# Évaluations"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "<i class=\"fa fa-arrow-left me-1\"/> Back to the Homepage"
+msgstr "<i class=\"fa fa-arrow-left me-1\"/> Retour à la page d'accueil"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
@@ -45,12 +48,12 @@ msgstr "Une étoile"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Nécessite une action"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Nombre de pièces jointes"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
@@ -61,7 +64,7 @@ msgstr "Évaluation moyenne"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr "Évaluation Moyenne (%)"
+msgstr "Évaluation moyenne (%)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -99,8 +102,12 @@ msgstr "Nom d'affichage"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ko
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Dissatisfied"
@@ -125,7 +132,7 @@ msgstr "Discussion par email"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to share feedback on your experience:"
-msgstr ""
+msgstr "N'hésitez pas à nous faire part de votre expérience :"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -135,17 +142,12 @@ msgstr "Évaluation complétée"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Abonnés"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go back to the Homepage"
-msgstr "Retourner à la page d'accueil"
+msgstr "Abonnés (Partenaires)"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -160,12 +162,15 @@ msgstr "Une demi-étoile"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "A un message"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__is_internal
-msgid "Hide to public / portal users, independently from subtype configuration."
-msgstr "Masquer pour les utilisateurs publics/portail, indépendamment de la configuration du sous-type."
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
+"Masquer pour les utilisateurs publics/portail, indépendamment de la "
+"configuration du sous-type."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -175,12 +180,12 @@ msgstr "ID"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si coché, certains messages ont une erreur de livraison."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -195,6 +200,7 @@ msgstr "URL de l'image"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
 msgstr "Évaluation incorrecte : devrait être 1, 3 ou 5 (reçu %d)"
@@ -204,12 +210,12 @@ msgstr "Évaluation incorrecte : devrait être 1, 3 ou 5 (reçu %d)"
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Invalid token or rating."
-msgstr ""
+msgstr "Jeton ou évaluation invalide."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Est un abonné"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -240,12 +246,12 @@ msgstr "Message"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -258,8 +264,12 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "No Rating yet"
 msgstr "Aucune évaluation pour l'instant"
 
@@ -271,28 +281,32 @@ msgstr "Aucune évaluation pour l'instant"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Nombre d'actions"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Okay"
@@ -362,7 +376,7 @@ msgstr "Texte de l'évaluation moyenne"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Évaluation des derniers commentaires"
+msgstr "Évaluation des derniers feedbacks"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
@@ -372,7 +386,7 @@ msgstr "Évaluation de la dernière image"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr "Dernière évaluation"
+msgstr "Évaluation dernière valeur"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -435,10 +449,6 @@ msgstr "Évaluation :"
 #: model:ir.model.fields,field_description:rating.field_fleet_vehicle_log_services__rating_ids
 #: model:ir.model.fields,field_description:rating.field_gamification_badge__rating_ids
 #: model:ir.model.fields,field_description:rating.field_gamification_challenge__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_department__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_employee__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_job__rating_ids
-#: model:ir.model.fields,field_description:rating.field_hr_plan_employee_activity__rating_ids
 #: model:ir.model.fields,field_description:rating.field_lunch_supplier__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_blacklist__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_thread__rating_ids
@@ -449,8 +459,8 @@ msgstr "Évaluation :"
 #: model:ir.model.fields,field_description:rating.field_maintenance_equipment__rating_ids
 #: model:ir.model.fields,field_description:rating.field_maintenance_equipment_category__rating_ids
 #: model:ir.model.fields,field_description:rating.field_maintenance_request__rating_ids
-#: model:ir.model.fields,field_description:rating.field_note_note__rating_ids
 #: model:ir.model.fields,field_description:rating.field_phone_blacklist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_pricelist__rating_ids
 #: model:ir.model.fields,field_description:rating.field_product_product__rating_ids
 #: model:ir.model.fields,field_description:rating.field_product_template__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
@@ -496,8 +506,12 @@ msgstr "Nom de la ressource"
 #. module: rating
 #. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Satisfied"
@@ -511,7 +525,7 @@ msgstr "Jeton de sécurité"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr "Envoyer un retour d'expérience"
+msgstr "Envoyer un feedback"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
@@ -525,8 +539,8 @@ msgstr "Merci d'avoir évalué nos services !"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Thank you, we appreciate your feedback!"
-msgstr "Merci, nous apprécions votre retour !"
+msgid "Thank you for your feedback!"
+msgstr "Merci de votre feedback !"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_action
@@ -549,6 +563,8 @@ msgstr "Visible en interne uniquement"
 #, python-format
 msgid "Wrong rating value. A rate should be between 0 and 5 (received %d)."
 msgstr ""
+"Mauvaise valeur d'évaluation. Une évaluation doit se situer entre 0 et 5 "
+"(reçu %d)."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban

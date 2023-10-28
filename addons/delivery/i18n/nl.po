@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -26,12 +24,12 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s foutmelding"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Bekom tarief"
 
 #. module: delivery
 #. odoo-python
@@ -52,11 +50,13 @@ msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
+"                                <span class=\"o_stat_text\">Omgeving</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Geen debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -69,6 +69,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Productie</span>\n"
+"                                <span class=\"o_stat_text\">Omgeving</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -77,8 +79,14 @@ msgstr "<strong>Verzendbeschrijving:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
-msgstr "Een beschrijving van de leveringsmethode die je aan je klanten wilt meedelen op de verkooporder en de e-mail met de verkoopbevestiging. Bijv. instructies die klanten moeten volgen."
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Een beschrijving van de leveringsmethode die je aan je klanten wilt meedelen"
+" op de verkooporder en de e-mail met de verkoopbevestiging. Bijv. "
+"instructies die klanten moeten volgen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -111,7 +119,7 @@ msgstr "Verzending toevoegen"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Extra marge"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -120,8 +128,12 @@ msgstr "Bedrag"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
-msgstr "Bedrag van de order wat kan profiteren van een gratis verzending, uitgedrukt in het bedrijfsvaluta"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Bedrag van de order wat kan profiteren van een gratis verzending, uitgedrukt"
+" in het bedrijfsvaluta"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -176,7 +188,7 @@ msgstr "Contact"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
 msgid "Cost"
-msgstr "Kosten"
+msgstr "Kostprijs"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
@@ -298,6 +310,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Postcodes voor bezorging worden toegewezen aan vervoerders om te beperken\n"
+"voor welke postcodes ze beschikbaar zijn."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -334,6 +348,9 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Elke vervoerder (bijv. UPS) kan verschillende verzendwijzes hebben (bijv.\n"
+"            UPS Express, UPS Standard) telkens gekoppeld aan een aantal regels\n"
+"met prijsformules."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -342,6 +359,7 @@ msgstr "Omgeving"
 
 #. module: delivery
 #. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -353,6 +371,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Geschatte kosten: de geschatte kosten van de levering zullen aan de klant gefactureerd worden. \n"
+"Werkelijke kosten: de werkelijke kosten van de levering zullen aan de klant gefactureerd worden, de verzendkosten worden bijgewerkt op het verkooporder na de levering."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -362,17 +382,23 @@ msgstr "Geschatte kosten"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "Vul dit veld in als je transportkosten wilt factureren op basis van een verzamelopdracht."
+msgstr ""
+"Vul dit veld in als je transportkosten wilt factureren op basis van een "
+"verzamelopdracht."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
-msgstr "Met het invullen van dit formulier kun je de vervoerders filteren op basis van het afleveradres van je klant."
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Met het invullen van dit formulier kun je de vervoerders filteren op basis "
+"van het afleveradres van je klant."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Vaste marge"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -410,7 +436,7 @@ msgstr "Zoek tarief een maak verzending"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -422,8 +448,12 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
-msgstr "Als het totaal bedrag van de order (excl. verzending) groter of gelijk is aan deze waarde, kan de klant profiteren van gratis verzending"
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Als het totaal bedrag van de order (excl. verzending) groter of gelijk is "
+"aan deze waarde, kan de klant profiteren van gratis verzending"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -524,7 +554,7 @@ msgstr "Nieuwe providers"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Not available for current order"
-msgstr ""
+msgstr "Niet beschikbaar voor huidige order"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -539,7 +569,7 @@ msgstr "Order"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "Selecteer een land voordat je een staat of een postcode kiest."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -553,8 +583,17 @@ msgstr "Prefix bestaat al!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
-msgstr "Voorvoegsels van postcodes waarop deze vervoerder van toepassing is. Merk op dat reguliere expressies kunnen worden gebruikt om landen met verschillende postcodelengtes te ondersteunen, d.w.z. '$' kan worden toegevoegd aan het einde van een voorvoegsel om overeen te komen met de exacte postcode (bijv. '100$' zal alleen overeenkomen met '100' en niet met '1000')"
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Voorvoegsels van postcodes waarop deze vervoerder van toepassing is. Merk op"
+" dat reguliere expressies kunnen worden gebruikt om landen met verschillende"
+" postcodelengtes te ondersteunen, d.w.z. '$' kan worden toegevoegd aan het "
+"einde van een voorvoegsel om overeen te komen met de exacte postcode (bijv. "
+"'100$' zal alleen overeenkomen met '100' en niet met '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -594,7 +633,7 @@ msgstr "Provider"
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -635,7 +674,8 @@ msgstr "Dienst product"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Zet op Waar wanneer je inloggegevens gecertificeerd zijn voor productie."
+msgstr ""
+"Zet op Waar wanneer je inloggegevens gecertificeerd zijn voor productie."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -658,19 +698,28 @@ msgstr "Aflevergewicht"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
-msgstr "Verzendverzekering is een service die afzenders kan vergoeden wiens pakketten verloren, gestolen en/of beschadigd zijn tijdens het transport."
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Verzendverzekering is een service die afzenders kan vergoeden wiens "
+"pakketten verloren, gestolen en/of beschadigd zijn tijdens het transport."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
-msgstr "Details van de verzendmethode die moeten worden opgenomen aan de onderkant van de verkooporders en de bevestigingsmails. Bijv. Instructies voor klanten om te volgen."
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Details van de verzendmethode die moeten worden opgenomen aan de onderkant "
+"van de verkooporders en de bevestigingsmails. Bijv. Instructies voor klanten"
+" om te volgen."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standaardlevering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -690,8 +739,10 @@ msgstr "De post"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid "The return label can be downloaded by the customer from the customer portal."
-msgstr "Het retourlabel kan door de klant worden gedownload via het klantenportaal."
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr ""
+"Het retourlabel kan door de klant worden gedownload via het klantenportaal."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
@@ -717,11 +768,14 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Deze methodes geven je de mogelijkheid om automatisch de leverprijs\n"
+"te berekenen volgens je instellingen; op het verkooporder (gebaseerd \n"
+"op de offerte) of op de factuur (gebaseerd op de leveringsbonnen)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Dit vaste bedrag wordt toegevoegd aan de verzendkosten."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -731,7 +785,7 @@ msgstr "Dit percentage wordt toegevoegd aan de afleverprijs."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Totaal gewicht van de bestelling"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -777,7 +831,7 @@ msgstr "Gewicht * Volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Naam maateenheid gewicht"
 
 #. module: delivery
 #. odoo-python

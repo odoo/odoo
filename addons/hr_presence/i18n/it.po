@@ -1,24 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
-# Luca Carlo, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Luca Carlo, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_presence
@@ -33,6 +31,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Gentile <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    a meno che non si tratti di un nostro errore, sembra che tu non sia in ufficio e che non ci siano richieste di ferie.<br>\n"
+"                    Per favore, adotta le misure necessarie per giustificare l'assenza.<br>\n"
+"                    Non esitare a contattare il tuo manager o il dipartimento risorse umane.\n"
+"                    <br>Cordiali saluti,<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -119,7 +125,7 @@ msgstr "HR Presence: cron"
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "Risorse umane: e-mail assenza dipendente"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -169,7 +175,7 @@ msgstr "Presenza"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr "Corrente"
+msgstr "Presente"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -178,8 +184,12 @@ msgstr "SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
-msgid "Sent manually in presence module when an employee wasn't working despite not being off"
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
 msgstr ""
+"E-mail inviata manualmente al modulo presenze quando un dipendente non è a "
+"lavoro nonostante l'assenza di giorni di ferie"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -230,9 +240,12 @@ msgstr "Registro utenti"
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
-msgstr "Diritti non sufficienti per questa operazione, contattare un amministratore."
+msgstr ""
+"Diritti non sufficienti per questa operazione, contattare un amministratore."
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket

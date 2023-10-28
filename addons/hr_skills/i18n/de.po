@@ -1,55 +1,164 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Friederike Fasterling-Nesselbosch, 2022
+# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
 msgid "'CV - %s' % (object.name)"
-msgstr ""
+msgstr "'Lebenslauf - %s' % (object.name)"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
+msgid "A 2D/3D map generator for incremental games."
+msgstr "Ein 2D/3D-Kartengenerator für Clicker-Games."
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "ADD"
 msgstr "HINZUFÜGEN"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jog_allenkeller
+msgid "Allen-Keller"
+msgstr "Allen-Keller"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_5
+msgid ""
+"Allows to encrypt/decrypt plain text or files. Available as a web app or as "
+"an API."
+msgstr ""
+"Ermöglicht die Ver-/Entschlüsselung von einfachem Text oder Dateien. "
+"Verfügbar als Web-App oder als API."
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jth_goodman_inc
+#: model:hr.resume.line,description:hr_skills.employee_resume_ngh_jackson_schwartz_and_aguirre
+msgid "Analytical chemist"
+msgstr "Chemiker"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_stw_green_ltd
+msgid "Arboriculturist"
+msgstr "Baumzüchter"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jth_wilkinson_plc
+msgid "Architectural technologist"
+msgstr "Technischer Architekt"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_ngh_armidale_city_public_school
+msgid "Armidale City Public School"
+msgstr "Armidale City Public School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jve_arnoldcohen
+msgid "Arnold-Cohen"
+msgstr "Arnold-Cohen"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_niv_arroyo_ltd
+msgid "Arroyo Ltd"
+msgstr "Arroyo Ltd"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_chs_avoca_primary_school
+msgid "Avoca Primary School"
+msgstr "Avoca Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_al_bathurst_west_public_school
+msgid "Bathurst West Public School"
+msgstr "Bathurst West Public School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_fme_russellwebster
+msgid "Biochemist, clinical"
+msgstr "Biochemiker, klinisch"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_blue_mountains_grammar_school
+msgid "Blue Mountains Grammar School"
+msgstr "Blue Mountains Grammar School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_chs_boyd_wilson_and_moore
+msgid "Boyd, Wilson and Moore"
+msgstr "Boyd, Wilson and Moore"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_burns_lester_and_cuevas
+msgid "Burns, Lester and Cuevas"
+msgstr "Burns, Lester and Cuevas"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_3
+msgid "Burtho Inc."
+msgstr "Burtho Inc."
+
+#. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
-msgstr "NEUER EINTRAG"
+msgstr "NEUEN EINTRAG ERSTELLEN"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__can_show_others
 msgid "Can Show Others"
-msgstr ""
+msgstr "Darf andere anzeigen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__can_show_skills
 msgid "Can Show Skills"
-msgstr ""
+msgstr "Darf Kompetenzen anzeigen"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jep_garcia_and_sons
+msgid "Careers information officer"
+msgstr "Berufsberater"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fpi_chavez_group
+msgid "Chavez Group"
+msgstr "Chavez Group"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_vad_christian_outreach_college
+msgid "Christian Outreach College"
+msgstr "Christian Outreach College"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_admin_lewisbailey
+msgid "Civil Service fast streamer"
+msgstr "Beamter im Schnelldurchlauf"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jog_claremont_college
+msgid "Claremont College"
+msgstr "Claremont College"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
@@ -57,9 +166,14 @@ msgid "Classic"
 msgstr "Klassisch"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_cole_ltd
+msgid "Cole Ltd"
+msgstr "Cole Ltd"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Colors"
-msgstr ""
+msgstr "Farben"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__company_id
@@ -67,16 +181,38 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_fpi_hubbarddean
+msgid "Conference centre manager"
+msgstr "Manager des Konferenzzentrums"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_contact
 msgid "Contact Information"
-msgstr ""
+msgstr "Kontaktinformationen"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_stw_finley_rowe_and_adams
+msgid "Copywriter, advertising"
+msgstr "Texter, Werbung"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_ngh_craigmore_south_junior_primary_school
+msgid "Craigmore South Junior Primary School"
+msgstr "Craigmore South Junior Primary School"
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 #, python-format
 msgid "Create a new entry"
 msgstr "Neuen Eintrag erstellen"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "Create new Skills"
+msgstr "Neue Kompetenzen erstellen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -104,10 +240,25 @@ msgstr "Erstellt am"
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 #, python-format
 msgid "Current"
 msgstr "Aktuell"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jep_davis_sanchez_and_miller
+msgid "Customer service manager"
+msgstr "Leiter des Kundenservices"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_hne_dandenong_north_primary_school
+msgid "Dandenong North Primary School"
+msgstr "Dandenong North Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_darlington_primary_school
+msgid "Darlington Primary School"
+msgstr "Darlington Primary School"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__date
@@ -124,6 +275,22 @@ msgstr "Enddatum"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_start
 msgid "Date Start"
 msgstr "Startdatum"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_chs_davis_plc
+#: model:hr.resume.line,name:hr_skills.employee_resume_han_davis_plc
+msgid "Davis PLC"
+msgstr "Davis PLC"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jve_davis_and_sons
+msgid "Davis and Sons"
+msgstr "Davis and Sons"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_davis_sanchez_and_miller
+msgid "Davis, Sanchez and Miller"
+msgstr "Davis, Sanchez and Miller"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
@@ -144,9 +311,14 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_admin_white_inc
+msgid "Designer, television/film set"
+msgstr "Designer, Fernseh-/Filmkulisse"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Verwerfen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
@@ -163,7 +335,27 @@ msgstr "Anzeigename"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_type
 msgid "Display Type"
-msgstr "Display-Typ"
+msgstr "Anzeigetyp"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jog_douglas_thompson_and_conner
+msgid "Douglas, Thompson and Conner"
+msgstr "Douglas, Thompson and Conner"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
+msgid "Duration"
+msgstr "Dauer"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jve_ellinbank_primary_school
+msgid "Ellinbank Primary School"
+msgstr "Ellinbank Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_han_elphinstone_primary_school
+msgid "Elphinstone Primary School"
+msgstr "Elphinstone Primary School"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee
@@ -180,13 +372,13 @@ msgstr "Mitarbeiter"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 msgid "Employee Name"
-msgstr "Mitarbeitername"
+msgstr "Name des Mitarbeiters"
 
 #. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
 #: model:ir.model,name:hr_skills.model_report_hr_skills_report_employee_cv
 msgid "Employee Resume"
-msgstr ""
+msgstr "Lebenslauf des Mitarbeiters"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
@@ -201,12 +393,135 @@ msgstr "Berichte über Mitarbeiterkompetenzen"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees with Skills"
-msgstr "Beschäftigte mit Qualifikationen"
+msgstr "Mitarbeiter mit Kompetenzen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees without Skills"
 msgstr "Mitarbeiter ohne Kompetenzen"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_5
+msgid "Encryption/decryption"
+msgstr "Ver-/Entschlüsselung"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_al_jones_ltd
+msgid "Energy manager"
+msgstr "Energiemanager"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_qdp_hughes_parker_and_barber
+msgid "Engineer, drilling"
+msgstr "Ingenieur, Bohrarbeiten"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_admin_schultz_inc
+msgid "Engineer, electrical"
+msgstr "Ingenieur, elektrisch"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_fme_johnson_shaw_and_carroll
+msgid "Engineer, mining"
+msgstr "Ingenieur, Bergbau"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_han_davis_plc
+msgid "Engineer, production"
+msgstr "Ingenieur, Produktion"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_6
+msgid ""
+"Enter your finance data and the app tries to forecast what will be your "
+"future incomes/expenses. The application uses machine learning to train "
+"itself."
+msgstr ""
+"Geben Sie Ihre Finanzdaten ein, und die App versucht, Ihre zukünftigen "
+"Einnahmen/Ausgaben zu prognostizieren. Die Anwendung nutzt maschinelles "
+"Lernen, um sich selbst zu trainieren."
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_qdp_evans_cooper_and_white
+msgid "Evans, Cooper and White"
+msgstr "Evans, Cooper and White"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jep_cole_ltd
+msgid "Fast food restaurant manager"
+msgstr "Manager eines Fast-Food-Restaurants"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_6
+msgid "Finance forecaster"
+msgstr "Finanzprognostiker"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_finley_rowe_and_adams
+msgid "Finley, Rowe and Adams"
+msgstr "Finley, Rowe and Adams"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jgo_fox_and_sons
+msgid "Fox and Sons"
+msgstr "Fox and Sons"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_chs_freeman_williams_and_berger
+msgid "Freeman, Williams and Berger"
+msgstr "Freeman, Williams and Berger"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jgo_galilee_catholic_school
+msgid "Galilee Catholic School"
+msgstr "Galilee Catholic School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_vad_gallegos_little_and_walters
+msgid "Gallegos, Little and Walters"
+msgstr "Gallegos, Little and Walters"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_garcia_and_sons
+msgid "Garcia and Sons"
+msgstr "Garcia and Sons"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_al_garcia_smith_and_king
+msgid "Garcia, Smith and King"
+msgstr "Garcia, Smith and King"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_chs_hanson_roach_and_jordan
+msgid "Geographical information systems officer"
+msgstr "Beauftragter für Geoinformationssysteme"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_han_perezmorgan
+msgid "Geoscientist"
+msgstr "Geowissenschaftler"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_lur_ramirez_inc
+#: model:hr.resume.line,description:hr_skills.employee_resume_mit_hill_group
+#: model:hr.resume.line,description:hr_skills.employee_resume_ngh_stanleymendez
+msgid "Glass blower/designer"
+msgstr "Glasbläser/Designer"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jth_goodman_inc
+msgid "Goodman Inc"
+msgstr "Goodman Inc"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_green_ltd
+msgid "Green Ltd"
+msgstr "Green Ltd"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_greeneorr
+msgid "Greene-Orr"
+msgstr "Greene-Orr"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -216,7 +531,52 @@ msgstr "Gruppieren nach"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Group By..."
-msgstr "Gruppieren"
+msgstr "Gruppieren nach ..."
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_chs_hanson_roach_and_jordan
+msgid "Hanson, Roach and Jordan"
+msgstr "Hanson, Roach and Jordan"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_harrington_park_public_school
+msgid "Harrington Park Public School"
+msgstr "Harrington Park Public School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jve_davis_and_sons
+msgid "Health physicist"
+msgstr "Medizinischer Physiker"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_hill_group
+msgid "Hill Group"
+msgstr "Hill Group"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_lur_holy_family_primary_school
+msgid "Holy Family Primary School"
+msgstr "Holy Family Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_hne_nortonsilva
+msgid "Horticulturist, commercial"
+msgstr "Gartenbauer, gewerblich"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fpi_hubbarddean
+msgid "Hubbard-Dean"
+msgstr "Hubbard-Dean"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_qdp_hughes_parker_and_barber
+msgid "Hughes, Parker and Barber"
+msgstr "Hughes, Parker and Barber"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_chs_freeman_williams_and_berger
+msgid "Human resources officer"
+msgstr "Personalverantwortlicher"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
@@ -232,14 +592,104 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jth_simmonswilcox
+msgid "IT sales professional"
+msgstr "IT-Fachverkäufer"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jgo_martin_stanley_and_duncan
+msgid "IT technical support officer"
+msgstr "IT-Techniker"
+
+#. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__default_level
-msgid "If checked, this level will be the default one selected when choosing this skill."
-msgstr "Wenn diese Option aktiviert ist, wird diese Stufe bei der Auswahl dieser Qualifikation standardmäßig ausgewählt."
+msgid ""
+"If checked, this level will be the default one selected when choosing this "
+"skill."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird dieses Level bei der Auswahl dieser "
+"Kompetenz standardmäßig ausgewählt."
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "If skills are missing, they can be created by an HR officer."
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_niv_arroyo_ltd
+msgid "Insurance risk surveyor"
+msgstr "Sachverständiger für Versicherungsrisiken"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_ngh_jackson_schwartz_and_aguirre
+msgid "Jackson, Schwartz and Aguirre"
+msgstr "Jackson, Schwartz and Aguirre"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jve_saundersadkins
+msgid "Jewellery designer"
+msgstr "Schmuckdesigner"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_4
+msgid ""
+"Job position: Development team leader\n"
+"- Supported technical operations with investigating and correcting varied production support issues (Java, Perl, Shell scripts, SQL).\n"
+"- Led quality assurance planning for multiple concurrent projects relative to overall system architecture or trading system changes/new developments.\n"
+"- Configured and released business critical alpha and risk models using MATLAB and SQL with inputs from Portfolio Managers.\n"
+"        "
+msgstr ""
+"Stelle: Leiter des Entwicklungsteams\n"
+"- Unterstützung des technischen Betriebs bei der Untersuchung und Behebung verschiedener Probleme im Produktionssupport (Java, Perl, Shell-Skripte, SQL).\n"
+"- Leitung der Qualitätssicherungsplanung für mehrere gleichzeitige Projekte in Bezug auf die gesamte Systemarchitektur oder Änderungen/Neuentwicklungen des Handelssystems.\n"
+"- Konfiguration und Freigabe von geschäftskritischen Alpha- und Risikomodellen unter Verwendung von MATLAB und SQL mit Eingaben von Portfoliomanagern.\n"
+"        "
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_3
+msgid ""
+"Job position: Product manager\n"
+"- Coordinated and managed software deployment across five system environments from development to production.\n"
+"- Developed stored procedures to assist Java level programming efforts.\n"
+"- Developed multiple renewable energy plant architectures, both commercial installations and defense-related.\n"
+"        "
+msgstr ""
+"Stelle: Produktmanager\n"
+"- Koordinierte und verwaltete den Softwareeinsatz in fünf Systemumgebungen von der Entwicklung bis zur Produktion.\n"
+"- Entwicklung von gespeicherten Prozeduren zur Unterstützung der Programmierung auf Java-Ebene.\n"
+"- Entwicklung mehrerer Architekturen für Anlagen für erneuerbare Energien, sowohl für kommerzielle Anlagen als auch für die Verteidigung."
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_johnson_shaw_and_carroll
+msgid "Johnson, Shaw and Carroll"
+msgstr "Johnson, Shaw and Carroll"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_al_jones_ltd
+msgid "Jones Ltd"
+msgstr "Jones Ltd"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_niv_kialla_west_primary_school
+msgid "Kialla West Primary School"
+msgstr "Kialla West Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_han_king_island_district_high_school
+msgid "King Island District High School"
+msgstr "King Island District High School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_qdp_rivera_shaw_and_hughes
+msgid "Landscape architect"
+msgstr "Landschaftsarchitekt"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Languages"
-msgstr ""
+msgstr "Sprachen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__write_uid
@@ -266,6 +716,21 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_lawson_public_school
+msgid "Lawson Public School"
+msgstr "Lawson Public School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_vad_gallegos_little_and_walters
+msgid "Lecturer, higher education"
+msgstr "Dozent, akademische Bildung"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_leinster_school
+msgid "Leinster School"
+msgstr "Leinster School"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
 msgstr "Level-Fortschritt"
@@ -274,17 +739,106 @@ msgstr "Level-Fortschritt"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "Levels"
-msgstr "Niveau"
+msgstr "Level"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_lewis_group
+msgid "Lewis Group"
+msgstr "Lewis Group"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_lewisbailey
+msgid "Lewis-Bailey"
+msgstr "Lewis-Bailey"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jog_allenkeller
+msgid "Lexicographer"
+msgstr "Lexikograph"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_lur_lindenow_primary_school
+msgid "Lindenow Primary School"
+msgstr "Lindenow Primary School"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr "Linienarten"
+msgstr "Zeilenarten"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_vad_loganmartin
+msgid "Logan-Martin"
+msgstr "Logan-Martin"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
 msgid "Logo"
+msgstr "Logo"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_lynchhodges
+msgid "Lynch-Hodges"
+msgstr "Lynch-Hodges"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_admin_greeneorr
+msgid "Magazine journalist"
+msgstr "Journalist für Zeitschriften"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jog_mandurah_catholic_college
+msgid "Mandurah Catholic College"
+msgstr "Mandurah Catholic College"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_7
+msgid "Map Generator"
+msgstr "Kartengenerator"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jgo_martin_stanley_and_duncan
+msgid "Martin, Stanley and Duncan"
+msgstr "Martin, Stanley and Duncan"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_1
+msgid ""
+"Master in Electrical engineering\n"
+"            Master thesis: Better grid management and control through machine learning"
 msgstr ""
+"Master in Elektrotechnik\n"
+"            Masterarbeit: Bessere Netzverwaltung und -steuerung durch maschinelles Lernen"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_mcneil_rodriguez_and_warren
+msgid "Mcneil, Rodriguez and Warren"
+msgstr "Mcneil, Rodriguez and Warren"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_al_garcia_smith_and_king
+msgid "Medical illustrator"
+msgstr "Medizinischer Zeichner"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_chs_boyd_wilson_and_moore
+msgid "Medical physicist"
+msgstr "Medizinphysiker"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_fpi_chavez_group
+msgid "Mental health nurse"
+msgstr "Krankenpfleger für psychische Erkrankungen"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jgo_fox_and_sons
+msgid "Merchant navy officer"
+msgstr "Offizier der Handelsmarine"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jog_douglas_thompson_and_conner
+msgid "Music therapist"
+msgstr "Musiktherapeut"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -296,11 +850,29 @@ msgid "Name"
 msgstr "Name"
 
 #. module: hr_skills
-#. odoo-python
-#: code:addons/hr_skills/models/hr_skill_level.py:0
-#, python-format
-msgid "Only one default level is allowed per skill type."
-msgstr "Pro Kompetenztyp ist nur eine Standardstufe erlaubt."
+#: model:hr.resume.line,name:hr_skills.employee_resume_jth_narellan_public_school
+msgid "Narellan Public School"
+msgstr "Narellan Public School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_lur_narrogin_primary_school
+msgid "Narrogin Primary School"
+msgstr "Narrogin Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_northern_bay_p12_college
+msgid "Northern Bay P-12 College"
+msgstr "Northern Bay P-12 College"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_hne_nortonsilva
+msgid "Norton-Silva"
+msgstr "Norton-Silva"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_4
+msgid "Odoo SA"
+msgstr "Odoo SA"
 
 #. module: hr_skills
 #. odoo-python
@@ -314,22 +886,79 @@ msgstr "Andere"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_others
 msgid "Others"
+msgstr "Andere"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fpi_our_lady_star_of_the_sea_school
+msgid "Our Lady Star of the Sea School"
+msgstr "Our Lady Star of the Sea School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_park_lake_state_school
+msgid "Park Lake State School"
+msgstr "Park Lake State School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_qdp_parke_state_school
+msgid "Parke State School"
+msgstr "Parke State School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_parker_roberson_and_acosta
+msgid "Parker, Roberson and Acosta"
+msgstr "Parker, Roberson and Acosta"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_han_perezmorgan
+msgid "Perez-Morgan"
+msgstr "Perez-Morgan"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jve_arnoldcohen
+msgid "Personnel officer"
+msgstr "Personalreferent"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_vad_loganmartin
+msgid "Petroleum engineer"
+msgstr "Erdölingenieur"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_qdp_phillips_jones_and_brown
+msgid "Phillips, Jones and Brown"
+msgstr "Phillips, Jones and Brown"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "Pick a skill from the list"
 msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_mit_burns_lester_and_cuevas
+msgid "Police officer"
+msgstr "Polizist"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jog_port_curtis_road_state_school
+msgid "Port Curtis Road State School"
+msgstr "Port Curtis Road State School"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Present"
-msgstr ""
+msgstr "Anwesend"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_primary
 msgid "Primary Color"
-msgstr ""
+msgstr "Primäre Farbe"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Print"
-msgstr ""
+msgstr "Drucken"
 
 #. module: hr_skills
 #. odoo-python
@@ -340,7 +969,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 #, python-format
 msgid "Print Resume"
-msgstr ""
+msgstr "Lebenslauf durcken"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__level_progress
@@ -359,7 +988,9 @@ msgstr "Fortschritt (%)"
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_log__level_progress
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr "Fortschritt von Nullkenntnissen (0%) bis zur vollständigen Beherrschung (100%)."
+msgstr ""
+"Fortschritt von Nullkenntnissen (0%) bis zur vollständigen Beherrschung "
+"(100%)."
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
@@ -367,9 +998,24 @@ msgid "Progress should be a number between 0 and 100."
 msgstr "Fortschritt sollte eine Zahl zwischen 0 und 100 sein."
 
 #. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_mit_robinson_crawford_and_norman
+msgid "Psychiatric nurse"
+msgstr "Psychiatrischer Krankenpfleger"
+
+#. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Öffentlicher Mitarbeiter"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_stw_lynchhodges
+msgid "Publishing rights manager"
+msgstr "Verleger"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_lur_ramirez_inc
+msgid "Ramirez Inc"
+msgstr "Ramirez Inc"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
@@ -387,12 +1033,12 @@ msgstr "Lebenslauf"
 #: code:addons/hr_skills/controllers/main.py:0
 #, python-format
 msgid "Resume %s"
-msgstr ""
+msgstr "%s fortsetzen"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resume Line Types"
-msgstr "Arten von Lebenslaufzeile"
+msgstr "Arten von Lebenslaufzeilen"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
@@ -411,7 +1057,47 @@ msgstr "Lebenslaufzeilen"
 #: code:addons/hr_skills/controllers/main.py:0
 #, python-format
 msgid "Resumes"
-msgstr ""
+msgstr "Lebensenläufe"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_qdp_rivera_shaw_and_hughes
+msgid "Rivera, Shaw and Hughes"
+msgstr "Rivera, Shaw and Hughes"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_robinson_crawford_and_norman
+msgid "Robinson, Crawford and Norman"
+msgstr "Robinson, Crawford and Norman"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_russellwebster
+msgid "Russell-Webster"
+msgstr "Russell-Webster"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_2
+msgid "Saint-Joseph School"
+msgstr "Saint-Joseph School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jve_saundersadkins
+msgid "Saunders-Adkins"
+msgstr "Saunders-Adkins"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_schultz_inc
+msgid "Schultz Inc"
+msgstr "Schultz Inc"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_line_admin_2
+msgid "Science & math"
+msgstr "Wissenschaft & Mathe"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_mit_parker_roberson_and_acosta
+msgid "Science writer"
+msgstr "Wissenschaftlicher Autor"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -426,7 +1112,33 @@ msgstr "Kompetenz suchen"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_secondary
 msgid "Secondary Color"
+msgstr "Sekundäre Farbe"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_chs_davis_plc
+msgid "Secretary, company"
+msgstr "Sekretär, Unternehmen"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+#, python-format
+msgid "Select & Close"
 msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+#, python-format
+msgid "Select & New"
+msgstr "Auswählen & Neu"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+#, python-format
+msgid "Select Skills"
+msgstr "Kompetenzen auswählen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -435,9 +1147,14 @@ msgid "Sequence"
 msgstr "Sequenz"
 
 #. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
-msgid "Set Default"
-msgstr "Standardwert setzen"
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_seymour_p12_college
+msgid "Seymour P-12 College"
+msgstr "Seymour P-12 College"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jth_simmonswilcox
+msgid "Simmons-Wilcox"
+msgstr "Simmons-Wilcox"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill
@@ -449,15 +1166,14 @@ msgstr "Standardwert setzen"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill"
-msgstr "Qualifikation"
+msgstr "Kompetenz"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_department
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_employee
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
-#: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
-msgstr "Berichte über Kompetenzenhistorie"
+msgstr "Berichte über Kompetenzhistorie"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
@@ -466,13 +1182,13 @@ msgstr "Berichte über Kompetenzenhistorie"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_level
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Skill Level"
-msgstr "Qualifikationsniveau"
+msgstr "Kompetenzlevel"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_tree
 msgid "Skill Levels"
-msgstr "Qualifikationsniveaus"
+msgstr "Kompetenzlevel"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_type
@@ -486,21 +1202,23 @@ msgstr "Qualifikationsniveaus"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill Type"
-msgstr "Qualifikationstyp"
+msgstr "Kompetenzart"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
 #: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr "Qualifikationstypen"
+msgstr "Kompetenzarten"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for an employee"
-msgstr "Qualifikationsniveau für einen Mitarbeiter"
+msgstr "Kompetenzlevel für einen Mitarbeiter"
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__employee_skill_ids
@@ -508,15 +1226,14 @@ msgstr "Qualifikationsniveau für einen Mitarbeiter"
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__employee_skill_ids
 #: model:ir.ui.menu,name:hr_skills.hr_employee_skill_report_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
+#, python-format
 msgid "Skills"
-msgstr "Fähigkeiten"
+msgstr "Kompetenzen"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_log
@@ -528,18 +1245,77 @@ msgid "Skills History"
 msgstr "Kompetenzenhistorie"
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+#, python-format
+msgid "Skills Report"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_lur_whitebell
+msgid "Sports coach"
+msgstr "Sportlehrer"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_fme_lewis_group
+msgid "Sports development officer"
+msgstr "Sportentwicklungsbeauftragter"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_st_michaels_primary_school
+msgid "St Michael's Primary School"
+msgstr "St Michael's Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_hne_st_peters_parish_primary_school
+msgid "St Peter's Parish Primary School"
+msgstr "St Peter's Parish Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fpi_st_raphaels_primary_school
+msgid "St Raphael's Primary School"
+msgstr "St Raphael's Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_ngh_stanleymendez
+msgid "Stanley-Mendez"
+msgstr "Stanley-Mendez"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jep_mcneil_rodriguez_and_warren
+msgid "Sub"
+msgstr "Vertreter"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_mit_sutherland_dianella_primary_school
+msgid "Sutherland Dianella Primary School"
+msgstr "Sutherland Dianella Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jve_talbot_primary_school
+msgid "Talbot Primary School"
+msgstr "Talbot Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_qdp_phillips_jones_and_brown
+msgid "Teacher, special educational needs"
+msgstr "Lehrerin, sonderpädagogischer Förderbedarf"
+
+#. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr "Die Fähigkeit%(name)s und die Kategorie %(type)s passen nicht zusammen"
+msgstr ""
+"Die Kompetenz %(name)s und die Kategorie %(type)s passen nicht zusammen"
 
 #. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
-msgstr "Die Fähigkeitsstufe %(level)s ist für den Fähigkeitstyp %(type)s nicht gültig: "
+msgstr ""
+"Das Kompetenzlevel %(level)s ist für die Kompetenzart %(type)s nicht gültig"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -547,24 +1323,61 @@ msgid "The start date must be anterior to the end date."
 msgstr "Das Startdatum muss vor dem Enddatum liegen"
 
 #. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_qdp_evans_cooper_and_white
+msgid "Therapist, speech and language"
+msgstr "Therapeutin, Logopädie und Sprache"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "There are no skills defined in the library."
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_vad_thomas_chirnside_primary_school
+msgid "Thomas Chirnside Primary School"
+msgstr "Thomas Chirnside Primary School"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Title"
 msgstr "Titel"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jgo_tottenham_central_school
+msgid "Tottenham Central School"
+msgstr "Tottenham Central School"
+
+#. module: hr_skills
+#: model:hr.resume.line,description:hr_skills.employee_resume_jod_wilson_ltd
+msgid "Trade union research officer"
+msgstr "Gewerkschaftlicher Forschungsbeauftragter"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_trinity_college
+msgid "Trinity College"
+msgstr "Trinity College"
+
+#. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
-msgstr "Zwei Stufen für dieselbe Kompetenz sind nicht erlaubt."
+msgstr "Zwei Level für dieselbe Kompetenz sind nicht erlaubt."
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr "Zwei Stufen für dieselbe Kompetenz am selben Tag sind nicht erlaubt."
+msgstr "Zwei Level für dieselbe Kompetenz am selben Tag sind nicht erlaubt."
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_tyndale_christian_school
+msgid "Tyndale Christian School"
+msgstr "Tyndale Christian School"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
 msgid "Type"
-msgstr "Typ"
+msgstr "Art"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
@@ -572,16 +1385,90 @@ msgid "Type of a resume line"
 msgstr "Art der Zeile im Lebenslauf"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jod_umbakumba_school
+msgid "Umbakumba School"
+msgstr "Umbakumba School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_line_admin_1
+msgid "Université Libre de Bruxelles - Polytechnique"
+msgstr "Université Libre de Bruxelles - Polytechnique"
+
+#. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
 msgid "User"
 msgstr "Benutzer"
 
 #. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_admin_white_inc
+msgid "White Inc"
+msgstr "White Inc"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_lur_whitebell
+msgid "White-Bell"
+msgstr "White-Bell"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_stw_whitsunday_anglican_school
+msgid "Whitsunday Anglican School"
+msgstr "Whitsunday Anglican School"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "Why not try adding some ?"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jth_wilkinson_plc
+msgid "Wilkinson PLC"
+msgstr "Wilkinson PLC"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_han_william_light_r12_school
+msgid "William Light R-12 School"
+msgstr "William Light R-12 School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jod_wilson_ltd
+msgid "Wilson Ltd"
+msgstr "Wilson Ltd"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fme_wodonga_primary_school
+msgid "Wodonga Primary School"
+msgstr "Wodonga Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_jep_woodend_primary_school
+msgid "Woodend Primary School"
+msgstr "Woodend Primary School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_fpi_woodridge_state_school
+msgid "Woodridge State School"
+msgstr "Woodridge State School"
+
+#. module: hr_skills
+#: model:hr.resume.line,name:hr_skills.employee_resume_vad_wycheproof_p12_college
+msgid "Wycheproof P-12 College"
+msgstr "Wycheproof P-12 College"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+#, python-format
+msgid "You can add skills from our library to the employee profile."
+msgstr ""
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "e.g. Languages"
-msgstr "z.B. Sprachen"
+msgstr "z. B. Sprachen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. Odoo Inc."
-msgstr "z.B. Odoo Inc."
+msgstr "z. B. Odoo Inc."
