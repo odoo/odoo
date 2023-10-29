@@ -91,13 +91,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_node", 3);
         assert.containsN(target, ".o_hierarchy_node_button", 2);
         assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-primary").textContent.trim(), "Unfold 1");
+        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-primary").textContent.trim(), "1 people");
         // check nodes in each row
         const row = target.querySelector(".o_hierarchy_row");
         assert.containsOnce(row, ".o_hierarchy_node");
         assert.strictEqual(row.querySelector(".o_hierarchy_node_content").textContent, "Albert");
         assert.containsOnce(target, ".o_hierarchy_node_button.btn-secondary");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-secondary").textContent.trim(), "Fold");
+        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-secondary").textContent.trim(), "2 people");
     });
 
     QUnit.test("display child nodes", async function (assert) {
@@ -129,7 +129,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_node_button", 2);
         assert.containsNone(target, ".o_hierarchy_node_button.btn-primary");
         assert.containsN(target, ".o_hierarchy_node_button.btn-secondary", 2);
-        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-secondary").textContent.trim(), "Fold");
+        assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-secondary").textContent.trim(), "2 people");
         // check nodes in each row
         const rows = target.querySelectorAll(".o_hierarchy_row");
         let row = rows[0];
@@ -635,10 +635,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").textContent.trim(), "Unfold 1");
+        assert.strictEqual(target.querySelector(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").textContent.trim(), "1 people");
         assert.containsOnce(
             target,
-            ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-share-alt.o_hierarchy_icon",
+            ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-caret-right",
             "The default icon of the hierarchy view should be displayed inside the button to unfold the node."
         );
     });
@@ -652,10 +652,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary");
-        assert.strictEqual(target.querySelector(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").textContent.trim(), "Unfold 1");
+        assert.strictEqual(target.querySelector(".o_hierarchy_node button[name=hierarchy_search_subsidiaries].btn-primary").textContent.trim(), "1 people");
         assert.containsOnce(
             target,
-            ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-users",
+            ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-caret-down",
             "The icon defined in the attribute icon in hierarchy tag should be displayed inside the button to unfold the node instead of the default one."
         );
     });
