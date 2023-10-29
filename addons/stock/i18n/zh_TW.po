@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Wil Odoo, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -228,7 +229,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr "+ %d day(s)"
+msgstr "+ %d 天"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -2726,7 +2727,7 @@ msgstr "篩選"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_number
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
-msgstr "第一個SN"
+msgstr "首個序號"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3460,26 +3461,26 @@ msgstr "內部編碼，它不同於製造商的批次/序號"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr "不正確的domain左操作符 %s"
+msgstr "域左運算項 %s 無效"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr "不正確的domain操作符 %s"
+msgstr "域的運算符 %s 無效"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
-msgstr ""
+msgstr "域右運算項「%s」無效。它必須是整數或浮點數類型。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr ""
+msgstr "無效規則配置，以下規則導致出現無限循環：%s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -3743,7 +3744,7 @@ msgstr "保持<strong>差異</strong>（盤點的數量將更新至庫存，並�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "LN/SN:"
-msgstr "批次/序列號："
+msgstr "批次/序號："
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4501,13 +4502,13 @@ msgstr "名稱"
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,field_description:stock.field_product_template__nbr_moves_in
 msgid "Nbr Moves In"
-msgstr "Nbr進貨"
+msgstr "移入數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,field_description:stock.field_product_template__nbr_moves_out
 msgid "Nbr Moves Out"
-msgstr "Nbr出貨"
+msgstr "移出數"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -4745,7 +4746,7 @@ msgstr "動作數量"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_count
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN"
-msgstr "SN號碼"
+msgstr "序號號碼"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -5071,7 +5072,7 @@ msgstr "所有者:"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr "P&L 數量"
+msgstr "損益數量"
 
 #. module: stock
 #. openerp-web
@@ -5906,7 +5907,7 @@ msgstr "數量"
 msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
-msgstr ""
+msgstr "配額會適時自動刪除。如果必須手動刪除，請要求庫存經理來做。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7065,7 +7066,7 @@ msgstr "顯示警告"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Sign"
-msgstr "簽字"
+msgstr "簽名"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_sign_delivery
@@ -7956,7 +7957,7 @@ msgstr "該產品已用於至少一次庫存移動。不建議更改產品類型
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
-msgstr ""
+msgstr "如果此產品有部份數量屬於另一間公司，便不可更改產品所屬公司。"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7964,7 +7965,7 @@ msgstr ""
 msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
-msgstr ""
+msgstr "如果此產品有庫存移動屬於另一間公司，便不可更改產品所屬公司。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8870,7 +8871,7 @@ msgstr "嚮導"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
-msgstr "逐個編寫 SN/LN 或複製粘貼清單。"
+msgstr "逐個序號/批次寫上，或複製貼上一張清單。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9072,7 +9073,7 @@ msgstr "不能拆分一個移動草稿。您需要先確認它。"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
-msgstr ""
+msgstr "設為「完成」或「取消」的庫存移動不可分拆。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9092,7 +9093,7 @@ msgstr "您無法取消狀態已標記為「完成」的庫存移動。"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
+msgstr "不可更改已取消的庫存移動。請改為建立新一行。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9286,7 +9287,7 @@ msgstr "天前/"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. CW"
-msgstr "e.g. CW"
+msgstr "例：CW"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -9404,4 +9405,4 @@ msgstr "{{ object.company_id.name }} 交貨單（號碼 {{ object.name or 'n/a' 
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "全局可見天數"

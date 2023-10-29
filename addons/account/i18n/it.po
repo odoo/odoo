@@ -243,7 +243,7 @@ msgstr "1 Pagamento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Statement"
-msgstr ""
+msgstr "1 Estratto conto"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -1851,6 +1851,9 @@ msgid ""
 "id=%d>%s</a>.                    And its <a href=# data-oe-"
 "model=account.move data-oe-id=%d>reverse entry</a>."
 msgstr ""
+"Voce ratei creata il %s: <a href=# data-oe-model=account.move data-oe-"
+"id=%d>%s</a> e <a href=# data-oe-model=account.move data-oe-id=%d>voce "
+"stornata</a> corrispondente."
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -2142,6 +2145,7 @@ msgstr ""
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})"
 msgstr ""
+"Voce di rettifica del {date} ({percent:.2f}% riconosciuta il {new_date})"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2326,6 +2330,8 @@ msgid ""
 "Allows you to import FEC files.\n"
 "-This installs the l10n_fr_fec_import module."
 msgstr ""
+"Consente di importare file FEC.\n"
+"-Installazione del modulo l10n_fr_fec_import."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3493,7 +3499,7 @@ msgstr "Riporto"
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "Carryover Lines For %s"
-msgstr ""
+msgstr "Righe di riporto per %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
@@ -6050,7 +6056,7 @@ msgstr "Riferimento esterno"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "FEC Import"
-msgstr ""
+msgstr "Improtazione FEC"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -6918,6 +6924,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and/or a negative one."
 msgstr ""
+"In una riga di resoconto fiscale sono ammesse solo due etichette, se "
+"definite: una positiva e una negativa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -7032,7 +7040,7 @@ msgstr "Importare file in formato .qif"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_fr_fec_import
 msgid "Import FEC files"
-msgstr ""
+msgstr "Importa file FEC"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7052,7 +7060,7 @@ msgstr "Importare file in formato CAMT.053"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your accounting data from FEC"
-msgstr ""
+msgstr "Importa i dati contabili da FEC"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7908,6 +7916,8 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, all optional journal "
 "items must share the same account."
 msgstr ""
+"La registrazione contabile %s non è valida. Per procedere, tutti i movimenti"
+" contabili opzionali devono condividere la stessa valuta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8700,6 +8710,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuale: ricevi i pagamenti con qualsiasi metodo al di fuori di Odoo.\n"
+"Fornitori di servizi di pagamento: ogni fornitore di pagamento ha il proprio metodo. Richiedi una transazione su/per una carta grazie ad un token di pagamento salvato dal partner durante un acquisto o un abbonamento effettuato online.\n"
+"Deposito in gruppo: raccogli gli assegni dei clienti in una volta creando e inoltrando un deposito in gruppo alla tua banca. È necessario il modulo account_batch_payment.\n"
+"Addebito diretto SEPA: ricevi pagamenti dall'area SEPA grazie ad un mandato conferito dal tuo partner. È necessario il modulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -9156,7 +9170,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__no_negative_amount_carry_over_condition
 msgid "No negative amount"
-msgstr ""
+msgstr "Nessun importo negativo"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -10123,7 +10137,7 @@ msgstr "Mappatura partner per modelli di riconciliazione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner should be set"
-msgstr ""
+msgstr "Configurare il partner"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -10259,7 +10273,7 @@ msgstr "Ricevuta di pagamento:"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment Receipt: Send by email"
-msgstr ""
+msgstr "Ricevuta di pagamento: invia tramite e-mail"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -13569,6 +13583,9 @@ msgid ""
 "Technical field. True if the balance of this move line needs to be inverted "
 "when computing its total for each tag (for sales invoices, for example)."
 msgstr ""
+"Campo tecnico. Vero se il saldo della riga di movimento necessita di essere "
+"invertito quando viene calcolato il totale per ogni tag (per le fatture di "
+"vendita, ad esempio)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
