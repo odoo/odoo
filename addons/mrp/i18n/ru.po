@@ -98,7 +98,7 @@ msgstr "Кол-во вхождений в спецификации"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%(qty)s %(measure)s unbuilt in %(order)s"
-msgstr ""
+msgstr "%(qty)s%(measure)sразобрано в %(order)s"
 
 #. module: mrp
 #. odoo-python
@@ -151,7 +151,7 @@ msgstr "'Заявка на производство - %s' % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_workorder
 msgid "'Work Order - %s' % object.name"
-msgstr "'Заказ на разработку - %s' % object.name"
+msgstr "'Производственное задание - %s' % object.name"
 
 #. module: mrp
 #. odoo-python
@@ -297,7 +297,7 @@ msgstr "<span class=\"o_stat_text\">Исходная заявка на прои�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Разборка заказов</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -612,7 +612,7 @@ msgstr "Отчет о планировании производственных 
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
 msgid "Allow Work Order Dependencies"
-msgstr "Разрешить взаимосвязи между заказами на разработку"
+msgstr "Разрешить взаимосвязи между производственными заданиями"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
@@ -1511,7 +1511,7 @@ msgstr "Создайте новый рабочий центр"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_workcenter_report
 msgid "Create a new work orders performance"
-msgstr "Создайте новую производительность производственных заданий"
+msgstr "Создайте новую производительность рабочих заданий"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
@@ -1543,9 +1543,9 @@ msgid ""
 "started simultaneously."
 msgstr ""
 "Создать взаимосвязи на уровне операций, которые будут влиять как на "
-"планирование, так и на статус заказов на разработку при подтверждении заявок"
-" на производство. Если эта функция выбрана, но ничего не указано, система "
-"будет считать, что все операции могут быть начаты одновременно."
+"планирование, так и на статус производственных заданий при подтверждении "
+"заявок на производство. Если эта функция выбрана, но ничего не указано, "
+"система будет считать, что все операции могут быть начаты одновременно."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1663,13 +1663,13 @@ msgstr "Дата"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_finished
 msgid "Date at which you plan to finish the production."
-msgstr "Дата, к которой вы планируете завершить производство."
+msgstr "Дата, когда вы планируете завершить производство."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_start
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid "Date at which you plan to start the production."
-msgstr "Дата, к которой вы планируете запустить производство."
+msgstr "Дата, когда вы планируете запустить производство."
 
 #. module: mrp
 #. odoo-javascript
@@ -1857,7 +1857,7 @@ msgstr "Отображает использованные партии/сери�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr "Вы подтверждаете, что хотите удалить сборку"
+msgstr "Вы подтверждаете, что хотите разобрать"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2464,8 +2464,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
-"Невозможно спланировать заказ на разработку. Пожалуйста, проверьте доступные"
-" рабочие центры."
+"Невозможно спланировать производственное задание. Пожалуйста, проверьте "
+"доступные рабочие центры."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2558,9 +2558,9 @@ msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
-"Невозможно распланировать один отдельный заказ на разработку. Необходимо "
-"отменить планирование заявки на производство, чтобы отменить планирование "
-"всех связанных с ней операций."
+"Невозможно распланировать одно отдельное производственное задание. "
+"Необходимо отменить планирование заявки на производство, чтобы отменить "
+"планирование всех связанных с ней операций."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -2708,8 +2708,8 @@ msgid ""
 "readiness status is ready, as per BOM configuration."
 msgstr ""
 "Самый последний статус готовности для этой заявки на производство. Если "
-"зеленый, то статус готовности -  \"Выполнено\", в соответствии с настройками"
-" спецификации."
+"зеленый, то статус готовности -  \"Доступно\", в соответствии с настройками "
+"спецификации."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -2739,7 +2739,7 @@ msgstr "Покинуть"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr ""
+msgstr "Строка вопросов по использованию"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -2749,7 +2749,7 @@ msgstr "Место"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr ""
+msgstr "Место, где находится изделие, которое вы хотите разобрать."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2767,6 +2767,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
+"Место, куда вы хотите отправить компоненты, полученные в результате "
+"выполнения заказа на разборку."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2846,7 +2848,7 @@ msgstr "Производственные задания"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "MRP Workorder productivity losses"
-msgstr "Потери производительности в производственных заданиях"
+msgstr "Потери производительности в рабочих заданиях"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_main_attachment_id
@@ -3170,7 +3172,7 @@ msgstr "Перемещения для отслеживания"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
 msgid "Mrp Consumption Warning Line"
-msgstr ""
+msgstr "Строка предупреждения об использовании заявки"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3182,7 +3184,7 @@ msgstr "Производство"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
 msgid "Mrp Production Count"
-msgstr ""
+msgstr "Подсчет производственных заявок"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
@@ -3286,7 +3288,7 @@ msgstr "Не происходит потери производительнос�
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Заказ на разборку не найден"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3376,7 +3378,7 @@ msgstr "Количество заявок на производство к ис�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
 msgid "Number of Unbuilds"
-msgstr ""
+msgstr "Количество заказов на разборку"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
@@ -3456,7 +3458,7 @@ msgstr "Только заявки на производство, имеющие 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Open Work Order"
-msgstr "Открытый заказ на разработку."
+msgstr "Открыть производственное задание."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
@@ -3491,9 +3493,9 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
-"Операции определяют, что необходимо сделать для реализации заказа на "
-"разработку. Каждая операция выполняется в определенном рабочем центре и "
-"имеет определенную продолжительность."
+"Операции определяют, что необходимо сделать для реализации производственного"
+" задания. Каждая операция выполняется в определенном рабочем центре и имеет "
+"определенную продолжительность."
 
 #. module: mrp
 #. odoo-python
@@ -3551,7 +3553,7 @@ msgstr "Операции, которые должны быть завершен�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
-msgstr "Orderpoint"
+msgstr "Точка заказа"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
@@ -3831,7 +3833,7 @@ msgstr "Планируйте операции по рабочим центрам
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
 msgid "Processed Disassembly Lines"
-msgstr "Processed Disassembly Lines"
+msgstr "Обработанные строки по разборке"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_group
@@ -3911,7 +3913,7 @@ msgstr "Приложения к продуктам"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
 msgid "Product Capacities"
-msgstr ""
+msgstr "Объем продукции"
 
 #. module: mrp
 #. odoo-javascript
@@ -3924,7 +3926,7 @@ msgstr "Стоимость товара"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
 msgid "Product Forecasted Quantity"
-msgstr ""
+msgstr "Прогнозируемое количество продуктов"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -3945,7 +3947,7 @@ msgstr "Перемещение товара (позиция складского
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
 msgid "Product On Hand Quantity"
-msgstr ""
+msgstr "Количество продукции в наличии"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
@@ -3985,7 +3987,7 @@ msgstr "Варианты продукта"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
 msgid "Product capacity should be unique for each workcenter."
-msgstr ""
+msgstr "Объем продукции должен быть уникальным для каждого рабочего центра."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production_line__production_id
@@ -4983,7 +4985,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr "Задание на разработку (%s) не может быть запущено дважды!"
+msgstr "Производственное задание (%s) не может быть запущено дважды!"
 
 #. module: mrp
 #. odoo-python
@@ -5537,17 +5539,17 @@ msgstr "Заказы на разборку"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr ""
+msgstr "Разборка: %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
-msgstr ""
+msgstr "Разборка заказов"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr ""
+msgstr "Разборные"
 
 #. module: mrp
 #. odoo-javascript
@@ -5727,7 +5729,7 @@ msgstr "Очень высокий"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "View WorkOrder"
-msgstr "Просмотреть заказ на разработку"
+msgstr "Просмотреть производственное задание"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5900,6 +5902,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"Мастер, предупреждающий об использовании большего количества компонентов в "
+"заявке на производство (связанной со спецификацией)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6270,7 +6274,7 @@ msgstr "Нельзя создавать циклическую зависимо�
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Вы не можете удалить заказ на разборку, если состояние - 'Выполнено'."
+msgstr "Вы не можете удалить заказ на разборку, если статус - 'Выполнено'."
 
 #. module: mrp
 #. odoo-python
@@ -6307,7 +6311,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Вы не можете разобрать еще не выполненную заявку на производство."
+msgstr "Вы не можете разобрать еще невыполненную заявку на производство."
 
 #. module: mrp
 #. odoo-python

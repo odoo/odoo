@@ -7,11 +7,11 @@
 # Ryanto The <ry.the77@gmail.com>, 2022
 # arfa simoncelli, 2022
 # Danu S Pratomo, 2022
-# Edi Santoso <repopamor@gmail.com>, 2022
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Abe Manyo, 2023
+# Edi Santoso <repopamor@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Edi Santoso <repopamor@gmail.com>, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr ""
 "\n"
 "Perpindahan (%s) tidak seimbang.\n"
 "Total debit sejumlah %s dan total kredit sejumlah %s.\n"
-"Anda mungkin harus menentukan akun default untuk jurnal \"%s\" untuk secara otomatis menyeimbangkan setiap perpindahan."
+"Anda mungkin harus menentukan akun default untuk jurnal \"%s\" supaya secara otomatis menyeimbangkan setiap perpindahan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -166,7 +166,7 @@ msgstr "%s (pembulatan)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr "%s - %s; %s Ditagih, %s Diteirma masing-masing pada%s"
+msgstr "%s - %s; %s Ditagih, %s Diterima masing-masing pada%s"
 
 #. module: account
 #. odoo-python
@@ -180,14 +180,14 @@ msgstr "%s - %s; %s Difaktur, %s Dikirim masing-masing pada %s"
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s Termasuk Pajak"
+msgstr "%s Tidak Termasuk Pajak"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s Tidak Termasuk Pajak"
+msgstr "%s Termasuk Pajak"
 
 #. module: account
 #. odoo-python
@@ -205,7 +205,7 @@ msgstr ""
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr "%s bukan sebuah field tersimpan"
+msgstr "%s bukan sebuah bidang tersimpan"
 
 #. module: account
 #. odoo-python
@@ -215,7 +215,7 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
-"%s mencapai status tidak valid mengenai baris statement yang terkait.\n"
+"%s mencapai status tidak sah mengenai baris pernyataan yang terkait.\n"
 "Agar konsisten, entri jurnal harus selalu memiliki tepat satu baris suspense."
 
 #. module: account
@@ -286,7 +286,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr "- Membuat agar urutan dokumen dapat di-edit pada semua dokumen."
+msgstr "- Membuat agar urutan dokumen dapat diubah pada semua dokumen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -362,7 +362,7 @@ msgstr "30% Pembayaran di Muka pada Akhir Bulan Berikutnya"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% Now, Balance 60 Days"
+msgstr "30% Sekarang, Lunas 60 Hari"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -627,7 +627,7 @@ msgid ""
 "                            Gaps in the sequence"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                            Celah dalam sequence"
+"                            Celah dalam urutan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -842,8 +842,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">All selected journal entries will be validated "
-"and posted. You won't be able to modify them afterwards.</span>"
+"<span class=\"o_form_label\">Semua entri jurnal terpilih akan divalidasi dan"
+" diposting. Anda tidak dapat menyuntingnya setelah itu.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -888,7 +888,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Fiscal Localization</span>\n"
+"<span class=\"o_form_label\">Lokalisai Fiskal</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -1171,7 +1171,7 @@ msgstr "<span>Laporan</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr "<span>Running Balance</span>"
+msgstr "<span>Saldo Berjalan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1335,7 +1335,7 @@ msgid ""
 "                payments on a daily basis."
 msgstr ""
 "Kasir memungkinkan Anda untuk mengelola entri tunai pada jurnal\n"
-"                tunai Anda. Fitur ini menyediakan cara gampang untuk follow up pembayaran\n"
+"                tunai Anda. Fitur ini menyediakan cara gampang untuk menindak lanjuti pembayaran\n"
 "                tunai dari hari ke hari."
 
 #. module: account
@@ -1401,7 +1401,7 @@ msgstr ""
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
-"Line di perpindahan ini menggunakan akun yang sudah diberhentikan, Anda "
+"Baris di perpindahan ini menggunakan akun yang sudah diberhentikan, Anda "
 "tidak dapat menggunakannya."
 
 #. module: account
@@ -1475,7 +1475,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Fiscal Position pajak hanya dapat didefinisikan satu kali pada pajak yang "
+"Posisi Fiskal pajak hanya dapat didefinisikan satu kali pada pajak yang "
 "sama."
 
 #. module: account
@@ -7985,7 +7985,7 @@ msgstr "Nomor Faktur"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr "Invoice Online Payment"
+msgstr "Faktur Pembayaran Daring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
@@ -9004,7 +9004,7 @@ msgstr "Pembayaran kurang"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices online"
-msgstr "Ijinkan pelanggan Anda untuk membayar faktur secara online"
+msgstr "Izinkan pelanggan Anda untuk membayar faktur secara daring"
 
 #. module: account
 #. odoo-javascript

@@ -5,11 +5,11 @@
 # Translators:
 # Андрей Гусев <gaussgss@gmail.com>, 2022
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Ekaterina <nawsikaya@bk.ru>, 2022
 # ILMIR <karamov@it-projects.info>, 2022
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Irina Fedulova <istartlin@gmail.com>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Irina Fedulova <istartlin@gmail.com>, 2022
 # Martin Trigaux, 2023
 # alenafairy, 2023
 # 
@@ -30,12 +30,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Purchase Agreement - %s' % (object.name)"
-msgstr ""
+msgstr "'Договор купли-продажи - %s' % (object.name)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Agreement Deadline:</strong><br/>"
-msgstr ""
+msgstr "<strong>Срок действия договора:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -120,12 +120,12 @@ msgstr "Иконка типа действия"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Agreement"
-msgstr ""
+msgstr "Договор"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
-msgstr "Срок действия соглашения"
+msgstr "Срок действия договора"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -137,23 +137,23 @@ msgstr "Тип выбора соглашения"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr "Тип соглашения"
+msgstr "Тип договора"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
 msgid "Alternative POs"
-msgstr ""
+msgstr "Альтернативные заказы на поставку"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
 msgid "Alternative Po Count"
-msgstr ""
+msgstr "Подсчет альтернативных заказов на поставку"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternative Purchase Order"
-msgstr ""
+msgstr "Альтернативный заказ на поставку"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -161,17 +161,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
 msgid "Alternative Warning"
-msgstr ""
+msgstr "Альтернативное предупреждение"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternatives"
-msgstr ""
+msgstr "Альтернативы"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr ""
+msgstr "Примером договора купли-продажи является общий заказ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
@@ -181,12 +181,12 @@ msgstr "Аналитический"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Поиск по аналитическому распределению"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Аналитическая точность"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -208,13 +208,13 @@ msgstr "Выбор ставки"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr "Заказать одеяло"
+msgstr "Общий заказ"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Blanket Orders"
-msgstr ""
+msgstr "Общие заказы"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -226,7 +226,7 @@ msgstr "Отмена"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Cancel Alternatives"
-msgstr ""
+msgstr "Отменить альтернативные заказы"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -254,7 +254,7 @@ msgstr "Выбрать"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr ""
+msgstr "Выбрать поставщика для альтернативного заказа"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -264,7 +264,7 @@ msgstr "Очистить"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear Selected"
-msgstr ""
+msgstr "Очистить выбранное"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -288,12 +288,12 @@ msgstr "Компания"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
-msgstr ""
+msgstr "Сравнить позиции заказа"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Compare Product Lines"
-msgstr ""
+msgstr "Сравнить позиции продукта"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -319,13 +319,13 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid "Copy Products"
-msgstr ""
+msgstr "Копировать продукты"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
 msgid "Create Alternative"
-msgstr ""
+msgstr "Создать альтернативный заказ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -334,13 +334,18 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"Создайте тендер, добавив альтернативные коммерческие предложения от "
+"различных поставщиков. Выберите наилучшее сочетание времени выполнения "
+"заказа, OTD и/или общую сумму. Сравнивая ассортимент продуктов, вы также "
+"можете принять решение о заказе одних продуктов у одного поставщика, а "
+"других - у другого."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
-msgstr ""
+msgstr "Создать альтернативный заказ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__create_uid
@@ -365,7 +370,7 @@ msgstr "Дата создания"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid "Creation Blocked"
-msgstr ""
+msgstr "Невозможно создать"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -380,7 +385,7 @@ msgstr "Пользовательское описание"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr "Данные для новых коммерческих"
+msgstr "Данные для новых КП"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
@@ -441,6 +446,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"В случае общего заказа вы можете заключить договор на определенный период\n"
+" (например, на год) и заказывать продукцию в рамках этого договора, чтобы получить прибыль\n"
+" от согласованных цен."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -457,7 +465,7 @@ msgstr "Группировка"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_kpis_tree_inherit_purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_tree_inherit_purchase_requisition
 msgid "Has Alternatives"
-msgstr ""
+msgstr "Имеет альтернативные заказы"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
@@ -503,12 +511,19 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"Если выбранный поставщик или любой из продуктов в исходном заказе на "
+"поставку имеет блокирующее уведомление, то мы не можем создать "
+"альтернативный заказ. Это связано с тем, что обычно содержание этих полей "
+"удаляется вместе с уведомлением в окне формы, но в данном случае невозможно "
+"восстановить эти данные."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
+"Если флажок установлен, то будут скопированы количества продуктов из "
+"исходного заказа на поставку"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -523,7 +538,7 @@ msgstr "Подписчик"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Keep Alternatives"
-msgstr ""
+msgstr "Сохраните альтернативные заказы"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group____last_update
@@ -563,12 +578,12 @@ msgstr "Просроченные действия"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Строк"
+msgstr "Строки"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr ""
+msgstr "Привязать к запросу о цене"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -635,7 +650,7 @@ msgstr "Тип следующего действия"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
-msgstr ""
+msgstr "Нечего удалять"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -687,17 +702,17 @@ msgstr "Дата заказа"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "Origin Po"
-msgstr ""
+msgstr "Исходный заказ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr ""
+msgstr "Другие возможные заказы на приобретение продукции"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr ""
+msgstr "Заказы для подтверждения"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -729,7 +744,7 @@ msgstr "Продукты"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__line_ids
 msgid "Products to Purchase"
-msgstr "ТМЦ для закупки"
+msgstr "Продукты для закупки"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
@@ -741,19 +756,19 @@ msgstr "Договор о покупке"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr "Типы соглашения о покупке"
+msgstr "Виды договоров купли-продажи"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr "Соглашения о покупке"
+msgstr "Договоры купли-продажи"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__purchase_group_id
 msgid "Purchase Group"
-msgstr ""
+msgstr "Группа закупок"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -800,7 +815,7 @@ msgstr "Позиция запроса закупки"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr "Тип реквизитов покупки"
+msgstr "Тип заявки на поставку"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
@@ -881,7 +896,7 @@ msgstr "Поиск соглашений о покупке"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
+msgstr "Выбрать несколько ЗЦП (неэксклюзивных)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -895,6 +910,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Выберите только один ЗЦП (эксклюзивный): при подтверждении заказа на поставку отмените остальные заказы.\n"
+"\n"
+" Выберите несколько ЗЦП (неэксклюзивных): допускается несколько заказов на поставку. Подтверждении заказа на поставку не отменяет остальные заказы."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -906,7 +924,7 @@ msgstr "Нумерация"
 msgid ""
 "Set active to false to hide the Purchase Agreement Types without removing "
 "it."
-msgstr ""
+msgstr "Снимите флажок \"Активно\", чтобы скрыть виды договора не удаляя их."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -925,7 +943,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
-msgstr ""
+msgstr "Некоторые не удалены"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -934,6 +952,8 @@ msgstr ""
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
+"Некоторые количества не обрабатывались, поскольку их статус не является "
+"статусом ЗЦП."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -943,12 +963,12 @@ msgstr "Документ-источник"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr "Начните новое соглашение закупок"
+msgstr "Создайте новый договор"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr "Этап долгосрочного заказ"
+msgstr "Указать общий заказ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -972,7 +992,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr "информация поставщика"
+msgstr "Информация о поставщике"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
@@ -983,6 +1003,7 @@ msgstr "Прайслист поставщика"
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
 msgstr ""
+"Техническая модель для группировки заказ на поставку при объявлении тендера"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -999,6 +1020,7 @@ msgstr "Ожидаемая и запланированная дата поста
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
 msgstr ""
+"Исходный заказ на поставку, для которого был создан альтернативный заказ."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1009,13 +1031,16 @@ msgid ""
 " from the original order has a blocking warning on it and cannot be selected"
 " to create an alternative."
 msgstr ""
+"Выбранный вами поставщик или хотя бы один из продуктов, которые вы копируете"
+" из исходного заказа, имеет уведомление о блокировке и не может быть выбран "
+"для создания альтернативного заказа."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
-msgstr ""
+msgstr "Нет количества для удаления."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1025,6 +1050,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
+"Для данного поставщика уже существует открытый общий заказ. Мы предлагаем не"
+" создавать новый заказ, а завершить открытый заказ."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1032,7 +1059,7 @@ msgstr ""
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
-msgstr ""
+msgstr "Это уведомление о блокировке!\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1062,12 +1089,12 @@ msgstr "ЕИ"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr "Использовать линии соглашения"
+msgstr "Использовать поля договора"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
-msgstr "Использовать количества соглашений"
+msgstr "Использовать количества договора"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1084,7 +1111,7 @@ msgstr "Поставщик"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
 msgid "Warning Messages"
-msgstr ""
+msgstr "Уведомление"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1094,6 +1121,8 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"Уведомление для %(partner)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1103,13 +1132,15 @@ msgid ""
 "Warning for %(product)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"Уведомление для %(product)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Предупреждение для %s "
+msgstr "Уведомление для %s "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
@@ -1127,31 +1158,36 @@ msgid ""
 "Whether or not this purchase order is linked to another purchase order as an"
 " alternative."
 msgstr ""
+"Связана ли данная заявка на поставку с другой заявкой в качестве "
+"альтернативы."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
 msgstr ""
+"Мастер в случае, если у заказа на поставку остаются открытые альтернативные "
+"запросы котировок"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
 msgid "Wizard to preset values for alternative PO"
 msgstr ""
+"Мастер предварительной установки значений для альтернативных заказов на "
+"поставку"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft or cancelled requisitions."
-msgstr ""
+msgstr "Удалить можно только черновые или отмененные заявки."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
-"Вы не можете подтвердить соглашение '%s', потому что нет строки товара."
+msgstr "Вы не можете подтвердить договор '%s', потому что нет строки товара."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1160,14 +1196,14 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr "Вы не можете подтвердить долгосрочное заказ без цены."
+msgstr "Вы не можете подтвердить общий заказ без указания цены."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr "Вы не можете подтвердить долгосрочное заказ без количестве."
+msgstr "Вы не можете подтвердить общий заказ без количества."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1176,9 +1212,7 @@ msgstr "Вы не можете подтвердить долгосрочное �
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr ""
-"Перед закрытием заявки необходимо отменить или проверить каждый Запрос на "
-"Коммерческое."
+msgstr "Перед закрытием заявки необходимо отменить или проверить каждый ЗЦП."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -1186,6 +1220,8 @@ msgid ""
 "alternative request for quotations are still open, do you want to cancel "
 "them?"
 msgstr ""
+"Альтернативный запрос котировок все еще открыт, не хотите ли вы его "
+"отменить?"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
