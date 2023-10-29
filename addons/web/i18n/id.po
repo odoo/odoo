@@ -320,7 +320,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">Pajak 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -353,6 +353,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"<span>Faktur</span>\n"
+"                           <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -410,7 +412,7 @@ msgstr "<strong>Total</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
-msgstr ""
+msgstr "<strong>Jumlah Sebelum Pajak</strong>"
 
 #. module: web
 #. odoo-javascript
@@ -1018,7 +1020,7 @@ msgstr "Binary file"
 #: code:addons/web/static/src/views/fields/boolean_icon/boolean_icon_field.js:0
 #, python-format
 msgid "Boolean Icon"
-msgstr ""
+msgstr "Boolean Icon"
 
 #. module: web
 #. odoo-javascript
@@ -1390,7 +1392,7 @@ msgstr "Salin URL ke Papan Klip"
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #, python-format
 msgid "Copy error to clipboard"
-msgstr ""
+msgstr "Salin error ke papan klip"
 
 #. module: web
 #. odoo-javascript
@@ -1518,7 +1520,7 @@ msgstr "Buat %s"
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Create <strong>%s</strong> as a new %s?"
-msgstr ""
+msgstr "Buat <strong>%s</strong> sebagai %s baru?"
 
 #. module: web
 #. odoo-javascript
@@ -1789,7 +1791,7 @@ msgstr "Alat pengembang"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "Mata uang yang berbeda tidak dapat diagregat"
 
 #. module: web
 #. odoo-javascript
@@ -2561,7 +2563,7 @@ msgstr "Kolom-kolom invalid:"
 #: code:addons/web/controllers/domain.py:0
 #, python-format
 msgid "Invalid model: %s"
-msgstr ""
+msgstr "Model tidak valid: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2633,7 +2635,7 @@ msgstr "Pilihan Label"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 #, python-format
 msgid "Label:"
-msgstr ""
+msgstr "Label:"
 
 #. module: web
 #. odoo-python
@@ -3025,7 +3027,7 @@ msgstr "Pindahkan ke %s..."
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Move to next %s"
-msgstr ""
+msgstr "Gerakkan ke berikutnya %s"
 
 #. module: web
 #. odoo-javascript
@@ -3226,7 +3228,7 @@ msgstr "Tidak ada menu yang ditemukan"
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "No quick filter available."
-msgstr ""
+msgstr "Tidak ada filter cepat yang tersedia."
 
 #. module: web
 #. odoo-javascript
@@ -3354,6 +3356,8 @@ msgid ""
 "Odoo Push notifications have been blocked. Go to your browser settings to "
 "allow them."
 msgstr ""
+"Odoo Push Notifications telah diblokir. Pergi ke pengaturan browser Anda "
+"untuk mengizinkannya."
 
 #. module: web
 #. odoo-javascript
@@ -3483,6 +3487,13 @@ msgstr "Hanya Anda"
 #, python-format
 msgid "Open View"
 msgstr "Buka Tampilan"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3711,13 +3722,15 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2023/00003</span></b>"
 msgstr ""
+"Mohon gunakan referensi berikut untuk pembayaran Anda : <b><span>\n"
+"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Please, scan again!"
-msgstr ""
+msgstr "Silakan scan lagi!"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -3929,6 +3942,7 @@ msgstr "Tambah Dengan Cepat"
 msgid ""
 "Quick filters will become available if the records shown can be filtered."
 msgstr ""
+"Filter cepat akan tersedia bila record yang ditunjukkan dapat difilter."
 
 #. module: web
 #. odoo-javascript
@@ -4056,7 +4070,7 @@ msgstr "Hubungan:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Tabel relasional"
 
 #. module: web
 #. odoo-javascript
@@ -4336,14 +4350,14 @@ msgstr "Cari record"
 #: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
 #, python-format
 msgid "Search user..."
-msgstr ""
+msgstr "Cari user..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.js:0
 #, python-format
 msgid "Search users..."
-msgstr ""
+msgstr "Cari user-user..."
 
 #. module: web
 #. odoo-javascript
@@ -4505,7 +4519,7 @@ msgstr "Pilih zona waktu untuk pengguna anda"
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Set kanban state as %s"
-msgstr ""
+msgstr "Tetapkan status kanban sebagai %s"
 
 #. module: web
 #. odoo-javascript
@@ -4542,7 +4556,7 @@ msgstr "Jalan pintas"
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #, python-format
 msgid "Show %s view"
-msgstr ""
+msgstr "Tunjukkan tampilan %s"
 
 #. module: web
 #. odoo-javascript
@@ -4665,7 +4679,7 @@ msgstr "Gaya"
 #: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
 #, python-format
 msgid "Style error"
-msgstr ""
+msgstr "Error style"
 
 #. module: web
 #. odoo-javascript
@@ -4686,7 +4700,7 @@ msgstr "Jumlah"
 #: code:addons/web/static/src/views/graph/graph_model.js:0
 #, python-format
 msgid "Sum (%s)"
-msgstr ""
+msgstr "Jumlah (%s)"
 
 #. module: web
 #. odoo-javascript
@@ -4819,6 +4833,9 @@ msgid ""
 "or developer error that must be fixed for the entire database before "
 "continuing working."
 msgstr ""
+"Kompilasi style gagal, lihat error di bawah. Ini adalah error administrator "
+"atau developer yang harus dibetulkan untuk seluruh database sebelum "
+"melanjutkan kerja."
 
 #. module: web
 #. odoo-python
@@ -5211,6 +5228,7 @@ msgstr "Belum ada judul"
 #, python-format
 msgid "Update the filters in the search bar to display more records."
 msgstr ""
+"Update filter di kolom pencarian untuk menampilkan lebih banyak record."
 
 #. module: web
 #. odoo-javascript
@@ -5574,6 +5592,8 @@ msgstr "Anda mungkin tidak percaya, <br /> tetapi aplikasi masih memuat..."
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
 msgstr ""
+"Anda harus bisa mengedit induk terlebih dahulu untuk menambahkan tag "
+"properti"
 
 #. module: web
 #. odoo-javascript
@@ -5582,6 +5602,8 @@ msgstr ""
 #, python-format
 msgid "You need to be able to edit parent first to configure property fields"
 msgstr ""
+"Anda harus bisa mengedit induk terlebih dahulu untuk mengonfigurasi field "
+"properti"
 
 #. module: web
 #. odoo-javascript
@@ -5600,7 +5622,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
-msgstr ""
+msgstr "Anda harus memilih model sebelum membuka pemilih placeholder dinamik."
 
 #. module: web
 #. odoo-javascript
@@ -6110,7 +6132,7 @@ msgstr "ms"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "new tab"
-msgstr ""
+msgstr "tab baru"
 
 #. module: web
 #. odoo-javascript
@@ -6155,7 +6177,7 @@ msgstr "tidak seperti"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.js:0
 #, python-format
 msgid "not set"
-msgstr ""
+msgstr "tidak ditetapkan"
 
 #. module: web
 #. odoo-javascript
@@ -6211,7 +6233,7 @@ msgstr "induk dari"
 #: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
 #, python-format
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.placeholder"
 
 #. module: web
 #. odoo-javascript

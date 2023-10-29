@@ -201,6 +201,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>儲存</strong>本頁，然後返回\n"
+"                                此處，以設定功能。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -411,7 +413,7 @@ msgstr "將優先權分配給產品供應商列表."
 msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr ""
+msgstr "最多可同時顯示 %s 個數量。請移除某個選定數量，以加入其他數量。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -853,7 +855,7 @@ msgstr "小數精確度"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "預設 %s 價目表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1690,7 +1692,7 @@ msgstr "辦公燈"
 msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
-msgstr ""
+msgstr "對於產品 %(product)s，不可將數值 %(value)s 關聯至屬性 %(attribute)s，因為它們不相符。 "
 
 #. module: product
 #. odoo-python
@@ -1699,7 +1701,7 @@ msgstr ""
 msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
-msgstr ""
+msgstr "對於產品 %(product)s，不可將屬性 %(attribute_src)s 轉換為屬性 %(attribute_dest)s。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1738,14 +1740,14 @@ msgstr "百分比價格"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Pills"
+msgstr "藥丸形狀"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "請輸入正整數。"
 
 #. module: product
 #. odoo-python
@@ -2211,7 +2213,7 @@ msgstr "採購計量單位"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "數量（價格）"
 
 #. module: product
 #. odoo-javascript
@@ -2231,7 +2233,7 @@ msgstr "數量"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "現有數量（%s）。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2407,7 +2409,7 @@ msgstr "如果這條規則只能用於一個產品模板，則指定一個模板
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "指定一個固定金額，用以加至計算折扣在內的金額（如果為負數，則由該金額減去）。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2510,7 +2512,7 @@ msgstr "此產品的類型與詳細類型不匹配"
 msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
-msgstr ""
+msgstr "屬性 %(attribute)s 必須至少具有一個關於產品 %(product)s 的值。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2604,7 +2606,7 @@ msgstr "從該供應商採購的數量，將影響適用的價格，依供應商
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "捨入方式必須嚴格為正數。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2620,7 +2622,7 @@ msgstr "銷售價是從產品模板管理的.按一下 \"組態變體\" 按鈕�
 msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
-msgstr ""
+msgstr "該值 %(value)s 尚未在產品 %(product)s 的屬性 %(attribute)s 上定義。"
 
 #. module: product
 #. odoo-python
@@ -2813,6 +2815,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"產品價值（在 AVCO 中自動計算）。\n"
+"        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
+"        用於計算銷售訂單的利潤率。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3022,7 +3027,7 @@ msgstr "寫入日期"
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr ""
+msgstr "你正在取消價目表功能。所有已啟用的價目表都會被封存。"
 
 #. module: product
 #. odoo-python
@@ -3068,6 +3073,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"你不可更改屬性 %(attribute)s 的款式建立模式，因為該屬性已用於以下產品：\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3076,7 +3083,7 @@ msgstr ""
 msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
-msgstr ""
+msgstr "你不可更改 %(value)s 值的屬性，因為它已用於以下產品： %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3085,7 +3092,7 @@ msgstr ""
 msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "不可更改在產品 %(product)s 上設置的值 %(value)s 的產品。"
 
 #. module: product
 #. odoo-python
@@ -3094,7 +3101,7 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "不可更改在產品 %(product)s 上設置的值 %(value)s 的值。"
 
 #. module: product
 #. odoo-python
@@ -3133,6 +3140,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"不可刪除屬性 %(attribute)s，因為該屬性已被用於以下產品：\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3143,6 +3152,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"不可刪除值 %(value)s，因為它用於以下產品：\n"
+"%(products)s\n"
+" 如果該值在過去已與產品關聯，便不能刪除。"
 
 #. module: product
 #. odoo-python
@@ -3172,7 +3184,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+msgstr "不可刪除值 %s，因為它曾在部份產品中使用過。"
 
 #. module: product
 #. odoo-python
@@ -3181,7 +3193,7 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
-msgstr ""
+msgstr "不可將屬性 %(attribute)s 從產品 %(product_src)s 移動至產品 %(product_dest)s。"
 
 #. module: product
 #. odoo-python
@@ -3232,7 +3244,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "須至少留下一個數量。"
 
 #. module: product
 #. odoo-python
