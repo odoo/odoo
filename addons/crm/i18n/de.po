@@ -103,7 +103,7 @@ msgstr "Verkaufschance von %s"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Create your first opportunity.</b>"
-msgstr "<b>Erstellen Sie Ihre erste Chance.</b>"
+msgstr "<b>Erstellen Sie Ihre erste Verkaufschance.</b>"
 
 #. module: crm
 #. openerp-web
@@ -166,9 +166,9 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
-"<p class='o_view_nocontent_smiling_face'>Füge eine neue Verkaufschance hinzu</p><p>\n"
-"    Scheinbar sind Sie kein Mitglied von diesem Vertriebskanal. Fügen Sie sich selbst\n"
-"    als ein Mitglied  dieses Vertriebskanals hinzu.\n"
+"<p class='o_view_nocontent_smiling_face'>Fügen Sie eine neue Verkaufschance hinzu</p><p>\n"
+"    Scheinbar sind Sie kein Mitglied dieses Verkaufsteams. Fügen Sie sich selbst\n"
+"    als ein Mitglied dieses Verkaufsteams hinzu.\n"
 "</p>"
 
 #. module: crm
@@ -279,10 +279,10 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span>Weisen Sie regelmäßig Leads basierend auf Regeln zu</span><br/>\n"
-"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
-"                                        Alle Sales Teams werden diese Einstellung standardmäßig verwenden\n"
-"                                       sofern nicht anders angegeben.\n"
-"                                    </span>"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    Alle Verkaufsteams werden diese Einstellung standardmäßig verwenden, sofern\n"
+"                                    nicht anders angegeben.\n"
+"                                </span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -1223,8 +1223,8 @@ msgstr "Beschreibung"
 msgid ""
 "Did you know emails sent to  generate opportunities in your pipeline?<br>"
 msgstr ""
-"Wussten Sie, dass E-Mails, die an einen Alias gesendet werden, Opportunities"
-" in Ihrer Pipeline generieren?<br>"
+"Wussten Sie, dass E-Mails, die an einen Alias gesendet werden, "
+"Verkaufschancen in Ihrer Pipeline generieren?<br>"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

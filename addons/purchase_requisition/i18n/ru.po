@@ -126,7 +126,7 @@ msgstr "Иконка типа действия"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Agreement"
-msgstr ""
+msgstr "Договор"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
@@ -759,7 +759,7 @@ msgstr "Поиск соглашений о покупке"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
+msgstr "Выбрать несколько запросов цен (неисключительных)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -773,6 +773,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Выберите только один ЗЦП (эксклюзивный): при подтверждении заказа на поставку отмените остальные заказы.\n"
+"\n"
+" Выберите несколько ЗЦП (неэксклюзивных): допускается несколько заказов на поставку. Подтверждении заказа на поставку не отменяет остальные заказы."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -784,7 +787,7 @@ msgstr "Нумерация"
 msgid ""
 "Set active to false to hide the Purchase Agreement Types without removing "
 "it."
-msgstr ""
+msgstr "Снимите флажок \"Активно\", чтобы скрыть виды договора не удаляя их."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -860,6 +863,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
+"Для данного поставщика уже существует открытый общий заказ. Мы предлагаем не"
+" создавать новый заказ, а завершить открытый заказ."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter

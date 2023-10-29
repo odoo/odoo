@@ -3071,6 +3071,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"Numero predefinito di pezzi (nella Diba del prodotto) che può essere "
+"prodotto in parallelo (nello stesso momento) in questo centro di lavoro. Ad "
+"esempio: se la capacità è 5 e hai bisogno di produrre 10 unità, il tempo "
+"dell'operazione elencato nella distinta base verrà moltiplicato per due. "
+"Tuttavia, nota che sia il tempo che precede che il tempo che segue la "
+"produzione verrà conteggiato una sola volta."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3079,6 +3085,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
 msgstr ""
+"Questa dovrebbe essere la quantità più piccola realizzabile del prodotto. Se"
+" la Diba contiene operazioni assicurati che la capacità del centro di lavoro"
+" sia corretta."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3183,7 +3192,7 @@ msgstr "Filtri ricerca operazioni"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_production_order
 msgid "Order Label"
-msgstr ""
+msgstr "Etichetta ordine"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -4440,6 +4449,8 @@ msgstr "Campo tecnico per mostrare il pulsante Applica"
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_backorders
 msgid "Technical field to show the Create Backorder and No Backorder buttons"
 msgstr ""
+"Campo tecnico per mostrare i pulsanti Crea ordine residuo e Nessun ordine "
+"residuo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__costs_hour
