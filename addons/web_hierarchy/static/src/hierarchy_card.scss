@@ -11,10 +11,6 @@
     width: 250px;
     min-height: 130px;
 
-    .o_hierarchy_node_button_container {
-        height: 30px;
-    }
-
     &.o_hierarchy_dragged {
         .o_hierarchy_node {
             background-color: $hierarchy_element_dragged-background;
@@ -50,8 +46,6 @@
         }
 
         .o_hierarchy_node_body {
-            height: 65px;
-
             .o_employee_availability {
                 position: absolute;
                 top: 4px;
@@ -59,24 +53,10 @@
             }
         }
 
-        .o_hierarchy_node_footer {
-            height: 30px;
-        }
-
         .o_hierarchy_node_color_0 {
             background-color: $gray-200;
         }
 
         @include o-hierarchy-node-color;
-    }
-
-    .o_hierarchy_node_button {
-        display: grid;
-        grid-template-columns: 50px 1fr 50px;
-        border-radius: 0;
-
-        .o_hierarchy_icon {
-            vertical-align: text-top;
-        }
     }
 }
