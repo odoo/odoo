@@ -38,7 +38,7 @@ msgstr "<i class=\"fa fa-clock-o\" title=\"日期\" role=\"img\" aria-label=\"�
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">估值</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -285,6 +285,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"平攤：費用均攤。\n"
+"按數量：根據產品的數量劃分成本。 \n"
+"按目前成本：成本將根據產品的當前成本進行劃分。\n"
+"按重量：根據重量劃分成本。\n"
+"按體積：根據體積劃分成本。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -350,7 +355,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
-msgstr ""
+msgstr "指示產品是否為到岸成本：當收到供應商賬單時，您可以在之前的收據上分配此成本。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -428,7 +433,7 @@ msgstr "到岸成本已驗證"
 msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
-msgstr ""
+msgstr "到岸成本可將額外費用（運輸、保險、關稅等）計入產品成本。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -734,7 +739,7 @@ msgstr "重量"
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
-msgstr ""
+msgstr "您不能在選擇的 %s 應用到岸成本。到岸成本只能應用於採用先進先出或平均成本計算方法的產品。"
 
 #. module: stock_landed_costs
 #. odoo-python

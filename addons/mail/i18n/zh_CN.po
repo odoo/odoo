@@ -3315,7 +3315,7 @@ msgstr "强制发送"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language:"
-msgstr ""
+msgstr "强制使用一种语言："
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -4092,7 +4092,7 @@ msgstr "无效模板或视图源 Xml ID%(source_ref)s不再存在"
 #, python-format
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
-msgstr ""
+msgstr "模版或视图来源记录%(svalue)s无效，应为%(model)s"
 
 #. module: mail
 #. odoo-python
@@ -4100,7 +4100,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
-msgstr ""
+msgstr "模版或视图来源参考%(svalue)s无效，应为%(model)s"
 
 #. module: mail
 #. odoo-python
@@ -4223,7 +4223,7 @@ msgstr "是聊天"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
 msgid "Is a log"
-msgstr ""
+msgstr "是系统日志"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -4436,7 +4436,7 @@ msgstr "上次更新日期"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "上次使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -4795,7 +4795,7 @@ msgstr "邮箱"
 msgid ""
 "Mailing or posting with a source should not be called with an empty "
 "%(source_type)s"
-msgstr ""
+msgstr "若邮件或帖文有来源，便不应以空的%(source_type)s呼叫"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -5554,7 +5554,7 @@ msgstr "通知类型"
 msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr ""
+msgstr "通知应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -5563,7 +5563,7 @@ msgstr ""
 msgid ""
 "Notification should receive attachments records as a list of IDs (received "
 "%(aids)s)"
-msgstr ""
+msgstr "通知应收到 ID 清单形式的附件记录（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -5572,7 +5572,7 @@ msgstr ""
 msgid ""
 "Notification should receive partners given as a list of IDs (received "
 "%(pids)s)"
-msgstr ""
+msgstr "通知应收到以 ID 清单形式提供的合作伙伴名单（已收到%(pids)s）"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -5802,7 +5802,7 @@ msgstr "只有消息类型的备注才能更新其内容"
 msgid ""
 "Only messages type comment can have their content updated on model "
 "'discuss.channel'"
-msgstr ""
+msgstr "只有消息类型的备注才能在模型“discuss.channel”上更新其内容"
 
 #. module: mail
 #. odoo-python
@@ -5813,7 +5813,7 @@ msgstr ""
 msgid ""
 "Only users belonging to the \"%(group_name)s\" group can modify dynamic "
 "templates."
-msgstr ""
+msgstr "仅限“%(group_name)s”群组用户修改动态模板。"
 
 #. module: mail
 #. odoo-javascript
@@ -6264,7 +6264,7 @@ msgstr "应在业务文档上发布消息。使用 message_notify 向用户发�
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr ""
+msgstr "发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -6273,7 +6273,7 @@ msgstr ""
 msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
-msgstr ""
+msgstr "发布一则消息应收到 ID 清单形式的附件记录（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -6282,7 +6282,7 @@ msgstr ""
 msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
-msgstr ""
+msgstr "发布一则消息应收到 ID 清单形式的合作伙伴名单（已收到%(pids)s）"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -7719,7 +7719,7 @@ msgstr "模板描述"
 msgid ""
 "Template rendering should be called only using on a list of IDs; received "
 "%(res_ids)r instead."
-msgstr ""
+msgstr "模板渲染应该仅在 ID 清单上呼叫；但实际接收到了 %(res_ids)r。"
 
 #. module: mail
 #. odoo-python
@@ -7728,7 +7728,7 @@ msgstr ""
 msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
-msgstr ""
+msgstr "模板渲染仅支持 inline_template、qweb或qweb_view（视图或原始视图）；但实际接收到了%(engine)s。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7755,12 +7755,12 @@ msgstr "Tenor GIF 内容过滤器"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr ""
+msgstr "Tenor GIF 限额"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr ""
+msgstr "Tenor Gif 限额"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
@@ -8100,7 +8100,7 @@ msgstr "此用户无法添加到此频道"
 #, python-format
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
-msgstr ""
+msgstr "渲染时不支持这些值作为选项：%(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -8127,7 +8127,7 @@ msgstr "线程图像"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
 msgid "Thread-Enabled"
-msgstr ""
+msgstr "已启用对话串"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
@@ -8173,7 +8173,7 @@ msgstr "待办"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "To peer:"
-msgstr ""
+msgstr "致同伴："
 
 #. module: mail
 #. odoo-javascript
@@ -8599,7 +8599,7 @@ msgstr "使用一键通话功能"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
 msgid "Used as context used to evaluate composer domain"
-msgstr ""
+msgstr "用作评估作者域名的上下文"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id

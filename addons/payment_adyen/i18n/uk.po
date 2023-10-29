@@ -3,8 +3,8 @@
 # 	* payment_adyen
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +26,16 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Попередження:</strong> Щоб зафіксувати суму вручну, вам також "
+"потрібно в налаштуваннях облікового запису Adyen встановити значення Capture"
+" Delay у ручний режим."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
-msgstr ""
+msgstr "Надіслано запит на анулювання транзакції з референсом %s (%s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -89,7 +92,7 @@ msgstr "Ключ HMAC"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Є Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -118,7 +121,7 @@ msgstr "Не знайдено жодної транзакції, що відпо
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Помічник отримання оплати"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
@@ -148,6 +151,7 @@ msgstr "Перевірте ваші деталі платежу."
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
 msgstr ""
+"Отримано дані для дочірньої транзакції з відсутніми значеннями транзакції"
 
 #. module: payment_adyen
 #. odoo-python
@@ -215,6 +219,8 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Сума, оброблена Adyen для транзакції %s відрізняється від запитаної. "
+"Створюється інша транзакція з правильною сумою."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
@@ -232,6 +238,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Отримання або анулювання транзакції може зайняти кілька хвилин, щоб Adyen "
+"обробила її та відобразила в Odoo."
 
 #. module: payment_adyen
 #. odoo-python
@@ -241,6 +249,8 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
+"Був надісланий запит на отримання %(amount)s для транзакції з референсом "
+"%(ref)s (%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -250,14 +260,14 @@ msgstr "Ключ клієнта для користувача вебсервіс
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Код рахунку мерчанта для використання з цим провайдером"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "Зʼєднання з цим API невдалося. Деталі: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code

@@ -27,6 +27,9 @@ msgid ""
 "                    <option value=\"savings\">Personal Savings</option>\n"
 "                    <option value=\"businessChecking\">Business Checking</option>"
 msgstr ""
+"<option value=\"checking\">Персональна перевірка</option>\n"
+"                    <option value=\"savings\">Персональні збереження</option>\n"
+"                    <option value=\"businessChecking\">Перевірка бізнесу</option>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -142,6 +145,7 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
+"Не вдалося отримати деталі транзакції. (код помилки: %s; error_details: %s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__authorize_payment_method_type__credit_card
@@ -209,7 +213,7 @@ msgstr "Не знайдено жодної транзакції, що відпо
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "В обліковому записі Authorize.Net можна вибрати лише одну валюту."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -282,6 +286,7 @@ msgstr "Технічний код цього провайдера платежу
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
+"Транзакція не має статусу для повернення коштів. (статус: %s, деталі: %s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -313,13 +318,16 @@ msgid ""
 "method type, please disable the provider and duplicate it. Then, change the "
 "payment method type on the duplicated provider."
 msgstr ""
+"Є активні токени, пов’язані з цим провайдером. Щоб змінити спосіб оплати, "
+"вимкніть провайдера та скопіюйте його. Потім змініть тип способу оплати "
+"дублюючого постачальника."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "Цю дію неможливо виконати, поки постачальника вимкнено."
 
 #. module: payment_authorize
 #. odoo-javascript

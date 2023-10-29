@@ -47,7 +47,7 @@ msgstr "BoM 유형"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr "하청업체 중 하나가 협력사인 자재명세서"
+msgstr "외주업체 중 하나가 협력사인 자재명세서"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
@@ -78,7 +78,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr "하도급으로 품목을 공급받으려는 경우 하청업체 유형의 공급업체를 선택해 주세요."
+msgstr "외주로 품목을 공급받으려는 경우 외주업체 유형의 거래처를 선택해 주세요."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -198,7 +198,7 @@ msgstr "외주 포털 보기에서 필터링 하는데 사용되는 자재명세
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr "협력사가 하청업체인 MRP 생산"
+msgstr "협력사가 외주업체인 MRP 생산"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -207,7 +207,7 @@ msgstr "협력사가 하청업체인 MRP 생산"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr "재고 현황에 불일치가 발생하지 않도록 하청업체에 재공급 피킹을 검증하거나 조정해야 합니다."
+msgstr "재고 현황에 불일치가 발생하지 않도록 외주업체에 재공급 피킹을 검증하거나 조정해야 합니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -362,7 +362,7 @@ msgstr "예약됨"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr "하청업체 재공급"
+msgstr "외주업체 재공급"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -371,17 +371,17 @@ msgstr "하청업체 재공급"
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "주문 시 하청업체로부터 재공급"
+msgstr "주문 시 외주업체로부터 재공급"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "하청업체 재공급"
+msgstr "외주업체 재공급"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
 msgid "Return Picking"
-msgstr "반품 선별"
+msgstr "반품 피킹"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -415,7 +415,7 @@ msgstr "원본 문서"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "State"
-msgstr "시/도"
+msgstr "상태"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -426,7 +426,7 @@ msgstr "재고 이동"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr "협력사가 하청업체인 재고 피킹"
+msgstr "협력사가 외주업체인 재고 피킹"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
@@ -523,19 +523,19 @@ msgstr "외주 생산: %s"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
 msgid "Subcontractor"
-msgstr "하청업체"
+msgstr "외주업체"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr "하청업체 위치"
+msgstr "외주업체 위치"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
-msgstr "하청업체"
+msgstr "외주업체"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -611,14 +611,14 @@ msgstr "경고/최소 모드에서 소비시 자재명세서와 비교하여 더
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
-msgstr "자재명세서에는 작업 또는 부산물 내역을 하청으로 설정할 수 없습니다."
+msgstr "자재명세서에는 작업 또는 부산물 내역을 외주로 설정할 수 없습니다."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 #, python-format
 msgid "You cannot alter the company's subcontracting location"
-msgstr "회사의 외주 생산 위치를 변경할 수 없습니다"
+msgstr "회사의 외주 생산 위치를 변경할 수 없습니다."
 
 #. module: mrp_subcontracting
 #. odoo-python

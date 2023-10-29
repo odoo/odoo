@@ -33,11 +33,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        作業エントリ生成元を定義します\n"
+"        ワークエントリ生成元を定義します\n"
 "\n"
-"        勤務スケジュール: 作業エントリは以下の作業時間から生成されます\n"
-"        勤怠管理: 作業エントリは従業員の勤怠管理から生成されます（勤怠管理アプリが必要）\n"
-"        計画: 作業エントリは従業員の計画から生成されます（計画アプリが必要）\n"
+"        勤務スケジュール: ワークエントリは以下の就業時間から生成されます\n"
+"        勤怠管理: ワークエントリは従業員の勤怠管理から生成されます（勤怠管理アプリが必要）\n"
+"        計画: ワークエントリは従業員の計画から生成されます（計画アプリが必要）\n"
 "    "
 
 #. module: hr_work_entry_contract
@@ -63,7 +63,7 @@ msgid ""
 "allowed to regenerate validated work entries"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle me-1\" "
-"title=\"Warning\"/>検証済の作業エントリを再生成することはできません。"
+"title=\"Warning\"/>検証済のワークエントリを再生成することはできません。"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -143,7 +143,7 @@ msgstr "従業員"
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
-msgstr "全員の作業エントリ"
+msgstr "全員のワークエントリ"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
@@ -158,7 +158,7 @@ msgstr "from"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 msgid "Generate Missing Work Entries"
-msgstr "欠勤エントリの作成"
+msgstr "欠落しているワークエントリの作成"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -205,7 +205,7 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"作業エントリを再生成するには、ウィザードに従業員ID、date_from、date_toを指定する必要があります。さらに、date_fromとdate_toで定義された時間間隔には、検証済の作業エントリが含まれていてはいけません。"
+"ワークエントリを再生成するには、ウィザードに従業員ID、date_from、date_toを指定する必要があります。さらに、date_fromとdate_toで定義された時間間隔には、検証済のワークエントリが含まれていてはいけません。"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
@@ -246,7 +246,7 @@ msgstr "有給休暇"
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "Regenerate Employee Work Entries"
-msgstr "従業員作業エントリを再生成"
+msgstr "従業員ワークエントリを再生成"
 
 #. module: hr_work_entry_contract
 #. odoo-javascript
@@ -254,7 +254,7 @@ msgstr "従業員作業エントリを再生成"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 #, python-format
 msgid "Regenerate Work Entries"
-msgstr "作業エントリの再生成"
+msgstr "ワークエントリの再生成"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_resource_calendar
@@ -277,7 +277,7 @@ msgstr "病気休暇"
 #, python-format
 msgid ""
 "Sorry, generating work entries from cancelled contracts is not allowed."
-msgstr "申し訳ありませんが、キャンセル済の契約書からの作業エントリは許可されていません。"
+msgstr "申し訳ありませんが、キャンセル済の契約書からのワークエントリは許可されていません。"
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -289,7 +289,7 @@ msgid ""
 "entries time interval."
 msgstr ""
 "開始日付は >= '%(earliest_available_date)s'である必要があり、終了日付は  <= "
-"'%(latest_available_date)s'である必要があり、 生成されたワークエントリーの時間間隔に対応します。"
+"'%(latest_available_date)s'である必要があり、 生成されたワークエントリの時間間隔に対応します。"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
@@ -319,12 +319,12 @@ msgstr "有効"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "Work Entries"
-msgstr "作業エントリ"
+msgstr "ワークエントリ"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
 msgid "Work Entries Within Interval"
-msgstr "間隔内の作業エントリ"
+msgstr "間隔内のワークエントリ"
 
 #. module: hr_work_entry_contract
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action

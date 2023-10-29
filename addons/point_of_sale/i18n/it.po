@@ -287,7 +287,7 @@ msgstr "<strong>Nota sessione di apertura:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice:</strong>"
-msgstr ""
+msgstr "<strong>Fattura originale:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -376,6 +376,8 @@ msgid ""
 "A valid product already exists for Point of Sale. Therefore, demonstration "
 "products cannot be loaded."
 msgstr ""
+"Un prodotto valido esiste già per Punto Vendita. I prodotti dimostrativi non"
+" possono essere caricati."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1120,14 +1122,14 @@ msgstr "Cassa"
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.xml:0
 #, python-format
 msgid "Cash In"
-msgstr "Cash-In"
+msgstr "Entrate di cassa"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Cash In/Out"
-msgstr "Cassa in entrata/uscita"
+msgstr "Entrate/uscite di cassa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
@@ -1172,14 +1174,14 @@ msgstr "Arrotondamenti di cassa"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 #, python-format
 msgid "Cash control - closing"
-msgstr ""
+msgstr "Controllo di cassa - chiusura"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.js:0
 #, python-format
 msgid "Cash control - opening"
-msgstr ""
+msgstr "Controllo di cassa - apertura"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1200,14 +1202,14 @@ msgstr "Differenza di cassa rilevata durante il conteggio (utili)"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 #, python-format
 msgid "Cash in / out"
-msgstr ""
+msgstr "Entrate/uscite di cassa"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.js:0
 #, python-format
 msgid "Cash in/out of %s is ignored."
-msgstr "Cash-in/cash-out per %s viene ignorato."
+msgstr "Le entrate/uscite di cassa di %s vengono ignorate."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1620,7 +1622,7 @@ msgstr "Continua a vendere"
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "Continue with limited functionalities"
-msgstr ""
+msgstr "Continua con funzionalità limitate"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2059,7 +2061,7 @@ msgstr "Eliminare gli ordini non pagati?"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.js:0
 #, python-format
 msgid "Demo products are no longer available"
-msgstr ""
+msgstr "I prodotti demo non sono più disponibili"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
@@ -3431,6 +3433,9 @@ msgid ""
 "Meanwhile connection is back, Odoo Point of Sale will operate limited "
 "operations. Check your connection or continue with limited functionalities"
 msgstr ""
+"In attesa che la connessione venga ristabilita, Odoo Punto Vendita eseguirà "
+"operazioni limitate. Controlla la connessione o continua con funzionalità "
+"limitate"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3595,7 +3600,7 @@ msgstr "Nuova sessione"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #, python-format
 msgid "New amount"
-msgstr ""
+msgstr "Nuovo importo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
@@ -3718,14 +3723,14 @@ msgstr "Nessun ordine trovato"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products found for"
-msgstr ""
+msgstr "Nessun prodotto trovato per"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products here, but don't worry, we've got your back."
-msgstr ""
+msgstr "Non ci sono prodotti qui ma non preoccuparti, ci pensiamo noi."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4505,7 +4510,7 @@ msgstr "Plastica"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "Play with"
-msgstr ""
+msgstr "Gioca con"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4899,7 +4904,7 @@ msgstr "Categorie prodotto POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr ""
+msgstr "POS fattura rimborsata"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
@@ -6433,7 +6438,7 @@ msgstr "Riepilogo"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Switch Product View"
-msgstr ""
+msgstr "Cambia vista prodotto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6563,7 +6568,7 @@ msgstr "Tel:"
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 #, python-format
 msgid "Thank you for your purchase!"
-msgstr ""
+msgstr "Grazie per aver acquistato!"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7986,7 +7991,7 @@ msgstr "Deve essere assegnato un punto vendita alla sessione."
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "You're offline"
-msgstr ""
+msgstr "Sei offline!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8053,7 +8058,7 @@ msgstr "appartengono a un'altra sessione:"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "create your own products"
-msgstr ""
+msgstr "crea i tuoi prodotti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8156,7 +8161,7 @@ msgstr "ordini:"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "our demo products"
-msgstr ""
+msgstr "i nostri prodotti demo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8187,14 +8192,14 @@ msgstr "invio"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the invoice"
-msgstr ""
+msgstr "la fattura"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the receipt"
-msgstr ""
+msgstr "la ricevuta"
 
 #. module: point_of_sale
 #. odoo-javascript

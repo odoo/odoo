@@ -22250,8 +22250,8 @@ msgid ""
 "         "
 msgstr ""
 "Si se hereda esta vista, \n"
-"* Si es \"TRUE\", la vista siempre extiende a la vista madre \n"
-"* Si es \"FALSE\", la vista actual no extiende la vista madre, pero se puede habilitar\n"
+"* Si es \"TRUE\", la vista siempre extiende a la vista principal \n"
+"* Si es \"FALSE\", la vista actual no extiende la vista principal, pero se puede habilitar\n"
 "             "
 
 #. module: base
@@ -22976,6 +22976,12 @@ msgstr "Parámetro 'agrupar por' no valido"
 
 #. module: base
 #. odoo-python
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Expresión no válida al procesar xpath %r"
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -34222,7 +34228,7 @@ msgstr "Los siguientes módulos no están instalados o se desconocen: %s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "The group %(name)r defined in view does not exist!"
-msgstr "El grupo %(name)r que está definido en la lista no existe."
+msgstr "El grupo %(name)r que está definido en la vista no existe."
 
 #. module: base
 #. odoo-python
@@ -36847,7 +36853,7 @@ msgstr "Fusionar contabilidad de WMS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
-msgstr "Costes en destino del WMS"
+msgstr "Costos en destino del WMS"
 
 #. module: base
 #: model:res.country,name:base.wf
@@ -37328,8 +37334,8 @@ msgid ""
 " for use; help about python expression is given in the help tab."
 msgstr ""
 "Escriba el código Python que ejecutará la acción. Algunas variables están "
-"disponibles para su uso. Puede encontrar ayuda para la expresión de Python "
-"en la pestaña de ayuda."
+"disponibles para su uso. Puede encontrar más información sobre la expresión "
+"de Python en la pestaña de ayuda."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
@@ -37431,8 +37437,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Puede tanto subir un archivo de su ordenador como copiar/pegar un enlace de "
-"internet a su fichero."
+"Puede subir un archivo de su ordenador o copiar/pegar un enlace de internet "
+"a su fichero."
 
 #. module: base
 #. odoo-python

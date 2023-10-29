@@ -487,12 +487,14 @@ msgstr "<span class=\"o_stat_text\">Ultima valutazione</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Attività principale</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
 msgstr ""
+"<span class=\"text-muted o_row ps-1 pb-3\">Invia richiesta di "
+"valutazione:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -513,6 +515,11 @@ msgid ""
 "                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','periodic')]}\">Verrà inviata una richiesta di valutazione non appena l'attività raggiunge una fase per la quale è definito un modello e-mail di valutazione.</span>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">Le richieste di valutazione verranno inviate finché l'attività rimane in una fase per la quale è definito un modello e-mail di valutazione.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1034,6 +1041,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"Allega direttamente tutti i documenti o i link all'attività per avere tutte "
+"le informazioni relative alla ricerca centralizzate."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1156,7 +1165,7 @@ msgstr "Bloccante"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocking Tasks"
-msgstr ""
+msgstr "Attività bloccanti"
 
 #. module: project
 #. odoo-javascript
@@ -1318,6 +1327,9 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"Comunica con i clienti sull'attività utilizzando il gateway e-mail. Allega "
+"all'attività design relativi al logo, in modo che le informazioni vengano "
+"comunicate dai designer a coloro che stampano la maglietta."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1602,6 +1614,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"I clienti forniscono riscontri via e-mail. Odoo crea attività "
+"automaticamente ed è possibile comunicare direttamente sull'attività."
 
 #. module: project
 #. odoo-python
@@ -2154,7 +2168,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "Ottieni riscontri e valuta le prestazioni dei dipendenti"
 
 #. module: project
 #. odoo-python
@@ -2197,6 +2211,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"Gestisci la raccolta di idee all'interno delle attività del tuo nuovo "
+"progetto e parlane nel chatter dedicato."
 
 #. module: project
 #. odoo-javascript
@@ -2711,7 +2727,7 @@ msgstr "Creazione logo"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Look for the"
-msgstr ""
+msgstr "Cerca"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3252,7 +3268,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "Organizza le priorità tra gli ordini utilizzando il pulsante"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3774,6 +3790,9 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"Controlla rapidamente lo stato delle attività per le approvazioni o "
+"richieste di modifica e individua quelle in sospeso finché le dipendenze non"
+" vengono risolte grazie all'icona a clessidra."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -5580,7 +5599,7 @@ msgstr "avatar"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "button."
-msgstr ""
+msgstr "."
 
 #. module: project
 #. odoo-javascript
@@ -5649,6 +5668,9 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or canceled, all of its dependencies will be unblocked."
 msgstr ""
+"l'icona per vedere le attività in attesa su altre. Una volta che un'attività"
+" è contrassegnata come completata o annullata, tutte le dipendenze verranno "
+"sbloccate."
 
 #. module: project
 #. odoo-javascript
@@ -5672,7 +5694,7 @@ msgstr "vista menu Attività personali"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "su base periodica"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5692,6 +5714,8 @@ msgstr "pronta per essere contrassegnata come raggiunta"
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
+"per indicare una richiesta di modifica o la necessità di parlare di "
+"un'attività."
 
 #. module: project
 #. odoo-javascript
@@ -5701,20 +5725,22 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"per informare i tuoi colleghi che l'attività è approvata per la prossima "
+"fase."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as canceled."
-msgstr ""
+msgstr "per contrassegnare l'attività come annullata."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "per contrassegnare l'attività come completata."
 
 #. module: project
 #. odoo-javascript
@@ -5768,7 +5794,7 @@ msgstr "per indicare lo stato attuale della tua idea."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "quando raggiungi una determinata fase"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
