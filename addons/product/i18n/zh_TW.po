@@ -205,6 +205,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>儲存</strong>本頁，然後返回\n"
+"                                此處，以設定功能。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -1753,7 +1755,7 @@ msgstr "百分比價格"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "藥丸"
+msgstr "藥丸形狀"
 
 #. module: product
 #. odoo-javascript
@@ -2421,7 +2423,7 @@ msgstr "如果這條規則只能用於一個產品模板，則指定一個模板
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "指定一個固定金額，用以加至計算折扣在內的金額（如果為負數，則由該金額減去）。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2616,7 +2618,7 @@ msgstr "從該供應商採購的數量，將影響適用的價格，依供應商
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "捨入方式必須嚴格為正數。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2823,6 +2825,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"產品價值（在 AVCO 中自動計算）。\n"
+"        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
+"        用於計算銷售訂單的利潤率。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3173,7 +3178,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+msgstr "不可刪除值 %s，因為它曾在部份產品中使用過。"
 
 #. module: product
 #. odoo-python
