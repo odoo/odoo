@@ -127,7 +127,7 @@
                                 <div class="row">
                                     <div class="col-6 o_kanban_primary_left">
                                         <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
-                                            <t t-if="record.current_session_state.raw_value === 'opened'">Continue selling</t>
+                                            <t t-if="record.current_session_state.raw_value === 'opened'">Continue Selling</t>
                                             <t t-elif="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value">New Session</t>
                                             <t t-elif="record.current_session_state.raw_value === 'opening_control'">Open Session</t>
                                         </button>
