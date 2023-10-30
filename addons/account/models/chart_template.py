@@ -812,6 +812,13 @@ class AccountChartTemplate(models.AbstractModel):
             }
             for model, templates in data.items()
         }
+        # add the prefix to the "children_tax_ids" value for group-type taxes
+        for tax_data in data['account.tax'].values():
+            if tax_data.get('amount_type') == 'group':
+                children_taxes = tax_data['children_tax_ids'].split(',')
+                for idx, child_tax in enumerate(children_taxes):
+                    children_taxes[idx] = f"{chart_template_code}_{child_tax}"
+                tax_data['children_tax_ids'] = ','.join(children_taxes)
         self._load_data(data)
 
     # --------------------------------------------------------------------------------
