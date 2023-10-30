@@ -15,13 +15,7 @@ options.registry.EmbedCode = options.Class.extend({
         const $container = this.$target.find('.s_embed_code_embedded');
         const code = $container.html().trim();
 
-        await loadBundle({
-            jsLibs: [
-                '/web/static/lib/ace/ace.js',
-                '/web/static/lib/ace/mode-xml.js',
-                '/web/static/lib/ace/mode-qweb.js',
-            ],
-        });
+        await loadBundle("web.ace_lib");
 
         await new Promise(resolve => {
             const $content = $(renderToElement('website.custom_code_dialog_content'));

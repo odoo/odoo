@@ -38,16 +38,7 @@ export class ProfilingQwebView extends Component {
         this.renderProfilingInformation = useDebounced(this.renderProfilingInformation, 100);
 
         onWillStart(async () => {
-            await loadBundle({
-                jsLibs: [
-                    "/web/static/lib/ace/ace.js",
-                    [
-                        "/web/static/lib/ace/mode-python.js",
-                        "/web/static/lib/ace/mode-xml.js",
-                        "/web/static/lib/ace/mode-qweb.js",
-                    ],
-                ],
-            });
+            await loadBundle("web.ace_lib");
             await this._fetchViewData();
             this.state.view = this.viewObjects.find((view) => view.id === this.state.viewID);
         });
