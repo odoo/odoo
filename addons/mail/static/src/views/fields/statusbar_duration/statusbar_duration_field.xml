@@ -6,7 +6,7 @@
         <!-- Add time to the stage buttons -->
         <xpath expr="//DropdownItem/t[1]" position="replace">
             <span t-esc="item.name" />
-            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 opacity-50 small">
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
                 <t t-esc="item.shortTimeInStage"/>
             </span>
         </xpath>
@@ -16,7 +16,7 @@
         </xpath>
         <xpath expr="//t[@t-if='item.isSelected']/button" position="inside">
             <span t-esc="item.name"/>
-            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 opacity-50 small">
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
                 <t t-esc="item.shortTimeInStage"/>
             </span>
         </xpath>
@@ -26,7 +26,7 @@
         </xpath>
         <xpath expr="//t[@t-elif='props.isDisabled']/button" position="inside">
             <span t-esc="item.name"/>
-            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 opacity-50 small">
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
                 <t t-esc="item.shortTimeInStage"/>
             </span>
         </xpath>
@@ -36,7 +36,7 @@
         </xpath>
         <xpath expr="//t[@t-else='']/button" position="inside">
             <span t-esc="item.name"/>
-            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 opacity-50 small">
+            <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
                 <t t-esc="item.shortTimeInStage"/>
             </span>
         </xpath>
