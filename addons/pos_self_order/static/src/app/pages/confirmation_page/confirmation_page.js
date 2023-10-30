@@ -28,10 +28,14 @@ export class ConfirmationPage extends Component {
                 }, 5000);
 
                 setTimeout(() => {
-                    this.printer.print(OrderReceipt, {
-                        data: this.selfOrder.export_for_printing(this.confirmedOrder),
-                        formatCurrency: this.selfOrder.formatMonetary,
-                    });
+                    try {
+                        this.printer.print(OrderReceipt, {
+                            data: this.selfOrder.export_for_printing(this.confirmedOrder),
+                            formatCurrency: this.selfOrder.formatMonetary,
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }, 500);
             }
         });
