@@ -28,10 +28,26 @@ export class ConfirmationPage extends Component {
                 }, 5000);
 
                 setTimeout(() => {
+<<<<<<< HEAD
                     this.printer.print(OrderReceipt, {
                         data: this.selfOrder.export_for_printing(this.selfOrder.currentOrder),
                         formatCurrency: this.selfOrder.formatMonetary,
                     });
+||||||| parent of e23795000042 (temp)
+                    this.printer.print(OrderReceipt, {
+                        data: this.selfOrder.export_for_printing(this.confirmedOrder),
+                        formatCurrency: this.selfOrder.formatMonetary,
+                    });
+=======
+                    try {
+                        this.printer.print(OrderReceipt, {
+                            data: this.selfOrder.export_for_printing(this.confirmedOrder),
+                            formatCurrency: this.selfOrder.formatMonetary,
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+>>>>>>> e23795000042 (temp)
                 }, 500);
             }
         });
