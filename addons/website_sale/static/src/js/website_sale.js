@@ -6,7 +6,6 @@ import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
-import dom from "@web/legacy/js/core/dom";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
@@ -891,7 +890,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @private
      */
     _updateCarouselPosition() {
-        this.$el.css('top', dom.scrollFixedOffset() + 5);
+        let size = 5;
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
+            size += $(el).outerHeight();
+        }
+        this.$el.css('top', size);
     },
 
     //--------------------------------------------------------------------------
@@ -978,7 +981,11 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @private
      */
     _updateChatterComposerPosition() {
-        this.$el.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
+        let size = 20;
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
+            size += $(el).outerHeight();
+        }
+        this.$el.find('.o_portal_chatter_composer').css('top', size);
     },
 });
 
