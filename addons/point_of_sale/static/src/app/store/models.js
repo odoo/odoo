@@ -1629,7 +1629,7 @@ export class Order extends PosModel {
     }
 
     /**
-     * @returns {{ [productKey: string]: { product_id: number, name: string, note: string, quantity: number } }}
+     * @returns {{ [lineKey: string]: { product_id: number, name: string, note: string, quantity: number } }}
      * This function recalculates the information to be sent to the preparation tools,
      * it uses the variable lastOrderPrepaChange which contains the last changes sent
      * to perform this calculation.
@@ -1647,7 +1647,6 @@ export class Order extends PosModel {
             const orderline = this.orderlines[orderlineIdx];
             const product = orderline.get_product();
             const note = orderline.getNote();
-            const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
             const lineKey = `${orderline.uuid} - ${note}`;
             if (
                 prepaCategoryIds.size === 0 ||
@@ -1659,7 +1658,7 @@ export class Order extends PosModel {
                     : quantity;
 
                 if (quantityDiff && orderline.skipChange === skipped) {
-                    changes[productKey] = {
+                    changes[lineKey] = {
                         name: orderline.get_full_product_name(),
                         product_id: product.id,
                         attribute_value_ids: orderline.attribute_value_ids,
@@ -1683,9 +1682,9 @@ export class Order extends PosModel {
         // was last sent to the preparation tools. If so we add this to the changes.
         for (const [lineKey, lineResume] of Object.entries(this.lastOrderPrepaChange)) {
             if (!this.getOrderedLine(lineKey)) {
-                const productKey = `${lineResume["product_id"]} - ${lineResume["name"]} - ${lineResume["note"]}`;
-                if (!changes[productKey]) {
-                    changes[productKey] = {
+                const lineKey = `${lineResume["line_uuid"]} - ${lineResume["note"]}`;
+                if (!changes[lineKey]) {
+                    changes[lineKey] = {
                         product_id: lineResume["product_id"],
                         name: lineResume["name"],
                         note: lineResume["note"],
@@ -1693,7 +1692,7 @@ export class Order extends PosModel {
                         quantity: -lineResume["quantity"],
                     };
                 } else {
-                    changes[productKey]["quantity"] -= lineResume["quantity"];
+                    changes[lineKey]["quantity"] -= lineResume["quantity"];
                 }
             }
         }
