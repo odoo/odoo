@@ -36,3 +36,16 @@ $filter-panel-width: 300px;
     background-color: #E7E9ED;
   }
 }
+
+
+@media print {
+  #spreadsheet-mount-anchor {
+    overflow: unset;
+  }
+  .o-public-spreadsheet-filter-button {
+    display: none;
+  }
+  .o-public-spreadsheet header {
+    display: none !important;
+  }
+}
