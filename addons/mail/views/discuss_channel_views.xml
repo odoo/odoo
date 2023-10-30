@@ -80,8 +80,8 @@
                                 <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="tree" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <tree string="Members" editable="bottom">
-                                        <field name="partner_id" readonly="id"/>
-                                        <field name="guest_id" readonly="id"/>
+                                        <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
+                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
                                     </tree>
                                 </field>
                             </page>
