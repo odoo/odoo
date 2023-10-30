@@ -620,13 +620,12 @@ export class ThreadService {
             typeof thread.id === "string"
                 ? `mail.box_${thread.id}`
                 : `discuss.channel_${thread.id}`;
-        this.store.discuss.activeTab = !this.ui.isSmall
-            ? "all"
-            : thread.model === "mail.box"
-            ? "mailbox"
-            : ["chat", "group"].includes(thread.type)
-            ? "chat"
-            : "channel";
+        this.store.discuss.activeTab =
+            !this.ui.isSmall || thread.model === "mail.box"
+                ? "main"
+                : ["chat", "group"].includes(thread.type)
+                ? "chat"
+                : "channel";
         if (pushState) {
             this.router.pushState({ active_id: activeId });
         }

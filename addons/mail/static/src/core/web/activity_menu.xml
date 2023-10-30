@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActivityMenu">
-    <Dropdown position="'bottom-end'" autoOpen="false" beforeOpen.bind="onBeforeOpen" menuClass="`p-0 ${ ui.isSmall ? 'o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column' : ''}`">
+    <Dropdown position="'bottom-end'" autoOpen="false" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass" class="discussSystray.class">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
             <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="store.activityCounter"/></span>
         </t>
         <t t-set-slot="default">
-            <div class="o-mail-ActivityMenu bg-view flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto w-100 mh-100': ui.isSmall }">
+            <div t-att-class="`${discussSystray.contentClass} o-mail-ActivityMenu`">
                 <div t-if="store.activityGroups.length === 0" class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
                     <span>Congratulations, you're done with your activities.</span>
                 </div>
