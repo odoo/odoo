@@ -17,6 +17,7 @@ export class NotificationItem extends Component {
         "displayName",
         "hasMarkAsReadButton?",
         "iconSrc?",
+        "muted?",
         "onClick",
         "onSwipeLeft?",
         "onSwipeRight?",
