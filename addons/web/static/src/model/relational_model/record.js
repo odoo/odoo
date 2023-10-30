@@ -1088,6 +1088,7 @@ export class Record extends DataPoint {
     _switchMode(mode) {
         this.model._updateConfig(this.config, { mode }, { reload: false });
         if (mode === "readonly") {
+            this._noUpdateParent = false;
             this._invalidFields.clear();
         }
     }
