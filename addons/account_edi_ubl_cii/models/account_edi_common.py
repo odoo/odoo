@@ -694,11 +694,16 @@ class AccountEdiCommon(models.AbstractModel):
 
         # Set the values on the line_form
         invoice_line_form.quantity = inv_line_vals['quantity']
-        if inv_line_vals.get('product_uom_id'):
-            invoice_line_form.product_uom_id = inv_line_vals['product_uom_id']
-        else:
+        if not inv_line_vals.get('product_uom_id'):
             logs.append(
                 _("Could not retrieve the unit of measure for line with label '%s'.", invoice_line_form.name))
+        elif not invoice_line_form.product_id:
+            # no product set on the line, no need to check uom compatibility
+            invoice_line_form.product_uom_id = inv_line_vals['product_uom_id']
+        elif inv_line_vals['product_uom_id'].category_id == invoice_line_form.product_id.product_tmpl_id.uom_id.category_id:
+            # needed to check that the uom is compatible with the category of the product
+            invoice_line_form.product_uom_id = inv_line_vals['product_uom_id']
+
         invoice_line_form.price_unit = inv_line_vals['price_unit']
         invoice_line_form.discount = inv_line_vals['discount']
         invoice_line_form.tax_ids = inv_line_vals['taxes']
