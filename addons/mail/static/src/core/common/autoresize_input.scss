@@ -2,8 +2,11 @@
     --o-input-border-color: transparent;
 
     &:not([disabled]) {
-        &:hover, &:focus {
+        &:hover {
             --o-input-border-color: #{$border-color};
+        }
+        &:focus {
+            --o-input-border-color: #{$black};
         }
     }
 }
