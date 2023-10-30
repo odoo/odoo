@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models, fields
 
 
 class AccountMoveLine(models.Model):
@@ -36,4 +35,31 @@ class AccountMoveLine(models.Model):
         res = super()._sale_prepare_sale_line_values(order, price)
         if self.expense_id:
             res.update({'product_uom_qty': self.expense_id.quantity})
+        return res
+
+    def _sale_create_reinvoice_sale_line(self):
+        expensed_lines = self.filtered('expense_id')
+        res = super(AccountMoveLine, self - expensed_lines)._sale_create_reinvoice_sale_line()
+        res.update(super(AccountMoveLine, expensed_lines.with_context({'force_split_lines': True}))._sale_create_reinvoice_sale_line())
+        return res
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    expense_sheet_id = fields.One2many(
+        comodel_name='hr.expense.sheet',
+        inverse_name='account_move_id',
+        string='Expense Sheet',
+        readonly=True
+    )
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        res = super()._reverse_moves(default_values_list, cancel)
+        self.expense_sheet_id._sale_expense_reset_sol_quantities()
+        return res
+
+    def button_draft(self):
+        res = super().button_draft()
+        self.expense_sheet_id._sale_expense_reset_sol_quantities()
         return res
