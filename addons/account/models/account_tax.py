@@ -148,7 +148,10 @@ class AccountTax(models.Model):
 
             if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
                     not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
-                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
+                print(invoice_repartition_line_ids,"invoice repartition line ids")
+                print(record, "current record")
+                print(refund_repartition_line_ids, "Refund repartition lines")
+                # raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
 
             index = 0
             while index < len(invoice_repartition_line_ids):
