@@ -101,15 +101,39 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
         holiday.with_user(SUPERUSER_ID).action_validate()
 
-        # The leave type and timesheet are linked to the same project and task'
-        self.assertEqual(holiday.timesheet_ids.project_id.id, self.internal_project.id)
-        self.assertEqual(holiday.timesheet_ids.task_id.id, self.internal_task_leaves.id)
+        # The leave type and timesheet are linked to the same project and task of hr_leave_type_with_ts as the company is set
+        self.assertEqual(holiday.timesheet_ids.project_id.id, self.hr_leave_type_with_ts.timesheet_project_id.id)
+        self.assertEqual(holiday.timesheet_ids.task_id.id, self.hr_leave_type_with_ts.timesheet_task_id.id)
 
         self.assertEqual(len(holiday.timesheet_ids), holiday.number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
 
         # manager refuse the leave
         holiday.with_user(SUPERUSER_ID).action_refuse()
         self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of linked timesheets should be zero, since the leave is refused.')
+
+        company = self.env['res.company'].create({"name": "new company"})
+        self.empl_employee.write({
+            "company_id": company.id,
+        })
+
+        hr_leave_type_with_ts_without_company = self.hr_leave_type_with_ts.copy()
+        hr_leave_type_with_ts_without_company.write({
+            'company_id': False,
+        })
+        self.assertTrue(hr_leave_type_with_ts_without_company.timesheet_generate)
+
+        holiday = self.Requests.create({
+            'name': 'Time Off 2',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': hr_leave_type_with_ts_without_company.id,
+            'request_date_from': self.leave_start_datetime,
+            'request_date_to': self.leave_end_datetime,
+        })
+        holiday.with_user(SUPERUSER_ID).action_validate()
+
+        # The leave type and timesheet are linked to the same project and task of the employee company as the company is not set
+        self.assertEqual(holiday.timesheet_ids.project_id.id, company.internal_project_id.id)
+        self.assertEqual(holiday.timesheet_ids.task_id.id, company.leave_timesheet_task_id.id)
 
     def test_validate_without_timesheet(self):
         # employee creates a leave request
