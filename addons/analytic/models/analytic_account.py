@@ -38,8 +38,8 @@ class AccountAnalyticAccount(models.Model):
     plan_id = fields.Many2one(
         'account.analytic.plan',
         string='Plan',
-        check_company=True,
         required=True,
+        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]"
     )
     root_plan_id = fields.Many2one(
         'account.analytic.plan',
