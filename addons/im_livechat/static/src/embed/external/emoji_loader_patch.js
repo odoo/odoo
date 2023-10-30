@@ -2,15 +2,10 @@
 
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 
-import { loadBundle } from "@web/core/assets";
-import { memoize } from "@web/core/utils/functions";
+import { loadJS } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 patch(loader, {
-    loadEmoji: memoize(() =>
-        loadBundle({
-            jsLibs: [`${session.origin}/im_livechat/emoji_bundle`],
-        })
-    ),
+    loadEmoji: () => loadJS(`${session.origin}/im_livechat/emoji_bundle`),
 });

@@ -54,8 +54,6 @@ QUnit.module('field html', (hooks) => {
                 return [{
                     cssLibs: [],
                     jsLibs: [],
-                    cssContents: ['.field_body {background-color: red;}'],
-                    jsContents: ['window.odoo = {define: function(){}}; // inline asset'],
                 }];
             },
         });
