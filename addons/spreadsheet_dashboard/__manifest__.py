@@ -21,6 +21,9 @@
             "spreadsheet_dashboard/static/src/bundle/**/*.js",
             "spreadsheet_dashboard/static/src/bundle/**/*.xml",
         ],
+        'spreadsheet.assets_print': [
+            'spreadsheet_dashboard/static/src/print_assets/**/*',
+        ],
         "web.assets_backend": [
             "spreadsheet_dashboard/static/src/assets/**/*.js",
             "spreadsheet_dashboard/static/src/**/*.scss",
