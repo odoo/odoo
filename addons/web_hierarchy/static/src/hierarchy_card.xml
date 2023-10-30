@@ -32,19 +32,27 @@
                 </div>
                 <button t-if="props.node.nodes.length or props.node.canShowChildNodes"
                         name="hierarchy_search_subsidiaries"
+                        class="o_hierarchy_node_button btn rounded-0 d-grid"
                         t-att-class="{
-                            'o_hierarchy_node_button btn': true,
                             'btn-primary': !props.node.nodes.length,
                             'btn-secondary': props.node.nodes.length > 0,
                         }"
                         t-on-click.synthetic="onClickArrowDown"
                 >
                     <t t-if="!props.node.nodes.length">
-                        <i class="fa fa-fw fa-caret-right"/>
-                    </t><t t-else="">
-                        <i class="fa fa-fw fa-caret-down"/>
+                        <span style="grid-column: 2;">
+                            Unfold
+                        </span>
+                        <span class="text-end" style="grid-column: 3;">
+                            <t t-out="props.node.childResIds.length"/>
+                            <i class="fa ps-1" t-att-class="props.archInfo.icon"/>
+                        </span>
                     </t>
-                    <t t-out="props.node.childResIds.length"/> people
+                    <t t-else="">
+                        <span style="grid-column: 2;">
+                            Fold
+                        </span>
+                    </t>
                 </button>
             </div>
         </div>
