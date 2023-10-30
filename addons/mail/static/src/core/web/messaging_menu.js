@@ -2,7 +2,7 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
 
 import { Component, onWillRender, useState } from "@odoo/owl";
 
@@ -18,6 +18,7 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     setup() {
+        this.discussSystray = useDiscussSystray();
         this.store = useState(useService("mail.store"));
         this.hasTouch = hasTouch;
         this.notification = useState(useService("mail.notification.permission"));
@@ -80,8 +81,12 @@ export class MessagingMenu extends Component {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.failures.length > 0 && this.store.discuss.activeTab === "all") ||
-            (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
+            (this.store.failures.length > 0 &&
+                this.store.discuss.activeTab === "main" &&
+                !this.env.inDiscussApp) ||
+            (this.notification.permission === "prompt" &&
+                this.store.discuss.activeTab === "main" &&
+                !this.env.inDiscussApp)
         );
     }
 
@@ -94,7 +99,7 @@ export class MessagingMenu extends Component {
             },
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isShown: this.canPromptToInstall,
+            isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
         };
     }
 
@@ -105,7 +110,8 @@ export class MessagingMenu extends Component {
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
             isShown:
-                this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
+                this.store.discuss.activeTab === "main" &&
+                this.notification.permission === "prompt",
         };
     }
 
@@ -117,8 +123,10 @@ export class MessagingMenu extends Component {
                 (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
         );
         const tab = this.store.discuss.activeTab;
-        if (tab !== "all") {
+        if (tab !== "main") {
             threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
+        } else if (tab === "main" && this.env.inDiscussApp) {
+            threads = threads.filter(({ type }) => this.tabToThreadType("mailbox").includes(type));
         }
         return threads.sort((a, b) => {
             /**
@@ -171,43 +179,23 @@ export class MessagingMenu extends Component {
      * @type {{ id: string, icon: string, label: string }[]}
      */
     get tabs() {
-        if (this.env.inDiscussApp) {
-            return [
-                {
-                    icon: "fa fa-inbox",
-                    id: "mailbox",
-                    label: _t("Mailboxes"),
-                },
-                {
-                    icon: "fa fa-user",
-                    id: "chat",
-                    label: _t("Chat"),
-                },
-                {
-                    icon: "fa fa-users",
-                    id: "channel",
-                    label: _t("Channel"),
-                },
-            ];
-        } else {
-            return [
-                {
-                    icon: "fa fa-envelope",
-                    id: "all",
-                    label: _t("All"),
-                },
-                {
-                    icon: "fa fa-user",
-                    id: "chat",
-                    label: _t("Chat"),
-                },
-                {
-                    icon: "fa fa-users",
-                    id: "channel",
-                    label: _t("Channel"),
-                },
-            ];
-        }
+        return [
+            {
+                icon: this.env.inDiscussApp ? "fa fa-inbox" : "fa fa-envelope",
+                id: "main",
+                label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
+            },
+            {
+                icon: "fa fa-user",
+                id: "chat",
+                label: _t("Chat"),
+            },
+            {
+                icon: "fa fa-users",
+                id: "channel",
+                label: _t("Channel"),
+            },
+        ];
     }
 
     openDiscussion(thread) {
@@ -216,12 +204,12 @@ export class MessagingMenu extends Component {
     }
 
     onClickNewMessage() {
-        if (this.ui.isSmall && this.env.inDiscussApp) {
+        if (this.ui.isSmall || this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
             this.chatWindowService.openNewMessage();
+            this.close();
         }
-        this.close();
     }
 
     /** @param {import("models").Failure} failure */
@@ -293,14 +281,15 @@ export class MessagingMenu extends Component {
         }
         this.store.discuss.activeTab = tabId;
         if (
-            this.store.discuss.activeTab === "mailbox" &&
+            this.store.discuss.activeTab === "main" &&
+            this.env.inDiscussApp &&
             (!this.store.discuss.thread || this.store.discuss.thread.type !== "mailbox")
         ) {
             this.threadService.setDiscussThread(
                 Object.values(this.store.Thread.records).find((thread) => thread.id === "inbox")
             );
         }
-        if (this.store.discuss.activeTab !== "mailbox") {
+        if (this.store.discuss.activeTab !== "main") {
             this.store.discuss.thread = undefined;
         }
     }
