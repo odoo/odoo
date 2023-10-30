@@ -6,10 +6,11 @@
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
             <field name="interviewer_ids" position="after">
-                <label for="survey_id" groups="survey.group_survey_user"/>
-                <div groups="survey.group_survey_user">
+                <label for="survey_id" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <div groups="hr_recruitment.group_hr_recruitment_interviewer">
                     <field name="survey_id"
-                        context="{'default_access_mode': 'token'}"/>
+                        context="{'default_access_mode': 'token'}"
+                        domain="[('survey_type', '=', 'recruitment')]"/>
                     <div class="o_link_trackers col-6 text-end">
                         <a type="object" name="action_test_survey">
                         </a>

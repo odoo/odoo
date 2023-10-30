@@ -64,6 +64,7 @@ class Survey(models.Model):
         ('custom', 'Custom'),
     ],
         string='Survey Type', required=True, default='custom')
+    allowed_survey_types = fields.Json(string='Allowed survey types', compute="_compute_allowed_survey_types")
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
@@ -77,8 +78,9 @@ class Survey(models.Model):
     active = fields.Boolean("Active", default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
-        domain=[('share', '=', False)], tracking=True,
+        domain=[('share', '=', False)], tracking=1,
         default=lambda self: self.env.user)
+    restrict_user_ids = fields.Many2many('res.users', string='Restricted to', domain=[('share', '=', False)], tracking=2)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -99,7 +101,7 @@ class Survey(models.Model):
         ('number', 'Number')], string='Display Progress as', default='percent',
         help="If Number is selected, it will display the number of questions answered on the total number of question to answer.")
     # attendees
-    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
+    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True)
     # security / access
     access_mode = fields.Selection([
         ('public', 'Anyone with the link'),
@@ -365,6 +367,15 @@ class Survey(models.Model):
         for survey in self:
             survey.session_available = survey.survey_type in {'live_session', 'custom'}
 
+    @api.depends_context('uid')
+    def _compute_allowed_survey_types(self):
+        self.allowed_survey_types = [
+            ('survey', 'Survey'),
+            ('live_session', 'Live session'),
+            ('assessment', 'Assessment'),
+            ('custom', 'Custom'),
+        ] if self.env.user.has_group('survey.group_survey_user') else False
+
     @api.onchange('survey_type')
     def _onchange_survey_type(self):
         if self.survey_type == 'survey':
@@ -397,6 +408,19 @@ class Survey(models.Model):
             survey.question_ids._update_time_limit_from_survey(
                 is_time_limited=survey.session_speed_rating, time_limit=survey.session_speed_rating_time_limit)
 
+    @api.onchange('restrict_user_ids', 'user_id')
+    def _onchange_restrict_user_ids(self):
+        """
+         Add survey user_id to restrict_user_ids when:
+         - restrict_user_ids is not False
+         - user_id is not part of restrict_user_ids
+         - user_id is not a survey manager
+        """
+        surveys_to_check = self.filtered(lambda s: s.restrict_user_ids and bool(s.user_id - s.restrict_user_ids))
+        users_are_managers = surveys_to_check.user_id.filtered(lambda user: user.has_group('survey.group_survey_manager'))
+        for survey in surveys_to_check.filtered(lambda s: s.user_id not in users_are_managers):
+            survey.restrict_user_ids += survey.user_id
+
     @api.constrains('scoring_type', 'users_can_go_back')
     def _check_scoring_after_page_availability(self):
         failing = self.filtered(lambda survey: survey.scoring_type == 'scoring_with_answers_after_page' and survey.users_can_go_back)
@@ -405,6 +429,22 @@ class Survey(models.Model):
                 _('Combining roaming and "Scoring with answers after each page" is not possible; please update the following surveys:\n- %(survey_names)s',
                   survey_names="\n- ".join(failing.mapped('title')))
             )
+
+    @api.constrains('user_id', 'restrict_user_ids')
+    def _check_survey_responsible_access(self):
+        """ When:
+                - a survey access is restricted to a list of users
+                - and there is a survey responsible,
+                - and this responsible is not survey manager (just survey officer),
+            check the responsible is part of the list."""
+        surveys_to_check = self.filtered(lambda s: bool(s.user_id - s.restrict_user_ids))
+        if surveys_to_check:
+            valid_surveys = surveys_to_check._filter_access_rules_python("write")
+            failing_surveys_sudo = (self - valid_surveys).sudo()
+            if failing_surveys_sudo:
+                raise ValidationError(
+                    _('The access of the following surveys is restricted. Make sure their responsible still has access to it: \n%(survey_names)s\n',
+                        survey_names='\n'.join(f'- {survey.title}: {survey.user_id.name}' for survey in failing_surveys_sudo)))
 
     # ------------------------------------------------------------
     # CRUD
@@ -544,10 +584,13 @@ class Survey(models.Model):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
         if test_entry:
-            # the current user must have the access rights to survey
-            if not user.has_group('survey.group_survey_user'):
+            try:
+                self.with_user(user).check_access_rights('read')
+                self.with_user(user).check_access_rule('read')
+            except AccessError:
                 raise exceptions.UserError(_('Creating test token is not allowed for you.'))
-        else:
+
+        if not test_entry:
             if not self.active:
                 raise exceptions.UserError(_('Creating token for closed/archived surveys is not allowed.'))
             if self.access_mode == 'authentication':
