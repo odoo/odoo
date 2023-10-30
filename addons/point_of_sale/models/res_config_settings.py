@@ -254,8 +254,7 @@ class ResConfigSettings(models.TransientModel):
             currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
             pricelists_in_current_currency = self.env['product.pricelist'].search([('company_id', 'in', (False, res_config.pos_config_id.company_id.id)), ('currency_id', '=', currency_id)])
             if not res_config.pos_use_pricelist:
-                res_config.pos_available_pricelist_ids = pricelists_in_current_currency[:1]
-                res_config.pos_pricelist_id = pricelists_in_current_currency[:1]
+                res_config.pos_pricelist_id = False
             else:
                 if any([p.currency_id.id != currency_id for p in res_config.pos_available_pricelist_ids]):
                     res_config.pos_available_pricelist_ids = pricelists_in_current_currency
