@@ -32,14 +32,6 @@
     transform: scale(-1);
 }
 
-@include media-breakpoint-down(lg) {
-    @for $i from 0 through 12 {
-        .o_we_mobile_order_#{$i} {
-            order: $i;
-        }
-    }
-}
-
 // GRID LAYOUT
 .o_grid_mode {
     @include media-breakpoint-down(lg) {

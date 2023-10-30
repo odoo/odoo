@@ -31,10 +31,10 @@ export const ColumnLayoutMixin = {
      *
      * @private
      * @param {HTMLElement} el
-     * @returns {Array|null} class match ["o_we_mobile_order_XX", "XX"]
+     * @returns {Array|null} class match ["order-XX", "XX"]
      */
     _getItemMobileOrder(el) {
-        return el.className.match(/\bo_we_mobile_order_([0-9]+)\b/);
+        return el.className.match(/\border-([0-9]+)\b/);
     },
     /**
      * Gets the first item, whether it has a mobile order class or not.
@@ -45,7 +45,7 @@ export const ColumnLayoutMixin = {
      * @returns {HTMLElement} first HTMLElement in order
      */
     _getFirstItem(columnEls, isMobile) {
-        return isMobile && [...columnEls].find(el => el.classList.contains("o_we_mobile_order_0"))
+        return isMobile && [...columnEls].find(el => el.classList.contains("order-0"))
             || columnEls[0];
     },
     /**
@@ -56,8 +56,8 @@ export const ColumnLayoutMixin = {
      */
     _addMobileOrders(columnEls) {
         for (let i = 0; i < columnEls.length; i++) {
-            const mobileOrderClass = `o_we_mobile_order_${i}`;
-            columnEls[i].classList.add(mobileOrderClass);
+            const mobileOrderClass = `order-${i}`;
+            columnEls[i].classList.add(mobileOrderClass, "order-lg-0");
         }
     },
     /**

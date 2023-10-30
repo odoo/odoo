@@ -5605,7 +5605,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             cloneEls.forEach((el, i) => {
                 if (i > 0) {
                     const newMobileOrder = siblingEls.length - cloneEls.length + i;
-                    el.classList.replace(mobileOrder[0], `o_we_mobile_order_${newMobileOrder}`);
+                    el.classList.replace(mobileOrder[0], `order-${newMobileOrder}`);
                 }
             });
         }
@@ -5624,8 +5624,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             [...this.$target[0].parentElement.children].forEach(el => {
                 const elOrder = parseInt(this._getItemMobileOrder(el)[1]);
                 if (elOrder > targetOrder) {
-                    el.classList.replace(`o_we_mobile_order_${elOrder}`,
-                        `o_we_mobile_order_${elOrder - 1}`);
+                    el.classList.replace(`order-${elOrder}`, `order-${elOrder - 1}`);
                 }
             });
         }
@@ -5641,7 +5640,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @see this.selectClass for parameters
      */
     moveSnippet: function (previewMode, widgetValue, params) {
-        const isMobile = weUtils.isMobileView(this.$target[0]);
+        const isMobile = this._isMobile();
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         const moveLeftOrRight = ["move_left_opt", "move_right_opt"].includes(params.name);
@@ -5673,7 +5672,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             }
             if (mobileOrder) {
                 for (const el of siblingEls) {
-                    el.className = el.className.replace(/\bo_we_mobile_order_[0-9]+\b/, "");
+                    el.className = el.className.replace(/\border(-lg)?-[0-9]+\b/g, "");
                 }
             }
         }
@@ -5726,7 +5725,7 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             if (moveLeftOrRight && isMobileView && this._getItemMobileOrder(this.$target[0])) {
                 const firstOrLast = widgetName === "move_left_opt" ? "0" :
                     this.$target[0].parentElement.children.length - 1;
-                return !this.$target[0].classList.contains(`o_we_mobile_order_${firstOrLast}`);
+                return !this.$target[0].classList.contains(`order-${firstOrLast}`);
             }
             const firstOrLastChild = moveUpOrLeft ? ":first-child" : ":last-child";
             return !this.$target.is(firstOrLastChild);
@@ -5742,10 +5741,16 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     _swapMobileOrders(widgetValue, siblingEls) {
         const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
         const orderModifier = widgetValue === "prev" ? -1 : 1;
-        const newOrderClass = `o_we_mobile_order_${parseInt(targetMobileOrder[1]) + orderModifier}`;
+        const newOrderClass = `order-${parseInt(targetMobileOrder[1]) + orderModifier}`;
         const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
         this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
         comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
+    },
+    /**
+     * @returns {Boolean}
+     */
+    _isMobile() {
+        return false;
     },
 });
 
