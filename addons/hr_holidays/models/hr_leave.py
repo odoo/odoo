@@ -183,6 +183,7 @@ class HolidaysRequest(models.Model):
     number_of_days = fields.Float(
         'Duration (Days)', compute='_compute_number_of_days', store=True, readonly=False, copy=False, tracking=True,
         help='Number of days of the time off request. Used in the calculation. To manually correct the duration, use this field.')
+    last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
     number_of_days_display = fields.Float(
         'Duration in days', compute='_compute_number_of_days_display', readonly=True,
         help='Number of days of the time off request according to your working schedule. Used for interface.')
@@ -514,6 +515,11 @@ class HolidaysRequest(models.Model):
                 holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id)['days']
             else:
                 holiday.number_of_days = 0
+
+    @api.depends('number_of_days')
+    def _compute_last_several_days(self):
+        for holiday in self:
+            holiday.last_several_days = holiday.number_of_days > 1
 
     @api.depends('tz')
     @api.depends_context('uid')
