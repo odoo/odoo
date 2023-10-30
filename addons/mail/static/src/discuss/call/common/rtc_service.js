@@ -15,12 +15,6 @@ const ORDERED_TRANSCEIVER_NAMES = ["audio", "screen", "camera"];
 const PEER_NOTIFICATION_WAIT_DELAY = 50;
 const RECOVERY_TIMEOUT = 15_000;
 const RECOVERY_DELAY = 3_000;
-const VIDEO_CONFIG = {
-    aspectRatio: 16 / 9,
-    frameRate: {
-        max: 30,
-    },
-};
 const INVALID_ICE_CONNECTION_STATES = new Set(["disconnected", "failed", "closed"]);
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
 const DEFAULT_ICE_SERVERS = [
@@ -139,6 +133,16 @@ export class Rtc {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
             }
+        });
+        onChange(this.userSettingsService, ["cameraFramerate", "cameraResolution"], () => {
+            this.state.sourceCameraStream?.getTracks().forEach((track) => {
+                track.applyConstraints(this.userSettingsService.cameraConstraints);
+            });
+        });
+        onChange(this.userSettingsService, ["screenFramerate", "screenResolution"], () => {
+            this.state.sourceScreenStream?.getTracks().forEach((track) => {
+                track.applyConstraints(this.userSettingsService.screenConstraints);
+            });
         });
         onChange(this.userSettingsService, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
             if (this.blurManager) {
@@ -1189,7 +1193,7 @@ export class Rtc {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
-                        video: VIDEO_CONFIG,
+                        video: this.userSettingsService.cameraConstraints,
                     });
                 }
             }
@@ -1198,7 +1202,7 @@ export class Rtc {
                     sourceStream = this.state.sourceScreenStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
-                        video: VIDEO_CONFIG,
+                        video: this.userSettingsService.screenConstraints,
                     });
                 }
                 this.soundEffectsService.play("screen-sharing");
