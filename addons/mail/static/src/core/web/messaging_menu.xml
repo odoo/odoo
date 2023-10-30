@@ -49,6 +49,7 @@
                         displayName="failure.modelName"
                         iconSrc="failure.iconSrc"
                         hasMarkAsReadButton="true"
+                        muted="false"
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                     />
@@ -63,6 +64,7 @@
                     displayName="thread.displayName"
                     iconSrc="thread.imgUrl"
                     hasMarkAsReadButton="thread.isUnread"
+                    muted="!thread.isUnread"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
