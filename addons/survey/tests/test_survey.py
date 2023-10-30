@@ -458,6 +458,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         for question_title, row_value, exp_display_name in cases:
             question = self.env['survey.question'].create({
                 'title': question_title,
+                'survey_id': self.survey.id,
                 'matrix_row_ids': [Command.create({'value': row_value})],
             })
 
@@ -513,6 +514,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         for question_title, answer_value, exp_display_name, other_values in cases:
             question = self.env['survey.question'].create({
                 'title': question_title,
+                'survey_id': self.survey.id,
                 'suggested_answer_ids': [Command.create({'value': answer_value})],
                 **other_values
             })

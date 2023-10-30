@@ -96,12 +96,15 @@ class SurveyCase(common.TransactionCase):
         if not sequence:
             sequence = page.question_ids[-1].sequence + 1 if page.question_ids else page.sequence + 1
 
+        survey_id = page.survey_id.id if page else kwargs['survey_id']
+
         base_qvalues = {
             'sequence': sequence,
             'title': name,
             'question_type': qtype,
             'constr_mandatory': constr_mandatory,
             'constr_error_msg': constr_error_msg,
+            'survey_id': survey_id,
         }
         if qtype in ('simple_choice', 'multiple_choice'):
             base_qvalues['suggested_answer_ids'] = [

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
@@ -13,6 +12,21 @@ class SurveyUserInput(models.Model):
     slide_partner_id = fields.Many2one('slide.slide.partner', 'Subscriber information',
         help="Slide membership information for the logged in user",
         index='btree_not_null') # index useful for deletions in comodel
+
+    @api.depends('survey_id.certification')
+    def _compute_can_access_survey_user_input(self):
+        return super()._compute_can_access_survey_user_input()
+
+    def _get_access_domain(self):
+        domain = super()._get_access_domain()
+        if not self.env.user.has_group("website_slides.group_website_slides_officer"):
+            return domain
+        return expression.OR([
+            domain,
+            expression.AND([
+                self._get_access_domain_survey_classic_types(),
+                self._get_access_domain_restricted_user_ids(),
+                [('survey_id.certification', '=', True)]])])
 
     @api.model_create_multi
     def create(self, vals_list):
