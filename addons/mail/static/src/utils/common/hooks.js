@@ -493,3 +493,22 @@ export function useSequential() {
         return prom;
     };
 }
+
+export function useDiscussSystray() {
+    const ui = useState(useService("ui"));
+    return {
+        class: "o-mail-DiscussSystray-class",
+        get contentClass() {
+            return `d-flex flex-column flex-grow-1 bg-view ${
+                ui.isSmall ? "overflow-auto w-100 mh-100" : ""
+            }`;
+        },
+        get menuClass() {
+            return `p-0 o-mail-DiscussSystray ${
+                ui.isSmall
+                    ? "o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column mt-0 border-0 shadow-lg"
+                    : ""
+            }`;
+        },
+    };
+}
