@@ -20,7 +20,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_hour': 'HUR',
     'uom.product_uom_ton': 'TNE',
     'uom.product_uom_meter': 'MTR',
-    'uom.product_uom_km': 'KTM',
+    'uom.product_uom_km': 'KMT',
     'uom.product_uom_cm': 'CMT',
     'uom.product_uom_litre': 'LTR',
     'uom.product_uom_cubic_meter': 'MTQ',
@@ -612,7 +612,7 @@ class AccountEdiCommon(models.AbstractModel):
         elif net_price_unit is not None:
             price_unit = (net_price_unit + rebate) / basis_qty
         elif price_subtotal is not None:
-            price_unit = (price_subtotal + allow_charge_amount) / billed_qty
+            price_unit = (price_subtotal + allow_charge_amount) / (billed_qty or 1)
         else:
             raise UserError(_("No gross price, net price nor line subtotal amount found for line in xml"))
 

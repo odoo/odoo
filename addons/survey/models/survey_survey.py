@@ -247,12 +247,11 @@ class Survey(models.Model):
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
             survey.question_count = len(survey.question_ids)
 
-    @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
+    @api.depends('users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
             if not survey.is_attempts_limited or \
-               (survey.access_mode == 'public' and not survey.users_login_required) or \
-               any(question.is_conditional for question in survey.question_and_page_ids):
+               (survey.access_mode == 'public' and not survey.users_login_required):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')

@@ -23,9 +23,8 @@
                     </t>
                     <t t-else="">
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
-                            <i class="fa fa-pencil me-2"/>
                             <span class="o_tax_group_amount_value o_list_monetary">
-                                <t t-out="props.taxGroup.formatted_tax_group_amount"/>
+                                <i class="fa fa-pencil me-2"/> <t t-out="props.taxGroup.formatted_tax_group_amount"/>
                             </span>
                         </span>
                     </t>
@@ -86,7 +85,7 @@
                             name="amount_total"
                             t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
                             t-out="totals.formatted_amount_total"
-                            style="'font-size: 1.3em; font-weight: bold; white-space: nowrap;'"
+                            style="font-size: 1.3em; font-weight: bold; white-space: nowrap;"
                         />
                     </td>
                 </tr>

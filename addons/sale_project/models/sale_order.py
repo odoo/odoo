@@ -156,12 +156,12 @@ class SaleOrder(models.Model):
         view_kanban_id = self.env.ref('project.view_project_kanban').id
         action = {
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.project_ids.ids)],
+            'domain': [('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
             'view_mode': 'kanban,form',
             'name': _('Projects'),
             'res_model': 'project.project',
         }
-        if len(self.project_ids) == 1:
+        if len(self.with_context(active_test=False).project_ids) == 1:
             action.update({'views': [(view_form_id, 'form')], 'res_id': self.project_ids.id})
         else:
             action['views'] = [(view_kanban_id, 'kanban'), (view_form_id, 'form')]

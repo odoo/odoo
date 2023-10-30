@@ -99,9 +99,9 @@
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
                                     <label for="is_attempts_limited" string="Limit Attempts"
-                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                           attrs="{'invisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
                                     <div class="o_checkbox_optional_field"
-                                        attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
+                                        attrs="{'invisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
                                         <field name="is_attempts_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_attempts_limited', '=', False)]}">
                                             to <field name="attempts_limit" nolabel="1" class="oe_inline"/> attempts
@@ -118,9 +118,9 @@
                                     </div>  
                                     <field name="scoring_type" widget="radio" />
                                     <field name="scoring_success_min" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
-                                    <label for="certification"/>
+                                    <label for="certification" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                                     <div class="o_checkbox_optional_field">
-                                        <field name="certification" nolabel="1"/>
+                                        <field name="certification" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                                         <div attrs="{'invisible': [('certification', '=', False)]}" class="w-100">
                                             <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
                                             <button name="action_survey_preview_certification_template"

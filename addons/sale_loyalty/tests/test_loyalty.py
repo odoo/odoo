@@ -33,10 +33,17 @@ class TestLoyalty(TestSaleCouponCommon):
                 'trigger': 'auto',
                 'applies_on': 'both',
                 'rule_ids': [(0, 0, {
-                    'reward_point_mode': 'money',
-                    'reward_point_amount': 10,
+                    'reward_point_mode': 'unit',
+                    'reward_point_amount': 1,
+                    'product_ids': [self.product_a.id],
                 })],
-                'reward_ids': [(0, 0, {})],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 1.5,
+                    'discount_mode': 'per_point',
+                    'discount_applicability': 'order',
+                    'required_points': 3,
+                })],
             },
             {
                 'name': 'eWallet Program',
@@ -58,7 +65,7 @@ class TestLoyalty(TestSaleCouponCommon):
         claimable_rewards = order._get_claimable_rewards()
         # Should be empty since we do not have any coupon created yet
         self.assertFalse(claimable_rewards, "No program should be applicable")
-        _, ewallet_coupon = self.env['loyalty.card'].create([
+        loyalty_card, ewallet_coupon = self.env['loyalty.card'].create([
             {
                 'program_id': loyalty_program.id,
                 'partner_id': self.partner_a.id,
@@ -79,6 +86,13 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(len(claimable_rewards), 1, "The ewallet program should not be applicable since the card has no points.")
+        vals = order._get_reward_values_discount(loyalty_program.reward_ids[0], loyalty_card)
+        self.assertEqual(
+            vals[0]['points_cost'] % loyalty_program.reward_ids.required_points,
+            0,
+            "Can only use a whole number of required points",
+        )
+        self.assertEqual(vals[0]['points_cost'], 9, "Use maximum available points for the reward")
         ewallet_coupon.points = 50
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()

@@ -15089,6 +15089,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Ygyldig 'grupper efter' parameter"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -24155,13 +24161,19 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
+"Denne handling kan ikke udføres:\n"
+"- Opret/opdatér: et obligatorisk felt er ikke udfyldt.\n"
+"- Slet: en anden model anvender det, du vil slette. Arkivér det i stedet hvis muligt.\n"
+"\n"
+"Model: %(model_name)s (%(model_tech_name)s)\n"
+"Felt: %(field_name)s (%(field_tech_name)s)\n"
 
 #. module: base
 #. odoo-python
 #: code:addons/model.py:0 code:addons/model.py:0
 #, python-format
 msgid "The operation cannot be completed: %s"
-msgstr ""
+msgstr "Handlingen kan ikke udføres: %s"
 
 #. module: base
 #. odoo-python
@@ -24173,6 +24185,10 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
+"Handlingen kan ikke udføres: en anden model anvender det, du vil slette. Arkivér det i stedet hvis muligt.\n"
+"\n"
+"Model: %(model_name)s (%(model_tech_name)s)\n"
+"Begrænsning: %(constraint)s\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain

@@ -552,12 +552,7 @@ describe('Format', () => {
                 stepFunction: async editor => {
                     insertText(editor, 'A');
                 },
-                contentAfter: `<p>A[]${s(`<br><br>`)}</p>`,
-                // Note: In the browser, the actual result is the following:
-                // contentAfter: `<p>${s(`A[]<br><br>`)}</p>`,
-                // It is arguable which version is better than the other but in
-                // any case this is a trade-off because it matches the native
-                // behavior of contentEditable in that case.
+                contentAfter: `<p>${s(`A[]<br><br>`)}</p>`,
             });
         });
         it('should not format non-editable text (strikeThrough)', async () => {

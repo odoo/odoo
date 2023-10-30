@@ -58,7 +58,7 @@
                                 <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" />
                                 <field name="months"/>
                                 <field name="days"/>
-                                <field name="end_month" widget="boolean_toggle"/>
+                                <field name="end_month" widget="boolean_toggle" options="{'autosave': False}"/>
                                 <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
                                 <field name="discount_percentage"/>
                                 <field name="discount_days"/>

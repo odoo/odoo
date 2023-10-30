@@ -316,7 +316,16 @@
     const mdyDateRegexp = /^\d{1,2}(\/|-|\s)\d{1,2}((\/|-|\s)\d{1,4})?$/;
     const ymdDateRegexp = /^\d{3,4}(\/|-|\s)\d{1,2}(\/|-|\s)\d{1,2}$/;
     const timeRegexp = /((\d+(:\d+)?(:\d+)?\s*(AM|PM))|(\d+:\d+(:\d+)?))$/;
+    const CACHE = {};
     function parseDateTime(str) {
+        if (CACHE[str]) {
+            return CACHE[str];
+        }
+        const date = _parseDateTime(str);
+        CACHE[str] = date;
+        return date;
+    }
+    function _parseDateTime(str) {
         str = str.trim();
         let time;
         const timeMatch = str.match(timeRegexp);
@@ -2042,8 +2051,9 @@
         }
         get zone() {
             const { left, top, bottom, right } = this._zone;
-            if (right !== undefined && bottom !== undefined)
-                return { left, top, right, bottom };
+            if (right !== undefined && bottom !== undefined) {
+                return this._zone;
+            }
             else if (bottom === undefined && right !== undefined) {
                 return { right, top, left, bottom: this.getSheetSize(this.sheetId).height - 1 };
             }
@@ -3294,6 +3304,9 @@
         CommandResult[CommandResult["InvalidQuantity"] = 86] = "InvalidQuantity";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
+    function isMatrix(x) {
+        return Array.isArray(x) && Array.isArray(x[0]);
+    }
     var DIRECTION;
     (function (DIRECTION) {
         DIRECTION["UP"] = "up";
@@ -17066,6 +17079,36 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // INDEX
+    // -----------------------------------------------------------------------------
+    const INDEX = {
+        description: _lt(`Returns the content of a cell, specified by row and column offset.`),
+        args: args(`
+      reference (any, range) ${_lt("The range of cells from which the value is returned.")}
+      row (number) ${_lt("The index of the row to be returned from within the reference range of cells.")}
+      column (number) ${_lt("The index of the column to be returned from within the reference range of cells.")}
+`),
+        returns: ["ANY"],
+        computeFormat: (reference, row, column) => {
+            var _a;
+            const _row = toNumber(row.value);
+            const _column = toNumber(column.value);
+            return (_a = reference[_column - 1][_row - 1]) === null || _a === void 0 ? void 0 : _a.format;
+        },
+        compute: function (reference, row, column) {
+            const _reference = isMatrix(reference) ? reference : [[reference]];
+            const _row = toNumber(row);
+            const _column = toNumber(column);
+            assert(() => _column >= 0 &&
+                _column - 1 < _reference.length &&
+                _row >= 0 &&
+                _row - 1 < _reference[0].length, _lt("Index out of range."));
+            assert(() => row !== 0 && column !== 0, _lt("This function can only return a single cell value, not an array. Provide valid row and column indices."));
+            return _reference[_column - 1][_row - 1];
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // LOOKUP
     // -----------------------------------------------------------------------------
     const LOOKUP = {
@@ -17254,6 +17297,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         COLUMN: COLUMN,
         COLUMNS: COLUMNS,
         HLOOKUP: HLOOKUP,
+        INDEX: INDEX,
         LOOKUP: LOOKUP,
         MATCH: MATCH,
         ROW: ROW,
@@ -21574,7 +21618,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             if (this.state.waitingForMove === true) {
-                this.startMovement(ev);
+                if (!this.env.model.getters.isGridSelectionActive()) {
+                    this._selectElement(index, false);
+                }
+                else {
+                    // FIXME: Consider reintroducing this feature for all type of selection if we find
+                    // a way to have the grid selection follow the other selections evolution
+                    this.startMovement(ev);
+                }
                 return;
             }
             if (this.env.model.getters.getEditionMode() === "editing") {
@@ -25186,12 +25237,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         };
     }
     function xmlEscape(str) {
-        return String(str)
+        return (String(str)
             .replace(/\&/g, "&amp;")
             .replace(/\</g, "&lt;")
             .replace(/\>/g, "&gt;")
             .replace(/\"/g, "&quot;")
-            .replace(/\'/g, "&apos;");
+            .replace(/\'/g, "&apos;")
+            // Delete all ASCII control characters except for TAB (\x09), LF (\x0A) and CR (\x0D)
+            // They are not valid at all in XML 1.0 (even escaped)
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""));
     }
     function formatAttributes(attrs) {
         return new XMLString(attrs.map(([key, val]) => `${key}="${xmlEscape(val)}"`).join(" "));
@@ -27729,10 +27783,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Reconstructs the original formula string based on a normalized form and its dependencies
          */
         buildFormulaContent(sheetId, cell, dependencies) {
-            const ranges = dependencies || [...cell.dependencies];
+            const ranges = dependencies || cell.dependencies;
+            let rangeIndex = 0;
             return concat(cell.compiledFormula.tokens.map((token) => {
                 if (token.type === "REFERENCE") {
-                    const range = ranges.shift();
+                    const range = ranges[rangeIndex++];
                     return this.getters.getRangeString(range, sheetId);
                 }
                 return token.value;
@@ -33055,6 +33110,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             currentRanges = currentRanges.concat(toAdd);
             const newRangesXC = recomputeZones(currentRanges, toRemove);
+            if (newRangesXC.length === 0) {
+                this.dispatch("REMOVE_CONDITIONAL_FORMAT", { id: cf.id, sheetId });
+                return;
+            }
             this.dispatch("ADD_CONDITIONAL_FORMAT", {
                 cf: {
                     id: cf.id,
@@ -34637,6 +34696,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
+        isGridSelectionActive() {
+            return this.selection.isListening(this);
+        }
         getActiveSheet() {
             return this.activeSheet;
         }
@@ -34707,11 +34769,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         getStatisticFnResults() {
+            const sheetId = this.getters.getActiveSheetId();
             // get deduplicated cells in zones
             const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getCellsInZone(this.getters.getActiveSheetId(), zone))
+                .map((zone) => this.getters.getCellsInZone(sheetId, zone))
                 .flat()
-                .filter((cell) => cell !== undefined));
+                .filter((cell) => {
+                if (!cell) {
+                    return false;
+                }
+                const { col, row } = this.getters.getCellPosition(cell === null || cell === void 0 ? void 0 : cell.id);
+                return !this.getters.isRowHidden(sheetId, row) && !this.getters.isColHidden(sheetId, col);
+            }));
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -35013,6 +35082,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getSheetPosition",
         "isSelected",
         "getElementsFromSelection",
+        "isGridSelectionActive",
     ];
 
     const uuidGenerator = new UuidGenerator();
@@ -40724,6 +40794,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 anchor: { zone, cell: this.anchor.cell },
             });
         }
+        isListening(owner) {
+            return this.stream.isListening(owner);
+        }
         /**
          * Process a new anchor selection event. If the new anchor is inside
          * the sheet boundaries, the event is pushed to the event stream to
@@ -42923,9 +42996,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.20';
-    __info__.date = '2023-10-03T13:22:04.440Z';
-    __info__.hash = '3be5a75';
+    __info__.version = '16.0.22';
+    __info__.date = '2023-10-19T15:24:20.617Z';
+    __info__.hash = '7f76b56';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

@@ -916,8 +916,12 @@ class PosOrder(models.Model):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
         existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
 
-        if not all(received_payment in existing_payments for received_payment in received_payments):
-            return False
+        for amount, payment_method in received_payments:
+            if not any(
+                float_is_zero(amount - ex_amount, precision_rounding=existing_order.currency_id.rounding) and payment_method == ex_payment_method
+                for ex_amount, ex_payment_method in existing_payments
+            ):
+                return False
 
         if len(data['lines']) != len(existing_order.lines):
             return False

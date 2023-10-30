@@ -265,7 +265,7 @@ class Property(models.Model):
 
         field = self.env[model]._fields[name]
         field_id = self.env['ir.model.fields']._get(model, name).id
-        company_id = self.env.company.id
+        company_id = self.env.company.id or None
 
         if field.type == 'many2one':
             comodel = self.env[field.comodel_name]

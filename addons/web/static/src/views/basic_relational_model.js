@@ -660,6 +660,7 @@ export class Record extends DataPoint {
         const saveOptions = {
             reload: !options.noReload,
             savePoint: options.savePoint,
+            viewType: this.__viewType,
         };
         try {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);

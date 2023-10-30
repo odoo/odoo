@@ -38,8 +38,8 @@ class TestMicrosoftService(TransactionCase):
         self.call_without_sync_token = call(
             "/v1.0/me/calendarView/delta",
             {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
             },
             {**self.header, 'Prefer': self.header_prefer},
             method="GET", timeout=DEFAULT_TIMEOUT,
@@ -224,8 +224,8 @@ class TestMicrosoftService(TransactionCase):
         mock_do_request.assert_called_with(
             "/v1.0/me/events/123/instances",
             {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), days=365).strftime("%Y-%m-%dT00:00:00Z"),
             },
             {**self.header, 'Prefer': self.header_prefer},
             method='GET', timeout=DEFAULT_TIMEOUT,

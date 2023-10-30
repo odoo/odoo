@@ -32,7 +32,7 @@ msgstr "% Püntkliche Lieferung"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr "+ %d Tage(e)"
+msgstr "+ %d Tag(e)"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -197,15 +197,15 @@ msgstr "Benutzerdefinierte Beschreibung"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr "Benötigte Tage zur Bestätigung eines Einkaufsauftrags"
+msgstr "Benötigte Tage zur Bestätigung einer Bestellung"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
-"Erforderliche Tage für die Bestätigung eines Einkaufsauftrags, Festlegung, "
-"wann ein Einkaufsauftrag validiert werden soll"
+"Erforderliche Tage für die Bestätigung einer Bestellung, Festlegung, wann "
+"eine Bestellung validiert werden soll"
 
 #. module: purchase_stock
 #. odoo-python
@@ -277,7 +277,7 @@ msgstr "Tatsächliches Datum letztes Jahr"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Ausnahme(n) bei Einkaufsaufträgen:"
+msgstr "Ausnahme(n) bei Bestellungen:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -325,8 +325,7 @@ msgstr "Erzeugen Sie den Entwurf der Lieferantenrechnung."
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
 msgstr ""
-"Gehen Sie zurück zum Einkaufsauftrag, um die Lieferantenrechnung zu "
-"erzeugen."
+"Gehen Sie zurück zum Bestellung, um die Lieferantenrechnung zu erzeugen."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -414,9 +413,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Toleranz bei Vorlaufzeiten des Lieferanten. Wenn das System Einkaufsaufträge"
-" für die Beschaffung von Produkten generiert, werden diese mit diesem "
-"Vorlauf geplant, um unerwartete Lieferverzögerungen mit einzuplanen."
+"Toleranz bei Vorlaufzeiten des Lieferanten. Wenn das System Bestellungen für"
+" die Beschaffung von Produkten generiert, werden diese mit diesem Vorlauf "
+"geplant, um unerwartete Lieferverzögerungen mit einzuplanen."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -502,7 +501,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
-msgstr "Einkaufsauftragsposition"
+msgstr "Bestellzeilen"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
@@ -557,20 +556,20 @@ msgstr "Auftragsposition"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr "Einkaufsauftrag"
+msgstr "Bestellung"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "Einkaufsauftragszeile"
+msgstr "Bestellzeile"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
-msgstr "Einkaufsaufträge"
+msgstr "Bestellungen"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
@@ -592,7 +591,7 @@ msgstr "Sichtbarkeitstage des Einkaufs"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr "Anzahl der Einkaufsaufträge"
+msgstr "Anzahl der Bestellungen"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
@@ -745,8 +744,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"Die auf Ihrem Einkaufsauftrag angegebenen Menge ist geringer als die in "
-"Rechnung gestellte Menge. Sie sollten um eine Erstattung bitten."
+"Die auf Ihrer Bestellung angegebenen Menge ist geringer als die in Rechnung "
+"gestellte Menge. Sie sollten um eine Erstattung bitten."
 
 #. module: purchase_stock
 #. odoo-python
@@ -758,9 +757,9 @@ msgid ""
 " Go on the product form and complete the list of vendors."
 msgstr ""
 "Für das Produkt %s sind keine Einkaufsinformationen hinterlegt, weswegen "
-"kein Einkaufsauftrag ausgelöst werden kann (kein Lieferant, "
-"Mindestabnahmemenge nicht erreicht, Datum nicht gültig ...). Gehen Sie zur "
-"Produktansicht und ergänzen Sie die Lieferantenliste."
+"keine Bestellung ausgelöst werden kann (kein Lieferant, Mindestabnahmemenge "
+"nicht erreicht, Datum nicht gültig ...). Gehen Sie zur Produktansicht und "
+"ergänzen Sie die Lieferantenliste."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -819,8 +818,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
-"Es ist nicht möglich den Einkaufsauftrag %s zu löschen, da einige Positionen"
-" bereits geliefert wurden."
+"Es ist nicht möglich die Bestellung %s zu löschen, da einige Positionen "
+"bereits geliefert wurden."
 
 #. module: purchase_stock
 #. odoo-javascript

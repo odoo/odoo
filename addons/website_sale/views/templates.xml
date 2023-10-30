@@ -175,7 +175,7 @@
                     <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
                     <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
                     <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-                    <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-field="product.website_ribbon_id.html"/>
+                    <span t-attf-class="o_ribbon o_not_editable #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-field="product.website_ribbon_id.html"/>
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -1400,7 +1400,7 @@
                     <th></th>
                     <th class="text-center td-qty">
                         <t t-if="show_qty">
-                            Quantity
+                            <span>Quantity</span>
                         </t>
                     </th>
                     <th class="text-center td-price">Price</th>
@@ -1839,7 +1839,7 @@
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>
                                                 <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
-                                                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
+                                                    <label class="col-form-label fw-normal label-optional" for="vat">VAT</label>
                                                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>

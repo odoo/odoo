@@ -173,6 +173,9 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
+                <group>
+                  <field name="name" widget="char"/>
+                </group>
                 <sheet>
                     <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>

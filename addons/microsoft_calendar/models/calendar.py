@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -74,13 +75,36 @@ class Meeting(models.Model):
         if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
             self._forbid_recurrence_creation()
 
-        # for a recurrent event, we do not create events separately but we directly
-        # create the recurrency from the corresponding calendar.recurrence.
-        # That's why, events from a recurrency have their `need_sync_m` attribute set to False.
-        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
-            dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
-            for vals in vals_list
-        ])
+        # Create events separately since the sender user may differ between events.
+        events = self.env['calendar.event']
+        vals_by_user = defaultdict(lambda: [])
+        for vals in vals_list:
+            # If event has a different organizer, check its sync status and verify if the user is listed as attendee.
+            sender_user, partner_ids = self._get_organizer_user_change_info(vals)
+            partner_included = partner_ids and len(partner_ids) > 0 and sender_user.partner_id.id in partner_ids
+            self._check_organizer_validation(sender_user, partner_included)
+            # Group new events values by user for later batch creation.
+            vals_by_user[sender_user].append(vals)
+            # Events from a recurrency have their `need_sync_m` attribute set to False.
+            if vals.get('recurrence_id') or vals.get('recurrency'):
+                vals['need_sync_m'] = False
+
+        for sender_user in vals_by_user:
+            events |= super(Meeting, self.with_user(sender_user).with_context(dont_notify=notify_context)).create(vals_by_user[sender_user])
+        return events
+
+    def _check_organizer_validation(self, sender_user, partner_included):
+        """ Check if the proposed event organizer can be set accordingly. """
+        if sender_user and sender_user != self.env.user:
+            current_sync_status = self._check_microsoft_sync_status()
+            sender_sync_status = self.with_user(sender_user)._check_microsoft_sync_status()
+            if not sender_sync_status and current_sync_status:
+                raise ValidationError(
+                    _("For having a different organizer in your event, it is necessary that "
+                      "the organizer have its Odoo Calendar synced with Outlook Calendar."))
+            elif not partner_included:
+                raise ValidationError(
+                    _("It is necessary adding the proposed organizer as attendee before saving the event."))
 
     def _check_recurrence_overlapping(self, new_start):
         """
@@ -146,6 +170,14 @@ class Meeting(models.Model):
             if not notify_context and recurrence_update_attempt and not 'active' in values:
                 self._forbid_recurrence_update()
 
+        # When changing the organizer, check its sync status and verify if the user is listed as attendee.
+        if values.get('user_id') and self.user_id.id != values['user_id']:
+            sender_user, partner_ids = self._get_organizer_user_change_info(values)
+            partner_included = sender_user.partner_id in self.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
+            self._check_organizer_validation(sender_user, partner_included)
+            self._recreate_event_different_organizer(values, sender_user)
+            values['active'] = False
+
         # check a Outlook limitation in overlapping the actual recurrence
         if recurrence_update_setting == 'self_only' and 'start' in values:
             self._check_recurrence_overlapping(values['start'])
@@ -163,6 +195,25 @@ class Meeting(models.Model):
            and values.keys() & self._get_microsoft_synced_fields():
             self.recurrence_id.need_sync_m = True
         return res
+
+    def _recreate_event_different_organizer(self, values, sender_user):
+        """ Copy current event values, delete it and recreate it with the new organizer user. """
+        self.ensure_one()
+        event_copy = {**self.copy_data()[0], 'microsoft_id': False}
+        self.env['calendar.event'].with_user(sender_user).create({**event_copy, **values})
+        if self.ms_universal_event_id:
+            self._microsoft_delete(self._get_organizer(), self.ms_organizer_event_id)
+
+    @api.model
+    def _get_organizer_user_change_info(self, values):
+        """ Return the sender user of the event and the partner ids listed on the event values. """
+        sender_user_id = values.get('user_id', self.env.user.id)
+        sender_user = self.env['res.users'].browse(sender_user_id)
+        attendee_values = self._attendees_values(values['partner_ids']) if 'partner_ids' in values else []
+        partner_ids = []
+        if attendee_values:
+            partner_ids = [command[2]['partner_id'] for command in attendee_values]
+        return sender_user, partner_ids
 
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.

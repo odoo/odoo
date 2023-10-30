@@ -1237,7 +1237,7 @@ X[]
                     stepFunction: deleteForward,
                     contentAfter: '<h1>ab []gh</h1>',
                 });
-                // // Backward selection
+                // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>ab ]cd</h1><p>ef[gh</p>',
                     stepFunction: deleteForward,
@@ -2355,6 +2355,36 @@ X[]
                     });
                 });
             });
+            describe('Nested Elements', () => {
+                it('should delete a h1 inside a td immediately after insertion', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<table><tbody><tr><td>[]<br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>',
+                        stepFunction: async editor => {
+                            await insertText(editor,'/');
+                            await insertText(editor, 'Heading');
+                            triggerEvent(editor.editable,'keyup');
+                            triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                            await nextTick();
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<table><tbody><tr><td><p>[]<br></p></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>',
+                    });
+                });
+                it('should delete a h1 inside a nested list immediately after insertion', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li></ul>',
+                        stepFunction: async editor => {
+                            await insertText(editor,'/');
+                            await insertText(editor, 'Heading');
+                            triggerEvent(editor.editable,'keyup');
+                            triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<ul><li>abc[]</li></ul>',
+                    });
+                });
+            })
             describe('Merging different types of elements', () => {
                 it('should merge a paragraph with text into a paragraph with text', async () => {
                     await testEditor(BasicEditor, {
@@ -2605,7 +2635,19 @@ X[]
                         contentAfter: '<p>ab[]de</p>',
                     });
                 });
-                it('should delete a one letter word', async () => {
+                it('should delete a one letter word followed by visible space (start of block)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>a[] b</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]&nbsp;b</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[a] b</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]&nbsp;b</p>',
+                    });
+                });
+                it('should delete a one letter word surrounded by visible space', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab c[] de</p>',
                         stepFunction: deleteBackward,
@@ -2614,7 +2656,19 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab [c] de</p>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<p>ab&nbsp;[] de</p>',
+                        contentAfter: '<p>ab []&nbsp;de</p>',
+                    });
+                });
+                it('should delete a one letter word preceded by visible space (end of block)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>a b[]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>a&nbsp;[]</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>a [b]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>a&nbsp;[]</p>',
                     });
                 });
                 it('should delete an empty paragraph in a table cell', () =>
@@ -6445,58 +6499,6 @@ X[]
                     <table class="o_selected_table"><tbody><tr>
                         <td class="o_selected_td">cd]</td>
                     </tr></tbody></table>
-                `),
-            });
-        });
-        it('should not fix the selection in a protected input even if it is contenteditable="false"', async () => {
-            await testEditor(BasicEditor, {
-                // Protected, the selection is kept.
-                contentBefore: unformat(`
-                    <p>ab</p>
-                    <div contenteditable="false" data-oe-protected="true">
-                        [<input>]
-                    </div>
-                `),
-                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                contentAfterEdit: unformat(`
-                    <p>ab</p>
-                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
-                        [<input>]
-                    </div>
-                `),
-            });
-            // Not protected, the selection is fixed.
-            await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                    <p>ab</p>
-                    <div contenteditable="false">
-                        [<input>]
-                    </div>
-                `),
-                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                contentAfterEdit: unformat(`
-                    <p>[]ab</p>
-                    <div contenteditable="false" data-oe-keep-contenteditable="">
-                        <input>
-                    </div>
-                `),
-            });
-        });
-        it('should remove the selection in a protected element if it is contenteditable="false"', async () => {
-            await testEditor(BasicEditor, {
-                // Protected, but not an input, the selection is fixed.
-                contentBefore: unformat(`
-                    <p>ab</p>
-                    <div contenteditable="false" data-oe-protected="true">
-                        <div>[]content</div>
-                    </div>
-                `),
-                stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                contentAfterEdit: unformat(`
-                    <p>ab</p>
-                    <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
-                        <div>content</div>
-                    </div>
                 `),
             });
         });

@@ -1643,7 +1643,7 @@ def _get_translation_upgrade_queries(cr, field):
             if "en_US" not in new_values:
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
             if extra and extra[0] not in new_values:
-                new_values[extra[0]] = new_values["en_US"]
+                new_values[extra[0]] = field.translate(lambda v: None, src_value)
             elif not extra:
                 missing_languages = languages - set(translations)
                 if missing_languages:

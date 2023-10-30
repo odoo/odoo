@@ -1700,6 +1700,7 @@ class Task(models.Model):
         if self.ids:
             # fetch 'user_ids' in superuser mode (and override value in cache
             # browse is useful to avoid miscache because of the newIds contained in self
+            self.invalidate_recordset(fnames=['user_ids'])
             self.browse(self.ids)._read(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))

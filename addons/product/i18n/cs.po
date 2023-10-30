@@ -15,8 +15,8 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Tomáš Píšek, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,12 +86,12 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Popisy produktů - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'Balení produktů - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -160,7 +160,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -631,7 +631,7 @@ msgstr "Sloupce"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinace indikátorů"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -676,7 +676,7 @@ msgstr "Konferenční křeslo"
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "Stůl konferenční místnosti"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -741,7 +741,7 @@ msgstr "Obsahuje množství"
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Rohový stůl, levý sed"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
@@ -928,7 +928,7 @@ msgstr "Kombinace stolu"
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr ""
+msgstr "Stolní stojan s obrazovkou"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
@@ -1064,6 +1064,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Datum ukončení pro ověření položky ceníku\n"
+"Zobrazená hodnota závisí na časovém pásmu nastaveném ve vašich předvolbách."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -1163,12 +1165,12 @@ msgstr "Vzorec"
 #. module: product
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
-msgstr ""
+msgstr "Stůl pro čtyři osoby"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "Moderní kancelářská pracovní stanice pro čtyři osoby"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1372,6 +1374,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Ve standardní ceně a AVCO: hodnota produktu (automaticky vypočtená v AVCO).\n"
+"        Ve FIFO: hodnota další jednotky, která opustí sklad (automaticky vypočtená).\n"
+"        Používá se k ocenění produktu, když nejsou známy nákupní náklady (např. úprava zásob).\n"
+"        Používá se k výpočtu marží na prodejních objednávkách."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1381,7 +1387,7 @@ msgstr "Neaktivní"
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr ""
+msgstr "Individuální pracovní místo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1776,6 +1782,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Na produktu %s nemůžete přiřadit hodnotu %s k atributu %s, protože se "
+"neshodují."
 
 #. module: product
 #. odoo-python
@@ -2258,7 +2266,7 @@ msgstr "Ceník výrobků"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "Hledání pravidel cen produktů"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2410,7 +2418,7 @@ msgstr "Prodejní popis"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Záznam prodejní mřížky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2762,6 +2770,9 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Toto nastavení atributů, hodnot a výjimek produktů by nevedlo k žádné možné "
+"variantě. Archivujte nebo přímo odstraňte svůj produkt, pokud je to "
+"zamýšlené."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2797,6 +2808,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Tato přesnost zaokrouhlení je vyšší než přesnost desetinných míst (%s číslic).\n"
+"To může způsobit nesrovnalosti ve výpočtech.\n"
+"Nastavte prosím přesnost mezi %s a 1. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2819,7 +2833,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Třímístná pohovka s lehátkem v ocelově šedé barvě"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -3045,12 +3059,12 @@ msgstr "Dodavatelé"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr ""
+msgstr "Titul: Virtual Home Staging"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
-msgstr ""
+msgstr "Virtuální interiérový design"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -3069,7 +3083,7 @@ msgstr "Objemová měrná jednotka"
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Štítek měrné jednotky objemu"
 
 #. module: product
 #. odoo-python
@@ -3126,7 +3140,7 @@ msgstr "Štítek měrné jednotky hmotnosti"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "Bílá"
 
 #. module: product
 #. odoo-python
@@ -3174,6 +3188,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Režim vytváření variant atributu %s nemůžete měnit, protože se používá v "
+"následujících produktech: %s"
 
 #. module: product
 #. odoo-python
@@ -3198,7 +3214,7 @@ msgstr "Produkt nelze změnit na hodnotu %s nastavenou na produktu %s."
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "Hodnotu nelze změnit na hodnotu %s nastavenou na produktu %s."
 
 #. module: product
 #. odoo-python
@@ -3239,6 +3255,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Nemůžete smazat atribut %s, protože se používá v následujících produktech:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3276,6 +3294,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
+"Nemůžete smazat hodnotu %s, protože byla použita v některých produktech."
 
 #. module: product
 #. odoo-python
@@ -3285,6 +3304,7 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr ""
+"Pravidlo ceníku nelze vypnout, prosím smažte jej nebo archivujte jeho ceník."
 
 #. module: product
 #. odoo-python
@@ -3292,7 +3312,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr ""
+msgstr "Tento atribut %s nelze přesunout z produktu %s k produktu %s."
 
 #. module: product
 #. odoo-python
@@ -3324,6 +3344,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat produkt pro vše, co prodáváte nebo nakupujete,\n"
+"                ať už jde o fyzický produkt, spotřební materiál nebo službu.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3333,6 +3357,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat jak produkt pro vše, co prodáváte, ať už jde o fyzický produkt, spotřební\n"
+"                materiál nebo službu, kterou nabízíte zákazníkům.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #. odoo-python

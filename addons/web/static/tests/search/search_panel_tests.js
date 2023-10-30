@@ -2270,6 +2270,34 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
+    QUnit.test("scroll kanban view with searchpanel and kept scroll position", async (assert) => {
+        for (let i = 10; i < 20; i++) {
+            serverData.models.category.records.push({ id: i, name: "Cat " + i });
+            for (let j = 0; j <9; j++)
+            serverData.models.partner.records.push({ id: 100 + i*10 +j, foo: `Record ${i*10 +j}` });
+        }
+
+        const container = document.createElement("div");
+        container.classList.add("o_web_client");
+        container.style = "max-height: 300px";
+        target.appendChild(container);
+        const webclient = await createWebClient({ target: container, serverData });
+
+        await doAction(webclient, 1);
+        await switchView(target, "kanban");
+
+        // simulate a scroll in the kanban view
+        target.querySelector(".o_renderer").scrollTop = 100;
+        await doAction(webclient, 2);
+
+        // execute a second action (in which we don't scroll)
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
+
+        // go back using the breadcrumbs
+        await click(target.querySelector(".o_control_panel .breadcrumb a"));
+        assert.strictEqual(target.querySelector(".o_renderer").scrollTop, 100);
+    });
+
     QUnit.test("scroll position is kept when switching between controllers", async (assert) => {
         for (let i = 10; i < 20; i++) {
             serverData.models.category.records.push({ id: i, name: "Cat " + i });
