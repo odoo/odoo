@@ -80,10 +80,10 @@ wTourUtils.clickOnSnippet({
     content: "Change the orders of the 2nd and 3rd items",
     trigger: "iframe .o_overlay_move_options [data-name='move_right_opt']",
 }, {
-    content: "Check that the 1st item now has a class .o_we_mobile_order_0" +
-             "and that .o_we_mobile_order_1 is set on the 3rd item, and .o_we_mobile_order_2 on the 2nd",
-    trigger: `${columnsSnippetRow}:has(.o_we_mobile_order_0:first-child)`,
-    extra_trigger: `${columnsSnippetRow}:has(.o_we_mobile_order_2:nth-child(2) + .o_we_mobile_order_1:nth-child(3))`,
+    content: "Check that the 1st item now has a class .order-0.order-lg-0" +
+             "and that .order-1.order-lg-0 is set on the 3rd item, and .order-2.order-lg-0 on the 2nd",
+    trigger: `${columnsSnippetRow}:has(.order-0.order-lg-0:first-child)`,
+    extra_trigger: `${columnsSnippetRow}:has(.order-2.order-lg-0:nth-child(2) + .order-1.order-lg-0:nth-child(3))`,
     isCheck: true,
 }, {
     content: "Toggle desktop view",
@@ -96,7 +96,7 @@ wTourUtils.clickOnSnippet({
     trigger: `${columnCountOptSelector} we-button[data-select-count='6']`,
 }, {
     content: "Check that each item has a different mobile order from 0 to 5",
-    trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5].map(n => `:has(.o_we_mobile_order_${n})`).join("")}`,
+    trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5].map(n => `:has(.order-${n}.order-lg-0)`).join("")}`,
     isCheck: true,
 }, {
     content: "Click on the 6th item",
@@ -111,8 +111,8 @@ wTourUtils.clickOnSnippet({
     content: "Change the orders of the 5th and 6th items to override the mobile orders",
     trigger: "iframe .o_overlay_move_options [data-name='move_left_opt']",
 }, {
-    content: "Check that there are no .o_we_mobile_order_X classes anymore",
-    trigger: `${columnsSnippetRow}:not(:has(.o_we_mobile_order_0))`,
+    content: "Check that there are no .order-X classes anymore",
+    trigger: `${columnsSnippetRow}:not(:has(.order-0)):not(:has(.order-lg-0))`,
     isCheck: true,
 },
 ]);
