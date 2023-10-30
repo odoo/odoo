@@ -319,23 +319,30 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
     assert.notOk($(".o-mail-Discuss-threadName")?.val() === "General");
 });
 
-QUnit.test("sidebar: unpin channel from bus", async (assert) => {
+QUnit.test("sidebar: unpin chat from bus", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Demo)");
 
-    await click(".o-mail-DiscussCategoryItem:contains(General)");
-    assert.strictEqual($(".o-mail-Discuss-threadName").val(), "General");
+    await click(".o-mail-DiscussCategoryItem:contains(Demo)");
+    assert.strictEqual($(".o-mail-Discuss-threadName").val(), "Demo");
 
-    // Simulate receiving a leave channel notification
+    // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
     });
-    assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(General)");
-    assert.notOk($(".o-mail-Discuss-threadName")?.val() === "General");
+    assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(Demo)");
+    assert.notOk($(".o-mail-Discuss-threadName")?.val() === "Demo");
 });
 
 QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (assert) => {

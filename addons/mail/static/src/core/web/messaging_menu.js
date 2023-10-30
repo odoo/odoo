@@ -105,7 +105,8 @@ export class MessagingMenu extends Component {
         /** @type {import("@mail/core/common/thread_model").Thread[]} */
         let threads = Object.values(this.store.threads).filter(
             (thread) =>
-                thread.is_pinned || (thread.hasNeedactionMessages && thread.type !== "mailbox")
+                thread.displayToSelf ||
+                (thread.hasNeedactionMessages && thread.type !== "mailbox")
         );
         const tab = this.store.discuss.activeTab;
         if (tab !== "all") {
