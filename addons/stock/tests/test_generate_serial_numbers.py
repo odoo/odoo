@@ -373,3 +373,37 @@ class StockGenerateCommon(TransactionCase):
             {'qty_done': 1, 'lot_name': '003', 'location_dest_id': sub_loc_03.id},
             {'qty_done': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
         ])
+
+    def test_import_lots(self):
+        product_lot = self.env['product.product'].create({
+            'name': 'Tracked by Lots',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        lot_id = self.env['stock.lot'].create({
+            'product_id': product_lot.id,
+            'name': 'abc',
+        })
+        self.warehouse.in_type_id.use_existing_lots = True
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
+        })
+        move = self.env['stock.move'].create({
+            'name': product_lot.name,
+            'product_id': product_lot.id,
+            'product_uom': product_lot.uom_id.id,
+            'product_uom_qty': 5.0,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        })
+        move._import_lots("abc;4\ndef", False)
+        self.assertIn(lot_id, move.move_line_ids.lot_id)
+        self.assertRecordValues(move.move_line_ids, [
+            {'qty_done': 4, 'lot_name': 'abc'},
+            {'qty_done': 1, 'lot_name': 'def'},
+        ])
