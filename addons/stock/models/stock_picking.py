@@ -1511,7 +1511,7 @@ class Picking(models.Model):
                     self.action_assign()
                     return self._post_put_in_pack_hook(package)
                 return res
-            raise UserError(_("Please add 'Done' quantities to the picking to create a new pack."))
+            raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
 
     def button_scrap(self):
         self.ensure_one()
