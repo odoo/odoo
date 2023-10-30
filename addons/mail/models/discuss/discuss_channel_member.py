@@ -116,6 +116,7 @@ class ChannelMember(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
+            # sudo: discuss.channel.member - creating members when creating channel, only safe fields allowed
             self = self.sudo()
         for vals in vals_list:
             if "channel_id" not in vals:

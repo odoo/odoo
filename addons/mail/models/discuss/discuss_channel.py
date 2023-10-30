@@ -12,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape, get_lang
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -196,33 +196,37 @@ class Channel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        allowed_member_fields = ["partner_id", "guest_id", "is_pinned"]
         for vals in vals_list:
             # find partners to add from partner_ids
-            partner_ids_cmd = vals.get('channel_partner_ids') or []
+            partner_ids_cmd = vals.pop("channel_partner_ids", [])
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
-                raise ValidationError(_('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
-            partner_ids = [cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4]
-            partner_ids += [cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6]
-
+                raise ValidationError(_("Invalid value when creating a channel with members, only 4 or 6 are allowed."))
+            partner_ids = OrderedSet(cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4)
+            partner_ids.update(cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6)
+            # find partners to add from current user
+            if not self.env.context.get("install_mode") and not self.env.user._is_public():
+                partner_ids.add(self.env.user.partner_id.id)
             # find partners to add from channel_member_ids
-            membership_ids_cmd = vals.get('channel_member_ids', [])
+            membership_ids_cmd = vals.pop("channel_member_ids", [])
             if any(cmd[0] != 0 for cmd in membership_ids_cmd):
-                raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
-
-            partner_ids_to_add = partner_ids
-            # always add current user to new channel to have right values for
-            # is_pinned + ensure they have rights to see channel
-            if not self.env.context.get('install_mode') and not self.env.user._is_public():
-                partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
-                for pid in partner_ids_to_add if pid not in membership_pids
-            ]
-
-            # clean vals
-            vals.pop('channel_partner_ids', False)
-
+                raise ValidationError(_("Invalid value when creating a channel with memberships, only 0 is allowed."))
+            members = []
+            for values in map(lambda cmd: cmd[2], membership_ids_cmd):
+                member = {}
+                for field_name, value in values.items():
+                    if field_name not in allowed_member_fields:
+                        raise ValidationError(
+                            _(
+                                "Invalid field “%(field_name)s” when creating a channel with member.",
+                                field_name=field_name,
+                            )
+                        )
+                    member[field_name] = value
+                members.append(member)
+            partner_ids.difference_update(member["partner_id"] for member in members if "partner_id" in member)
+            members += [{"partner_id": pid} for pid in partner_ids]
+            vals["channel_member_ids"] = [Command.create(member) for member in members]
         # Create channel and alias
         channels = super(Channel, self.with_context(mail_create_bypass_create_check=self.env['discuss.channel.member']._bypass_create_check, mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
