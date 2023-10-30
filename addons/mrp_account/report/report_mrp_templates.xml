@@ -9,10 +9,11 @@
                     <div class="row mt8">
                         <div class="col-lg-12">
                             <h2>
-                                <span>WIP Report for <t t-out="docs.account_id.name"/></span>
+                                <span>WIP Report for <span t-field="docs.account_id.name">Acme Corp.</span></span>
                             </h2>
                         </div>
                     </div>
+                    <div class="oe_structure"/>
                     <div class="row mt8">
                             <div class="col-12">
                                 <table class="table table-sm">
@@ -29,29 +30,29 @@
                                    <tbody>
                                         <tr t-foreach="docs" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
                                             <td class="align-middle">
-                                               <span t-field="line.date"/>
+                                               <span t-field="line.date">2023-08-15</span>
                                             </td>
                                             <td class="align-middle">
-                                               <span t-field="line.ref"/>
+                                               <span t-field="line.ref">REF123</span>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.product_id"/>
+                                                <span t-field="line.product_id">Laptop</span>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.unit_amount"/>
+                                                <span t-field="line.unit_amount">5</span>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.product_uom_id"/>
+                                                <span t-field="line.product_uom_id">Units</span>
                                             </td>
                                             <td class="text-end align-middle">
-                                                <span t-field="line.amount"/>
+                                                <span t-field="line.amount">$1000</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="text-end" t-attf-colspan="6">
                                                 <strong>
                                                     <span style="margin-right: 15px;">Total</span>
-                                                    <t t-esc="sum(docs.mapped('amount'))"/>
+                                                    <span t-out="sum(docs.mapped('amount'))">$5000</span>
                                                 </strong>
                                             </td>
                                         </tr>
