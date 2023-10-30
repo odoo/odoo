@@ -137,6 +137,12 @@ class ResCompany(models.Model):
             if not company._check_peppol_endpoint_number(PEPPOL_ENDPOINT_RULES):
                 raise ValidationError(_("The Peppol endpoint identification number is not correct."))
 
+    @api.constrains('peppol_purchase_journal_id')
+    def _check_peppol_purchase_journal_id(self):
+        for company in self:
+            if company.peppol_purchase_journal_id and company.peppol_purchase_journal_id.type != 'purchase':
+                raise ValidationError(_("A purchase journal must be used to receive Peppol documents."))
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
