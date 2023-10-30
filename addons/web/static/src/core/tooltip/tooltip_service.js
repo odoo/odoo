@@ -199,8 +199,6 @@ export const tooltipService = {
                         }
                     }
                 });
-
-                return;
             }
 
             // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
