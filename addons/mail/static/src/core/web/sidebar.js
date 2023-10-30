@@ -132,9 +132,9 @@ export class Sidebar extends Component {
         return category.threads.filter((threadLocalId) => {
             const thread = this.store.threads[threadLocalId];
             return (
-                (thread.is_pinned || thread.group_based_subscription) &&
+                thread.displayToSelf &&
                 (!this.state.quickSearchVal ||
-                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
+                    cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
