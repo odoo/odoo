@@ -773,16 +773,17 @@ export class SearchModel extends EventBus {
      */
     getSearchItems(predicate) {
         const searchItems = [];
-        Object.values(this.searchItems).forEach((searchItem) => {
-            const isInvisible =
-                "invisible" in searchItem && evaluateExpr(searchItem.invisible, this.globalContext);
-            if (!isInvisible && (!predicate || predicate(searchItem))) {
-                const enrichedSearchitem = this._enrichItem(searchItem);
-                if (enrichedSearchitem) {
+        for (const searchItem of Object.values(this.searchItems)) {
+            const enrichedSearchitem = this._enrichItem(searchItem);
+            if (enrichedSearchitem) {
+                const isInvisible =
+                    "invisible" in searchItem &&
+                    evaluateExpr(searchItem.invisible, this.globalContext);
+                if (!isInvisible && (!predicate || predicate(enrichedSearchitem))) {
                     searchItems.push(enrichedSearchitem);
                 }
             }
-        });
+        }
         if (searchItems.some((f) => f.type === "favorite")) {
             searchItems.sort((f1, f2) => f1.groupNumber - f2.groupNumber);
         }
