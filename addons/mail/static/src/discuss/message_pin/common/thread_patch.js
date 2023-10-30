@@ -14,5 +14,6 @@ patch(Thread.prototype, {
         if (oeType === "pin-menu") {
             this.env.pinMenu?.open();
         }
+        await super.onClickNotification(...arguments);
     },
 });
