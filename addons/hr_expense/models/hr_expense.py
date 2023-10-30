@@ -1137,11 +1137,14 @@ class HrExpenseSheet(models.Model):
 
     def action_unpost(self):
         self = self.with_context(clean_context(self.env.context))
-        for sheet in self:
-            move = sheet.account_move_id
-            sheet.account_move_id = False
-            move._reverse_moves(cancel=True)
-            sheet.write({'state': 'draft'})
+        moves = self.account_move_id
+        draft_moves = moves.filtered(lambda m: m.state == 'draft')
+        (moves - draft_moves)._reverse_moves(cancel=True)
+        self.write({
+            'account_move_id': False,
+            'state': 'draft',
+        })
+        draft_moves.unlink()
 
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
