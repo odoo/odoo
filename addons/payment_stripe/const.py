@@ -24,6 +24,7 @@ PAYMENT_METHODS_MAPPING = {
     'ach_direct_debit': 'us_bank_account',
     'bacs_direct_debit': 'bacs_debit',
     'becs_direct_debit': 'au_becs_debit',
+    'sepa_direct_debit': 'sepa_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
     'unknown': 'card',  # For express checkout.
