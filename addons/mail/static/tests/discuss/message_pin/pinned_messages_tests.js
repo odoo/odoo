@@ -116,14 +116,7 @@ QUnit.test("Jump to message", async () => {
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
 });
 
-QUnit.skip("Jump to message from notification", async () => {
-    // skipped because the last assertion does not work, there is no scroll change when cliking
-    // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView() {
-            return super.scrollIntoView(true);
-        },
-    });
+QUnit.test("Jump to message from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
