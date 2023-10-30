@@ -50,7 +50,9 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar"/>
-                    <field name="survey_type" widget="radio" options="{'horizontal': True}"/>
+                    <field name="allowed_survey_types" invisible="True"/>
+                    <field name="survey_type" widget="radio_selection_with_filter" context="{'allowed_selection': allowed_survey_types}" options="{'horizontal': True}"
+                        class="o_field_radio" invisible="not allowed_survey_types"/>
                     <div class="oe_title" style="width: 100%;">
                         <h1>
                             <field name="title" options="{'line_breaks': False}" widget="text" placeholder="e.g. Satisfaction Survey"/>
@@ -59,6 +61,7 @@
                     <group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                            <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
                         </group>
@@ -226,6 +229,7 @@
                 <field name="scoring_type"/>
                 <field name="session_state"/>
                 <field name="success_ratio"/>
+                <field name="session_available" invisible="1"/>
                 <templates>
                     <div t-name="kanban-menu" t-if="widget.editable">
                         <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
@@ -317,7 +321,7 @@
                                 <button name="action_start_session"
                                         string="Start Live Session" type="object"
                                         class="btn btn-secondary"
-                                        invisible="session_state or certification or not active">
+                                        invisible="session_state or certification or not active or not session_available">
                                     Start Live Session
                                 </button>
                                 <button name="action_end_session"
@@ -397,7 +401,8 @@
             <search string="Survey">
                 <field string="Survey" name="title" filter_domain="['|', ('title', 'ilike', self), ('session_code', 'ilike', self)]"/>
                 <field string="Question &amp; Pages" name="question_and_page_ids"/>
-                <field string="Responsible" name="user_id"/>
+                <field name="user_id"/>
+                <field name="restrict_user_ids"/>
                 <filter string="Is a Certification" name="certification" domain="[('certification', '=', True)]"/>
                 <filter string="Is not a Certification" name="not_certification" domain="[('certification', '=', False)]"/>
                 <separator/>
@@ -413,6 +418,8 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="group_by_responsible"
                         context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_restrict_user_ids"
+                        context="{'group_by': 'restrict_user_ids'}"/>
                 </group>
             </search>
         </field>

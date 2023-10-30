@@ -23,7 +23,7 @@ class SurveyUserInput(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # answer description
-    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
+    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, index=True, ondelete='cascade')
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     end_datetime = fields.Datetime('End date and time', readonly=True)
