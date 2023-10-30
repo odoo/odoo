@@ -91,6 +91,16 @@
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="ir_rule_discuss_channel_member_is_just_created_group_user" model="ir.rule">
+            <field name="name">discuss.channel.member: can create members for just created channel</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('channel_id.is_just_created', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_all" model="ir.rule">
             <field name="name">discuss.channel.member: can join group restricted channels when group is matching</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>

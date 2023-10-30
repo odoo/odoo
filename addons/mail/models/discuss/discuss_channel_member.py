@@ -9,7 +9,6 @@ class ChannelMember(models.Model):
     _name = "discuss.channel.member"
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
-    _bypass_create_check = {}
 
     # identity
     partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
@@ -115,8 +114,6 @@ class ChannelMember(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
-            self = self.sudo()
         for vals in vals_list:
             if "channel_id" not in vals:
                 raise UserError(

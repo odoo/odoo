@@ -12,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape, get_lang
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -77,6 +77,7 @@ class Channel(models.Model):
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
     allow_public_upload = fields.Boolean(default=False)
+    is_just_created = fields.Boolean(compute="_compute_is_just_created", search="_search_is_just_created")
 
     _sql_constraints = [
         ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
@@ -190,6 +191,16 @@ class Channel(models.Model):
         for channel in self:
             channel.invitation_url = f"/chat/{channel.id}/{channel.uuid}"
 
+    @api.depends_context('uid')
+    def _compute_is_just_created(self):
+        for channel in self:
+            channel.is_just_created = channel.create_uid == self.env.user and channel.create_date == self.env.cr.now()
+
+    def _search_is_just_created(self, operator, value):
+        is_in = (operator == '=' and value) or (operator == '!=' and not value)
+        assert is_in
+        return [("create_uid", "=", self.env.user.id), ("create_date", "=", self.env.cr.now())]
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -198,37 +209,23 @@ class Channel(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             # find partners to add from partner_ids
-            partner_ids_cmd = vals.get('channel_partner_ids') or []
+            partner_ids_cmd = vals.pop("channel_partner_ids", [])
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
                 raise ValidationError(_('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
-            partner_ids = [cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4]
-            partner_ids += [cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6]
-
+            partner_ids = OrderedSet(cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4)
+            partner_ids.update(cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6)
+            # find partners to add from current user
+            if not self.env.context.get("install_mode") and not self.env.user._is_public():
+                partner_ids.add(self.env.user.partner_id.id)
             # find partners to add from channel_member_ids
             membership_ids_cmd = vals.get('channel_member_ids', [])
             if any(cmd[0] != 0 for cmd in membership_ids_cmd):
                 raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
-
-            partner_ids_to_add = partner_ids
-            # always add current user to new channel to have right values for
-            # is_pinned + ensure they have rights to see channel
-            if not self.env.context.get('install_mode') and not self.env.user._is_public():
-                partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
-                for pid in partner_ids_to_add if pid not in membership_pids
-            ]
-
-            # clean vals
-            vals.pop('channel_partner_ids', False)
-
+            partner_ids.difference_update(cmd[2]["partner_id"] for cmd in membership_ids_cmd if "partner_id" in cmd[2])
+            vals['channel_member_ids'] = membership_ids_cmd + [Command.create({'partner_id': pid}) for pid in partner_ids]
         # Create channel and alias
-        channels = super(Channel, self.with_context(mail_create_bypass_create_check=self.env['discuss.channel.member']._bypass_create_check, mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
-        # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
-        channels = channels.with_context(mail_create_bypass_create_check=None)
+        channels = super(Channel, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
         channels._subscribe_users_automatically()
-
         return channels
 
     @api.ondelete(at_uninstall=False)
