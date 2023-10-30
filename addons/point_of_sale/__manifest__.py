@@ -103,9 +103,9 @@
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/views/fields/parsers.js',
-            'web/static/src/webclient/barcode/barcode_scanner.js',
-            'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
-            'web/static/src/webclient/barcode/crop_overlay.js',
+            'web/static/src/webclient/barcode/**/*',
+            'web/static/src/legacy/xml/base.xml',
+            'web/static/src/legacy/js/core/bus.js',
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # libs

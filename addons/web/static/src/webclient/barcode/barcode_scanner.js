@@ -201,14 +201,14 @@ export function isBarcodeScannerSupported() {
  *
  * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
  */
-export async function scanBarcode(facingMode = "environment") {
+export async function scanBarcode(facingMode = "environment", env = owl.Component.env) {
     const promise = new Promise((resolve, reject) => {
         bus.on(busOk, null, resolve);
         bus.on(busError, null, reject);
     });
     const appForBarcodeDialog = new App(BarcodeDialog, {
-        env: owl.Component.env,
-        dev: owl.Component.env.isDebug(),
+        env: env,
+        dev: "isDebug" in env ? env.isDebug() : env.debug,
         templates,
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
