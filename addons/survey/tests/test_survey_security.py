@@ -4,7 +4,7 @@
 import datetime
 
 from odoo.addons.survey.tests import common
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
@@ -140,25 +140,34 @@ class TestAccess(common.TestSurveyCommon):
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('survey_user')
     def test_access_survey_survey_user(self):
-        # Create: own only
-        survey = self.env['survey.survey'].create({'title': 'Test Survey 2'})
-        self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'question_type': False, 'survey_id': survey.id})
-        self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'survey_id': survey.id})
+        # Restrict common survey to survey_manager
+        restricted_to_other_survey = self.survey
+        self.assertEqual(self.survey_manager, restricted_to_other_survey.user_id)
+        restricted_to_other_survey.write({'restrict_user_ids': [[4, restricted_to_other_survey.user_id.id]]})
 
-        # Read: all
+        # Create: restricted to self or no one
+        unrestricted_survey = self.env['survey.survey'].create({'title': 'Test Survey Unrestricted'})
+        self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'question_type': False, 'survey_id': unrestricted_survey.id})
+        self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'survey_id': unrestricted_survey.id})
+        restricted_to_self_survey = self.env['survey.survey'].create({'title': 'Test Survey Restricted to Self', 'restrict_user_ids': [[4, self.env.user.id]]})
+        with self.assertRaises(ValidationError):
+            self.env['survey.survey'].with_user(self.env.user).create({
+                'title': 'Test Survey Restricted to Other', 'restrict_user_ids': [[4, restricted_to_other_survey.user_id.id]]})
+
+        # Read: restricted to self or no one
         surveys = self.env['survey.survey'].search([('title', 'ilike', 'Test')])
-        self.assertEqual(surveys, self.survey | survey)
+        self.assertEqual(surveys, restricted_to_self_survey | unrestricted_survey)
         surveys.read(['title'])
 
-        # Write: own only
-        survey.write({'title': 'New Title'})
+        # Write: restricted to self or no one
+        (unrestricted_survey + restricted_to_self_survey).write({'title': 'New Title'})
         with self.assertRaises(AccessError):
-            self.survey.with_user(self.env.user).write({'title': 'New Title'})
+            restricted_to_other_survey.with_user(self.env.user).write({'title': 'New Title'})
 
-        # Unlink: own only
-        survey.unlink()
+        # Unlink: restricted to self or no one
+        (unrestricted_survey + restricted_to_self_survey).unlink()
         with self.assertRaises(AccessError):
-            self.survey.with_user(self.env.user).unlink()
+            restricted_to_other_survey.with_user(self.env.user).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
     @users('user_emp')
@@ -254,12 +263,12 @@ class TestAccess(common.TestSurveyCommon):
         self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'question_type': False, 'survey_id': survey_own.id})
         question_own = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_own.id})
 
-        # Create: own survey only
+        # Create: unrestricted survey
         answer_own = self.env['survey.user_input'].create({'survey_id': survey_own.id})
         with self.assertRaises(AccessError):
             self.env['survey.user_input.line'].create({'question_id': question_own.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': answer_own.id})
 
-        # Read: always
+        # Read: restricted to self or no one
         answers = self.env['survey.user_input'].search([('survey_id', 'in', [survey_own.id, self.survey.id])])
         self.assertEqual(answers, answer_own | self.answer_0)
 
@@ -268,21 +277,27 @@ class TestAccess(common.TestSurveyCommon):
 
         self.env['survey.user_input'].browse(answer_own.ids).read(['state'])
         self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
-
         self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
 
-        # Create: own survey only (moved after read because DB not correctly rollbacked with assertRaises)
+        self.survey.write({'restrict_user_ids': [[4, self.survey.user_id.id]]})
+        with self.assertRaises(AccessError):
+            self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+        with self.assertRaises(AccessError):
+            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+
+        # Create: in restricted users survey (moved after read because DB not correctly rollbacked with assertRaises)
+        self.survey.write({'restrict_user_ids': [[4, self.survey.user_id.id]]})
         with self.assertRaises(AccessError):
             answer_other = self.env['survey.user_input'].create({'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
             answer_line_other = self.env['survey.user_input.line'].create({'question_id': self.question_num.id, 'answer_type': 'numerical_box', 'value_numerical_box': 3, 'user_input_id': self.answer_0.id})
 
-        # Write: own survey only
+        # Write: unrestricted survey or in restricted users
         answer_own.write({'state': 'done'})
         with self.assertRaises(AccessError):
             self.answer_0.with_user(self.env.user).write({'state': 'done'})
 
-        # Unlink: own survey only
+        # Unlink: unrestricted survey or in restricted users
         answer_own.unlink()
         with self.assertRaises(AccessError):
             self.answer_0.with_user(self.env.user).unlink()

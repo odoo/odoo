@@ -168,6 +168,7 @@
     <record model="ir.actions.act_window" id="action_survey_user_input">
         <field name="name">Participations</field>
         <field name="res_model">survey.user_input</field>
+        <field name="domain">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="survey_user_input_view_tree"></field>
         <field name="search_view_id" ref="survey_user_input_view_search"/>
@@ -242,6 +243,7 @@
     <record id="survey_user_input_line_action" model="ir.actions.act_window">
         <field name="name">Detailed Answers</field>
         <field name="res_model">survey.user_input.line</field>
+        <field name="domain">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_user_input_line_view_search"/>
         <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
