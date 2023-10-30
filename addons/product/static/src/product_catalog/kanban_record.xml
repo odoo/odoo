@@ -8,7 +8,7 @@
              t-on-click="onGlobalClick"
              t-ref="root">
             <div class="d-flex flex-column h-100"
-                 t-att-class="{'o_product_added': productCatalogData.quantity}">
+                 t-att-class="{'o_product_added': productCatalogData.quantity || productCatalogData.readOnly}">
                 <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}"
                    t-call-context="this.renderingContext"/>
                 <t t-component="orderLineComponent" productId="props.record.resId" t-props="productCatalogData"/>
