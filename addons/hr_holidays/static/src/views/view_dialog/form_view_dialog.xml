@@ -9,7 +9,7 @@
         <xpath expr="//button[contains(@class, 'o_form_button_cancel')]" position="after">
             <button class="btn btn-secondary" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="x">Delete</button>
         </xpath>
-        <xpath expr="//div[contains(@class, 'o_cp_buttons')]" position="after">
+        <xpath expr="//div[contains(@class, 'o_cp_buttons')]" position="inside">
             <div class="flex-grow-1 d-flex flex-row-reverse gap-1">
                 <button class="btn btn-secondary" t-if="canRefuse" t-on-click="() => this.onClick('action_refuse')" data-hotkey="z">Refuse</button>
                 <button class="btn btn-secondary" t-if="canApprove" t-on-click="() => this.onClick('action_approve')" data-hotkey="g">Approve</button>
