@@ -385,6 +385,8 @@ class Repair(models.Model):
         no_service_policy = 'service_policy' not in self.env['product.template']
         #SOL qty delivered = repair.move_ids.quantity
         for repair in self:
+            if all(not move.picked for move in repair.move_ids):
+                repair.move_ids.picked = True
             if repair.sale_order_line_id:
                 ro_origin_product = repair.sale_order_line_id.product_template_id
                 # TODO: As 'service_policy' only appears with 'sale_project' module, isolate conditions related to this field in a 'sale_project_repair' module if it's worth
@@ -392,6 +394,7 @@ class Repair(models.Model):
                     repair.sale_order_line_id.qty_delivered = repair.sale_order_line_id.product_uom_qty
             if not repair.product_id:
                 continue
+
             if repair.product_id.product_tmpl_id.tracking != 'none' and not repair.lot_id:
                 raise ValidationError(_(
                     "Serial number is required for product to repair : %s",
@@ -412,6 +415,7 @@ class Repair(models.Model):
                 'partner_id': repair.partner_id.id,
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_id.id,
+                'picked': True,
                 'move_line_ids': [(0, 0, {
                     'product_id': repair.product_id.id,
                     'lot_id': repair.lot_id.id,
@@ -436,7 +440,6 @@ class Repair(models.Model):
             move_id = repair_move.get(repair.id, False)
             if move_id:
                 repair.move_id = move_id
-        self.sale_order_line_id.move_ids.picked = True
         all_moves = self.move_ids + product_moves
         all_moves._action_done()
 
