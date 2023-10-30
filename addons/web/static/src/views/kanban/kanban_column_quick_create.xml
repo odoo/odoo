@@ -15,7 +15,7 @@
                             class="form-control o_input bg-transparent fs-4"
                             t-attf-placeholder="{{ relatedFieldName }}..."
                             t-ref="autofocus"
-                            t-model.trim="state.columnTitle"
+                            t-model="state.columnTitle"
                             t-on-focus="() => state.hasInputFocused = true"
                             t-on-blur="() => state.hasInputFocused = false"
                         />
