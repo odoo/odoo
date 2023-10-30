@@ -5,6 +5,8 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 export class MovesListRenderer extends ListRenderer {
+    static recordRowTemplate = "stock.MovesListRenderer.RecordRow";
+
     processAllColumn(allColumns, list) {
         let cols = super.processAllColumn(...arguments);
         if (list.resModel === "stock.move") {
