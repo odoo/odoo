@@ -414,7 +414,6 @@ class TestRepair(common.TransactionCase):
         repair_order.action_repair_start()
         for line in repair_order.move_ids:
             line.quantity = line.product_uom_qty
-        repair_order.move_ids.picked = True
         repair_order.action_repair_end()
         self.assertTrue(float_is_zero(order_line.qty_delivered, 2))
         self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity, 2), 0)
