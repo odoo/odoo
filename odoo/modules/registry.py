@@ -573,6 +573,7 @@ class Registry(Mapping):
             env['ir.model.fields']._reflect_fields(model_names)
             env['ir.model.fields.selection']._reflect_selections(model_names)
             env['ir.model.constraint']._reflect_constraints(model_names)
+            env['ir.model.inherit']._reflect_inherits(model_names)
 
             self._ordinary_tables = None
 
