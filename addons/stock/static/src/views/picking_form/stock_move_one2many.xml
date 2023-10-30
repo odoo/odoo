@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit-mode="extension" t-inherit="web.ListRenderer.RecordRow">
+    <t t-name="stock.MovesListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//tr/t[1]" position="inside">
             <t t-if="column.type === 'opendetailsop'">
                 <td class="o_data_cell cursor-pointer o_list_button">
