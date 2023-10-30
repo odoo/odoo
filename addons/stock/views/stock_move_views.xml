@@ -171,7 +171,10 @@
                         <group/>
                     </group>
                     <div class="d-flex">
-                        <widget class="btn btn-link btn-group" name="generate_serials" invisible="not display_assign_serial"/>
+                        <!-- The button is done this way to align it with the import widget-->
+                        <div class="btn btn-link btn-group">
+                            <button class="btn btn-link" name="action_assign_serial" type="object">Generate Serials</button>
+                        </div>
                         <widget class="btn btn-link btn-group" name="import_lots" invisible="not display_import_lot"/>
                     </div>
                     <field name="move_line_ids"
