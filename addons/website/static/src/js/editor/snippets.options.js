@@ -4179,6 +4179,15 @@ options.registry.layout_column.include({
     },
 });
 
+options.registry.SnippetMove.include({
+    /**
+     * @override
+     */
+    _isMobile() {
+        return wUtils.isMobile(this);
+    },
+});
+
 export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
