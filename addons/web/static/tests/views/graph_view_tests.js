@@ -86,12 +86,12 @@ function checkTooltip(assert, graph, expectedTooltipContent, index, datasetIndex
     const dataPoints = [];
     for (let i = 0; i < datasets.length; i++) {
         const dataset = datasets[i];
-        const yLabel = dataset.data[index];
-        if (yLabel !== undefined && (datasetIndex === undefined || datasetIndex === i)) {
+        const raw = dataset.data[index];
+        if (raw !== undefined && (datasetIndex === undefined || datasetIndex === i)) {
             dataPoints.push({
                 datasetIndex: i,
                 dataIndex: index,
-                yLabel,
+                raw,
             });
         }
     }
@@ -1031,6 +1031,70 @@ QUnit.module("Views", (hooks) => {
             1
         );
     });
+
+    QUnit.test(
+        "Check if values in tooltip are correctly sorted when groupBy filter are applied",
+        async function (assert) {
+            serverData.models.foo.records = [
+                { product_id: 37, foo: 1, revenue: 12 },
+                { product_id: 37, foo: 2, revenue: 5 },
+                { product_id: 37, foo: 3, revenue: 1.45e2 },
+                { product_id: 37, foo: 4, revenue: -9 },
+                { product_id: 41, foo: 5, revenue: 0 },
+                { product_id: 41, foo: 6, revenue: -1 },
+                { product_id: 41, foo: 7, revenue: Math.PI },
+                { product_id: 41, foo: 8, revenue: 80.67 },
+            ];
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+					<graph type="line" stacked="0">
+						<field name="revenue" type="measure"/>
+						<field name="product_id"/>
+						<field name="foo"/>
+					</graph>
+				`,
+            });
+            checkTooltip(
+                assert,
+                graph,
+                {
+                    lines: [
+                        { label: "xphone / 3", value: "145.00" },
+                        { label: "xphone / 1", value: "12.00" },
+                        { label: "xphone / 2", value: "5.00" },
+                        { label: "xphone / 5", value: "0.00" },
+                        { label: "xphone / 6", value: "0.00" },
+                        { label: "xphone / 7", value: "0.00" },
+                        { label: "xphone / 8", value: "0.00" },
+                        { label: "xphone / 4", value: "-9.00" },
+                    ],
+                    title: "Revenue",
+                },
+                0
+            );
+            checkTooltip(
+                assert,
+                graph,
+                {
+                    lines: [
+                        { label: "xpad / 8", value: "80.67" },
+                        { label: "xpad / 7", value: "3.14" },
+                        { label: "xpad / 1", value: "0.00" },
+                        { label: "xpad / 2", value: "0.00" },
+                        { label: "xpad / 3", value: "0.00" },
+                        { label: "xpad / 4", value: "0.00" },
+                        { label: "xpad / 5", value: "0.00" },
+                        { label: "xpad / 6", value: "-1.00" },
+                    ],
+                    title: "Revenue",
+                },
+                1
+            );
+        }
+    );
 
     QUnit.test("Stacked button visible in the line chart", async function (assert) {
         const graph = await makeView({

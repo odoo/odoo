@@ -500,7 +500,7 @@ export class GraphRenderer extends Component {
      */
     getTooltipItems(data, metaData, tooltipModel) {
         const { allIntegers, domains, mode, groupBy } = metaData;
-        const sortedDataPoints = sortBy(tooltipModel.dataPoints, "yLabel", "desc");
+        const sortedDataPoints = sortBy(tooltipModel.dataPoints, "raw", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
             const index = item.dataIndex;
