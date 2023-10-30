@@ -98,11 +98,20 @@ def data_method_provider(chart_template_name, country_code):
                 },
             },
             'account.tax': {
-                xmlid: _tax_vals(name, amount, external_id_prefix)
-                for name, xmlid, amount in (
-                    ('Tax 1', 'test_tax_1_template', 15),
-                    ('Tax 2', 'test_tax_2_template', 0),
-                )
+                **{
+                    xmlid: _tax_vals(name, amount, external_id_prefix)
+                    for name, xmlid, amount in (
+                        ('Tax 1', 'test_tax_1_template', 15),
+                        ('Tax 2', 'test_tax_2_template', 0),
+                    )
+                },
+                'test_composite_tax_template': {
+                    'name': 'Tax Grouped',
+                    'amount_type': 'group',
+                    'type_tax_use': 'purchase',
+                    'tax_group_id': 'tax_group_taxes',
+                    'children_tax_ids': 'test_tax_1_template,test_tax_2_template',
+                }
             },
         }
     return test_data_getter
@@ -175,8 +184,10 @@ class TestMultiVAT(TransactionCase):
                 # tax
                 'test_tax_1_template',
                 'test_tax_2_template',
+                'test_composite_tax_template',
                 'foreign_test_tax_1_template',
                 'foreign_test_tax_2_template',
+                'foreign_test_composite_tax_template'
         ):
             with self.subTest(xml_id=xml_id):
                 record = self.env["account.chart.template"].ref(xml_id, raise_if_not_found=False)
@@ -223,3 +234,17 @@ class TestMultiVAT(TransactionCase):
         _base_line, tax_line = tax.invoice_repartition_line_ids
         self.assertEqual(tax_line.account_id.code, '411001',
                          "The previously created tax account should be reused for similar tax")
+
+    def test_children_taxes(self):
+        # Ensure that group-type taxes are correctly linked to their children
+        composite_taxes = ['test_composite_tax_template', 'foreign_test_composite_tax_template']
+        children_taxes = {
+            'test_composite_tax_template': ['test_tax_1_template', 'test_tax_2_template'],
+            'foreign_test_composite_tax_template': ['foreign_test_tax_1_template', 'foreign_test_tax_2_template'],
+        }
+        for xml_id in composite_taxes:
+            with self.subTest(xml_id=xml_id):
+                record = self.env["account.chart.template"].ref(xml_id, raise_if_not_found=False)
+                for i, child in enumerate(record.children_tax_ids):
+                    child_tax = self.env["account.chart.template"].ref(children_taxes[xml_id][i], raise_if_not_found=False)
+                    self.assertEqual(child.id, child_tax.id)
