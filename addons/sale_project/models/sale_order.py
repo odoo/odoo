@@ -115,7 +115,6 @@ class SaleOrder(models.Model):
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
-            projects = projects.filtered('active')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
@@ -201,7 +200,7 @@ class SaleOrder(models.Model):
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
-            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.project_ids.ids)],
+            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
             'res_model': 'project.project',
             'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
@@ -212,7 +211,7 @@ class SaleOrder(models.Model):
                 'default_allow_billable': 1,
             }
         }
-        if len(self.project_ids) == 1:
+        if len(self.with_context(active_test=False).project_ids) == 1:
             action.update({'views': [(False, 'form')], 'res_id': self.project_ids.id})
         return action
 
