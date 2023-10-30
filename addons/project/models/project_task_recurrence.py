@@ -4,6 +4,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+from datetime import datetime
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, rruleset, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU
@@ -252,7 +253,21 @@ class ProjectTaskRecurrence(models.Model):
             new_task = self.env['project.task'].sudo().create(create_values)
             recurrence._create_subtasks(task, new_task, depth=3)
 
-    def _set_next_recurrence_date(self):
+    def _set_next_recurrence_date(self, date_start=None):
+        """
+            Update the date of the next recurrence.
+            :param date_start: reference date for applying the recurrence rule,
+                               tomorrow's date will be used if None
+            :type date_start: date - datetime - string (format: '%Y-%m-%d %H:%M:%S') object
+        """
+        #
+        #   date_start                 next_recurrence_date
+        #       |                               |
+        # ============X============X============X============X=========>
+        #                               |
+        #                            Tomorrow
+        # X: potential future tasks to be created according to the recurrence rule
+        #
         today = fields.Date.today()
         tomorrow = today + relativedelta(days=1)
         for recurrence in self.filtered(
@@ -264,8 +279,15 @@ class ProjectTaskRecurrence(models.Model):
             if recurrence.repeat_type == 'after' and recurrence.recurrence_left == 0:
                 recurrence.next_recurrence_date = False
             else:
-                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
-                recurrence.next_recurrence_date = next_date[0] if next_date else False
+                date_start = date_start or tomorrow
+                date_format = '%Y-%m-%d %H:%M:%S'
+                if isinstance(date_start, str):
+                    date_start = datetime.strptime(date_start, date_format)
+                if isinstance(date_start, datetime):
+                    date_start = date_start.date()
+                next_dates = self._get_next_recurring_dates(date_start, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month)
+                next_dates = [next_date.date() if isinstance(next_date, datetime) else next_date for next_date in next_dates]
+                recurrence.next_recurrence_date = next((next_date for next_date in next_dates if next_date >= tomorrow), False) # If not next date after tomorrow, the recurrence is finished
 
     @api.model
     def _cron_create_recurring_tasks(self):
