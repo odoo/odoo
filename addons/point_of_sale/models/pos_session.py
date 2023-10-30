@@ -1642,10 +1642,13 @@ class PosSession(models.Model):
         for tax in loaded_data['taxes_by_id'].values():
             tax['children_tax_ids'] = [loaded_data['taxes_by_id'][id] for id in tax['children_tax_ids']]
 
-        for pricelist in loaded_data['product.pricelist']:
-            if pricelist['id'] == self.config_id.pricelist_id.id:
-                loaded_data['default_pricelist'] = pricelist
-                break
+        if self.config_id.use_pricelist:
+            default_pricelist = next(
+                (pl for pl in loaded_data['product.pricelist'] if pl['id'] == self.config_id.pricelist_id.id),
+                False
+            )
+            if default_pricelist:
+                loaded_data['default_pricelist'] = default_pricelist
 
         fiscal_position_by_id = {fpt['id']: fpt for fpt in self._get_pos_ui_account_fiscal_position_tax(
             self._loader_params_account_fiscal_position_tax())}
