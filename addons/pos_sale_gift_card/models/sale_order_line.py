@@ -12,5 +12,7 @@ class SaleOrderLine(models.Model):
             gift_card = self.env['sale.order.line'].browse(sale_line['id']).gift_card_id
             if gift_card:
                 sale_line['gift_card_id'] = gift_card.id
+                #If the order hasn't been confirmed the qty_to_invoice is 0, and the qty in the PoS will also be 0 so we set it to 1
+                sale_line['qty_to_invoice'] = 1
 
         return result
