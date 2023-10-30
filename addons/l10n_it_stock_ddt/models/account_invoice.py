@@ -24,7 +24,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_invoice_is_direct(self):
         """ An invoice is only direct if the Transport Documents are all done the same day as the invoice. """
         for ddt in self.l10n_it_ddt_ids:
-            if not ddt.date_done or ddt.date_done != self.invoice_date:
+            if not ddt.date_done or ddt.date_done.date() != self.invoice_date:
                 return False
         return True
 
