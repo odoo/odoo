@@ -3,14 +3,16 @@
 import base64
 
 from dateutil.relativedelta import relativedelta
+
 from odoo import tests
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.fields import Datetime
 from odoo.tools import mute_logger
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tools.misc import file_open
 
 
-class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
     def setUp(self):
         super(TestUICommon, self).setUp()
@@ -172,7 +174,7 @@ class TestUi(TestUICommon):
 
 
 @tests.common.tagged('post_install', '-at_install')
-class TestUiPublisher(HttpCaseWithUserDemo):
+class TestUiPublisher(HttpCaseGamification):
 
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
@@ -226,7 +228,7 @@ class TestUiMemberInvited(TestUICommon):
 
 
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')
-class TestUiPublisherYoutube(HttpCaseWithUserDemo):
+class TestUiPublisherYoutube(HttpCaseGamification):
 
     def test_course_member_yt_employee(self):
         # remove membership because we need to be able to join the course during the tour
