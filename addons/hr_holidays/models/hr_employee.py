@@ -494,6 +494,7 @@ class HrEmployee(models.Model):
                 leave_type_data = allocations_leaves_consumed[employee][leave_type]
                 for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
                     leave_duration = leave[leave_duration_field]
+                    skip_excess = False
                     if leave_type.requires_allocation == 'yes':
                         for allocation in sorted_leave_allocations:
                             # We don't want to include future leaves linked to accruals into the total count of available leaves.
@@ -501,6 +502,7 @@ class HrEmployee(models.Model):
                             # to give a warning if the total exceeds what will be accrued.
                             if allocation.allocation_type == 'accrual' and leave.date_from.date() > target_date:
                                 to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
+                                skip_excess = True
                                 continue
                             interval_start = max(
                                 leave.date_from,
@@ -530,7 +532,7 @@ class HrEmployee(models.Model):
                             leave_duration -= allocated_time
                             if not leave_duration:
                                 break
-                        if round(leave_duration, 2) > 0:
+                        if round(leave_duration, 2) > 0 and not skip_excess:
                             to_recheck_leaves_per_leave_type[employee][leave_type]['excess_days'][leave.date_to.date()] = {
                                 'amount': leave_duration,
                                 'is_virtual': leave.state != 'validate',
