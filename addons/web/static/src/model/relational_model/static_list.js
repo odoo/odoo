@@ -223,6 +223,7 @@ export class StaticList extends DataPoint {
             }
 
             if (record) {
+                record._noUpdateParent = true;
                 record._activeFieldsToRestore = { ...this.config.activeFields };
                 const config = {
                     ...record.config,
@@ -288,6 +289,7 @@ export class StaticList extends DataPoint {
                     manuallyAdded: true,
                 });
                 record._activeFieldsToRestore = { ...this.config.activeFields };
+                record._noUpdateParent = true;
             }
             // mark the record as being extended, to go through case 1.1 next time
             this._extendedRecords.add(record.id);
@@ -706,7 +708,7 @@ export class StaticList extends DataPoint {
                 if (!hasCommand) {
                     this._commands.push([UPDATE, id]);
                 }
-                if (this._extendedRecords.has(record.id)) {
+                if (record._noUpdateParent) {
                     // the record is edited from a dialog, so we don't want to notify the parent
                     // record to be notified at each change inside the dialog (it will be notified
                     // at the end when the dialog is saved)

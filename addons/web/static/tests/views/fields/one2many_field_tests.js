@@ -34,7 +34,8 @@ import { Record } from "@web/model/relational_model/record";
 import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { errorService } from "../../../src/core/errors/error_service";
-import { onWillDestroy, onWillStart } from "@odoo/owl";
+import { onWillDestroy, onWillStart, reactive, useState } from "@odoo/owl";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 const serviceRegistry = registry.category("services");
 
@@ -14250,4 +14251,72 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(target, ".o_error_dialog");
     });
+
+    QUnit.test(
+        "one2many custom which can be edited in dialog or on the line",
+        async function (assert) {
+            const customState = reactive({ isEditable: false });
+            class CustomX2manyField extends X2ManyField {
+                setup() {
+                    super.setup();
+                    this.canOpenRecord = true;
+                    this.customState = useState(customState);
+                }
+
+                get rendererProps() {
+                    const props = super.rendererProps;
+                    props.editable = this.customState.isEditable;
+                    return props;
+                }
+            }
+
+            const customX2ManyField = {
+                ...x2ManyField,
+                component: CustomX2manyField,
+            };
+            registry.category("fields").add("custom", customX2ManyField);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles" widget="custom">
+                        <tree editable="top">
+                            <field name="turtle_foo"/>
+                        </tree>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons.invisible",
+                "form view is not dirty"
+            );
+
+            await click(target, ".o_data_cell");
+            assert.containsOnce(target, ".modal");
+
+            customState.isEditable = true;
+            await click(target, ".modal .btn-close");
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons.invisible",
+                "form view is not dirty"
+            );
+
+            await click(target, ".o_data_cell");
+            await editInput(target, "[name='turtle_foo'] input", "new value");
+            assert.containsOnce(
+                target,
+                ".o_form_status_indicator_buttons:not(.invisible)",
+                "form view is dirty"
+            );
+        }
+    );
 });
