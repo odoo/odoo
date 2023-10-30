@@ -59,6 +59,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_stock_production_lot(self):
         if not self.group_stock_production_lot:
             self.group_lot_on_delivery_slip = False
+            if self.env['product.product'].search_count([('tracking', '!=', 'none')], limit=1):
+                raise UserError(_("You have product(s) in stock that have lot/serial number tracking enabled. \nSwitch off tracking on all the products before switching off this setting."))
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
