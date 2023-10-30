@@ -29,7 +29,6 @@ class PosPaymentMethod(models.Model):
     adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.', groups='base.group_erp_manager')
 
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
-    adyen_latest_diagnosis = fields.Char(copy=False, groups='base.group_erp_manager') # used to determine if the terminal is still connected.
 
     @api.constrains('adyen_terminal_identifier')
     def _check_adyen_terminal_identifier(self):
