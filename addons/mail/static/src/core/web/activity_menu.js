@@ -2,6 +2,8 @@
 
 import { Component, useState } from "@odoo/owl";
 
+import { useDiscussSystray } from "@mail/utils/common/hooks";
+
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -14,6 +16,7 @@ export class ActivityMenu extends Component {
     static template = "mail.ActivityMenu";
 
     setup() {
+        this.discussSystray = useDiscussSystray();
         this.store = useState(useService("mail.store"));
         this.action = useService("action");
         this.userId = useService("user").userId;

@@ -4,9 +4,10 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { useService } from "@web/core/utils/hooks";
 
 export class NotificationItem extends Component {
     static components = { ActionSwiper, RelativeTime, ImStatus };
@@ -15,6 +16,7 @@ export class NotificationItem extends Component {
         "counter?",
         "datetime?",
         "displayName?",
+        "first?",
         "hasMarkAsReadButton?",
         "iconSrc?",
         "muted?",
@@ -31,6 +33,7 @@ export class NotificationItem extends Component {
     static template = "mail.NotificationItem";
 
     setup() {
+        this.ui = useState(useService("ui"));
         this.markAsReadRef = useRef("markAsRead");
         this.rootHover = useHover("root");
     }

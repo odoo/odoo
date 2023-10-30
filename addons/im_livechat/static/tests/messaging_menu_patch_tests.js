@@ -24,10 +24,10 @@ QUnit.test('livechats should be in "chat" filter', async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "All" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
     await contains(".o-mail-NotificationItem", { text: "Visitor 11" });
     await click(".o-mail-MessagingMenu button", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Chats" });
     await contains(".o-mail-NotificationItem", { text: "Visitor 11" });
 });
 

@@ -3,28 +3,28 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'text-muted': props.muted === 1, 'opacity-50': props.muted === 2 }" t-on-click="onClick" t-ref="root">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center bg-view w-100 gap-2" t-att-class="{ 'o-important': props.muted === 0, 'text-muted': props.muted === 1, 'opacity-50': props.muted === 2, 'border-start-0 border-end-0': ui.isSmall, 'border-top-0': props.first, 'p-2 pe-3': !ui.isSmall }" t-on-click="onClick" t-ref="root">
             <div class="position-relative bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
-            <div class="d-flex flex-column flex-grow-1 align-self-start m-2 overflow-auto">
+            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto">
                 <div class="d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name text-truncate" t-att-class="props.muted === 1 ? 'fw-bolder' : 'fw-bold'" t-esc="props.displayName"/>
+                    <span class="o-mail-NotificationItem-name text-truncate fw-bold" t-esc="props.displayName"/>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2" t-att-class="{ 'opacity-75 fw-bold': !props.muted, 'opacity-50 text-muted': props.muted }">
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 opacity-75" t-att-class="{ 'opacity-50 fw-bold': !props.muted, 'opacity-25 text-muted': props.muted }">
                         <RelativeTime datetime="props.datetime"/>
                     </small>
                 </div>
                 <div class="d-flex">
-                    <div class="o-mail-NotificationItem-text text-truncate">
+                    <div class="o-mail-NotificationItem-text text-truncate opacity-75">
                         <t t-slot="body-icon"/>
                         <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-center">
                         <span t-if="props.counter > 0 and !rootHover.isHover" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{props.muted === 2 ? 'o-muted' : ''}} d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-counter"><t t-esc="props.counter"/></span>
-                        <span t-if="props.hasMarkAsReadButton and rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badgeShape text-success d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-markAsRead fa fa-check text-600 opacity-50 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
+                        <span t-if="props.hasMarkAsReadButton and rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badgeShape text-success d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-markAsRead fa fa-check text-600 opacity-75 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
                     </div>
                 </div>
             </div>

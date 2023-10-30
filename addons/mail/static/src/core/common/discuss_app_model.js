@@ -42,8 +42,8 @@ export class DiscussApp extends Record {
         return super.insert(...arguments);
     }
 
-    /** @type {'mailbox'|'all'|'channel'|'chat'|'livechat'} */
-    activeTab = "all";
+    /** @type {'main'|'channel'|'chat'|'livechat'} */
+    activeTab = "main";
     chatWindows = Record.many("ChatWindow");
     isActive = false;
     thread = Record.one("Thread");

@@ -370,13 +370,16 @@ export const storeService = {
     start(env, services) {
         const store = makeStore(env);
         store.discuss = {};
-        store.discuss.activeTab = env.services.ui.isSmall ? "mailbox" : "all";
+        store.discuss.activeTab = "main";
         onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
-            if (!services.ui.isSmall) {
-                store.discuss.activeTab = "all";
-            } else {
-                store.discuss.activeTab = store.discuss.thread?.type ?? "all";
+            store.discuss.activeTab = "main";
+            if (
+                services.ui.isSmall &&
+                store.discuss.thread &&
+                store.discuss.thread.type !== "mailbox"
+            ) {
+                store.discuss.activeTab = store.discuss.thread.type;
             }
         });
         return store;

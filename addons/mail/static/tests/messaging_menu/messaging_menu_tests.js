@@ -8,8 +8,8 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, triggerEvents } from "@web/../tests/utils";
+import { getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
 
@@ -25,9 +25,9 @@ QUnit.test("messaging menu should have topbar buttons", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-header button", { count: 4 });
-    await contains("button.fw-bolder", { text: "All" });
-    await contains("button:not(.fw-bolder)", { text: "Chats" });
-    await contains("button:not(.fw-bolder)", { text: "Channels" });
+    await contains("button.fw-bold", { text: "All" });
+    await contains("button:not(.fw-bold)", { text: "Chats" });
+    await contains("button:not(.fw-bold)", { text: "Channels" });
     await contains("button", { text: "New Message" });
 });
 
@@ -585,12 +585,18 @@ QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', asyn
     await contains("input[placeholder='Add or join a channel']", { count: 0 });
 });
 
-QUnit.test("'New Message' button should open a chat window in mobile", async () => {
+QUnit.test("'Start a conversation' button should open a thread in mobile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
     patchUiSize({ height: 360, width: 640 });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow");
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Start a conversation']", "demo");
+    await click(".o-discuss-ChannelSelector-suggestion", { text: "Demo" });
+    triggerHotkey("enter");
+    await contains(".o-mail-ChatWindow", { text: "Demo" });
 });
 
 QUnit.test("Counter is updated when receiving new message", async () => {
@@ -643,9 +649,9 @@ QUnit.test("basic rendering", async (assert) => {
     await contains(".o-mail-MessagingMenu");
     await contains(".o-mail-MessagingMenu-header");
     await contains(".o-mail-MessagingMenu-header button", { count: 4 });
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "All" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await contains("button", { text: "New Message" });
     await contains(".o-mail-MessagingMenu div.text-muted", { text: "No conversation yet..." });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
@@ -658,21 +664,21 @@ QUnit.test("basic rendering", async (assert) => {
 QUnit.test("switch tab", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "All" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await click(".o-mail-MessagingMenu button", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "All" });
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "All" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "All" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "Channels" });
     await click(".o-mail-MessagingMenu button", { text: "All" });
-    await contains(".o-mail-MessagingMenu button.fw-bolder", { text: "All" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Chats" });
-    await contains(".o-mail-MessagingMenu button:not(.fw-bolder)", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu button.fw-bold", { text: "All" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Chats" });
+    await contains(".o-mail-MessagingMenu button:not(.fw-bold)", { text: "Channels" });
 });
 
 QUnit.test("channel preview: basic rendering", async () => {

@@ -47,3 +47,23 @@ a.o_mail_redirect, a.o_channel_redirect {
     @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
     padding: map-get($spacers, 1);
 }
+
+.o-mail-DiscussSystray {
+    --border-color: #{$o-gray-300} !important; // cancel custom border color of dropdown
+}
+
+.o-mail-DiscussSystray-class {
+    margin-top: - $o-navbar-padding-v; // cancel navbar padding
+    margin-bottom: - $o-navbar-padding-v; // cancel navbar padding
+    display: flex;
+    align-items: center;
+
+    &:hover, &.show {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+}
+
+.o-mail-systrayFullscreenDropdownMenu {
+    top: $o-navbar-height !important;
+    height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
+}

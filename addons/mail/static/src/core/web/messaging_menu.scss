@@ -8,6 +8,8 @@
     }
 }
 
-.o-mail-MessagingMenu-navbar {
-    z-index: 1;
+.o-mail-MessagingMenu-navbar button {
+    &.o-active, &:hover {
+        background-color: mix($o-gray-100, $o-gray-200);
+    }
 }
