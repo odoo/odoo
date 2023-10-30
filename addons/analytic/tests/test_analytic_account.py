@@ -190,3 +190,17 @@ class TestAnalyticAccount(TransactionCase):
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
         self.assertEqual(2, len(plans_json) - self.analytic_plan_offset,
                          "The parent plan should be available even if the analytic account is set on child of third generation")
+
+    def test_analytic_account_company(self):
+        """Test we can assign an analytic plan owned by company A
+           to an analytic account not owned by any company
+        """
+        self.analytic_plan_2.write({'company_id': self.env.company.id})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Project - no company',
+            'code': '1234',
+            'plan_id': self.analytic_plan_1.id,
+            'company_id': False,
+        })
+        # Should not raise
+        analytic_account.write({'plan_id': self.analytic_plan_2.id})
