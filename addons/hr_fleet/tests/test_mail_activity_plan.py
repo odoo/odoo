@@ -60,7 +60,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         self.assertTrue(form.has_error)
         n_error = form.error.count('<li>')
         self.assertEqual(n_error, 1)
-        self.assertIn(f"Employee's vehicle {self.employee_1.name} is not linked to a fleet manager.", form.error)
+        self.assertIn(f"The vehicle of employee {self.employee_1.name} is not linked to a fleet manager.", form.error)
         with self.assertRaises(ValidationError):
             form.save()
 
