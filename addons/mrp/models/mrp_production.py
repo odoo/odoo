@@ -1982,6 +1982,7 @@ class MrpProduction(models.Model):
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'do_multi_print',
+                    'context': {},
                     'params': {
                         'reports': report_actions,
                     }
