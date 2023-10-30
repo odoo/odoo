@@ -27,9 +27,9 @@ export class ConfirmationPage extends Component {
                     this.setDefautLanguage();
                 }, 5000);
 
-                setTimeout(() => {
+                setTimeout(async () => {
                     try {
-                        this.printer.print(OrderReceipt, {
+                        await this.printer.print(OrderReceipt, {
                             data: this.selfOrder.export_for_printing(this.confirmedOrder),
                             formatCurrency: this.selfOrder.formatMonetary,
                         });
