@@ -1048,4 +1048,22 @@ QUnit.module("Search", (hooks) => {
             ]);
         }
     );
+
+    QUnit.test("allow filtering based on extra keys in getSearchItems", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch: `
+                    <search>
+                        <filter name="filter_1" string="Filter 1" domain="[['foo', '=', 'a']]"/>
+                        <filter name="filter_2" string="Filter 2" domain="[['foo', '=', 'b']]"/>
+                    </search>
+                `,
+            context: {
+                search_default_filter_1: true,
+            },
+        });
+        const items = model.getSearchItems((i) => i.isActive);
+        assert.strictEqual(items.length, 1);
+        assert.strictEqual(items[0].name, "filter_1");
+    });
 });
