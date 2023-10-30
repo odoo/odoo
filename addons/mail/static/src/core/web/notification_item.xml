@@ -3,16 +3,16 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'text-muted': !props.hasMarkAsReadButton, 'opacity-50': props.muted }" t-on-click="onClick" t-ref="root">
+        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'text-muted': props.muted === 1, 'opacity-50': props.muted === 2 }" t-on-click="onClick" t-ref="root">
             <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start m-2 overflow-auto">
                 <div class="d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name text-truncate" t-att-class="props.hasMarkAsReadButton and !props.muted ? 'fw-bolder' : 'fw-bold'" t-esc="props.displayName"/>
+                    <span class="o-mail-NotificationItem-name text-truncate" t-att-class="props.muted === 1 ? 'fw-bolder' : 'fw-bold'" t-esc="props.displayName"/>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2" t-att-class="{ 'opacity-75 fw-bold': props.counter > 0 and !props.muted, 'opacity-50 text-muted': props.counter === 0 || props.muted }">
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2" t-att-class="{ 'opacity-75 fw-bold': !props.muted, 'opacity-50 text-muted': props.muted }">
                         <RelativeTime datetime="props.datetime"/>
                     </small>
                 </div>
@@ -23,7 +23,7 @@
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-center">
-                        <span t-if="props.counter > 0 and !rootHover.isHover" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{props.muted ? 'o-muted' : ''}} d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-counter"><t t-esc="props.counter"/></span>
+                        <span t-if="props.counter > 0 and !rootHover.isHover" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{props.muted === 2 ? 'o-muted' : ''}} d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-counter"><t t-esc="props.counter"/></span>
                         <span t-if="props.hasMarkAsReadButton and rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badgeShape text-success d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-markAsRead fa fa-check text-600 opacity-50 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
                     </div>
                 </div>
