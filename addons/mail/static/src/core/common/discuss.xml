@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
-    <div class="o-mail-Discuss d-flex h-100 flex-grow-1 border-top" t-att-class="{ 'border-top': !store.inPublicPage, 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
-        <div t-if="ui.isSmall and store.discuss.activeTab === 'mailbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'border-top': !store.inPublicPage and !ui.isSmall, 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
+        <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         <div t-if="thread and (store.inPublicPage or !(ui.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab)))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-3 bg-view border-bottom d-flex flex-shrink-0 align-items-center">
                 <div t-if="thread and ['channel', 'group', 'chat'].includes(thread.type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+        <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'main')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
     </div>

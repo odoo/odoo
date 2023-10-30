@@ -2,25 +2,20 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
-            <div class="flex-grow-1"/>
-            <t t-if="!store.discuss.isActive or ui.isSmall and store.discuss.activeTab !== 'mailbox'">
-                <t t-if="env.inDiscussApp and ['chat', 'channel'].includes(store.discuss.activeTab)">
-                    <div t-if="state.addingChat or state.addingChannel" class="p-4 border-bottom bg-light" t-ref="selector">
-                        <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
-                        <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
-                        <ChannelSelector category="category" autofocus="true"/>
-                    </div>
-                </t>
-                <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat' and !state.addingChat)" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link'" t-on-click.stop="onClickNewMessage">
-                    <t t-if="env.inDiscussApp">Start a conversation</t>
-                    <t t-else="">New Message</t>
-                </button>
-                <div t-if="env.inDiscussApp and store.discuss.activeTab === 'channel' and !state.addingChannel">
-                    <button class="w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click.stop="() => this.state.addingChannel = true">
-                        New Channel
-                    </button>
+            <t t-if="ui.isSmall and (store.discuss.activeTab !== 'main' or !env.inDiscussApp)">
+                <div t-if="state.addingChat or state.addingChannel" class="w-100 p-1 bg-light" t-ref="selector">
+                    <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
+                    <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
+                    <ChannelSelector category="category" autofocus="true"/>
                 </div>
             </t>
+            <button t-if="!ui.isSmall or (ui.isSmall and store.discuss.activeTab !== 'channel' and !state.addingChat and !(env.inDiscussApp and store.discuss.activeTab === 'main'))" t-att-class="ui.isSmall ? 'w-100 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                <t t-if="ui.isSmall">Start a conversation</t>
+                <t t-elif="!store.discuss.isActive">New Message</t>
+            </button>
+            <button t-if="ui.isSmall and store.discuss.activeTab === 'channel' and !state.addingChannel" class="w-100 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingChannel = true">
+                New Channel
+            </button>
         </xpath>
     </t>
 </templates>
