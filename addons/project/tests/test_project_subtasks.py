@@ -198,14 +198,14 @@ class TestProjectSubtasks(TestProjectCommon):
             'name': 'Parent Task',
             'project_id': self.project_goats.id,
             'child_ids': [
-                Command.create({'name': 'child 1'}),
+                Command.create({'name': 'child 1', 'stage_id': self.project_goats.type_ids[1].id}),
                 Command.create({'name': 'child 2', 'display_project_id': self.project_goats.id}),
                 Command.create({'name': 'child 3', 'display_project_id': self.project_pigs.id}),
                 Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'})]}),
                 Command.create({'name': 'child archived', 'active': False}),
             ],
+            'stage_id': self.project_goats.type_ids[0].id
         })
-
         task_count_with_subtasks_including_archived_in_project_goats = self.project_goats.with_context(active_test=False).task_count_with_subtasks
         task_count_in_project_pigs = self.project_pigs.task_count
         self.project_goats._compute_task_count()  # recompute without archived tasks and subtasks
@@ -219,3 +219,4 @@ class TestProjectSubtasks(TestProjectCommon):
             'that is only the active subtasks are duplicated.')
         self.assertEqual(self.project_goats.task_count, task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
         self.assertEqual(self.project_pigs.task_count, task_count_in_project_pigs + 1, 'The project pigs should an additional task after the duplication of the project goats.')
+        self.assertEqual(project_goats_duplicated.tasks[0].child_ids[0].stage_id.id, self.project_goats.type_ids[1].id, 'The stage of subtasks should be copied too.')
