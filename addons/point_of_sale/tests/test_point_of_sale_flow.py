@@ -1797,3 +1797,18 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         moves = self.env['account.move'].search([('ref', '=', f'pos_order_{order.id}')])
         self.assertEqual(len(moves), 2)
+
+    def test_no_default_pricelist(self):
+        """Should not have default_pricelist if use_pricelist is false."""
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+        })
+        self.pos_config.write({
+            'pricelist_id': pricelist.id,
+            'use_pricelist': False,
+        })
+        self.pos_config.open_ui()
+        loaded_data = self.pos_config.current_session_id.load_pos_data()
+
+        self.assertFalse(loaded_data.get('default_pricelist', False))
