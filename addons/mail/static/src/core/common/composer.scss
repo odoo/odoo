@@ -11,8 +11,8 @@
     }
 
     .o-mail-Composer-sidebarMain {
+        padding-top: 0.1875rem; // avatar centered with composer text input: 36px (avatar) + 2*3px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
         width: 48px;
-        justify-self: center;
     }
 
     .o-mail-Composer-coreHeader {
@@ -45,6 +45,7 @@
     padding-bottom: 10px;
     max-height: 100px;
     resize: none;
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 
     .o-extended:not(.o-isUiSmall) & {
         max-height: 400px;
@@ -68,4 +69,5 @@
     top: -10000px;
     padding-top: 10px;
     padding-bottom: 10px;
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 }
