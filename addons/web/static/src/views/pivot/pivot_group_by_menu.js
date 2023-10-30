@@ -39,10 +39,10 @@ export class PivotGroupByMenu extends Component {
      * @returns {Object[]}
      */
     get items() {
-        let items = this.env.searchModel.getSearchItems((searchItem) =>
-            ["groupBy", "dateGroupBy"].includes(searchItem.type)
+        let items = this.env.searchModel.getSearchItems(
+            (searchItem) =>
+                ["groupBy", "dateGroupBy"].includes(searchItem.type) && !searchItem.custom
         );
-        items = items.filter((i) => !i.custom);
         if (items.length === 0) {
             items = this.fields;
         }
