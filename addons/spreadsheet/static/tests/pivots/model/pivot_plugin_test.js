@@ -876,4 +876,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.strictEqual(getCellContent(model, "A2"), "");
         }
     );
+
+    QUnit.test("getter `getFirstPivotFunction` does not crash upon invalid formulas", async (assert) => {
+            const { model } = await createSpreadsheetWithPivot();
+            assert.equal(model.getters.getFirstPivotFunction("=ODOO.PIVOT(DATE(-1999,1,1))"), undefined);
+    });
 });

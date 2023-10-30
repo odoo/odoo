@@ -39,8 +39,12 @@ QUnit.test("Invalid pivot/list formulas should not be clickable", async (assert)
         sheets: [
             {
                 cells: {
-                    A1: { content: `=ODOO.PIVOT("1", "measure")` },
+                    A1: { content: `=ODOO.PIVOT(1, "measure")` },
                     A2: { content: `=ODOO.LIST("1", 1, "name")` },
+                    // error cell to reference in a pivot/list formula
+                    A3: { content: '=date(-199,1,1)' },
+                    A4: { content: `=ODOO.PIVOT(A3, "probability", "bar", "false")` },
+                    A5: { content: `=ODOO.LIST(A3, 1, "foo")` },
                 },
             },
         ],

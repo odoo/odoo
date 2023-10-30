@@ -669,4 +669,11 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(getBorders(model, "A5"), { ...leftBorder, ...bottomBorder });
         assert.deepEqual(getBorders(model, "D5"), { ...rightBorder, ...bottomBorder });
     });
+
+   QUnit.test("getter `getListIdFromPosition` does not crash upon invalid formulas", async (assert) => {
+        const { model } = await createSpreadsheetWithList();
+        setCellContent(model, "A1", '=ODOO.LIST(DATE(-1999,1,1), 1, "foo")');
+        const sheetId = model.getters.getActiveSheetId();
+        assert.equal(model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 }), undefined);
+    });
 });
