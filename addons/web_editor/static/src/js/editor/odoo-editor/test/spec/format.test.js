@@ -539,7 +539,7 @@ describe('Format', () => {
                 contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
             });
         });
-        it('should insert new character inside strikethrough at first position', async () => {
+        it('should insert before strikethrough', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>d[a${s('bc]<br><br>')}</p>`,
                 stepFunction: async editor => {
@@ -899,7 +899,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
                 stepFunction: editor => editor.execCommand('removeFormat'),
-                contentAfter: '<div><p><span style="">[ab]</span></p></div>',
+                contentAfter: '<div><p>[ab]</p></div>',
             });
         });
     });

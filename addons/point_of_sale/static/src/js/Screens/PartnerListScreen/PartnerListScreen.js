@@ -200,8 +200,11 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             let domain = [];
             const limit = 30;
             if(this.state.query) {
-                domain = ['|', ["name", "ilike", this.state.query + "%"],
-                               ["parent_name", "ilike", this.state.query + "%"]];
+                const search_fields = ["name", "parent_name", "phone_mobile_search", "email"];
+                domain = [
+                    ...Array(search_fields.length - 1).fill('|'),
+                    ...search_fields.map(field => [field, "ilike", this.state.query + "%"])
+                ];
             }
             const result = await this.env.services.rpc(
                 {
