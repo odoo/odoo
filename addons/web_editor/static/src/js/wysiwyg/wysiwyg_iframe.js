@@ -234,24 +234,14 @@ patch(Wysiwyg.prototype, {
 function getWysiwygIframeContent(params) {
     const assets = {
         cssLibs: [],
-        cssContents: [],
         jsLibs: [],
-        jsContents: [],
     };
     for (const asset of params.assets) {
         for (const cssLib of asset.cssLibs) {
             assets.cssLibs.push(`<link type="text/css" rel="stylesheet" href="${cssLib}"/>`);
         }
-        for (const cssContent of asset.cssContents) {
-            assets.cssContents.push(`<style type="text/css">${cssContent}</style>`);
-        }
         for (const jsLib of asset.jsLibs) {
             assets.jsLibs.push(`<script type="text/javascript" src="${jsLib}"/>`);
-        }
-        for (const jsContent of asset.jsContents) {
-            if (jsContent.indexOf('inline asset') !== -1) {
-                assets.jsContents.push(`<script type="text/javascript">${jsContent}</script>`);
-            }
         }
     }
     return `
@@ -259,12 +249,10 @@ function getWysiwygIframeContent(params) {
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         ${assets.cssLibs.join('\n')}
-        ${assets.cssContents.join('\n')}
         ${assets.jsLibs.join('\n')}
-        ${assets.jsContents.join('\n')}
 
         <script type="text/javascript">
-            odoo.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
+            window.odoo?.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
                 'use strict';
                 var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
                 var widget = new Widget();
@@ -276,7 +264,7 @@ function getWysiwygIframeContent(params) {
     <body class="o_in_iframe">
         <div id="iframe_target"/>
         <script type="text/javascript">
-            odoo.define('web_editor.wysiwyg.iniframe', [], function (require) {
+            window.odoo?.define('web_editor.wysiwyg.iniframe', [], function (require) {
                 'use strict';
                 if (window.top.${params.updateIframeId}) {
                     window.top.${params.updateIframeId}(${params.avoidDoubleLoad});

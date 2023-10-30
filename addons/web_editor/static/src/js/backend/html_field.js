@@ -481,13 +481,6 @@ export class HtmlField extends Component {
                         link.setAttribute('href', cssLib);
                         cwindow.document.head.append(link);
                     }
-                    for (const cssContent of this.cssReadonlyAsset.cssContents) {
-                        const style = cwindow.document.createElement('style');
-                        style.setAttribute('type', 'text/css');
-                        const textNode = cwindow.document.createTextNode(cssContent);
-                        style.append(textNode);
-                        cwindow.document.head.append(style);
-                    }
                 }
 
                 if (!this.sandboxedPreview) {
