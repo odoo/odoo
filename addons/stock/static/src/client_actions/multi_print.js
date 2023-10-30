@@ -27,9 +27,9 @@ async function doMultiPrint(env, action) {
     }
     if (action.params.anotherAction) {
         return env.services.action.doAction(action.params.anotherAction);
-    } else if (action.params.on_close) {
+    } else if (action.params.onClose) {
         // handle special cases such as barcode
-        action.params.on_close()
+        action.params.onClose()
     } else {
         return env.services.action.doAction("reload_context");
     }
