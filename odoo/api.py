@@ -772,7 +772,7 @@ class Environment(Mapping):
         if not records:
             return records
         assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
-        self.all.tocompute[field].update(records._ids)
+        self.all.tocompute[field].update(dict.fromkeys(records._ids, records.env))
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
@@ -781,7 +781,8 @@ class Environment(Mapping):
         ids = self.all.tocompute.get(field, None)
         if ids is None:
             return
-        ids.difference_update(records._ids)
+        for id_ in records._ids:
+            ids.pop(id_, None)
         if not ids:
             del self.all.tocompute[field]
 
@@ -837,8 +838,8 @@ class Transaction:
         self.cache = Cache()
         # fields to protect {field: ids}
         self.protected = StackMap()
-        # pending computations {field: ids}
-        self.tocompute = defaultdict(OrderedSet)
+        # pending computations {field: {id: env}}
+        self.tocompute = defaultdict(dict)
 
     def flush(self):
         """ Flush pending computations and updates in the transaction. """

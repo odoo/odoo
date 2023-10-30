@@ -138,7 +138,7 @@ class HrEmployee(models.Model):
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
         for employee in self:
-            employee.last_attendance_id = self.env['hr.attendance'].search([
+            employee.last_attendance_id = self.env['hr.attendance'].sudo().search([
                 ('employee_id', '=', employee.id),
             ], order="check_in desc", limit=1)
 

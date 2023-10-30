@@ -77,7 +77,11 @@ class StockWarehouseOrderpoint(models.Model):
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
-    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure')
+    # --test-tags :TestInvoiceExtractPurchase
+    # addons/purchase_stock/models/stock.py, override `_compute_qty` to recompute `qty_forecast` when a product has a new purchase line
+    # what is a pity is that with only `stock`, there is no need of the `compute_sudo`, it's when `purchase_stock` gets installed that it becomes required
+    # because purchase manager do not necessarily have read access on orderpoint.
+    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure', compute_sudo=True)
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(

@@ -307,6 +307,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move.quantity = 6
         action = receipt01.button_validate()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+        receipt01_move.flush_recordset(['product_qty'])
 
         data = self.env['vendor.delay.report'].read_group(
             [('partner_id', '=', self.partner.id)],

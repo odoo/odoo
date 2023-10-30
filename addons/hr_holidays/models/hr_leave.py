@@ -166,9 +166,11 @@ class HolidaysRequest(models.Model):
     # These dates are computed based on request_date_{to,from} and should
     # therefore never be set directly.
     date_from = fields.Datetime(
-        'Start Date', compute='_compute_date_from_to', store=True, index=True, tracking=True)
+        # --test-tags .test_holidays_manager_create_batch
+        'Start Date', compute='_compute_date_from_to', store=True, index=True, tracking=True, compute_sudo=True)
     date_to = fields.Datetime(
-        'End Date', compute='_compute_date_from_to', store=True, tracking=True)
+        # --test-tags .test_holidays_manager_create_batch
+        'End Date', compute='_compute_date_from_to', store=True, tracking=True, compute_sudo=True)
     number_of_days = fields.Float(
         'Duration (Days)', compute='_compute_duration', store=True, tracking=True,
         help='Number of days of the time off request. Used in the calculation.')

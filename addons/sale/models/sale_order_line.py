@@ -207,6 +207,8 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
+        # --test-tags .test_inventory_admin_no_backorder_not_own_sale_order
+        compute_sudo=True,
         digits='Product Unit of Measure',
         store=True, readonly=False, copy=False)
 
@@ -240,6 +242,8 @@ class SaleOrderLine(models.Model):
         ],
         string="Invoice Status",
         compute='_compute_invoice_status',
+        # --test-tags .test_inventory_admin_no_backorder_not_own_sale_order
+        compute_sudo=True,
         store=True)
 
     untaxed_amount_invoiced = fields.Monetary(
@@ -249,6 +253,8 @@ class SaleOrderLine(models.Model):
     untaxed_amount_to_invoice = fields.Monetary(
         string="Untaxed Amount To Invoice",
         compute='_compute_untaxed_amount_to_invoice',
+        # --test-tags .test_inventory_admin_no_backorder_not_own_sale_order
+        compute_sudo=True,
         store=True)
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
@@ -418,7 +424,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             lines_by_company[line.company_id] += line
         for product in self.product_id:
-            for tax in product.taxes_id:
+            # --test-tags .test_update_subscription_company
+            # If a user changes the company on a sale order line, it must set the correct taxes
+            # even if he can't read them directly.
+            for tax in product.sudo().taxes_id:
                 taxes_by_product_company[(product, tax.company_id)] += tax
         for company, lines in lines_by_company.items():
             for line in lines.with_company(company):

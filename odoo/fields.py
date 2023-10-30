@@ -445,7 +445,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # mode if stored, not copied (unless stored and explicitly not
             # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
-            attrs['compute_sudo'] = attrs.get('compute_sudo', store)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', False)
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
@@ -1350,12 +1350,22 @@ class Field(MetaField('DummyField', (object,), {})):
                 for f in records.pool.field_computed[self]:
                     records.env.remove_to_compute(f, missing)
 
+        def apply_compute_env(records, env):
+            context = dict(records.env.context)
+            if 'allowed_company_ids' in env.context:
+                context['allowed_company_ids'] = env.context['allowed_company_ids']
+            else:
+                context.pop('allowed_company_ids', None)
+            records = records.with_env(records.env(user=env.uid, su=env.su, context=context))
+            return records
+
         if self.recursive:
             # recursive computed fields are computed record by record, in order
             # to recursively handle dependencies inside records
             def recursive_compute(records):
                 for record in records:
                     if record.id in to_compute_ids:
+                        record = apply_compute_env(record, to_compute_ids[record.id])
                         self.compute_value(record)
 
             apply_except_missing(recursive_compute, records)
@@ -1363,7 +1373,20 @@ class Field(MetaField('DummyField', (object,), {})):
 
         for record in records:
             if record.id in to_compute_ids:
-                ids = expand_ids(record.id, to_compute_ids)
+                record = apply_compute_env(record, to_compute_ids[record.id])
+                ids = expand_ids(record.id, (
+                    id_
+                    for id_, env in to_compute_ids.items()
+                    if (
+                        env.uid,
+                        env.su,
+                        env.context.get('allowed_company_ids'),
+                    ) == (
+                        record.env.uid,
+                        record.env.su,
+                        record.env.context.get('allowed_company_ids'),
+                    )
+                ))
                 recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
                 try:
                     apply_except_missing(self.compute_value, recs)
@@ -1386,14 +1409,61 @@ class Field(MetaField('DummyField', (object,), {})):
             if field.store:
                 env.remove_to_compute(field, records)
 
-        try:
-            with records.env.protecting(fields, records):
-                records._compute_field_value(self)
-        except Exception:
-            for field in fields:
-                if field.store:
-                    env.add_to_compute(field, records)
-            raise
+        with records.env.protecting(fields, records):
+            # --test-tags .test_access_sales_person
+            # Infinite loop in `_compute_field_value` of `base_automation`
+            # Computation of a stored field lands in `base_automation.py` `_compute_field_value`
+            # -> Tries to read old values with `for old_vals in (records.read([f.name for f in stored_fields]))`
+            # -> User doesn't have access (this is the point of the test): Raise an access error and go in `_make_access_error`
+            # -> `_make_access_error` calls `records.invalidate_recordset()` to empty the cache of the unauthorized record
+            # -> `invalidate_recordset` flushes using `flush_recordset` (because invalidate_recordset calls without `flush=False`)
+            # -> `flush_recordset` triggers the recomputation of the field, because it was added back in the tocompute
+            # -> lands back in `_compute_field_value` of `base_automation`, and the loop goes on.
+            # It could actually happen before the changes brought by this revision
+            # if the field was manually set to `compute_sudo=False`
+            # It wasn't happenning only because computed stored field where `compute_sudo=True` by default,
+            # and therefore the read of old values in the `_compute_field_value` of `base_automation` was always working.
+            # I see two solutions:
+            # - Either we do not put back the field in the `tocompute` queue.
+            #   I think it was added in the past to handle the recomputation of single record when the batch recomputation failed,
+            #   in `def recompute`:
+            #   try:
+            #       apply_except_missing(self.compute_value, recs)
+            #   except AccessError:
+            #       self.compute_value(record)
+            # but it seems no longer used nowadays, and runbot got green with this removal
+            # - Either we do not flush when invalidating the record in the `_make_access_error`:
+            #   `records.invalidate_recordset(flush=False)`
+            # Traceback:
+            #   File "/home/odoo/src/odoo/master/addons/base_automation/models/base_automation.py", line 630, in _compute_field_value
+            #     for old_vals in (records.read([f.name for f in stored_fields]))
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3495, in read
+            #     self._origin.fetch(fields)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3785, in fetch
+            #     raise self.env['ir.rule']._make_access_error('read', forbidden)
+            #   File "/home/odoo/src/odoo/master/odoo/addons/base/models/ir_rule.py", line 210, in _make_access_error
+            #     records.invalidate_recordset(flush=False)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6583, in invalidate_recordset
+            #     self.flush_recordset(fnames)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6233, in flush_recordset
+            #     self._recompute_recordset(fnames)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6765, in _recompute_recordset
+            #     self._recompute_field(field, self._ids)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 6779, in _recompute_field
+            #     field.recompute(records)
+            #   File "/home/odoo/src/odoo/master/odoo/fields.py", line 1395, in recompute
+            #     self.compute_value(record)
+            #   File "/home/odoo/src/odoo/master/odoo/fields.py", line 1415, in compute_value
+            #     records._compute_field_value(self)
+            #   File "/home/odoo/src/odoo/master/addons/base_automation/models/base_automation.py", line 630, in _compute_field_value
+            #     for old_vals in (records.read([f.name for f in stored_fields]))
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3495, in read
+            #     self._origin.fetch(fields)
+            #   File "/home/odoo/src/odoo/master/odoo/models.py", line 3785, in fetch
+            #     raise self.env['ir.rule']._make_access_error('read', forbidden)
+            #   File "/home/odoo/src/odoo/master/odoo/addons/base/models/ir_rule.py", line 210, in _make_access_error
+            #     records.invalidate_recordset(flush=False)
+            records._compute_field_value(self)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """

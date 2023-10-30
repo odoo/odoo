@@ -223,6 +223,8 @@ class SaleOrder(models.Model):
         selection=INVOICE_STATUS,
         string="Invoice Status",
         compute='_compute_invoice_status',
+        # --test-tags .test_inventory_admin_no_backorder_not_own_sale_order
+        compute_sudo=True,
         store=True)
 
     # Payment fields

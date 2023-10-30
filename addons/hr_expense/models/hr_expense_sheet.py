@@ -360,7 +360,9 @@ class HrExpenseSheet(models.Model):
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
-            sheet.department_id = sheet.employee_id.department_id
+            # --test-tags .test_expense_sheet_access_rights
+            # department_id is a related to employee_id.department_id, not a compute field
+            # it shouldn't be set in a compute method of another field
             sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
 
     @api.depends_context('uid')
