@@ -92,19 +92,6 @@ var dom = {
         $textarea.on('input focus change', resize);
     },
     /**
-     * @return {HTMLElement|null}
-     */
-    closestScrollable(el) {
-        return $(el).closestScrollable()[0] || null;
-    },
-    /**
-     * @param {HTMLElement} el
-     * @see $.compensateScrollbar
-     */
-    compensateScrollbar(el, ...rest) {
-        $(el).compensateScrollbar(...rest);
-    },
-    /**
      * jQuery find function behavior is::
      *
      *      $('A').find('A B') <=> $('A A B')
