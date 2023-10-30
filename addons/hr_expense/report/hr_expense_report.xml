@@ -5,30 +5,32 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page o_content_pdf">
+                        <div class="oe_structure"></div>
                         <h2>Expenses Report</h2>
-                        <h3><t t-out="o.name"/></h3>
+                        <h3><span t-out="o.name">Business Trip</span></h3>
                         <div class="row o_header">
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-3 fw-bold"><span>Employee:</span> </div>
-                                    <div class="col-9 text-muted"><span t-field="o.employee_id.name"/></div>
+                                    <div class="col-9 text-muted"><span t-field="o.employee_id.name">Marc Demo</span></div>
                                 </div>
                                 <div class="row" t-if="o.accounting_date">
                                     <div class="col-3 fw-bold"><span>Date:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.accounting_date"/></div>
+                                    <div class="col-9 text-muted"><span t-field="o.accounting_date">2023-08-11</span></div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row" t-if="o.user_id.name">
                                     <div class="col-3 fw-bold"><span>Manager:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.user_id"/></div>
+                                    <div class="col-9 text-muted"><span t-field="o.user_id">Mitchell Admin</span></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3 fw-bold"><span>Paid by:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.payment_mode"/></div>
+                                    <div class="col-9 text-muted"><span t-field="o.payment_mode">Credit Card</span></div>
                                 </div>
                             </div>
                         </div>
+                        <div class="oe_structure"></div>
 
                         <table class="o_table">
                             <thead>
@@ -45,46 +47,56 @@
                             </thead>
                             <tbody>
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
-                                    <td class="text-start"><span t-field="line.date"/></td>
+                                    <td class="text-start"><span t-field="line.date"></span></td>
                                     <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
-                                        <span t-field="line.name"/><br/>
+                                        <span t-field="line.name">Flight Ticket</span><br/>
                                         <span>
-                                            <div t-foreach="line.analytic_distribution" t-as="distribution">
-                                                <t t-out="line.env['account.analytic.account'].browse(int(distribution))[0].name"/>: <t t-out="line.analytic_distribution.get(distribution)"/>
-                                            </div>
+                                            <span t-foreach="line.analytic_distribution" t-as="distribution">
+                                                <span t-out="line.env['account.analytic.account'].browse(int(distribution))[0].name">Analytic Account Name</span>:
+                                                <span t-out="line.analytic_distribution.get(distribution)">50%</span>
+                                            </span>
                                         </span>
                                     </td>
-                                    <td class="text-end"><span t-field="line.price_unit"/></td>
-                                    <td class="text-end"><span t-field="line.quantity"/></td>
+                                    <td class="text-end"><span t-field="line.price_unit">$100.00</span></td>
+                                    <td class="text-end"><span t-field="line.quantity">1</span></td>
                                     <td class="text-end">
                                         <t t-foreach="line.tax_ids" t-as="tax">
-                                            <t t-if="tax.description"><span t-field="tax.description"/></t>
-                                            <t t-if="not tax.description"><span t-field="tax.name"/></t>
+                                            <t t-if="tax.description"><span t-field="tax.description">VAT</span></t>
+                                            <t t-if="not tax.description"><span t-field="tax.name">Tax Name</span></t>
                                         </t>
                                     </td>
-                                    <td t-if="foreign_currencies" class="text-end"><span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
-                                    <td class="text-end"><span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
+                                    <td t-if="foreign_currencies" class="text-end">
+                                        <span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}'>$120.00</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$100.00</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="oe_structure"></div>
                         <div class="row justify-content-end o_total">
                             <div class="col-4">
+                                <div class="oe_structure"></div>
                                 <table class="o_subtable">
                                     <tbody>
                                         <tr>
                                             <td>Untaxed Amount</td>
-                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$500.00</span></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$100.00</span></td>
                                         </tr>
                                         <tr class="fw-bold">
                                             <td>Total</td>
-                                            <td class="text-end"><span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                            <td class="text-end">
+                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$600.00</span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="oe_structure"></div>
                             </div>
                         </div>
                     </div>
@@ -97,8 +109,9 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.basic_layout">
+                    <div class="oe_structure"></div>
                     <div t-if="attachment and attachment.mimetype != 'application/pdf'">
-                        <h3> <t t-out="attachment.res_name"/> </h3>
+                        <h3> <span t-out="attachment.res_name">Attachment Name</span> </h3>
                         <img t-att-src="attachment.image_src" class="o_attachment_pdf"/>
                     </div>
                 </t>

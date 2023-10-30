@@ -35,10 +35,10 @@
                                         <t t-set="certif_style" t-value="certif_style + 'font-size: 30px; line-height: 4;'"/>
                                     </t>
                                 </t>
-                                <span t-att-style="certif_style" class="user-name" t-esc="certified_name"/>
+                                <span t-att-style="certif_style" class="user-name" t-out="certified_name">DEMO_CERTIFIED_NAME</span>
 
-                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name"/> <span>for successfully completing</span>
-                                <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name"/></b>
+                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name">Odoo</span> <span>for successfully completing</span>
+                                <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name">Functional Training</span></b>
                              </p>
                             <div class="oe_structure"/>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="certification-bottom">
                         <div class="oe_structure"/>
                         <div class="certification-date-wrapper">
-                            <div class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'/>
+                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'>2023-08-18</span>
                             <span>Date</span>
                         </div>
                         <div class="certification-company">
@@ -61,7 +61,7 @@
                     </div>
                     <div t-if="user_input.test_entry" class="test-entry"/>
                     <div class="certification-number" t-if="user_input.scoring_success">
-                        Certification n°<t t-esc="str(user_input.id).rjust(10, '0')"/>
+                        Certification n°<span t-out="str(user_input.id).rjust(10, '0')">0000000010</span>
                     </div>
                 </div>
             </div>
