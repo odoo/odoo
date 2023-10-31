@@ -203,12 +203,10 @@ export class DiscussCoreCommon {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.Thread.get({ model: "discuss.channel", id });
         if (!channel || !channel.type) {
-            const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
-            channel = this.store.Thread.insert({
-                model: "discuss.channel",
-                type: channelData.channel_type,
-                ...channelData,
-            });
+            channel = await this.threadService.fetchChannel(id);
+            if (!channel) {
+                return;
+            }
         }
         if (!channel.is_pinned) {
             this.threadService.pin(channel);
