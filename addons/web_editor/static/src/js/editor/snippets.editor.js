@@ -207,7 +207,7 @@ var SnippetEditor = Widget.extend({
                 isCurrent: targetEl === this.$target[0],
             });
         }
-        await this.toggleTargetVisibility(true);
+        await this.toggleTargetVisibility(true, true);
     },
     /**
      * Notifies all the associated snippet options that the template which
@@ -590,10 +590,11 @@ var SnippetEditor = Widget.extend({
     },
     /**
      * @param {boolean} [show]
+     * @param {boolean} [ignoreDeviceVisibility]
      * @returns {Promise<boolean>}
      */
-    toggleTargetVisibility: async function (show) {
-        show = this._toggleVisibilityStatus(show);
+    toggleTargetVisibility: async function (show, ignoreDeviceVisibility) {
+        show = this._toggleVisibilityStatus(show, ignoreDeviceVisibility);
         var styles = Object.values(this.styles);
         const proms = sortBy(styles, "__order").map((style) => {
             return show ? style.onTargetShow() : style.onTargetHide();
@@ -883,8 +884,24 @@ var SnippetEditor = Widget.extend({
     /**
      * @private
      * @param {boolean} [show]
+     * @param {boolean} [ignoreDeviceVisibility]
+     * @returns {boolean}
      */
-    _toggleVisibilityStatus: function (show) {
+    _toggleVisibilityStatus: function (show, ignoreDeviceVisibility) {
+        if (ignoreDeviceVisibility) {
+            if (this.$target[0].matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")) {
+                const isMobilePreview = weUtils.isMobileView(this.$target[0]);
+                const isMobileHidden = this.$target[0].classList.contains("o_snippet_mobile_invisible");
+                if (isMobilePreview === isMobileHidden) {
+                    // Preview mode and hidden type are the same.
+                    show = false;
+                } else {
+                    // Preview mode is not related to hidden type.
+                    delete this.$target[0].dataset.invisible;
+                    return false;
+                }
+            }
+        }
         if (show === undefined) {
             show = !this.isTargetVisible();
         }
