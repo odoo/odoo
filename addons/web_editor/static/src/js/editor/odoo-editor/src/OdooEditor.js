@@ -4313,7 +4313,7 @@ export class OdooEditor extends EventTarget {
         const content = block && block.innerHTML.trim();
         if (
             block &&
-            (content === '' || content === '<br>') &&
+            ((content === '' && this.options.showEmptyElementHint) || content === '<br>') &&
             !block.querySelector('T[t-out],[t-field]') &&
             ancestors(block, this.editable).includes(this.editable)
         ) {
