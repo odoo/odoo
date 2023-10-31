@@ -850,16 +850,31 @@ Please change the quantity done or the rounding precision of your unit of measur
             options = options or self._get_formating_options(lot_text_parts[1:])
             for extra_string in lot_text_parts[1:]:
                 field_data = self._convert_string_into_field_data(extra_string, options)
-                if field_data == "ignore":
-                    # Got an unusable data for this move, updates only the lot_name part.
-                    move_line_vals.update(lot_name=lot_text_parts[0])
-                elif field_data:
-                    move_line_vals.update(**field_data, lot_name=lot_text_parts[0])
+                if field_data:
+                    lot_text = lot_text_parts[0]
+                    if field_data == "ignore":
+                        # Got an unusable data for this move, updates only the lot_name part.
+                        move_line_vals.update(lot_name=lot_text)
+                    else:
+                        move_line_vals.update(**field_data, lot_name=lot_text)
                 else:
                     # At least this part of the string is erronous and can't be converted,
                     # don't try to guess and simply use the full string as the lot name.
                     move_line_vals['lot_name'] = lot_text
                     break
+            if self.picking_type_id.use_existing_lots:
+                lot_id = self.env['stock.lot'].search([
+                    ('product_id', '=', self.product_id.id),
+                    ('name', '=', lot_text),
+                    ('company_id', '=', self.company_id.id),
+                ])
+                if not lot_id:
+                    lot_id = self.env['stock.lot'].create({
+                        'product_id': self.product_id.id,
+                        'name': lot_text,
+                        'company_id': self.company_id.id,
+                    })
+                move_line_vals['lot_id'] = lot_id.id
             move_lines_vals.append(move_line_vals)
         return move_lines_vals
 
