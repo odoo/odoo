@@ -355,7 +355,7 @@
                             <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
                         </t>
                         <!-- Social -->
-                        <t t-call="website.header_social_links_no_color">
+                        <t t-call="website.placeholder_header_social_links">
                             <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
                         </t>
                     </ul>
@@ -398,7 +398,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="align-items-center mt-2 border-top pt-2 text-center o_border_contrast"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-center o_border_contrast"/>
     </xpath>
     <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
@@ -416,7 +416,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="align-items-end mt-2 border-top pt-2 text-end o_border_contrast"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-end o_border_contrast"/>
     </xpath>
     <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
@@ -567,7 +567,7 @@
                                 <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
                             </t>
                             <!-- Social -->
-                            <t t-call="website.header_social_links_no_color">
+                            <t t-call="website.placeholder_header_social_links">
                                 <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
                             </t>
                         </ul>
@@ -616,7 +616,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-center o_border_contrast"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-center o_border_contrast"/>
     </xpath>
 </template>
@@ -628,7 +628,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-end o_border_contrast"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-end o_border_contrast"/>
     </xpath>
 </template>
@@ -671,7 +671,7 @@
                         <t t-set="_classes" t-valuef="h-100 border-start o_border_contrast"/>
                     </t>
                     <!-- Social -->
-                    <t t-call="website.header_social_links_no_color">
+                    <t t-call="website.placeholder_header_social_links">
                         <t t-set="_div_class" t-valuef="d-flex align-items-center h-100 border-start px-2 o_border_contrast"/>
                     </t>
                     <!-- Language Selector -->
@@ -767,7 +767,7 @@
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Call To Action -->
-                        <t t-call="website.header_call_to_action_pill"/>
+                        <t t-call="website.placeholder_header_call_to_action"/>
                     </ul>
                 </div>
                 <div class="d-flex justify-content-center w-100">
@@ -854,7 +854,7 @@
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
                         </t>
                         <!-- Call To Action -->
-                        <t t-call="website.header_call_to_action_pill"/>
+                        <t t-call="website.placeholder_header_call_to_action"/>
                     </ul>
                 </div>
             </div>
@@ -921,7 +921,7 @@
                     </t>
                     <ul class="o_header_sales_one_right_col navbar-nav align-items-center gap-1 flex-grow-1 justify-content-end">
                         <!-- Call To Action -->
-                        <t t-call="website.header_call_to_action_pill">
+                        <t t-call="website.placeholder_header_call_to_action">
                             <t t-set="_item_class" t-valuef="flex-grow-1"/>
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
                         </t>
@@ -960,7 +960,7 @@
                             <t t-set="_item_class" t-valuef="flex-basis-0 flex-grow-1 flex-shrink-0"/>
                         </t>
                         <!-- Social -->
-                        <t t-call="website.header_social_links_no_color"/>
+                        <t t-call="website.placeholder_header_social_links"/>
                     </ul>
                 </div>
             </div>
@@ -1015,7 +1015,7 @@
                             <!-- Social -->
                             <!-- Return empty placeholder if the element is not active to keep the right layout -->
                             <li class="o_header_sales_two_social_links_placeholder" t-if="is_view_active('website.header_social_links') == False"/>
-                            <t t-call="website.header_social_links_no_color">
+                            <t t-call="website.placeholder_header_social_links">
                                 <t t-set="_div_class" t-valuef="d-flex align-items-center justify-content-end h-100"/>
                             </t>
                         </ul>
@@ -1103,7 +1103,7 @@
                     <div class="container d-flex justify-content-between gap-3 h-100">
                         <ul class="navbar-nav align-items-center gap-3 py-1">
                             <!-- Social -->
-                            <t t-call="website.header_social_links_no_color"/>
+                            <t t-call="website.placeholder_header_social_links"/>
                             <!-- Text element -->
                             <t t-call="website.placeholder_header_text_element">
                                 <t t-set="_txt_elt_content" t-valuef="list"/>
@@ -1205,7 +1205,7 @@
                             <t t-set="_item_class" t-valuef="position-relative"/>
                         </t>
                         <!-- Social -->
-                        <t t-call="website.header_social_links_no_color">
+                        <t t-call="website.placeholder_header_social_links">
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
                             <t t-set="_item_class" t-valuef="position-relative"/>
                         </t>
@@ -1251,7 +1251,7 @@
                             <li class="d-flex align-items-center gap-3 ms-auto mb-0">
                                 <ul class="navbar-nav gap-2">
                                     <!-- Call To Action -->
-                                    <t t-call="website.header_call_to_action_pill"/>
+                                    <t t-call="website.placeholder_header_call_to_action"/>
                                 </ul>
                             </li>
                         </ul>
@@ -1325,7 +1325,7 @@
                                 <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
                             </t>
                             <!-- Social -->
-                            <t t-call="website.header_social_links_no_color">
+                            <t t-call="website.placeholder_header_social_links">
                                 <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
                             </t>
                         </ul>
@@ -1373,7 +1373,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-center"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-center"/>
     </xpath>
     <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
@@ -1391,7 +1391,7 @@
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-end"/>
     </xpath>
-    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+    <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-end"/>
     </xpath>
     <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
@@ -1459,7 +1459,7 @@
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Call To Action -->
-                        <t t-call="website.header_call_to_action_pill"/>
+                        <t t-call="website.placeholder_header_call_to_action"/>
                     </ul>
                 </div>
             </t>
@@ -2219,12 +2219,6 @@
     </xpath>
 </template>
 
-<template id="website.header_call_to_action_pill" inherit_id="website.header_call_to_action" name="Header Call to Action - Pill" primary="True">
-    <xpath expr="//a[hasclass('btn')]" position="attributes">
-        <attribute name="class" remove="btn-primary" add="btn-fill-primary rounded-circle" separator=" "/>
-    </xpath>
-</template>
-
 <template id="record_cover">
     <t t-set="_cp" t-value="_cp or json.loads(_record.cover_properties)"/>
     <t t-set="_name" t-value="_name or _record._name"/>
@@ -2852,11 +2846,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </div>
             </div>
         </li>
-    </xpath>
-</template>
-<template id="website.header_social_links_no_color" inherit_id="website.header_social_links" name="Header Social Links - No Color" primary="True">
-    <xpath expr="//div[hasclass('s_social_media')]" position="attributes">
-        <attribute name="class" remove="" add="no_icon_color text-reset" separator=" "/>
     </xpath>
 </template>
 

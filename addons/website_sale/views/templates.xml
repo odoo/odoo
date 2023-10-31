@@ -62,7 +62,7 @@
     </template>
 
     <template id="template_header_stretch" inherit_id="website.template_header_stretch">
-        <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="before">
+        <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
@@ -129,7 +129,7 @@
     </template>
 
     <template id="template_header_sales_four" inherit_id="website.template_header_sales_four">
-        <xpath expr="//t[@t-call='website.header_call_to_action_pill']" position="before">
+        <xpath expr="//t[@t-call='website.placeholder_header_call_to_action']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-pill p-1 text-reset'"/>
