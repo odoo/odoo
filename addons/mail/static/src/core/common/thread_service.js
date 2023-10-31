@@ -44,10 +44,13 @@ export class ThreadService {
     /**
      * @param {import("models).Thread} thread
      * @param {number} id
-     * @returns {Promise<import("models").Thread>}
+     * @returns {Promise<import("models").Thread|undefined>}
      */
     async fetchChannel(id) {
-        const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
+        const channelData = await this.rpc("/discuss/channel/info", { channel_id: id });
+        if (!channelData) {
+            return;
+        }
         return this.store.Thread.insert({
             ...channelData,
             model: "discuss.channel",

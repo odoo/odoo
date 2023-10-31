@@ -28,7 +28,10 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/info", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_info(self, channel_id):
-        return request.env["discuss.channel"].search([("id", "=", channel_id)])._channel_info()
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            return
+        return channel._channel_info()[0]
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
