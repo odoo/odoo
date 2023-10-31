@@ -1489,10 +1489,8 @@ class SaleOrder(models.Model):
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         lang_code = render_context.get('lang')
-        subtitles = [
-            render_context['record'].name,
-        ]
-
+        record = render_context['record']
+        subtitles = [f"{record.name} - {record.partner_id.name}" if record.partner_id else record.name]
         if self.amount_total:
             # Do not show the price in subtitles if zero (e.g. e-commerce orders are created empty)
             subtitles.append(
