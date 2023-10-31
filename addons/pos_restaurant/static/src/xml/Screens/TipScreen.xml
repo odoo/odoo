@@ -30,7 +30,7 @@
                     <div class="tip-amount-options">
                         <div class="percentage-amounts">
                             <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
-                                <div class="button" t-on-click="() => { state.inputTipAmount = tip.amount.toFixed(2); }">
+                                <div class="button" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.amount,false); }">
                                     <div class="percentage">
                                         <t t-esc="tip.percentage"></t>
                                     </div>
