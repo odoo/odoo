@@ -865,29 +865,36 @@ const Wysiwyg = Widget.extend({
                     // id parameters.
                     return;
                 }
-                const attachment = await this._rpc({
-                    route: '/web_editor/attachment/add_data',
-                    params: {
-                        name: el.dataset.fileName || '',
-                        data: el.getAttribute('src').split(',')[1],
-                        is_image: true,
-                        res_model: resModel,
-                        res_id: parseInt(resId),
-                    },
-                });
-                let src = attachment.image_src;
-                if (!attachment.public) {
-                    let accessToken = attachment.access_token;
-                    if (!accessToken) {
-                        [accessToken] = await this._rpc({
-                            model: 'ir.attachment',
-                            method: 'generate_access_token',
-                            args: [attachment.id],
-                        });
+                
+                const imageData = el.getAttribute('src').split('base64,')[1];
+                // Checks if the image is in base64 format for RPC call. Relying
+                // only on the presence of the class "o_b64_image_to_save" is
+                // not robust enough.
+                if (imageData) {
+                    const attachment = await this._rpc({
+                        route: '/web_editor/attachment/add_data',
+                        params: {
+                            name: el.dataset.fileName || '',
+                            data: imageData,
+                            is_image: true,
+                            res_model: resModel,
+                            res_id: parseInt(resId),
+                        },
+                    });
+                    let src = attachment.image_src;
+                    if (!attachment.public) {
+                        let accessToken = attachment.access_token;
+                        if (!accessToken) {
+                            [accessToken] = await this._rpc({
+                                model: 'ir.attachment',
+                                method: 'generate_access_token',
+                                args: [attachment.id],
+                            });
+                        }
+                        src += `?access_token=${encodeURIComponent(accessToken)}`;
                     }
-                    src += `?access_token=${encodeURIComponent(accessToken)}`;
+                    el.setAttribute('src', src);
                 }
-                el.setAttribute('src', src);
                 el.classList.remove('o_b64_image_to_save');
             });
             const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
