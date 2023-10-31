@@ -8,7 +8,6 @@ import unicodedata
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
-from werkzeug._compat import wsgi_encoding_dance
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -533,7 +532,6 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def reroute(cls, path):
-        path = wsgi_encoding_dance(path)
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
