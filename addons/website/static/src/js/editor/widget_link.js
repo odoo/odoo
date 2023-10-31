@@ -3,21 +3,13 @@
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { patch } from "@web/core/utils/patch";
 
-import { status, useEffect } from '@odoo/owl';
+import { onWillStart, status, useEffect } from '@odoo/owl';
 import wUtils from "@website/js/utils";
 import { debounce } from "@web/core/utils/timing";
 
 const LINK_DEBOUNCE = 1000;
 
 patch(LinkTools.prototype, {
-    /**
-     *
-     * @override
-     */
-    onWillStart() {
-        this._adaptPageAnchor = debounce(this._adaptPageAnchor, LINK_DEBOUNCE);
-        return super.onWillStart(...arguments);
-    },
     /**
      * Allows the URL input to propose existing website pages.
      *
@@ -31,6 +23,9 @@ patch(LinkTools.prototype, {
 
     setup() {
         super.setup();
+        onWillStart(() => {
+            this._adaptPageAnchor = debounce(this._adaptPageAnchor, LINK_DEBOUNCE);
+        });
         useEffect((container) => {
             const input = container?.querySelector(`input[name="url"]`);
             if (!input) {
