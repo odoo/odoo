@@ -862,7 +862,6 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
-        self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
         # maps frame ids to callbacks
@@ -886,6 +885,12 @@ class ChromeBrowser:
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
+
+    @property
+    def had_failure(self):
+        with contextlib.suppress(concurrent.futures.TimeoutError, CancelledError):
+            return self._result.exception(timeout=0) is not None
+        return False
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1182,7 +1187,8 @@ class ChromeBrowser:
         )
 
         if log_type == 'error':
-            self.had_failure = True
+            if self.had_failure:
+                return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
@@ -1243,6 +1249,10 @@ which leads to stray network requests and inconsistencies."""))
         stack = ''.join(self._format_stack(exceptionDetails))
         if stack:
             message += '\n' + stack
+
+        if self.had_failure:
+            self._logger.getChild('browser').error("%s", message)
+            return
 
         self.take_screenshot()
         self._save_screencast()
@@ -1452,7 +1462,6 @@ which leads to stray network requests and inconsistencies."""))
         self._responses.clear()
         self._result.cancel()
         self._result = Future()
-        self.had_failure = False
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible
