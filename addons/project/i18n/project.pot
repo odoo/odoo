@@ -1195,6 +1195,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "Communication history"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_project_stage__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
@@ -1799,15 +1804,17 @@ msgid "Draft"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
-msgid "Edit"
+#. odoo-python
+#: code:addons/project/models/project_task_type.py:0
+#, python-format
+msgid ""
+"Each user should have at least one personal stage. Create a new stage to "
+"which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_header.js:0
-#, python-format
-msgid "Edit Personal Stage"
+#: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
+msgid "Edit"
 msgstr ""
 
 #. module: project
@@ -2637,11 +2644,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "Message and communication history"
 msgstr ""
 
 #. module: project
@@ -5337,15 +5339,6 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "You must be"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task_type.py:0
-#, python-format
-msgid ""
-"You should at least have one personal stage. Create a new stage to which the"
-" tasks can be transferred after this one is deleted."
 msgstr ""
 
 #. module: project
