@@ -1708,8 +1708,9 @@ class MrpProduction(models.Model):
         move_lines_to_unlink = set()
 
         for initial_move, backorder_moves in move_to_backorder_moves.items():
-            # Create `stock.move.line` for consumed but non-reserved components
-            if initial_move.raw_material_production_id and not initial_move.move_line_ids and set_consumed_qty:
+            # Create `stock.move.line` for consumed but non-reserved components and for by-products
+            if (initial_move.raw_material_production_id or (initial_move.production_id and initial_move.product_id != production.product_id))\
+                and not initial_move.move_line_ids and set_consumed_qty:
                 ml_vals = initial_move._prepare_move_line_vals()
                 backorder_move_to_ignore = backorder_moves[-1] if has_backorder_to_ignore[initial_move.raw_material_production_id] else self.env['stock.move']
                 for move in list(initial_move + backorder_moves - backorder_move_to_ignore):
@@ -1756,7 +1757,7 @@ class MrpProduction(models.Model):
                     taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
                     if move == initial_move:
                         move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
-                        if set_consumed_qty:
+                        if set_consumed_qty and not move.production_id:
                             move_line.qty_done += taken_qty_uom
                     elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
                         new_ml_vals = dict(
@@ -1764,7 +1765,7 @@ class MrpProduction(models.Model):
                             reserved_uom_qty=taken_qty_uom,
                             move_id=move.id
                         )
-                        if set_consumed_qty:
+                        if set_consumed_qty and not move.production_id:
                             new_ml_vals['qty_done'] = taken_qty_uom
                         move_lines_vals.append(new_ml_vals)
                     quantity -= taken_qty
