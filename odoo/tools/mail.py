@@ -202,6 +202,9 @@ def html_normalize(src, filter_callback=None):
     try:
         src = src.replace('--!>', '-->')
         src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
+        # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
+        # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+        src = re.sub(r'</?o:.*?>', '', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
