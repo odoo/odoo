@@ -89,7 +89,8 @@
                     <t t-foreach="frontend_languages.values()" t-as="lg">
                         <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
                         t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
-                        t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()">
+                        t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
+                        role="menuitem">
                             <span t-if="not no_text" t-esc="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
                             <span t-elif="codes" t-esc="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
                         </a>

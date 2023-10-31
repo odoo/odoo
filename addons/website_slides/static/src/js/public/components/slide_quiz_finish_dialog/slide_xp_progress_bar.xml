@@ -9,7 +9,7 @@
                 <div class="tooltip-inner" t-out="state.userKarma"/>
             </div>
             <div class="progress-bar" t-att-class="{'level-up': props.levelUp}" role="progressbar"
-                 t-att-aria-valuenow="props.previousRank.progress" aria-valuemin="0" aria-valuemax="100"
+                 t-att-aria-valuenow="props.previousRank.progress" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"
                  t-attf-style="width: #{state.rankProgressPercentage}%"/>
         </div>
         <small class="float-start text-primary fw-bold" t-att-class="{'d-none': state.hideRankBounds}"

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -40,6 +41,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             scrolling: 'no',
             frameborder: '0',
             allowTransparency: 'true',
+            "aria-label": _t("Facebook"),
         });
         this.$el.append(this.$iframe);
 

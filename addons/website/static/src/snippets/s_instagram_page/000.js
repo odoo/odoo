@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 // Note that Instagram can automatically detect the language of the user and
@@ -16,6 +17,7 @@ const InstagramPage = publicWidget.Widget.extend({
         const iframeEl = document.createElement("iframe");
         this.el.querySelector(".o_instagram_container").appendChild(iframeEl);
         iframeEl.setAttribute("scrolling", "no");
+        iframeEl.setAttribute("aria-label", _t("Instagram"));
         iframeEl.classList.add("w-100");
         // We can already estimate the height of the iframe.
         iframeEl.height = this._estimateIframeHeight();
