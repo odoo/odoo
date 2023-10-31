@@ -38,6 +38,22 @@ class ProductReplenish(models.TransientModel):
         if not self.env.context.get('default_quantity'):
             self.quantity = abs(self.forecasted_quantity) if self.forecasted_quantity < 0 else 1
 
+    @api.depends('warehouse_id', 'product_id')
+    def _compute_forecasted_quantity(self):
+        for rec in self:
+            rec.forecasted_quantity = rec.product_id.with_context(warehouse=rec.warehouse_id.id).virtual_available
+
+    @api.depends('product_id', 'product_tmpl_id')
+    def _compute_allowed_route_ids(self):
+        domain = self._get_allowed_route_domain()
+        route_ids = self.env['stock.route'].search(domain)
+        self.allowed_route_ids = route_ids
+
+    @api.depends('route_id')
+    def _compute_date_planned(self):
+        for rec in self:
+            rec.date_planned = rec._get_date_planned(rec.route_id)
+
     @api.model
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
@@ -68,6 +84,13 @@ class ProductReplenish(models.TransientModel):
             if not res['route_id']:
                 res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
         return res
+
+    def _get_date_planned(self, route_id, **kwargs):
+        now = fields.Datetime.now()
+        delay = 0
+        if route_id:
+            delay = sum([rule.delay for rule in route_id.rule_ids])
+        return fields.Datetime.add(now, days=delay)
 
     def launch_replenishment(self):
         if not self.route_id:
@@ -149,12 +172,6 @@ class ProductReplenish(models.TransientModel):
             }
         }
 
-
-    @api.depends('warehouse_id', 'product_id')
-    def _compute_forecasted_quantity(self):
-        for rec in self:
-            rec.forecasted_quantity = rec.product_id.with_context(warehouse=rec.warehouse_id.id).virtual_available
-
     # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
     def _get_allowed_route_domain(self):
         stock_location_inter_wh_id = self.env.ref('stock.stock_location_inter_wh').id
@@ -164,8 +181,13 @@ class ProductReplenish(models.TransientModel):
             ('rule_ids.location_dest_id', '!=', stock_location_inter_wh_id)
         ]
 
-    @api.depends('product_id', 'product_tmpl_id')
-    def _compute_allowed_route_ids(self):
-        domain = self._get_allowed_route_domain()
-        route_ids = self.env['stock.route'].search(domain)
-        self.allowed_route_ids = route_ids
+    def _get_route_domain(self, product_tmpl_id):
+        company = product_tmpl_id.company_id or self.env.company
+        if not company:
+            company_domain = [('company_id', '=', False)]
+        else:
+            company_domain = ['|', ('company_id', '=', False), ('company_id', 'in', company.ids)]
+        domain = expression.AND([self._get_allowed_route_domain(), company_domain])
+        if product_tmpl_id.route_ids:
+            domain = expression.AND([domain, [('product_ids', '=', product_tmpl_id.id)]])
+        return domain
