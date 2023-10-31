@@ -510,8 +510,10 @@ class Post(models.Model):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
-                match = re.escape(match)  # replace parenthesis or special char in regex
-                content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+                escaped_match = re.escape(match)  # replace parenthesis or special char in regex
+                url_match = re.match(r'^.*href="(.*)".*', match) # extracting the link allows to rebuild a clean link tag
+                url = url_match.group(1)
+                content = re.sub(escaped_match, f'<a rel="nofollow" href="{url}">', content)
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
