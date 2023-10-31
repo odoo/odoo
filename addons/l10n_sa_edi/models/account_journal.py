@@ -324,10 +324,10 @@ class AccountJournal(models.Model):
             if result.get('error'):
                 raise UserError(Markup("<p class='mb-0'>%s <b>%s</b></p>") % (_("Could not complete Compliance Checks for the following file:"), fname))
             if result['validationResults']['status'] == 'WARNING':
-                warnings = "".join(Markup("<li><b>%s</b>: %s </li>") % (e['code'], e['message']) for e in result['validationResults']['warningMessages'])
+                warnings = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['warningMessages'])
                 self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Warnings:"), warnings)
             elif result['validationResults']['status'] != 'PASS':
-                errors = "".join(Markup("<li><b>%s</b>: %s </li>") % (e['code'], e['message']) for e in result['validationResults']['errorMessages'])
+                errors = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['errorMessages'])
                 raise UserError(Markup("<p class='mb-0'>%s <b>%s</b> %s</p>")
                                 % (_("Could not complete Compliance Checks for the following file:"), fname, Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Errors:"), errors)))
         self.l10n_sa_compliance_checks_passed = True
