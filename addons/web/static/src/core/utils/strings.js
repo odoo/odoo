@@ -2,8 +2,6 @@
 
 export const nbsp = "\u00a0";
 
-export const escapeMethod = Symbol("html");
-
 /**
  * Escapes a string for HTML.
  *
@@ -11,27 +9,23 @@ export const escapeMethod = Symbol("html");
  * @returns {string} an escaped string
  */
 export function escape(str) {
-    if (typeof str === "object" && str[escapeMethod]) {
-        return str[escapeMethod]();
-    } else {
-        if (str === undefined) {
-            return "";
-        }
-        if (typeof str === "number") {
-            return String(str);
-        }
-        [
-            ["&", "&amp;"],
-            ["<", "&lt;"],
-            [">", "&gt;"],
-            ["'", "&#x27;"],
-            ['"', "&quot;"],
-            ["`", "&#x60;"],
-        ].forEach((pairs) => {
-            str = String(str).replaceAll(pairs[0], pairs[1]);
-        });
-        return str;
+    if (str === undefined) {
+        return "";
     }
+    if (typeof str === "number") {
+        return String(str);
+    }
+    [
+        ["&", "&amp;"],
+        ["<", "&lt;"],
+        [">", "&gt;"],
+        ["'", "&#x27;"],
+        ['"', "&quot;"],
+        ["`", "&#x60;"],
+    ].forEach((pairs) => {
+        str = String(str).replaceAll(pairs[0], pairs[1]);
+    });
+    return str;
 }
 
 /**
