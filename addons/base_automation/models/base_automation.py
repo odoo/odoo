@@ -236,8 +236,8 @@ class BaseAutomation(models.Model):
             )
             if record.trigger == 'on_unlink' and mail_actions:
                 raise exceptions.ValidationError(
-                    _('Email, followers or activities action types cannot be used when deleting records, '
-                      'as there is no more records on which to apppply these changes!')
+                    _('Email, follower or activity action types cannot be used when deleting records, '
+                      'as there are no more records to apply these changes to!')
                 )
 
     @api.depends('model_id')
