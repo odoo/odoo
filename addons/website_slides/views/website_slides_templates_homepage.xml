@@ -362,7 +362,7 @@
                         <span class="badge rounded-pill text-bg-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
                     </t>
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
-                        <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
+                        <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
                     </div>
                     <small t-else=""><b t-esc="channel.total_slides"/> steps</small>
                 </div>
