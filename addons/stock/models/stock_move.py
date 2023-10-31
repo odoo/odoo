@@ -368,7 +368,7 @@ class StockMove(models.Model):
                 quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
 
         def _process_increase(move, quantity):
-            # move._action_assign(quantity)
+            move._action_assign(quantity)
             move._set_quantity_done(move.quantity)
 
         err = []
