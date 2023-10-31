@@ -156,7 +156,7 @@ class AccrualPlanLevel(models.Model):
             if level.accrual_plan_id.time_off_type_id:
                 level.added_value_type = "day" if level.accrual_plan_id.time_off_type_id.request_unit in ["day", "half_day"] else "hour"
             elif level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] != level:
-                level.added_value_type = level.accrual_plan_id.level_ids[0]._origin.added_value_type
+                level.added_value_type = level.accrual_plan_id.level_ids[0].added_value_type
 
     @api.depends('first_day', 'second_day', 'first_month_day', 'second_month_day', 'yearly_day')
     def _compute_days_display(self):
