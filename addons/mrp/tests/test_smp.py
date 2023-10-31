@@ -3,6 +3,7 @@
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
+from odoo import Command
 
 
 class TestMrpSerialMassProduce(TestMrpCommon):
@@ -132,3 +133,99 @@ class TestMrpSerialMassProduce(TestMrpCommon):
             {'product_qty': 1},
             {'product_qty': 1},
         ])
+
+    def test_mass_produce_with_tracked_product(self):
+        """
+        Check that we can mass produce a tracked product.
+        """
+        tracked_product = self.env['product.product'].create({
+            'name': 'Tracked Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+        })
+        byproduct = self.env['product.product'].create({
+            'name': 'Byproduct',
+            'type': 'product',
+        })
+        # create a BoM
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': tracked_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1,
+            })],
+            'byproduct_ids': [Command.create({
+                'product_id': byproduct.id,
+                'product_qty': 1,
+            })],
+        })
+        sn_1 = self.env['stock.lot'].create({
+            'name': 'SN1',
+            'product_id': tracked_product.id,
+        })
+        sn_2 = self.env['stock.lot'].create({
+            'name': 'SN2',
+            'product_id': tracked_product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location_14, 1, lot_id=sn_1)
+        self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location_14, 1, lot_id=sn_2)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location_14, 10)
+        # create an MO to use the tracked product available in stock
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_1
+        mo_form.product_qty = 2
+        mo_form.product_uom_id = component.uom_id
+        # use tracked  as component
+        with mo_form.move_raw_ids.new() as move:
+            move.name = tracked_product.name
+            move.product_id = tracked_product
+            move.product_uom_qty = 2
+            move.product_uom = tracked_product.uom_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.qty_producing = 2
+        mo.move_raw_ids.move_line_ids.write({'quantity': 1})
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        # create a Mo to produce 2 units of tracked product
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = tracked_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo_form.product_uom_id = tracked_product.uom_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+
+        mo.action_assign()
+        # Open the wizard
+        action = mo.action_serial_mass_produce_wizard()
+        wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
+        # Let the wizard generate all serial numbers
+        wizard.next_serial_number = "sn#3"
+        wizard.next_serial_count = 2
+        action = wizard.save().generate_serial_numbers_production()
+        # Reload the wizard to apply generated serial numbers
+        wizard = Form(self.env['stock.assign.serial'].browse(action['res_id']))
+        wizard.save().apply()
+        # Initial MO should have a backorder-sequenced name and be in to_close state
+        self.assertTrue("-001" in mo.name)
+        self.assertEqual(mo.state, "to_close")
+        # Each generated serial number should have its own mo
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        # Check generated serial numbers
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#3", "sn#4"])
+        #check byproduct quantity
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.move_byproduct_ids.mapped('quantity'), [1, 1])
+        # check the component quantity
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.move_raw_ids.mapped('quantity'), [1, 1])
+        # Mark the MOs as done
+        mo.procurement_group_id.mrp_production_ids.move_raw_ids.picked = True
+        mo.procurement_group_id.mrp_production_ids.button_mark_done()
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done'])
