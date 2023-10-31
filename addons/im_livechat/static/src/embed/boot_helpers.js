@@ -64,7 +64,7 @@ export async function makeShadow(root) {
     shadow.appendChild(link);
     await Promise.all([
         stylesLoadedPromise,
-        loadFont("FontAwesome", url("im_livechat/font-awesome")),
+        loadFont("FontAwesome", url("/im_livechat/font-awesome")),
         loadFont("odoo_ui_icons", url("/im_livechat/odoo_ui_icons")),
     ]);
     return shadow;
