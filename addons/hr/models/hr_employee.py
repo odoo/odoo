@@ -132,7 +132,7 @@ class HrEmployeePrivate(models.Model):
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
                                           copy=False, tracking=True, ondelete='restrict')
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
@@ -433,6 +433,10 @@ class HrEmployeePrivate(models.Model):
             self.env['discuss.channel'].sudo().search([
                 ('subscription_department_ids', 'in', department_id)
             ])._subscribe_users_automatically()
+        if vals.get('departure_description'):
+            self.message_post(body=_(
+                'Additional Information: \n %(description)s',
+                description=vals.get('departure_description')))
         return res
 
     def unlink(self):
