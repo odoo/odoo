@@ -495,3 +495,14 @@ class TestForum(TestForumCommon):
         self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
         self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
         self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")
+
+    def test_forum_post_link(self):
+        content = 'This is a test link: <a href="https://www.example.com/route?param1=a&param2=b" rel="ugc">test</a> Let make sure it works.'
+        self.user_portal.karma = 50
+        with self.with_user(self.user_portal.login):
+            post = self.env['forum.post'].create({
+                'name': "Post Forum test",
+                'content': content,
+                'forum_id': self.forum.id,
+            })
+        self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')
