@@ -195,6 +195,9 @@ export class MediaDialog extends Component {
                     if (this.props.media.dataset.hoverEffectIntensity) {
                         element.dataset.hoverEffectIntensity = this.props.media.dataset.hoverEffectIntensity;
                     }
+                    if (this.props.media.dataset.shapeAnimationSpeed) {
+                        element.dataset.shapeAnimationSpeed = this.props.media.dataset.shapeAnimationSpeed;
+                    }
                 }
             }
             for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

@@ -55,6 +55,20 @@ const clearServiceCache = () => {
         rpc: {},
     };
 };
+
+// Regex definitions to apply speed modification in SVG files
+// Note : These regex patterns are duplicated on the server side for
+// background images that are part of a CSS rule "background-image: ...". The
+// client-side regex patterns are used for images that are part of an
+// "src" attribute with a base64 encoded svg in the <img> tag. Perhaps we should
+// consider finding a solution to define them only once? The issue is that the
+// regex patterns in Python are slightly different from those in JavaScript.
+// See : controllers/main.py
+const CSS_ANIMATION_RULE_REGEX =
+    /(?<declaration>animation(?:-duration)?: .*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
+const SVG_DUR_TIMECOUNT_VAL_REGEX =
+    /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
+const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
 /**
  * Caches rpc/orm service
  * @param {Function} service
@@ -2562,7 +2576,7 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
         const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
         this.input.value = inputValue;
         if (this.displayValue) {
-            this.outputEl.value = inputValue;
+            this._computeDisplayValue(inputValue);
         }
     },
     /**
@@ -2587,12 +2601,25 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     },
     /**
      * @private
+     * @param {string} inputValue 
+     */
+    _computeDisplayValue(inputValue) {
+        if (this.el.dataset.toRatio) {
+            const inputValueAsNumber = Number(inputValue);
+            const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+            this.outputEl.value = `${ratio.toFixed(2)}x`;
+        } else {
+            this.outputEl.value = inputValue;
+        }
+    },
+    /**
+     * @private
      * @param {Event} ev
      */
     _onInputInput(ev) {
         this._value = ev.target.value;
         if (this.displayValue) {
-            this.outputEl.value = this._value;
+            this._computeDisplayValue(this._value);
         }
         this._onUserValuePreview(ev);
     },
@@ -6626,6 +6653,9 @@ registry.ImageTools = ImageHandlerOption.extend({
                         delete img.dataset.hoverEffectIntensity;
                         img.classList.remove("o_animate_on_hover");
                     }
+                    if (!this._isAnimatedShape()) {
+                        delete img.dataset.shapeAnimationSpeed;
+                    }
                 }
             }
         } else {
@@ -6636,6 +6666,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             delete img.dataset.fileName;
             delete img.dataset.shapeFlip;
             delete img.dataset.shapeRotate;
+            delete img.dataset.shapeAnimationSpeed;
             if (saveData) {
                 img.dataset.mimetype = img.dataset.originalMimetype;
                 delete img.dataset.originalMimetype;
@@ -6718,7 +6749,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (["hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
+        if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
             await this._applyOptions();
         }
     },
@@ -6873,6 +6904,53 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
     },
     /**
+     * Replace animation durations in SVG and CSS with modified values.
+     *
+     * This function takes a ratio and an SVG string containing animations. It 
+     * uses regular expressions to find and replace the duration values in both
+     * CSS animation rules and SVG duration attributes based on the provided
+     * ratio.
+     *
+     * @param {number} speed The speed used to calculate the new animation
+     *                       durations. If speed is 0.0, the original
+     *                       durations are preserved.
+     * @param {string} svg The SVG string containing animations.
+     * @returns {string} The modified SVG string with updated animation 
+     *                   durations.
+     */
+    _replaceAnimationDuration(speed, svg) {
+        const ratio = (speed >= 0.0 ? 1.0 + speed : 1.0 / (1.0 - speed)).toFixed(3);
+        // Callback for CSS 'animation' and 'animation-duration' declarations
+        function callbackCssAnimationRule(match, declaration, value, unit, separator) {
+            value = parseFloat(value) / (ratio ? ratio : 1);
+            return `${declaration}${value}${unit}${separator}`;
+        }
+
+        // Callback function for handling the 'dur' SVG attribute timecount
+        // value in accordance with the SMIL animation specification (e.g., 4s,
+        // 2ms). If no unit is provided, seconds are implied.
+        function callbackSvgDurTimecountVal(match, attribute_name, value, unit) {
+            value = parseFloat(value) / (ratio ? ratio : 1);
+            return `${attribute_name}${value}${unit ? unit : 's'}"`
+        }
+
+        // Applying regex substitutions to modify animation speed in the 'svg'
+        // variable.
+        svg = svg.replace(CSS_ANIMATION_RULE_REGEX, callbackCssAnimationRule);
+        svg = svg.replace(SVG_DUR_TIMECOUNT_VAL_REGEX, callbackSvgDurTimecountVal);
+        if (CSS_ANIMATION_RATIO_REGEX.test(svg)) {
+            // Replace the CSS --animation_ratio variable for future purpose.
+            svg = svg.replace(CSS_ANIMATION_RATIO_REGEX, `--animation_ratio: ${ratio};`);
+        } else {
+            // Add the style tag with the root variable --animation ratio for 
+            // future purpose.
+            const regex = /<svg .*>/m;
+            const subst = `$&\n\t<style>\n\t\t:root { \n\t\t\t--animation_ratio: ${ratio};\n\t\t}\n\t</style>`;
+            svg = svg.replace(regex, subst);
+        }
+        return svg;
+    },
+    /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
      * @param {string} svgText svg file as text
@@ -6881,6 +6959,12 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _writeShape(svgText) {
         const img = this._getImg();
+        // Apply the right animation speed if there is an animated shape.
+        const shapeAnimationSpeed = Number(img.dataset.shapeAnimationSpeed) || 0;
+        if (shapeAnimationSpeed) {
+            svgText = this._replaceAnimationDuration(shapeAnimationSpeed, svgText);
+        }
+
         const initialImageWidth = img.naturalWidth;
         let needToRefreshPublicWidgets = false;
 
@@ -7018,6 +7102,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
             const colors = img.dataset.shapeColors.split(';');
             return colors[parseInt(params.colorId)];
+        }
+        if (widgetName === "shape_anim_speed_opt") {
+            return this._isAnimatedShape();
         }
         if (params.optionsPossibleValues.resetTransform) {
             return this._isTransformed();
@@ -7227,6 +7314,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 delete img.dataset.hoverEffectStrokeWidth;
                 delete img.dataset.hoverEffectIntensity;
                 img.classList.remove("o_animate_on_hover");
+                delete img.dataset.shapeAnimationSpeed;
                 return;
             }
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -7920,6 +8008,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 colors: this._getImplicitColors(widgetValue, this._getShapeData().colors),
                 flip: [],
                 animated: params.animated,
+                shapeAnimationSpeed: this._getShapeData().shapeAnimationSpeed,
             };
         });
     },
@@ -7963,6 +8052,16 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             return {showOnMobile: !this._getShapeData().showOnMobile};
         });
     },
+    /**
+     * Sets the speed of the animation of a background shape.
+     *
+     * @see this.selectClass for params
+     */
+    setBgShapeAnimationSpeed(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            return { shapeAnimationSpeed: widgetValue };
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -7995,6 +8094,19 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             case 'showOnMobile': {
                 return this._getShapeData().showOnMobile;
             }
+            case "setBgShapeAnimationSpeed": {
+                return this._getShapeData().shapeAnimationSpeed;
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === "bg_shape_anim_speed_opt") {
+            const bgShapeWidget = this._requestUserValueWidgets("bg_shape_opt")[0];
+            return bgShapeWidget.getMethodsParams().animated === "true";
         }
         return this._super(...arguments);
     },
@@ -8139,7 +8251,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         // Updates/removes the shape container as needed and gives it the
         // correct background shape
         const json = target.dataset.oeShapeData;
-        const {shape, colors, flip = [], animated = 'false', showOnMobile} = json ? JSON.parse(json) : {};
+        const {shape, colors, flip = [], animated = 'false', showOnMobile, shapeAnimationSpeed} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
             return this._insertShapeContainer(null);
@@ -8152,9 +8264,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
 
         shapeContainer.classList.toggle('o_we_animated', animated === 'true');
-
-        if (colors || flip.length) {
-            // Custom colors/flip, overwrite shape that is set by the class
+        if (colors || flip.length || parseFloat(shapeAnimationSpeed) !== 0) {
+            // Custom colors/flip/speed, overwrite shape that is set by the class
             $(shapeContainer).css('background-image', `url("${this._getShapeSrc()}")`);
             shapeContainer.style.backgroundPosition = '';
             if (flip.length) {
@@ -8222,7 +8333,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @private
      */
     _getShapeSrc() {
-        const {shape, colors, flip} = this._getShapeData();
+        const { shape, colors, flip, shapeAnimationSpeed } = this._getShapeData();
         if (!shape) {
             return '';
         }
@@ -8233,6 +8344,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             });
         if (flip.length) {
             searchParams.push(`flip=${encodeURIComponent(flip.sort().join(''))}`);
+        }
+        if (Number(shapeAnimationSpeed)) {
+            searchParams.push(`shapeAnimationSpeed=${encodeURIComponent(shapeAnimationSpeed)}`);
         }
         return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
     },
@@ -8249,6 +8363,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             colors: this._getDefaultColors($(target)),
             flip: [],
             showOnMobile: false,
+            shapeAnimationSpeed: "0",
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
