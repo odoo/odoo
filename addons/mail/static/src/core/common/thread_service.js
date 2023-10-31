@@ -10,6 +10,7 @@ import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { escape } from "@web/core/utils/strings";
+import { assignDefined } from "@mail/utils/common/misc";
 
 const FETCH_LIMIT = 30;
 
@@ -98,13 +99,15 @@ export class ThreadService {
             this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
-            }).then(() => {
-                this.updateSeen(thread, newestPersistentMessage.id);
-            }).catch((e) => {
-                if (e.code !== 404) {
-                    throw e;
-                }
-            });
+            })
+                .then(() => {
+                    this.updateSeen(thread, newestPersistentMessage.id);
+                })
+                .catch((e) => {
+                    if (e.code !== 404) {
+                        throw e;
+                    }
+                });
         } else if (newestPersistentMessage) {
             this.updateSeen(thread);
         }
@@ -542,7 +545,7 @@ export class ThreadService {
             model: "discuss.channel",
             name,
             type: "channel",
-            channel: { avatarCacheKey: "hello" },
+            avatarCacheKey: "hello",
         });
         this.sortChannels();
         this.open(thread);
@@ -851,45 +854,45 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("models").Persona} persona
-     * @param {import("models").Thread} [thread]
+     * @param {{ persona: import("models").Persona, thread: import("models").Thread }}
      */
-    avatarUrl(persona, thread) {
-        if (!persona) {
-            return DEFAULT_AVATAR;
-        }
-        const urlParams = {};
-        if (persona.write_date) {
-            urlParams.unique = persona.write_date;
-        }
-        if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
-            this.personaService.fetchIsCompany(persona);
-        }
-        if (thread?.model === "discuss.channel") {
-            if (persona.type === "partner") {
-                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`, urlParams);
+    avatarUrl(thread, persona) {
+        if (thread && !persona) {
+            if (thread.type === "channel" || thread.type === "group") {
+                return url(
+                    `/discuss/channel/${thread.id}/avatar_128`,
+                    assignDefined({}, { unique: thread.avatarCacheKey })
+                );
             }
-            if (persona.type === "guest") {
-                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`, urlParams);
+            if (thread.type === "chat") {
+                return url(
+                    `/web/image/res.partner/${thread.chatPartner.id}/avatar_128`,
+                    assignDefined({}, { unique: thread.avatarCacheKey })
+                );
+            }
+            if (this.module_icon) {
+                return this.module_icon;
             }
         }
-        if (persona.type === "partner" && persona?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.id,
-                model: "res.partner",
-                ...urlParams,
-            });
-            return avatar;
-        }
-        if (persona.user?.id) {
-            const avatar = url("/web/image", {
-                field: "avatar_128",
-                id: persona.user.id,
-                model: "res.users",
-                ...urlParams,
-            });
-            return avatar;
+        if (persona) {
+            const urlParams = {};
+            if (persona.write_date) {
+                urlParams.unique = persona.write_date;
+            }
+            if (persona.is_company === undefined && this.store.self?.user?.isInternalUser) {
+                this.personaService.fetchIsCompany(persona);
+            }
+            if (thread?.model === "discuss.channel") {
+                if (persona.type === "partner") {
+                    return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
+                }
+                if (persona.type === "guest") {
+                    return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
+                }
+            }
+            if (persona.avatarUrl) {
+                return persona.avatarUrl;
+            }
         }
         return DEFAULT_AVATAR;
     }

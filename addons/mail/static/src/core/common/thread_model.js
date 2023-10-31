@@ -353,10 +353,6 @@ export class Thread extends Record {
         return undefined;
     }
 
-    get imgUrl() {
-        return this.module_icon ?? "/mail/static/src/img/smiley/avatar.jpg";
-    }
-
     get allowDescription() {
         return ["channel", "group"].includes(this.type);
     }

@@ -221,7 +221,7 @@ export class Message extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
+        return this.threadService.avatarUrl(this.props.message.originThread, this.message.author);
     }
 
     get expandText() {

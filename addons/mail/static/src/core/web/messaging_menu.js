@@ -97,7 +97,7 @@ export class MessagingMenu extends Component {
             onClick: () => {
                 this.installPrompt.show();
             },
-            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
         };
@@ -107,7 +107,7 @@ export class MessagingMenu extends Component {
         return {
             body: _t("Enable desktop notifications to chat"),
             displayName: _t("%s has a request", this.store.odoobot.name),
-            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown:
                 this.store.discuss.activeTab === "main" &&

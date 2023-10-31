@@ -4,7 +4,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { url } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 
 patch(Thread.prototype, {
@@ -57,21 +56,6 @@ patch(Thread.prototype, {
                 name: _t("Until I turn it back on"),
             },
         ];
-    },
-    get imgUrl() {
-        if (this.type === "channel" || this.type === "group") {
-            return url(
-                `/discuss/channel/${this.id}/avatar_128`,
-                assignDefined({}, { unique: this.avatarCacheKey })
-            );
-        }
-        if (this.type === "chat") {
-            return url(
-                `/web/image/res.partner/${this.chatPartner.id}/avatar_128`,
-                assignDefined({}, { unique: this.chatPartner.write_date })
-            );
-        }
-        return super.imgUrl;
     },
     update(data) {
         super.update(data);

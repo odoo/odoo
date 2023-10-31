@@ -65,7 +65,7 @@ commandProviderRegistry.add("mail.partner", {
                     name: channel.displayName,
                     category: "discuss_mentioned",
                     props: {
-                        imgUrl: channel.imgUrl,
+                        imgUrl: threadService.avatarUrl(channel),
                         persona: channel.type === "chat" ? channel.correspondent : undefined,
                         counter: threadService.getCounter(channel),
                     },
@@ -85,7 +85,7 @@ commandProviderRegistry.add("mail.partner", {
                     },
                     name: partner.name,
                     props: {
-                        imgUrl: threadService.avatarUrl(partner),
+                        imgUrl: partner.avatarUrl,
                         persona: partner,
                         counter: chat ? threadService.getCounter(chat) : undefined,
                     },
@@ -133,7 +133,7 @@ commandProviderRegistry.add("discuss.channel", {
                         name: channel.displayName,
                         category: "discuss_recent",
                         props: {
-                            imgUrl: channel.imgUrl,
+                            imgUrl: threadService.avatarUrl(channel),
                             counter: threadService.getCounter(channel),
                         },
                     });
@@ -183,7 +183,7 @@ commandProviderRegistry.add("discuss.channel", {
                 },
                 name: channel.displayName,
                 props: {
-                    imgUrl: channel.imgUrl,
+                    imgUrl: threadService.avatarUrl(channel),
                     counter: threadService.getCounter(channel),
                 },
             });

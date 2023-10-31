@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
+import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -77,6 +78,32 @@ export class Persona extends Record {
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));
+    }
+
+    get avatarUrl() {
+        const urlParams = {};
+        if (this.write_date) {
+            urlParams.unique = this.write_date;
+        }
+        if (this.type === "partner" && this.id) {
+            const avatar = url("/web/image", {
+                field: "avatar_128",
+                id: this.id,
+                model: "res.partner",
+                ...urlParams,
+            });
+            return avatar;
+        }
+        if (this.user?.id) {
+            const avatar = url("/web/image", {
+                field: "avatar_128",
+                id: this.user.id,
+                model: "res.users",
+                ...urlParams,
+            });
+            return avatar;
+        }
+        return undefined;
     }
 }
 

@@ -53,13 +53,6 @@ patch(Thread.prototype, {
         return this.getMemberName(this.correspondent);
     },
 
-    get imgUrl() {
-        if (this.type !== "livechat") {
-            return super.imgUrl;
-        }
-        return this._store.env.services["mail.thread"].avatarUrl(this.correspondent, this);
-    },
-
     /**
      *
      * @param {import("models").Persona} persona

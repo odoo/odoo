@@ -59,4 +59,10 @@ patch(ThreadService.prototype, {
         this.chatWindowService.focus(chatWindow);
         return true;
     },
+    avatarUrl(thread, persona) {
+        if (thread.type === "livechat" && !persona) {
+            return super.avatarUrl(thread, thread.correspondent);
+        }
+        return super.avatarUrl(...arguments);
+    },
 });

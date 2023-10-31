@@ -78,7 +78,7 @@
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     displayName="thread.displayName"
-                    iconSrc="thread.imgUrl"
+                    iconSrc="threadService.avatarUrl(thread)"
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.muteUntilDateTime ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"

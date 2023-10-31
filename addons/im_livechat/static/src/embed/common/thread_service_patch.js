@@ -52,9 +52,9 @@ patch(ThreadService.prototype, {
         }
     },
 
-    avatarUrl(persona, thread) {
-        if (thread.type === "livechat" && persona.eq(thread.operator)) {
-            return url(`/im_livechat/operator/${persona.id}/avatar`);
+    avatarUrl(thread, persona) {
+        if (thread.type === "livechat" && (!persona || persona?.eq(thread.operator))) {
+            return url(`/im_livechat/operator/${thread.operator.id}/avatar`);
         }
         return super.avatarUrl(...arguments);
     },

@@ -27,7 +27,7 @@
                         'o-isInvitation': !rtcSession,
                         }"
                         class="h-100 rounded-circle border-5 o_object_fit_cover"
-                        t-att-src="threadService.avatarUrl(channelMember?.persona, props.thread)"
+                     t-att-src="threadService.avatarUrl(props.thread, channelMember?.persona)"
                         draggable="false"
                 />
             </div>

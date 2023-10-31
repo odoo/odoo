@@ -7,7 +7,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { onChange } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { url } from "@web/core/utils/urls";
 
 patch(Thread, {
     _insert(data) {
@@ -66,12 +65,5 @@ patch(Thread.prototype, {
             return super.isLastMessageFromCustomer;
         }
         return this.newestMessage?.isSelfAuthored;
-    },
-
-    get imgUrl() {
-        if (this.type !== "livechat") {
-            return super.imgUrl;
-        }
-        return url(`/im_livechat/operator/${this.operator.id}/avatar`);
     },
 });
