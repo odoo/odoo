@@ -1,10 +1,9 @@
 from collections import defaultdict
 from itertools import chain
-import base64
 import json
 import re
-from odoo.tests.common import TransactionCase, Form
-from odoo.exceptions import ValidationError
+
+from odoo import _
 
 markdown_link_regex = r"^\[([^\[]+)\]\((.+)\)$"
 
@@ -189,37 +188,3 @@ def menus_xml_ids_in_spreadsheet(data):
         for url in links_urls(data)
         if url.startswith(xml_id_url_prefix)
     }
-
-
-class ValidateSpreadsheetData(TransactionCase):
-    def validate_spreadsheet_data(self, stringified_data, spreadsheet_name):
-        data = json.loads(stringified_data)
-        for model, fields in fields_in_spreadsheet(data).items():
-            if model not in self.env:
-                raise AssertionError(
-                    f"model '{model}' used in '{spreadsheet_name}' does not exist"
-                )
-            for field_chain in fields:
-                field_model = model
-                for fname in field_chain.split(
-                    "."
-                ):  # field chain 'product_id.channel_ids'
-                    if fname not in self.env[field_model]._fields:
-                        raise AssertionError(
-                            f"field '{fname}' used in spreadsheet '{spreadsheet_name}' does not exist on model '{field_model}'"
-                        )
-                    field = self.env[field_model]._fields[fname]
-                    if field.relational:
-                        field_model = field.comodel_name
-
-        for xml_id in menus_xml_ids_in_spreadsheet(data):
-            record = self.env.ref(xml_id, raise_if_not_found=False)
-            if not record:
-                raise AssertionError(
-                    f"xml id '{xml_id}' used in spreadsheet '{spreadsheet_name}' does not exist"
-                )
-            # check that the menu has an action. Root menus always have an action.
-            if not record.action and record.parent_id.id:
-                raise AssertionError(
-                    f"menu with xml id '{xml_id}' used in spreadsheet '{spreadsheet_name}' does not have an action"
-                )

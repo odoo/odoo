@@ -8,6 +8,8 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError
 
+from odoo.addons.spreadsheet.utils import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
+
 class SpreadsheetMixin(models.AbstractModel):
     _name = "spreadsheet.mixin"
     _description = "Spreadsheet mixin"
@@ -20,6 +22,45 @@ class SpreadsheetMixin(models.AbstractModel):
     )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
     thumbnail = fields.Binary()
+
+    @api.constrains("spreadsheet_binary_data")
+    def _check_spreadsheet_data(self):
+        for spreadsheet in self.filtered("spreadsheet_binary_data"):
+            try:
+                data = json.loads(spreadsheet.spreadsheet_data)
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                raise ValidationError(_("Uh-oh! Looks like the spreadsheet data file isn't quite right."))
+            if data.get("[Content_Types].xml"):
+                # this is a xlsx file
+                continue
+            display_name = spreadsheet.display_name
+            errors = []
+            for model, fields in fields_in_spreadsheet(data).items():
+                if model not in self.env:
+                    errors.append(f"- model '{model}' used in '{display_name}' does not exist")
+                    continue
+                for field_chain in fields:
+                    field_model = model
+                    for fname in field_chain.split(
+                        "."
+                    ):  # field chain 'product_id.channel_ids'
+                        if fname not in self.env[field_model]._fields:
+                            errors.append(f"- field '{fname}' used in spreadsheet '{display_name}' does not exist on model '{field_model}'")
+                        field = self.env[field_model]._fields[fname]
+                        if field.relational:
+                            field_model = field.comodel_name
+
+            for xml_id in menus_xml_ids_in_spreadsheet(data):
+                record = self.env.ref(xml_id, raise_if_not_found=False)
+                if not record:
+                    errors.append(f"- xml id '{xml_id}' used in spreadsheet '{display_name}' does not exist")
+                    continue
+                # check that the menu has an action. Root menus always have an action.
+                if not record.action and record.parent_id.id:
+                    errors.append(f"- menu with xml id '{xml_id}' used in spreadsheet '{display_name}' does not have an action")
+
+            if errors:
+                raise ValidationError(_("Uh-oh! Looks like the spreadsheet data file isn't quite right.") + "\n\n" + "\n".join(errors))
 
     @api.depends("spreadsheet_binary_data")
     def _compute_spreadsheet_data(self):
@@ -38,12 +79,7 @@ class SpreadsheetMixin(models.AbstractModel):
 
     @api.onchange('spreadsheet_binary_data')
     def _onchange_data_(self):
-        if self.spreadsheet_binary_data:
-            try:
-                data_str = base64.b64decode(self.spreadsheet_binary_data).decode('utf-8')
-                json.loads(data_str)
-            except:
-                raise ValidationError(_('Invalid JSON Data'))
+        self._check_spreadsheet_data()
 
     def _empty_spreadsheet_data_base64(self):
         """Create an empty spreadsheet workbook.
