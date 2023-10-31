@@ -236,7 +236,7 @@ export class FloorScreen extends Component {
                 width: widthTable,
                 height: heightTable,
                 shape: "square",
-                seats: 1,
+                seats: 2,
                 color: "rgb(53, 211, 116)",
             };
         }

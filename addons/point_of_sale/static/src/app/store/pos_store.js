@@ -276,6 +276,7 @@ export class PosStore extends Reactive {
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
+        this.db.addProductIdsToNotDisplay(loadedData["pos_special_products_ids"]);
         await this._loadPosPrinters(loadedData["pos.printer"]);
         this.open_orders_json = loadedData["open_orders"];
     }
