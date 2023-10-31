@@ -212,7 +212,9 @@ class Meeting(models.Model):
         attendee_values = self._attendees_values(values['partner_ids']) if 'partner_ids' in values else []
         partner_ids = []
         if attendee_values:
-            partner_ids = [command[2]['partner_id'] for command in attendee_values]
+            for command in attendee_values:
+                if len(command) == 3 and isinstance(command[2], dict):
+                    partner_ids.append(command[2].get('partner_id'))
         return sender_user, partner_ids
 
     def action_mass_archive(self, recurrence_update_setting):
