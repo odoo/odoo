@@ -207,7 +207,10 @@ var SnippetEditor = Widget.extend({
                 isCurrent: targetEl === this.$target[0],
             });
         }
+        // TODO In master differentiate device-based visibility.
+        this._toggleVisibilityStatusIgnoreDeviceVisibility = true;
         await this.toggleTargetVisibility(true);
+        this._toggleVisibilityStatusIgnoreDeviceVisibility = false;
     },
     /**
      * Notifies all the associated snippet options that the template which
@@ -885,6 +888,21 @@ var SnippetEditor = Widget.extend({
      * @param {boolean} [show]
      */
     _toggleVisibilityStatus: function (show) {
+        // TODO In master differentiate device-based visibility.
+        if (this._toggleVisibilityStatusIgnoreDeviceVisibility) {
+            if (this.$target[0].matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")) {
+                const isMobilePreview = weUtils.isMobileView(this.$target[0]);
+                const isMobileHidden = this.$target[0].classList.contains("o_snippet_mobile_invisible");
+                if (isMobilePreview === isMobileHidden) {
+                    // Preview mode and hidden type are the same.
+                    show = false;
+                } else {
+                    // Preview mode is not related to hidden type.
+                    delete this.$target[0].dataset.invisible;
+                    return false;
+                }
+            }
+        }
         if (show === undefined) {
             show = !this.isTargetVisible();
         }
