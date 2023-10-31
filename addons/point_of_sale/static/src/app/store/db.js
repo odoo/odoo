@@ -53,6 +53,7 @@ export class PosDB {
         this.category_search_string = {};
         this.combo_by_id = {};
         this.combo_line_by_id = {};
+        this.product_ids_to_not_display = [];
     }
 
     add_attributes(attribute) {
@@ -197,6 +198,10 @@ export class PosDB {
         combo_lines.forEach((combo_line) => {
             this.combo_line_by_id[combo_line.id] = combo_line;
         });
+    }
+
+    addProductIdsToNotDisplay(product_ids) {
+        this.product_ids_to_not_display = this.product_ids_to_not_display.concat(product_ids);
     }
 
     /* loads a record store from the database. returns default if nothing is found */
@@ -531,7 +536,12 @@ export class PosDB {
     }
 
     shouldAddProduct(product, list) {
-        return product.active && product.available_in_pos && !list.includes(product);
+        return (
+            product.active &&
+            product.available_in_pos &&
+            !list.includes(product) &&
+            !this.product_ids_to_not_display.includes(product.id)
+        );
     }
 
     get_product_by_category(category_id) {
