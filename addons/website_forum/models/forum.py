@@ -511,13 +511,14 @@ class Post(models.Model):
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 match = re.escape(match)  # replace parenthesis or special char in regex
-                content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+                content = re.sub(match, match[:match.find("ugc") + 3] + ' nofollow' + match[match.find("ugc") + 3:], content)
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
             content_match = re.search(filter_regexp, content, re.I)
             if content_match:
                 raise AccessError(_('%d karma required to post an image or link.', forum.karma_editor))
+        content = content.replace('\\', '')
         return content
 
     def _default_website_meta(self):
