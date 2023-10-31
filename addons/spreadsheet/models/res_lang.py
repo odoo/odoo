@@ -2,7 +2,7 @@
 
 from odoo import api, models
 
-from odoo.addons.spreadsheet.utils import (
+from odoo.addons.spreadsheet.utils.formatting import (
     strftime_format_to_spreadsheet_date_format,
     strftime_format_to_spreadsheet_time_format,
 )
