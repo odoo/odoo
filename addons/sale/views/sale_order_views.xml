@@ -59,7 +59,7 @@
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <pivot string="Sales Orders" sample="1">
-                <field name="date_order" type="row"/>
+                <field name="date_order" interval="month" type="row"/>
                 <field name="amount_total" type="measure"/>
             </pivot>
         </field>

@@ -220,7 +220,7 @@
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <pivot string="PoS Orders" sample="1">
-                <field name="date_order" type="row"/>
+                <field name="date_order" interval="month" type="row"/>
                 <field name="margin"/>
                 <field name="margin_percent" invisible="1"/>
                 <field name="amount_total" type="measure"/>
