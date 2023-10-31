@@ -1,0 +1,123 @@
+.o_pivot {
+    .o_pivot_cell_value {
+        font-size: 1em;
+        .o_comparison {
+            font-size: 0.61em;
+        }
+        .o_variation {
+            &.o_positive {
+                color: green;
+            }
+            &.o_negative {
+                color: red;
+            }
+        }
+    }
+
+    table {
+        th > .dropdown > .dropdown-toggle {
+            background: none!important;
+            border: none!important;
+            padding: 0!important;
+        }
+        background-color: $o-view-background-color;
+        width: auto;  // bootstrap override
+
+        // Inform the user that he may click on a cell to be redirected to a list view of the
+        // items corresponding to the clicked cell
+        &.o_enable_linking {
+            .o_pivot_cell_value:not(.o_empty):hover {
+                color: $o-brand-primary;
+                cursor: pointer;
+
+            }
+        }
+
+        thead th:not(.o_pivot_header_cell_closed):not(.o_pivot_header_cell_opened):not(.o_pivot_header_cell) {
+            text-align: center;
+        }
+
+        th, td {
+            border-color: gray('200');
+            border-width: $border-width $border-width $border-width $border-width;
+        }
+
+        th {
+            font-weight: $font-weight-normal;  // bootstrap override
+            background-color: gray('100');
+        }
+
+        @mixin o-pivot-header-cell {
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            &:hover {
+                background-color: gray('200');
+                color: $headings-color;
+            }
+        }
+
+        .o_pivot_measure_row, .o_pivot_origin_row {
+            @include o-pivot-header-cell;
+        }
+
+        .o_pivot_header_cell {
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .o_pivot_header_cell_closed {
+            @include o-pivot-header-cell;
+            &::after, &::before {
+                font-family: FontAwesome;
+                margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
+            }
+        }
+
+        .o_pivot_header_cell_opened {
+            @include o-pivot-header-cell;
+            &::after, &::before {
+                font-family: FontAwesome;
+                margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
+            }
+        }
+
+        .o_pivot_sort_order_asc::after {
+            @include o-caret-up;
+            margin-left: 5px;
+        }
+
+        .o_pivot_sort_order_desc::after {
+            @include o-caret-down;
+            margin-left: 5px;
+        }
+
+        .o_pivot_cell_value.o_cell_hover {
+            background-color: $table-hover-bg;
+        }
+    }
+
+    .o_pivot_field_selection::after {
+        @include o-caret-right;
+        position: absolute;
+        right: 6px;
+        top: 8px;
+    }
+
+    .show > .o_pivot_field_selection::after {
+        @include o-caret-down;
+        top: 10px;
+    }
+}

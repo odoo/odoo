@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TipReceipt" owl="1">
+        <div class="pos-receipt">
+            <t t-if="receipt.company.logo">
+                <img class="pos-receipt-logo" t-att-src="receipt.company.logo" alt="Logo"/>
+                <br/>
+            </t>
+            <t t-if="!receipt.company.logo">
+                <h2 class="pos-receipt-center-align">
+                    <t t-esc="receipt.company.name" />
+                </h2>
+                <br/>
+            </t>
+            <div class="pos-receipt-contact">
+                <t t-if="receipt.company.contact_address">
+                    <div><t t-esc="receipt.company.contact_address" /></div>
+                </t>
+                <t t-if="receipt.company.phone">
+                    <div>Tel:<t t-esc="receipt.company.phone" /></div>
+                </t>
+                <t t-if="receipt.company.vat">
+                    <div>VAT:<t t-esc="receipt.company.vat" /></div>
+                </t>
+                <t t-if="receipt.company.email">
+                    <div><t t-esc="receipt.company.email" /></div>
+                </t>
+                <t t-if="receipt.company.website">
+                    <div><t t-esc="receipt.company.website" /></div>
+                </t>
+                <t t-if="receipt.header_html">
+                    <t t-raw="receipt.header_html" />
+                </t>
+                <t t-if="!receipt.header_html and receipt.header">
+                    <div><t t-esc="receipt.header" /></div>
+                </t>
+                <t t-if="receipt.cashier">
+                    <div class="cashier">
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc="receipt.cashier" /></div>
+                    </div>
+                </t>
+            </div>
+            <br/>
+
+            <div class="pos-payment-terminal-receipt">
+                <t t-raw="data"/>
+            </div>
+            <br/>
+
+
+            <div class="subtotal">
+                <span>Subtotal</span>
+                <div class="pos-receipt-right-align"><t t-esc="total"/></div>
+            </div>
+            <br/>
+
+            <div class="tip">
+                <span>Tip:</span>
+                <div class="pos-receipt-right-align">________________________</div>
+            </div>
+            <br/>
+
+            <div class="total">
+                <span>Total:</span>
+                <div class="pos-receipt-right-align">________________________</div>
+            </div>
+            <br/>
+            <br/>
+
+            <div class="signature">
+                <div>______________________________________________</div>
+                <div>Signature</div>
+            </div>
+        </div>
+    </t>
+
+</templates>

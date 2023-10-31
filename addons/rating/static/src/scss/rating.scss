@@ -1,0 +1,31 @@
+/* Rating feedback */
+.o_rating_page_submit {
+
+    .btn-group > .btn:not(:first-child),
+    .btn-group > .btn-group:not(:first-child) > .btn {
+        margin-left: 0 !important;
+    }
+    .o_rating_label {
+        transition: .3s;
+        &:hover {
+            transform: scale(1.1);
+        }
+        a {
+            &.bg-white:hover,
+            &.bg-white:focus {
+                background-color: #ffffff !important;
+            }
+        }
+        &.active {
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.25));
+            -webkit-filter: drop-shadow(0 0 10px rgba(0,0,0,0.25));
+            transform: scale(1.1);
+            a {
+                &.bg-white:hover,
+                &.bg-white:focus {
+                    background-color: #ffffff !important;
+                }
+            }
+        }
+    }
+}

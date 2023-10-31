@@ -1,0 +1,80 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+.o_AttachmentImage {
+    min-width: 20px;
+    min-height: 20px;
+    flex-shrink: 0;
+    margin: map-get($spacers, 1);
+
+    img {
+        object-fit: contain;
+        margin: 0 auto;
+    }
+
+    &.o-details-overlay:hover {
+        .o_AttachmentImage_imageOverlay {
+            opacity: 1;
+        }
+    }
+}
+
+.o_AttachmentImageUploading {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.o_AttachmentImage_action {
+    min-width: 20px;
+}
+
+.o_AttachmentImage_actions {
+    justify-content: space-between;
+}
+
+.o_AttachmentImage_filename {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_AttachmentImage_imageOverlay {
+    bottom: 0;
+    left: 0;
+    padding: map-get($spacers, 2);
+    right: 0;
+    top: 0;
+}
+
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_AttachmentImage {
+    cursor: zoom-in;
+}
+
+.o_AttachmentImage_action {
+    border-radius: 10px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+}
+
+.o_AttachmentImage_imageOverlay {
+    color: $white;
+    opacity: 0;
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+.o_AttachmentImage_imageOverlay {
+    transition: all 0.3s ease 0s;
+}

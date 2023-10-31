@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_tax_python
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - กลุ่มภาษี: ภาษีคือชุดของภาษีย่อย\n"
+"    - คงที่: จำนวนภาษียังคงเท่าเดิมไม่ว่าจะมีราคาเท่าใดก็ตาม\n"
+"    - เปอร์เซ็นต์ของราคา: จำนวนภาษีคือ % ของราคา:\n"
+"        เช่น 100 * (1 + 10%) = 110 (ไม่รวมราคา)\n"
+"        เช่น 110 / (1 + 10%) = 100 (ราคารวม)\n"
+"    - เปอร์เซ็นต์ของภาษีราคารวม: จำนวนภาษีเป็นส่วนหนึ่งของราคา:\n"
+"        เช่น 180 / (1 - 10%) = 200 (ไม่รวมราคา)\n"
+"        เช่น 200 * (1 - 10%) = 180 (รวมราคา)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
+msgid "Applicable Code"
+msgstr "Applicable Code"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"คำนวณจำนวนภาษีโดยการตั้งค่าตัวแปร 'ผลลัพธ์'\n"
+"\n"
+":param base_amount: ลอยตัว จำนวนเงินจริงที่ใช้ภาษี\n"
+":param price_unit: ลอยตัว\n"
+":param quantity: ลอยตัว\n"
+":param company: res.company ชุดระเบียนซิงเกิลตัน\n"
+":param product: product.product ชุดระเบียนซิงเกิลตัน หรือ ไม่มี\n"
+":param Partner: res.partner ชุดระเบียนซิงเกิลตัน หรือ ไม่มี"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+"ตรวจสอบว่าภาษีจะถูกนำไปใช้โดยการตั้งค่าตัวแปร 'ผลลัพธ์' เป็น True หรือ False\n"
+"\n"
+":param price_unit: ลอยตัว\n"
+":param quantity: ลอยตัว\n"
+":param company: res.company ชุดระเบียนซิงเกิลตัน\n"
+":param product: product.product ชุดระเบียนซิงเกิลตัน หรือ ไม่มี\n"
+":param Partner: res.partner ชุดระเบียนซิงเกิลตัน หรือ ไม่มี"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
+msgid "Python Code"
+msgstr "Python Code"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "ภาษี"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "การคำนวนวันครบกำหนด"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "แม่แบบสำหรับภาษี"
+
+#. module: account_tax_python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""
+"คุณป้อนรหัส %r ไม่ถูกต้องในภาษี %r\n"
+"\n"
+"เกิดข้อผิดพลาด : %s"

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <function model="res.company" name="create_missing_unbuild_sequences" />
+        <!--
+             Stock rules and routes
+        -->
+
+        <record id="route_warehouse0_manufacture" model='stock.location.route'>
+            <field name="name">Manufacture</field>
+            <field name="company_id"></field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Enable the manufacturing in warehouse0 -->
+        <record id='stock.warehouse0' model='stock.warehouse'>
+            <field name='manufacture_to_resupply' eval='True'/>
+        </record>
+
+        <!--  Category for Blocking Reasons Workcenter -->
+        <record id="category_availability" model="mrp.workcenter.productivity.loss.type">
+            <field name="loss_type">availability</field>
+        </record>
+        <record id="category_performance" model="mrp.workcenter.productivity.loss.type">
+            <field name="loss_type">performance</field>
+        </record>
+        <record id="category_quality" model="mrp.workcenter.productivity.loss.type">
+            <field name="loss_type">quality</field>
+        </record>
+        <record id="category_productive" model="mrp.workcenter.productivity.loss.type">
+            <field name="loss_type">productive</field>
+        </record>
+
+        <!-- Reasons To Block Workcenter -->
+        <record id="block_reason0" model="mrp.workcenter.productivity.loss">
+            <field name="name">Material Availability</field>
+            <field name="loss_id" ref="mrp.category_availability"></field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="block_reason1" model="mrp.workcenter.productivity.loss">
+            <field name="name">Equipment Failure</field>
+            <field name="loss_id" ref="mrp.category_availability"></field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="block_reason2" model="mrp.workcenter.productivity.loss">
+            <field name="name">Setup and Adjustments</field>
+            <field name="loss_id" ref="mrp.category_availability"></field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="block_reason4" model="mrp.workcenter.productivity.loss">
+            <field name="name">Reduced Speed</field>
+            <field name="loss_id" ref="mrp.category_performance"></field>
+            <field name="manual" eval="False"/>
+            <field name="sequence">5</field>
+        </record>
+        <record id="block_reason5" model="mrp.workcenter.productivity.loss">
+            <field name="name">Process Defect</field>
+            <field name="loss_id" ref="mrp.category_quality"></field>
+            <field name="sequence">6</field>
+        </record>
+        <record id="block_reason6" model="mrp.workcenter.productivity.loss">
+            <field name="name">Reduced Yield</field>
+            <field name="loss_id" ref="mrp.category_quality"></field>
+            <field name="sequence">7</field>
+        </record>
+        <record id="block_reason7" model="mrp.workcenter.productivity.loss">
+            <field name="name">Fully Productive Time</field>
+            <field name="loss_id" ref="mrp.category_productive"></field>
+            <field name="manual" eval="False"/>
+            <field name="sequence">0</field>
+        </record>
+
+    </data>
+
+</odoo>

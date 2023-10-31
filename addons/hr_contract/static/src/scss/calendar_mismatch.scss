@@ -1,0 +1,19 @@
+.o_form_view {
+    .o_calendar_warning {
+        cursor: help;
+    }
+
+    .o_calendar_warning_tooltip {
+        display: block;
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .o_calendar_warning:hover + .o_calendar_warning_tooltip {
+        display: inline;
+        height: auto;
+        opacity: 1;
+        transition: opacity 0.5s linear;
+    }
+}

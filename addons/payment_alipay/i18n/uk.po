@@ -1,0 +1,170 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid ""
+"* Cross-border: For the overseas seller \n"
+"* Express Checkout: For the Chinese Seller"
+msgstr ""
+"* Транскордонний: Для продавця за кордоном \n"
+"* Експрес-оплата: для китайського продавця"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid "Account"
+msgstr "Рахунок"
+
+#. module: payment_alipay
+#: model:account.payment.method,name:payment_alipay.payment_method_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+msgid "Alipay"
+msgstr "Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "Email продавця Alipay "
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "Транскордонний"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Expected signature %(sc) but received %(sign)s."
+msgstr "Очікуваний підпис %(sc) а отримано %(sign)s."
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr "Експрес-оплата (лише для китайський продавців)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "Ключ підпису MD5"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "ID партнера продавця"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Не знайдено жодної транзакції, що відповідає референсу %s."
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Платіжний еквайєр"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Способи оплати"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Платіжна операція"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Провайдер"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr "Отримані дані з відстутнім референсом %(r)s або txn_id %(t)s."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data not acknowledged by Alipay:\n"
+"%s"
+msgstr ""
+"Отримані дані сповіщення не підтверджені Alipay:\n"
+"%s"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data with unknown reference:\n"
+"%s"
+msgstr ""
+"Отримані дані сповіщення з невідомим референсом:\n"
+"%s"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "Постачальник платіжних послуг для використання з цим еквайєром"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The amount does not match the total + fees."
+msgstr "Сума не відповідає загальній вартості + збори."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The currency returned by Alipay %(rc)s does not match the transaction "
+"currency %(tc)s."
+msgstr ""
+"Валюта повернена Alipay %(rc)s не відповідає валюті транзакції %(tc)s."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr "Електронна адреса публічного партнера Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr ""
+"ID публічного партнера, який використовується виключно для ідентифікації "
+"облікового запису в Alipay"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The seller email does not match the configured Alipay account."
+msgstr ""
+"Електронна адреса продавця не співпадає з налаштованим обліковим записом "
+"Alipay."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr "статус недійсної отриманої транзакції: %s"

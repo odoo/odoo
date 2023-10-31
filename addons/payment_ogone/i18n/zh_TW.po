@@ -1,0 +1,155 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_ogone
+# 
+# Translators:
+# Martin Trigaux, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Tony Ng, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "API User ID"
+msgstr "API 使用者 ID"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+msgid "API User Password"
+msgstr "API 使用者密碼"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "無法建立與 API 的連線。"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "沒有找到匹配參考 %s 的交易。"
+
+#. module: payment_ogone
+#: model:account.payment.method,name:payment_ogone.payment_method_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "付款收單方"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_account_payment_method
+msgid "Payment Methods"
+msgstr "付款方法"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "付款代碼(token)"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "收到的付款狀態無效的資料：%s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/controllers/main.py:0
+#, python-format
+msgid ""
+"Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
+"%(data)s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received feedback data with unknown type: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA Key IN"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA Key OUT"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been archived."
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "與此收單行一起使用的支付服務供應商"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "與 API 通訊失敗。"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The payment has been declined: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "交易未有連結至代碼。"

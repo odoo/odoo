@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record model="ir.ui.view" id="crm_lead_forward_to_partner_form">
+            <field name="name">crm_lead_forward_to_partner</field>
+            <field name="model">crm.lead.forward.to.partner</field>
+            <field name="arch" type="xml">
+                <form string="Send Mail">
+                    <group>
+                        <field name="forward_type" invisible="context.get('hide_forward_type',False)"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])], 'required': [('forward_type', '=', 'single')]}"  />
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
+                        <tree create="false" editable="bottom">
+                            <field name="lead_id" readonly="1" force_save="1" />
+                            <field name="lead_location" readonly="1"/>
+                            <field name="partner_assigned_id"/>
+                            <field name="partner_location" readonly="1"/>
+                        </tree>
+                    </field>
+                    <notebook colspan="4" groups="base.group_no_one">
+                        <page string="Email Template" name="email_template">
+                            <field name="body" readonly="1" options="{'style-inline': true}"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="action_forward" string="Send" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="z" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_lead_forward_to_partner_act">
+            <field name="name">Forward to Partner</field>
+            <field name="res_model">crm.lead.forward.to.partner</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_lead_forward_to_partner_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_crm_send_mass_forward" model="ir.actions.act_window">
+            <field name="name">Forward to partner</field>
+            <field name="res_model">crm.lead.forward.to.partner</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_lead_forward_to_partner_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_composition_mode' : 'mass_mail'}</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+        </record>
+
+</odoo>

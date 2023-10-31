@@ -1,0 +1,157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_ogone
+# 
+# Translators:
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2021
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
+# Ryanto The <ry.the77@gmail.com>, 2022
+# Abe Manyo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "API User ID"
+msgstr "API User ID"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+msgid "API User Password"
+msgstr "Password Api User"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Tidak dapat membuat hubungan ke API."
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
+
+#. module: payment_ogone
+#: model:account.payment.method,name:payment_ogone.payment_method_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Pemilik Tagihan"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Cara Pembayaran"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Token Pembayaran"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaksi Tagihan"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Pemberi"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Menerima data dengan status pembayaran tidak valid: %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/controllers/main.py:0
+#, python-format
+msgid ""
+"Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
+"%(data)s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received feedback data with unknown type: %s"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA Key IN"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA Key OUT"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been archived."
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr ""
+"Menyimpan detail pembayaran Anda penting untuk penggunaan di masa depan."
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr "ID yang digunakan hanya untuk mengidentifikasi API user dengan Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr "ID yang digunakan hanya untuk mengidentifikasi akun dengan Ogone"
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "Komunikasi dengan API gagal."
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The payment has been declined: %s"
+msgstr "Pembayaran telah ditolak: %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Transaksi ini tidak terhubung ke token."

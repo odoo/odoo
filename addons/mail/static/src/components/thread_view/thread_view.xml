@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadView" owl="1">
+        <div class="o_ThreadView" t-att-class="threadView and threadView.extraClass" t-att-data-correspondent-id="threadView and threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView and threadView.thread and threadView.thread.localId">
+            <t t-if="threadView">
+                <t t-if="threadView.topbar">
+                    <ThreadViewTopbar class="border-bottom" localId="threadView.topbar.localId"/>
+                </t>
+                <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
+                    <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
+                        <t t-if="threadView.rtcCallViewer">
+                            <RtcCallViewer localId="threadView.rtcCallViewer.localId"/>
+                        </t>
+                        <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
+                            <div class="o_ThreadView_loading">
+                                <span><i class="o_ThreadView_loadingIcon fa fa-circle-o-notch fa-spin" title="Loading..." role="img"/>Loading...</span>
+                            </div>
+                        </t>
+                        <t t-elif="threadView.threadCache.isLoaded or threadView.thread.isTemporary">
+                            <MessageList
+                                class="o_ThreadView_messageList"
+                                getScrollableElement= "props.getScrollableElement"
+                                hasScrollAdjust="props.hasScrollAdjust"
+                                threadViewLocalId="threadView.localId"
+                                t-ref="messageList"
+                            />
+                        </t>
+                        <t t-elif="threadView.threadCache.hasLoadingFailed">
+                            <div class="o_ThreadView_loadingFailed">
+                                <div class="o_ThreadView_loadingFailedText">
+                                    An error occurred while fetching messages.
+                                </div>
+                                <button class="o_ThreadView_loadingFailedRetryButton btn btn-link" t-on-click="_onClickRetryLoadMessages">
+                                    Click here to retry
+                                </button>
+                            </div>
+                        </t>
+                        <t t-elif="threadView.composerView">
+                            <div class="o-autogrow"/>
+                        </t>
+                        <t t-if="threadView.composerView">
+                            <Composer
+                                class="o_ThreadView_composer"
+                                composerViewLocalId="threadView.composerView.localId"
+                                hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+                                hasDiscardButton="props.hasComposerDiscardButton"
+                                hasSendButton="props.hasComposerSendButton"
+                                hasThreadName="props.hasComposerThreadName"
+                                hasThreadTyping="props.hasComposerThreadTyping"
+                                showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
+                                showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
+                                textInputSendShortcuts="threadView.textInputSendShortcuts"
+                            />
+                        </t>
+                    </div>
+                    <t t-if="threadView.thread and threadView.thread.hasMemberListFeature and threadView.hasMemberList and threadView.isMemberListOpened">
+                        <ChannelMemberList class="o_ThreadView_channelMemberList flex-shrink-0 border-left" channelLocalId="threadView.thread.localId"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

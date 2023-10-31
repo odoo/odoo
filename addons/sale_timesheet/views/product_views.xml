@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_timesheet_form" model="ir.ui.view">
+        <field name="name">product.template.timesheet.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_policy']" position="attributes">
+                <attribute name="invisible">False</attribute>
+                <attribute name="attrs">{'invisible': [('type', '=', 'service')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_policy']" position="after">
+                <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
+            </xpath>
+            <field name="product_tooltip" position="after">
+                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}"/>
+                <div attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" class="font-italic text-muted">
+                    Warn the salesperson for an upsell when work done exceeds
+                    <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
+                    of hours sold. (<field name="service_upsell_threshold_ratio" class="oe_inline"/>)
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_view_search_sale_timesheet" model="ir.ui.view">
+        <field name="name">product.template.search.timesheet</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='consumable']" position="after">
+                <separator/>
+                <filter string="Time-based services" name="product_time_based" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')]"/>
+                <filter string="Fixed price services" name="product_service_fixed" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'order'), ('service_type', '=', 'timesheet')]"/>
+                <filter string="Milestone services" name="product_service_milestone" domain="[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'manual')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_action_default_services" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="sale_timesheet.product_template_view_search_sale_timesheet"/>
+        <field name="context">{'search_default_services': 1, 'default_detailed_type': 'service'}</field>
+    </record>
+
+</odoo>

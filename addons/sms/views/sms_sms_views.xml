@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo><data>
+    <record id="sms_tsms_view_form" model="ir.ui.view">
+        <field name="name">sms.sms.view.form</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <form string="SMS">
+                <header>
+                    <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
+                    <button name="action_set_outgoing" string="Retry" type="object" states='error,canceled'/>
+                    <button name="action_set_canceled" string="Cancel" type="object" states='error,outgoing'/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" string="Contact"/>
+                            <field name="mail_message_id" readonly="1" attrs="{'invisible': [('mail_message_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="number" required="1"/>
+                            <field name="failure_type" readonly="1" attrs="{'invisible': [('failure_type', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="body" widget="sms_widget" string="Message" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_sms_view_tree" model="ir.ui.view">
+        <field name="name">sms.sms.view.tree</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <tree string="SMS Templates" decoration-muted="state == 'canceled'" decoration-info="state == 'outgoing'" decoration-danger="state == 'error'">
+                <field name="number"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <field name="failure_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sms_sms_view_search" model="ir.ui.view">
+        <field name="name">sms.sms.view.search</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <search string="Search SMS Templates">
+                <field name="number"/>
+                <field name="partner_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sms_sms_action" model="ir.actions.act_window">
+        <field name="name">SMS</field>
+        <field name="res_model">sms.sms</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="sms_sms_menu"
+        parent="phone_validation.phone_menu_main"
+        action="sms_sms_action"
+        sequence="1"/>
+
+    <record id="ir_actions_server_sms_sms_resend" model="ir.actions.server">
+        <field name="name">Resend</field>
+        <field name="model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.resend_failed()</field>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_address_city
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Irina Fedulova <istartlin@gmail.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2021\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_address_city
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Отметьте это, чтобы каждый адрес, созданная в этой стране, содержала "
+"`Город`, избранное в списке городов страны."
+
+#. module: base_address_city
+#: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "города"
+
+#. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:0
+#: model:ir.model,name:base_address_city.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
+msgid "City"
+msgstr "Город"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr "город адреса"
+
+#. module: base_address_city
+#: model:ir.model,name:base_address_city.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: base_address_city
+#: model:ir.model,name:base_address_city.model_res_country
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
+msgid "Country"
+msgstr "Страна"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
+msgid "Created by"
+msgstr "Создан"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
+msgid "Created on"
+msgstr "Создан"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: base_address_city
+#: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Показать и управлять списком всех городов, на которые можно назначить ваши "
+"партнерские записи. Заметьте, что опцию можно установить отдельно в каждой "
+"стране чтобы обеспечить любую его адрес, чтобы город в этом списке."
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Обеспечить применение городов"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
+msgid "Name"
+msgstr "Название"
+
+#. module: base_address_city
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
+msgid "Search City"
+msgstr "Поиск города"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
+msgid "State"
+msgstr "Статус"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
+msgid "Zip"
+msgstr "Индекс"

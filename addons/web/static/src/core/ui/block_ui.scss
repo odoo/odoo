@@ -1,0 +1,31 @@
+.o_blockUI {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+
+  cursor: wait;
+  background: #000000;
+  opacity: 0.6;
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .o_spinner {
+    height: 4.2rem;
+    margin-bottom: 1rem;
+
+    img {
+      animation: fa-spin 1s infinite steps(12);
+    }
+  }
+
+  .o_message {
+    color: #ffffff;
+    text-align: center;
+  }
+}

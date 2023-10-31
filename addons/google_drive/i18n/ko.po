@@ -1,0 +1,378 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_drive
+# 
+# Translators:
+# Martin Trigaux, 2021
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"<b>To create a new filter:</b><br/>\n"
+"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
+"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+msgstr ""
+"새 필터를 만들려면 다음과 같이하십시오.\n"
+"                                 - 필터링 할 Odoo 문서로 이동하십시오. 예를 들어 영업 기회로 이동하여 영업 부서에서 검색하십시오.\n"
+"                                 - 이 \"검색\"보기에서 \"현재 필터 저장\"옵션을 선택하고 이름을 입력하십시오 (예 : 영업 부서)\n"
+"                                 - \"모든 사용자와 공유\"를 선택하면 영업 부서의 기회가 있는 모든 사용자에 대해 \"기타\"옵션의 Google 문서 링크가 표시됩니다.\n"
+"                                 - \"모든 사용자와 공유\"를 선택하지 않으면 영업 부서의 기회에 있는 다른 사용자에게 \"기타\" 옵션의 Google 문서 링크가 표시되지 않습니다.\n"
+"                                 - 필터를 지정하지 않으면 Google 문서 링크가 모든 기회에 대해 모든 사용자에게 '기타'옵션으로 표시됩니다."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr "<i class=\"fa fa-arrow-right\"/> 토큰 초기화"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr "<i class=\"fa fa-arrow-right\"/> 토큰 설정"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; 토큰셋 새로고침 "
+"없음"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr "<i class=\"text-success fa fa-check\"/> &amp;nbsp; 토큰셋 새로고침"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr "<span>인증코드를 찾아서 아래의 칸에 설정하세요.</span>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Active</strong>"
+msgstr "<strong>활성화</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Model</strong>"
+msgstr "<strong>모델</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Template</strong>"
+msgstr "<strong>서식</strong>"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
+msgid "Active"
+msgstr "활성"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid "Add a new template"
+msgstr "새 서식 추가"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "At least one key cannot be found in your Google Drive name pattern."
+msgstr "Google 드라이브 이름 패턴에서 하나 이상의 키를 찾을 수 없습니다."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
+msgid "Authorization Code"
+msgstr "인증 코드"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "취소"
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
+msgid ""
+"Choose how the new google drive will be named, on google side. Eg. "
+"gdoc_%(field_name)s"
+msgstr "Google 쪽에서 새 Google 드라이브 이름 지정 방법을 선택하십시오.예를 들면 gdoc_%(field_name)s"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "승인"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Creating google drive may only be done by one at a time."
+msgstr "Google 드라이브 만들기는 한 번에 하나씩 만 수행 할 수 있습니다."
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "고객"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
+msgid "Filter"
+msgstr "필터"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "구성 패널로 이동하기"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
+msgid "Google Client"
+msgstr "구글 클라이언트"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
+msgid "Google Drive Configuration"
+msgstr "구글 드라이브 환경 설정"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
+msgid "Google Drive Name Pattern"
+msgstr "구글 드라이브 이름 패턴"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "Google Drive Templates"
+msgstr "구글 드라이브 서식"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Google Drive is not yet configured. Please contact your administrator."
+msgstr "구글 드라이브가 아직 구성되지 않았습니다. 관리자에게 문의하십시오."
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_google_drive_config
+msgid "Google Drive templates config"
+msgstr "구글 드라이브 서식 구성"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
+msgid "Last Modified on"
+msgstr "최근 수정일"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid ""
+"Link your own google drive templates to any record of Odoo. If you have "
+"really specific documents you want your collaborator fill in, e.g. Use a "
+"spreadsheet to control the quality of your product or review the delivery "
+"checklist for each order in a foreign country, ... Its very easy to manage "
+"them, link them to Odoo and use them to collaborate with your employees."
+msgstr ""
+"Odoo의 모든 기록에 자신의 Google 드라이브 템플릿을 연결하십시오. 공동 작업자가 채우기를 원하는 정말 구체적인 문서가 있는 "
+"경우. 예 : 스프레드 시트를 사용하여 제품의 품질을 제어하거나 외국의 각 주문에 대한 배송 점검 목록을 검토하십시오 ... 매우 쉽게 "
+"관리 할 수 있으며이를 Odoo와 연결하여 직원과 협력 할 수 있습니다."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
+msgid "Model"
+msgstr "모델"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Please enter a valid Google Document URL."
+msgstr "유효한 구글 문서 URL을 입력하세요."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr "새로 고침 토큰 생성"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
+msgid "Related Model"
+msgstr "관련된 모델"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
+msgid "Resource Id"
+msgstr "리소스 ID"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
+msgstr "구글 드라이브 구성 검색"
+
+#. module: google_drive
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr "새로 고침 토큰 설정"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code ."
+msgstr "토큰을 생성하는 동안 문제가 발생했습니다. 인증 코드를 다시 요청하시기 바랍니다."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
+msgid "Template Name"
+msgstr "서식명"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
+msgid "Template URL"
+msgstr "서식 URL"
+
+#. module: google_drive
+#: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
+msgid "Templates"
+msgstr "템플릿(서식)"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "The Google Template cannot be found. Maybe it has been deleted."
+msgstr "구글 서식을 찾을 수 없습니다. 삭제되었습니다."
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr "구글로부터 인증 코드를 생성하기 위한 URL."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr "문서 필터에는 '동적' 부분이 포함되어서는 안 되므로, 현재 시간 또는 현재 사용자를 기준으로 해서는 안 됩니다."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"                                'Deco_Addict_SO0001_Sales'."
+msgstr ""
+"첨부 된 문서의 이름은 고정 또는 가변 데이터를 사용할 수 있습니다. 문서를 구분하려면\n"
+"                                Google 드라이브에서는 고정 단어와 입력란을 사용합니다.  예를 들어 위의 예에서 Google 드라이브 이름 입력란에 Deco_Addict_%(name)s_Sales를 쓰면 \n"
+"                                Google 드라이브 및 Odoo 첨부 파일의 문서 이름이 'Deco_Addict_SO0001_Sales'가 됩니다."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The permission 'reader' for 'anyone with the link' has not been written on "
+"the document"
+msgstr "'링크에 있는 사용자'에 대한 '읽기' 권한이 문서에 기록되지 않았습니다."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr "구글 드라이브에 설정된 새로 고침 코드가 없습니다. 환경 설정 패널에서 설정할 수 있습니다."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "This module will stop working after the 3rd October 2022 due to"
+msgstr ""
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
+msgid "URI"
+msgstr "URL"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "changes in Google Authentication API"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

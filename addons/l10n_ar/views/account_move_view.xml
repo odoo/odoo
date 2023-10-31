@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_filter" model="ir.ui.view">
+        <field name="name">account.move.filter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="l10n_ar_afip_responsibility_type_id"/>
+            </field>
+            <group>
+                <filter string="AFIP Responsibility Type" domain="[]" name="l10n_ar_afip_responsibility_type_id_filter" context="{'group_by':'l10n_ar_afip_responsibility_type_id'}"/>
+            </group>
+        </field>
+    </record>
+
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+			<group id="other_tab_group" position="inside">
+                <group name="afip_group" string="AFIP" attrs="{'invisible': [('country_code', '!=', 'AR')]}">
+                    <field name='l10n_ar_afip_concept' attrs="{'invisible': [('l10n_latam_use_documents', '=', False)]}"/>
+                    <label for="l10n_ar_afip_service_start" attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" string="Service Date"/>
+                    <div attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}">
+                        <field name="l10n_ar_afip_service_start" class="oe_inline"/> to <field name="l10n_ar_afip_service_end" class="oe_inline"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

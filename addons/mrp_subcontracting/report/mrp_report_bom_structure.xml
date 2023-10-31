@@ -1,0 +1,33 @@
+<odoo>
+    <template id="report_mrp_bom_line_inherit_mrp_subcontracting" inherit_id="mrp.report_mrp_bom_line">
+        <xpath expr="//t[@name='operations']" position="after">
+            <t t-if="data.get('subcontracting')">
+                <t t-set="space_td" t-value="'margin-left: '+ str(data['subcontracting']['level'] * 20) + 'px;'"/>
+                <tr class="o_mrp_bom_report_line" t-att-parent_id="data['bom'].id">
+                    <td name="td_subcontracting">
+                        <div t-att-style="space_td">
+                            <div class="o_mrp_bom_no_fold">
+                                Subcontracting: <a href="#" class="o_mrp_bom_action" t-att-data-res-id="data['subcontracting']['partner_id']" t-att-data-model="'res.partner'"><t t-esc="data['subcontracting']['name']"/></a>
+                            </div>
+                        </div>
+                    </td>
+                    <td/>
+                    <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                        <td/>
+                    </t>
+                    <td class="text-right">
+                        <span t-esc="data['subcontracting']['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                    </td>
+                    <td groups="uom.group_uom"><span t-esc="data['subcontracting']['uom']"/></td>
+                    <td class="o_mrp_prod_cost text-right">
+                        <span t-esc="data['subcontracting']['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </td>
+                    <td class="o_mrp_bom_cost text-right">
+                        <span t-esc="data['subcontracting']['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </td>
+                    <td/>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>

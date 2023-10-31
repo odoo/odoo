@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_forum.add_new_forum">
+        <form id="editor_new_forum">
+            <div class="form-group row">
+                <label for="page-name" class="col-md-4 col-form-label">Forum Name</label>
+                <div class="col-md-8">
+                    <input type="text" name="forum_name" class="form-control" required="required"/>
+                    <div class="custom-control custom-checkbox mt-2">
+                        <input type="checkbox" class="custom-control-input" id="add_to_menu" required="required"/>
+                        <label class="custom-control-label" for="add_to_menu">Add to menu</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mt-2">
+                <label class="col-md-4 col-form-label" data-toggle="tooltip" data-placement="bottom"
+                    title="Questions and Answers mode: only one answer allowed\n Discussions mode: multiple answers allowed">Forum Mode</label>
+                <div class="col-md-8">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="questions" name="mode" class="custom-control-input" value="questions" checked="checked"/>
+                        <label class="custom-control-label" for="questions">Questions and Answers</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="discussions" name="mode" class="custom-control-input" value="discussions"/>
+                        <label class="custom-control-label" for="discussions">Discussions</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mt-2">
+                <label class="col-md-4 col-form-label" data-toggle="tooltip" data-placement="bottom"
+                    title="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group">Privacy</label>
+                <div class="col-md-8">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="public" name="privacy" class="custom-control-input" value="public" checked="checked"/>
+                        <label class="custom-control-label" for="public">Public</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="connected" name="privacy" class="custom-control-input" value="connected"/>
+                        <label class="custom-control-label" for="connected">Signed In</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="private" name="privacy" class="custom-control-input" value="private"/>
+                        <label class="custom-control-label" for="private">Some Users</label>
+                    </div>
+                    <div class="form-group show_visibility_group d-none">
+                        <input type="text" class="form-control" name="group_id" id="group_id" placeholder="Select Authorized Group"/>
+                        <p id="group-required" class="text-danger mt-1 mb-0 d-none">Please fill in this field</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </t>
+    <t t-name="website_forum.web_editor_toolbar" t-extend="web_editor.toolbar" primary="True">
+        <t t-jquery="li#heading1-dropdown-item" t-operation="replace"/>
+        <t t-jquery="li#heading2-dropdown-item" t-operation="replace"/>
+        <t t-jquery="li#heading3-dropdown-item" t-operation="replace"/>
+        <t t-jquery="div#font-size" t-operation="replace"/>
+        <t t-jquery="div#colorInputButtonGroup" t-operation="replace"/>
+        <t t-jquery="div#toolbar" t-operation="append">
+            <div id="history" class="btn-group">
+                <div id="undo" data-call="undo" class="btn fa fa-undo"/>
+                <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
+            </div>
+        </t>
+    </t>
+</templates>

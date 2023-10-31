@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" groups="mass_mailing.group_mass_mailing_campaign" string="Send new Mailing"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(action_view_mass_mailings_from_campaign)d"
+                    type="action" class="oe_stat_button order-9" icon="fa-envelope-o"
+                    attrs="{'invisible': [('mailing_mail_count', '=', 0)]}" groups="mass_mailing.group_mass_mailing_campaign">
+                    <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Mailings" name="mailings" attrs="{'invisible': [('mailing_mail_count', '=', 0)]}">
+                    <field name="mailing_mail_ids" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="subject"/>
+                            <field name="sent_date"/>
+                            <field name="state"/>
+                            <field name="delivered"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                            <button name="action_duplicate" type="object" string="Duplicate"/>
+                        </tree>
+                    </field>
+                    <div class="o_utm_campaign_mass_mailing_substats d-flex justify-content-end align-items-center">
+                        <div class="d-flex justify-content-end align-items-center flex-column">
+                            <label for="received_ratio" string="Delivered" class="m-0"/>
+                            <div class="m-0">
+                                <span class="text-right">
+                                    <field name="received_ratio"/>
+                                    <span>%</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center flex-column">
+                            <label for="opened_ratio" string="Opened" class="m-0"/>
+                            <div class="m-0">
+                                <span class="text-right">
+                                    <field name="opened_ratio"/>
+                                    <span>%</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center flex-column">
+                            <label for="replied_ratio" string="Replied" class="m-0"/>
+                            <div class="m-0">
+                                <span class="text-right">
+                                    <field name="replied_ratio"/>
+                                    <span>%</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center flex-column">
+                            <label for="bounced_ratio" string="Bounced" class="m-0"/>
+                            <div class="m-0">
+                                <span class="text-right">
+                                    <field name="bounced_ratio"/>
+                                    <span>%</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="mailing_mail_ids"/>
+            </xpath>
+            <xpath expr="//ul[@id='o_utm_actions']">
+                <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
+                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
+                    groups="mass_mailing.group_mass_mailing_campaign">
+                    <t t-out="record.mailing_mail_ids.raw_value.length"/> Mailings
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_view_utm_campaigns" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">utm.campaign</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a mailing campaign
+            </p><p>
+            Campaigns are the perfect tool to track results across multiple mailings.
+            </p>
+        </field>
+        <field name="domain">[('is_auto_campaign', '=', False)]</field>
+    </record>
+
+    <menuitem name="Campaigns" id="menu_email_campaigns"
+        parent="mass_mailing_menu_root" sequence="5"
+        action="action_view_utm_campaigns"
+        groups="mass_mailing.group_mass_mailing_campaign"/>
+
+    <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
+        parent="mass_mailing_configuration" sequence="1"
+        groups="mass_mailing.group_mass_mailing_campaign"
+        action="utm.action_view_utm_stage"/>
+
+    <menuitem id="mass_mailing_tag_menu"
+        parent="mass_mailing_configuration"
+        action="utm.action_view_utm_tag"
+        sequence="2"
+        groups="mass_mailing.group_mass_mailing_campaign"/>
+</odoo>

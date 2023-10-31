@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcVideo" owl="1">
+        <video class="o_RtcVideo"
+           t-ref="video"
+           playsinline="true"
+           autoplay="true"
+           muted="true"
+           t-on-loadedmetadata="_onVideoLoadedMetaData"
+        />
+    </t>
+
+</templates>

@@ -1,0 +1,109 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcCallViewer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 50%; // ensures that the view returns to the right height when resized
+    min-height: 50%;
+
+    &.o-isMinimized {
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(20%, 130px)"};
+    }
+
+    &.o-fullScreen {
+        position: fixed;
+        z-index: $zindex-fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.o_RtcCallViewer_controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: map-get($spacers, 1);
+
+    &.o-isFloating {
+        position: absolute;
+        padding-bottom: map-get($spacers, 3);
+        bottom: 0;
+    }
+}
+
+.o_RtcCallViewer_grid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.3vw;
+    }
+
+    &.o-isTiled {
+        flex-direction: row;
+        width: 100%;
+        overflow-y: hidden;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .o_RtcCallViewer_participantCard {
+            width: var(--width);
+            height: var(--height);
+            min-width: var(--width);
+            min-height: var(--height);
+        }
+    }
+
+    &.o-isSidebar {
+        width: 120px;
+        min-width: 120px;
+    }
+}
+
+.o_RtcCallViewer_gridTile {
+    width: 100%;
+    aspect-ratio: 16/9;
+}
+
+.o_RtcCallViewer_mainParticipantContainer {
+    display: flex;
+    flex-grow: 1;
+}
+
+.o_RtcCallViewer_participantContainer {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcCallViewer {
+    background-color: lighten(black, 10%);
+}
+
+.o_RtcCallViewer_grid {
+
+    &::-webkit-scrollbar {
+        background: gray('900');
+    }
+    &::-webkit-scrollbar-thumb {
+        background: gray('700');
+    }
+}

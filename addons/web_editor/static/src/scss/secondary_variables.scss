@@ -1,0 +1,148 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Color combinations
+$o-color-combinations: o-safe-nth($o-color-combinations-presets, $o-color-combinations-preset-number, ()) !default;
+$-combination-additions: ();
+@for $index from 1 through length($o-color-combinations) {
+    $combination: map-merge($o-base-color-combination, nth($o-color-combinations, $index));
+
+    @each $element, $color in $combination {
+        $-combination-additions: map-merge($-combination-additions, (
+            'o-cc#{$index}-#{$element}': $color,
+        ));
+    }
+}
+
+// Colors
+$o-color-palette: map-get($o-color-palettes, $o-color-palette-name) or ();
+// Original color palette can contain override of the default combinations (so keep 'null' values for this merge)
+$o-color-palette: map-merge($-combination-additions, $o-color-palette);
+$o-color-palette: map-merge($o-base-color-palette, $o-color-palette);
+
+// Theme colors
+$o-theme-color-palette: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or () !default;
+@if not $o-support-13-0-color-system {
+    $o-theme-color-palette: map-remove($o-theme-color-palette, 'alpha', 'beta', 'gamma', 'delta', 'epsilon');
+}
+$-main-color: map-get($o-color-palette, 'o-color-1');
+$-main-color-lightness: lightness($-main-color);
+$o-theme-color-palette: map-merge((
+    // color 1 and 2 are used to override primary and secondary BS4
+    // colors by default, so that theme colors affect the default Odoo layouts
+    'primary': $-main-color,
+    'secondary': map-get($o-color-palette, 'o-color-2'),
+
+    // BS light and dark colors are not used for any BS component, just
+    // for color utilities. By default, we set them to a very light and
+    // very dark version of a desaturate version of the main color
+    'light': lighten(desaturate($-main-color, 80%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
+    'dark': darken(desaturate($-main-color, 80%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
+), $o-theme-color-palette);
+$o-theme-color-palette: map-merge($o-base-theme-color-palette, $o-theme-color-palette);
+
+// Gray colors
+// Extend grays with transparent ones (for some reason, BS4 create black-50 and
+// white-50 but does not allow overridding that with variables).
+$o-gray-color-palette: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or () !default;
+$o-gray-color-palette: map-merge($o-transparent-grays, $o-gray-color-palette);
+$o-gray-color-palette: map-merge($o-base-gray-color-palette, $o-gray-color-palette);
+
+$o-color-system-initialized: false;
+
+// Returns:
+// - true if the given name is a css color or null
+// - false if a potential valid color name
+// - throws an error if the given arg cannot reference a color
+@function check-color-identifier-type($name) {
+    $-type: type-of($name);
+    @if $-type == 'color' or $-type == 'null' {
+        @return true;
+    } @else if $-type != 'string' {
+        @error "Color name '#{$name}' is of unsupported type '#{$-type}'";
+    }
+    @return false;
+}
+@function use-cc-bg($name) {
+    @if type-of($name) == 'number' {
+        // Preset number, let's return the background color of the related
+        // preset.
+        @return 'o-cc#{$name}-bg';
+    }
+    @return $name;
+}
+// Looks up for the color related to the given name in the related odoo palettes
+// following redirection a maximum number of time (by default none).
+@function o-related-color($name, $max-recursions: 0, $original-name: $name, $use-cc-bg: false) {
+    @if $use-cc-bg {
+        $name: use-cc-bg($name);
+    } @else if type-of($name) == 'number' {
+        @return $name;
+    }
+
+    @if $max-recursions < 0 or check-color-identifier-type($name) {
+        @return $name;
+    }
+
+    $-value: null;
+    @if map-has-key($o-color-palette, $name) {
+        $-value: map-get($o-color-palette, $name);
+    } @else if map-has-key($o-theme-color-palette, $name) {
+        $-value: map-get($o-theme-color-palette, $name);
+    } @else if map-has-key($o-gray-color-palette, $name) {
+        $-value: map-get($o-gray-color-palette, $name);
+    }
+    @return o-related-color($-value, $max-recursions - 1, $original-name);
+}
+// Function which allows to retrieve a color value from a name, the color being
+// either in $theme-colors, $grays or $colors maps. If those maps are not
+// initialized yet, it will look up the color in the related odoo palettes.
+@function o-color($name) {
+    $name: use-cc-bg($name);
+
+    @if check-color-identifier-type($name) {
+        @return $name;
+    }
+
+    // When the system is initialized, it means that the bootstrap maps have
+    // been configured and contain a direct mapping between color name -> css
+    // value. We can thus search in those.
+    @if $o-color-system-initialized {
+        @if map-has-key($colors, $name) {
+            @return color($name);
+        }
+        @if map-has-key($theme-colors, $name) {
+            @return theme-color($name);
+        }
+        @if map-has-key($grays, $name) {
+            @return gray($name);
+        }
+    }
+
+    // If not initialized, search the css color value in selected color palettes
+    @return o-related-color($name, $max-recursions: 10, $use-cc-bg: true);
+}
+
+// Same as 'increase-contrast' except that the color is not changed if the given
+// related color name is part of the given exclusion list (default to a global
+// exclusion list which can be extended by other apps).
+$o-we-auto-contrast-exclusions: () !default;
+@function auto-contrast($color1, $color2, $color1-name, $exclude: $o-we-auto-contrast-exclusions) {
+    @if index($exclude, $color1-name) {
+        @return $color1;
+    }
+    @return increase-contrast($color1, $color2);
+}
+
+// Replace invalid characters used for colors in url.
+// (e.g. "rgba(0, 0, 0, .5)" or "#111111").
+@function encode-color($colors) {
+    $colors: str-replace($colors, '#', '%23');
+    $colors: str-replace($colors, '(', '%28');
+    $colors: str-replace($colors, ')', '%29');
+    $colors: str-replace($colors, ',', '%2C');
+    $colors: str-replace($colors, ' ', '%20');
+    @return $colors;
+}

@@ -1,0 +1,173 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Jonatan Gk, 2022
+# marcescu, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: marcescu, 2022\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid ""
+"* Cross-border: For the overseas seller \n"
+"* Express Checkout: For the Chinese Seller"
+msgstr ""
+"* Transfronterizo: Para vendedores en el extranjero \n"
+"* Pago exprés: para vendedores chinos"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: payment_alipay
+#: model:account.payment.method,name:payment_alipay.payment_method_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+msgid "Alipay"
+msgstr "Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "Correo electrónico del vendedor Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "Transfronterizo"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Expected signature %(sc) but received %(sign)s."
+msgstr "Se esperaba la firma %(sc) pero se recibió %(sign)s."
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr "Pago exprés (solo para comerciantes chinos)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "Clave de firma MD5"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "ID de socio comercial"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
+"No se ha encontrado ninguna transacción que coincida con la referencia %s."
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Método de pago"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Métodos de pago"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr "Datos recibidos sin referencia %(r)s o txn_id %(t)s."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data not acknowledged by Alipay:\n"
+"%s"
+msgstr ""
+"Datos de notificación recibidos no reconocidos por Alipay:\n"
+"%s"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data with unknown reference:\n"
+"%s"
+msgstr ""
+"Datos de notificación recibidos con referencia desconocida:\n"
+"%s"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "El proveedor de servicios de pago a utilizar con este adquirente"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The amount does not match the total + fees."
+msgstr "El importe no coincide con el total + cuotas."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The currency returned by Alipay %(rc)s does not match the transaction "
+"currency %(tc)s."
+msgstr ""
+"La divisa %(rc)s devuelta por Alipay no coincide con la divisa %(tc)s de la "
+"transacción."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr "El correo electrónico público de los partners de Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr ""
+"El ID de partner público que se utiliza exclusivamente para identificar la "
+"cuenta con Alipay"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The seller email does not match the configured Alipay account."
+msgstr ""
+"El correo electrónico del vendedor no coincide con la cuenta de Alipay "
+"configurada."
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr "recibió un estado de transacción inválido: %s"

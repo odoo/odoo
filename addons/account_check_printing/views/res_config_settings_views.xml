@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.check.printing</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="print_bills_payment" position="after">
+                <div class="content-group">
+                    <div class="row mt16">
+                        <label for="account_check_printing_layout" class="col-lg-4 o_light_label"/>
+                        <field name="account_check_printing_layout" required="True"/>
+                    </div>
+                    <div class="row">
+                        <label for="account_check_printing_multi_stub" class="col-lg-4 o_light_label"/>
+                        <field name="account_check_printing_multi_stub"/>
+                    </div>
+                    <div class="row">
+                        <label for="account_check_printing_margin_top" class="col-lg-4 o_light_label"/>
+                        <field name="account_check_printing_margin_top"/>
+                    </div>
+                    <div class="row">
+                        <label for="account_check_printing_margin_left" class="col-lg-4 o_light_label"/>
+                        <field name="account_check_printing_margin_left"/>
+                    </div>
+                    <div class="row" attrs="{'invisible': [('country_code', '!=', 'CA')]}">
+                        <label for="account_check_printing_margin_right" class="col-lg-4 o_light_label"/>
+                        <field name="account_check_printing_margin_right"/>
+                    </div>
+                    <div class="row" attrs="{'invisible': [('country_code', '!=', 'CA')]}">
+                      <label for="account_check_printing_date_label" class="col-lg-4 o_light_label"/>
+                      <field name="account_check_printing_date_label"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

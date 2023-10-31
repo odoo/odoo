@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_payulatam
+# 
+# Translators:
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# Martin Trigaux, 2022
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
+# Junko Augias, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid payment status."
+msgstr "無効な支払ステータス"
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid sign: received %(sign)s, computed %(check)s."
+msgstr ""
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "参照に一致する取引が見つかりません%s。"
+
+#. module: payment_payulatam
+#: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_acquirer__provider__payulatam
+msgid "PayU Latam"
+msgstr "PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_api_key
+msgid "PayU Latam API Key"
+msgstr "PayU Latam APIキー"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_account_id
+msgid "PayU Latam Account ID"
+msgstr "PayU Latam アカウントID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+msgid "PayU Latam Merchant ID"
+msgstr "PayU LatamマーチャントID"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "決済サービス"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_account_payment_method
+msgid "Payment Methods"
+msgstr "支払方法"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "決済トランザクション"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "プロバイダ"
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or sign (%(sign)s)."
+msgstr ""
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+msgid "The ID solely used to identify the account with PayULatam"
+msgstr "PayULatamのアカウントを識別するためにのみ使用されるID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_account_id
+msgid ""
+"The ID solely used to identify the country-dependent shop with PayULatam"
+msgstr "PayULatamの国別店舗を識別するためにのみ使用されるID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_payulatam
+#: model:account.payment.method,name:payment_payulatam.payment_method_payulatam
+msgid "payulatam"
+msgstr ""

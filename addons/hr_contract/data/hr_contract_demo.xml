@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+    </record>
+
+    <record id="hr_contract_admin" model="hr.contract">
+        <field name="name">Mitchell Admin Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_admin').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_admin').department_id.id"/>
+        <field eval="7540.0" name="wage"/>
+        <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_admin_new" model="hr.contract">
+        <field name="name">Contract For Mitchell Admin</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="notes">This is Mitchell Admin's contract</field>
+        <field eval="5500.0" name="wage"/>
+        <field name="state">open</field>
+    </record>
+
+    <record id="hr_contract_al" model="hr.contract">
+        <field name="name">Ronnie Hart Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="employee_id" ref="hr.employee_al"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_al').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_al').department_id.id"/>
+        <field eval="4000.0" name="wage"/>
+        <field name="state">open</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_mit" model="hr.contract">
+        <field name="name">Marketing Executive Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="employee_id" ref="hr.employee_mit"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_mit').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_mit').department_id.id"/>
+        <field eval="4500.0" name="wage"/>
+        <field name="state">open</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_stw" model="hr.contract">
+        <field name="name">Randall Lewis Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-2-1'"/>
+        <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
+        <field name="employee_id" ref="hr.employee_stw"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_stw').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_stw').department_id.id"/>
+        <field eval="4500.0" name="wage"/>
+        <field name="state">open</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_qdp" model="hr.contract">
+        <field name="name">Demo Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_qdp').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_qdp').department_id.id"/>
+        <field eval="3750.0" name="wage"/>
+        <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_han" model="hr.contract">
+        <field name="name">Walter Horton Contract</field>
+        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="employee_id" ref="hr.employee_han"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_han').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_han').department_id.id"/>
+        <field eval="4600.0" name="wage"/>
+        <field name="state">open</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_niv" model="hr.contract">
+        <field name="name">Sharlene Rhodes Contract</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
+        <field name="employee_id" ref="hr.employee_niv"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_niv').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_niv').department_id.id"/>
+        <field eval="4000.0" name="wage"/>
+        <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_jth" model="hr.contract">
+        <field name="name">Toni Jimenez</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
+        <field name="employee_id" ref="hr.employee_jth"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_jth').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_jth').department_id.id"/>
+        <field eval="4200.0" name="wage"/>
+        <field name="state">draft</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_chs" model="hr.contract">
+        <field name="name">Jennie Fletcher Contract</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="employee_id" ref="hr.employee_chs"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_chs').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_chs').department_id.id"/>
+        <field eval="3750.0" name="wage"/>
+        <field name="state">cancel</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_jve" model="hr.contract">
+        <field name="name">Paul Williams Contract</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="employee_id" ref="hr.employee_jve"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_jve').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_jve').department_id.id"/>
+        <field eval="3950.0" name="wage"/>
+        <field name="state">cancel</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_fme" model="hr.contract">
+        <field name="name">Keith Byrd Contract</field>
+        <field name="date_start" eval="'2015-1-1'"/>
+        <field name="date_end" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_fme"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_fme').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_fme').department_id.id"/>
+        <field eval="3650.0" name="wage"/>
+        <field name="state">open</field>
+        <field name="kanban_state">blocked</field>
+    </record>
+
+    <record id="hr_contract_fpi_previous" model="hr.contract">
+        <field name="name">Audrey Peterson Contract</field>
+        <field name="date_start" eval="'2014-1-1'"/>
+        <field name="date_end" eval="'2014-12-31'"/>
+        <field name="employee_id" ref="hr.employee_fpi"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_fpi').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_fpi').department_id.id"/>
+        <field eval="3700.0" name="wage"/>
+        <field name="state">close</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_fpi" model="hr.contract">
+        <field name="name">Audrey Peterson Contract</field>
+        <field name="date_start" eval="'2015-1-1'"/>
+        <field name="date_end" eval="'2017-12-1'"/>
+        <field name="employee_id" ref="hr.employee_fpi"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_fpi').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_fpi').department_id.id"/>
+        <field eval="3750.0" name="wage"/>
+        <field name="state">close</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+    <record id="hr_contract_vad" model="hr.contract">
+        <field name="name">Tina Williamson Contract</field>
+        <field name="date_start" eval="'2015-1-1'"/>
+        <field name="date_end" eval="'2018-2-1'"/>
+        <field name="employee_id" ref="hr.employee_vad"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_vad').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_vad').department_id.id"/>
+        <field eval="3750.0" name="wage"/>
+        <field name="state">close</field>
+        <field name="kanban_state">normal</field>
+    </record>
+
+</odoo>

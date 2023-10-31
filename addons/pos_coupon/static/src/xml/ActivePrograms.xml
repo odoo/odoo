@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ActivePrograms" owl="1">
+        <div class="active-programs">
+            <div t-if="currentOrder and renderParams.show">
+                <div class="title">Active Programs</div>
+                <t t-foreach="renderParams.withRewardsPromoPrograms" t-as="program" t-key="program.id">
+                    <div>
+                        <t t-esc="program.name"/>
+                        <span t-if="program.promo_code !== false">
+                            (<t t-esc="program.promo_code"/>)
+                        </span>
+                    </div>
+                </t>
+                <t t-foreach="renderParams.withRewardsBookedCoupons" t-as="coupon" t-key="coupon.coupon_code">
+                    <div>
+                        <t t-esc="coupon.program_name"/> (<t t-esc="coupon.coupon_code"/>)
+                    </div>
+                </t>
+                <t t-foreach="renderParams.onNextOrderPromoPrograms" t-as="program" t-key="program.id">
+                    <div style="font-style: italic;">
+                        <t t-esc="program.name"/>
+                        <span t-if="program.promo_code !== false">
+                            (<t t-esc="program.promo_code"/>)
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

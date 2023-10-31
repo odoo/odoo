@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="project.model_project_task" model="ir.model">
+            <field name="website_form_key">create_task</field>
+            <field name="website_form_default_field_id" ref="project.field_project_task__description" />
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Create a Task</field>
+        </record>
+
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>project.task</value>
+            <value eval="[
+                'name',
+                'email_from',
+                'description',
+                'project_id',
+            ]"/>
+        </function>
+
+</odoo>

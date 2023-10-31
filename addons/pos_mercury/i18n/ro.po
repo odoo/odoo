@@ -1,0 +1,510 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_mercury
+# 
+# Translators:
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2021\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Cumpărați un cititor de carduri"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+msgid ""
+"<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
+"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
+"                                configuration will enable you to allow payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
+"                                configuration you should associate it with a Point Of Sale payment method."
+msgstr ""
+"<i>Configurări Vantiv</i> Configurările Vantiv definesc ce cont Vantiv va fi utilizat când\n"
+"                                se vor procesa tranzacții cu cardul de credit în punctul de vânzare. Configurarea unei configurații Vantiv\n"
+"                                vă permite să aceeptați plăți cu diferite carduri de credite\n"
+"                                (de exemplu:  Visa, MasterCard, Discovery, American Express, ...). După configurarea acestei\n"
+"                                configurații, ar trebui să o asociați cu o metodă de plată la punctul de vânzare."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "ABOVE AMOUNT PURSUANT"
+msgstr "PESTE SUMA URMĂTOARE"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "APPROVAL CODE:"
+msgstr "COD DE APROBARE:"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Regulă cod de bare"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "CARDHOLDER WILL PAY CARD ISSUER"
+msgstr "DEȚINĂTORUL DE CARD VA PLĂTI EMITENTUL DE CARD"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
+msgid "Card Brand"
+msgstr "Tip Card"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_number
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
+msgid "Card Number"
+msgstr "Număr card"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_prefixed_card_number
+msgid "Card Number Prefix"
+msgstr "Prefix Număr Card"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
+msgid "Card Owner Name"
+msgstr "Nume propietar card"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
+msgid "Card Reader"
+msgstr "Cititor Card"
+
+#. module: pos_mercury
+#: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
+msgid "Configure your card reader"
+msgstr "Configurați-vă cititorul de carduri"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Could not read card"
+msgstr "Nu am putut citi cardul"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_uid
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_date
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: pos_mercury
+#: model:ir.model.fields.selection,name:pos_mercury.selection__barcode_rule__type__credit
+msgid "Credit Card"
+msgstr "Carte de credit"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid ""
+"Credit card refunds are not supported. Instead select your credit card "
+"payment method, click 'Validate' and refund the original charge manually "
+"through the Vantiv backend."
+msgstr ""
+"Rambursările cu cardul de credit nu sunt acceptate. În schimb, selectați "
+"metoda de plată cu cardul de credit, faceți clic pe 'Validate' și rambursați"
+" manual taxa originală prin backend-ul Vantiv."
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+msgid ""
+"For quickly handling orders: just swiping a credit card when on the payment screen\n"
+"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"                                the card."
+msgstr ""
+"Pentru gestionarea rapidă a comenzilor: glisați doar un card de credit când sunteți pe ecranul de plată\n"
+"                                (fără a fi apăsat nimic altceva) va încasa suma totală a comenzii către\n"
+"                                card."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
+#, python-format
+msgid "Go to payment screen to use cards"
+msgstr "Accesați ecranul de plată pentru a utiliza carduri"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Handling transaction..."
+msgstr "Negociere tranzacție..."
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__id
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
+msgid "ID of the merchant to authenticate him on the payment provider server"
+msgstr ""
+"ID-ul comerciantului pentru a-l autentifica pe serverul furnizorului de "
+"plăți"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+msgid ""
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
+"                                to create one."
+msgstr ""
+"Dacă nu aveți deja un cont Vantiv, contactați Vantiv la +1 (800) 846-4472\n"
+"                                pentru a crea unul."
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
+msgid "Invoice number from Vantiv Pay"
+msgstr "Numărul facturii de la Vantiv Pay"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_uid
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_date
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
+msgid "Merchant ID"
+msgstr "ID Comerciant"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
+msgid "Merchant Password"
+msgstr "Parolă Comerciant"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
+msgid "Name of this Vantiv configuration"
+msgstr "Numele acestei configurări Vantiv"
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
+#, python-format
+msgid "No Vantiv configuration associated with the payment method."
+msgstr "Nu există configurație Vantiv asociată cu metoda de plată."
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
+#, python-format
+msgid "No opened point of sale session for user %s found."
+msgstr "Nicio sesiune deschisă de punct de vânzare a utilizatorului%s gasită."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "No response from Vantiv (Vantiv down?)"
+msgstr "Niciun răspuns de la Vantiv (Vantiv down?)"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "No response from server (connected to network?)"
+msgstr "Niciun răspune de la server (conectat la rețea?)"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Odoo error while processing transaction."
+msgstr "Eroare Odoo la procesarea tranzacției"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
+#, python-format
+msgid "Ok"
+msgstr "Ok"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
+#, python-format
+msgid "Online Payment"
+msgstr "Plata online"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Partially approved"
+msgstr "Parțial confirmat"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
+msgid ""
+"Password of the merchant to authenticate him on the payment provider server"
+msgstr ""
+"Parola comerciantului pentru a-l autentifica pe serverul furnizorului de "
+"plăți"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Pay with: "
+msgstr "Plătiți cu:"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
+msgid "Payment record number from Vantiv Pay"
+msgstr "Număr înregistrare plată de la Vantiv Pay"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
+msgid "Payment reference number from Vantiv Pay"
+msgstr "Număr de referință de plată de la Vantiv Pay"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Please setup your Vantiv merchant account."
+msgstr "Vă rugăm să vă configurați contul de comerciant Vantiv."
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Comenzile Punctului de vânzare"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metode plată Punct de Vânzare"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Plăți Punct de Vânzare"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Vantiv Configuration"
+msgstr "Configurare Vantiv la punctul de vânzare"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Vantiv Transaction"
+msgstr "Tranzacție Vantiv la punctul de vânzare"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Refunds not supported"
+msgstr "Restituirea nu este suportată"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Reversal failed, sending VoidSale..."
+msgstr "Inversare eșuată, trimitere VoidSale ..."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Reversal succeeded"
+msgstr "Inversarea reușită"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Sending reversal..."
+msgstr "Trimitere Inversare..."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "TO CARDHOLDER AGREEMENT"
+msgstr "LA ACORDUL DEȚINĂTORULUI DE CARD"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_brand
+msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
+msgstr "Tipul cardului de plată (ex. Visa, Master Card, ...)"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_prefixed_card_number
+msgid "The card number used for the payment."
+msgstr "Numărul de card folosit pentru plată"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
+msgid "The configuration of Vantiv used for this journal"
+msgstr "Configurația Vantiv utilizată pentru acest jurnal"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
+msgid "The last 4 numbers of the card used to pay"
+msgstr "Ultimile 4 cifre de pe card folosite pentru plată"
+
+#. module: pos_mercury
+#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_owner_name
+msgid "The name of the card owner"
+msgstr "Numele deținătorului de card"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid ""
+"This can be caused by a badly executed swipe or by not having your keyboard "
+"layout set to US QWERTY (not US International)."
+msgstr ""
+"Acest lucru poate fi cauzat de o glisare executată greșit sau de faptul că "
+"aspectul tastaturii nu este setat la US QWERTY (nu la US International)."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Transaction approved"
+msgstr "Tranzacție aprobată"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
+msgid "Type"
+msgstr "Tip"
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+msgid ""
+"Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
+"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                can be swiped through the card reader device."
+msgstr ""
+"Utilizarea integrării Vantiv în punctul de vânzare este ușoară: trebuie doar să apăsați pe\n"
+"                                metoda de plată asociată. După aceea, suma poate fi ajustată (de exemplu, pentru rambursare)\n"
+"                               la fel ca pe orice altă linie de plată. Ori de câte ori este configurată linia de plată, un card\n"
+"                                poate fi glisat prin dispozitivul cititor de carduri."
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
+msgid "Vantiv Accounts"
+msgstr "Conturi Vantiv"
+
+#. module: pos_mercury
+#: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
+#: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
+msgid "Vantiv Configurations"
+msgstr "Configurări Vantiv"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
+msgid "Vantiv Credentials"
+msgstr "Acreditare Vantiv"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
+msgid "Vantiv invoice number"
+msgstr "Numărul facturii Vantiv"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
+msgid "Vantiv record number"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
+msgid "Vantiv reference number"
+msgstr "Numărul de referință Vantiv"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "VoidSale succeeded"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
+#, python-format
+msgid "WAITING FOR SWIPE"
+msgstr ""
+
+#. module: pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+msgid ""
+"We currently support the MagTek Dynamag card reader device. It can be connected\n"
+"                                directly to the Point Of Sale device or it can be connected to the IoTBox."
+msgstr ""
+"În prezent, acceptăm dispozitivul de citire a cardurilor MagTek Dynamag. Poate fi conectat\n"
+"                                direct la dispozitivul Point Of Sale sau poate fi conectat la IoTBox."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "X______________________________"
+msgstr "X______________________________"

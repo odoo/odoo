@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="crm_team_view_search" model="ir.ui.view">
+        <field name="name">crm.team.view.search</field>
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <search string="Salesteams Search">
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="member_ids"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Team Leader" name="team_leader" domain="[]" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_team_view_form" model="ir.ui.view">
+        <field name="name">crm.team.form</field>
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <form string="Sales Team">
+                <div class="alert alert-info text-center" role="alert"
+                    attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('member_warning', '=', False)]}">
+                    <field name="member_warning"/>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Sales Team"/>
+                        <h1>
+                            <field class="text-break" name="name" placeholder="e.g. North America"/>
+                        </h1>
+                        <div name="options_active"/>
+                    </div>
+                    <group>
+                        <group name="left" string="Team Details">
+                            <field name="active" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="is_membership_multi" invisible="1"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="member_company_ids" invisible="1"/>
+                        </group>
+                        <group name="right">
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Members" name="members_users">
+                            <field name="member_ids" mode="kanban"
+                                class="w-100">
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="avatar_128"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="o_kanban_card_content d-flex">
+                                                    <div>
+                                                        <img t-att-src="kanban_image('res.users', 'avatar_128', record.id.raw_value)"
+                                                            class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                                    </div>
+                                                    <div class="oe_kanban_details d-flex flex-column ml-3">
+                                                        <strong class="o_kanban_record_title oe_partner_heading"><field name="name"/></strong>
+                                                        <div class="d-flex align-items-baseline text-break">
+                                                            <i class="fa fa-envelope mr-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <field name="crm_team_member_ids" mode="kanban"
+                                class="w-100"
+                                attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('is_membership_multi', '=', False)]}"
+                                context="{
+                                    'kanban_view_ref': 'sales_team.crm_team_member_view_kanban_from_team',
+                                    'form_view_ref': 'sales_team.crm_team_member_view_form_from_team',
+                                    'tree_view_ref': 'sales_team.crm_team_member_view_tree_from_team',
+                                    'default_crm_team_id': active_id,
+                                }"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" help="Follow this salesteam to automatically track the events associated to users of this team."/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- SALES TEAMS TREE VIEW + MUTI_EDIT -->
+    <record id="crm_team_view_tree" model="ir.ui.view">
+        <field name="name">crm.team.tree</field>
+        <field name="model">crm.team</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Team" sample="1" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="active" invisible="1"/>
+                <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_team_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.view.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right"><field name="user_id"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Case Teams Salesteams dashboard view -->
+   <record id="crm_team_view_kanban_dashboard" model="ir.ui.view" >
+        <field name="name">crm.team.view.kanban.dashboard</field>
+        <field name="model">crm.team</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_crm_team_kanban" create="0" sample="1">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="member_ids"/>
+                <field name="color"/>
+                <field name="currency_id"/>
+                <field name="is_favorite"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary o_text_overflow"><field name="name"/></div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row o_kanban_card_upper_content">
+                                    <div class="col-4 o_kanban_primary_left" name="to_replace_in_sale_crm">
+                                        <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
+                                    </div>
+                                    <div class="col-8 o_kanban_primary_right" style="padding-bottom:0;">
+                                        <t name="first_options"/>
+                                        <t name="second_options"/>
+                                        <t name="third_options"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 o_kanban_primary_bottom">
+                                        <t t-call="SalesTeamDashboardGraph"/>
+                                    </div>
+                                </div>
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                <div class="row">
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </div>
+                                        <div name="o_team_kanban_report_separator"></div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
+                                    <div role="menuitem" aria-haspopup="true" class="col-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
+                                    <div role="menuitem" class="col-4">
+                                        <a class="dropdown-item" type="edit">Configuration</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="SalesTeamDashboardGraph">
+                        <div t-if="record.dashboard_graph_data.raw_value" class="o_sales_team_kanban_graph_section">
+                            <field name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="'bar'"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Sales Teams Actions -->
+    <record id="crm_team_action_sales" model="ir.actions.act_window">
+        <field name="name">Sales Teams</field>
+        <field name="res_model">crm.team</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'in_sales_app': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new sales team
+            </p><p>
+                Use Sales Teams to organize your sales departments.
+                Each team will work with a separate pipeline.
+            </p>
+        </field>
+    </record>
+
+      <record id="crm_team_action_pipeline" model="ir.actions.act_window">
+        <field name="name">Teams</field>
+        <field name="res_model">crm.team</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new sales team
+            </p><p>
+                Use Sales Teams to organize your sales departments.
+                Each team will work with a separate pipeline.
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_team_action_config" model="ir.actions.act_window">
+        <field name="name">Sales Teams</field>
+        <field name="res_model">crm.team</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Sales Team
+            </p><p>
+                Use Sales Teams to organize your sales departments and draw up reports.
+            </p>
+        </field>
+    </record>
+
+</data>
+</odoo>

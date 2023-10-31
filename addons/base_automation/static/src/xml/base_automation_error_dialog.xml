@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="base_automation.ErrorDialogBody" t-inherit="web.ErrorDialogBody" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@role='alert']" position="inside">
+            <p>
+                The error occurred during the execution of the automated action
+                "<t t-esc="actionName"/>"
+                (ID: <t t-esc="actionId"/>).
+                <br/>
+            </p>
+            <p t-if="isUserAdmin">
+                You can disable this automated action or edit it to solve the issue.<br/>
+                Disabling this automated action will enable you to continue your workflow
+                but any data created after this could potentially be corrupted,
+                as you are effectively disabling a customization that may set
+                important and/or required fields.
+            </p>
+            <p t-else="">
+                You can ask an administrator to disable or correct this automated action.
+            </p>
+        </xpath>
+        <xpath expr="//div[@role='alert']//button" position="after">
+            <t t-if="isUserAdmin">
+                <button class="btn btn-secondary mt4 o_disable_action_button" t-on-click.prevent="disableAction">
+                    <i class="fa fa-ban mr8"/>Disable Action
+                </button>
+                <button class="btn btn-secondary mt4 o_edit_action_button" t-on-click.prevent="editAction">
+                    <i class="fa fa-edit mr8"/>Edit action
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

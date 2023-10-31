@@ -1,0 +1,79 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon_delivery
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_program
+msgid "Coupon Program"
+msgstr "쿠폰 프로그램"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "쿠폰 혜택"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"할인 - 보상은 할인으로 제공됩니다.\n"
+"무료 상품 - 무료 상품이 보상으로 제공됩니다.\n"
+"무료 배송 - 무료 배송이 보상금으로 제공됩니다(배송 모듈 필요)."
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr ""
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:0
+#: model:ir.model.fields.selection,name:sale_coupon_delivery.selection__coupon_reward__reward_type__free_shipping
+#, python-format
+msgid "Free Shipping"
+msgstr "무료 배송"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "보상 유형"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon.py:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:0
+#, python-format
+msgid "The shipping costs are not in the order lines."
+msgstr "운송 비용이 주문 내역에 없습니다."

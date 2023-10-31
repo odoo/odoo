@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Message" owl="1">
+        <div class="o_Message position-relative pt-1"
+            t-att-class="{
+                'o_Message_active': isActive,
+                'o-clicked': state.isClicked,
+                'o-discussion': messageView and (messageView.message.is_discussion or messageView.message.is_notification),
+                'o-has-message-selection': threadView and threadView.replyingToMessageView,
+                'o-highlighted': messageView and (messageView.message.isHighlighted or messageView.isHighlighted),
+                'o-mobile': messaging and messaging.device.isMobile,
+                'o-not-discussion': messageView and !(messageView.message.is_discussion or messageView.message.is_notification),
+                'o-notification': messageView and messageView.message.message_type === 'notification',
+                'o-selected': isSelected,
+                'o-squashed': messageView and messageView.isSquashed,
+                'o-starred': messageView and messageView.message.isStarred,
+                'mt-3': messageView and !messageView.isSquashed,
+            }" role="group" t-att-aria-label="messageView and messageView.message.messageTypeText" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
+        >
+            <t t-if="messageView" name="rootCondition">
+                <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
+                <div t-if="isActive and messageView.messageActionList" class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
+                    <MessageActionList messageActionListLocalId="messageView.messageActionList.localId"/>
+                </div>
+                <div class="d-flex flex-shrink-0">
+                    <div class="o_Message_highlightIndicator" t-att-class="{ 'o-active': messageView.message.isHighlighted or messageView.isHighlighted }"/>
+                    <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
+                        <t t-if="!messageView.isSquashed">
+                            <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
+                                <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" role="button" tabindex="0" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" t-att-alt="hasAuthorOpenChat ? OPEN_CHAT : ''"/>
+                                <t t-if="messageView.message.author and messageView.message.author.im_status">
+                                    <PartnerImStatusIcon
+                                        class="o_Message_partnerImStatusIcon"
+                                        t-att-class="{
+                                            'o-message-selected': isSelected,
+                                            'o_Message_partnerImStatusIcon-mobile': messaging.device.isMobile,
+                                        }"
+                                        hasOpenChat="hasAuthorOpenChat"
+                                        partnerLocalId="messageView.message.author.localId"
+                                    />
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <t t-if="isActive and messageView.message.date">
+                                <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': isSelected }">
+                                    <t t-esc="shortTime"/>
+                                </div>
+                            </t>
+                            <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
+                                <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="messageView.message.localId" threadLocalId="threadView.thread.localId"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div class="o_Message_core flex-grow-1">
+                        <t t-if="!messageView.isSquashed">
+                            <div class="o_Message_header ml-2">
+                                <t t-if="messageView.message.author">
+                                    <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" role="link" tabindex="0" t-on-click="_onClickAuthorName" title="Open profile">
+                                        <t t-if="messageView.message.originThread">
+                                            <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="messageView.message.author.nameOrDisplayName"/>
+                                        </t>
+                                    </div>
+                                </t>
+                                <t t-elif="messageView.message.guestAuthor">
+                                    <div class="o_Message_authorName text-truncate">
+                                        <t t-esc="messageView.message.guestAuthor.name"/>
+                                    </div>
+                                </t>
+                                <t t-elif="messageView.message.email_from">
+                                    <a class="o_Message_authorName text-truncate" t-attf-href="mailto:{{ messageView.message.email_from }}?subject=Re: {{ messageView.message.subject ? messageView.message.subject : '' }}">
+                                        <t t-esc="messageView.message.email_from"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <div class="o_Message_authorName text-truncate">
+                                        Anonymous
+                                    </div>
+                                </t>
+                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
+                                    <t t-if="messageView.message.failureNotifications.length > 0">
+                                        <span class="o_Message_notificationIconClickable o-error mr-1" role="button" tabindex="0" t-on-click="_onClickFailure">
+                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <Popover>
+                                            <span class="o_Message_notificationIconClickable mr-1">
+                                                <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
+                                            </span>
+                                            <t t-set="opened">
+                                                <NotificationPopover
+                                                    notificationLocalIds="messageView.message.notifications.map(notification => notification.localId)"
+                                                />
+                                            </t>
+                                        </Popover>
+                                    </t>
+                                </t>
+                                <t t-if="messageView.message.date">
+                                    <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="datetime">
+                                        - <t t-esc="messageView.message.dateFromNow"/>
+                                    </div>
+                                </t>
+                                <t t-if="messageView.message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
+                                    <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="messageView.message.localId" threadLocalId="threadView.thread.localId"/>
+                                </t>
+                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread !== threadView.thread">
+                                    <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': isSelected }">
+                                        <t t-if="messageView.message.originThread.model === 'mail.channel'">
+                                            (from <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
+                                        </t>
+                                        <t t-else="">
+                                            on <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="messageView.message.originThread.displayName"><t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">document</t></a>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-if="messageView.message.subject and !messageView.message.isSubjectSimilarToOriginThreadName">
+                            <p class="o_Message_subject mx-2 mb-1">Subject: <t t-esc="messageView.message.subject"/></p>
+                        </t>
+                        <div class="o_Message_content mx-2" t-ref="content">
+                            <t t-if="!messageView.composerViewInEditing">
+                                <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- messageView.message.prettyBody is inserted here from _update() -->
+                            </t>
+                            <t t-if="messageView.composerViewInEditing">
+                                <Composer
+                                    class="o_Message_composer mb-1"
+                                    composerViewLocalId="messageView.composerViewInEditing.localId"
+                                    hasCurrentPartnerAvatar="false"
+                                    hasDiscardButton="false"
+                                    hasMentionSuggestionsBelowPosition="false"
+                                    hasSendButton="false"
+                                    isCompact="true"
+                                    textInputSendShortcuts="['enter']"
+                                    t-ref="composer"
+                                />
+                            </t>
+                            <t t-if="messageView.message.subtype_description and !messageView.message.isBodyEqualSubtypeDescription">
+                                <p t-esc="messageView.message.subtype_description"/>
+                            </t>
+                            <t t-if="trackingValues.length > 0">
+                                <ul class="o_Message_trackingValues">
+                                    <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                        <li>
+                                            <div class="o_Message_trackingValue" role="group">
+                                                <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                                <t t-if="value.old_value">
+                                                    <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
+                                                </t>
+                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                                <t t-if="value.new_value">
+                                                    <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
+                                                </t>
+                                            </div>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </t>
+                        </div>
+                        <AttachmentList t-if="messageView.attachmentList" attachmentListLocalId="messageView.attachmentList.localId"/>
+                        <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
+                            <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
+                                <MessageReactionGroup class="mr-1 mb-1" messageReactionGroupLocalId="messageReactionGroup.localId"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

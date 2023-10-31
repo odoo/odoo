@@ -1,0 +1,87 @@
+// = jQueryUI dropdown adaptations
+// ----------------------------------------------------------------------------
+.ui-widget.ui-autocomplete {
+    top: 0;       // Compute initial position
+    min-width: 0; // Compute initial width
+
+    // Needed because .ui-widget are rendered at a
+    // lower stacking contex compared to modals.
+    z-index: $zindex-modal + 1;
+
+    .ui-menu-item {
+        > a {
+            &.dropdown-item {
+                padding: $o-dropdown-vpadding $o-dropdown-hpadding;
+            }
+            &.ui-state-active {
+                margin: 0;
+                border: none;
+                font-weight: $font-weight-normal;
+                color: $dropdown-link-hover-color;
+                background-color: $dropdown-link-hover-bg;
+            }
+        }
+
+        &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
+            text-indent: $o-dropdown-hpadding * .5;
+        }
+
+        &.o_m2o_start_typing, &.o_m2o_no_result {
+            font-style: italic;
+            cursor: default;
+            a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {
+                background: none;
+            }
+        }
+    }
+}
+
+// = Legacy submenus
+// Workaround appling owl 'vertical nested menu' design.
+// Should be removed once we'll support the 'horizontal' design.
+// ----------------------------------------------------------------------------
+.o_inline_dropdown {
+    .dropdown-menu {
+        position: relative;
+        border: 0;
+        padding-top: 0;
+        box-shadow: none;
+
+        > .dropdown-item {
+            padding-left: $dropdown-item-padding-x * 1.5;
+        }
+    }
+}
+
+// TODO probably remove those next rules that target dropdown main classes once
+// the backend searchbar has been refactored to use OWL dropdown components and
+// to stop using the BS4 "focus" class which is not part of BS5 anymore.
+// See the commit that introduced this comment for more details.
+
+.dropdown-menu {
+    .dropdown-toggle:focus, .dropdown-item:focus {
+        background-color: transparent;
+        outline: none;
+    }
+    .dropdown-toggle.focus, .dropdown-item.focus {
+        background-color: $dropdown-link-hover-bg;
+    }
+}
+
+.dropdown-item:not(.disabled):not(:disabled) {
+    cursor: pointer;
+}
+
+button.dropdown-toggle {
+    &.active, &:hover, &:focus, &:active {
+        outline: none;
+        box-shadow: none !important;
+    }
+    &.dropdown-item {
+        &::after, &::before {
+            // Changes the placement of bootstrap dropdown carets for subdropdowns
+            @include o-position-absolute($right: 0, $top: 0);
+            transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
+        }
+    }
+}

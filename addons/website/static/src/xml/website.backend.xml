@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="WidgetWebsiteButton" class="o_stat_info published">
+        <span class="o_stat_text o_value"/>
+        <span class="o_stat_text">On Website</span>
+    </div>
+
+    <t t-name="WidgetWebsiteButtonIcon">
+        <button type="button" class="btn oe_stat_button">
+            <i class="fa fa-fw o_button_icon fa-globe"/>
+            <div class="o_stat_info">
+                <span class="o_stat_text">Go to<br/>Website</span>
+            </div>
+        </button>
+    </t>
+
+    <t t-name="website.WebsiteDashboardMain">
+        <div class="o_dashboards">
+            <div class="container-fluid o_website_dashboard">
+                <t t-call="website.dashboard_header"/>
+                <t t-call="website.dashboard_content"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.dashboard_header">
+        <div class="row o_dashboard_common"/>
+    </t>
+
+    <t t-name="website.dashboard_content">
+        <div class="o_website_dashboard_content">
+            <t t-call="website.google_analytics_content"/>
+        </div>
+    </t>
+    <t t-name="website.google_analytics_content">
+        <div class="row o_dashboard_visits" t-if="widget.groups.website_designer">
+            <div class="col-12 o_box">
+                <h2>Visits</h2>
+                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                    <div class="row js_analytics_components"/>
+                    <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                </div>
+                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-lg-12">
+                    <div class="o_demo_background">
+                        <div class="o_layer">
+                        </div>
+                        <div class="o_buttons text-center">
+                            <h3>There is no data currently available.</h3>
+                            <button class="btn btn-primary js_link_analytics_settings d-block mx-auto mb8">Connect Google Analytics</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <div t-name="website.unauthorized_analytics" class="col-12 js_unauthorized_message mb16">
+        <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
+        <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+        <p t-if="reason === 'not_initialized'">
+            Google deprecated both its "Universal Analytics" and "Google Sign-In" API. It means that only accounts and keys created before 2020 will be able to integrate their Analytics dashboard in Odoo (or any other website). This will be possible only up to mid 2023. After that, those services won't work anymore, at all.<br />
+            New Google Analytics accounts and keys are now using Google Analytics 4 which, for now, can't be integrated/embed in external websites.<br />
+            Those accounts should now check their Analytics dashboard in the Google platform directly.
+        </p>
+        <span t-if="reason === 'not_initialized'">Google Analytics initialization failed. Maybe this domain is not whitelisted in your Google Analytics project for this client ID.</span>
+    </div>
+
+    <div t-name="website.ga_dialog_content">
+        Your Measurement ID: <input type="text" name="ga_analytics_key" placeholder="G-XXXXXXXXXX" t-att-value="ga_analytics_key" style="width: 100%"></input>
+        <a href="https://support.google.com/analytics/answer/9304153" target="_blank">
+            <i class="fa fa-arrow-right"/>
+            How to get my Measurement ID
+        </a>
+        <br/><br/>
+        Your Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
+        <a href="https://www.odoo.com/documentation/15.0/applications/websites/website/optimize/google_analytics_dashboard.html" target="_blank">
+            <i class="fa fa-arrow-right"/>
+            How to get my Client ID
+        </a>
+    </div>
+
+    <t t-name="website.DateRangeButtons">
+        <!-- TODO: Hide in mobile as it is going to push in control panel and it breaks UI, maybe we will improve it in future -->
+        <div class="btn-group o_date_range_buttons d-none d-md-inline-flex float-right">
+            <button class="btn btn-secondary js_date_range active" data-date="week">Last Week</button>
+            <button class="btn btn-secondary js_date_range" data-date="month">Last Month</button>
+            <button class="btn btn-secondary js_date_range" data-date="year">Last Year</button>
+        </div>
+        <div class="btn-group d-none d-md-inline-block float-right" style="margin-right: 20px;">
+            <t t-foreach="widget.websites" t-as="website">
+                <button t-attf-class="btn btn-secondary js_website #{website.selected ? 'active' : ''}"
+                        t-att-data-website-id="website.id">
+                    <t t-esc="website.name"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website.GoToButtons">
+        <a role="button" href="/" class="btn btn-primary" title="Go to Website">
+            Go to Website
+        </a>
+    </t>
+
+</templates>

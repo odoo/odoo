@@ -1,0 +1,79 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon_delivery
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_program
+msgid "Coupon Program"
+msgstr "Kupónový program"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "Odmena za kupón"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"Zľava - Odmena bude poskytnutá ako zľava.\n"
+"Bezplatný produkt - bezplatný produkt bude poskytnutý ako odmena\n"
+"Doprava zadarmo - Doprava zdarma bude poskytnutá ako odmena (potrebujete doručovací modul)"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr ""
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:0
+#: model:ir.model.fields.selection,name:sale_coupon_delivery.selection__coupon_reward__reward_type__free_shipping
+#, python-format
+msgid "Free Shipping"
+msgstr "Dopravné zdarma"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "Typ odmeny"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Objednávka "
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Položka objednávok"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon.py:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:0
+#, python-format
+msgid "The shipping costs are not in the order lines."
+msgstr "Náklady na dopravu nie sú uvedené v objednávkových položkách."

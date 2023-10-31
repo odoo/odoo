@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        Procurement
+        -->
+
+        <record id="procurement_group_form_view" model="ir.ui.view">
+            <field name="name">procurement.group.form</field>
+            <field name="model">procurement.group</field>
+            <field name="arch" type="xml">
+                <form string="Procurement group">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(do_view_pickings)d" string="Transfers" type="action" class="oe_stat_button" icon="fa-truck"/>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="move_type"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Stock Rules -->
+
+        <record id="view_stock_rule_filter" model="ir.ui.view">
+            <field name="name">stock.rule.select</field>
+            <field name="model">stock.rule</field>
+            <field name="arch" type="xml">
+                <search string="Search Procurement">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Route' name="groupby_route" context="{'group_by': 'route_id'}"/>
+                        <filter string='Warehouse' name="groupby_warehouse" context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- <Rules> -->
+        <record id="view_stock_rule_tree" model="ir.ui.view">
+            <field name="name">stock.rule.tree</field>
+            <field name="model">stock.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Rules">
+                    <field name="action"/>
+                    <field name="location_src_id" options="{'no_create': True}"/>
+                    <field name="location_id" options="{'no_create': True}"/>
+                    <field name="route_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_rule_form" model="ir.ui.view">
+            <field name="name">stock.rule.form</field>
+            <field name="model">stock.rule</field>
+            <field name="arch" type="xml">
+                <form string="Rules">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="picking_type_code_domain" invisible="1"/>
+                                <field name="action"/>
+                                <field name="picking_type_id"/>
+                                <field name="location_src_id" options="{'no_create': True}" attrs="{'required': [('action', 'in', ['pull', 'push', 'pull_push'])]}"/>
+                                <field name="location_id" options="{'no_create': True}"/>
+                                <field name="auto" attrs="{'invisible': [('action', 'not in', ['push', 'pull_push'])]}"/>
+                                <field name="procure_method" attrs="{'invisible': [('action', 'not in', ['pull', 'pull_push'])]}"/>
+                            </group>
+                            <group>
+                                <div colspan="2">
+                                    <label for="rule_message" invisible="1"/>
+                                    <div>
+                                        <field name="rule_message" readonly="1"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group name="apply_on" string="Applicability">
+                                <field name="route_id"/>
+                                <field name="warehouse_id" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one"/>
+                                <field name="route_company_id" invisible="1"/>
+                                <field name="company_id" options="{'no_create': True}" attrs="{'required': [('action', '=', 'push')]}" groups="base.group_multi_company"/>
+                                <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            </group>
+                            <group name="propagation_group" string="Propagation" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
+                                <field name="group_propagation_option"/>
+                                <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                                <field name="propagate_cancel"/>
+                                <field name="propagate_carrier" groups="base.group_no_one"/>
+                                <field name="propagate_warehouse_id"/>
+                            </group>
+                            <group string="Options" attrs="{'invisible': [('action', 'not in', ['pull', 'push', 'pull_push'])]}">
+                                <field name="partner_address_id" attrs="{'invisible': [('action', '=', 'push')]}"/>
+                                <label for="delay"/>
+                                <div><field name="delay" class="oe_inline"/> days</div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Form view for route -->
+
+        <record id="view_route_rule_form" model="ir.ui.view">
+            <field name="name">stock.rule.form</field>
+            <field name="model">stock.rule</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.view_stock_rule_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='route_id']" position="replace"></xpath>
+                <xpath expr="//group[@name='apply_on']" position="attributes">
+                    <attribute name="groups">base.group_multi_company,base.group_no_one</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_rules_form" model="ir.actions.act_window">
+            <field name="name">Rules</field>
+            <field name="res_model">stock.rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_rules_form" id="menu_action_rules_form"
+        parent="menu_warehouse_config" sequence="4" groups="stock.group_adv_location"/>
+
+    </data>
+</odoo>

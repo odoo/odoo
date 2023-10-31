@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR WORK ENTRY -->
+
+    <record id="hr_work_entry_action_conflict" model="ir.actions.act_window">
+        <field name="name">Work Entry</field>
+        <field name="res_model">hr.work.entry</field>
+        <field name="context">{'search_default_work_entries_error': 1}</field>
+        <field name="view_mode">tree,calendar,form,pivot</field>
+    </record>
+
+    <record id="hr_work_entry_action" model="ir.actions.act_window">
+        <field name="name">Work Entry</field>
+        <field name="res_model">hr.work.entry</field>
+        <field name="view_mode">calendar,tree,form,pivot</field>
+    </record>
+
+    <record id="hr_work_entry_view_calendar" model="ir.ui.view">
+        <field name="name">hr.work.entry.calendar</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <calendar string="Work Entry"
+                date_start="date_start"
+                date_stop="date_stop"
+                mode="month"
+                quick_add="False"
+                color="color"
+                event_limit="5">
+                <!-- Sidebar favorites filters -->
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="avatar_128"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.form</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <form string="Work Entry" >
+                <header>
+                    <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
+                </header>
+                 <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
+                    Note: Validated work entries cannot be modified.
+                </div>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Work Entry Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="work_entry_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                            <label for="duration" string="Period"/>
+                            <div class="o_row">
+                                <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
+                            </div>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_view_tree" model="ir.ui.view">
+        <field name="name">hr.work.entry.tree</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1" sample="1">
+                <field name="name"/>
+                <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="duration" readonly="1"/>
+                <field name="state"/>
+                <field name="date_start" string="Beginning" readonly="1"/>
+                <field name="date_stop" string="End" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_view_search" model="ir.ui.view">
+        <field name="name">hr.work.entry.filter</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Entry">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="work_entry_type_id"/>
+                <field name="name"/>
+                <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
+                <separator/>
+                <filter name="date_filter" string="Date" date="date_start"/>
+                <filter name="current_month" string="Current Month" domain="[
+                    ('date_stop', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('date_start', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <separator/>
+                <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
+                <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
+                <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- HR WORK ENTRY TYPE -->
+
+    <record id="hr_work_entry_type_view_search" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.search</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Entry Type">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_action" model="ir.actions.act_window">
+        <field name="name">Work Entry Types</field>
+        <field name="res_model">hr.work.entry.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
+    </record>
+
+    <record id="hr_work_entry_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.tree</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="color" widget="color_picker"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <form string="Work Entry Type" >
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Work Entry Type Name"/>
+                        </h1>
+                    </div>
+                    <group name="main_group">
+                        <group name="identification">
+                            <field name="code"/>
+                            <field name="active" invisible="1"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group name="other">
+                        <group name="time_off" string="Time Off Options"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_kanban" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.kanban.view</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span class="text-muted o_kanban_record_subtitle"><field name="code"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

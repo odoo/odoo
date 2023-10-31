@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_visitor_event_0" model="website.visitor">
+        <field name="name">Edwin Hansen</field>
+        <field name="partner_id" ref="base.res_partner_address_5"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="website_visitor_event_1" model="website.visitor">
+        <field name="name">Soham Palmer</field>
+        <field name="partner_id" ref="base.res_partner_address_11"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="website_visitor_event_2" model="website.visitor">
+        <field name="name">Philipe J. Fry</field>
+        <field name="partner_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+    <record id="website_visitor_event_2_1" model="website.visitor">
+        <field name="name">Philipe J. Fry (old)</field>
+        <field name="parent_id" ref="website_event.website_visitor_event_2"/>
+        <field name="partner_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+</odoo>

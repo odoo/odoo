@@ -1,0 +1,95 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcInvitationCard {
+    display: flex;
+    flex-direction: column;
+    margin: map-get($spacers, 2);
+    padding: map-get($spacers, 5);
+}
+
+.o_RtcInvitationCard_buttonList {
+    width: 100%;
+    display: flex;
+    margin-top: map-get($spacers, 4);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.o_RtcInvitationCard_buttonListButton {
+    padding: map-get($spacers, 2);
+}
+
+.o_RtcInvitationCard_buttonListButtonIcon {
+    margin: map-get($spacers, 3);
+}
+
+.o_RtcInvitationCard_partnerInfo {
+    display: flex;
+    width: 130px;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.o_RtcInvitationCard_partnerInfoImage {
+    margin-bottom: map-get($spacers, 2);
+    width: 70%;
+    height: 70%;
+}
+
+.o_RtcInvitationCard_partnerInfoName {
+    overflow: hidden;
+    width: 100%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcInvitationCard {
+    border-radius: 3px;
+    background-color: gray('900');
+    border: 1px solid black;
+}
+
+.o_RtcInvitationCard_buttonListButton {
+    border-radius: 100%;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+}
+
+.o_RtcInvitationCard_buttonListAccept {
+    background-color: theme-color('success');
+
+    &:hover {
+        background-color: darken(theme-color('success'), 10%);
+    }
+}
+
+.o_RtcInvitationCard_buttonListRefuse {
+    background-color: theme-color('danger');
+
+    &:hover {
+        background-color: darken(theme-color('danger'), 10%);
+    }
+}
+
+.o_RtcInvitationCard_partnerInfoImage {
+    border: 3px solid gray;
+    cursor: pointer;
+}
+
+.o_RtcInvitationCard_partnerInfoName {
+    font-weight: bold;
+    @include text-truncate();
+    text-align: center;
+}
+
+.o_RtcInvitationCard_partnerInfoText {
+    font-style: italic;
+    opacity: 0.9;
+}

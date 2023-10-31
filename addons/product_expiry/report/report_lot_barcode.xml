@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_lot_label_expiry" inherit_id="stock.report_lot_label">
+    <xpath expr="//tr[@name='lot_name']" position="after">
+        <tr t-if="o.use_expiration_date">
+            <td>
+                <div t-if="o.use_date">
+                    Best before:
+                    <span style="float:right;" t-field="o.use_date" t-options='{"widget": "date"}'/>
+                </div>
+                <div t-if="o.expiration_date">
+                    Use by:
+                    <span style="float:right;" t-field="o.expiration_date" t-options='{"widget": "date"}'/>
+                </div>
+            </td>
+        </tr>
+    </xpath>
+</template>
+
+<template id="label_lot_template_view_expiry" inherit_id="stock.label_lot_template_view">
+    <xpath expr="//t" position="replace">
+        <t t-foreach="docs" t-as="lot">
+            <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^FO100,100
+^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
+<t t-if="lot.use_expiration_date and lot.use_date">
+^FO100,150
+^A0N,44,33^FDBest before: <t t-esc="lot.use_date" t-options='{"widget": "date"}'/>^FS
+<t t-if="lot.expiration_date">
+^FO100,200
+^A0N,44,33^FDUse by: <t t-esc="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^FO100,250^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="lot.name"/>^FS
+</t>
+<t t-else="">
+^FO100,200^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="lot.name"/>^FS
+</t>
+</t>
+<t t-elif="lot.use_expiration_date and lot.expiration_date">
+^FO100,150
+^A0N,44,33^FDUse by: <t t-esc="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^FO100,200^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="lot.name"/>^FS
+</t>
+<t t-else="">
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="lot.name"/>^FS
+</t>
+^XZ
+            </t>
+        </t>
+    </xpath>
+</template>
+</odoo>

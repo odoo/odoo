@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Badge" id="s_badge">
+    <span class="s_badge badge badge-secondary o_animable" data-name="Badge">
+        <i class="fa fa-1x fa-fw fa-folder o_not-animable"/>Category
+    </span>
+</template>
+
+<template id="s_badge_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-selector=".s_badge">
+            <we-colorpicker string="Color" data-name="badge_colorpicker_opt"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="badge-"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_badge_000_variables_scss" model="ir.asset">
+    <field name="name">Badge 000 variables SCSS</field>
+    <field name="bundle">web._assets_primary_variables</field>
+    <field name="path">website/static/src/snippets/s_badge/000_variables.scss</field>
+</record>
+
+<record id="website.s_badge_000_scss" model="ir.asset">
+    <field name="name">Badge 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_badge/000.scss</field>
+</record>
+
+</odoo>

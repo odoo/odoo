@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model='l10n_latam.document.type' id='document_type01'>
+        <field name='sequence'>10</field>
+        <field name='code'>01</field>
+        <field name='report_name'>Factura electrónica</field>
+        <field name='name'>Factura</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type02'>
+        <field name='sequence'>20</field>
+        <field name='code'>03</field>
+        <field name='report_name'>Boleta de venta electrónica</field>
+        <field name='name'>Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type07'>
+        <field name='sequence'>40</field>
+        <field name='code'>07</field>
+        <field name='report_name'>Nota de Crédito electrónica</field>
+        <field name='name'>Nota de Crédito</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type07b'>
+        <field name='sequence'>41</field>
+        <field name='code'>07</field>
+        <field name='report_name'>Nota de Crédito Boleta electrónica</field>
+        <field name='name'>Nota de Crédito Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type08'>
+        <field name='sequence'>50</field>
+        <field name='code'>08</field>
+        <field name='report_name'>Nota de Débito electrónica</field>
+        <field name='name'>Nota de Débito</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type08b'>
+        <field name='sequence'>50</field>
+        <field name='code'>08</field>
+        <field name='report_name'>Nota de débito boleta electrónica </field>
+        <field name='name'>Nota de Débito Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type20'>
+        <field name='sequence'>60</field>
+        <field name='code'>20</field>
+        <field name='report_name'>Comprobante de retención</field>
+        <field name='name'>Comprobante de retención</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'/>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type40'>
+        <field name='sequence'>60</field>
+        <field name='code'>40</field>
+        <field name='report_name'>Comprobante de percepción</field>
+        <field name='name'>Comprobante de percepción</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>P</field>
+        <field name='internal_type'/>
+    </record>
+</odoo>

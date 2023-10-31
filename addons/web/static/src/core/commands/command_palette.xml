@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.CommandPalette" owl="1">
+    <div>
+      <div class="o_command_palette_search">
+        <input type="text" data-allow-hotkeys="true" t-model="state.searchValue" t-on-input="onDebouncedSearchInput" autofocus="" t-att-placeholder="state.placeholder"/>
+        <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
+      </div>
+
+      <div class="o_command_palette_listbox">
+        <div t-if="!state.commands.length" class="o_command_palette_listbox_empty" t-esc="state.emptyMessage"/>
+        <t t-if="!isFuzzySearch">
+          <t t-foreach="commandsByCategory" t-as="category">
+
+            <div class="o_command_category" t-key="category.keyId">
+              <t t-foreach="category.commands" t-as="command">
+                <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
+                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
+                  <t t-component="command.Component || DefaultCommandItem" name="command.name" t-props="command.props" t-on-close="props.closeMe()" t-on-execute-command="executeCommand(command)"/>
+                </div>
+              </t>
+            </div>
+
+            <hr t-if="!category_last" />
+
+          </t>
+        </t>
+      </div>
+
+      <div t-if="state.footerTemplate" class="o_command_palette_footer">
+        <t t-call="{{ state.footerTemplate }}"/>
+      </div>
+
+    </div>
+  </t>
+
+  <t t-name="web.DefaultCommandItem" owl="1">
+    <div class="o_command_default">
+      <span t-esc="props.name" />
+    </div>
+  </t>
+
+  <t t-name="web.HotkeyCommandItem" owl="1">
+    <div class="o_command_hotkey">
+      <span t-esc="props.name" />
+      <span>
+        <t t-foreach="getKeysToPress(props)" t-as="key">
+          <kbd t-esc="key" />
+          <span t-if="!key_last"> + </span>
+        </t>
+      </span>
+    </div>
+  </t>
+
+  <t t-name="web.AppIconCommand" owl="1">
+    <div class="o_command_default">
+        <span t-esc="props.name"/>
+        <img t-if="props.webIconData" class="o_app_icon" t-attf-src="{{props.webIconData}}"/>
+        <div t-else="" class="o_app_icon" t-attf-style="background-color:{{props.webIcon.backgroundColor}}" >
+          <i t-att-class="props.webIcon.iconClass" t-attf-style="color:{{props.webIcon.color}}"></i>
+        </div>
+    </div>
+  </t>
+
+</templates>

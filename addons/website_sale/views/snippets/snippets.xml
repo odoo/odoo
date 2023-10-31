@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+    <xpath expr="//t[@id='sale_products_hook']" position="replace">
+        <t t-snippet="website_sale.s_dynamic_snippet_products" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_dynamic_products.svg"/>
+    </xpath>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
+    <xpath expr="." position="inside">
+        <div data-js="WebsiteSaleGridLayout"
+            data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
+            data-no-check="true">
+            <we-input string="Number of products" data-set-ppg="" data-no-preview="true"/>
+            <we-select string="Number of Columns" class="o_wsale_ppr_submenu" data-no-preview="true">
+                <we-button data-set-ppr="2">2</we-button>
+                <we-button data-set-ppr="3">3</we-button>
+                <we-button data-set-ppr="4">4</we-button>
+            </we-select>
+        </div>
+
+        <div data-js="WebsiteSaleProductsItem"
+            data-selector="#products_grid .oe_product"
+            data-no-check="true">
+            <div class="o_wsale_soptions_menu_sizes">
+                <we-title>Size</we-title>
+                <table>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                    </tr>
+                </table>
+            </div>
+
+            <we-row data-name="ribbon_options">
+                <we-select string="Ribbon" class="o_wsale_ribbon_select">
+                    <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
+                    <!-- Ribbons are filled in JS -->
+                </we-select>
+                <we-button data-edit-ribbon="" class="fa fa-edit" data-no-preview="true" data-dependencies="!no_ribbon_opt"/>
+                <we-button data-create-ribbon="" class="fa fa-plus text-success" data-no-preview="true"/>
+            </we-row>
+            <div class="d-none" data-name="ribbon_customize_opt">
+                <we-row string="Ribbon">
+                    <we-input data-set-ribbon-html="" class="o_we_large" data-apply-to=".o_wsale_ribbon_dummy"/>
+                    <we-button class="fa fa-check" data-save-ribbon="" title="Validate" data-no-preview="true"/>
+                    <we-button class="fa fa-trash" data-delete-ribbon="" title="Delete" data-no-preview="true"/>
+                </we-row>
+                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="background-color" data-color-prefix="bg-"/>
+                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="color"/>
+                <we-select string="⌙ Mode">
+                    <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
+                    <we-button data-set-ribbon-mode="tag">Tag</we-button>
+                </we-select>
+                <we-select string="⌙ Position">
+                    <we-button data-set-ribbon-position="left">Left</we-button>
+                    <we-button data-set-ribbon-position="right">Right</we-button>
+                </we-select>
+            </div>
+
+            <div name="reordering" data-no-preview="true">
+                <we-button data-change-sequence="top">Push to top</we-button>
+                <we-button data-change-sequence="up">Push up</we-button>
+                <we-button data-change-sequence="down">Push down</we-button>
+                <we-button data-change-sequence="bottom">Push to bottom</we-button>
+            </div>
+        </div>
+        <div data-selector="#wrapwrap > header"
+            data-no-check="true"
+            groups="website.group_website_designer">
+            <we-checkbox string="Show Empty Cart"
+                        data-customize-website-views="website_sale.header_hide_empty_cart_link|"
+                        data-no-preview="true"
+                        data-reload="/"/>
+        </div>
+        <div data-selector="#product_detail #o-carousel-product" data-no-check="true">
+            <we-button-group string="Thumbnails Position" data-no-preview="true" data-reload="/">
+                <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>
+                <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<template id="product_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="product search bar snippet options">
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
+        <we-button data-set-search-type="products" data-select-data-attribute="products" data-name="search_products_opt" data-form-action="/shop">Products</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
+        <we-button data-set-order-by="list_price asc" data-select-data-attribute="list_price asc" data-dependencies="search_products_opt" data-name="order_price_asc_opt">Price (low to high)</we-button>
+        <we-button data-set-order-by="list_price desc" data-select-data-attribute="list_price desc" data-dependencies="search_products_opt" data-name="order_price_desc_opt">Price (high to low)</we-button>
+        <we-button data-set-order-by="website_sequence asc" data-select-data-attribute="website_sequence asc" data-dependencies="search_products_opt" data-name="order_sequence_asc_opt">Sequence</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
+        <we-checkbox string="Description" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Category" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Price" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Image" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
+            data-apply-to=".search-query"/>
+    </xpath>
+</template>
+
+</odoo>

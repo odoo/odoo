@@ -1,0 +1,194 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Alexandra Jubert, 2021
+# RHTodoo, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_gift_card
+#: model:mail.template,body_html:sale_gift_card.mail_template_gift_card
+msgid ""
+"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                Here is your gift card!\n"
+"            </div>\n"
+"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                <img src=\"/gift_card/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                    <strong t-out=\"format_amount(object.initial_amount, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                    <strong>Gift Card Code</strong>\n"
+"                </p>\n"
+"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Card expires <t t-out=\"format_date(object.expired_date) or ''\">05/05/2021</t></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                    <a t-attf-href=\"{{ object.buy_line_id.order_id.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Use it right now!</a>\n"
+"                </span>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                Voici votre carte cadeau !\n"
+"            </div>\n"
+"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                <img src=\"/gift_card/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                    <strong t-out=\"format_amount(object.initial_amount, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                    <strong>Code Carte Cadeau</strong>\n"
+"                </p>\n"
+"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Votre carte expirera le <t t-out=\"format_date(object.expired_date) or ''\">05/05/2021</t></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                    <a t-attf-href=\"{{ object.buy_line_id.order_id.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Utilisez là dès maintenant !</a>\n"
+"                </span>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr "<span class=\"fa fa-clipboard\"/>Copier"
+
+#. module: sale_gift_card
+#: model:ir.model.fields,field_description:sale_gift_card.field_sale_order_line__generated_gift_card_ids
+msgid "Bought Gift Card"
+msgstr "Carte-cadeau achetée"
+
+#. module: sale_gift_card
+#: model:ir.model.fields,field_description:sale_gift_card.field_gift_card__buy_line_id
+msgid "Buy Line"
+msgstr "Acheter ligne"
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.used_gift_card
+msgid "Code:"
+msgstr "Code :"
+
+#. module: sale_gift_card
+#: model:ir.model.fields,help:sale_gift_card.field_sale_order_line__gift_card_id
+msgid "Deducted from this Gift Card"
+msgstr "Déduit de cette carte-cadeau"
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.used_gift_card
+msgid "Expired Date:"
+msgstr "Date d'expiration :"
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
+msgid "Gift #"
+msgstr "Cadeau #"
+
+#. module: sale_gift_card
+#: model:ir.model,name:sale_gift_card.model_gift_card
+#: model:ir.model.fields,field_description:sale_gift_card.field_sale_order_line__gift_card_id
+msgid "Gift Card"
+msgstr "Cartes-cadeau"
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
+msgid "Gift Card Code"
+msgstr "Code carte cadeau"
+
+#. module: sale_gift_card
+#: model:ir.model.fields,field_description:sale_gift_card.field_sale_order__gift_card_count
+msgid "Gift Card Count"
+msgstr "Nombre de cartes-cadeaux"
+
+#. module: sale_gift_card
+#: code:addons/sale_gift_card/models/sale_order.py:0
+#, python-format
+msgid "Gift Card already used."
+msgstr "Carte cadeau déjà utilisée."
+
+#. module: sale_gift_card
+#: code:addons/sale_gift_card/models/sale_order.py:0
+#, python-format
+msgid "Gift Card are restricted for another user."
+msgstr "Carte cadeau réservée à un autre utilisateur."
+
+#. module: sale_gift_card
+#: model:mail.template,name:sale_gift_card.mail_template_gift_card
+msgid "Gift Card: Send by Email"
+msgstr "Carte cadeau : Envoyer par email"
+
+#. module: sale_gift_card
+#: model:ir.actions.act_window,name:sale_gift_card.gift_card_sale_order_action
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_order_view_extend_gift_card_form
+msgid "Gift Cards"
+msgstr "Cartes cadeau"
+
+#. module: sale_gift_card
+#: code:addons/sale_gift_card/models/sale_order.py:0
+#, python-format
+msgid "Invalid or Expired Gift Card."
+msgstr "Carte cadeau invalide ou expirée."
+
+#. module: sale_gift_card
+#: model:ir.model.fields,field_description:sale_gift_card.field_gift_card__redeem_line_ids
+msgid "Redeems"
+msgstr "Récupère"
+
+#. module: sale_gift_card
+#: model:ir.model.fields,help:sale_gift_card.field_gift_card__buy_line_id
+msgid "Sale Order line where this gift card has been bought."
+msgstr "Ligne de bon de commande où cette carte-cadeau a été achetée."
+
+#. module: sale_gift_card
+#: model:ir.model,name:sale_gift_card.model_sale_order
+msgid "Sales Order"
+msgstr "Commande"
+
+#. module: sale_gift_card
+#: model:ir.model,name:sale_gift_card.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de Commande"
+
+#. module: sale_gift_card
+#: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
+msgid ""
+"You will find below your gift cards code. An email has been sent with it. "
+"You can use it starting right now."
+msgstr ""
+"Vous trouverez ci-dessous votre code carte cadeau. Il vous a également été "
+"envoyé par courriel. Vous pouvez l'utiliser dès maintenant."
+
+#. module: sale_gift_card
+#: model:mail.template,subject:sale_gift_card.mail_template_gift_card
+msgid "Your Gift Card"
+msgstr "Votre carte cadeau"

@@ -1,0 +1,50 @@
+Babel==2.9.1  # min version = 2.6.0 (Focal with security backports)
+chardet==3.0.4
+cryptography==2.6.1  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
+decorator==4.4.2
+docutils==0.16
+ebaysdk==2.1.5
+freezegun==0.3.11; python_version < '3.8'
+freezegun==0.3.15; python_version >= '3.8'
+gevent==1.5.0 ; python_version == '3.7'
+gevent==20.9.0 ; python_version > '3.7' and python_version <= '3.9'
+gevent==21.8.0 ; python_version > '3.9'  # (Jammy)
+greenlet==0.4.15 ; python_version == '3.7'
+greenlet==0.4.17 ; python_version > '3.7' and python_version <= '3.9'
+greenlet==1.1.2 ; python_version  > '3.9'  # (Jammy)
+idna==2.8
+Jinja2==2.11.3 # min version = 2.10.1 (Focal - with security backports)
+libsass==0.18.0
+lxml==4.6.5 # min version = 4.5.0 (Focal - with security backports)
+MarkupSafe==1.1.0
+num2words==0.5.6
+ofxparse==0.19; python_version <= '3.9'
+ofxparse==0.21; python_version > '3.9'  # (Jammy)
+passlib==1.7.3 # min version = 1.7.2 (Focal with security backports)
+Pillow==9.0.1  # min version = 7.0.0 (Focal with security backports)
+polib==1.1.0
+psutil==5.6.7 # min version = 5.5.1 (Focal with security backports)
+psycopg2==2.7.7; sys_platform != 'win32' and python_version < '3.8'
+psycopg2==2.8.6; sys_platform == 'win32' or python_version >= '3.8'
+pydot==1.4.1
+pyopenssl==19.0.0
+PyPDF2==1.26.0
+pypiwin32 ; sys_platform == 'win32'
+pyserial==3.4
+python-dateutil==2.7.3
+python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
+python-stdnum==1.13
+pytz  # no version pinning to avoid OS perturbations
+pyusb==1.0.2
+qrcode==6.1
+reportlab==3.5.59 # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye
+requests==2.25.1 # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
+urllib3==1.26.5 # indirect / min version = 1.25.8 (Focal with security backports)
+vobject==0.9.6.1
+Werkzeug==0.16.1 ; python_version <= '3.9'
+Werkzeug==2.0.2 ; python_version > '3.9'  # (Jammy)
+xlrd==1.1.0; python_version < '3.8'
+xlrd==1.2.0; python_version >= '3.8'
+XlsxWriter==1.1.2
+xlwt==1.3.*
+zeep==3.4.0

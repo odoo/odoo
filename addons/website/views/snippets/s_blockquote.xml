@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Blockquote" id="s_blockquote">
+    <blockquote class="s_blockquote s_blockquote_classic w-100 mx-auto o_animable blockquote">
+        <i class="s_blockquote_icon fa fa-1x fa-quote-left bg-o-color-2 rounded"/>
+        <div class="s_blockquote_content bg-100">
+            <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+            <footer class="blockquote-footer">
+                <img src="/web/image/website.s_blockquote_default_image" class="s_blockquote_avatar img rounded-circle mr-2" alt=""/>
+                <span class="s_blockquote_author"><b>John DOE</b> &#8226; CEO of MyCompany</span>
+            </footer>
+        </div>
+    </blockquote>
+</template>
+
+<template id="s_blockquote_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <!-- Layout -->
+        <div data-js="Blockquote" data-selector=".s_blockquote">
+            <we-select string="Display">
+                <we-button data-select-class="s_blockquote_classic" data-display="classic">Classic</we-button>
+                <we-button data-select-class="s_blockquote_cover" data-display="cover" data-name="blockquote_cover_opt">Cover</we-button>
+                <we-button data-select-class="s_blockquote_minimalist" data-display="minimalist" data-name="blockquote_minimalist_opt">Minimalist</we-button>
+            </we-select>
+        </div>
+
+        <!-- Color and images -->
+        <t t-call="web_editor.snippet_options_background_options">
+            <t t-set="selector" t-value="'.s_blockquote'"/>
+            <t t-set="target" t-value="'.s_blockquote_content'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="True"/>
+            <t t-set="with_gradients" t-value="True"/>
+            <t t-set="images_dependencies" t-value="'blockquote_cover_opt'"/>
+        </t>
+
+        <!-- Shadow -->
+        <div data-js="Box" data-selector=".s_blockquote" data-target=".s_blockquote_content">
+            <t t-call="website.snippet_options_shadow_widgets"/>
+        </div>
+
+        <!-- Border Color -->
+        <div data-selector="blockquote">
+            <we-colorpicker string="Border Color"
+                data-select-style="true"
+                data-css-property="border-color"
+                data-color-prefix="border-"
+                data-dependencies="blockquote_minimalist_opt"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_blockquote_000_scss" model="ir.asset">
+    <field name="name">Blockquote 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_blockquote/000.scss</field>
+</record>
+
+</odoo>

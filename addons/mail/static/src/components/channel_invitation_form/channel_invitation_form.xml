@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelInvitationForm" owl="1">
+        <div class="o_ChannelInvitationForm d-flex flex-column" t-ref="channelInvitationForm">
+            <t t-if="channelInvitationForm">
+                <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
+                <t t-if="!messaging.isCurrentUserGuest">
+                    <div class="mx-3 my-2">
+                        <input class="o_ChannelInvitationForm_searchInput" type="text" t-att-value="channelInvitationForm.searchTerm" placeholder="Type the name of a person" t-on-input="channelInvitationForm.onInputSearch" t-ref="searchInput"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
+                        <t t-foreach="channelInvitationForm.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.localId">
+                            <div class="o_ChannelInvitationForm_selectablePartner d-flex align-items-center px-3 py-1" t-on-click="channelInvitationForm.onClickSelectablePartner.bind(channelInvitationForm, selectablePartner)" t-att-data-partner-id="selectablePartner.id">
+                                <div class="o_ChannelInvitationForm_selectablePartnerAvatarContainer flex-shrink-0 position-relative">
+                                    <img class="o_ChannelInvitationForm_selectablePartnerAvatar w-100 h-100 rounded-circle" t-att-src="selectablePartner.avatarUrl" alt="Avatar"/>
+                                    <t t-if="selectablePartner.im_status and selectablePartner.im_status !== 'im_partner'">
+                                        <PartnerImStatusIcon
+                                            class="o_ChannelInvitationForm_selectablePartnerImStatusIcon d-flex align-items-center justify-content-center text-white"
+                                            t-att-class="{
+                                                'o_ChannelInvitationForm_selectablePartnerImStatusIcon-mobile': messaging.device.isMobile,
+                                            }"
+                                            partnerLocalId="selectablePartner.localId"
+                                        />
+                                    </t>
+                                </div>
+                                <div class="o_ChannelInvitationForm_selectablePartnerAvatarNameSeparator"/>
+                                <span class="o_ChannelInvitationForm_selectablePartnerName flex-grow-1 text-truncate">
+                                    <t t-esc="selectablePartner.nameOrDisplayName"/>
+                                </span>
+                                <div class="o_ChannelInvitationForm_selectablePartnerNameSelectionSeparator flex-grow-1 flex-shrink-0"/>
+                                <input class="o_ChannelInvitationForm_selectablePartnerCheckbox flex-shrink-0" type="checkbox" t-att-checked="channelInvitationForm.selectedPartners.includes(selectablePartner) ? 'checked' : undefined" t-on-input="channelInvitationForm.onInputPartnerCheckbox.bind(channelInvitationForm, selectablePartner)" t-ref="selection-status"/>
+                            </div>
+                        </t>
+                        <t t-if="channelInvitationForm.selectablePartners.length === 0">
+                            <div class="mx-3">No user found that is not already a member of this channel.</div>
+                        </t>
+                        <t t-if="channelInvitationForm.searchResultCount > channelInvitationForm.selectablePartners.length">
+                            <div class="mx-3">
+                                Showing <t t-esc="channelInvitationForm.selectablePartners.length"/> results out of <t t-esc="channelInvitationForm.searchResultCount"/>. Narrow your search to see more choices.
+                            </div>
+                        </t>
+                    </div>
+                    <t t-if="channelInvitationForm.selectedPartners.length > 0">
+                        <div class="mx-3 mt-3">
+                            <h4>Selected users:</h4>
+                            <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
+                                <t t-foreach="channelInvitationForm.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.localId">
+                                    <button class="btn btn-secondary" t-on-click="channelInvitationForm.onClickSelectedPartner.bind(channelInvitationForm, selectedPartner)">
+                                        <t t-esc="selectedPartner.nameOrDisplayName"/> <i class="fa fa-times"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="mx-3 mt-2 mb-3">
+                        <button class="o_ChannelInvitationForm_inviteButton btn btn-primary w-100" t-att-disabled="channelInvitationForm.selectedPartners.length === 0" t-on-click="channelInvitationForm.onClickInvite">
+                            <t t-esc="channelInvitationForm.inviteButtonText"/>
+                        </button>
+                    </div>
+                </t>
+                <t t-if="channelInvitationForm.thread and channelInvitationForm.thread.invitationLink">
+                    <h4 class="mx-3 mt-3 mb-2">Invitation Link</h4>
+                    <div class="mx-3 my-2">
+                        <input type="text" t-att-value="channelInvitationForm.thread.invitationLink"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

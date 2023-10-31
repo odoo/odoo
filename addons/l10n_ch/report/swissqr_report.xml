@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_ch_qr_report" model="ir.actions.report">
+            <field name="name">QR-bill</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ch.qr_report_main</field>
+            <field name="report_file">l10n_ch.qr_report_main</field>
+            <field name="print_report_name">'QR-bill-%s' % object.name</field>
+            <field name="paperformat_id" ref="l10n_ch.paperformat_euro_no_margin"/>
+            <field name="attachment">'QR-bill-' + object.name + '.pdf'</field>
+        </record>
+
+        <template id="l10n_ch_swissqr_template">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <t t-call="web.external_layout">
+                <!-- TODO master: remove this -->
+                <script t-if="0">document.body.className += " l10n_ch_qr";</script>
+                <!-- add default margin for header (matching A4 European margin) -->
+                <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
+
+                <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
+
+                <t t-set="is_qrr" t-value="o.partner_bank_id.l10n_ch_qr_iban"/>
+                <t t-set="is_scor" t-value="o.partner_bank_id._is_iso11649_reference(o.payment_reference)"/>
+
+                <div class="swissqr_page_title">
+                    <h1>QR-bill for invoice <t t-esc="o.name"/></h1>
+                </div>
+
+                <div class="swissqr_content_v2">
+
+                    <div class="swissqr_receipt">
+
+                        <img src="/l10n_ch/static/src/img/scissors_h.png" class="scissors horizontal_scissors"/>
+
+                        <div id="receipt_title_zone" class="swissqr_section_title">
+                            <span>Receipt</span>
+                        </div>
+
+                        <div id="receipt_indication_zone" class="receipt_indication_zone">
+
+                            <div class="swissqr_text title">
+                                <span>Account / Payable to</span>
+                            </div>
+                            <div class="swissqr_text content">
+                                <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <br/>
+                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-field="o.company_id.street"/><br/>
+                                <t t-if="o.company_id.country_id.code != 'CH'">
+                                    <span t-field="o.company_id.country_id.code"/>
+                                </t>
+                                <span t-field="o.company_id.zip"/>
+                                <span t-field="o.company_id.city"/><br/>
+                                <br/>
+                            </div>
+
+                            <t t-if="is_qrr or is_scor">
+                                <div class="swissqr_text title">
+                                    <span>Reference</span>
+                                </div>
+                            </t>
+                            <t t-if="is_qrr">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+                            <t t-if="is_scor">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+
+                            <div class="swissqr_text title">
+                                <span>Payable by</span>
+                            </div>
+                            <div class="swissqr_text content">
+                                <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
+                                <span t-field="o.partner_id.street"/>
+                                <span t-field="o.partner_id.street2"/><br/>
+                                <t t-if="o.partner_id.country_id.code != 'CH'">
+                                    <span t-field="o.partner_id.country_id.code"/>
+                                </t>
+                                <span t-field="o.partner_id.zip"/>
+                                <span t-field="o.partner_id.city"/>
+                            </div>
+
+                        </div>
+
+                        <div id="receipt_amount_zone" class="swissqr_column_left receipt_amount_zone">
+                            <div class="swissqr_text">
+                                <div class="column">
+                                    <div class="title">
+                                        <span>Currency</span>
+                                    </div>
+                                    <div class="content">
+                                        <span t-field="o.currency_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="title">
+                                        <span>Amount</span>
+                                    </div>
+                                    <div class="content">
+                                        <span t-esc="formated_amount"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="receipt_acceptance_point_zone" class="receipt_acceptance_point_zone">
+                            <div class="swissqr_text content">
+                                <span class="title">Acceptance point</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="swissqr_body">
+
+                        <img src="/l10n_ch/static/src/img/scissors_v.png" class="scissors vertical_scissors"/>
+
+                        <div class="swissqr_column_left">
+
+                            <div class="swissqr_section_title">
+                                <span>Payment part</span>
+                            </div>
+
+                            <img class="swissqr" t-att-src="qr_code_urls[o.id]"/>
+
+                            <div id="amount_zone" class="amount_zone">
+                                <div class="swissqr_text">
+                                    <div class="column">
+                                        <div class="title">
+                                            <span>Currency</span>
+                                        </div>
+                                        <div class="content">
+                                            <span t-field="o.currency_id.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="title">
+                                            <span>Amount</span><br/>
+                                        </div>
+                                        <div class="content">
+                                            <span t-esc="formated_amount"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="indications_zone" class="swissqr_column_right">
+                            <div class="swissqr_text title">
+                                <span>Account / Payable to</span><br/>
+                            </div>
+                            <div class="swissqr_text content">
+                                <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <br/>
+                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-field="o.company_id.street"/><br/>
+                                <t t-if="o.company_id.country_id.code != 'CH'">
+                                    <span t-field="o.company_id.country_id.code"/>
+                                </t>
+                                <span t-field="o.company_id.zip"/>
+                                <span t-field="o.company_id.city"/><br/>
+                                <br/>
+                            </div>
+
+                            <t t-if="is_qrr or is_scor">
+                                <div class="swissqr_text title">
+                                    <span class="title">Reference</span>
+                                </div>
+                            </t>
+                            <t t-if="is_qrr">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+                            <t t-if="is_scor">
+                                <div class="swissqr_text content">
+                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+
+                            <t t-set="additional_info" t-value="(o.ref or o.name if is_qrr or is_scor else o.payment_reference or o.ref or o.name)"/>
+                            <t t-if="additional_info">
+                                <div class="swissqr_text title">
+                                    <span>Additional information</span>
+                                </div>
+                                <div class="swissqr_text content">
+                                    <span t-esc="additional_info"/><br/>
+                                    <br/>
+                                </div>
+                            </t>
+
+                            <div class="swissqr_text title">
+                                <span>Payable by</span>
+                            </div>
+                            <div class="swissqr_text content">
+                                <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
+                                <span t-field="o.partner_id.street"> </span>
+                                <span t-field="o.partner_id.street2"/><br/>
+                                <t t-if="o.partner_id.country_id.code != 'CH'">
+                                    <span t-field="o.partner_id.country_id.code"/>
+                                </t>
+                                <span t-field="o.partner_id.zip"/>
+                                <span t-field="o.partner_id.city"/><br/>
+                                <br/>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="l10n_ch.qr_report_main">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_ch.l10n_ch_swissqr_template" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+        <template id="minimal_layout_with_report_attribute" inherit_id="web.minimal_layout">
+            <body position="attributes">
+                <attribute name="t-att-data-report-id">report_xml_id</attribute>
+            </body>
+        </template> 
+    </data>
+</odoo>

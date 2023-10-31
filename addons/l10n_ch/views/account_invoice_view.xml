@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="isr_invoice_form" model="ir.ui.view">
+            <field name="name">l10n_ch.account.invoice.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_move_sent']" position="after">
+                    <field name="l10n_ch_isr_sent" invisible="1"/>
+                    <field name="l10n_ch_currency_name" invisible="1" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', True),
+                                             '|', ('move_type', '!=', 'out_invoice'),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        class="oe_highlight"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', False),
+                                             '|', ('move_type', '!=', 'out_invoice'),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
+                </xpath>
+                <header position="after">
+                    <field name="l10n_ch_isr_needs_fixing" invisible="1"/>
+                    <div groups="account.group_account_invoice" class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('l10n_ch_isr_needs_fixing', '=', False)]}">
+                        Please fill in a correct ISR reference in the payment reference.  The banks will refuse your payment file otherwise.
+                    </div>
+                </header>
+            </field>
+        </record>
+
+        <record id="isr_invoice_search_view" model="ir.ui.view">
+            <field name="name">l10n_ch.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_ch_isr_number" string="ISR reference number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Overridden action (and primary child view), so the filter are only
+        available for customer invoices-->
+        <record id="account.action_move_out_invoice_type" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="search_view_id" ref="isr_invoice_search_view"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_adyen
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
+msgid "Add tip through payment terminal (Adyen)"
+msgstr "Ajouter un pourboire via le terminal de paiement (Adyen)"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid "Adyen API key"
+msgstr "Clé API Adyen"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Adyen Error"
+msgstr "Erreur Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
+msgid "Adyen Latest Diagnosis"
+msgstr "Dernier diagnostic Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
+msgid "Adyen Latest Response"
+msgstr "Dernière réponse Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "Adyen Terminal Identifier"
+msgstr "Identifiant terminal Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Adyen Test Mode"
+msgstr "Mode test Adyen"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "An unexpected error occurred. Message from Adyen: %s"
+msgstr "Une erreur inattendue est survenue. Message d'Adyen : %s"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
+msgid "Ask Customers For Tip"
+msgstr "Demandez un pourboir à vos clients"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Authentication failed. Please check your Adyen credentials."
+msgstr ""
+"L'authentification a échoué. Veuillez vérifier vos identifiants Adyen."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
+msgstr ""
+"L'annulation du paiement a échoué. Veuillez l'annuler manuellement sur le "
+"terminal de paiement."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Cannot process transactions with negative amount."
+msgstr "Impossible de traiter des transactions avec un montant négatif."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"Impossible de se connecter au serveur Odoo. Veuillez vérifier votre "
+"connexion internet et réessayer."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Message from Adyen: %s"
+msgstr "Message d'Adyen: %s"
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_config.py:0
+#, python-format
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
+msgstr ""
+"Veuillez configurer un produit pourboire pour le point de vente %safin de "
+"prendre en charge les pourboires avec Adyen."
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Paramétrage du point de vente"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Modes de paiement au point de vente"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
+msgid "Prompt the customer to tip."
+msgstr "Inviter le client à donner un pourboire."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Run transactions in the test environment."
+msgstr "Exécuter des transactions dans l'environnement de test."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
+msgid ""
+"Technical field used to buffer the latest asynchronous notification from "
+"Adyen."
+msgstr ""
+"Champ technique utilisé pour mettre en mémoire tampon la dernière "
+"notification asynchrone d'Adyen."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
+msgid "Technical field used to determine if the terminal is still connected."
+msgstr ""
+"Champ technique utilisé pour déterminer si le terminal est toujours "
+"connecté."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Terminal %s est déjà utlisé comme méthode de paiement %s."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Le terminal %s est déjà utilisé dans l'entreprise %s pour le mode de "
+"paiement %s."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"The connection to your payment terminal failed. Please check if it is still "
+"connected to the internet."
+msgstr ""
+"La connexion à votre terminal de paiement a échoué. Veuillez vérifier s'il "
+"est toujours connecté à Internet."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"Utilisé lors de la connexion à Adyen : https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
+msgstr "[Terminal model]-[Serial number], par exemple : P400Plus-123456789"

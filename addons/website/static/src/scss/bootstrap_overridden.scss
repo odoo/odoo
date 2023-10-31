@@ -1,0 +1,147 @@
+//
+// Color system
+//
+
+// Use auto threshold for yiq colors
+// Note: also need to be defined here so that color-yiq below works
+$yiq-contrasted-threshold: false !default;
+
+// Customize the light and dark text colors for use in our YIQ color contrast function.
+$yiq-text-dark: o-color('900') !default;
+$yiq-text-light: o-color('white') !default;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default; // Need to predefine as used below
+
+// Body
+//
+// Settings for the `<body>` element.
+
+// Bootstrap uses $body-bg as default value for multiple variables but also in
+// the creation of CSS rules (not controlled by variables), which is wrong in
+// case of Odoo boxed layouts. In stable versions, this is fixed for default
+// variable values of critical components only. In 16.0, the problem increased
+// as $body-bg was even more used in BS 5.1.3. That will be fixed entirely in a
+// slightly less stable way: $body-bg will now be the boxed-layout color instead
+// of the behind-the-box color. In future bootstrap version (> 5.1.3), this
+// changed again so this logic may change again too.
+$body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
+$body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
+
+// Links
+//
+// Style anchor elements.
+
+$-link-color: o-color('o-cc1-link');
+$-link-color: if($-link-color, $-link-color, o-color('primary'));
+$link-color: auto-contrast($-link-color, o-color('o-cc1-bg'), 'o-cc1-link') !default;
+$link-hover-color: auto-contrast(darken($link-color, 15%), o-color('o-cc1-bg'), 'o-cc1-link') !default;
+$link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
+$link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+// Note: for the 'active' color, color preset edition is not really flexible but
+// this could come in a future update.
+$component-active-bg: o-color('o-cc1-btn-primary') !default;
+$component-active-color: if($component-active-bg, color-yiq($component-active-bg), null) !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: $o-theme-font !default;
+
+$font-size-base: o-website-value('font-size-base') !default;
+
+$h1-font-size: $font-size-base * $o-theme-h1-font-size-multiplier !default;
+$h2-font-size: $font-size-base * $o-theme-h2-font-size-multiplier !default;
+$h3-font-size: $font-size-base * $o-theme-h3-font-size-multiplier !default;
+$h4-font-size: $font-size-base * $o-theme-h4-font-size-multiplier !default;
+$h5-font-size: $font-size-base * $o-theme-h5-font-size-multiplier !default;
+$h6-font-size: $font-size-base * $o-theme-h6-font-size-multiplier !default;
+
+$headings-font-family: $o-theme-headings-font !default;
+$headings-color: o-color('o-cc1-headings') !default;
+
+$lead-font-size: 1.125rem !default;
+
+$text-muted: mute-color($body-color) !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-padding-y: o-website-value('btn-padding-y') !default;
+$btn-padding-x: o-website-value('btn-padding-x') !default;
+$btn-font-size: o-website-value('btn-font-size') !default;
+
+$btn-padding-y-sm: o-website-value('btn-padding-y-sm') !default;
+$btn-padding-x-sm: o-website-value('btn-padding-x-sm') !default;
+$btn-font-size-sm: o-website-value('btn-font-size-sm') !default;
+
+$btn-padding-y-lg: o-website-value('btn-padding-y-lg') !default;
+$btn-padding-x-lg: o-website-value('btn-padding-x-lg') !default;
+$btn-font-size-lg: o-website-value('btn-font-size-lg') !default;
+
+$btn-border-width: o-website-value('btn-border-width') !default;
+
+$btn-border-radius: o-website-value('btn-border-radius') !default;
+$btn-border-radius-lg: o-website-value('btn-border-radius-lg') !default;
+$btn-border-radius-sm: o-website-value('btn-border-radius-sm') !default;
+
+// Forms
+
+$input-padding-y: o-website-value('input-padding-y') !default;
+$input-padding-x: o-website-value('input-padding-x') !default;
+$input-font-size: o-website-value('input-font-size') !default;
+
+$input-padding-y-sm: o-website-value('input-padding-y-sm') !default;
+$input-padding-x-sm: o-website-value('input-padding-x-sm') !default;
+$input-font-size-sm: o-website-value('input-font-size-sm') !default;
+
+$input-padding-y-lg: o-website-value('input-padding-y-lg') !default;
+$input-padding-x-lg: o-website-value('input-padding-x-lg') !default;
+$input-font-size-lg: o-website-value('input-font-size-lg') !default;
+
+$input-border-width: o-website-value('input-border-width') !default;
+
+$input-border-radius: o-website-value('input-border-radius') !default;
+$input-border-radius-lg: o-website-value('input-border-radius-lg') !default;
+$input-border-radius-sm: o-website-value('input-border-radius-sm') !default;
+
+// Navs
+
+$nav-tabs-link-active-bg: o-color('o-cc1-bg') !default;
+
+// Navbar
+
+// Increase default navbar padding for some navbar styles
+$navbar-padding-y: if(index(('fill', 'pills', 'outline'), o-website-value('header-links-style')), ($spacer / 2) * 1.25, null) !default;
+$navbar-nav-link-padding-x: if(index(('outline', 'block'), o-website-value('header-links-style')), .5rem * 3, null) !default;
+$navbar-nav-link-padding-x: if(o-website-value('header-links-style') == 'border-bottom', .5rem * 2, null) !default;
+
+
+// Jumbotron
+
+$jumbotron-bg: transparent !default;
+
+// Bootstrap Review
+
+$o-btn-outline-defaults: () !default;
+@each $color in ('primary', 'secondary') {
+    @if o-website-value('btn-#{$color}-outline') {
+        $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
+    }
+}
+
+// Increase default navbar pills padding for 'pills' mode and add big radius
+$o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
+$o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="hr_timesheet_qr_code">
+    <div style="text-align:center;">
+        <t t-if="widget.url">
+            <h3>Scan this QR code to get the Awesome Timesheet app:</h3><br/><br/>
+            <img class="border border-dark rounded" t-att-src="widget.url"/>
+        </t>
+    </div>
+</t>
+</templates>

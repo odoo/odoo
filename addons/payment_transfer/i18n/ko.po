@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_transfer
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_transfer
+#: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
+msgid "<strong>Communication: </strong>"
+msgstr "<strong>커뮤니케이션: </strong>"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__qr_code
+msgid "Enable QR Codes"
+msgstr "QR 코드 활성화"
+
+#. module: payment_transfer
+#: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "계좌 이체로 결제할 때 QR 코드를 사용하도록 설정합니다."
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_transfer
+#: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
+msgid "Or scan me with your banking app."
+msgstr "아니면 은행앱으로 스캔하십시오."
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "결제 매입사"
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "결제 내역"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "공급업체"
+
+#. module: payment_transfer
+#: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_transaction.py:0
+#, python-format
+msgid "The customer has selected %(acq_name)s to make the payment."
+msgstr ""
+
+#. module: payment_transfer
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Wire Transfer"
+msgstr "계좌 이체"

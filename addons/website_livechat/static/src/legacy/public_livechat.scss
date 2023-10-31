@@ -1,0 +1,15 @@
+.editor_has_snippets:not(.o_fullscreen) {
+    .o_livechat_button, .o_thread_window {
+        // TODO add this in an edit-mode only file in master (in 14.0 that asset
+        // would be website.assets_wysiwyg...)
+        right: $o-we-sidebar-width !important;
+    }
+}
+
+@if o-website-value('header-template') == 'sidebar' and $-hamburger-right {
+    @include media-breakpoint-up(lg) {
+        .o_livechat_button, .o_thread_window {
+            transform: translate(- o-website-value('sidebar-width'));
+        }
+    }
+}

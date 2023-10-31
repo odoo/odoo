@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="product_template_hs_code">
+    <field name="name">product.template.form.hs_code</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view"/>
+    <field name="arch" type="xml">
+	       <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+            <field name="hs_code"/>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

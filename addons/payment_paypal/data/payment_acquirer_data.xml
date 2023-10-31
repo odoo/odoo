@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_acquirer_paypal" model="payment.acquirer">
+        <field name="provider">paypal</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">True</field>
+        <field name="support_refund"></field>
+        <field name="support_tokenization">False</field>
+    </record>
+
+    <record id="payment_method_paypal" model="account.payment.method">
+        <field name="name">Paypal</field>
+        <field name="code">paypal</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

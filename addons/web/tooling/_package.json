@@ -1,0 +1,24 @@
+{
+    "name": "odoo-js-config",
+    "version": "0.0.1",
+    "description": "JS Config for better DX in javascript",
+    "scripts": {
+        "format-web": "prettier-eslint --write 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
+        "format-staged": "lint-staged",
+        "lint-web": "prettier-eslint --list-different 'addons/web/static/src/**/*.js'  'addons/web/static/tests/**/*.js' 'addons/web/doc/**/*.md'",
+        "format-all": "prettier-eslint --write '**/*.js'  '**/*.md'"
+    },
+    "devDependencies": {
+        "eslint": "^7.25.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "lint-staged": "^10.5.4",
+        "prettier": "2.2.1",
+        "prettier-eslint-cli": "^5.0.1"
+    },
+    "lint-staged": {
+        "*.{js,md}": [
+            "prettier-eslint --write"
+        ]
+    }
+}

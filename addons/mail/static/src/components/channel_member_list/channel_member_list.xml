@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelMemberList" owl="1">
+        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light">
+            <t t-if="channel.orderedOnlineMembers.length > 0">
+                <t t-call="mail.ChannelMemberList_memberList">
+                    <t t-set="members" t-value="channel.orderedOnlineMembers"/>
+                    <t t-set="title">Online</t>
+                </t>
+            </t>
+            <t t-if="channel.orderedOfflineMembers.length > 0">
+                <t t-call="mail.ChannelMemberList_memberList">
+                    <t t-set="members" t-value="channel.orderedOfflineMembers"/>
+                    <t t-set="title">Offline</t>
+                </t>
+            </t>
+            <t t-if="channel.unknownMemberCount === 1">
+                <span class="mx-2 mt-2">And 1 other member.</span>
+            </t>
+            <t t-if="channel.unknownMemberCount > 1">
+                <span class="mx-2 mt-2">And <t t-esc="channel.unknownMemberCount"/> other members.</span>
+            </t>
+            <t t-if="channel.unknownMemberCount > 0">
+                <div class="mx-2 my-1">
+                    <button class="btn btn-secondary" t-on-click="channel.onClickLoadMoreMembers">Load more</button>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.ChannelMemberList_memberList" owl="1">
+        <h6 class="m-2"><t t-esc="title"/> - <t t-esc="members.length"/></h6>
+        <t t-foreach="members" t-as="member" t-key="member.localId">
+            <div class="o_ChannelMemberList_member d-flex align-items-center mx-3 my-1">
+                <div class="o_ChannelMemberList_avatarContainer position-relative flex-shrink-0" t-on-click="channel.onClickMemberAvatar(member)">
+                    <img class="o_ChannelMemberList_avatar rounded-circle w-100 h-100" t-attf-src="/mail/channel/{{ channel.id }}/partner/{{ member.id }}/avatar_128" alt="Avatar"/>
+
+                    <t t-if="member.im_status and member.im_status !== 'im_partner'">
+                        <PartnerImStatusIcon
+                            class="o_ChannelMemberList_partnerImStatusIcon d-flex align-items-center justify-content-center"
+                            t-att-class="{
+                                'o-mobile': messaging.device.isMobile,
+                            }"
+                            partnerLocalId="member.localId"
+                        />
+                    </t>
+                </div>
+                <span class="o_ChannelMemberList_name ml-2 flex-column-1 text-truncate" t-on-click="channel.onClickMemberName(member)">
+                    <t t-esc="member.nameOrDisplayName"/>
+                </span>
+            </div>
+        </t>
+    </t>
+
+</templates>

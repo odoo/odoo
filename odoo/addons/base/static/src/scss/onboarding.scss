@@ -1,0 +1,409 @@
+$o-onboarding-dot-size: 20px;
+$o-onboarding-dot-timing: 0.5s;
+
+$o-onboarding-blue-bg-1: #60ABC3;
+$o-onboarding-blue-bg-2: #4187AE;
+$o-onboarding-blue-ui-1: #F39D9B;
+$o-onboarding-blue-ui-2: #FBEEC8;
+
+$o-onboarding-orange-bg-1: #DA9D77;
+$o-onboarding-orange-bg-2: #B9684F;
+$o-onboarding-orange-ui-1: #599FF1;
+$o-onboarding-orange-ui-2: #68B3C9;
+
+$o-onboarding-violet-bg-1: #6070C3;
+$o-onboarding-violet-bg-2: #475DA4;
+$o-onboarding-violet-ui-1: #F39D9B;
+$o-onboarding-violet-ui-2: #FBEEC8;
+
+@mixin o-onboarding-vertical-gradient($startColor: #555, $endColor: #333) {
+    background-color: mix($startColor, $endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor);
+    background-image: -moz-linear-gradient(top, $startColor, $endColor);
+    background-image: -ms-linear-gradient(top, $startColor, $endColor);
+    background-image: -o-linear-gradient(top, $startColor, $endColor);
+    background-image: linear-gradient(to bottom, $startColor, $endColor);
+}
+
+.o_onboarding {
+    position: relative;
+    overflow: hidden;
+    background: white center top;
+    background-size: cover;
+    border-bottom: 1px solid gray('300');
+
+    .o_onboarding_wrap {
+        padding: $o-horizontal-padding*2 $o-horizontal-padding;
+
+        @include media-breakpoint-down(sm) {
+            overflow-x: auto;
+        }
+    }
+    .o_onboarding_step_title, a.o_onboarding_all_done {
+        cursor: pointer;
+    }
+
+    .o_onboarding_btn_close {
+        @include o-position-absolute(auto, 0, 0);
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+
+    .o_onboarding_btn_close {
+        top: 0;
+        bottom: auto;
+    }
+    .o_onboarding_completed_message {
+        @include o-position-absolute(auto, 0,0,0);
+        //transform: translateY(115%);
+        //transition: transform $o-onboarding-dot-timing;
+        box-shadow: 0 2px 10px gray(600);
+        padding: $o-horizontal-padding;
+        background-color: white;
+        color: $o-main-text-color;
+        opacity: 0;
+        z-index: -1;
+        &.o_onboarding_steps_just_done {
+            animation: o_onb_fadeIn ($o-onboarding-dot-timing*3);
+        }
+        &.o_onboarding_steps_done {
+            opacity: 1;
+            z-index: auto;
+        }
+    }
+
+    .o_onboarding_steps, .o_onboarding_step {
+        display: flex;
+    }
+
+    .o_onboarding_steps {
+        flex-flow: row nowrap;
+        justify-content: initial;
+    }
+
+    .o_onboarding_step {
+        flex-flow: column nowrap;
+        flex: 1 1 auto;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        opacity: 0.6;
+
+        @include media-breakpoint-down(sm) {
+            flex: 1 0 auto;
+            margin-bottom: 16px;
+            align-items: baseline;
+
+            .o_onboarding_step_content {
+                max-width: none;
+            }
+        }
+
+        &:first-of-type {
+            .o_onboarding_progress {
+                display: none !important;
+            }
+
+            .o_onboarding_dot {
+                transition-delay: 0s;
+            }
+        }
+
+        .o_onboarding_step_content {
+            @include media-breakpoint-up(lg) {
+                min-width: 230px;
+            }
+            /* Progressbar should not break in mobile view */
+            @include media-breakpoint-down(sm) {
+                min-width: 230px;
+            }
+            max-width: 230px;
+            padding: 0 10px;
+
+            .o_onboarding_step_action {
+                border: 1px solid gray('200');
+                display: none;
+            }
+
+            p {
+                opacity: 0.8;
+            }
+        }
+
+        .o_onboarding_progress {
+            @include o-position-absolute($o-onboarding-dot-size*0.5 - 2px, calc(50% + 10px));
+            width: calc(100% - 20px);
+            height: 4px;
+            background-color: gray('200');
+
+            .progress-bar {
+                background-image: linear-gradient(90deg, $o-brand-primary, $o-brand-odoo);
+                transition: opacity $o-onboarding-dot-timing;
+            }
+        }
+
+        .o_onboarding_dot {
+            @include media-breakpoint-down(sm) {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            width: $o-onboarding-dot-size;
+            height: $o-onboarding-dot-size;
+            color: transparent;
+            padding-top: 5px;
+            font-size: 11px;
+            display: inline-block;
+            border-radius: 100%;
+            background-color: gray('200');
+            position: relative;
+            transition: background $o-onboarding-dot-timing ease $o-onboarding-dot-timing;
+        }
+
+        .o_onboarding_all_done {
+            display: none;
+        }
+
+        // Steps' Status
+        &.o_onboarding_current, &.o_onboarding_done {
+            opacity: 1;
+
+            .o_onboarding_progress .progress-bar {
+                width: 100%;
+                box-shadow: none;
+                transition: width $o-onboarding-dot-timing;
+            }
+        }
+
+        &.o_onboarding_current {
+            .o_onboarding_step_action, .o_onboarding_dot {
+                animation: bounceIn ($o-onboarding-dot-timing*2);
+            }
+
+            .o_onboarding_step_action {
+                display: inline-block;
+            }
+
+            .o_onboarding_dot {
+                background: $o-brand-odoo;
+            }
+        }
+
+        &.o_onboarding_done {
+            .o_onboarding_dot {
+                background: $o-brand-primary;
+                color: white;
+            }
+
+            .o_onboarding_all_done {
+                display: block;
+            }
+
+            + .o_onboarding_done {
+                .o_onboarding_dot {
+                    transition-delay: 0s;
+                }
+
+                .o_onboarding_progress {
+                    background: $o-brand-primary;
+                }
+
+                .progress-bar {
+                    opacity: 0;
+                }
+            }
+        }
+
+        &.o_onboarding_just_done {
+
+            .o_onboarding_all_done {
+                animation: bounceIn ($o-onboarding-dot-timing*2);
+                display: block;
+            }
+            .o_onboarding_step_content_info {
+                animation: o_onb_fadeIn ($o-onboarding-dot-timing*3);
+            }
+        }
+
+    }
+
+    @keyframes o_onb_fadeIn {
+        0%  {opacity: 0}
+        33% {opacity: 0}
+        100% {opacity: 1}
+    }
+
+    // =========  Color Variations  =========
+    // ======================================
+
+    // =========  Variation Mixin  ==========
+    @mixin o-onboarding-variation($bg1, $bg2, $ui1, $ui2) {
+        &, .o_onboarding_step_title, .o_onboarding_step_action, a.o_onboarding_all_done, .o_onboarding_all_done > .fa, .o_onboarding_btn_close {
+            color: white !important;
+        }
+
+        .o_onboarding_wrap {
+            @include o-onboarding-vertical-gradient(fade-out($bg1, 0.5), $bg2);
+            box-shadow: inset 0 -7px 20px -5px fade-out(black, 0.7);
+        }
+
+        .o_onboarding_dot, .o_onboarding_progress {
+            background-color: fade-out(white, 0.5);
+        }
+
+        .o_onboarding_step_action {
+            border-color: fade-out(white, 0.5);
+        }
+
+        .progress-bar {
+            background-image: linear-gradient(90deg, $ui1, $ui2);
+        }
+
+        .o_onboarding_step {
+            &.o_onboarding_done, .o_onboarding_done + .o_onboarding_done {
+                .o_onboarding_dot, .o_onboarding_progress {
+                    background: $ui1;
+                }
+            }
+
+            &.o_onboarding_current .o_onboarding_dot {
+                background: $ui2;
+            }
+        }
+    }
+
+    // =========  Variation Templates  ==========
+    &.o_onboarding_blue {
+        @include o-onboarding-variation($o-onboarding-blue-bg-1, $o-onboarding-blue-bg-2, $o-onboarding-blue-ui-1, $o-onboarding-blue-ui-2);
+    }
+
+    &.o_onboarding_orange {
+        @include o-onboarding-variation($o-onboarding-orange-bg-1, $o-onboarding-orange-bg-2, $o-onboarding-orange-ui-1, $o-onboarding-orange-ui-2);
+    }
+
+    &.o_onboarding_violet {
+        @include o-onboarding-variation($o-onboarding-violet-bg-1, $o-onboarding-violet-bg-2, $o-onboarding-violet-ui-1, $o-onboarding-violet-ui-2);
+    }
+
+    // =========  "Cannon Confetti" animation  ==========
+    .o_onboarding_confetti {
+        animation: cannon-explosion ($o-onboarding-dot-timing*3) ease-out 0s 1 normal both;
+        @include o-position-absolute(0, 50%, 30px);
+        transform-origin: 50% 100%;
+        display: none;
+        width: 1px;
+
+        @keyframes cannon-explosion {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        > div {
+            @include o-position-absolute(auto, 0, 5px,0);
+            transform-origin: 50% 100%;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-around;
+            align-content: center;
+            padding-bottom: 30%;
+
+            &:nth-child(1), &:nth-child(5) {
+                height: 90%;
+                transform: rotate(-20deg);
+            }
+            &:nth-child(2), &:nth-child(4) {
+                height: 95%;
+                transform: rotate(-10deg);
+            }
+            &:nth-child(3) {
+                height: 100%;
+            }
+            &:nth-child(4) {
+                transform: rotate(10deg);
+            }
+            &:nth-child(5) {
+                transform: rotate(20deg);
+            }
+
+            > div {
+                flex: 0 1 auto;
+                animation: confetti-rotate-l ($o-onboarding-dot-timing*3) ease-out 0s 1 normal both;
+
+                &:nth-child(odd) {
+                    animation: confetti-rotate-r ($o-onboarding-dot-timing*3) ease-out 0s 1 normal both;
+                }
+
+                @keyframes confetti-rotate-l {
+                    0% {
+                        transform: rotate(0) scaleY(1);
+                    }
+                    50% {
+                        transform: rotate(2turn) scaleY(1.5);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: rotate(2.05turn) scaleY(1);
+                        opacity: 0;
+                    }
+                }
+
+                @keyframes confetti-rotate-r {
+                    0% {
+                        transform: rotate(0) scaleY(1);
+                    }
+                    50% {
+                        transform: rotate(-2turn) scaleY(1.5);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: rotate(-2.05turn) scaleY(1);
+                        opacity: 0;
+                    }
+                }
+
+                &.ribbon {
+                    width: .3em;
+                    height: .7em;
+                    border-radius: .1em;
+                }
+
+                &.flake {
+                    width: .3em;
+                    height: .3em;
+                    border-radius: 50%;
+                }
+
+                // Confetti Colors
+                &.color-1 {
+                    background-color: #feb535;
+                }
+
+                &.color-2 {
+                    background-color: #bea4ff;
+                }
+
+                &.color-3 {
+                    background-color: #ff6e83;
+                }
+
+                &.color-4 {
+                    background-color: #58cafe;
+                }
+            }
+        }
+    }
+
+    .o_onboarding_just_done {
+        // Activate confetti cannon when step is done
+        .o_onboarding_confetti {
+            display: block;
+        }
+    }
+}

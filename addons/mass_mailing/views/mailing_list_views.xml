@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAILING LIST -->
+    <record model="ir.ui.view" id="mailing_list_view_search">
+        <field name="name">mailing.list.view.search</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <search string="Mailing Lists">
+                <field name="name"/>
+                <field name="create_date"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Creation Period" name="group_create_date"
+                        context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_tree">
+        <field name="name">mailing.list.view.tree</field>
+        <field name="model">mailing.list</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing Lists" sample="1">
+                <field name="name"/>
+                <field name="is_public"/>
+                <field name="mailing_count" string="Mailings"/>
+                <field name="contact_pct_bounce" string="Bounce (%)"/>
+                <field name="contact_pct_opt_out" string="Opt-out (%)"/>
+                <field name="contact_pct_blacklisted" string="Blacklist (%s)"/>
+                <field name="contact_count" string="Recipients"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_form">
+        <field name="name">mailing.list.form</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contacts"
+                                type="object" icon="fa-user" class="oe_stat_button">
+                            <field name="contact_count" string="Recipients" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_mailings"
+                                type="object" icon="fa-envelope-o" class="oe_stat_button">
+                            <field name="mailing_count" string="Mailings" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_contacts_bouncing"
+                                type="object" icon="fa-exchange" class="oe_stat_button">
+                            <div class="o_field_widget o_stat_info">
+                                <div class="oe_inline">
+                                    <span class="o_stat_value">
+                                        <field name="contact_pct_bounce" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_value">%</span>
+                                </div>
+                                <span class="o_stat_text">Bounce</span>
+                            </div>
+                        </button>
+                        <button name="action_view_contacts_opt_out"
+                                type="object" icon="fa-bell-slash-o" class="oe_stat_button">
+                            <div class="o_field_widget o_stat_info">
+                                <div class="oe_inline">
+                                    <span class="o_stat_value">
+                                        <field name="contact_pct_opt_out" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_value">%</span>
+                                </div>
+                                <span class="o_stat_text">Opt-out</span>
+                            </div>
+                        </button>
+                        <button name="action_view_contacts_blacklisted"
+                                type="object" icon="fa-ban" class="oe_stat_button">
+                            <div class="o_field_widget o_stat_info">
+                                <div class="oe_inline">
+                                    <span class="o_stat_value">
+                                        <field name="contact_pct_blacklisted" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_value">%</span>
+                                </div>
+                                <span class="o_stat_text">Blacklist</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" class="text-break" placeholder="e.g. Consumer Newsletter"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="is_public"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form_simplified" model="ir.ui.view">
+        <field name="name">mailing.list.form.simplified</field>
+        <field name="model">mailing.list</field>
+        <field name="priority" eval="25"/>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <group>
+                    <group>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                            </h1>
+                        </div>
+                    </group>
+                </group>
+                <group>
+                    <field name="is_public"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form_simplified_footer" model="ir.ui.view">
+        <field name="name">mailing.list.form.simplified.footer</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mailing_list_view_form_simplified"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <footer>
+                    <button string="Create" name="close_dialog" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="open_create_mass_mailing_list" model="ir.actions.act_window">
+        <field name="name">Create a Mailing List</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mailing_list_view_form_simplified_footer"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="mailing_list_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.list.view.kanban</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_kanban_mailing_list" on_create="mass_mailing.open_create_mass_mailing_list" sample="1">
+                <field name="name"/>
+                <field name="contact_count"/>
+                <field name="contact_count_email"/>
+                <field name="contact_count_opt_out"/>
+                <field name="contact_count_blacklisted"/>
+                <field name="contact_pct_bounce"/>
+                <field name="contact_pct_opt_out"/>
+                <field name="contact_pct_blacklisted"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content d-flex flex-column h-100">
+                                <h2 class="mb-3 o_text_overflow">
+                                    <field name="name"/>
+                                </h2>
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-3">
+                                        <button class="btn btn-primary" name="action_view_contacts" type="object">
+                                            <t t-esc="record.contact_count.value"/>
+                                            <span>Contacts</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex-grow-1 d-flex flex-column align-items-end o_mass_mailing_kanban_contact_links">
+                                        <a name="action_view_contacts_email" type="object">
+                                            <span>Valid Email Recipients</span>
+                                            <span t-esc="record.contact_count_email.value" class="ml-3"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 d-flex align-items-end mt-4">
+                                    <div class="col-12">
+                                        <div class="row mt3">
+                                            <div class="col-3 border-right">
+                                                <a name="action_view_mailings" type="object" class="d-flex flex-column align-items-center">
+                                                    <span><field name="mailing_count"/></span>
+                                                    <span class="text-muted">Mailings</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-3 border-right">
+                                                <a name="action_view_contacts_bouncing" type="object" class="d-flex flex-column align-items-center">
+                                                    <span><field name="contact_pct_bounce"/>%</span>
+                                                    <span class="text-muted">Bounce</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-3 border-right">
+                                                <a name="action_view_contacts_opt_out" type="object" class="d-flex flex-column align-items-center">
+                                                    <span><field name="contact_pct_opt_out"/>%</span>
+                                                    <span class="text-muted">Opt-out</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-3">
+                                                <a name="action_view_contacts_blacklisted" type="object" class="d-flex flex-column align-items-center">
+                                                    <span><field name="contact_pct_blacklisted"/>%</span>
+                                                    <span class="text-muted">Blacklist</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
+        <field name="name">Mailing Lists</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Mailing List
+          </p><p>
+            No need to import mailing lists, you can send mailings to contacts saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
+        parent="mass_mailing_mailing_list_menu" sequence="3"
+        action="action_view_mass_mailing_lists"/>
+</odoo>

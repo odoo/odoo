@@ -1,0 +1,202 @@
+<odoo>
+    <!-- Badge views -->
+    <record id="gamification_badge_view_search" model="ir.ui.view">
+        <field name="name">gamification.badge.view.search</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <search string="Search Badge">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="badge_list_action" model="ir.actions.act_window">
+        <field name="name">Badges</field>
+        <field name="res_model">gamification.badge</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="gamification_badge_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new badge
+            </p><p>
+                A badge is a symbolic token granted to a user as a sign of reward.
+                It can be deserved automatically when some conditions are met or manually by users.
+                Some badges are harder than others to get with specific conditions.
+            </p>
+        </field>
+    </record>
+
+    
+    <record id="badge_list_view" model="ir.ui.view">
+        <field name="name">Badge List</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <tree string="Badge List">
+                <field name="name"/>
+                <field name="granted_count"/>
+                <field name="stat_this_month"/>
+                <field name="stat_my"/>
+                <field name="rule_auth"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="badge_form_view" model="ir.ui.view">
+        <field name="name">Badge Form</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <form string="Badge">
+                <header>
+                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Problem Solver"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description" nolabel="1" placeholder="Badge Description"/>
+                    </group>
+                    <group string="Granting">
+                        <div class="oe_grey" colspan="2">
+                            Security rules to define who is allowed to manually grant badges. Not enforced for administrator.
+                        </div>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="rule_auth" widget="radio"/>
+                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
+                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
+                            <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
+                            <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
+                            <label for="stat_my_monthly_sending"/>
+                            <div>
+                                <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
+                                <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
+                                    You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
+                                </div>
+                                <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
+                                    No monthly sending limit
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Rewards for challenges">
+                        <field name="challenge_ids" mode="kanban" widget="many2many" nolabel="1" context="{'default_reward_id': active_id}" />
+                        <field name="level"/>
+                    </group>
+                    <group id="badge_statistics" string="Statistics">
+                        <group>
+                            <field name="granted_count"/>
+                            <field name="stat_this_month"/>
+                            <field name="granted_users_count"/>
+                        </group>
+                        <group>
+                            <field name="stat_my"/>
+                            <field name="stat_my_this_month"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="badge_kanban_view" model="ir.ui.view" >
+        <field name="name">Badge Kanban View</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_badge">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="stat_my"/>
+                <field name="granted_count"/>
+                <field name="stat_this_month"/>
+                <field name="unique_owner_ids"/>
+                <field name="stat_my_monthly_sending"/>
+                <field name="remaining_sending" />
+                <field name="rule_max_number" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="o_kanban_gamification oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('gamification.badge', 'image_1024', record.id.raw_value)" t-att-title="record.name.value" t-att-alt="record.name.value"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <span class="oe_grey">
+                                    <t t-if="record.remaining_sending.value != -1">
+                                        <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
+                                    </t>
+                                    <t t-if="record.remaining_sending.value == -1">
+                                        <t t-esc="record.stat_my_monthly_sending.value"/>/∞
+                                    </t>
+                                </span>
+                                <div t-if="record.remaining_sending.value == 0" class="oe_grey">Can not grant</div>
+                                <div>
+                                    <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
+                                    <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
+                                </div>
+                                <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description">
+                                    <em t-out="record.description.value"/>
+                                    <div>
+                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                            <img class="oe_kanban_avatar o_image_24_cover" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div t-if="record.remaining_sending.value != 0 and !selection_mode" class="o_kanban_button">
+                                    <button type="action" name="%(action_grant_wizard)d" class="oe_highlight btn btn-primary">Grant</button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Badge user viewss -->
+
+    <record id="badge_user_kanban_view" model="ir.ui.view" >
+        <field name="name">Badge User Kanban View</field>
+        <field name="model">gamification.badge.user</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey">
+                <field name="badge_name"/>
+                <field name="badge_id"/>
+                <field name="user_id"/>
+                <field name="comment"/>
+                <field name="create_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click oe_kanban_badge oe_kanban_color_white o_kanban_gamification">
+                            <div class="o_kanban_content">
+                                <div class="o_kanban_image">
+                                    <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image_1024', record.badge_id.raw_value)" t-att-title="record.badge_name.value" t-att-alt="record.badge_name.value" /></a>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4 class="mt0 mb0">
+                                        <a class="o_kanban_record_title" type="open"><t t-esc="record.badge_name.raw_value" /></a>
+                                    </h4>
+                                    <t t-if="record.comment.raw_value">
+                                        <p class="o_kanban_record_subtitle"><em><field name="comment"/></em></p>
+                                    </t>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="moment(record.create_date.raw_value).format('L')" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

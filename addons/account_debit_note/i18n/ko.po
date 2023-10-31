@@ -1,0 +1,180 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_debit_note
+# 
+# Translators:
+# Martin Trigaux, 2021
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "<span class=\"o_stat_text\">Debit Notes</span>"
+msgstr "<span class=\"o_stat_text\">차변전표</span>"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "Add Debit Note"
+msgstr "차변전표 추가"
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr "차변전표 마법사 추가"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
+msgid "Copy Lines"
+msgstr "라인 복사"
+
+#. module: account_debit_note
+#: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Create Debit Note"
+msgstr "차변전표 생성"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Debit Note Date"
+msgstr "차변전표 날짜"
+
+#. module: account_debit_note
+#: code:addons/account_debit_note/models/account_move.py:0
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_ids
+#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_ids
+#, python-format
+msgid "Debit Notes"
+msgstr "차변전표"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
+msgid "If empty, uses the journal of the journal entry to be debited."
+msgstr "공란인 경우, 차감할 분개 항목이 있는 분개장을 사용합니다."
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
+msgid ""
+"In case you need to do corrections for every line, it can be in handy to "
+"copy them.  We won't copy them for debit notes from credit notes. "
+msgstr "모든 항목을 수정해야 하는 경우에는, 복사해두는 것이 편할 수 있습니다. 대변전표에서 차변전표로는 복사되지 않습니다."
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_move
+msgid "Journal Entry"
+msgstr "분개"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
+msgid "Journal Type"
+msgstr "분개 유형"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note____last_update
+msgid "Last Modified on"
+msgstr "최근 수정일"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
+msgid "Move"
+msgstr "이동"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
+msgid "Move Type"
+msgstr "이동 유형"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
+#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
+msgid "Number of Debit Notes"
+msgstr "차변전표 수"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
+msgid "Original Invoice Debited"
+msgstr "원래의 청구서 금액 출금"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
+msgid "Reason"
+msgstr "사유"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
+#: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
+msgid "The debit notes created for this invoice"
+msgstr "이 청구서에 대해 생성된 대변전표"
+
+#. module: account_debit_note
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#, python-format
+msgid "This debit note was created from:"
+msgstr ""
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
+msgid "Use Specific Journal"
+msgstr "특정 분개 사용"
+
+#. module: account_debit_note
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#, python-format
+msgid "You can only debit posted moves."
+msgstr "승인된 전표만 차변 입력 처리할 수 있습니다."

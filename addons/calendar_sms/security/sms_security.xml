@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_rule_sms_template_system" model="ir.rule">
+        <field name="name">SMS Template: unnecessary rule for system group</field>
+        <field name="model_id" ref="sms.model_sms_template"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <!-- TDE NOTE: remove me in master, broken fix from odoo/odoo#64626 -->
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+</odoo>

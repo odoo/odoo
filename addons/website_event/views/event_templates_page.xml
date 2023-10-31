@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Event -->
+<template id="layout" name="Event">
+    <t t-call="website.layout">
+        <!-- Options -->
+        <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
+        <div id="wrap" t-attf-class="o_wevent_event js_event #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
+            <t t-if="not event.menu_id">
+                <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+                    <div class="container align-items-baseline justify-content-start">
+                        <a href="/event" class="navbar-brand h4 my-0 mr-0 mr-md-4">
+                            <i class="fa fa-long-arrow-left text-primary mr-2"/>
+                            <span>All Events</span>
+                        </a>
+                        <ul class="navbar-nav flex-row ml-md-auto ml-0">
+                            <li t-if="opt_events_list_categories" class="nav-item mr-3">
+                                <a t-attf-href="/event?type=#{event.event_type_id.id}" t-if="event.event_type_id" class="nav-link">
+                                    <i class="fa fa-folder-open text-primary mr-2"/><span t-field="event.event_type_id"/>
+                                </a>
+                            </li>
+                            <li t-if="event.country_id" class="nav-item mr-3">
+                                <a t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
+                                    <i class="fa fa-map-marker text-primary mr-2"/><span t-field="event.country_id"/>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="d-flex align-items-centerflex-wrap pl-sm-3 pr-0">
+                            <t t-call="website_event.events_search_box_input">
+                                <t t-set="_classes" t-valuef="ml-auto"/>
+                            </t>
+                        </div>
+                    </div>
+                </nav>
+            </t>
+            <t t-else="">
+                <nav class="navbar navbar-light border-top shadow-sm navbar-expand-md">
+                    <div class="container align-items-baseline">
+                        <a t-att-href="event.website_url" t-field="event.name" class="navbar-brand h4 my-0 mr-0"/>
+                        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#o_wevent_event_submenu" aria-controls="o_wevent_event_submenu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div id="o_wevent_event_submenu" class="collapse navbar-collapse">
+                            <ul class="navbar-nav w-100 flex-md-wrap" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                                <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                    <t t-call="website.submenu">
+                                        <t t-set="item_class" t-value="'nav-item'"/>
+                                        <t t-set="link_class" t-value="'nav-link'"/>
+                                    </t>
+                                </t>
+                            </ul>
+                            <!-- Add Register additional CTA button, in addition to menus -->
+                            <a t-if="event.menu_register_cta and not event.is_participating"
+                                t-att-href="'/event/%s/register' % (slug(event))"
+                                class="btn btn-primary ml-auto">
+                                Register
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </t>
+            <t t-out="0"/>
+            <t t-set="editor_sub_message">Following content will appear on all events.</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="editor_sub_message"/>
+        </div>
+    </t>
+</template>
+
+</odoo>

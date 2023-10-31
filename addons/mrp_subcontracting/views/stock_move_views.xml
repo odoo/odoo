@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_subcontracting_stock_move_line_tree_view" model="ir.ui.view">
+        <field name="name">mrp.subcontracting.stock.move.line.tree.view</field>
+        <field name="model">stock.move.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="company_id" invisible="1"/>
+                <field name="product_uom_category_id" invisible="1"/>
+                <field name="owner_id" invisible="1"/>
+                <field name="tracking" invisible="1"/>
+                <field name="package_id" invisible="1"/>
+                <field name="result_package_id" invisible="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <!-- Don't put move_id here to avoid that the framework send falsy move_id -->
+                <field name="id" invisible="1"/>
+                <field name="product_id" required="1"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                    attrs="{'invisible': [('tracking', 'not in', ('serial', 'lot'))], 'required': [('tracking', 'in', ('serial', 'lot'))]}"
+                    context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                <field name="product_uom_qty" readonly="1" force_save="1"/>
+                <field name="qty_done" 
+                    decoration-warning="product_uom_qty &lt; qty_done"
+                    decoration-success="product_uom_qty == qty_done"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mrp_subcontracting_move_form_view" model="ir.ui.view">
+        <field name="name">mrp.subcontracting.move.form.view</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="has_tracking" invisible="1"/>
+                    <field name="product_uom_qty" invisible="1"/>
+                    <group>
+                        <field name="order_finished_lot_ids" widget="many2many_tags"/>
+                        <field name="product_uom" groups="uom.group_uom"/>
+                        <field name="quantity_done" string="Total Consumed" readonly="1"/>
+                    </group>
+                    <field name="move_line_ids"
+                        attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
+                        context="{'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}">
+                        <tree editable="bottom" decoration-muted="state in ('done', 'cancel')">
+                            <field name="company_id" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="picking_id" invisible="1"/>
+                            <field name="move_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="product_id" readonly="1" force_save="1"/>
+                            <field name="qty_done"/>
+                            <field name="lot_id" attrs="{'column_invisible':[('parent.has_tracking', 'not in', ('serial', 'lot'))], 'required': [('tracking', 'in', ('serial', 'lot'))]}" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="mrp_subcontracting_move_tree_view" model="ir.ui.view">
+        <field name="name">mrp.subcontracting.move.tree.view</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001">
+                <field name="company_id" invisible="1"/>
+                <field name="sequence" invisible="1"/>
+                <field name="product_uom_category_id" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="unit_factor" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="picking_type_id" invisible="1"/>
+                <field name="has_tracking" invisible="1"/>
+                <field name="operation_id" invisible="1"/>
+                <field name="is_done" invisible="1"/>
+                <field name="bom_line_id" invisible="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="warehouse_id" invisible="1"/>
+                <field name="product_uom_qty" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
+                <field name="state" invisible="1" force_save="1"/>
+                <field name="raw_material_production_id" invisible="1"/>
+                <field name="product_id" required="1"/>
+                <field name="order_finished_lot_ids" widget="many2many_tags"/>
+                <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}" string="Reserved"/>
+                <field name="quantity_done" string="Consumed" readonly="1"/>
+                <field name="product_uom" groups="uom.group_uom"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

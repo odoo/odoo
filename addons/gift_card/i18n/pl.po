@@ -1,0 +1,195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2021
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2021
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
+# Paweł Wodyński <pw@myodoo.pl>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,help:gift_card.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Produkt rejestrowany to produkt, którego stanem magazynowym zarządzasz. Wymaga zainstalowania aplikacji Magazynowanie.\n"
+"Produkt pomocniczy to produkt, którego stan magazynowy nie jest zarządzany.\n"
+"Usługa jest dostarczanym przez Ciebie niefizycznym produktem."
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__balance
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__currency_id
+msgid "Currency"
+msgstr "Waluta"
+
+#. module: gift_card
+#: code:addons/gift_card/models/product.py:0
+#, python-format
+msgid "Deleting the Gift Card Pay product is not allowed."
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__expired
+msgid "Expired"
+msgstr "Wygasło"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__expired_date
+msgid "Expired Date"
+msgstr ""
+
+#. module: gift_card
+#: code:addons/gift_card/models/gift_card.py:0
+#, python-format
+msgid "Gift #%s"
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__product_template__detailed_type__gift
+#: model:product.product,name:gift_card.gift_card_product_50
+#: model:product.product,name:gift_card.pay_with_gift_card_product
+#: model:product.template,name:gift_card.gift_card_product_50_product_template
+#: model:product.template,name:gift_card.pay_with_gift_card_product_product_template
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_tree
+msgid "Gift Card"
+msgstr "Karta podarunkowa"
+
+#. module: gift_card
+#: model:ir.actions.act_window,name:gift_card.gift_card_action
+msgid "Gift Cards"
+msgstr "Karty podarunkowe"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__id
+msgid "ID"
+msgstr "ID"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_gift_card__partner_id
+msgid "If empty, all users can use it"
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__initial_amount
+msgid "Initial Amount"
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__name
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__partner_id
+msgid "Partner"
+msgstr "Kontrahent"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_product_template
+msgid "Product Template"
+msgstr "Szablon produktu"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:gift_card.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Typ produktu"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__state
+msgid "State"
+msgstr "Stan"
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_unique_gift_card_code
+msgid "The gift card code must be unique."
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_check_amount
+msgid "The initial amount must be positive."
+msgstr ""
+
+#. module: gift_card
+#: model:product.product,uom_name:gift_card.gift_card_product_50
+#: model:product.product,uom_name:gift_card.pay_with_gift_card_product
+#: model:product.template,uom_name:gift_card.gift_card_product_50_product_template
+#: model:product.template,uom_name:gift_card.pay_with_gift_card_product_product_template
+msgid "Units"
+msgstr "Jednostki"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__valid
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+msgid "Valid"
+msgstr "Ważny"

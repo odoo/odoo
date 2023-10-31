@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="type_single" model="purchase.requisition.type">
+            <field name="name">Blanket Order</field>
+            <field name="sequence">3</field>
+            <field name="quantity_copy">none</field>
+        </record>
+        <record id="type_multi" model="purchase.requisition.type">
+            <field name="name">Call for Tender</field>
+            <field name="sequence">1</field>
+            <field name="quantity_copy">copy</field>
+        </record>
+
+        <record id="seq_purchase_tender" model="ir.sequence">
+            <field name="name">Call for Tender</field>
+            <field name="code">purchase.requisition.purchase.tender</field>
+            <field name="prefix">TE</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"></field>
+        </record>
+
+        <record id="seq_blanket_order" model="ir.sequence">
+            <field name="name">Blanket Order</field>
+            <field name="code">purchase.requisition.blanket.order</field>
+            <field name="prefix">BO</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"></field>
+        </record>
+    </data>
+</odoo>

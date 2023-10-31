@@ -1,0 +1,21 @@
+.s_dynamic {
+  .carousel-control-prev, .carousel-control-next {
+    position: absolute;
+    width: 4rem;
+
+    > span.fa {
+      color: gray('700');
+      background: radial-gradient($white 50%, transparent 50%);
+    }
+  }
+  .dynamic_snippet_template .card-footer a, .dynamic_snippet_template .card-footer button, .o_dynamic_snippet_btn_wrapper {
+    z-index: 2;
+  }
+  .dynamic_snippet_template .card-body .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

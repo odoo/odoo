@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MediaPreview" owl="1">
+        <div class="o_MediaPreview position-relative d-flex justify-content-center">
+            <t t-if="mediaPreview">
+                <video class="o_MediaPreview_videoDisplay shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
+                <p t-if="mediaPreview.doesBrowserSupportMediaDevices and !mediaPreview.isVideoEnabled" class="o_MediaPreview_mediaDevicesStatus position-absolute text-light">
+                    Camera is off
+                </p>
+                <p t-if="!mediaPreview.doesBrowserSupportMediaDevices" class="o_MediaPreview_mediaDevicesStatus text-light">
+                    Your browser does not support videoconference
+                </p>
+                <div class="o_MediaPreview_buttonsContainer">
+                    <button t-if="!mediaPreview.isMicrophoneEnabled" class="o_MediaPreview_enableMicrophoneButton o_MediaPreview_button btn btn-danger btn-lg rounded-circle p-0 m-3 fa fa-microphone-slash" t-on-click="mediaPreview.onClickEnableMicrophoneButton"/>
+                    <button t-if="mediaPreview.isMicrophoneEnabled" class="o_MediaPreview_disableMicrophoneButton o_MediaPreview_button btn btn-dark btn-lg p-0 m-3 rounded-circle border-light fa fa-microphone" t-on-click="mediaPreview.onClickDisableMicrophoneButton"/>
+                    <button t-if="!mediaPreview.isVideoEnabled" class="o_MediaPreview_enableVideoButton o_MediaPreview_button btn btn-danger btn-lg p-0 m-3 rounded-circle fa fa-eye-slash" t-on-click="mediaPreview.onClickEnableVideoButton"/>
+                    <button t-if="mediaPreview.isVideoEnabled" class="o_MediaPreview_disableVideoButton o_MediaPreview_button btn btn-dark btn-lg p-0 m-3 rounded-circle border-light fa fa-video-camera" t-on-click="mediaPreview.onClickDisableVideoButton"/>
+                </div>
+                <audio class="o_MediaPreview_audioPlayer" autoplay="" t-ref="audio"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

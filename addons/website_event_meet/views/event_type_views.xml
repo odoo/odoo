@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.meet</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='community_menu']" position='after'>
+                <span attrs="{'invisible': [('community_menu', '=', False)]}">
+                    <label for="meeting_room_allow_creation"/>
+                    <field name="meeting_room_allow_creation"/>
+                </span>
+            </xpath>
+            <xpath expr="//span[@name='community_menu']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

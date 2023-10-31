@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.cl"/>
+    </record>
+
+    <record id="tax_report_base_imponible_ventas" model="account.tax.report.line">
+        <field name="name">Base Imponible Ventas</field>
+        <field name="tag_name">Base Imponible Ventas</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_ventas_netas_gravadas_c_iva" model="account.tax.report.line">
+        <field name="name">Ventas Netas Gravadas con IVA</field>
+        <field name="tag_name">Ventas Netas Gravadas con IVA</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_ventas_exentas" model="account.tax.report.line">
+        <field name="name">Ventas Exentas</field>
+        <field name="tag_name">Ventas Exentas</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
+    </record>
+
+    <record id="tax_report_impuestos_renta" model="account.tax.report.line">
+        <field name="name">Impuesto a la Renta Primera Categoría a Pagar</field>
+        <field name="tag_name">Impuesto a la Renta Primera Categoría a Pagar</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
+    </record>
+
+    <record id="tax_report_retencion_total_compras" model="account.tax.report.line">
+        <field name="name">Retención Total (compras)</field>
+        <field name="tag_name">Retención Total (compras)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_impuestos_originados_venta" model="account.tax.report.line">
+        <field name="name">Impuesto Originado por la Venta</field>
+        <field name="tag_name">Impuesto Originado por la Venta</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_iva_debito_fiscal" model="account.tax.report.line">
+        <field name="name">IVA Debito Fiscal</field>
+        <field name="tag_name">IVA Debito Fiscal</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_ppm" model="account.tax.report.line">
+        <field name="name">PPM</field>
+        <field name="tag_name">PPM</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_netas_gr_iva_recup" model="account.tax.report.line">
+        <field name="name">Compras Netas Gravadas Con IVA (recuperable)</field>
+        <field name="tag_name">Compras Netas Gravadas Con IVA (recuperable)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_netas_gr_iva_uso_comun" model="account.tax.report.line">
+        <field name="name">Compra Netas Gravadas Con IVA Uso Comun</field>
+        <field name="tag_name">Compra Netas Gravadas Con IVA Uso Comun</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_netas_gr_iva_no_recuperable" model="account.tax.report.line">
+        <field name="name">Compras IVA No Recuperable</field>
+        <field name="tag_name">Compras IVA No Recuperable</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_supermercado" model="account.tax.report.line">
+        <field name="name">Compras De Supermercado</field>
+        <field name="tag_name">Compras De Supermercado</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo" model="account.tax.report.line">
+        <field name="name">Compras de Activo Fijo</field>
+        <field name="tag_name">Compras de Activo Fijo</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo_uso_comun" model="account.tax.report.line">
+        <field name="name">Compras de Activo Fijo Uso Común</field>
+        <field name="tag_name">Compras de Activo Fijo Uso Común</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_activo_fijo_no_recup" model="account.tax.report.line">
+        <field name="name">Compras de Activo Fijo No Recuperable</field>
+        <field name="tag_name">Compras de Activo Fijo No Recuperable</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_no_gravadas_iva" model="account.tax.report.line">
+        <field name="name">Compras No Gravadas Con IVA</field>
+        <field name="tag_name">Compras No Gravadas Con IVA</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_impuestos_pagados_compra" model="account.tax.report.line">
+        <field name="name">Impuestos Pagados en la Compra</field>
+        <field name="tag_name">Impuestos Pagados en la Compra</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_recup" model="account.tax.report.line">
+        <field name="name">IVA Pagado Compras Recuperables</field>
+        <field name="tag_name">IVA Pagado Compras Recuperables</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_uso_comun" model="account.tax.report.line">
+        <field name="name">IVA Pagado Compras Uso Común</field>
+        <field name="tag_name">IVA Pagado Compras Uso Común</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_no_recup" model="account.tax.report.line">
+        <field name="name">IVA Pagado No Recuperable</field>
+        <field name="tag_name">IVA Pagado No Recuperable</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_supermercado" model="account.tax.report.line">
+        <field name="name">IVA Pagado Compras Supermercado</field>
+        <field name="tag_name">IVA Pagado Compras Supermercado</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_activo_fijo" model="account.tax.report.line">
+        <field name="name">Compras Activo Fijo</field>
+        <field name="tag_name">Compras Activo Fijo</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_activo_fijo_uso_comun" model="account.tax.report.line">
+        <field name="name">Compras Activo Fijo Uso Común</field>
+        <field name="tag_name">Compras Activo Fijo Uso Común</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_compras_iva_activo_fijo_no_recup" model="account.tax.report.line">
+        <field name="name">Compras Activo Fijo No Recuperables</field>
+        <field name="tag_name">Compras Activo Fijo No Recuperables</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_retencion_segunda_categ" model="account.tax.report.line">
+        <field name="name">Retención Segunda Categoría</field>
+        <field name="tag_name">Retención Segunda Categoría</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_base_retencion_segunda_categ" model="account.tax.report.line">
+        <field name="name">Base Retención Segunda Categoría</field>
+        <field name="tag_name">Base Retención Segunda Categoría</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_base_ila_compras" model="account.tax.report.line">
+        <field name="name">Base Retenciones ILA (compras)</field>
+        <field name="tag_name">Base Retenciones ILA (compras)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_tax_ila_compras" model="account.tax.report.line">
+        <field name="name">Impuesto Ret Sufrida ILA (compras)</field>
+        <field name="tag_name">Retenciones ILA (compras)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_base_ila_ventas" model="account.tax.report.line">
+        <field name="name">Base Retenciones ILA (ventas)</field>
+        <field name="tag_name">Base Retenciones ILA (ventas)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_tax_ila_ventas" model="account.tax.report.line">
+        <field name="name">Impuesto Ret Practicadas ILA (ventas)</field>
+        <field name="tag_name">Retenciones ILA (ventas)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+</odoo>

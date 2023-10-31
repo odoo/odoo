@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="s_alert" name="Alert">
+    <div class="s_mail_alert s_alert_md alert-info w-100 clearfix o_mail_snippet_general pt16 pb16 px-3" data-snippet="s_alert">
+        <div class="s_alert_icon" valign="top">
+            <i class="fa fa-2x fa-info-circle"/>
+        </div>
+        <div class="s_alert_content">
+            <p><b>Explain the benefits you offer</b>
+            <br/>Don't write about products or services here, write about solutions.</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_alert_options" inherit_id="mass_mailing.snippet_options">
+    <xpath expr="//div[@id='so_width']" position="before">
+        <div data-selector=".s_mail_alert" data-js="Alert">
+            <we-select string="Type" data-apply-to=".fa.s_alert_icon" data-trigger="alert_colorpicker_opt">
+                <we-button data-select-class="fa-user-circle" data-trigger-value="primary">Primary</we-button>
+                <we-button data-select-class="fa-user-circle-o" data-trigger-value="secondary">Secondary</we-button>
+                <we-button data-select-class="fa-info-circle" data-trigger-value="info">Info</we-button>
+                <we-button data-select-class="fa-check-circle" data-trigger-value="success">Success</we-button>
+                <we-button data-select-class="fa-exclamation-triangle" data-trigger-value="warning">Warning</we-button>
+                <we-button data-select-class="fa-exclamation-circle" data-trigger-value="danger">Danger</we-button>
+            </we-select>
+        </div>
+    </xpath>
+    <!-- Keep those options in separate xpath for options order -->
+    <xpath expr="//div[@id='so_width']" position="after">
+        <div data-selector=".s_mail_alert">
+            <we-select string="Size">
+                <we-button data-select-class="s_alert_sm">Small</we-button>
+                <we-button data-select-class="s_alert_md">Medium</we-button>
+                <we-button data-select-class="s_alert_lg">Large</we-button>
+            </we-select>
+            <we-colorpicker string="Color" data-name="alert_colorpicker_opt"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="alert-"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<record id="mass_mailing.s_alert_001_scss" model="ir.asset">
+    <field name="name">Alert 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">mass_mailing/static/src/snippets/s_alert/000.scss</field>
+</record>
+
+</odoo>

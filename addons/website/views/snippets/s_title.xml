@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" name="Title">
+    <section class="s_title pt40 pb40" data-vcss="001">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;"><font style="font-size: 62px;">Your Site Title</font></h1>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_title_000_scss" model="ir.asset">
+    <field name="name">Title 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_title/000.scss</field>
+    <field name="active" eval="False"/>
+    </record>
+
+</odoo>

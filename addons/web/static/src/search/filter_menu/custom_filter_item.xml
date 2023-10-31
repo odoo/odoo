@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CustomFilterItem" owl="1">
+        <Dropdown class="o_add_custom_filter_menu">
+            <t t-set-slot="toggler">
+                Add Custom Filter
+            </t>
+            <t t-foreach="conditions" t-as="condition" t-key="condition_index">
+                <div class=" o_filter_condition dropdown-item-text position-relative">
+                    <t t-set="fieldType" t-value="fields[condition.field].type"/>
+                    <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
+                    <span t-if="!condition_first" class="o_or_filter">or</span>
+                    <select class="o_input o_generator_menu_field"
+                        t-on-change="onFieldSelect(condition)"
+                        >
+                        <option t-foreach="fields" t-as="field" t-key="field_index"
+                            t-att-value="field.name"
+                            t-att-selected="field_index === condition.field"
+                            t-esc="field.string"
+                        />
+                    </select>
+                    <select class="o_input o_generator_menu_operator"
+                        t-on-change="onOperatorSelect(condition)"
+                        >
+                        <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
+                            t-att-value="operator.symbol"
+                            t-att-selected="operator_index === condition.operator"
+                            t-esc="operator.description"
+                        />
+                    </select>
+                    <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
+                        <t t-if="fieldType === 'date'">
+                            <DatePicker
+                                date="condition.value[0]"
+                                t-on-datetime-changed="onDateChanged(condition, 0)"
+                            />
+                            <DatePicker t-if="selectedOperator.symbol === 'between'"
+                                date="condition.value[1]"
+                                t-on-datetime-changed="onDateChanged(condition, 1)"
+                            />
+                        </t>
+                        <t t-elif="fieldType === 'datetime'">
+                            <DateTimePicker
+                                date="condition.value[0]"
+                                t-on-datetime-changed="onDateChanged(condition, 0)"
+                            />
+                            <DateTimePicker t-if="selectedOperator.symbol === 'between'"
+                                date="condition.value[1]"
+                                t-on-datetime-changed="onDateChanged(condition, 1)"
+                            />
+                        </t>
+                        <select t-elif="fieldType === 'selection'" class="o_input"
+                            t-on-change="onValueChange(condition)"
+                            >
+                            <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
+                                t-att-value="option[0]"
+                                t-esc="option[1]"
+                            />
+                        </select>
+                        <!-- @todo (DAM) I think that the localization should be better consisered below -->
+                        <input t-elif="fieldType === 'float'"
+                            class="o_input"
+                            step="0.01"
+                            t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
+                            t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
+                            t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
+                            t-att-value="condition.displayedValue"
+                            t-on-change="onValueChange(condition)"
+                        />
+                        <input t-elif="['integer', 'id'].includes(fieldType)"
+                            class="o_input"
+                            step="1"
+                            type="number"
+                            t-att-value="condition.displayedValue"
+                            t-on-change="onValueChange(condition)"
+                        />
+                        <input t-else=""
+                            type="text"
+                            class="o_input"
+                            t-att-value="condition.displayedValue"
+                            t-on-change="onValueChange(condition)"
+                        />
+                    </span>
+                    <i t-if="conditions.length gt 1"
+                        class="fa fa-trash-o o_generator_menu_delete"
+                        role="image"
+                        aria-label="Delete"
+                        title="Delete"
+                        t-on-click="onRemoveCondition(condition_index)"
+                    />
+                </div>
+            </t>
+            <div class="px-3 py-2">
+                <button type="button"
+                    class="btn btn-primary o_apply_filter mr-2"
+                    t-on-click="onApply"
+                >
+                    Apply
+                </button>
+                <button type="button"
+                    class="btn btn-secondary o_add_condition"
+                    t-on-click.stop="addNewCondition"
+                >
+                    <i class="fa fa-plus-circle"/>
+                    <t>Add a condition</t>
+                </button>
+            </div>
+        </Dropdown>
+    </t>
+
+</templates>

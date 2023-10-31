@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<!-- Include fields created in account.tax and account.tax.template form views -->
+		<record model="ir.ui.view" id="view_l10n_br_account_tax_template_form">
+			<field name="name">l10n_br_account.tax.template.form</field>
+			<field name="model">account.tax.template</field>
+			<field name="inherit_id" ref="account.view_account_tax_template_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="price_include">
+					<field name="tax_discount"/>
+			    </field>
+				<field position="after" name="tax_discount">
+					<field name="base_reduction" widget="monetary"/>
+					<field name="amount_mva" widget="monetary"/>
+			    </field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_l10n_br_account_tax_form">
+			<field name="name">l10n_br_account.tax.form</field>
+			<field name="model">account.tax</field>
+			<field name="inherit_id" ref="account.view_tax_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="price_include">
+					<field name="tax_discount" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
+			    </field>
+			    <field position="after" name="tax_discount">
+					<field name="base_reduction" widget="monetary" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
+					<field name="amount_mva" widget="monetary" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
+			    </field>
+			</field>
+		</record>
+</odoo>

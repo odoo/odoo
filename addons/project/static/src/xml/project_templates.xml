@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="day_of_week_widget">
+        <table class="o_dow_widget">
+            <thead>
+                <tr>
+                    <th t-foreach="widget.labels" t-as="label">
+                        <t t-esc="label"/>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="o_dow_days" />
+            </tbody>
+        </table>
+    </t>
+
+    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble mr-2 o_color_bubble_' + color"></span>
+
+    <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
+            <t t-call="project.ProjectControlPanelContent">
+                <t t-set="showProjectUpdate" t-value="show_project_update"/>
+                <t t-set="isProjectUser" t-value="is_project_user"/>
+            </t>
+        </xpath>
+    </div>
+
+    <t t-name="project.ProjectRightPanel" owl="1">
+        <div t-if="project_id" class="o_rightpanel">
+            <t t-call="project.StatButtonsSection"/>
+            <t t-call="project.MilestoneSection"/>
+        </div>
+        <!-- If this is called from notif, multiples updates but no specific project -->
+        <div t-else=""/>
+    </t>
+
+    <t t-name="project.StatButtonsSection" owl="1">
+        <div class="o_rightpanel_section">
+            <div class="o_form_view">
+                <div class="oe_button_box o_full">
+                    <t t-foreach="state.data.buttons" t-as="button" t-key="button.order">
+                        <button class="btn oe_stat_button" t-if="button.show"
+                            t-on-click="onProjectActionClick" 
+                            t-att-data-action="button.action"
+                            t-att-data-additional_context="button.additional_context"
+                            t-att-data-type="button.action_type">
+                            <i t-att-class="'fa fa-fw o_button_icon fa-' + button.icon"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <t t-esc="button.number"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    <t t-esc="button.text"/>
+                                </span>
+                            </div>
+                        </button>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="project.MilestoneSection" owl="1">
+        <t t-set="milestones" t-value="state.data.milestones"/>
+        <div class="o_rightpanel_section" name="milestone">
+            <div class="o_rightpanel_header">
+                <div class="o_rightpanel_title">
+                    Milestones
+                </div>
+                <span class="o_rightpanel_button">
+                    <AddMilestone context="context"/>
+                </span>
+            </div>
+            <div class="o_rightpanel_data">
+                <div t-foreach="milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
+                    <OpenMilestone context="context" milestone="milestone" t-key="milestone.id"/>
+                </div>
+                <span t-if="milestones.data.length === 0" class="text-muted font-italic">
+                    Track major progress points that must be reached to achieve success.
+                </span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="project.AddMilestone" owl="1">
+        <div class="o_add_milestone">
+            <a t-on-click="onAddMilestoneClick">Add Milestone</a>
+            <span t-if="state.openDialog" class="o_rightpanel_hidden">
+                <ComponentAdapter
+                    Component="FormViewDialog"
+                    params="{
+                        context: context,
+                        _createContext: _createContext,
+                        on_saved: _onDialogSaved,
+                        res_id: false,
+                        res_model: 'project.milestone',
+                        title: NEW_PROJECT_MILESTONE,
+                        multi_select: true,
+                    }"
+                    t-ref="dialog"
+                />
+            </span>
+        </div>
+    </t>
+
+    <t t-name="project.OpenMilestone" owl="1">
+        <div class="o_open_milestone row" t-att-class="state.colorClass">
+            <span class="o_milestone_checkbox col-1" t-on-click="onMilestoneClick">
+                <i class="fa" t-att-class="state.checkboxIcon"></i>
+            </span>
+            <div class="o_milestone_detail col-10 p-0" t-on-click="onOpenMilestone">
+                <span class="text-truncate col-8 px-0" t-att-title="milestone.name" style="flex: 10%">
+                    <t t-esc="milestone.name"/>
+                </span>
+                <span class="o_rightpanel_center_col col-4">
+                    <t t-esc="deadline"/>
+                </span>
+            </div>
+            <span class="o_rightpanel_right_col col-1 px-0">
+                <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
+            </span>
+            <span t-if="state.openDialog" class="o_rightpanel_hidden">
+                <ComponentAdapter
+                    Component="FormViewDialog"
+                    params="{
+                        context: context,
+                        on_saved: _onDialogSaved,
+                        res_id: milestone.id,
+                        res_model: 'project.milestone',
+                        title: OPEN_PROJECT_MILESTONE,
+                        disable_multiple_selection: true,
+                        deletable: true
+                    }"
+                    t-ref="dialog"
+                />
+            </span>
+        </div>
+    </t>
+
+</templates>

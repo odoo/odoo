@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.event</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="65"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Events" string="Events" data-key="event" groups="event.group_event_manager">
+                        <h2>Events</h2>
+                        <div class="row mt16 o_settings_container" name="events_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="manage_tracks"
+                                title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_event_track"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Schedule &amp; Tracks" for="module_website_event_track"/>
+                                    <div class="text-muted">
+                                        Manage &amp; publish a schedule with tracks
+                                    </div>
+                                    <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                        <field name="module_website_event_track_live" class="w-auto"/>
+                                        <div>
+                                            <label string="Live Broadcast" for="module_website_event_track_live"/><br/>
+                                            <span class="text-muted">Air your tracks online through a Youtube integration</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                        <field name="module_website_event_track_quiz" class="w-auto"/>
+                                        <div>
+                                            <label string="Event Gamification" for="module_website_event_track_quiz"/><br/>
+                                            <span class="text-muted">Share a quiz to your attendees once a track is over</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div>
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_event_meet"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Community Chat Rooms" for="module_website_event_meet"/>
+                                        <div class="text-muted">
+                                            Foster interactions between attendees by creating virtual conference rooms
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_event_exhibitor"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Online Exhibitors" for="module_website_event_exhibitor"/>
+                                        <div class="text-muted">
+                                            Display Sponsors and Exhibitors on your event pages
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_event_booth"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Booth Management" for="module_event_booth"/>
+                                        <div class="text-muted">
+                                            Create Booths and manage their reservations
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Registration</h2>
+                        <div class="row mt16 o_settings_container" name="registration_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sell_tickets">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_event_sale"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_event_sale"/>
+                                    <div class="text-muted">
+                                        Sell tickets with sales orders
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_settings_website">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_event_sale"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_website_event_sale"/>
+                                    <div class="text-muted">
+                                        Sell tickets on your website
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Attendance</h2>
+                        <div class="row mt16 o_settings_container" name="attendance_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="event_barcode">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_event_barcode" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_event_barcode"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted" name="event_barcode">
+                                        Scan badges to confirm attendances
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_event_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'event', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_event_global_settings" name="Settings"
+            parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

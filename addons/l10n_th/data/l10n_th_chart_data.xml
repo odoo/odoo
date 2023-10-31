@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_th_statements_menu" name="Thailand" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+<!-- ACCOUNT TYPES -->
+
+<record id="acc_type_reconciled" model="account.account.type">
+    <field name="name">Reconciled</field>
+    <field name="internal_group">off_balance</field>
+</record>
+
+<!-- CHART OF Template -->
+
+<record id="chart" model="account.chart.template">
+    <field name="name">Thailand - Chart of Accounts</field>
+    <field name="cash_account_code_prefix">1100</field>
+    <field name="bank_account_code_prefix">1110</field>
+    <field name="transfer_account_code_prefix">16</field>
+    <field name="currency_id" ref="base.THB"/>
+    <field name="country_id" ref="base.th"/>
+</record>
+</odoo>

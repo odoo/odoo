@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">Alipay Acquirer Form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+                    <field name="alipay_payment_method" widget="radio"/>
+                    <field name="alipay_seller_email"
+                           attrs="{'invisible': [('alipay_payment_method', '=', 'standard_checkout')], 'required': [('provider', '=', 'alipay'), ('alipay_payment_method', '=', 'express_checkout')]}"/>
+                    <field name="alipay_merchant_partner_id" password="True"/>
+                    <field name="alipay_md5_signature_key" password="True"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

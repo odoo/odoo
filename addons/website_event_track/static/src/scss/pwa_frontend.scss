@@ -1,0 +1,35 @@
+@media all and (display-mode: standalone) {
+    #wrapwrap.event {
+        #top,
+        #bottom {
+            display: none;
+        }
+    }
+}
+
+#wrapwrap.event {
+    .o_pwa_install_banner {
+        position: fixed;
+        display: flex;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        margin: 0;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-top: 1px solid $gray-200;
+        box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        font-size: 1rem;
+        z-index: $zindex-tooltip;
+
+        .o_btn_close {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .o_btn_install {
+            margin-left: auto;
+        }
+    }
+}

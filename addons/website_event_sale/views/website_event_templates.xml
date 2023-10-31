@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="registration_template" inherit_id="website_event.registration_template">
+    <!-- Add price information on tickets (multi tickets, aka in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
+        <t t-if="ticket.price">
+            <t t-if="(ticket.price - ticket.price_reduce) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                <del class="text-danger mr-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
+            </t>
+            <span t-field="ticket.price_reduce"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                  groups="account.group_show_line_subtotals_tax_excluded"/>
+            <span t-field="ticket.price_reduce_taxinc"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                  groups="account.group_show_line_subtotals_tax_included"/>
+            <span itemprop="price" class="d-none" t-esc="ticket.price"/>
+            <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
+        </t>
+        <span t-else="" class="font-weight-bold text-uppercase">Free</span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
+        <t t-if="event.event_ticket_ids[-1].price_reduce > 0">
+            <span class="text-dark">
+                From
+                <span t-esc="event.event_ticket_ids[0].price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
+                <t t-if="event.event_ticket_ids[-1].price_reduce != event.event_ticket_ids[0].price_reduce">
+                    to
+                    <span t-esc="event.event_ticket_ids[-1].price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
+                </t>
+            </span>
+        </t>
+    </xpath>
+    <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_single')]//h6" position="after">
+        <div class="px-2 text-dark d-flex align-items-center align-self-stretch">
+            <t t-if="tickets.price">
+                <t t-if="(tickets.price - tickets.price_reduce) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                    <del class="text-danger mr-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
+                </t>
+                <span t-field="tickets.price_reduce"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span t-field="tickets.price_reduce_taxinc"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      groups="account.group_show_line_subtotals_tax_included"/>
+                <span itemprop="price" class="d-none" t-esc="tickets.price"/>
+                <span itemprop="priceCurrency" class="d-none" t-esc="website.pricelist_id.currency_id.name"/>
+            </t>
+            <span t-else="" class="font-weight-bold text-uppercase">Free</span>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

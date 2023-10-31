@@ -1,0 +1,95 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_payumoney
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid shasign: received %(sign)s, computed %(computed)s."
+msgstr "Shasign non valido: ricevuto %(sign)s, calcolato %(computed)s."
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Chiave del commerciante"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "Salt del commerciante"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Nessuna transazione trovata corrispondente al riferimento %s."
+
+#. module: payment_payumoney
+#: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
+#: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_acquirer__provider__payumoney
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Sistema di pagamento"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Metodi di pagamento"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transazione di pagamento"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fornitore"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
+msgstr "Dati ricevuti con riferimento mancante (%(ref)s) o shasign (%(sign)s)"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+"Il fornitore di servizi di pagamento da utilizzare con questo acquirente"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "The key solely used to identify the account with PayU money"
+msgstr ""
+"La chiave utilizzata esclusivamente per identificare il conto con denaro "
+"PayU"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment_transaction.py:0
+#, python-format
+msgid "The payment encountered an error with code %s"
+msgstr "Il pagamento ha incontrato un errore con il codice %s"

@@ -1,0 +1,25 @@
+.o_MessageActionList {
+    background-color: $white;
+    border: $border-width solid $border-color;
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+
+    &:hover {
+        box-shadow: 0 4px .5rem -.5rem black;
+    }
+}
+
+.o_MessageActionList_action {
+    cursor: pointer;
+
+    &:hover {
+        background-color: mix($border-color, $white);
+    }
+}
+
+.o_MessageActionList_actionStar.o_MessageActionList_actionStar_active {
+    color: gold;
+}
+
+.o_MessageActionList_actionReaction {
+    display: inline; // override block from popover div
+}

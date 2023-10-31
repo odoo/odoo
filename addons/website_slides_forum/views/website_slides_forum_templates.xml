@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <template id="website_slides_forum_header" inherit_id="website_forum.header">
+        <xpath expr="//div[hasclass('o_forum_nav_header_container')]" position="before">
+            <t t-if="forum.slide_channel_id">
+                <div class="o_wforum_elearning_navtabs_container">
+                    <div class="container">
+                        <ul class="nav nav-tabs o_wprofile_nav_tabs mt-0 flex-nowrap" role="tablist" id="profile_extra_info_tablist">
+                            <li class="nav-item">
+                                <a t-att-href="'/slides/%s%s' % (slug(forum.slide_channel_id), '/%s' % slug(category) if category else '')"
+                                    t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
+                                    <i class="fa fa-home"/> Course</a>
+                            </li>
+                            <li t-if="forum.slide_channel_id.allow_comment" class="nav-item">
+                                <a t-att-href="'/slides/%s?active_tab=review' % (slug(forum.slide_channel_id))"
+                                    t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
+                                    Reviews<t t-if="forum.slide_channel_id.rating_count"> (<t t-esc="forum.slide_channel_id.rating_count"/>)</t>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a t-att-href="'/forum/%s' % (slug(forum))" t-att-class="'nav-link active o_wprofile_navlink'" style="border-left: 0px">Forum</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template name="Split regular forums/courses" id="website_slides_forum_index" inherit_id="website_forum.forum_all" active="True" customize_show="True">
+        <xpath expr="//div[@id='o_wforum_forums_index_list']/*[@t-if='forums']" position="replace">
+            <t t-if="forums">
+                <t t-set="courses_discussions" t-value="forums.filtered(lambda f: f.slide_channel_id)"/>
+                <t t-set="regular_forums" t-value="forums - courses_discussions"/>
+
+                <div class="row mb-4">
+                    <t t-if="len(regular_forums) == 1">
+                        <t t-set="forum" t-value="regular_forums"/>
+                        <div class="col-md-10 col-lg-8 mb-2">
+                            <div class="row align-items-start">
+                                <div class="col-12 col-sm-4">
+                                    <a t-attf-href="/forum/#{slug(forum)}">
+                                        <div t-attf-class="h-100 w-100 o_editable #{not forum.image_1920 and 'rounded o_wforum_forum_card_bg shadow-sm flex-shrink-0'}">
+                                            <div t-if="forum.image_1920 or editable" t-attf-class="h-100"
+                                            t-field="forum.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'w-100 h-100 o_object_fit_cover rounded'}" />
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-12 col-sm-7 mt-2 mt-sm-0">
+                                    <a t-attf-href="/forum/#{slug(forum)}" class="text-reset" t-att-title="forum.name">
+                                        <h3 class="h2" t-field="forum.name"/>
+                                    </a>
+                                    <p t-attf-class="m-0 lead #{not forum.description and 'css_non_editable_mode_hidden'}"
+                                       placeholder="Description"
+                                       t-field="forum.teaser"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="website_forum.forum_all_all_entries">
+                            <t t-set="_forums" t-value="regular_forums"/>
+                        </t>
+                    </t>
+                </div>
+
+                <div class="d-flex border-bottom pb-1 pt-3 mb-3">
+                    <h2 class="h4 mb-0 text-muted">Courses Discussions</h2>
+                    <div class="flex-grow-1 text-right">
+                        <a href="/slides" title="See all Courses">Check our Courses <i class="fa fa-chevron-right"/></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <t t-call="website_forum.forum_all_all_entries">
+                        <t t-set="_forums" t-value="courses_discussions"/>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</data></odoo>

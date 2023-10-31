@@ -1,0 +1,202 @@
+
+// This file is included in both backend and frontend bundles.
+// Bundle-specific rules can be found in 'webclient/navbar.scss' (backend) and
+// 'website.ui.scss' (frontend).
+
+// = Main Navbar
+// ============================================================================
+.o_main_navbar {
+  background-color: $o-brand-odoo;
+  border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+  display: grid;
+  height: $o-navbar-height;
+  gap: 0px 0px;
+  grid-template-areas: "apps brand sections systray";
+  grid-template-columns:
+    minmax($o-navbar-height, max-content)
+    max-content
+    minmax($o-navbar-height, 1fr)
+    fit-content(100%);
+  grid-template-rows: $o-navbar-height;
+  min-width: min-content;
+
+  // = Scoped Variables
+  //
+  // Variables scoped within the current context that mirror backend's
+  // boostrap values.
+  // --------------------------------------------------------------------------
+  $-backend-font-weight-bold: 500;
+  $-backend-entry-hover-bg: rgba(0, 0, 0, .08);
+  $-backend-h3-font-size: 17px;
+  $-backend-h2-font-size: 20px;
+  $-backend-entry-hpadding: 20px;
+  $-backend-entry-vpadding: 3px;
+
+  // = % PseudoClasses
+  //
+  // Regroup rules shared across different elements
+  // --------------------------------------------------------------------------
+  %-main-navbar-entry-base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: $o-navbar-height;
+    cursor: pointer;
+    user-select: none;
+    background: transparent;
+
+    @include o-hover-text-color(rgba($white, .9), $white);
+  }
+
+  %-main-navbar-entry-padding {
+    padding: 0 $o-horizontal-padding;
+  }
+
+  %-main-navbar-entry-bg-hover {
+    @include hover() {
+      background-color: $-backend-entry-hover-bg;
+    }
+  }
+
+  %-main-navbar-entry-active {
+    @include plain-hover-focus() {
+      background: $-backend-entry-hover-bg;
+      color: $white;
+    }
+  }
+
+  // = Reset browsers defaults
+  // --------------------------------------------------------------------------
+  > ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  // = Owl <Dropdown> components
+  // --------------------------------------------------------------------------
+  &,.o_menu_sections, .o_menu_systray {
+
+    .dropdown .dropdown-toggle {
+      @extend %-main-navbar-entry-base;
+      @extend %-main-navbar-entry-padding;
+      @extend %-main-navbar-entry-bg-hover;
+      border: 0;
+      white-space: nowrap;
+    }
+
+    .dropdown {
+      &.show > .dropdown-toggle {
+        @extend %-main-navbar-entry-active;
+      }
+    }
+
+    .o_nav_entry {
+      @extend %-main-navbar-entry-base;
+      @extend %-main-navbar-entry-padding;
+      @extend %-main-navbar-entry-bg-hover;
+    }
+
+    .dropdown-menu {
+      margin-top: 0;
+      border-top: 0;
+      @include border-top-radius(0);
+    }
+
+    .dropdown-menu_group {
+      margin-top: 0;
+    }
+
+    .dropdown-item + .dropdown-header:not(.o_more_dropdown_section_group) {
+      margin-top: .3em;
+    }
+
+    .o_dropdown_menu_group_entry.dropdown-item {
+      padding-left: $o-dropdown-hpadding * 1.5;
+
+      + .dropdown-item:not(.o_dropdown_menu_group_entry) {
+        margin-top: .8em;
+      }
+    }
+  }
+
+  // = Legacy elements adaptations
+  // --------------------------------------------------------------------------
+  > .o_menu_sections, .o_menu_systray {
+    > div > a, > div > label:only-child, .dropdown-toggle, .dropdown-toggle.o-dropdown--narrow {
+      padding: 0 $dropdown-item-padding-x * .5;
+    }
+
+    > div {
+      &, > a {
+        @extend %-main-navbar-entry-base;
+      }
+
+      &.show > a {
+        @extend %-main-navbar-entry-active;
+      }
+
+      > a {
+        @extend %-main-navbar-entry-bg-hover;
+      }
+    }
+  }
+  // = Main Navbar Elements
+  // --------------------------------------------------------------------------
+  .o_menu_toggle, .o_navbar_apps_menu {
+    @extend %-main-navbar-entry-base;
+    font-size: $-backend-h3-font-size;
+    grid-area: apps;
+  }
+
+  .o_menu_toggle { // Enterprise-legacy only
+    @extend %-main-navbar-entry-padding;
+  }
+
+  .o_menu_brand {
+    @extend %-main-navbar-entry-base;
+    @extend %-main-navbar-entry-padding;
+    padding-left: 0;
+    grid-area: brand;
+    font-size: $-backend-h2-font-size;
+    font-weight: $-backend-font-weight-bold;
+
+    @include hover() {
+      background: none;
+    }
+  }
+
+  .o_menu_sections {
+    display: flex;
+    grid-area: sections;
+
+    .o_more_dropdown_section_group {
+      padding: $-backend-entry-vpadding $-backend-entry-hpadding;
+      margin-top: .8em;
+
+      &:first-child {
+        margin-top: $dropdown-padding-y * -1;
+        padding-top: $dropdown-padding-y * 1.5;
+      }
+    }
+  }
+
+  .o_menu_systray {
+    grid-area: systray;
+    display: flex;
+  }
+}
+
+// = SuperUser Design
+// ============================================================================
+body.o_is_superuser .o_menu_systray {
+  position: relative;
+  background: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px);
+
+  &:before {
+    content: "";
+    @include o-position-absolute(2px, 2px, 2px, 2px);
+    background-color: $o-brand-odoo;
+  }
+}

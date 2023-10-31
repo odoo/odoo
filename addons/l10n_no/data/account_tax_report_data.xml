@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tax report for Norway (January 2022)
+         Tax codes are related to the SAF-T codes  -->
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.no"/>
+    </record>
+
+    <record id="tax_report_line_sales_goods_services_homeland" model="account.tax.report.line">
+        <!-- Sales of goods and services in Norway -->
+        <field name="name">Salg av varer og tjenester i Norge</field>
+        <field name="sequence" eval="0"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_3" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (high rate 25%) - base -->
+        <field name="name">3 Salg og uttak av varer og tjenester (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">3 Base</field>
+        <field name="code">BASE_3</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_3_tax" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (high rate 25%) - tax -->
+        <field name="name">3 Salg og uttak av varer og tjenester (høy sats 25%) - avgift</field>
+        <field name="tag_name">3 Tax</field>
+        <field name="code">TAX_3</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_31" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (middle rate 15%) - base -->
+        <field name="name">31 Salg og uttak av varer og tjenester (middels sats 15%) - grunnlag</field>
+        <field name="tag_name">31 Base</field>
+        <field name="code">BASE_31</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_31_tax" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (middle rate 15%) - tax -->
+        <field name="name">31 Salg og uttak av varer og tjenester (middels sats 15%) - avgift</field>
+        <field name="tag_name">31 Tax</field>
+        <field name="code">TAX_31</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_33" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (low rate 12%) - base -->
+        <field name="name">33 Salg og uttak av varer og tjenester (lav sats 12%) - grunnlag</field>
+        <field name="tag_name">33 Base</field>
+        <field name="code">BASE_33</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_33_tax" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services (low rate 12%) - tax -->
+        <field name="name">33 Salg og uttak av varer og tjenester (lav sats 12%) - avgift</field>
+        <field name="tag_name">33 Tax</field>
+        <field name="code">TAX_33</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_5" model="account.tax.report.line">
+        <!-- Sales and withdrawals of goods and services that are exempt from VAT (0%) -->
+        <field name="name">5 Salg og uttak av varer og tjenester som er fritatt for merverdiavgift (0%)</field>
+        <field name="tag_name">5 Base</field>
+        <field name="code">BASE_5</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_6" model="account.tax.report.line">
+        <!-- Sale of goods and services that are exempt from the VAT Act (0%) -->
+        <field name="name">6 Salg av varer og tjenester som er unntatt merverdiavgiftsloven (0%)</field>
+        <field name="tag_name">6 Base</field>
+        <field name="code">BASE_6</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_sales_goods_services_abroad" model="account.tax.report.line">
+        <!-- Sales of goods and services to other countries -->
+        <field name="name">Salg av varer og tjenester til utlandet</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_52" model="account.tax.report.line">
+        <!-- Sales of goods and services abroad that are exempt from VAT (0%) -->
+        <field name="name">52 Salg av varer og tjenester til utlandet som er fritatt for merverdiavgift (0%)</field>
+        <field name="tag_name">52 Base</field>
+        <field name="code">BASE_52</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_sales_goods_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_purchases_goods_services_homeland" model="account.tax.report.line">
+        <!-- Purchases of goods and services in Norway -->
+        <field name="name">Kjøp av varer og tjenester i Norge</field>
+        <field name="sequence" eval="3"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_1" model="account.tax.report.line">
+        <!-- Purchase of goods and services with a right to deduct (high rate 25%) -->
+        <field name="name">1 Kjøp av varer og tjenester med fradragsrett (høy sats 25%)</field>
+        <field name="tag_name">1 Tax</field>
+        <field name="code">TAX_1</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_11" model="account.tax.report.line">
+        <!-- Purchase of goods and services with a right to deduct (middle rate 15%) -->
+        <field name="name">11 Kjøp av varer og tjenester med fradragsrett (middels sats 15%)</field>
+        <field name="tag_name">11 Tax</field>
+        <field name="code">TAX_11</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_13" model="account.tax.report.line">
+        <!-- Purchase of goods and services with a right to deduct (low rate 12%) -->
+        <field name="name">13 Kjøp av varer og tjenester med fradragsrett (lav sats 12%)</field>
+        <field name="tag_name">13 Tax</field>
+        <field name="code">TAX_13</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_services_homeland"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_purchases_goods_abroad" model="account.tax.report.line">
+        <!-- Purchases of goods from abroad (import) -->
+        <field name="name">Kjøp av varer fra utlandet (import)</field>
+        <field name="sequence" eval="4"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_14" model="account.tax.report.line">
+        <!-- Deduction on purchases of goods from abroad (VAT paid on import, high rate 25%) -->
+        <field name="name">14 Fradrag på kjøp av varer fra utlandet (merverdiavgift betalt ved innførsel, høy sats 25%)</field>
+        <field name="tag_name">14 Tax</field>
+        <field name="code">TAX_14</field>
+        <field name="sequence" eval="100"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_15" model="account.tax.report.line">
+        <!-- Deduction on purchases of goods from abroad (VAT paid on import, middle rate 15%) -->
+        <field name="name">15 Fradrag på kjøp av varer fra utlandet (merverdiavgift betalt ved innførsel, middels sats 15%)</field>
+        <field name="tag_name">15 Tax</field>
+        <field name="code">TAX_15</field>
+        <field name="sequence" eval="200"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_81" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad with a right to deduct (high rate 25%) - base -->
+        <field name="name">81 Kjøp av varer fra utlandet med fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">81 Base</field>
+        <field name="code">BASE_81</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_81_tax" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad with a right to deduct (high rate 25%) - tax -->
+        <field name="name">81 Kjøp av varer fra utlandet med fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">81 Tax</field>
+        <field name="code">TAX_81</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_82" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad without the right to deduct (high rate 25%) - base -->
+        <field name="name">82 Kjøp av varer fra utlandet uten fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">82 Base</field>
+        <field name="code">BASE_82</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_82_tax" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad without the right to deduct (high rate 25%) - tax -->
+        <field name="name">82 Kjøp av varer fra utlandet uten fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">82 Tax</field>
+        <field name="code">TAX_82</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_83" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad with a right to deduct (middle rate 15%) - base -->
+        <field name="name">83 Kjøp av varer fra utlandet med fradragsrett (middels sats 15%) - grunnlag</field>
+        <field name="tag_name">83 Base</field>
+        <field name="code">BASE_83</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_83_tax" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad with a right to deduct (middle rate 15%) - tax -->
+        <field name="name">83 Kjøp av varer fra utlandet med fradragsrett (middels sats 15%) - avgift</field>
+        <field name="tag_name">83 Tax</field>
+        <field name="code">TAX_83</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_84" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad without the right to deduct (middle rate 15%) - base -->
+        <field name="name">84 Kjøp av varer fra utlandet som er uten fradragsrett (middels sats 15%) - grunnlag</field>
+        <field name="tag_name">84 Base</field>
+        <field name="code">BASE_84</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_84_tax" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad without the right to deduct (middle rate 15%) - tax -->
+        <field name="name">84 Kjøp av varer fra utlandet som er uten fradragsrett (middels sats 15%) - avgift</field>
+        <field name="tag_name">84 Tax</field>
+        <field name="code">TAX_84</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_85" model="account.tax.report.line">
+        <!-- Purchase of goods from abroad for which VAT is not to be calculated (zero rate 0%) -->
+        <field name="name">85 Kjøp av varer fra utlandet som det ikke skal beregnes merverdiavgift på (nullsats 0%)</field>
+        <field name="tag_name">85 Base</field>
+        <field name="code">BASE_85</field>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="tax_report_line_purchases_goods_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_purchases_services_abroad" model="account.tax.report.line">
+        <!-- Purchases of services from abroad (import) -->
+        <field name="name">Kjøp av tjenester fra utlandet (import)</field>
+        <field name="sequence" eval="5"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_86" model="account.tax.report.line">
+        <!-- Purchase of services from abroad with a right to deduct (high rate 25%) - base -->
+        <field name="name">86 Kjøp av tjenester fra utlandet med fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">86 Base</field>
+        <field name="code">BASE_86</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_86_tax" model="account.tax.report.line">
+        <!-- Purchase of services from abroad with a right to deduct (high rate 25%) - tax -->
+        <field name="name">86 Kjøp av tjenester fra utlandet med fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">86 Tax</field>
+        <field name="code">TAX_86</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_87" model="account.tax.report.line">
+        <!-- Purchase of services from abroad without the right to deduct (high rate 25%) - base -->
+        <field name="name">87 Kjøp av tjenester fra utlandet uten fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">87 Base</field>
+        <field name="code">BASE_87</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_87_tax" model="account.tax.report.line">
+        <!-- Purchase of services from abroad without the right to deduct (high rate 25%) - tax -->
+        <field name="name">87 Kjøp av tjenester fra utlandet uten fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">87 Tax</field>
+        <field name="code">TAX_87</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_88" model="account.tax.report.line">
+        <!-- Purchase of services from abroad with a right to deduct (low rate 12%) - base -->
+        <field name="name">88 Kjøp av tjenester fra utlandet med fradragsrett (lav sats 12%) - grunnlag</field>
+        <field name="tag_name">88 Base</field>
+        <field name="code">BASE_88</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_88_tax" model="account.tax.report.line">
+        <!-- Purchase of services from abroad with a right to deduct (low rate 12%) - tax -->
+        <field name="name">88 Kjøp av tjenester fra utlandet med fradragsrett (lav sats 12%) - avgift</field>
+        <field name="tag_name">88 Tax</field>
+        <field name="code">TAX_88</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_89" model="account.tax.report.line">
+        <!-- Purchase of services from abroad without the right to deduct (low rate 12%) - base -->
+        <field name="name">89 Kjøp av tjenester fra utlandet uten fradragsrett (lav sats 12%) - grunnlag</field>
+        <field name="tag_name">89 Base</field>
+        <field name="code">BASE_89</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_89_tax" model="account.tax.report.line">
+        <!-- Purchase of services from abroad without the right to deduct (low rate 12%) - tax -->
+        <field name="name">89 Kjøp av tjenester fra utlandet uten fradragsrett (lav sats 12%) - avgift</field>
+        <field name="tag_name">89 Tax</field>
+        <field name="code">TAX_89</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_line_purchases_services_abroad"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_fish_etc" model="account.tax.report.line">
+        <!-- Fish etc. -->
+        <field name="name">Fisk mv.</field>
+        <field name="sequence" eval="6"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_12" model="account.tax.report.line">
+        <!-- Purchase of fish and other marine wildlife resources (11.11%) -->
+        <field name="name">12 Kjøp av fisk og andre marine viltlevende ressurser (11,11%)</field>
+        <field name="tag_name">12 Tax</field>
+        <field name="code">TAX_12</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_fish_etc"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_32" model="account.tax.report.line">
+        <!-- Sales of fish and other marine wildlife resources (11.11%) - base -->
+        <field name="name">32 Salg av fisk og andre marine viltlevende ressurser (11,11%) - grunnlag</field>
+        <field name="tag_name">32 Base</field>
+        <field name="code">BASE_32</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_fish_etc"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_32_tax" model="account.tax.report.line">
+        <!-- Sales of fish and other marine wildlife resources (11.11%) - tax -->
+        <field name="name">32 Salg av fisk og andre marine viltlevende ressurser (11,11%) - avgift</field>
+        <field name="tag_name">32 Tax</field>
+        <field name="code">TAX_32</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_fish_etc"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_emission_and_gold" model="account.tax.report.line">
+        <!-- Emission allowances and gold -->
+        <field name="name">Klimakvoter og gull</field>
+        <field name="sequence" eval="7"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_code_51" model="account.tax.report.line">
+        <!-- Sale of climate quotas and gold to businesses (0%) -->
+        <field name="name">51 Salg av klimakvoter og gull til næringsdrivende (0%)</field>
+        <field name="tag_name">51 Base</field>
+        <field name="code">BASE_51</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_emission_and_gold"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_91" model="account.tax.report.line">
+        <!-- Purchase of climate quotas and gold with a right to deduct (high rate 25%) - base -->
+        <field name="name">91 Kjøp av klimakvoter og gull med fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">91 Base</field>
+        <field name="code">BASE_91</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_emission_and_gold"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_91_tax" model="account.tax.report.line">
+        <!-- Purchase of climate quotas and gold with a right to deduct (high rate 25%) - tax -->
+        <field name="name">91 Kjøp av klimakvoter og gull med fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">91 Tax</field>
+        <field name="code">TAX_91</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_line_emission_and_gold"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_92" model="account.tax.report.line">
+        <!-- Purchase of climate quotas and gold without the right to deduct (high rate 25%) - base -->
+        <field name="name">92 Kjøp av klimakvoter og gull uten fradragsrett (høy sats 25%) - grunnlag</field>
+        <field name="tag_name">92 Base</field>
+        <field name="code">BASE_92</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_line_emission_and_gold"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_code_92_tax" model="account.tax.report.line">
+        <!-- Purchase of climate quotas and gold without the right to deduct (high rate 25%) - base -->
+        <field name="name">92 Kjøp av klimakvoter og gull uten fradragsrett (høy sats 25%) - avgift</field>
+        <field name="tag_name">92 Tax</field>
+        <field name="code">TAX_92</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_line_emission_and_gold"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_line_sum" model="account.tax.report.line">
+        <field name="name">Sum</field>
+        <field name="sequence" eval="8"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_line_to_be_paid" model="account.tax.report.line">
+        <!-- Tax to be paid -->
+        <field name="name">Avgift å betale</field>
+        <field name="formula">TAX_3+TAX_31+TAX_32+TAX_33+TAX_81+TAX_82+TAX_83+TAX_84+TAX_86+TAX_87+TAX_88+TAX_89+TAX_91+TAX_92-TAX_1-TAX_11-TAX_12-TAX_13-TAX_14-TAX_15</field>
+        <field name="code">SUM</field>
+        <field name="sequence" eval="0"/>
+        <field name="parent_id" ref="tax_report_line_sum"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+</odoo>

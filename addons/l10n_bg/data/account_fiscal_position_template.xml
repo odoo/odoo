@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fiscal positions -->
+        <record id="fiscal_position_template_dom" model="account.fiscal.position.template">
+            <field name="sequence">10</field>
+            <field name="name">Domestic</field>
+            <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.bg"/>
+        </record>
+
+        <record id="fiscal_position_bg_private_eu" model="account.fiscal.position.template">
+            <field name="name">Private EU</field>
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+        </record>
+
+        <record id="fiscal_position_template_in_eu" model="account.fiscal.position.template">
+            <field name="sequence">30</field>
+            <field name="name">Inside EU</field>
+            <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+        </record>
+
+        <record id="fiscal_position_template_out_eu" model="account.fiscal.position.template">
+            <field name="sequence">40</field>
+            <field name="name">Outside EU</field>
+            <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+        </record>
+        <!-- Fiscal positions [END] -->
+
+        <!-- Sales -->
+            <!-- 20% VAT -->
+            <record id="fp_in_eu_sale_20_vat" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_20"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_icd"/>
+            </record>
+
+            <record id="fp_out_eu_sale_20_vat" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_20"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_export"/>
+            </record>
+            <!-- 20% VAT [END] -->
+
+            <!-- 20% Personal use -->
+            <record id="fp_in_eu_sale_20_personal" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_20_personal"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_icd"/>
+            </record>
+
+            <record id="fp_out_eu_sale_20_personal" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_20_personal"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_export"/>
+            </record>
+            <!-- 20% Personal use [END] -->
+
+            <!-- 9% VAT -->
+            <record id="fp_in_eu_sale_9_vat" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_9"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_icd"/>
+            </record>
+
+            <record id="fp_out_eu_sale_9_vat" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_9"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_export"/>
+            </record>
+            <!-- 9% VAT [END] -->
+
+            <!-- 9% Personal use -->
+            <record id="fp_in_eu_sale_9_personal" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_9_personal"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_icd"/>
+            </record>
+
+            <record id="fp_out_eu_sale_9_personal" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_9_personal"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_export"/>
+            </record>
+            <!-- 9% Personal use [END] -->
+
+            <!-- 0% Exempt -->
+            <record id="fp_in_eu_sale_0_exempt" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_0_exempt"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_icd"/>
+            </record>
+
+            <record id="fp_out_eu_sale_9_personal" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_sale_vat_0_exempt"/>
+                <field name="tax_dest_id" ref="l10n_bg_sale_vat_0_export"/>
+            </record>
+            <!-- 0% Exempt [END] -->
+        <!-- Sales [END] -->
+
+        <!-- Purchase -->
+            <!-- 20% Other Tax Credit -->
+            <record id="fp_in_eu_purchase_20_otc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_otc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_0_otc_ica"/>
+            </record>
+
+            <record id="fp_out_eu_purchase_20_otc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_otc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_0_otc_exempt"/>
+            </record>
+            <!-- 20% Other Tax Credit [END] -->
+
+            <!-- 20% Foreign Tax Credit -->
+            <record id="fp_in_eu_purchase_20_ftc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_ftc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_20_ftc_ica"/>
+            </record>
+
+            <record id="fp_out_eu_purchase_20_ftc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_ftc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_20_ftc_exempt"/>
+            </record>
+            <!-- 20% Foreign Tax Credit [END] -->
+
+            <!-- 20% Payable Tax Credit -->
+            <record id="fp_in_eu_purchase_20_ptc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_in_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_ptc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_20_ptc_ica"/>
+            </record>
+
+            <record id="fp_out_eu_purchase_20_ptc" model="account.fiscal.position.tax.template">
+                <field name="position_id" ref="fiscal_position_template_out_eu"/>
+                <field name="tax_src_id" ref="l10n_bg_purchase_vat_20_ptc"/>
+                <field name="tax_dest_id" ref="l10n_bg_purchase_vat_20_ptc_exempt"/>
+            </record>
+            <!-- 20% Payable Tax Credit [END] -->
+        <!-- Purchase [END] -->
+    </data>
+</odoo>

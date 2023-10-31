@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ControlPanel" owl="1">
+        <div class="o_control_panel">
+            <div t-if="display['top']" class="o_cp_top">
+                <div t-if="display['top-left']" class="o_cp_top_left">
+                    <t t-slot="control-panel-top-left">
+                        <t t-call="web.Breadcrumbs" />
+                    </t>
+                </div>
+                <div t-if="display['top-right']" class="o_cp_top_right">
+                    <t t-slot="control-panel-top-right">
+                        <SearchBar/>
+                    </t>
+                </div>
+            </div>
+            <div t-if="display['bottom']" class="o_cp_bottom">
+                <div t-if="display['bottom-left']" class="o_cp_bottom_left">
+                    <t t-slot="control-panel-bottom-left"/>
+                </div>
+                <div t-if="display['bottom-right']" class="o_cp_bottom_right">
+                    <t t-slot="control-panel-bottom-right">
+                        <div class="btn-group o_search_options position-static" role="search">
+                            <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
+                                <t t-component="menu.Component"/>
+                            </t>
+                        </div>
+                    </t>
+
+                    <div class="o_cp_pager"/>
+
+                    <t t-if="(env.config.viewSwitcherEntries or []).length">
+                        <nav class="btn-group o_cp_switch_buttons">
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                <button class="btn btn-light fa fa-lg o_switch_view "
+                                    t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-tooltip="view.name"
+                                    t-on-click="onViewClicked(view.type)"
+                                    />
+                            </t>
+                        </nav>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.Breadcrumbs" owl="1">
+        <ol class="breadcrumb">
+            <t t-foreach="env.config.breadcrumbs or []" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                <li class="breadcrumb-item"
+                    t-att-class="{ o_back_button: breadcrumb_last}"
+                    t-on-click.prevent="onBreadcrumbClicked(breadcrumb.jsId)"
+                    >
+                    <a href="#">
+                        <t t-esc="breadcrumb.name"/>
+                    </a>
+                </li>
+            </t>
+            <li class="breadcrumb-item active">
+                <t t-if="env.config.displayName" t-esc="env.config.displayName" />
+                <em t-else="" class="text-warning">Unnamed</em>
+            </li>
+        </ol>
+    </t>
+
+</templates>

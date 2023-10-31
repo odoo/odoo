@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_payulatam
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Layna Nascimento, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid payment status."
+msgstr "Status de pagamento inválido."
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid sign: received %(sign)s, computed %(check)s."
+msgstr ""
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Nenhuma transação encontrada com a referência %s."
+
+#. module: payment_payulatam
+#: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_acquirer__provider__payulatam
+msgid "PayU Latam"
+msgstr "PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_api_key
+msgid "PayU Latam API Key"
+msgstr "Chave da API da PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_account_id
+msgid "PayU Latam Account ID"
+msgstr "ID da conta PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+msgid "PayU Latam Merchant ID"
+msgstr "ID do comerciante da PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Método de Pagamento"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Formas de pagamento"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transação do Pagamento"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fornecedor"
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or sign (%(sign)s)."
+msgstr ""
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+msgid "The ID solely used to identify the account with PayULatam"
+msgstr "O ID usado exclusivamente para identificar a conta no PayULatam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_account_id
+msgid ""
+"The ID solely used to identify the country-dependent shop with PayULatam"
+msgstr ""
+"O ID usado exclusivamente para identificar a loja dependente do país com o "
+"PayULatam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_payulatam
+#: model:account.payment.method,name:payment_payulatam.payment_method_payulatam
+msgid "payulatam"
+msgstr ""

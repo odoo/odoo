@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.RtcCallViewer" owl="1">
+    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }">
+        <t t-if="rtcCallViewer">
+
+            <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
+            <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
+
+            <!-- Call members display -->
+            <div class="o_RtcCallViewer_participantContainer" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">
+                <t t-if="rtcCallViewer.layout !== 'tiled'">
+                    <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
+                        <t t-if="rtcCallViewer.mainParticipantCard">
+                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard w-100" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-if="rtcCallViewer.layout !== 'spotlight'">
+                    <div
+                        class="o_RtcCallViewer_grid"
+                        t-att-class="{
+                            'o-isTiled': rtcCallViewer.layout === 'tiled',
+                            'o-isSidebar': rtcCallViewer.layout === 'sidebar',
+                        }"
+                        t-ref="tileContainer"
+                        t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px; --columns:{{state.columnCount}};"
+                    >
+                        <t t-foreach="rtcCallViewer.tileParticipantCards" t-as="participantCard" t-key="'grid_tile_'+participantCard.localId">
+                            <t t-if="!rtcCallViewer.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
+                                <!-- maybe filter focused partner out? -->
+                                <RtcCallParticipantCard
+                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile mw-100"
+                                    callParticipantCardLocalId="participantCard.localId"
+                                />
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Buttons -->
+            <t t-if="rtcCallViewer.showOverlay or !rtcCallViewer.isControllerFloating">
+                <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-isFloating': rtcCallViewer.isControllerFloating }">
+                    <div class="o_RtcCallViewer_controlsOverlayContainer" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
+                        <RtcController localId="rtcCallViewer.rtcController.localId"/>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Dialogs -->
+            <t t-if="messaging.userSetting.rtcConfigurationMenu.isOpen">
+                <Dialog size="'small'" title="rtcCallViewer.settingsTitle" t-on-dialog-closed="rtcCallViewer.onRtcSettingsDialogClosed">
+                    <RtcConfigurationMenu/>
+                    <t t-set-slot="buttons">
+                        <!-- Explicit No buttons -->
+                    </t>
+                </Dialog>
+            </t>
+            <t t-if="rtcCallViewer and rtcCallViewer.rtcLayoutMenu">
+                <Dialog size="'small'" title="rtcCallViewer.layoutSettingsTitle" t-on-dialog-closed="rtcCallViewer.onLayoutSettingsDialogClosed">
+                    <RtcLayoutMenu localId="rtcCallViewer.rtcLayoutMenu.localId"/>
+                    <t t-set-slot="buttons">
+                        <!-- Explicit No buttons -->
+                    </t>
+                </Dialog>
+            </t>
+        </t>
+    </div>
+</t>
+
+</templates>

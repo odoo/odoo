@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Tooltip" owl="1">
+        <div class="o-tooltip px-2 py-1">
+            <t t-if="props.template" t-call="{{props.template}}">
+                 <t t-set="info" t-value="props.info"/>
+            </t>
+            <small t-else="" t-esc="props.tooltip"/>
+        </div>
+    </t>
+
+</templates>

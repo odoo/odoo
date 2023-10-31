@@ -1,0 +1,21 @@
+{
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2019
+  },
+  "env": {
+    "browser": true,
+    "es2017": true,
+    "qunit": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-undef": "error"
+  },
+  "globals": {
+    "odoo": "writable",
+    "owl": "readonly",
+    "luxon": "readonly"
+  }
+}

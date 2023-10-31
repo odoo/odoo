@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.product</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='companies']" position="after">
+                    <h2>Units of Measure</h2>
+                    <div class="row mt16 o_settings_container" id="product_general_settings">
+                        <div class="col-12 col-lg-6 o_setting_box" id="weight_uom_setting">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="product_weight_in_lbs" string="Weight"/>
+                                <div class="text-muted">
+                                    Define your weight unit of measure
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="product_weight_in_lbs" class="o_light_label" widget="radio" options="{'horizontal': true}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="manage_volume_uom_setting">
+                            <div class="o_setting_right_pane">
+                                <label for="product_volume_volume_in_cubic_feet" string="Volume"/>
+                                <div class="text-muted">
+                                    Define your volume unit of measure
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="product_volume_volume_in_cubic_feet" class="o_light_label" widget="radio" options="{'horizontal': true}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+                 <xpath expr="//div[@id='product_get_pic_setting']" position="replace">
+                    <div class="col-12 col-lg-6 o_setting_box" id="product_get_pic_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="module_product_images"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_product_images" string="Google Images"/>
+                            <a href="https://www.odoo.com/documentation/15.0/applications/sales/sales/products_prices/products/product_images.html"
+                               title="Documentation" class="o_doc_link" target="_blank"/>
+                            <div class="text-muted">
+                                Get product pictures using Barcode
+                            </div>
+                            <div class="content-group mt16"
+                                attrs="{'invisible': [('module_product_images','=',False)]}"
+                                id="msg_module_product_images">
+                                <div class="mt16 text-warning">
+                                    <strong>Save</strong> this page and come back
+                                    here to set up the feature.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </xpath>
+            </field>
+        </record>
+</odoo>

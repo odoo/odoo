@@ -1,0 +1,166 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Martin Trigaux, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid ""
+"* Cross-border: For the overseas seller \n"
+"* Express Checkout: For the Chinese Seller"
+msgstr ""
+"* 跨国:针对海外卖家\n"
+"* 快速结账。适用于中国卖家"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid "Account"
+msgstr "账户"
+
+#. module: payment_alipay
+#: model:account.payment.method,name:payment_alipay.payment_method_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+msgid "Alipay"
+msgstr "支付宝"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "支付宝卖家邮箱"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "跨境"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Expected signature %(sc) but received %(sign)s."
+msgstr "期待签名%(sc)，但收到%(sign)s。"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr "快速结账（仅适用于中国商户）"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "md5签名验签"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "商家合作伙伴ID"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "没有发现与参考文献%s相匹配的交易。"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "支付收款"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_account_payment_method
+msgid "Payment Methods"
+msgstr "付款方式"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "物流商"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr "收到的数据中缺少参考号%(r)s或txn_id %(t)s。"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data not acknowledged by Alipay:\n"
+"%s"
+msgstr ""
+"收到的通知数据没有得到支付宝的确认:\n"
+"%s"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/controllers/main.py:0
+#, python-format
+msgid ""
+"Received notification data with unknown reference:\n"
+"%s"
+msgstr ""
+"收到的通知数据，参考文献不详。\n"
+"%s"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "与该收单机构一起使用的支付服务提供商"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The amount does not match the total + fees."
+msgstr "金额与总额+费用不符。"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The currency returned by Alipay %(rc)s does not match the transaction "
+"currency %(tc)s."
+msgstr "支付宝返回的货币%(rc)s与交易货币%(tc)s不一致。"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr "公开的支付宝合作伙伴电子邮件"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr "仅用于识别支付宝账户的公共合作伙伴ID"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "The seller email does not match the configured Alipay account."
+msgstr "卖方邮箱与配置的支付宝账户不匹配。"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr "收到无效的交易状态:%s"

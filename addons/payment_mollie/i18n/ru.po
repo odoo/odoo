@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mollie
+# 
+# Translators:
+# Martin Trigaux, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Oleg Kuryan <oleg@ventor.tech>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2021\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment_mollie
+#: model_terms:ir.ui.view,arch_db:payment_mollie.payment_acquirer_form
+msgid "API Key"
+msgstr "Ключ API"
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "Canceled payment with status: %s"
+msgstr ""
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Не удалось установить соединение с API."
+
+#. module: payment_mollie
+#: model:account.payment.method,name:payment_mollie.payment_method_mollie
+#: model:ir.model.fields.selection,name:payment_mollie.selection__payment_acquirer__provider__mollie
+msgid "Mollie"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__mollie_api_key
+msgid "Mollie API Key"
+msgstr ""
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Платежная система"
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Методы Оплаты"
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Операция Оплаты"
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Провайдер"
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Получены данные с неверным статусом платежа: %s"
+
+#. module: payment_mollie
+#: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+"Поставщик платежных услуг для использования с этой платежной системой "
+
+#. module: payment_mollie
+#: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__mollie_api_key
+msgid ""
+"The Test or Live API Key depending on the configuration of the acquirer"
+msgstr ""

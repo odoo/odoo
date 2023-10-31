@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategoryItem" owl="1">
+        <div class="o_DiscussSidebarCategoryItem"
+            t-att-class="{
+                'o-active': categoryItem and categoryItem.isActive,
+                'o-unread': categoryItem and categoryItem.isUnread,
+            }" t-on-click="categoryItem and categoryItem.onClick" t-att-data-thread-local-id="categoryItem and categoryItem.channel.localId" t-att-data-thread-name="categoryItem and categoryItem.channel.displayName"
+        >
+            <t t-if="categoryItem">
+                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar">
+                    <div class="o_DiscussSidebarCategoryItem_imageContainer">
+                        <img class="o_DiscussSidebarCategoryItem_image rounded-circle" t-att-src="categoryItem.avatarUrl" alt="Thread Image"/>
+                        <t t-if="categoryItem.hasThreadIcon">
+                            <ThreadIcon class="o_DiscussSidebarCategoryItem_threadIcon" threadLocalId="categoryItem.channel.localId"/>
+                        </t>
+                    </div>
+                </div>
+                <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ml-3 text-truncate" t-att-class="{ 'o-item-unread': categoryItem.isUnread }">
+                    <t t-esc="categoryItem.channel.displayName"/>
+                </span>
+                <div class="o-autogrow o_DiscussSidebarCategoryItem_item"/>
+                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands">
+                    <t t-if="categoryItem.hasSettingsCommand">
+                        <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandSettings fa fa-cog" t-on-click="categoryItem.onClickCommandSettings" title="Channel settings" role="img"/>
+                    </t>
+                    <t t-if="categoryItem.hasLeaveCommand">
+                        <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandLeave fa fa-times" t-on-click="categoryItem.onClickCommandLeave" title="Leave this channel" role="img"/>
+                    </t>
+                    <t t-if="categoryItem.hasUnpinCommand">
+                        <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandUnpin fa fa-times" t-on-click="categoryItem.onClickCommandUnpin" title="Unpin Conversation" role="img"/>
+                    </t>
+                </div>
+                <t t-if="categoryItem.channel and categoryItem.channel.rtcSessions.length">
+                    <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up" t-att-class="{ 'o-isCalling': categoryItem.channel.rtc }"/>
+                </t>
+                <t t-if="categoryItem.counter > 0">
+                    <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge badge-pill">
+                        <t t-esc="categoryItem.counter"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

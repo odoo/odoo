@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.delivery.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='module_stock_sms']" position="replace">
+                <field name="stock_move_sms_validation"/>
+            </xpath>
+            <xpath expr="//label[@for='module_stock_sms']" position="replace">
+                <label for="stock_move_sms_validation" string="SMS Confirmation"/>
+            </xpath>
+            <xpath expr="//div[@id='stock_confirmation_sms']" position="replace">
+                <div class="row mt16" attrs="{'invisible': [('stock_move_sms_validation', '=', False)]}">
+                    <label for="stock_sms_confirmation_template_id" string="SMS Template" class="col-lg-4 o_light_label"/>
+                    <field name="stock_sms_confirmation_template_id" class="oe_inline" attrs="{'required': [('stock_move_sms_validation', '=', True)]}" context="{'default_model': 'stock.picking'}"/>
+                </div>
+                <widget name="iap_buy_more_credits" service_name="sms" attrs="{'invisible': [('stock_move_sms_validation', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

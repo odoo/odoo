@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphRenderer.CustomTooltip" owl="1">
+        <div class="o_graph_custom_tooltip">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="o_measure" t-esc="measure" />
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="tooltipItems" t-as="tooltipItem" t-key="tooltipItem.id">
+                        <td>
+                            <span class="o_square" t-attf-style="background-color: {{ tooltipItem.boxColor }}" />
+                            <span class="o_label" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label" />
+                        </td>
+                        <td class="o_value">
+                            <t t-esc="tooltipItem.value"/>
+                            <t t-if="mode === 'pie' and tooltipItem.percentage">
+                                (<t t-esc="tooltipItem.percentage" />%)
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web.GraphRenderer" owl="1">
+        <div class="o_graph_renderer">
+            <div class="o_graph_canvas_container" t-ref="container">
+                <canvas t-ref="canvas" />
+            </div>
+        </div>
+    </t>
+
+</templates>

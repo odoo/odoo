@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="acquirer_form_inherit_sale" model="ir.ui.view">
+            <field name="name">payment.acquirer.form.inherit.sale.payment</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='payment_form']" position="inside">
+                    <field name="so_reference_type" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="transaction_form_inherit_sale" model="ir.ui.view">
+            <field name="name">payment.transaction.form.inherit.sale.payment</field>
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.payment_transaction_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_view_sales_orders" type="object"
+                            class="oe_stat_button" icon="fa-money"
+                            attrs="{'invisible': [('sale_order_ids_nbr', '=', 0)]}">
+                        <field name="sale_order_ids_nbr" widget="statinfo" string="Sales Order(s)"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

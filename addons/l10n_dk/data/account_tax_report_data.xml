@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_skat_dk" model="account.tax.report">
+        <field name="name">VAT Report</field>
+        <field name="country_id" ref="base.dk"/>
+    </record>
+    <!--  Due VAT  -->
+    <record id="account_tax_report_line_sales_group" model="account.tax.report.line">
+        <field name="name">Skyldig moms</field>
+        <field name="code">DUE_VAT</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  classic VAT on sales  -->
+    <record id="account_tax_report_line_sales_tax" model="account.tax.report.line">
+        <field name="name">Salgsmoms (udgående moms)</field>
+        <field name="code">SALES_VAT</field>
+        <field name="tag_name">UM</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_sales_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  VAT on goods purchases abroad with reverse charge  -->
+    <record id="account_tax_report_line_international_purchase_products" model="account.tax.report.line">
+        <field name="name">Moms af varekøb i udlandet (både EU og lande uden for EU)</field>
+        <field name="code">REVERSE_CHARGE_MERCHANDISES_PURCHASED_OUT_DK</field>
+        <field name="tag_name">MVU</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_sales_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  VAT on service purchases abroad with reverse charge  -->
+    <record id="account_tax_report_line_international_purchase_services" model="account.tax.report.line">
+        <field name="name">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+        <field name="code">REVERSE_CHARGE_SERVICES_PURCHASED_OUT_DK</field>
+        <field name="tag_name">MYUOB</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_sales_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    
+    <!--  Deduction VAT  -->
+    <record id="account_tax_report_line_deduction_group" model="account.tax.report.line">
+        <field name="name">Fradrag</field>
+        <field name="code">VAT_TO_DEDUCED</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_purchase_tax" model="account.tax.report.line">
+        <field name="name">Købsmoms (indgående moms)</field>
+        <field name="code">PURCHASE_VAT</field>
+        <field name="tag_name">KM</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_oil_bottle_tax" model="account.tax.report.line">
+        <field name="name">Olie- og flaskegasafgift</field>
+        <field name="code">OIL_AND_BOTTLED_GAS_TAX</field>
+        <field name="tag_name">OFA</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_electrical_tax" model="account.tax.report.line">
+        <field name="name">Elafgift</field>
+        <field name="code">ELECTRICITY_TAX</field>
+        <field name="tag_name">EA</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_gas_tax" model="account.tax.report.line">
+        <field name="name">Naturgas- og bygasafgift</field>
+        <field name="code">NATURAL_AND_CITY_GAS_TAX</field>
+        <field name="tag_name">NOBA</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_coal_tax" model="account.tax.report.line">
+        <field name="name">Kulafgift</field>
+        <field name="code">COAL_TAX</field>
+        <field name="tag_name">KA</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_co2_tax" model="account.tax.report.line">
+        <field name="name">CO2-afgift</field>
+        <field name="code">CO2_TAX</field>
+        <field name="tag_name">CO2A</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <record id="account_tax_report_line_deduction_water_tax" model="account.tax.report.line">
+        <field name="name">Vandafgift</field>
+        <field name="code">WATER_TAX</field>
+        <field name="tag_name">VA</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_deduction_group"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+
+    <!--  Report Results  -->
+    <record id="account_tax_report_line_vat_statement" model="account.tax.report.line">
+        <field name="name">Momsangivelse (positivt beløb = betale, negativt beløb = penge tilgode)</field>
+        <field name="sequence" eval="3"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+        <field name="formula">DUE_VAT - VAT_TO_DEDUCED</field>
+    </record>
+
+    <!--  additional required information  -->
+    <record id="account_tax_report_line_additional_info" model="account.tax.report.line">
+        <field name="name">Supplerende oplysninger</field>
+        <field name="sequence" eval="4"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+        <field name="formula">None</field>
+    </record>
+    <!--  Notes: "in EU" implicitly also mean "out of DK"  -->
+    <!--  Bought merchandises base value in EU-->
+    <record id="account_tax_report_line_section_a_products" model="account.tax.report.line">
+        <!--  Rubrik A = varer - Værdien uden moms af varekøb i andre EU-lande (EU-erhvervelser)-->
+        <field name="name">Rubrik A: varer (EU)</field>
+        <field name="tag_name">R-A-V</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  Bought services base value in EU -->
+    <record id="account_tax_report_line_section_a_services" model="account.tax.report.line">
+        <field name="name">Rubrik A = ydelser (EU)</field>
+        <field name="tag_name">R-A-Y</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  Merchandises base value sold in EU and reported under the no-VAT system (~reverse charge system)-->
+    <record id="account_tax_report_line_section_b_product_eu" model="account.tax.report.line">
+        <field name="name">Rubrik B = varer (Indberettes til EU-salg uden moms)</field>
+        <field name="tag_name">R-B-MR</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!-- Merchandises base value sold in EU without VAT (and thus not reported under the VAT system) to entity/people not subject to VAT -->
+    <record id="account_tax_report_line_section_b_products_non_eu" model="account.tax.report.line">
+        <field name="name">Rubrik B = varer (Indberettes ikke til EU-salg uden moms)</field>
+        <field name="tag_name">R-B-UR</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  Reported services base value sold in EU without VAT -->
+    <record id="account_tax_report_line_section_b_services" model="account.tax.report.line">
+        <field name="name">Rubrik B = ydelser - (EU-salg uden moms)</field>
+        <field name="tag_name">R-C-MR</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+    <!--  Any other base value sold without tax (e.g. exportation out of EU) (amount that would go in any of the previous Rubrik) -->
+    <record id="account_tax_report_line_section_c" model="account.tax.report.line">
+        <field name="name">Rubrik C - Værdien af andre varer og ydelser (uanset landet)</field>
+        <field name="tag_name">R-C-UR</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="l10n_dk.account_tax_report_line_additional_info"/>
+        <field name="report_id" ref="account_tax_report_skat_dk"/>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcActivityNotice_buttonContent {
+    max-width: 150px;
+    align-items: center;
+    display: flex;
+}
+
+.o_RtcActivityNotice_buttonTitle {
+    @include text-truncate();
+}
+
+.o_RtcActivityNotice_outputIndicator {
+    margin-inline-start: map-get($spacers, 2);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcActivityNotice {
+    cursor: pointer;
+    &:hover {
+        background-color: rgba(black, 0.1);
+    }
+}
+
+.o_RtcActivityNotice_button {
+    font-weight: bold;
+    user-select: none;
+}

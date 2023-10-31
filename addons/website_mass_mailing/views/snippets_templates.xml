@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="iframe_css_assets_edit" name="CSS assets for wysiwyg iframe content for popup" groups="base.group_user">
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
+    <t t-call-assets="website.assets_editor" t-js="false"/>
+</template>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@id='newsletter_snippet']" position="replace"/>
+    <xpath expr="//t[@id='newsletter_popup_snippet']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg" t-forbid-sanitize="form"/>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg" t-forbid-sanitize="form"/>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
+    </xpath>
+</template>
+
+<template id="s_newsletter_subscribe_form" name="Newsletter">
+    <div class="s_newsletter_subscribe_form js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+        <div class="input-group">
+            <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
+            <span class="input-group-append">
+                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
+            </span>
+        </div>
+    </div>
+</template>
+
+<template id="s_newsletter_block" name="Newsletter block">
+    <section class="s_newsletter_block bg-200 pt32 pb32">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 pt24 pb24">
+                    <h2>Always First.</h2>
+                    <p>Be the first to find out all the latest news, products, and trends.</p>
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
+    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-name="Newsletter Popup" data-vcss="001" data-invisible="1">
+        <div class="modal fade s_popup_middle o_newsletter_modal"
+             style="background-color: var(--black-50) !important;"
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
+             data-focus="false" data-backdrop="false" tabindex="-1" role="dialog">
+            <div class="modal-dialog d-flex">
+                <div class="modal-content oe_structure">
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
+                    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block" data-name="Text"
+                             style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
+                        <div class="container s_allow_columns">
+                            <h1 style="text-align: center;">Always <b>First</b>.</h1>
+                            <p style="text-align: center;">Be the first to find out all the latest news,<br/> products, and trends.</p>
+                        </div>
+                    </section>
+                    <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                        <div class="container">
+                            <div class="row s_nb_column_fixed no-gutters">
+                                <div class="col-lg-8 offset-lg-2 pt32 pb32">
+                                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
+    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
+    <xpath expr="//div" position="after">
+        <t t-set="selector" t-value="'.js_subscribe'"/>
+        <div data-js="mailing_list_subscribe"
+            t-att-data-selector="selector">
+            <we-select string="Newsletter" data-attribute-name="listId"></we-select>
+        </div>
+        <div data-js="recaptchaSubscribe"
+            t-att-data-selector="selector">
+            <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
+            <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
+        </div>
+        <div t-att-data-selector="selector" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
+    </xpath>
+    <xpath expr="//div[@data-js='anchor']" position="attributes">
+        <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
+    </xpath>
+</template>
+
+<!-- Extend default mass_mailing snippets with website feature -->
+
+<template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
+    <xpath expr="//div[hasclass('o_mail_footer_links')]" position="inside">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+</template>
+
+<template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
+    <xpath expr="//div[hasclass('o_mail_footer_links')]" position="inside">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mollie
+# 
+# Translators:
+# Kristoffer Grundström <lovaren@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Daniel Forslund <daniel.forslund@gmail.com>, 2021
+# Simon S, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# Lasse L, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_mollie
+#: model_terms:ir.ui.view,arch_db:payment_mollie.payment_acquirer_form
+msgid "API Key"
+msgstr "API-nyckel"
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "Canceled payment with status: %s"
+msgstr ""
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Det gick inte att upprätta anslutningen till API:et."
+
+#. module: payment_mollie
+#: model:account.payment.method,name:payment_mollie.payment_method_mollie
+#: model:ir.model.fields.selection,name:payment_mollie.selection__payment_acquirer__provider__mollie
+msgid "Mollie"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__mollie_api_key
+msgid "Mollie API Key"
+msgstr ""
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Ingen transaktion hittades som matchar referensen %s."
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Betalningsförvärvare"
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Betalningsmetoder"
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalningstransaktion"
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Leverantör"
+
+#. module: payment_mollie
+#: code:addons/payment_mollie/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "Betaltjänstleverantör som ska användas med denna inlösare"
+
+#. module: payment_mollie
+#: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__mollie_api_key
+msgid ""
+"The Test or Live API Key depending on the configuration of the acquirer"
+msgstr ""

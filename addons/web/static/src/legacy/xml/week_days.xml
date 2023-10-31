@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="web.RecurrentTask" owl="1">
+        <div class="o_recurrent_weekdays border mt-2 mb-2">
+            <table class="table table-responsive mb-0">
+                <tr>
+                    <th t-foreach="weekdaysShort" t-as="day" t-key="day" class="text-center border font-weight-bold">
+                        <div class="o_recurrent_weekday_label" t-att-title="props.record.fields[day].string">
+                            <t t-esc="props.record.fields[day].string"/>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <td t-foreach="weekdaysShort" t-as="day" t-key="day">
+                        <CustomCheckbox disabled="mode === 'readonly'"
+                            value="state.days[day].value"
+                            id="state.days[day].id"
+                            class="o_recurrent_weekday_checkbox text-center"
+                            t-on-change="_onChange"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+</template>

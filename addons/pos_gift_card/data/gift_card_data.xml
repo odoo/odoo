@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- the product used to deduce on sale order -->
+        <record id="gift_card.pay_with_gift_card_product" model="product.product">
+            <field name="available_in_pos">True</field>
+        </record>
+
+        <record id="gift_card_report_pdf" model="ir.actions.report">
+            <field name="name">Gift Card</field>
+            <field name="model">gift.card</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_gift_card.gift_card_template</field>
+            <field name="binding_type">report</field>
+            <field name="binding_model_id" ref="model_gift_card"/>
+        </record>
+
+        <template id="gift_card_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div style="margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center">
+                            Here is your gift card!
+                        </div>
+                        <div style="padding-top:20px; padding-bottom:20px">
+                            <img src="/gift_card/static/img/gift_card.png" style="display:block; border:0; outline:none; text-decoration:none; margin:auto;" width="300"/>
+                        </div>
+                        <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;">
+                            <h3 style="margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center">
+                                <strong><span t-field="o.initial_amount"/></strong>
+                            </h3>
+                        </div>
+                        <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;">
+                            <p style="margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333">
+                                <strong>Gift Card Code</strong>
+                            </p>
+                            <p style="margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9">
+                                <span t-field="o.code"/>
+                            </p>
+                        </div>
+                        <div style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                            <h3 style="margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center">
+                                Card expires <span t-field="o.expired_date"/>
+                            </h3>
+                        </div>
+                        <div style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                            <img t-att-src="'/report/barcode/Code128/'+o.code" style="width:400px;height:75px" alt="Barcode"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClosePosPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup close-pos-popup">
+                <header class="title">
+                    CLOSING CONTROL
+                </header>
+                <main class="body">
+                    <div class="session-overview">
+                        <div class="overview-info">
+                            <div class="info-title column-left">
+                                <span>Total <t t-esc="ordersDetails.quantity"/> orders</span>
+                                <span>Payments</span>
+                                <span>Customer Account</span>
+                            </div>
+                            <div class="info-value column-left">
+                                <span t-esc="env.pos.format_currency(ordersDetails.amount)"/>
+                                <span t-esc="env.pos.format_currency(paymentsAmount)"/>
+                                <span t-esc="env.pos.format_currency(payLaterAmount)"/>
+                            </div>
+                        </div>
+                        <div t-if="openingNotes" class="opening-note">
+                            <t t-esc="openingNotes"/>
+                        </div>
+                    </div>
+                    <div class="payment-methods-overview">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Payment Method</th>
+                                    <th>Expected</th>
+                                    <th style="width: 25%">Counted</th>
+                                    <th style="width: 20%">Difference</th>
+                                </tr>
+                            </thead>
+                            <t t-if="cashControl">
+                                <tbody>
+                                    <tr>
+                                        <td t-esc="defaultCashDetails.name"/>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
+                                        <td class="flex" t-on-input="handleInputChange(defaultCashDetails.id)">
+                                            <input class="pos-input" t-ref="closingCashInput"/>
+                                            <div class="button icon" t-on-click="openDetailsPopup()">
+                                                <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
+                                    </tr>
+                                </tbody>
+                                <tbody class="cash-overview">
+                                    <tr>
+                                        <td>Opening</td>
+                                        <td t-esc="env.pos.format_currency(defaultCashDetails.opening)"/>
+                                    </tr>
+                                    <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move.name">
+                                        <td>
+                                            <div class="flex">
+                                                <div class="cash-sign" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
+                                                <t t-esc="move.name"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(Math.abs(move.amount))" />
+                                    </tr>
+                                    <tr t-if="defaultCashDetails.payment_amount">
+                                        <td>
+                                            <div class="flex">
+                                                <div class="cash-sign" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
+                                                Payments in <t t-esc="defaultCashDetails.name"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                    </tr>
+                                </tbody>
+                            </t>
+                            <tbody t-if="otherPaymentMethods.length &gt; 0">
+                                <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
+                                    <td t-esc="pm.name"/>
+                                    <td t-esc="env.pos.format_currency(pm.amount)"/>
+                                    <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
+                                    <td t-if="_showDiff" t-on-input="handleInputChange(pm.id)">
+                                        <input class="pos-input" t-ref="closingCashInput_{{pm.id}}"/>
+                                    </td>
+                                    <td t-if="_showDiff" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <textarea placeholder="Notes" class="closing-notes" t-model="state.notes"/>
+                    <div class="accept-closing" t-att-class="{invisible: !hasDifference()}">
+                        <t t-set="_hasUserAuthority" t-value="hasUserAuthority()" />
+                        <input t-att-disabled="!_hasUserAuthority" type="checkbox" id="accept" t-model="state.acceptClosing"/>
+                        <label t-att-class="{disabled: !_hasUserAuthority}" for="accept">Accept payments difference and post a profit/loss journal entry</label>
+                        <div class="warning" t-att-class="{invisible: _hasUserAuthority}">The maximum difference allowed is <t t-esc="env.pos.format_currency(amountAuthorizedDiff)"/>. Please contact your manager to accept the closing difference.</div>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button" t-att-class="{'disabled': !canCancel()}" t-on-click="cancelPopup()">Continue Selling</div>
+                    <div class="button" t-on-click="closePos()">Keep Session Open</div>
+                    <div class="button" t-att-class="{'disabled': !canCloseSession()}" t-on-click="closeSession()">Close Session</div>
+                </footer>
+            </div>
+            <MoneyDetailsPopup t-ref="moneyDetails" t-on-money-details-validated="updateCountedCash"/>
+        </div>
+    </t>
+
+</templates>

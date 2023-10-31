@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-inherit="hr_holidays.dashboard_calendar_header" t-inherit-mode="extension">
+        <!--inject a first condition-->
+        <xpath expr="//t[@t-if='requires_allocation']" position="before">
+            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !requires_allocation">
+                <t t-if="has_icon">
+                    <img height="30px" t-attf-src="{{timeoff[1]['icon']}}"/>
+                </t>
+                <span t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_huge o_timeoff_purple font-weight-bold align-middle"/><br/>
+                <span class="o_timeoff_purple">HOURS AVAILABLE</span>
+            </t>
+        </xpath>
+        <!--change t-if to t-elif-->
+        <xpath expr="//t[@t-if='requires_allocation']" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">requires_allocation</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="hr_holidays.dashboard_calendar_header_mobile" t-inherit-mode="extension">
+        <!--inject a first condition-->
+        <xpath expr="//t[@t-if='requires_allocation']" position="before">
+            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !requires_allocation">
+                <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> Hours <span class="o_timeoff_green ml-2">Available </span>
+            </t>
+        </xpath>
+        <!--change t-if to t-elif-->
+        <xpath expr="//t[@t-if='requires_allocation']" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">requires_allocation</attribute>
+        </xpath>
+    </t>
+</templates>

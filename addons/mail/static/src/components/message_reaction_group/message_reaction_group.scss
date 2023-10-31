@@ -1,0 +1,37 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MessageReactionGroup {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+    cursor: pointer;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MessageReactionGroup {
+    background: $white;
+    border-color: gray('200');
+    border-style: solid;
+    border-width: $border-width;
+
+    &.o-hasUserReacted, &.o-hasUserReacted:hover {
+        border-color: $o-brand-primary;
+        background-color: rgba($o-brand-primary, .1);
+    }
+
+    &:hover {
+        border-color: gray('400');
+        background-color: gray('200');
+    }
+}
+
+.o_MessageReactionGroup_count {
+
+    &.o-hasUserReacted {
+        color: $o-brand-primary;
+        font-weight: bold;
+    }
+}

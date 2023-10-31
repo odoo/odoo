@@ -1,0 +1,317 @@
+.o_configurator_container {
+    @include o-position-absolute(0, 0, 0, 0);
+
+    .o_configurator_screen {
+
+        // ==== Animations
+        @keyframes configuratorFadeIn{
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        @keyframes theme_screenshot_scroll {
+            to { transform: translate3d(0, -24%, 0)}
+        }
+
+        @keyframes theme_screenshot_scroll_small {
+            to { transform: translate3d(0, -31.5%, 0)}
+        }
+
+        // ==== General Components
+        %o_configurator_titles_weight {
+            font-weight: 300;
+
+            b {
+                font-weight: 500;
+            }
+        }
+
+        .o_configurator_typing_text {
+            font-size: 28px;
+            @extend %o_configurator_titles_weight;
+
+            @include media-breakpoint-up(md) {
+                font-size: 32px;
+            }
+
+            @include media-breakpoint-up(lg) {
+                font-size: 36px;
+            }
+
+            @include media-breakpoint-up(xl) {
+                font-size: 40px;
+            }
+        }
+
+        @for $i from 1 through 6 {
+            .h#{$i} {
+                @extend %o_configurator_titles_weight;
+            }
+        }
+
+        .o_configurator_hide {
+            opacity: 0;
+        }
+
+        .o_configurator_show {
+            animation: configuratorFadeIn 1s;
+        }
+
+        .o_configurator_show_fast {
+            animation: configuratorFadeIn .35s;
+        }
+
+        // TODO review in master, this seems useless and had to be overridden
+        // in stable templates. All the templates can be improved.
+        .o_configurator_screen_content {
+            overflow-y: auto;
+        }
+
+        .o_configurator_logo_wrapper {
+            img {
+                object-fit: contain;
+            }
+        }
+
+        // ==== Screens
+
+        &.o_description_screen {
+            .dropdown, .industry_selection, .custom-ui-autocomplete {
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            .o_configurator_type_dd.o_step_todo {
+                min-width: 13ch;
+            }
+
+            .o_configurator_purpose_dd.o_step_todo {
+                min-width: 12ch;
+            }
+
+            .o_configurator_industry_wrapper {
+                position: relative;
+                display: inline-block;
+                height: $line-height-base * 1em;
+                min-width: 17ch;
+                cursor: pointer;
+
+                input, &::after {
+                    height: $line-height-base * 1em;
+                    font-weight: 500;
+                    font-style: italic;
+                    text-indent: 5px;
+                    padding: 0;
+                }
+
+                input {
+                    position: absolute;
+                    width: 100%;
+                    border: none;
+                    border-bottom: 3px solid theme-color(primary);
+                    color: theme-color(primary);
+
+                    &:focus {
+                        color: inherit;
+                        outline: none;
+                    }
+                }
+
+                &::after {
+                    content: attr(data-value) '|';
+                    display: inline-block;
+                    overflow: hidden;
+                }
+            }
+
+            .dropdown {
+                box-shadow: inset 0 -3px 0 theme-color(primary);
+
+                &.o_step_todo .fa-angle-down {
+                    transform: translateY(-0.26em);
+                }
+
+                &.o_step_completed {
+                    transition: all 300ms ease;
+
+                    .fa-angle-down {
+                        @include o-position-absolute($right: 0);
+                        opacity:0;
+                    }
+
+                    &:hover, &.show {
+                        padding-right: 1.3rem!important;
+
+                        .fa-angle-down {
+                            transition: all 300ms ease 100ms;
+                            opacity:1;
+                        }
+                    }
+                }
+            }
+
+            .dropdown-menu, .custom-ui-autocomplete {
+                @include border-bottom-radius($border-radius);
+                font-size: inherit;
+                min-width: 100%;
+            }
+
+            .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
+                font-size: .65em;
+                font-weight: inherit;
+            }
+
+            .custom-ui-autocomplete {
+                max-height: 300px; // <- Fallback
+                max-height: 35vh;
+
+                .ui-menu-item {
+                    list-style: none;
+
+                    a {
+                        padding: $dropdown-item-padding-y*2 $dropdown-item-padding-x;
+                        font-family: $font-family-base;
+                        text-decoration: none;
+                        line-height: 1.2;
+
+                        &.o_no_result, &.o_no_result:hover {
+                            background-color: transparent !important;
+                            color: gray('600') !important;
+                            cursor: default;
+                            padding: $dropdown-item-padding-y*4 $dropdown-item-padding-x;
+                            font-style: italic;
+                            font-size: .5em;
+                        }
+                    }
+                }
+            }
+
+            .dropdown-item, .custom-ui-autocomplete .ui-menu-item a {
+                &:hover, &:active, &.ui-state-active {
+                    background-color: $dropdown-link-hover-bg;
+                    color: $dropdown-link-color;
+                }
+            }
+        }
+
+        &.o_palette_selection_screen {
+            .palette_card {
+                cursor: pointer;
+                box-shadow: 0 0 0 1px gray('200');
+
+                .color_sample {
+                    padding-top: 30%;
+                }
+
+                &:hover, &.selected {
+                    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px theme-color("primary")
+                }
+            }
+
+            .o_configurator_logo_wrapper {
+                transition: opacity .1s ease;
+
+                &:hover {
+                    transition: opacity .3s ease;
+                    opacity: .1;
+                }
+
+                img {
+                    height: 120px;
+                    max-width: 90%;
+                }
+            }
+
+            .o_configurator_logo_upload {
+                cursor: pointer;
+                @include o-hover-text-color(gray('400'), gray('800'));
+            }
+
+            .palette_selection_or {
+                @include o-position-absolute(50%);
+                transform: translateY(-50%);
+
+                @include media-breakpoint-up(lg) {
+                    right: 0;
+                }
+            }
+        }
+
+        &.o_feature_selection_screen {
+            .card {
+                cursor: pointer;
+
+                &.card_installed {
+                    cursor: default;
+                    opacity: 0.75;
+                }
+            }
+            .o_configurator_feature_status {
+                @include o-position-absolute($card-spacer-y * 0.5 , $card-spacer-x * 0.5);
+            }
+        }
+
+        &.o_theme_selection_screen{
+            .button_area, .theme_svg_container {
+                @include o-position-absolute(0, 0, 0, 0);
+            }
+
+            .theme_preview_tip {
+                @include o-position-absolute(0, 0, auto, 0);
+            }
+
+            .theme_preview, .theme_svg_container svg, .theme_preview_tip {
+                transform: translate3d(0,0,0);
+                will-change: transform;
+            }
+
+            .theme_preview, .theme_preview_tip {
+                transition: all .3s ease 0s;
+            }
+
+            .theme_svg_container svg {
+                width: 100%;
+                height: auto;
+            }
+
+            .button_area {
+                cursor: pointer;
+            }
+
+            .theme_preview {
+                padding-top: 65%;
+                box-shadow: $box-shadow-sm;
+
+                @include media-breakpoint-up(lg) {
+                    padding-top: 200%;
+
+                    &:hover {
+                        transform: translate3d(0,-10px,0);
+                    }
+
+                    &.small {
+                        padding-top: 180%;
+                    }
+                }
+
+                &:hover {
+                    border-color: theme-color(primary)!important;
+                    box-shadow: $box-shadow;
+
+                    .theme_preview_tip {
+                        transform: translate3d(0,-120%,0);
+                    }
+
+                    .theme_svg_container svg {
+                        animation: theme_screenshot_scroll 4s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
+                    }
+
+                    &.small .theme_svg_container svg {
+                        animation-name: theme_screenshot_scroll_small;
+                        animation-duration: 5s;
+                    }
+                }
+            }
+        }
+    }
+}

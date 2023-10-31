@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PaymentScreen" owl="1">
+        <div class="payment-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div class="screen-content">
+                <t t-if="!env.isMobile">
+                    <div class="top-content">
+                        <div class="button back"
+                              t-on-click="showScreen('ProductScreen')">
+                            <i class="fa fa-angle-double-left fa-fw"></i>
+                            <span class="back_text">Back</span>
+                        </div>
+                        <div class="top-content-center"><h1>Payment</h1></div>
+                        <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() and _isValidEmptyOrder() and !currentOrder.electronic_payment_in_progress() }"
+                              t-on-click="lockedValidateOrder(false)">
+                            <span class="next_text">Validate</span>
+                            <i class="fa fa-angle-double-right fa-fw"></i>
+                        </div>
+                    </div>
+                </t>
+                <div class="main-content">
+                    <div class="left-content">
+                        <t t-if="env.isMobile">
+                            <section class="paymentlines-container">
+                                <PaymentScreenStatus paymentLines="paymentLines" />
+                            </section>
+                        </t>
+                        <div class="paymentmethods-container">
+                            <PaymentScreenPaymentLines paymentLines="paymentLines" />
+                            <div class="paymentmethods">
+                                <t t-foreach="payment_methods_from_config" t-as="paymentMethod"
+                                   t-key="paymentMethod.id">
+                                    <PaymentMethodButton paymentMethod="paymentMethod" />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-content">
+                        <t t-if="!env.isMobile">
+                            <section class="paymentlines-container">
+                                <PaymentScreenStatus paymentLines="paymentLines" />
+                            </section>
+                        </t>
+
+                        <div class="payment-buttons-container">
+                            <section class="payment-numpad">
+                                <PaymentScreenNumpad />
+                            </section>
+
+                            <div class="payment-buttons">
+                                <div class="customer-button">
+                                    <div class="button" t-att-class="{ highlight: env.pos.get_client() }" t-on-click="selectClient">
+                                        <i class="fa fa-user" role="img" aria-label="Customer"
+                                           title="Customer" />
+                                        <span class="js_customer_name">
+                                            <t t-if="env.pos.get_client()">
+                                                <t t-esc="env.pos.get_client().name" />
+                                            </t>
+                                            <t t-if="!env.pos.get_client()">
+                                                Customer
+                                            </t>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="payment-controls">
+                                    <div t-if="env.pos.config.module_account" class="button js_invoice"
+                                        t-att-class="{ highlight: currentOrder.is_to_invoice() }"
+                                        t-on-click="toggleIsToInvoice">
+                                        <i class="fa fa-file-text-o" /> Invoice
+                                    </div>
+                                    <div t-if="env.pos.config.tip_product_id" class="button js_tip"
+                                        t-att-class="{ highlight: currentOrder.get_tip() }"
+                                        t-on-click="addTip">
+                                        <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)</t>
+                                    </div>
+                                    <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
+                                        t-on-click="openCashbox">
+                                        <i class="fa fa-archive" /> Open Cashbox
+                                    </div>
+                                    <div t-if="env.pos.config.ship_later" class="button"
+                                         t-att-class="{ highlight: currentOrder.is_to_ship() }"
+                                         t-on-click="toggleIsToShip()">
+                                        <i class="fa fa-clock-o" /> Ship Later
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <t t-if="env.isMobile">
+                    <div class="switchpane">
+                        <button class="btn-switchpane" t-att-class="{ secondary: !(currentOrder.is_paid() and _isValidEmptyOrder()) }" t-on-click="lockedValidateOrder(false)">
+                            <h1>Validate</h1>
+                        </button>
+                        <button class="btn-switchpane secondary" t-on-click="showScreen('ProductScreen', {mobile_pane: 'left'})">
+                            <h1>Review</h1>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

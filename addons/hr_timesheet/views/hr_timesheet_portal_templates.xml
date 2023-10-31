@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_layout" name="Portal layout: timesheet menu entry" inherit_id="portal.portal_breadcrumbs" priority="35">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'timesheet' or timesheet" t-attf-class="breadcrumb-item #{'active' if not timesheet else ''}">
+                <t>Timesheets</t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_timesheet" name="Show Timesheets" customize_show="True"  inherit_id="portal.portal_my_home" priority="45">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Timesheets</t>
+                <t t-set="url" t-value="'/my/timesheets'"/>
+                <t t-set="placeholder_count" t-value="'timesheet_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_timesheets" name="My Timesheets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Timesheets</t>
+            </t>
+            <t t-if="not grouped_timesheets">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no timesheets.
+                </div>
+            </t>
+            <t t-if="grouped_timesheets">
+                <t t-call="portal.portal_table">
+                    <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
+                        <t t-set="timesheets" t-value="timesheets_with_hours[0]"/>
+                        <t t-set="hours_spent" t-value="timesheets_with_hours[1]"/>
+                        <thead style="font-size: 0.8rem">
+                            <tr t-if="not groupby =='none'" t-attf-class="{{'thead-light'}}">
+                                <t t-if="groupby == 'project'">
+                                    <th t-if="groupby == 'project'" colspan="5">
+                                        <em class="font-weight-normal text-muted">Timesheets for project:</em>
+                                        <span t-field="timesheets[0].project_id.name"/>
+                                    </th>
+                                    <th colspan="1" class="text-right text-muted">
+                                        <t t-if="is_uom_day">
+                                            Total: <span class="text-muted" t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                        </t>
+                                        <t t-else="">
+                                            Total: <span class="text-muted" t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                        </t>
+                                    </th>
+                                </t>
+                                <t t-elif="groupby == 'task'">
+                                    <th colspan="5">
+                                        <em class="font-weight-normal text-muted">Timesheets for task:</em>
+                                        <span t-field="timesheets[0].task_id.name"/>
+                                    </th>
+                                    <th colspan="1" class="text-right text-muted">
+                                        <t t-if="is_uom_day">
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                        </t>
+                                        <t t-else="">
+                                            Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                        </t>
+                                    </th>
+                                </t>
+                                <t t-elif="groupby == 'date'">
+                                    <th colspan="5">
+                                        <em class="font-weight-normal text-muted">Timesheets on </em>
+                                        <span t-field="timesheets[0].date"/>
+                                    </th>
+                                    <th colspan="1" class="text-right text-muted">
+                                        <t t-if="is_uom_day">
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                        </t>
+                                        <t t-else="">
+                                            Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                        </t>
+                                    </th>
+                                </t>
+                                <t t-elif="groupby == 'employee'">
+                                    <th colspan="5">
+                                        <em class="font-weight-normal text-muted">Timesheets for employee:</em>
+                                        <span t-field="timesheets[0].employee_id.name"/>
+                                    </th>
+                                    <th colspan="1" class="text-right text-muted">
+                                        <t t-if="is_uom_day">
+                                            Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                        </t>
+                                        <t t-else="">
+                                            Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                        </t>
+                                    </th>
+                                </t>
+                            </tr>
+                            <tr t-else="">
+                                <div style="text-align: right;" class="mr-2 mb-1 text-muted">
+                                    <t t-if="is_uom_day">
+                                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                    </t>
+                                    <t t-else="">
+                                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                                    </t>
+                                </div>
+                            </tr>
+                            <tr>
+                                <th t-if="not groupby == 'date'">Date</th>
+                                <th t-if="not groupby == 'employee'">Employee</th>
+                                <th t-if="not groupby == 'project'">Project</th>
+                                <th t-if="not groupby == 'task'">Task</th>
+                                <th>Description</th>
+                                <th t-if="is_uom_day" class="text-right">Days Spent</th>
+                                <th t-else="" class="text-right">Hours Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 0.8rem">
+                            <t t-foreach="timesheets" t-as="timesheet">
+                                <tr>
+                                    <td t-if="not groupby == 'date'"><span t-field="timesheet.date" t-options='{"widget": "date"}'/></td>
+                                    <td t-if="not groupby == 'employee'"><span t-field="timesheet.employee_id" t-att-title="timesheet.employee_id.display_name" /></td>
+                                    <td t-if="not groupby == 'project'"><span t-field="timesheet.project_id" t-att-title="timesheet.project_id.display_name"/></td>
+                                    <td t-if="not groupby == 'task'"><span t-field="timesheet.task_id" t-att-title="timesheet.task_id.display_name"/></td>
+                                    <td><span t-esc="timesheet.name" t-att-title="timesheet.name"/></td>
+                                    <td class="text-right">
+                                        <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                                        <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

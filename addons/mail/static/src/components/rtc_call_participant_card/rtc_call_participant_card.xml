@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcCallParticipantCard" owl="1">
+        <div class="o_RtcCallParticipantCard"
+             t-att-class="{
+                'o-isClickable': callParticipantCard.invitedGuest or callParticipantCard.invitedPartner or !callParticipantCard.isMinimized,
+                'o-isTalking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
+                'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
+            }"
+            t-on-contextmenu="_onContextMenu"
+        >
+            <t t-if="callParticipantCard">
+                <div class="o_RtcCallParticipantCard_container align-items-center"
+                     t-att-title="callParticipantCard.name"
+                     t-att-aria-label="callParticipantCard.name"
+                     t-on-click="callParticipantCard.onClick"
+                >
+                    <!-- card -->
+                    <t t-if="callParticipantCard.rtcSession and callParticipantCard.rtcSession.videoStream">
+                        <RtcVideo rtcSessionLocalId="callParticipantCard.rtcSession.localId"/>
+                    </t>
+                    <t t-else="">
+                        <div class="o_RtcCallParticipantCard_avatarFrame mh-100 mw-100 h-100 align-items-center justify-content-center" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized }" draggable="false">
+                            <img alt="Avatar"
+                                 t-att-class="{
+                                    'o-isTalking': callParticipantCard.isTalking,
+                                    'o-isInvitation': callParticipantCard.isInvitation,
+                                 }"
+                                 class="o_RtcCallParticipantCard_avatarImage h-100 rounded-circle"
+                                 t-att-src="callParticipantCard.avatarUrl"
+                                 draggable="false"
+                            />
+                        </div>
+                    </t>
+
+                    <t t-if="callParticipantCard.rtcSession">
+                        <!-- overlay -->
+                        <span class="o_RtcCallParticipantCard_overlayBottom">
+                            <t t-if="!callParticipantCard.isMinimized">
+                                <span class="o_RtcCallParticipantCard_name" t-esc="callParticipantCard.name"/>
+                            </t>
+                            <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
+                                <span class="o_RtcCallParticipantCard_liveIndicator badge-pill o-isMinimized" title="live" aria-label="live">
+                                    LIVE
+                                </span>
+                            </t>
+                        </span>
+                        <div class="o_RtcCallParticipantCard_overlayTop">
+                            <t t-if="callParticipantCard.rtcSession.isMuted">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="muted" aria-label="muted">
+                                    <i class="fa fa-microphone-slash"/>
+                                </span>
+                            </t>
+                            <t t-if="callParticipantCard.rtcSession.isDeaf">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
+                                    <i class="fa fa-deaf"/>
+                                </span>
+                            </t>
+                            <t t-if="callParticipantCard.rtcSession.channel.rtc and callParticipantCard.rtcSession.isAudioInError">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement text-danger" title="Issue with audio">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                </span>
+                            </t>
+                            <t t-if="callParticipantCard.rtcSession.channel.rtc and !callParticipantCard.rtcSession.rtc and !['connected', 'completed'].includes(callParticipantCard.rtcSession.connectionState)">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-title="callParticipantCard.rtcSession.connectionState">
+                                    <i class="fa fa-exclamation-triangle o_RtcCallParticipantCard_connectionState"/>
+                                </span>
+                            </t>
+                            <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and !callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
+                                <span class="o_RtcCallParticipantCard_liveIndicator badge-pill" title="live" aria-label="live">
+                                    LIVE
+                                </span>
+                            </t>
+                        </div>
+
+                        <!-- volume popover -->
+                        <t t-if="!callParticipantCard.rtcSession.isOwnSession">
+                            <Popover>
+                                <i class="o_RtcCallParticipantCard_volumeMenuAnchor" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
+                                <t t-set="opened">
+                                    <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
+                                </t>
+                            </Popover>
+                        </t>
+                    </t>
+
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

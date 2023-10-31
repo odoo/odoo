@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SearchBar" owl="1">
+        <div class="pos-search-bar">
+            <div class="search">
+                <span class="search-icon" t-if="!env.isMobile"><i class="fa fa-search"></i></span>
+                <input class="radius-left" t-att-class="{ 'radius-right': !props.config.filter.show }"
+                    t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
+                <ul t-if="state.showSearchFields and state.searchInput" class="fields">
+                    <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName">
+                        <li t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"
+                            t-on-click="trigger('click-search-field', fieldName)">
+                            <span class="field">
+                                <t t-esc="props.config.searchFields.get(fieldName)"></t>
+                            </span>
+                            <span>: </span>
+                            <span class="term">
+                                <t t-esc="state.searchInput"></t>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div t-if="props.config.filter.show" class="filter radius-right"
+                t-on-click.stop="state.showFilterOptions = !state.showFilterOptions">
+                <span class="down-icon">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </span>
+                <span>
+                    <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
+                </span>
+                <ul t-if="state.showFilterOptions" class="options">
+                    <t t-foreach="filterOptionsList" t-as="key" t-key="key">
+                        <t t-set="_option" t-value="props.config.filter.options.get(key)" />
+                        <li t-on-click="trigger('select-filter', key)" t-att-class="{ indented: _option.indented }">
+                            <t t-esc="_option.text"></t>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </div>
+    </t>
+
+</templates>

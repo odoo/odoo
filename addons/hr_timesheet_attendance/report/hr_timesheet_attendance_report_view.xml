@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_timesheet_attendance_report_search" model="ir.ui.view">
+            <field name="name">Search for HR timesheet attendance report</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet Attendance">
+                    <field name="user_id" string="Employee"/>
+                    <filter name="month" string="Date" date="date"/>
+                    <filter name="group_by_user" string="Employee" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_month" string="Date" date="date" context="{'group_by': 'date'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_hr_timesheet_attendance_report_pivot" model="ir.ui.view">
+            <field name="name">HR timesheet attendance report: Pivot</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Timesheet Attendance" disable_linking="1" sample="1">
+                    <field name="date" interval="month" type="row"/>
+                    <field name="total_attendance" type="measure" widget="timesheet_uom"/>
+                    <field name="total_timesheet" type="measure" widget="timesheet_uom"/>
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_attendance_report_view_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.attendance.report.view.tree</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet Attendance">
+                    <field name="date"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="total_timesheet" optional="show" sum="Sum of Total Timesheet"/>
+                    <field name="total_attendance" optional="show" sum="Sum of Total Attendance"/>
+                    <field name="total_difference" optional="show" sum="Sum of Total Difference"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_attendance_report_view_graph" model="ir.ui.view">
+            <field name="name">hr.timesheet.attendance.report.view.graph</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet Attendance" sample="1" disable_linking="1">
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report" model="ir.actions.act_window">
+            <field name="name">Timesheet / Attendance</field>
+            <field name="res_model">hr.timesheet.attendance.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="view_id" ref="view_hr_timesheet_attendance_report_pivot"/>
+            <field name="context">{'search_default_group_by_month': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="hr_timesheet_attendance_report_view_graph"/>
+            <field name="act_window_id" ref="action_hr_timesheet_attendance_report"/>
+        </record>
+
+        <menuitem id="menu_hr_timesheet_attendance_report"
+                  parent="hr_timesheet.menu_timesheets_reports"
+                  action="action_hr_timesheet_attendance_report"
+                  name="Timesheet / Attendance"/>
+    </data>
+</odoo>

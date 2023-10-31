@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+         <record id="slide_template_published" model="mail.template">
+            <field name="name">Slide Published</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="subject">New {{ object.slide_type }} published on {{ object.channel_id.name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello<br/><br/>
+                        There is something new in the course <strong t-out="object.channel_id.name or ''">Trees, Wood and Gardens</strong> you are following:<br/><br/>
+                        <center><strong t-out="object.name or ''">Trees</strong></center>
+                        <t t-if="object.image_1024">
+                            <div style="padding: 16px 8px 16px 8px; text-align: center;">
+                                <a t-att-href="object.website_url">
+                                <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                            </a>
+                        </div>
+                        </t>
+                        <div style="padding: 16px 8px 16px 8px; text-align: center;">
+                            <a t-att-href="object.website_url"
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
+                        </div>
+                        Enjoy this exclusive content!
+                        <t t-if="user.signature">
+                            <br />
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="slide_template_shared" model="mail.template">
+            <field name="name">Slide Shared</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="subject">{{ user.name }} shared a {{ object.slide_type }} with you!</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ ctx.get('email', '') }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello<br/><br/>
+                        <t t-out="user.name or ''">Mitchell Admin</t> shared the <t t-out="object.slide_type or ''">document</t> <strong t-out="object.name or ''">Trees</strong> with you!
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a t-att-href="(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url">
+                                <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                            </a>
+                        </div>
+                        <div style="padding: 16px 8px 16px 8px; text-align: center;">
+                            <a t-att-href="(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url"
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong t-out="object.name or ''">Trees</strong></a>
+                        </div>
+                        <t t-if="user.signature">
+                            <br />
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Completed Channel Message -->
+        <record id="mail_template_channel_completed" model="mail.template">
+            <field name="name">Completed Course</field>
+            <field name="model_id" ref="model_slide_channel_partner"/>
+            <field name="subject">Congratulation! You completed {{ object.channel_id.name }}</field>
+            <field name="email_from">{{ (object.channel_id.user_id.email_formatted or object.channel_id.user_id.company_id.catchall_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <p style="margin: 0px;">Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,</p><br/>
+                        <p><b>Congratulations!</b></p>
+                        <p>You've completed the course <b t-out="object.channel_id.name or ''">Basics of Gardening</b></p>
+                        <p>Check out the other available courses.</p><br/>
+
+                        <div style="padding: 16px 8px 16px 8px; text-align: center;">
+                            <a href="/slides/all" style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                                Explore courses
+                            </a>
+                        </div>
+                        Enjoy this exclusive content!
+                        <t t-if="object.channel_id.user_id.signature">
+                            <br />
+                            <t t-out="object.channel_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+        </record>
+
+        <!-- Slide channel invite feature -->
+        <record id="mail_template_slide_channel_invite" model="mail.template">
+            <field name="name">Channel: Invite by email</field>
+            <field name="model_id" ref="model_slide_channel_partner" />
+            <field name="subject">You have been invited to join {{ object.channel_id.name }}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello<br/><br/>
+        You have been invited to join a new course: <t t-out="object.channel_id.name or ''">Basics of Gardening</t>.
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
