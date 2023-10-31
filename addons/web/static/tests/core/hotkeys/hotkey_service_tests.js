@@ -144,7 +144,7 @@ QUnit.test("[accesskey] attrs replaced by [data-hotkey], part 2", async (assert)
             useActiveElement("bouh");
         }
     }
-    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh">bouh</p>`;
+    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh"><button/></p>`;
     class MyComponent extends Component {
         setup() {
             this.state = useState({ foo: true });
@@ -1015,7 +1015,7 @@ QUnit.test("operating area and UI active element", async (assert) => {
             useActiveElement("bouh");
         }
     }
-    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh">bouh</p>`;
+    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh"><button/></p>`;
     class C extends Component {
         setup() {
             this.state = useState({ foo: false });
