@@ -235,7 +235,7 @@ QUnit.test("global command with hotkey", async (assert) => {
             useActiveElement("active");
         }
     }
-    MyComponent.template = xml`<div t-ref="active"></div>`;
+    MyComponent.template = xml`<div t-ref="active"><button/></div>`;
     await mount(MyComponent, target, { env });
 
     triggerHotkey("a");

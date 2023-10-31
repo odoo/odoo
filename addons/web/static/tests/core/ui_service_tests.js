@@ -66,7 +66,7 @@ QUnit.test("use block and unblock several times to block ui with ui service", as
     assert.strictEqual(blockUI, null, "ui should not be blocked");
 });
 
-QUnit.test("a component can be the  UI active element: with t-ref delegation", async (assert) => {
+QUnit.test("a component can be the  UI active element: simple usage", async (assert) => {
     class MyComponent extends Component {
         setup() {
             useActiveElement("delegatedRef");
@@ -76,7 +76,9 @@ QUnit.test("a component can be the  UI active element: with t-ref delegation", a
     MyComponent.template = xml`
     <div>
       <h1>My Component</h1>
-      <div t-if="hasRef" id="owner" t-ref="delegatedRef"/>
+      <div t-if="hasRef" id="owner" t-ref="delegatedRef">
+        <input type="text"/>
+      </div>
     </div>
   `;
 
@@ -85,12 +87,15 @@ QUnit.test("a component can be the  UI active element: with t-ref delegation", a
     assert.deepEqual(ui.activeElement, document);
 
     const comp = await mount(MyComponent, target, { env });
+    const input = target.querySelector("#owner input");
     assert.deepEqual(ui.activeElement, document.getElementById("owner"));
+    assert.strictEqual(document.activeElement, input);
     comp.hasRef = false;
     comp.render();
     await nextTick();
 
     assert.deepEqual(ui.activeElement, document);
+    assert.strictEqual(document.activeElement, document.body);
 });
 
 QUnit.test("UI active element: trap focus", async (assert) => {
@@ -192,7 +197,7 @@ QUnit.test("UI active element: trap focus - default focus with autofocus", async
     assert.strictEqual(event.defaultPrevented, false);
 });
 
-QUnit.test("UI active element: trap focus - no focus element", async (assert) => {
+QUnit.test("do not become UI active element if no element to focus", async (assert) => {
     class MyComponent extends Component {
         setup() {
             useActiveElement("delegatedRef");
@@ -212,24 +217,7 @@ QUnit.test("UI active element: trap focus - no focus element", async (assert) =>
 
     const env = await makeTestEnv({ ...baseConfig });
     await mount(MyComponent, target, { env });
-
-    assert.strictEqual(
-        document.activeElement,
-        target.querySelector("div[id=idActiveElement]"),
-        "when there is not other element, the focus is on the UI active element itself"
-    );
-    // Pressing 'Tab'
-    let event = await triggerEvent(document.activeElement, null, "keydown", { key: "Tab" });
-    assert.strictEqual(event.defaultPrevented, true);
-    assert.strictEqual(document.activeElement, target.querySelector("div[id=idActiveElement]"));
-
-    // Pressing 'Shift + Tab'
-    event = await triggerEvent(document.activeElement, null, "keydown", {
-        key: "Tab",
-        shiftKey: true,
-    });
-    assert.strictEqual(event.defaultPrevented, true);
-    assert.strictEqual(document.activeElement, target.querySelector("div[id=idActiveElement]"));
+    assert.strictEqual(env.services.ui.activeElement, document);
 });
 
 QUnit.test("UI active element: trap focus - first or last tabable changes", async (assert) => {
