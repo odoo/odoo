@@ -1111,6 +1111,13 @@ class Picking(models.Model):
         self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+        draft_picking = self.filtered(lambda p: p.state == 'draft')
+        draft_picking.action_confirm()
+        for move in draft_picking.move_ids:
+            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) and\
+               not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                move.quantity = move.product_uom_qty
+
         # Sanity checks.
         if not self.env.context.get('skip_sanity_check', False):
             self._sanity_check()
@@ -1238,7 +1245,7 @@ class Picking(models.Model):
                 continue
             if any(move.additional for move in picking.move_ids):
                 picking.action_confirm()
-        to_confirm = self.move_ids.filtered(lambda m: m.state == 'draft' and not m.product_uom_qty and m.quantity)
+        to_confirm = self.move_ids.filtered(lambda m: m.state == 'draft' and m.quantity)
         to_confirm._action_confirm()
 
     def _create_backorder(self):
