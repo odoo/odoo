@@ -352,8 +352,15 @@ const processMessage = (data) => {
     throw new Error(`Action '${action}' not found.`);
 };
 
-self.addEventListener("fetch", (event) => {
-    event.respondWith(processFetchRequest(event.request));
+self.addEventListener("fetch", async (event) => {
+        const response = await processFetchRequest(event.request);
+        /**
+         * You can only return Response objects of type "opaqueredirect" if the fetchEvent.request object's mode is "manual".
+         * https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent/respondWith
+         */
+        if (response.type !== "opaqueredirect") {
+            event.respondWith(response);
+        }
 });
 
 self.addEventListener("sync", (event) => {
