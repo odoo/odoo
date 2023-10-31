@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { serverUrl } from "@im_livechat/embed/common/livechat_data";
+import { url } from "@web/core/utils/urls";
 
 async function loadFont(name, url) {
     await document.fonts.ready;
@@ -55,7 +55,7 @@ export function makeRoot(target) {
 export async function makeShadow(root) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = `${serverUrl}/im_livechat/assets_embed.css`;
+    link.href = url("/im_livechat/assets_embed.css");
     const stylesLoadedPromise = new Promise((res, rej) => {
         link.addEventListener("load", res);
         link.addEventListener("error", rej);
@@ -64,8 +64,8 @@ export async function makeShadow(root) {
     shadow.appendChild(link);
     await Promise.all([
         stylesLoadedPromise,
-        loadFont("FontAwesome", `${serverUrl}/im_livechat/font-awesome`),
-        loadFont("odoo_ui_icons", `${serverUrl}/im_livechat/odoo_ui_icons`),
+        loadFont("FontAwesome", url("/im_livechat/font-awesome")),
+        loadFont("odoo_ui_icons", url("/im_livechat/odoo_ui_icons")),
     ]);
     return shadow;
 }

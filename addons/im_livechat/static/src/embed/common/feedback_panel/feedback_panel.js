@@ -7,6 +7,7 @@ import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
@@ -34,6 +35,7 @@ export class FeedbackPanel extends Component {
             rating: null,
             feedback: "",
         });
+        this.url = url;
     }
 
     /**

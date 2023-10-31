@@ -3,7 +3,7 @@
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='messageContent']" position="replace">
             <div t-if="props.isTypingMessage">
-                <img height="30" t-att-src="`${session.origin}/im_livechat/static/src/img/chatbot_is_typing.gif`"/>
+                <img height="30" t-att-src="url('/im_livechat/static/src/img/chatbot_is_typing.gif')"/>
             </div>
             <t t-else="">$0</t>
         </xpath>

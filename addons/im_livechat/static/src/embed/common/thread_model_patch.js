@@ -7,7 +7,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { onChange } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 patch(Thread, {
     _insert(data) {
@@ -72,6 +72,6 @@ patch(Thread.prototype, {
         if (this.type !== "livechat") {
             return super.imgUrl;
         }
-        return `${session.origin}/im_livechat/operator/${this.operator.id}/avatar`;
+        return url(`/im_livechat/operator/${this.operator.id}/avatar`);
     },
 });

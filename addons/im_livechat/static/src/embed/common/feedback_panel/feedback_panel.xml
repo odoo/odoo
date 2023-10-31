@@ -8,9 +8,9 @@
             <t t-if="state.step === STEP.RATING">
                 <p class="text-center fs-6 mb-4">Did we correctly answer your question?</p>
                 <div class="d-flex justify-content-center">
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.GOOD }" t-att-src="`${session.origin}/rating/static/src/img/rating_${RATING.GOOD}.png`" t-att-alt="RATING.GOOD" t-on-click="() => this.select(RATING.GOOD)"/>
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.OK }" t-att-src="`${session.origin}/rating/static/src/img/rating_${RATING.OK}.png`" t-att-alt="RATING.OK"  t-on-click="() => this.select(RATING.OK)"/>
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.BAD }" t-att-src="`${session.origin}/rating/static/src/img/rating_${RATING.BAD}.png`" t-att-alt="RATING.BAD" t-on-click="() => this.select(RATING.BAD)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.GOOD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.GOOD}.png`)" t-att-alt="RATING.GOOD" t-on-click="() => this.select(RATING.GOOD)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.OK }" t-att-src="url(`/rating/static/src/img/rating_${RATING.OK}.png`)" t-att-alt="RATING.OK"  t-on-click="() => this.select(RATING.OK)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.BAD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.BAD}.png`)" t-att-alt="RATING.BAD" t-on-click="() => this.select(RATING.BAD)"/>
                 </div>
             </t>
             <t t-else="">
