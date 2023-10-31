@@ -3759,6 +3759,34 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "td.o_list_record_remove button");
     });
 
+    QUnit.test("boolean field in a one2many must be directly editable", async function (assert) {
+        serverData.models.partner.records[0].p = [2, 4];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="bar"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='bar'] input")].map((el) => el.checked),
+            [true, false]
+        );
+
+        await click(target.querySelector('.o_field_widget[name="bar"] input'));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='bar'] input")].map((el) => el.checked),
+            [false, false]
+        );
+    });
+
     QUnit.test("many2many list: unlink two records", async function (assert) {
         assert.expect(4);
         serverData.models.partner.records[0].p = [1, 2, 4];

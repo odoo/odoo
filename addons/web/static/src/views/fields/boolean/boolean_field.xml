@@ -2,10 +2,6 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BooleanField">
-        <CheckBox id="props.id" value="state.value" className="'d-inline-block'" disabled="props.readonly" onChange.bind="onChange" />
-    </t>
-
-    <t t-name="web.ListBooleanField">
         <div t-on-click="onClick">
             <CheckBox id="props.id" value="state.value" className="'d-inline-block'" disabled="props.readonly" onChange.bind="onChange"></CheckBox>
         </div>

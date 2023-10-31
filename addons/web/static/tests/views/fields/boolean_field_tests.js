@@ -179,34 +179,34 @@ QUnit.module("Fields", (hooks) => {
 
         // Edit a line
         let cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        assert.ok(
-            cell.querySelector(".o-checkbox input:checked").disabled,
-            "input should be disabled in readonly mode"
+        assert.notOk(
+            cell.querySelector(".o-checkbox input").disabled,
+            "checkbox should be enabled"
         );
-        await click(cell, ".o-checkbox");
+        assert.ok(cell.querySelector(".o-checkbox input").checked);
+
+        await click(cell.querySelector("div > div"));
         assert.hasClass(
             document.querySelector("tr.o_data_row:nth-child(1)"),
             "o_selected_row",
             "the row is now selected, in edition"
         );
-        assert.ok(
-            !cell.querySelector(".o-checkbox input:checked").disabled,
-            "input should now be enabled"
+        assert.notOk(
+            cell.querySelector(".o-checkbox input").disabled,
+            "checkbox should be enabled"
         );
+        assert.notOk(cell.querySelector(".o-checkbox input").checked);
+
         await click(cell);
         assert.notOk(
-            cell.querySelector(".o-checkbox input:checked").disabled,
+            cell.querySelector(".o-checkbox input").disabled,
             "input should not have the disabled property in edit mode"
         );
-        await click(cell, ".o-checkbox");
 
         // save
         await clickSave(target);
         cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        assert.ok(
-            cell.querySelector(".o-checkbox input:not(:checked)").disabled,
-            "input should be disabled again"
-        );
+        assert.notOk(cell.querySelector(".o-checkbox input:not(:checked)").disabled);
         assert.containsN(
             target,
             "tbody td:not(.o_list_record_selector) .o-checkbox",

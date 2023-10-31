@@ -2980,8 +2980,6 @@ QUnit.module("Views", (hooks) => {
         // toggle the boolean value after switching the row in edition
         assert.containsNone(target, ".o_selected_row");
         await click(target.querySelector(".o_data_row .o_data_cell .o_field_boolean_toggle div"));
-        assert.containsOnce(target, ".o_selected_row");
-        await click(target.querySelector(".o_selected_row .o_field_boolean_toggle div"));
         assert.verifySteps(["web_save: true"]);
     });
 
@@ -18100,7 +18098,7 @@ QUnit.module("Views", (hooks) => {
                 "classnames are set on the corresponding field div directly"
             );
             assert.hasClass(
-                target.querySelectorAll(".o_field_cell")[3],
+                target.querySelectorAll(".o_field_cell")[3].querySelector("[name='bar']"),
                 "d-none",
                 "classnames are set on the second cell"
             );

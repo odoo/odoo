@@ -21,12 +21,22 @@ export class BooleanField extends Component {
         });
     }
 
+    updateValue(value) {
+        this.state.value = value;
+        return this.props.record.update({ [this.props.name]: value });
+    }
+
+    onClick() {
+        if (!this.props.readonly) {
+            return this.updateValue(!this.props.record.data[this.props.name]);
+        }
+    }
+
     /**
      * @param {boolean} newValue
      */
     onChange(newValue) {
-        this.state.value = newValue;
-        this.props.record.update({ [this.props.name]: newValue });
+        return this.updateValue(newValue);
     }
 }
 
@@ -34,7 +44,7 @@ export class ListBooleanField extends BooleanField {
     static template = "web.ListBooleanField";
 
     async onClick() {
-        if (!this.props.readonly) {
+        if (!this.props.readonly && this.props.record.isInEdition) {
             const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
             await this.props.record.update(changes);
         }
@@ -46,11 +56,6 @@ export const booleanField = {
     displayName: _t("Checkbox"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
-};
-
-export const listBooleanField = {
-    ...booleanField,
-    component: ListBooleanField,
     extractProps(fieldInfo, dynamicInfo) {
         return {
             readonly: dynamicInfo.readonly,
@@ -59,4 +64,3 @@ export const listBooleanField = {
 };
 
 registry.category("fields").add("boolean", booleanField);
-registry.category("fields").add("list.boolean", listBooleanField);

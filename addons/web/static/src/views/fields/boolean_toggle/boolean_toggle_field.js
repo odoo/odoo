@@ -11,10 +11,12 @@ export class BooleanToggleField extends BooleanField {
         autosave: { type: Boolean, optional: true },
     };
 
-    async onChange(newValue) {
-        this.state.value = newValue;
-        const changes = { [this.props.name]: newValue };
-        await this.props.record.update(changes, { save: this.props.autosave });
+    updateValue(value) {
+        this.state.value = value;
+        return this.props.record.update(
+            { [this.props.name]: value },
+            { save: this.props.autosave }
+        );
     }
 }
 
@@ -33,11 +35,10 @@ export const booleanToggleField = {
             ),
         },
     ],
-    extractProps({ options }, dynamicInfo) {
-        return {
-            autosave: "autosave" in options ? Boolean(options.autosave) : true,
-            readonly: dynamicInfo.readonly,
-        };
+    extractProps({ options }) {
+        const props = booleanField.extractProps(...arguments);
+        props.autosave = "autosave" in options ? Boolean(options.autosave) : true;
+        return props;
     },
 };
 

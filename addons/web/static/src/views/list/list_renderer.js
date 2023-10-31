@@ -454,6 +454,10 @@ export class ListRenderer extends Component {
         if (column.widget) {
             return false;
         }
+        const field = record.fields[column.name];
+        if (field.type === "boolean") {
+            return false;
+        }
         if (record.isInEdition && (record.model.multiEdit || this.isInlineEditable(record))) {
             // in a x2many non editable list, a record is in edition when it is opened in a dialog,
             // but in the list we want it to still be displayed in readonly.
