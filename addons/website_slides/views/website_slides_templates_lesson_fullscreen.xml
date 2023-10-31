@@ -45,10 +45,10 @@
                         <i class="fa fa-share-alt"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
                     </a>
-                    <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}">
+                    <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
                         <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
                     </a>
-                    <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}">
+                    <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
                         <i class="fa fa-home"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
                     </a>
                 </div>
@@ -69,7 +69,7 @@
                                 </span>
                                 <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} w-100 align-items-center">
                                     <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
-                                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
                                     </div>
                                     <div class="ms-3 small">
                                         <span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/> %

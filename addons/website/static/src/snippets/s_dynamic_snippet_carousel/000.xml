@@ -19,10 +19,10 @@
             <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
             <t t-set="rowIndexGenerator" t-value="Array.from(Array(rowPerSlide).keys())"/>
             <t t-set="colIndexGenerator" t-value="Array.from(Array(rowSize).keys())"/>
-            <div class="carousel-inner row w-100 mx-auto" role="listbox">
+            <div class="carousel-inner row w-100 mx-auto" role="listbox" aria-label="Carousel">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
-                    <div t-attf-class="carousel-item #{extraClasses} #{slideIndex_first ? 'active' : ''}">
+                    <div t-attf-class="carousel-item #{extraClasses} #{slideIndex_first ? 'active' : ''}" role="option">
                         <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
                             <t t-set="rowOffset" t-value="slideOffset + (rowIndex * rowSize)"/>
                             <t t-if="rowOffset &lt; data.length">
