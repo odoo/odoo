@@ -1814,8 +1814,9 @@ class MrpProduction(models.Model):
         partially_assigned_moves = set()
         move_lines_to_unlink = set()
         for initial_move, backorder_moves in move_to_backorder_moves.items():
-            # Create `stock.move.line` for consumed but non-reserved components
-            if initial_move.raw_material_production_id and not initial_move.move_line_ids and set_consumed_qty:
+            # Create `stock.move.line` for consumed but non-reserved components and for by-products
+            if (initial_move.raw_material_production_id or (initial_move.production_id and initial_move.product_id != production.product_id))\
+                and not initial_move.move_line_ids and set_consumed_qty:
                 ml_vals = initial_move._prepare_move_line_vals()
                 backorder_move_to_ignore = backorder_moves[-1] if has_backorder_to_ignore[initial_move.raw_material_production_id] else self.env['stock.move']
                 for move in list(initial_move + backorder_moves - backorder_move_to_ignore):
