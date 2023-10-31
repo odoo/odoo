@@ -64,8 +64,16 @@ export async function makeShadow(root) {
     shadow.appendChild(link);
     await Promise.all([
         stylesLoadedPromise,
+<<<<<<< HEAD:addons/im_livechat/static/src/embed/common/boot_helpers.js
         loadFont("FontAwesome", `${serverUrl}/im_livechat/font-awesome`),
         loadFont("odoo_ui_icons", `${serverUrl}/im_livechat/odoo_ui_icons`),
+||||||| parent of d457609292cd (temp):addons/im_livechat/static/src/embed/boot_helpers.js
+        loadFont("FontAwesome", url("im_livechat/font-awesome")),
+        loadFont("odoo_ui_icons", url("/im_livechat/odoo_ui_icons")),
+=======
+        loadFont("FontAwesome", url("/im_livechat/font-awesome")),
+        loadFont("odoo_ui_icons", url("/im_livechat/odoo_ui_icons")),
+>>>>>>> d457609292cd (temp):addons/im_livechat/static/src/embed/boot_helpers.js
     ]);
     return shadow;
 }
