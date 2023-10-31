@@ -86,7 +86,7 @@
                         </div>
 
                         <div class="btn-group ms-1 position-static">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Search"><i class="fa fa-search"></i></a>
                             <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                                 <t t-call="website.website_search_box_input">
                                     <t t-set="_classes" t-valuef="px-3"/>
@@ -173,14 +173,14 @@
                         </div>
                         <div class="col-12 col-md-8 col-lg-9 position-relative">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
-                                <li class="nav-item">
+                                <li class="nav-item" role="presentation">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
                                         id="home-tab" data-bs-toggle="pill" href="#home" role="tab" aria-controls="home"
                                         t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
                                         <i class="fa fa-home"/> Course
                                     </a>
                                 </li>
-                                <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review">
+                                <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review" role="presentation">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
                                         id="review-tab" data-bs-toggle="pill" href="#review" role="tab" aria-controls="review"
                                         t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
@@ -416,7 +416,7 @@
                 </span>
                 <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if channel.completed else 'd-flex'} w-100 align-items-center">
                     <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
-                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
                     </div>
                     <div class="ms-3 small">
                         <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
@@ -462,6 +462,10 @@
                                 <span class="ms-1" t-field="category['category'].completion_time" t-options="{'widget': 'duration', 'format' : 'short', 'unit': 'hour', 'round': 'minute'}"/>
                             </div>
                             <div class="d-flex border-start ms-2 o_not_editable">
+                                <!-- TODO: review the aria-label which does not
+                                match the actual text thus triggering the
+                                warning "Elements with visible text labels do
+                                not have matching accessible names" -->
                                 <a  t-if="channel.can_upload"
                                     class="o_text_link o_wslides_js_slide_upload px-3 py-2"
                                     role="button"
@@ -490,6 +494,9 @@
             </t>
         </ul>
         <div t-if="channel.can_upload" class="o_wslides_content_actions o_not_editable btn-group">
+            <!-- TODO: review the aria-label which does not match the actual
+            text thus triggering the warning "Elements with visible text labels
+            do not have matching accessible names" -->
             <a  class="o_wslides_js_slide_upload me-1 border btn btn-primary"
                 role="button"
                 aria-label="Upload Document"
@@ -606,10 +613,10 @@
         </div>
 
         <div class="d-flex flex-row o_not_editable">
-            <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create">
+            <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create" aria-label="Add quiz">
                 <span class="badge text-bg-light badge-hide border fw-normal px-2 py-1 m-1">Add Quiz</span>
             </a>
-            <a t-if="channel.can_upload" href="#" name="o_wslides_slide_toggle_is_preview">
+            <a t-if="channel.can_upload" href="#" name="o_wslides_slide_toggle_is_preview" aria-label="Preview">
                 <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'text-bg-success' if slide.is_preview else 'text-bg-light badge-hide border'} fw-normal px-2 py-1 m-1"><span>Preview</span></span>
             </a>
             <t t-elif="slide.is_preview and not channel.is_member">
@@ -632,9 +639,9 @@
                 <t t-set="use_slide_icon" t-value="False"/>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
-                <a t-if="slide.slide_category == 'article'" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
+                <a t-if="slide.slide_category == 'article'" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1" title="Edit"><span class="fa fa-pencil"/></a>
                 <a t-else="" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form" title="Edit in backend"><span class="fa fa-pencil"/></a>
-                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger mx-2 o_wslides_js_slide_archive o_not_editable"><span class="fa fa-trash"/></a>
+                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger mx-2 o_wslides_js_slide_archive o_not_editable" title="Delete"><span class="fa fa-trash"/></a>
             </span>
         </div>
     </li>
@@ -780,6 +787,10 @@
             </div>
 
             <div t-if="channel.can_upload" class="text-end pb-2 col-auto">
+                <!-- TODO: In master, remove the aria-label of the next two
+                    anchors, as they already have a title, to avoid an
+                    accessibility error of type `Elements with visible text
+                    labels do not have matching accessible names`. -->
                 <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
                     title="Upload Document" role="button"
                     aria-label="Upload Document" href="#"
