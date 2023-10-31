@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import { Chrome } from "@web/../tests/chrome_chrome/helpers";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
