@@ -73,6 +73,9 @@ export class ProductsWidget extends Component {
     get searchWord() {
         return this.pos.searchProductWord.trim();
     }
+    getProductListToNotDisplay() {
+        return [this.pos.config.tip_product_id];
+    }
     get productsToDisplay() {
         const { db } = this.pos;
         let list = [];
@@ -81,6 +84,8 @@ export class ProductsWidget extends Component {
         } else {
             list = db.get_product_by_category(this.selectedCategoryId);
         }
+
+        list = list.filter(product => !this.getProductListToNotDisplay().includes(product.id));
         return list.sort(function (a, b) {
             return a.display_name.localeCompare(b.display_name);
         });

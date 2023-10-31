@@ -797,3 +797,6 @@ class PosConfig(models.Model):
             if pm.type == payment_type:
                 return pm
         return False
+
+    def _get_special_products_ids(self):
+        return [self.env.ref('point_of_sale.product_product_tip').id]
