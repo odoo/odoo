@@ -39,7 +39,7 @@ class MassMailController(http.Controller):
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
                 contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
-                subscription_list_ids = contacts.mapped('subscription_list_ids').filtered('active')
+                subscription_list_ids = contacts.mapped('subscription_list_ids').filtered('list_id.active')
                 # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
                 # assume that the user is not opt_out on both
                 # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
