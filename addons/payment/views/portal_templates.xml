@@ -254,7 +254,7 @@
         -->
         <t t-set="options" t-value="options or {'widget': 'string'}"/>
         <hr t-if="include_separator" class="d-md-none m-0 text-300 opacity-100"/>
-        <div t-att-class="'col my-3'
+        <div t-att-class="'col my-3 text-break'
                           + (' o_payment_summary_separator' if include_separator else '')"
         >
             <label t-attf-for="o_payment_summary_{{name}}"
@@ -264,7 +264,7 @@
             <span t-attf-id="o_payment_summary_{{name}}"
                   t-out="value"
                   t-options="options"
-                  class="fs-4 fw-bold"
+                  class="fs-5 fw-bold"
             />
         </div>
     </template>

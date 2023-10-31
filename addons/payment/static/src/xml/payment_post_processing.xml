@@ -61,17 +61,17 @@
                     </label>
                     <span id="o_payment_summary_amount"
                           t-out="formatCurrency(amount, currency_id)"
-                          class="fs-4 fw-bold"
+                          class="fs-5 fw-bold"
                     />
                 </div>
                 <hr class="d-md-none m-0 text-300 opacity-100"/>
-                <div class="o_payment_summary_separator col py-3">
+                <div class="o_payment_summary_separator col py-3 text-break">
                     <label for="o_payment_summary_reference" class="d-block small text-muted">
                         Reference
                     </label>
                     <span id="o_payment_summary_reference"
                           t-out="reference"
-                          class="fs-4 fw-bold"
+                          class="fs-5 fw-bold"
                     />
                 </div>
             </div>
