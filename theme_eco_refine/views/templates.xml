@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="header_call_to_action_refurbished"
+              inherit_id="website.header_call_to_action">
+        <!--        Template for replace header_call_to_action-->
+        <xpath expr="//a[@href='/contactus']" position="replace">
+        </xpath>
+    </template>
+    <template id="template_header_refurbished"
+              inherit_id="website.template_header_default"
+              name="Template Header refurbished" active="True">
+        <!--        Template for replace website template header -->
+        <xpath expr="//t[@t-call='website.placeholder_header_brand']"
+               position="replace">
+        </xpath>
+        <xpath expr="//t[@t-call='portal.user_dropdown']" position="replace">
+        </xpath>
+        <xpath expr="//t[@t-call='website.navbar']" position="before">
+            <div class="ref-header">
+                <div class="ref-wrapper ref-head">
+                    <div class="ref-header__logo">
+                        <span class="ref-logo">ReTech</span>
+                    </div>
+                    <div class="ref-searchbox">
+                        <t t-call="website.website_search_box_input"/>
+                    </div>
+                    <div class="ref-header__icons">
+                        <ul class="nav navbar-nav navbar-expand">
+                            <!-- Sign In -->
+                            <t t-call="portal.placeholder_user_sign_in">
+                                <t t-set="_item_class"
+                                   t-value="'nav-item'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link'"/>
+                            </t>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown">
+                                <t t-set="_icon" t-value="true"/>
+                                <t t-set="_item_class"
+                                   t-value="'nav-item dropdown'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link'"/>
+                                <t t-set="_dropdown_menu_class"
+                                   t-value="'position-absolute dropdown-menu-right'"/>
+                            </t>
+                            <t t-call="website_sale.header_cart_link">
+                                <t t-set="_icon" t-value="True"/>
+                                <t t-set="_item_class"
+                                   t-value="'nav-item ml-lg-3'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link'"/>
+                            </t>
+                            <t t-call="website_sale_wishlist.header_wishlist_link">
+                                <t t-set="_icon" t-value="True"/>
+                                <t t-set="_item_class"
+                                   t-value="'nav-item ml-lg-3'"/>
+                                <t t-set="_link_class"
+                                   t-value="'nav-link'"/>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <template id="website_contactus_refurbished"
+              inherit_id="website.contactus">
+        <!--        Template website contact us page-->
+        <xpath expr="//section[hasclass('s_title')]" position="replace">
+            <div class="ref-hero-sub-bg">
+                <h2 class="ref-hero-sub-bg_heading">Get in Touch with Us
+                </h2>
+            </div>
+        </xpath>
+        <xpath expr="//section[hasclass('s_text_block')]" position="before">
+            <div class="ref-contact-info">
+                <div class="ref-contact_container">
+                    <img src="/theme_eco_refine/static/src/img/phone.svg"
+                         alt=""/>
+                    <h4>Phone</h4>
+                    <p>+1 (650) 555-0111</p>
+                </div>
+                <div class="ref-contact_container">
+                    <img src="/theme_eco_refine/static/src/img/location.svg"
+                         alt=""/>
+                    <h4>Location</h4>
+                    <p>3575 Fake Buena Vista Avenue</p>
+                </div>
+                <div class="ref-contact_container">
+                    <img src="/theme_eco_refine/static/src/img/email.svg"
+                         alt=""/>
+                    <h4>Email</h4>
+                    <p>info@yourcompany.example.com</p>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//section[hasclass('s_text_block')]" position="replace">
+            <div class="ref-contact-msg">
+                <span class="ref-section_head ref-head--primary">
+                    Contact Us
+                </span>
+                <section class="s_website_form" data-vcss="001"
+                         data-snippet="s_website_form">
+                    <div class="container">
+                        <form id="contactus_form"
+                              action="/website/form/"
+                              method="post"
+                              enctype="multipart/form-data"
+                              class="ref-contact-form"
+                              data-mark="*"
+                              data-model_name="mail.mail"
+                              data-success-mode="redirect"
+                              data-success-page="/contactus-thank-you"
+                              data-pre-fill="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required"
+                                     data-type="char"
+                                     data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div class="col-sm">
+                                            <input id="contact1"
+                                                   type="text"
+                                                   class="ref-contant-form_input"
+                                                   placeholder="Name"
+                                                   required=""
+                                                   data-fill-with="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_required"
+                                     data-type="email"
+                                     data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div class="col-sm">
+                                            <input id="contact3"
+                                                   type="email"
+                                                   class="ref-contant-form_input"
+                                                   placeholder="Email"
+                                                   required=""
+                                                   data-fill-with="email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_required"
+                                     data-type="char"
+                                     data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div class="col-sm">
+                                            <input id="contact5"
+                                                   type="text"
+                                                   class="form-control s_website_form_input"
+                                                   name="subject"
+                                                   placeholder="Subject"
+                                                   required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required"
+                                     data-type="text"
+                                     data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div class="col-sm">
+                                            <textarea
+                                                    id="contact6"
+                                                    class="form-control s_website_form_input"
+                                                    name="description"
+                                                    placeholder="Question"
+                                                    required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_dnone">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label"
+                                               style="width: 200px"
+                                               for="contact7">
+                                            <span class="s_website_form_label_content">
+                                                Email To
+                                            </span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact7"
+                                                   type="hidden"
+                                                   class="form-control s_website_form_input"
+                                                   name="email_to"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ref-form-subbtn"
+                                     data-name="Submit Button">
+                                    <div style="width: 200px;"
+                                         class="s_website_form_label"/>
+                                    <a href="#" role="button"
+                                       class="btn btn-primary btn-lg s_website_form_send">
+                                        Send
+                                    </a>
+                                    <span id="s_website_form_result"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+    <template id="footer_custom_refurbished" inherit_id="website.footer_custom"
+              name="Default" active="True">
+        <!--        Template for custom footer -->
+        <xpath expr="//div[@id='footer']" position="replace">
+            <footer id="ref-footer">
+                <div class="ref-footer-section">
+                    <div class="ref-wrapper">
+                        <div class="ref-foot-row">
+                            <div class="column">
+                                <div class="ref-header__logo">
+                                    <span class="ref-logo light-logo">ReTech
+                                    </span>
+                                </div>
+                                <p class="ref-foot-para">Lorem Ipsum is simply
+                                    dummy text of the printing and typesetting
+                                    industry.
+                                </p>
+                            </div>
+                            <div class="column">
+                                <h4 class="ref-foot_head"
+                                    style="margin-left: 30px;">Contact Us
+                                </h4>
+                                <ul>
+                                    <li class="ref-foot-para">Phone: +1 (555)
+                                        555-5555
+                                    </li>
+                                    <li class="ref-foot-para ">Email:
+                                        <a>info@example.com</a>
+                                    </li>
+                                    <li class="ref-foot-para ">Address: 123
+                                        Main Street, Anytown, USA
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <h4 class="ref-foot_head"
+                                    style="margin-left: 30px;">Useful Links
+                                </h4>
+                                <ul>
+                                    <li class="ref-foot-para ">
+                                        <a>About Us</a>
+                                    </li>
+                                    <li class="ref-foot-para ">
+                                        <a>Shipping &amp; Returns</a>
+                                    </li>
+                                    <li class="ref-foot-para ">
+                                        <a>Terms &amp; Conditions</a>
+                                    </li>
+                                    <li class="ref-foot-para ">
+                                        <a>Privacy Policy</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <h4 class="ref-foot_head"
+                                    style="margin-left: 35px;">Follow Us
+                                </h4>
+                                <ul class="d-flex">
+                                    <li>
+                                        <a>
+                                            <img src="/theme_eco_refine/static/src/img/facebook.svg"
+                                                 alt=""/>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <img src="/theme_eco_refine/static/src/img/twitter.svg"
+                                                 alt=""/>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <img src="/theme_eco_refine/static/src/img/instagram.svg"
+                                                 alt=""/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe"
+                                 data-vxml="001" data-list-id="1"
+                                 data-name="Newsletter Form">
+                                <div class="input-group">
+                                    <input type="email" name="email"
+                                           class="js_subscribe_value form-control"
+                                           placeholder="your email..."/>
+                                    <a role="button" href="#"
+                                       class="btn btn-primary js_subscribe_btn o_submit"
+                                       style="background-color:#0d5272; border-radius: 5px;">
+                                        Subscribe
+                                    </a>
+                                    <a role="button" href="#"
+                                       class="btn btn-success js_subscribed_btn d-none o_submit"
+                                       disabled="disabled">Thanks
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ref-wrapper">
+                    <p class="ref-foot-cpy-rt">Copyright © 2023 Example
+                        Company. All rights reserved.
+                    </p>
+                </div>
+            </footer>
+        </xpath>
+    </template>
+    <template id="products_refurbished" inherit_id="website_sale.products">
+        <!--        Customized template of shop page-->
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="before">
+            <div class="ref-hero-sub-bg ref-prdt-bg">
+                <h2 class="ref-hero-sub-bg_heading">Discover Our Latest
+                    Refurbished Products
+                </h2>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wsale_products_grid_before_rail')]"
+               position="before">
+            <div class="ref-product-main-header__section">
+                <span class="ref-section_head">Product</span>
+                <img id="filterImage" src="images/filter.svg"
+                     alt=""
+                     class="mob-filter"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('products_categories')]"
+               position="before">
+            <div class="ref-filter__settings-row">
+                <div class="ref-filter-head">
+                    <img src="/theme_eco_refine/static/src/img/filter.svg"
+                         alt=""/>
+                    <span class="ref-sm-head">Filter</span>
+                </div>
+                <a class="ref-filter_rest-btn"
+                   t-attf-href="/shop">Reset
+                </a>
+            </div>
+        </xpath>
+    </template>
+    <template id="product_add_to_wishlist_refurbished"
+              inherit_id="website_sale_wishlist.product_add_to_wishlist">
+        <!--        Template for replace product_add_to_wishlist-->
+        <xpath expr="//button[hasclass('o_add_wishlist_dyn')]"
+               position="replace">
+        </xpath>
+    </template>
+    <template id="product_refurbished" inherit_id="website_sale.product">
+        <!--        Template for add custom wishlist and product specification and details-->
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <button t-if="product_variant" type="button" role="button"
+                    class="btn btn-link px-0 pe-3 o_add_wishlist_dyn"
+                    t-att-disabled='in_wish or None'
+                    t-att-data-product-template-id="product.id"
+                    t-att-data-product-product-id="product_variant.id"
+                    data-action="o_wishlist" title="Add to wishlist"><i
+                    class="fa fa-heart-o me-2" role="img"
+                    aria-label="Add to wishlist"/>Add to wishlist
+            </button>
+        </xpath>
+        <xpath expr="//div[@id='o_product_terms_and_share']" position="before">
+            <div class="ref-sl-product--describe-tabs">
+                <div class="tab-container">
+                    <div class="tab">
+                        <button class="tab-link active tab1">
+                            Specification
+                        </button>
+                        <button class="tab-link tab2">
+                            Product detail
+                        </button>
+                    </div>
+                    <div id="tab1"
+                         class="tab-content active"
+                         t-field="product.product_spec">
+                    </div>
+                    <div id="tab2" class="tab-content"
+                         t-field="product.product_detail">
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <template id="alternative_products_refurbished"
+              inherit_id="website_sale.alternative_products">
+        <!--        Customise alternative product template-->
+        <xpath expr="//div[hasclass('css_non_editable_mode_hidden')]"
+               position="before">
+            <span class="ref-head__underline ref-section_head" style="float:left;">Related
+                Product
+            </span>
+        </xpath>
+    </template>
+</odoo>

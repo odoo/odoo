@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Inherited form view product template-->
+    <record id="product_template_only_form_view"
+            model="ir.ui.view">
+        <field name="name">
+            product.template.view.form.inherit.theme.refurbished
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"
+               ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description_sale']"
+                   position="after">
+                <field colspan="2" name="product_spec" nolabel="1"
+                       placeholder="Product Specification"/>
+                <field colspan="2" name="product_detail" nolabel="1"
+                       placeholder="Product Details"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

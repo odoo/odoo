@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="collections_template" name="Collection snippet">
+        <!--        Template of our collection snippet-->
+        <section class="main_body_collections">
+            <div class="ref-collection-section ref-light-section">
+                <div class="ref-wrapper">
+                    <span class="ref-section_head ref-section__second-head" style="float:none;">
+                        Our Collection
+                    </span>
+                    <div class="ref-collection--container mt-5">
+                        <div class="ref-collection__item">
+                            <div class="ref-collection__item--box selected">
+                                <img src="/theme_eco_refine/static/src/img/Laptop.svg"
+                                     alt="featured-product"
+                                     width="60px" height="auto"/>
+                            </div>
+                            <span class="ref-sm-head">Laptop</span>
+                        </div>
+                        <div class="ref-collection__item">
+                            <div class="ref-collection__item--box">
+                                <img src="/theme_eco_refine/static/src/img/smartphone 1.svg"
+                                     alt="featured-product"
+                                     width="60px" height="auto"/>
+                            </div>
+                            <span class="ref-sm-head">Smart phone
+                            </span>
+                        </div>
+                        <div class="ref-collection__item">
+                            <div class="ref-collection__item--box">
+                                <img src="/theme_eco_refine/static/src/img/headphone 1.svg"
+                                     alt="featured-product"
+                                     width="60px" height="auto"/>
+                            </div>
+                            <span class="ref-sm-head">Head phone
+                            </span>
+                        </div>
+                        <div class="ref-collection__item">
+                            <div class="ref-collection__item--box">
+                                <img src="/theme_eco_refine/static/src/img/smart-watch 1.svg"
+                                     alt="featured-product"
+                                     width="60px" height="auto"/>
+                            </div>
+                            <span class="ref-sm-head">Smart watch
+                            </span>
+                        </div>
+                        <div class="ref-collection__item">
+                            <div class="ref-collection__item--box">
+                                <img src="/theme_eco_refine/static/src/img/camera 1.svg"
+                                     alt="featured-product"
+                                     width="60px" height="auto"/>
+                            </div>
+                            <span class="ref-sm-head">Camera</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="homepage_carousel_template" name="Refurbished Carousel">
+        <!--        Template of Theme Refurbished banner-->
+        <section class="main_body_refurbished_carousel">
+            <div id="carouselExampleIndicators" class="carousel slide"
+                 data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="0"
+                        class="active"/>
+                    <li data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="1"/>
+                    <li data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide-to="2"/>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item  active ref-hero-bg">
+                        <div class="ref-wrapper ref-hero-carousel">
+                            <h1 class="ref-hero__mainhead">Get the
+                                Latest <span
+                                        class="highlight">Tech</span>Without
+                                Breaking
+                                the
+                                Bank
+                            </h1>
+                            <p class="ref-hero__subhead">Save on
+                                Refurbished Gadgets from Trusted Brands
+                            </p>
+                        </div>
+                    </div>
+                    <div class="carousel-item ref-hero-bg">
+                        <div class="ref-wrapper ref-hero-carousel">
+                            <h1 class="ref-hero__mainhead">Don't be slow! Our
+                                <span class="highlight">prices</span>
+                                are low.
+                            </h1>
+                            <p class="ref-hero__subhead">Save on
+                                Refurbished Gadgets from Trusted Brands
+                            </p>
+                        </div>
+                    </div>
+                    <div class="carousel-item ref-hero-bg">
+                        <div class="ref-wrapper ref-hero-carousel">
+                            <h1 class="ref-hero__mainhead">Winter is over, but
+                                our
+                                <span
+                                        class="highlight">spring</span>sale has
+                                just begun!
+                            </h1>
+                            <p class="ref-hero__subhead">Save on
+                                Refurbished Gadgets from Trusted Brands
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="products_category_wise_template" name="Best Seller">
+        <!--        Template Best seller product dynamic snippet-->
+        <section class="best_seller_product_snippet">
+           <div class="ref-arrival-content">
+                <p class="ref-section_head ref-centerhead__underline ref-head--primary"
+                   style="color: #0d5272;">Best Seller
+                </p>
+            </div>
+            <div id="top_products_carousel">
+            </div>
+        </section>
+    </template>
+    <template id="products_new_arrival_template" name="New Arrivals">
+        <!--        Template New Arrival product dynamic snippet-->
+        <section class="container product_new_arrival_snippet">
+            <div class="ref-arrival-content">
+                <p class="ref-section_head ref-centerhead__underline ref-head--primary"
+                   style="color: #0d5272;">New Arrivals
+                </p>
+            </div>
+            <div id="new_arrival_carousel">
+            </div>
+        </section>
+    </template>
+    <template id="top_rated_products_template" name="Top Rated Products">
+        <!--        Template Top Rated product dynamic snippet-->
+        <section class="container top_rated_product_snippet">
+            <div class="ref-arrival-content">
+                <p class="ref-section_head ref-centerhead__underline ref-head--primary"
+                   style="color: #0d5272;">Top Rated Products
+                </p>
+            </div>
+            <div id="top_rated_carousel">
+            </div>
+        </section>
+    </template>
+    <template id="home_signup_snippet_template" name="Sign Up Snippet">
+        <!--        Template sign up template-->
+        <section class="container home_sign_up_snippet">
+            <div class="ref-banner-section">
+                <span class="">Join Our Newsletter for Exclusive Deals and
+                    Updates
+                </span>
+                <p class="ref-sm-head">Stay up-to-date with the latest product
+                    releases and exclusive deals by signing up for
+                    our
+                    newsletter today.
+                </p>
+                <a href="/web/signup?" class="ref-border_btn">Sign Up Now</a>
+            </div>
+        </section>
+    </template>
+    <template id="signup_and_buy_now_snippet_template" name="Sign up and Buy Now">
+        <!--        Template of signup and buy snippet-->
+        <section class="container sign_and_buy_snippet">
+            <div class="ref-second-banners mb-5">
+                <div class="ref-wrapper">
+                    <div class="banner-box">
+                        <div class="ref-banner_sm--container">
+                            <h2 class="ref-banner_text banner-lft">Shop now and
+                                save with our limited time offer prices!
+                            </h2>
+                            <a href="/web/signup?" class="ref-border_btn">Sign
+                                Now
+                            </a>
+                        </div>
+                        <div class="ref-banner_sm--container banner-bg-sm">
+                            <h2 class="ref-banner_text">Get your hands on
+                                premium gadgets at unbeatable prices today!
+                            </h2>
+                            <a href="/shop" class="ref-border_btn">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="customer_response_template" name="Customer Response Snippet">
+        <!--        Template Customer Response testimonial-->
+        <section class="container customer_response">
+            <div class="ref-testimonial-section ">
+                <div class="ref-wrapper ">
+                    <div class="ref-arrival-content">
+                        <p class="ref-section_head ref-centerhead__underline ref-head--primary">
+                            What Our Customers Say
+                        </p>
+                    </div>
+                    <p class=" ref-sm-head ref-testimonial__head">We take pride
+                        in our customer service and here's why
+                    </p>
+                    <div class="owl-carousel owl-carousel2">
+                        <div class="ref-testimonial__content">
+                            <div class="ref-testimonial-photo">
+                                <img src="/theme_eco_refine/static/src/img/testimonial-person-1.png"
+                                     alt=""/>
+                            </div>
+                            <div class="ref-testimonial-text">
+                                <p>I was hesitant to buy a refurbished phone,
+                                    but the quality and customer service
+                                    exceeded my
+                                    expectations.
+                                    I'm so glad I chose this company for my
+                                    purchase.
+                                </p>
+                                <span>-Tom</span>
+                                <div class="custom-nav">
+                                    <img src="/theme_eco_refine/static/src/img/Arrow 2.svg"
+                                         class="custom-nav__prev"
+                                         alt="Previous" width="30"/>
+                                    <img src="/theme_eco_refine/static/src/img/Arrow 1.svg"
+                                         class="custom-nav__next" alt="Next"
+                                         width="30"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ref-testimonial__content slide">
+                            <div class="ref-testimonial-photo">
+                                <img src="/theme_eco_refine/static/src/img/testimonial-person-1.png"
+                                     alt=""/>
+                            </div>
+                            <div class="ref-testimonial-text">
+                                <p>I was hesitant to buy a refurbished phone,
+                                    but the quality and customer service
+                                    exceeded my
+                                    expectations.
+                                    I'm so glad I chose this company for my
+                                    purchase.
+                                </p>
+                                <span>-Tom</span>
+                                <div class="custom-nav">
+                                    <img src="/theme_eco_refine/static/src/img/Arrow 2.svg"
+                                         class="custom-nav__prev"
+                                         alt="Previous" width="30"/>
+                                    <img src="/theme_eco_refine/static/src/img/Arrow 1.svg"
+                                         class="custom-nav__next" alt="Next"
+                                         width="30"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="questions_accordian_template" name="Frequently Asked Questions">
+        <section class="question_accordian">
+            <div class="ref-faq-section ref-light-section">
+                <div class="ref-wrapper">
+                    <span class="ref-section_head ref-head__underline ">
+                        Frequently Asked Questions
+                    </span>
+                    <div class="ref-faq-section__content">
+                        <div class="panel-group" id="accordion" role="tablist"
+                             aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab"
+                                     id="headingOne">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse"
+                                           data-parent="#accordion"
+                                           href="#collapseOne"
+                                           aria-expanded="true"
+                                           aria-controls="collapseOne"
+                                           class="ref-head--primary ref-faq-question">
+                                            <span class="ref-fag-index">01
+                                            </span>
+                                            Is there any warranty for the
+                                            products?
+                                        </a>
+                                    </h4>
+                                </div>
+                                    <div id="collapseOne"
+                                     class="panel-collapse collapse in show"
+                                     role="tabpanel"
+                                     aria-labelledby="headingOne">
+                                    <div class="panel-body ref-faq-panel">
+                                        Lorem Ipsum is simply dummy text of the
+                                        printing and typesetting industry.
+                                        Lorem Ipsum has been the
+                                        industry's standard dummy text ever
+                                        since the 1500s, when an unknown
+                                        printer took a galley of type
+                                        and
+                                        scrambled it to make a type specimen
+                                        book.Lorem Ipsum is simply dummy text
+                                        of the printing and
+                                        typesetting industry. Lorem Ipsum has
+                                        been the
+                                        industry's standard dummy text ever
+                                        since the 1500s, when an unknown
+                                        printer took a galley of type
+                                        and
+                                        scrambled it to make a type specimen
+                                        book.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab"
+                                     id="headingTwo">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed ref-head--primary ref-faq-question"
+                                           role="button" data-toggle="collapse"
+                                           data-parent="#accordion"
+                                           href="#collapseTwo"
+                                           aria-expanded="false"
+                                           aria-controls="collapseTwo">
+                                            <span class="ref-fag-index">02
+                                            </span>
+                                            What is Lorem Ipsum?
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo"
+                                     class="panel-collapse collapse"
+                                     role="tabpanel"
+                                     aria-labelledby="headingTwo">
+                                    <div class="panel-body ref-faq-panel">
+                                        Lorem Ipsum is simply dummy text of the
+                                        printing and typesetting industry.
+                                        Lorem Ipsum has been the
+                                        industry's standard dummy text ever
+                                        since the 1500s, when an unknown
+                                        printer took a galley of type
+                                        and
+                                        scrambled it to make a type specimen
+                                        book.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab"
+                                     id="headingThree">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed ref-head--primary ref-faq-question"
+                                           role="button" data-toggle="collapse"
+                                           data-parent="#accordion"
+                                           href="#collapseThree"
+                                           aria-expanded="false"
+                                           aria-controls="collapseThree">
+                                            <span class="ref-fag-index">03
+                                            </span>
+                                            What is Lorem Ipsum?
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseThree"
+                                     class="panel-collapse collapse"
+                                     role="tabpanel"
+                                     aria-labelledby="headingThree">
+                                    <div class="panel-body ref-faq-panel">
+                                        Lorem Ipsum is simply dummy text of the
+                                        printing and typesetting industry.
+                                        Lorem Ipsum has been the
+                                        industry's standard dummy text ever
+                                        since the 1500s, when an unknown
+                                        printer took a galley of type
+                                        and
+                                        scrambled it to make a type specimen
+                                        book.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab"
+                                     id="headingThree">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed ref-head--primary ref-faq-question"
+                                           role="button" data-toggle="collapse"
+                                           data-parent="#accordion"
+                                           href="#collapsefour"
+                                           aria-expanded="false"
+                                           aria-controls="collapseThree">
+                                            <span class="ref-fag-index">04
+                                            </span>
+                                            What is Lorem Ipsum?
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapsefour"
+                                     class="panel-collapse collapse"
+                                     role="tabpanel"
+                                     aria-labelledby="headingThree">
+                                    <div class="panel-body ref-faq-panel">
+                                        Lorem Ipsum is simply dummy text of the
+                                        printing and typesetting industry.
+                                        Lorem Ipsum has been the
+                                        industry's standard dummy text ever
+                                        since the 1500s, when an unknown
+                                        printer took a galley of type
+                                        and
+                                        scrambled it to make a type specimen
+                                        book.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

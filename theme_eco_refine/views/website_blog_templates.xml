@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="blog_post_complete_refurbished"
+              inherit_id="website_blog.blog_post_complete">
+        <!--        Customized template of single blog page-->
+        <xpath expr="//section[@id='o_wblog_post_main']" position="replace">
+            <div t-if="prev_post" class="mt-5">
+                <t t-if="opt_blog_post_regular_cover">
+                    <t t-if="opt_blog_post_sidebar" t-set="readableClass"
+                       t-value="'o_wblog_read_with_sidebar'"/>
+                    <t t-else="" t-set="readableClass"
+                       t-value="'o_container_small'"/>
+                    <div class="container">
+                        <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
+                            <hr/>
+                            <div class="d-flex text-end py-4">
+                                <div class="flex-grow-1 pe-3">
+                                    <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">
+                                        Read Previous
+                                    </span>
+                                    <a t-att-href="'/blog/' + slug(prev_post.blog_id) + '/' + slug(prev_post)"
+                                       t-att-title="'Read next' + prev_post.name">
+                                        <div t-field="prev_post.name"
+                                             id="o_wblog_post_name"
+                                             t-att-data-blog-id="prev_post.id"
+                                             placeholder="Blog Post Title"
+                                             class="h2"/>
+                                        <div t-field="prev_post.subtitle"
+                                             id="o_wblog_post_subtitle"
+                                             placeholder="Subtitle"
+                                             class="lead"/>
+                                    </a>
+                                </div>
+                                <a t-att-href="'/blog/' + slug(prev_post.blog_id) + '/' + slug(prev_post)"
+                                   t-att-title="'Read next' + prev_post.name"
+                                   class="w-25">
+                                    <t t-call="website.record_cover">
+                                        <t t-set="_record"
+                                           t-value="prev_post"/>
+                                        <t t-set="additionnal_classes"
+                                           t-value="'rounded shadow-sm overflow-hidden h-100'"/>
+                                    </t>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div id="o_wblog_next_container" class="d-flex flex-column"
+                         t-cache="prev_post">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="prev_post"/>
+                            <t t-set="_cp"
+                               t-value="json.loads(_record.cover_properties)"/>
+                            <t t-set="use_filters" t-value="True"/>
+                            <t t-set="additionnal_classes"
+                               t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
+                            <a id="o_wblog_next_post_info" class="d-none"
+                               t-att-data-size="_cp.get('resize_class')"
+                               t-att-data-url="'/blog/' + slug(prev_post.blog_id) + '/' + slug(prev_post) + '?anim'"/>
+                            <t t-set="next_cover_is_full"
+                               t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
+                            <t t-set="next_cover_is_auto"
+                               t-value="'cover_auto' in _cp.get('resize_class', '')"/>
+                            <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                                <div t-attf-class="o_wblog_post_title">
+                                    <div t-field="prev_post.name"
+                                         id="o_wblog_post_name"
+                                         t-att-data-blog-id="prev_post.id"
+                                         placeholder="Blog Post Title"
+                                         class="h1"/>
+                                    <div t-field="prev_post.subtitle"
+                                         id="o_wblog_post_subtitle"
+                                         placeholder="Subtitle"/>
+                                </div>
+                                <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                                    <span class="h4 d-inline-block py-1 px-2 rounded-1 text-white">
+                                        <i class="fa fa-angle-left fa-3x text-white"
+                                           aria-label="Read next"
+                                           title="Read Next"/>
+                                    </span>
+                                </div>
+                                <!-- Emulate the next post's cover's height. For non-auto covers,
+                                the room that will be occupied by the 'scroll-down' link is temporary
+                                occupied  by the loader circle. For auto covers, an empty <div>
+                                creates enough separation.
+                                -->
+                                <div t-if="not next_cover_is_auto"
+                                     class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
+                                    <div class="rounded-circle bg-black-50"/>
+                                </div>
+                                <div t-else=""
+                                     class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+            <section id="o_wblog_post_main"
+                     t-attf-class="container pt-4 pb-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
+                <!-- Sidebar-enabled Layout -->
+                <div t-if="opt_blog_post_sidebar"
+                     t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
+                    <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
+                        <div id="o_wblog_post_content"
+                             t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
+                            <t t-call="website_blog.blog_post_content"/>
+                        </div>
+                        <div id="o_wblog_post_sidebar_col"
+                             t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
+                            <t t-call="website_blog.blog_post_sidebar"/>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="not opt_blog_post_sidebar"
+                     t-attf-class="#{opt_blog_post_readable and 'o_container_small'}">
+
+                    <div class="d-flex flex-column flex-lg-row">
+                        <div id="o_wblog_post_content"
+                             t-attf-class=" #{opt_blog_post_readable and 'o_container_small w-100 flex-shrink-0'}">
+                            <div t-attf-class="o_wblog_post_title #{opt_blog_post_select_to_tweet and 'js_tweet'} #{opt_blog_post_select_to_comment and 'js_comment'}">
+                                <h1 t-field="blog_post.name"
+                                    id="o_wblog_post_name"
+                                    class="o_editable_no_shadow"
+                                    data-oe-expression="blog_post.name"
+                                    t-att-data-blog-id="blog_post.id"
+                                    placeholder="Blog Post Title"/>
+                                <div t-field="blog_post.subtitle"
+                                     id="o_wblog_post_subtitle"
+                                     class="o_editable_no_shadow"
+                                     placeholder="Subtitle"/>
+                            </div>
+                            <t t-call="website_blog.post_info"/>
+                            <t t-call="website_blog.post_cover_image"/>
+                            <t t-call="website_blog.blog_post_content"/>
+                            <div class="ref-pagination-section">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+    <template id="posts_loop_refurbished"
+              inherit_id="website_blog.posts_loop">
+        <!--        Customized template blog page-->
+        <xpath expr="//t[@t-if='opt_blog_list_view']" position="replace">
+            <t t-if="opt_blog_list_view">
+                <div class="ref-wrapper">
+                    <div class="ref-blog-container">
+                        <div class="ref-blog-contain">
+                            <div t-if="opt_posts_loop_show_cover">
+                                <t t-call="website_blog.post_cover_image"/>
+                            </div>
+                            <div class="ref-blog-detail">
+                                <div>
+                                    <div class="ref-blog--sub-head">
+                                        <t t-call="website_blog.post_info"/>
+                                    </div>
+                                    <span class="ref-section_head">
+                                        <t t-call="website_blog.post_heading"/>
+                                    </span>
+                                    <p class="ref-blog-txt">
+                                        <t t-call="website_blog.post_teaser"/>
+                                    </p>
+                                </div>
+                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
+                                   class="btn btn-primary">
+                                    Read more
+                                    <i class="fa fa-chevron-right ms-2"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+    <template id="opt_blog_cover_post_fullwidth_design_refurbish"
+              inherit_id="website_blog.opt_blog_cover_post_fullwidth_design">
+        <!--        Template for blog banner heading-->
+        <xpath expr="//t[@t-set='additionnal_classes']" position="after">
+            <div class="ref-hero-sub-bg ref-blog-bg">
+                <h2 class="ref-hero-sub-bg_heading">Blog</h2>
+            </div>
+        </xpath>
+    </template>
+</odoo>

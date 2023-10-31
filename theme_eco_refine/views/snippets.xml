@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Theme Refurbished snippets inherits -->
+    <template id="theme_eco_refine" inherit_id="website.snippets"
+              name="Theme Refurbished snippets">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_eco_refine.collections_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Our-collection.jpg"/>
+            <t t-snippet="theme_eco_refine.homepage_carousel_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Refurbished-Carousel.jpg"/>
+            <t t-snippet="theme_eco_refine.home_signup_snippet_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Sign-up-snippet.jpg"/>
+            <t t-snippet="theme_eco_refine.signup_and_buy_now_snippet_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Sign_up_and_Buy.jpg"/>
+            <t t-snippet="theme_eco_refine.customer_response_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Customer-Response.jpg"/>
+            <t t-snippet="theme_eco_refine.questions_accordian_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/FAQ.jpg"/>
+        </xpath>
+        <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]"
+               position="after">
+            <t t-snippet="theme_eco_refine.products_category_wise_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Best-Seller.jpg"/>
+            <t t-snippet="theme_eco_refine.products_new_arrival_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/New-Arrival.jpg"/>
+            <t t-snippet="theme_eco_refine.top_rated_products_template"
+               t-thumbnail="/theme_eco_refine/static/src/img/snippet/Top-Rated-Product.jpg"/>
+        </xpath>
+    </template>
+</odoo>

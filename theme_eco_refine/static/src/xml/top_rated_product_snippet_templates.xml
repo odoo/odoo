@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Template for displaying top-rated products in categories -->
+<templates id="top_rated_snippet_template" xml:space="preserve">
+    <t t-name="theme_eco_refine.top_rated_products">
+       <div id="top_rated_carousel" class="container">
+            <div>
+                <div>
+                    <t t-foreach="products_list" t-as="product_category">
+                        <div class="product_list">
+                            <t t-if="product_category.products.flat().includes('chunk')">
+                                <div t-att-id="product_category.category.name"
+                                     class="carousel slide col-md-12"
+                                     t-att-data-bs-interval="interval"
+                                     data-bs-ride="carousel">
+                                    <div class="carousel-inner row w-100 mx-auto"
+                                         role="listbox">
+                                        <t t-foreach="product_category.products"
+                                           t-as="product_chunks">
+                                           <div t-att-class="product_chunks.is_active? 'carousel-item active' : 'carousel-item top' "
+                                                 style="min-height: 252.062px;">
+                                                <div class="row top_rated owl-carousel">
+                                                    <t t-foreach="product_chunks"
+                                                       t-as="product">
+                                                        <t t-if="product.id">
+                                                            <t t-if="product.website_id">
+                                                                <t t-if="product.website_id[0] == current_website_id">
+                                                                    <div class="d-flex flex-grow-0 flex-shrink-0 col-12 col-sm-11 top_rate_product">
+                                                                        <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                                                                            <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link"
+                                                                               t-attf-href="/shop/product/{{product.id}}">
+                                                                                <div class="overflow-hidden rounded">
+                                                                                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                                         t-attf-src="data:image/jpeg;base64,{{product.image_1920}}"/>
+                                                                                </div>
+                                                                            </a>
+                                                                            <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                                                                                <div class="h6 card-title"
+                                                                                     t-esc="product.name"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </t>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <div class="d-flex flex-grow-0 flex-shrink-0 col-12 col-sm-11 top_rate_product">
+                                                                    <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                                                                        <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link"
+                                                                           t-attf-href="/shop/product/{{product.id}}">
+                                                                            <div class="overflow-hidden rounded">
+                                                                                <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                                     t-attf-src="data:image/jpeg;base64,{{product.image_1920}}"/>
+                                                                            </div>
+                                                                        </a>
+                                                                        <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                                                                            <div class="h6 card-title"
+                                                                                 t-esc="product.name"/>
+                                                                        </div>
+                                                                        <p class="ref-prdt-price" style="margin-top: -20px;color: #0D5272;font-weight: 600;
+                                                                                  justify-content: center;align-items: center;font-size: 20px;margin-left: 16px;">
+                                                                                <span class="ref-prdt-offer-price"
+                                                                                      data-oe-type="monetary"
+                                                                                      data-oe-expression="product.list_price">$&nbsp;&nbsp;&nbsp;
+                                                                                    <span class="oe_currency_value"
+                                                                                        t-esc="product.list_price"/>
+                                                                                </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                           </div>
+                                        </t>
+                                    </div>
+                                    <a class="carousel-control-prev"
+                                       t-att-href="'#' + product_category.category.name"
+                                       role="button"
+                                       data-bs-slide="prev"
+                                       style="position:absolute;margin-left:-150px">
+                                        <span class="fa fa-chevron-circle-left fa-2x"
+                                              style="color: cadetblue;"/>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next"
+                                       t-att-href="'#' + product_category.category.name"
+                                       role="button"
+                                       data-bs-slide="next"
+                                       style="position:absolute; right:-130px">
+                                        <span class="fa fa-chevron-circle-right fa-2x"
+                                              style="color: cadetblue;"/>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </t>
+                                <t t-else="">
+                                    <t t-foreach="product_category.products"
+                                       t-as="product_chunks">
+                                        <t t-foreach="product_chunks"
+                                           t-as="product">
+                                            <t t-if="product.website_id">
+                                                <t t-if="product.website_id[0] == current_website_id">
+                                                    <div class="d-flex flex-grow-0 flex-shrink-0 col-3 top_rate_product">
+                                                        <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                                                            <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link"
+                                                               t-attf-href="/shop/product/{{product.id}}">
+                                                                <div class="overflow-hidden rounded">
+                                                                    <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                         t-attf-src="data:image/jpeg;base64,{{product.image_1920}}"/>
+                                                                </div>
+                                                            </a>
+                                                            <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                                                                <div class="h6 card-title"
+                                                                     t-esc="product.name"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="d-flex flex-grow-0 flex-shrink-0 col-3 top_rate_product">
+                                                    <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                                                        <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link"
+                                                           t-attf-href="/shop/product/{{product.id}}">
+                                                            <div class="overflow-hidden rounded">
+                                                                <img class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                                                     t-attf-src="data:image/jpeg;base64,{{product.image_1920}}"/>
+                                                            </div>
+                                                        </a>
+                                                        <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
+                                                            <div class="h6 card-title"
+                                                                 t-esc="product.name"/>
+                                                        </div>
+                                                        <p class="ref-prdt-price" style=" margin-top: -20px;color: #0D5272;font-weight: 600;justify-content: center;align-items: center;font-size: 20px;margin-left: 16px;">
+                                                            <span class="ref-prdt-offer-price"
+                                                                  data-oe-type="monetary"
+                                                                  data-oe-expression="product.list_price">$&nbsp;&nbsp;&nbsp;<span
+                                                                    class="oe_currency_value"
+                                                                    t-esc="product.list_price"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
