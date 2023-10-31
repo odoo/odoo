@@ -18,7 +18,7 @@ export async function testEmojiButtonVisible(selector) {
     await contains(".o_form_editable");
     await contains(selector);
     await contains(`${selector} button`);
-    await contains(`${selector} button .fa-smile-o`);
+    await contains(`${selector} button .oi-smile-add`);
 }
 
 /**
