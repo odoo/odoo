@@ -407,6 +407,16 @@
             <we-row string="Colors" class="o_we_sublevel_2" data-name="colors">
                 <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to="> .o_we_shape"/>
             </we-row>
+            <we-row string="Speed" class="o_we_sublevel_2">
+                <we-range data-name="bg_shape_anim_speed_opt"
+                          data-no-preview="true"
+                          data-display-range-value="true"
+                          data-set-bg-shape-animation-speed=""
+                          data-max="2"
+                          data-min="-2"
+                          data-step="0.1"
+                          data-to-ratio="true"/>
+            </we-row>
         </div>
     </t>
 </template>
@@ -718,6 +728,17 @@
                     data-no-preview="true" data-dependencies="shape_img_opt" title="Rotate left"/>
                 <we-button class="fa fa-fw fa-rotate-right" data-name="img_shape_transform_rotate_y_opt" data-set-img-shape-rotate-right="true"
                     data-no-preview="true" data-dependencies="shape_img_opt" title="Rotate right"/>
+            </we-row>
+            <we-row string="Speed" class="o_we_sublevel_1">
+                <we-range data-name="shape_anim_speed_opt"
+                    data-no-preview="true"
+                    data-display-range-value="true"
+                    data-attribute-name="shapeAnimationSpeed"
+                    data-select-data-attribute=""
+                    data-max="2"
+                    data-min="-2"
+                    data-step="0.1"
+                    data-to-ratio="true"/>
             </we-row>
         </div>
         <we-input string="Description" class="o_we_large"
