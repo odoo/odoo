@@ -100,8 +100,8 @@ export class Link extends Component {
 
         this._updateOptionsUI();
 
-        this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
         this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
+        this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
     }
     /**
      * @override
