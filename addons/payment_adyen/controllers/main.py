@@ -66,7 +66,10 @@ class AdyenController(http.Controller):
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
-            'amount': converted_amount,
+            'amount': {
+                'value': converted_amount,
+                'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
+            },
             'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
