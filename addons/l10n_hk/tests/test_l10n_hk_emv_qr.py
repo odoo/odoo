@@ -86,4 +86,4 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
 
         # Check the whole qr code string
         qr_code_string = ''.join(emv_qr_vals)
-        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK62170513INV/TEST/00016304264C')
+        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK6304CD39')

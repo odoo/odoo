@@ -42,7 +42,7 @@ class ResPartnerBank(models.Model):
         return super()._get_merchant_account_info()
 
     def _get_additional_data_field(self, comment):
-        return f'05{len(comment):02}{comment}'
+        return False
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == 'emv_qr' and self.country_code == 'HK':
