@@ -917,7 +917,6 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
-        self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
         # maps frame ids to callbacks
@@ -942,6 +941,12 @@ class ChromeBrowser:
     @property
     def screencasts_frames_dir(self):
         return os.path.join(self.screencasts_dir, 'frames')
+
+    @property
+    def had_failure(self):
+        with contextlib.suppress(concurrent.futures.TimeoutError, CancelledError):
+            return self._result.exception(timeout=0) is not None
+        return False
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1244,7 +1249,8 @@ class ChromeBrowser:
         )
 
         if log_type == 'error':
-            self.had_failure = True
+            if self.had_failure:
+                return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
@@ -1305,6 +1311,10 @@ which leads to stray network requests and inconsistencies."""))
         stack = ''.join(self._format_stack(exceptionDetails))
         if stack:
             message += '\n' + stack
+
+        if self.had_failure:
+            self._logger.getChild('browser').error("%s", message)
+            return
 
         self.take_screenshot()
         self._save_screencast()
