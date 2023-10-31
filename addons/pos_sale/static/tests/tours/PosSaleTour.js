@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
@@ -21,7 +20,7 @@ ProductScreen.check.selectedOrderlineHas('Pizza Chicken', 2);
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod('Bank');
 PaymentScreen.do.clickValidate();
-Chrome.do.clickTicketButton();
+ReceiptScreen.check.isShown();
 
 registry.category("web_tour.tours").add('PosSettleOrder', { test: true, url: '/pos/ui', steps: getSteps() });
 
@@ -93,7 +92,7 @@ ProductScreen.check.totalAmountIs(40);
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod('Bank');
 PaymentScreen.do.clickValidate();
-Chrome.do.clickTicketButton();
+ReceiptScreen.check.isShown();
 
 registry.category("web_tour.tours").add('PosSettleOrderRealTime', { test: true, url: '/pos/ui', steps: getSteps() });
 
