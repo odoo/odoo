@@ -13,7 +13,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(domain="""[
             ('project_id', '=?', project_id),
             ('is_timeoff_task', '=', False),
-            '|', ('project_id.allow_timesheets', '=', True), '&', ('project_id', '=', False), ('parent_id', '!=', False),
+            '|', ('allow_timesheets', '=', True), '&', ('project_id', '=', False), ('parent_id', '!=', False),
         ]""",
     )
 
