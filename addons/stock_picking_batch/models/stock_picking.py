@@ -237,6 +237,9 @@ class StockPicking(models.Model):
 
         return domain
 
+    def _package_move_lines(self):
+        return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines()
+
     def action_view_batch(self):
         self.ensure_one()
         return {
