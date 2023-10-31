@@ -4218,7 +4218,7 @@ export class OdooEditor extends EventTarget {
         const content = block && block.innerHTML.trim();
         if (
             block &&
-            (content === '' || content === '<br>') &&
+            content === '<br>' &&
             !block.querySelector('T[t-out]') &&
             ancestors(block, this.editable).includes(this.editable)
         ) {
