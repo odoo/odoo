@@ -446,7 +446,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
                 .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
-        $wrap.filter(':empty').attr('contenteditable', false);
+        // Using "data-oe-not-contenteditable" as marker, to keep node
+        // contenteditable = false while having "o_editable" class.
+        $wrap.filter(':empty').attr('data-oe-not-contenteditable', '');
         for (let htmlEl of $wrap.not("[placeholder]").filter('[data-oe-sanitize="no_block"]')) {
             const placeholderText = this.env._t("Type in text here...");
             // Put the placeholder in the same location as the powerbox hint.
