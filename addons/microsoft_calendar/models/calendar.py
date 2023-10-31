@@ -164,6 +164,27 @@ class Meeting(models.Model):
             self.recurrence_id.need_sync_m = True
         return res
 
+    def _recreate_event_different_organizer(self, values, sender_user):
+        """ Copy current event values, delete it and recreate it with the new organizer user. """
+        self.ensure_one()
+        event_copy = {**self.copy_data()[0], 'microsoft_id': False}
+        self.env['calendar.event'].with_user(sender_user).create({**event_copy, **values})
+        if self.ms_universal_event_id:
+            self._microsoft_delete(self._get_organizer(), self.ms_organizer_event_id)
+
+    @api.model
+    def _get_organizer_user_change_info(self, values):
+        """ Return the sender user of the event and the partner ids listed on the event values. """
+        sender_user_id = values.get('user_id', self.env.user.id)
+        sender_user = self.env['res.users'].browse(sender_user_id)
+        attendee_values = self._attendees_values(values['partner_ids']) if 'partner_ids' in values else []
+        partner_ids = []
+        if attendee_values:
+            for command in attendee_values:
+                if len(command) == 3 and isinstance(command[2], dict):
+                    partner_ids.append(command[2].get('partner_id'))
+        return sender_user, partner_ids
+
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
         self.ensure_one()
