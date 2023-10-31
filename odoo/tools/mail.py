@@ -190,6 +190,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     src = src.replace(u'<%', misc.html_escape(u'<%'))
     src = src.replace(u'%>', misc.html_escape(u'%>'))
 
+    # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
+    # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+    src = re.sub(r'</?o:.*?>', '', src)
+
     kwargs = {
         'page_structure': True,
         'style': strip_style,              # True = remove style tags/attrs
