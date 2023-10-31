@@ -1,0 +1,47 @@
+{
+    "manifest_version": 3,
+    "name": "Discuss push to talk",
+    "description": "Enable global push to talk for Odoo Discuss",
+    "version": "1.0",
+    "permissions": [
+        "scripting",
+        "tabs",
+        "storage"
+    ],
+    "action": {},
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "icons": {
+        "128": "assets/icons/icon_inactive.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "commands": {
+        "ptt-pressed": {
+            "suggested_key": "Ctrl+Shift+Y",
+            "description": "Speak while key is held"
+        },
+        "toggle-voice": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Z"
+            },
+            "description": "Toggle voice on/off"
+        }
+    }
+}
