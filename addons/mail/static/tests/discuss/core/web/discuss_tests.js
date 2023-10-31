@@ -193,3 +193,10 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     await contains(".o-mail-DiscussSidebarChannel", { target: tab1.target, text: "Jerry Golay" });
     await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Jerry Golay" });
 });
+
+QUnit.test("no conversation selected when opening non-existing channel in discuss", async () => {
+    await startServer();
+    const { openDiscuss } = await start();
+    await openDiscuss(200); // non-existing id
+    await contains("h4", { text: "No conversation selected." });
+});

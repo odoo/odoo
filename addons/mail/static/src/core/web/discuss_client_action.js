@@ -58,6 +58,9 @@ export class DiscussClientAction extends Component {
             const thread =
                 this.store.Thread.get({ model, id }) ??
                 (await this.threadService.fetchChannel(parseInt(id)));
+            if (!thread) {
+                return;
+            }
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);
             }
