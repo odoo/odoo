@@ -25,6 +25,19 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(cells.C3.content, "15.00", "the content is replaced with the value");
     });
 
+    QUnit.test("invalid expression with pivot function", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        setCellContent(model, "A1", "=ODOO.PIVOT(1)+"); // invalid expression
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, "#BAD_EXPR");
+        const data = await freezeOdooData(model);
+        const cells = data.sheets[0].cells;
+        assert.strictEqual(
+            cells.A1.content,
+            "=ODOO.PIVOT(1)+",
+            "the content is left as is when the expression is invalid"
+        );
+    });
+
     QUnit.test("odoo pivot functions detection is not case sensitive", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         setCellContent(model, "A1", '=odoo.pivot(1,"probability")');
