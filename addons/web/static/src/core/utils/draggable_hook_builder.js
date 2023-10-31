@@ -517,7 +517,7 @@ export function makeDraggableHook(hookParams) {
                 return (
                     !ctx.tolerance ||
                     Math.hypot(pointer.x - initialPosition.x, pointer.y - initialPosition.y) >=
-                        ctx.tolerance
+                    ctx.tolerance
                 );
             };
 
@@ -693,6 +693,9 @@ export function makeDraggableHook(hookParams) {
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
                 safePrevent(ev);
+                if (document.activeElement && !document.activeElement.contains(ev.target)) {
+                    document.activeElement.blur();
+                }
 
                 const { currentTarget, pointerId, target } = ev;
                 ctx.current.initialPosition = { ...ctx.pointer };
@@ -989,7 +992,7 @@ export function makeDraggableHook(hookParams) {
                             // be fired. Note that we DO NOT want to prevent touchstart
                             // events since they're responsible of the native swipe
                             // scrolling.
-                            addListener(el, "touchstart", () => {}, {
+                            addListener(el, "touchstart", () => { }, {
                                 passive: false,
                                 noAddedStyle: true,
                             });
