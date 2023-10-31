@@ -4,6 +4,7 @@
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
+import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
@@ -792,6 +793,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
+            "aria-label": _t("Media video"),
         })[0];
         this.$el.append(iframeEl);
         return iframeEl;
