@@ -11,7 +11,7 @@
         <span t-else="" class="text-danger"><i class="fa fa-times float-start my-1 me-1"/> <span class="o_we_error_text" t-esc="props.errorMessage ? props.errorMessage : 'File could not be saved'"/></span>
     </small>
     <div t-else="" class="progress">
-        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" t-attf-style="width: {{this.progress}}%;"><span t-esc="this.progress + '%'"/></div>
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" t-attf-style="width: {{this.progress}}%;" aria-label="Progress bar"><span t-esc="this.progress + '%'"/></div>
     </div>
     <hr/>
 </t>
