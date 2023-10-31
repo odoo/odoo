@@ -176,6 +176,35 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
 
+    @users('admin')
+    def test_notification_access_error_record(self):
+        """Check if user has access to the record before displaying a notification about it"""
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        partner = self.env['res.partner'].create({
+            'name': 'New Partner',
+            'company_id': company_b.id,
+        })
+        message = self.env['mail.message'].create({
+            'model': 'res.partner',
+            'res_id': partner.id,
+            'body': 'Test',
+            'message_type': 'comment',
+            'subtype_id': self.env.ref('mail.mt_note').id,
+        })
+        self.env['mail.notification'].create({
+            'mail_message_id': message.id,
+            'res_partner_id': partner.id,
+            'notification_type': 'email',
+            'notification_status': 'exception',
+            'failure_type': 'UNKNOWN',
+        })
+
+        error_messages = self.env['mail.message'].with_context(allowed_company_ids=company_a.ids).message_fetch_failed()
+        self.assertEqual(len(error_messages), 0)
+        error_messages = self.env['mail.message'].with_context(allowed_company_ids=company_b.ids).message_fetch_failed()
+        self.assertEqual(len(error_messages), 1)
+
     def test_notification_has_error_filter(self):
         """Ensure message_has_error filter is only returning threads for which
         the current user is author of a failed message."""
