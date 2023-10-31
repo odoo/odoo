@@ -525,6 +525,7 @@
                                                         aria-valuemin="0"
                                                         t-att-aria-valuenow="record.delivered.raw_value"
                                                         t-att-aria-valuemax="record.expected.raw_value"
+                                                        aria-label="Progress bar"
                                                         t-attf-style="width: #{record.delivered.raw_value * 100 / record.expected.raw_value}%"/>
                                                 </div>
                                             </div>

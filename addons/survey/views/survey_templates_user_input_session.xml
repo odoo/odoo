@@ -100,7 +100,7 @@
                     <div t-if="show_bar_chart or show_text_answers">
                         <div class="progress" title="Attendees are answering the question...">
                             <div class="progress-bar o_survey_session_progress_small fw-bold"
-                                 style="overflow: visible" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                 style="overflow: visible" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar">
                                 <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                                 </span>
                             </h2>
                             <div class="progress">
-                                <div class="progress-bar fw-bold" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar fw-bold" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
                             </div>
                             <fieldset disabled="disabled" class="mt-5" t-if="question.question_type == 'matrix'" t-call="survey.question_container">
                                 <t t-set="hide_question_title" t-value="true" />
