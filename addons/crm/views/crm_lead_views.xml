@@ -53,11 +53,11 @@
                             <h2 class="d-flex gap-2 g-0 align-items-end pb-3">
                                 <div attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="expected_revenue" class="oe_edit_only pb-1" />
-                                    <div class="d-flex align-items-end">
+                                    <div class="d-flex align-items-baseline">
                                         <field name="company_currency" invisible="1"/>
                                         <field name="expected_revenue" class="oe_inline o_input_8ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                        <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
-                                        <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
+                                        <span class="oe_grey px-2" groups="crm.group_use_recurring_revenues"> + </span>
+                                        <span class="oe_grey px-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                     </div>
                                 </div>
                                 <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
@@ -71,10 +71,10 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="oe_edit_only d-md-flex align-items-center">
+                                    <div class="oe_edit_only d-md-flex align-items-baseline">
                                         <label for="probability"/>
-                                        <div class="d-flex align-items-center">
-                                            <button class="ps-0 ps-md-2 btn btn-link" name="action_set_automated_probability" type="object"
+                                        <div class="d-flex align-items-baseline">
+                                            <button class="p-0 px-1 ps-md-2 btn btn-link" name="action_set_automated_probability" type="object"
                                                     attrs="{'invisible': [('is_automated_probability', '=', True)]}">
                                                 <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                             </button>
