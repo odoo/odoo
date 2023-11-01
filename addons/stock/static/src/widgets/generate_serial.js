@@ -20,6 +20,7 @@ export class GenerateDialog extends Component {
 
         this.nextSerial = useRef('nextSerial');
         this.nextSerialCount = useRef('nextSerialCount');
+        this.keepLines = useRef('keepLines');
         this.lots = useRef('lots');
         this.orm = useService("orm");
         onMounted(() => {
@@ -51,11 +52,18 @@ export class GenerateDialog extends Component {
                 })
             );
         }
+        if (!this.keepLines.el.checked) {
+            await lines._applyCommands(lines._currentIds.map((currentId) => [
+                x2ManyCommands.DELETE,
+                currentId,
+            ]));
+        }
         lines.records.push(...newlines);
         lines._commands.push(...newlines.map((record) => [
             x2ManyCommands.CREATE,
             record._virtualId,
         ]));
+        lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
         this.props.close();
     }
