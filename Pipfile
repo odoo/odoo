@@ -1,0 +1,55 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+babel = "==2.9.1"
+chardet = "==4.0.0"
+cryptography = "==3.4.8"
+decorator = "==4.4.2"
+docutils = "==0.16"
+ebaysdk = "==2.1.5"
+freezegun = "==0.3.15"
+gevent = "==22.10.2"
+greenlet = "==2.0.2"
+idna = "==2.10"
+jinja2 = "==3.1.2"
+libsass = "==0.20.1"
+lxml = "==4.9.2"
+markupsafe = "==2.1.2"
+num2words = "==0.5.9"
+ofxparse = "==0.21"
+passlib = "==1.7.4"
+pillow = "==9.4.0"
+polib = "==1.1.0"
+psutil = "==5.9.4"
+psycopg2 = "==2.9.5"
+pydot = "==1.4.2"
+pyopenssl = "==20.0.1"
+pypdf2 = "==2.12.1"
+pypiwin32 = "*"
+pyserial = "==3.5"
+python-dateutil = "==2.8.1"
+python-ldap = "==3.4.0"
+python-stdnum = "==1.16"
+pytz = "*"
+pyusb = "==1.2.1"
+qrcode = "==6.1"
+reportlab = "==3.6.12"
+requests = "==2.25.1"
+urllib3 = "==1.26.5"
+vobject = "==0.9.6.1"
+werkzeug = "==2.0.2"
+xlrd = "==1.2.0"
+xlsxwriter = "==1.1.2"
+xlwt = "==1.3.*"
+zeep = "==4.0.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+
+[scripts]
+server = "bash - c rm - f odoo.log && python ./odoo-bin - c run.conf'"
