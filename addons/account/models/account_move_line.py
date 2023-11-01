@@ -575,13 +575,7 @@ class AccountMoveLine(models.Model):
         product_lines = self.filtered(lambda line: line.display_type == 'product' and line.move_id.is_invoice(True))
         for line in product_lines:
             if line.product_id:
-                fiscal_position = line.move_id.fiscal_position_id
-                accounts = line.with_company(line.company_id).product_id\
-                    .product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
-                if line.move_id.is_sale_document(include_receipts=True):
-                    line.account_id = accounts['income'] or line.account_id
-                elif line.move_id.is_purchase_document(include_receipts=True):
-                    line.account_id = accounts['expense'] or line.account_id
+                line.account_id = line._get_computed_account()
             elif line.partner_id:
                 line.account_id = self.env['account.account']._get_most_frequent_account_for_partner(
                     company_id=line.company_id.id,
@@ -868,6 +862,17 @@ class AccountMoveLine(models.Model):
             # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
             if line.product_id or line.account_id.tax_ids or not line.tax_ids:
                 line.tax_ids = line._get_computed_taxes()
+
+    def _get_computed_account(self):
+        self.ensure_one()
+        fiscal_position = self.move_id.fiscal_position_id
+        accounts = self.with_company(self.company_id).product_id\
+            .product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+        if self.move_id.is_sale_document(include_receipts=True):
+            return accounts['income'] or self.account_id
+        if self.move_id.is_purchase_document(include_receipts=True):
+            return accounts['expense'] or self.account_id
+        return self.account_id
 
     def _get_computed_taxes(self):
         self.ensure_one()
