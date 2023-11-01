@@ -31,6 +31,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
+                            </div>
+                            <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                                <div name="keep_lines" class="o_input">
+                                    <input type="checkbox" t-ref="keepLines" id="keep_lines_0"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </t>
                 <t t-if="props.type === 'import'" class="d-flex">
@@ -45,6 +55,16 @@
                                 <textarea
                                     placeholder="Write one lot/serial name per line, followed by the quantity."
                                     class="o_input" t-ref="lots" id="next_serial_0" type="text"/>
+                            </div>
+                        </div>
+                        <div class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
+                            </div>
+                        </div>
+                        <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                            <div name="keep_lines" class="o_input">
+                                <input type="checkbox" t-ref="keepLines" id="keep_lines_0"/>
                             </div>
                         </div>
                     </div>
