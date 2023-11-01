@@ -628,14 +628,14 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_model_field_selector_popover_prev_page");
     });
 
-    QUnit.test("support of invalid paths", async (assert) => {
+    QUnit.test("support of invalid paths (allowEmpty=false)", async (assert) => {
         class Parent extends Component {
             setup() {
                 this.state = useState({ path: `` });
             }
         }
         Parent.components = { ModelFieldSelector };
-        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path"/>`;
+        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
 
         const parent = await mountComponent(Parent);
         assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
@@ -645,6 +645,55 @@ QUnit.module("Components", (hooks) => {
         await nextTick();
         assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
         assert.containsOnce(target, ".o_model_field_selector_warning");
+
+        parent.state.path = false;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+
+        parent.state.path = {};
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), ["-"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+
+        parent.state.path = `a`;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), ["a"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+
+        parent.state.path = `foo.a`;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Foo", "a"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+
+        parent.state.path = `a.foo`;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), ["a", "foo"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+    });
+
+    QUnit.test("support of invalid paths (allowEmpty=true)", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ path: `` });
+            }
+        }
+        Parent.components = { ModelFieldSelector };
+        Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
+
+        const parent = await mountComponent(Parent);
+        assert.deepEqual(getModelFieldSelectorValues(target), []);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+
+        parent.state.path = undefined;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), []);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+
+        parent.state.path = false;
+        await nextTick();
+        assert.deepEqual(getModelFieldSelectorValues(target), []);
+        assert.containsNone(target, ".o_model_field_selector_warning");
 
         parent.state.path = {};
         await nextTick();
@@ -726,7 +775,7 @@ QUnit.module("Components", (hooks) => {
             setup() {
                 this.state = useState({ path: `foo` });
             }
-            update() {}
+            update() { }
         }
         Parent.components = { ModelFieldSelector };
         Parent.template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
@@ -830,5 +879,57 @@ QUnit.module("Components", (hooks) => {
             "PropertiesP2"
         );
         assert.containsNone(target, ".o_model_field_selector_warning");
+    });
+
+    QUnit.test("clear button (allowEmpty=true)", async (assert) => {
+        class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    allowEmpty="true"
+                    isDebugMode="true"
+                    update="(path, fieldInfo) => this.onUpdate(path)"
+                />
+            `;
+            setup() {
+                this.path = "baaarrr";
+            }
+            onUpdate(path) {
+                this.path = path;
+                assert.step(`path is ${JSON.stringify(path)}`);
+                this.render();
+            }
+        }
+
+        await mountComponent(Parent);
+
+        assert.deepEqual(getModelFieldSelectorValues(target), ["baaarrr"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+        assert.containsOnce(target, ".o_model_field_selector .fa.fa-times");
+
+        // clear when popover is not open
+        await click(target, ".o_model_field_selector .fa.fa-times");
+        assert.deepEqual(getModelFieldSelectorValues(target), []);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+        assert.containsNone(target, ".o_model_field_selector .fa.fa-times");
+        assert.verifySteps([`path is ""`]);
+
+        await openModelFieldSelectorPopover(target);
+        await click(target.querySelector(".o_model_field_selector_popover_item_name"));
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Bar"]);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+        assert.containsOnce(target, ".o_model_field_selector .fa.fa-times");
+        assert.verifySteps([`path is "bar"`]);
+
+        // clear when popover is open
+        await openModelFieldSelectorPopover(target);
+        await click(target, ".o_model_field_selector .fa.fa-times");
+        assert.deepEqual(getModelFieldSelectorValues(target), []);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+        assert.containsNone(target, ".o_model_field_selector .fa.fa-times");
+        assert.verifySteps([`path is ""`]);
     });
 });
