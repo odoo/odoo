@@ -16,6 +16,9 @@
             <div t-if="!props.readonly and state.isInvalid" class="o_model_field_selector_controls ms-2" tabindex="0">
                 <i class="fa fa-exclamation-triangle text-warning o_model_field_selector_warning" role="alert"  aria-label="Invalid field chain" title="Invalid field chain"/>
             </div>
+            <div t-if="!props.readonly and props.allowEmpty and state.displayNames.length" class="o_model_field_selector_controls ms-2" tabindex="0">
+                <i class="fa fa-times" t-on-click.stop="clear" aria-label="Clear" title="Clear"/>
+            </div>
         </div>
     </t>
 

@@ -24,9 +24,12 @@ export function useLoadFieldInfo(fieldService) {
 
 export function useLoadPathDescription(fieldService) {
     fieldService ||= useService("field");
-    return async (resModel, path) => {
+    return async (resModel, path, allowEmpty) => {
         if ([0, 1].includes(path)) {
             return { isInvalid: false, displayNames: [makeString(path)] };
+        }
+        if (allowEmpty && !path) {
+            return { isInvalid: false, displayNames: [] };
         }
         if (typeof path !== "string" || !path) {
             return { isInvalid: true, displayNames: [makeString()] };
