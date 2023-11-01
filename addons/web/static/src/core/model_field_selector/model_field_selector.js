@@ -14,6 +14,7 @@ export class ModelFieldSelector extends Component {
     static props = {
         resModel: String,
         path: { optional: true },
+        allowEmpty: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
         showSearchInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
@@ -23,9 +24,10 @@ export class ModelFieldSelector extends Component {
     };
     static defaultProps = {
         readonly: true,
+        allowEmpty: false,
         isDebugMode: false,
         showSearchInput: true,
-        update: () => {},
+        update: () => { },
         followRelations: true,
     };
 
@@ -35,7 +37,7 @@ export class ModelFieldSelector extends Component {
         this.popover = usePopover(this.constructor.components.Popover, {
             popoverClass: "o_popover_field_selector",
             onClose: async () => {
-                if (this.newPath) {
+                if (this.newPath !== null) {
                     const fieldInfo = await loadFieldInfo(this.props.resModel, this.newPath);
                     this.props.update(this.newPath, fieldInfo);
                 }
@@ -43,8 +45,8 @@ export class ModelFieldSelector extends Component {
         });
         this.keepLast = new KeepLast();
         this.state = useState({ isInvalid: false, displayNames: [] });
-        onWillStart(() => this.updateState(this.props.resModel, this.props.path));
-        onWillUpdateProps((nextProps) => this.updateState(nextProps.resModel, nextProps.path));
+        onWillStart(() => this.updateState(this.props));
+        onWillUpdateProps((nextProps) => this.updateState(nextProps));
     }
 
     openPopover(currentTarget) {
@@ -57,7 +59,7 @@ export class ModelFieldSelector extends Component {
             path: this.props.path,
             update: (path) => {
                 this.newPath = path;
-                this.updateState(this.props.resModel, path, true);
+                this.updateState({ ...this.props, path }, true);
             },
             showSearchInput: this.props.showSearchInput,
             isDebugMode: this.props.isDebugMode,
@@ -66,12 +68,22 @@ export class ModelFieldSelector extends Component {
         });
     }
 
-    async updateState(resModel, path, isConcurrent) {
-        let prom = this.loadPathDescription(resModel, path);
+    async updateState(params, isConcurrent) {
+        const { resModel, path, allowEmpty } = params;
+        let prom = this.loadPathDescription(resModel, path, allowEmpty);
         if (isConcurrent) {
             prom = this.keepLast.add(prom);
         }
         const state = await prom;
         Object.assign(this.state, state);
+    }
+
+    clear() {
+        if (this.popover.isOpen) {
+            this.newPath = "";
+            this.popover.close();
+            return;
+        }
+        this.props.update("", { resModel: this.props.resModel, fieodDef: null });
     }
 }
