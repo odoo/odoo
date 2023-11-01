@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.input">
         <div t-attf-class="{{props.class}} d-flex align-items-center">
             <button t-if="props.isSmall" 
-                class="p-3 rounded" 
+                class="p-3 rounded btn btn-light"
                 t-on-click="() => state.isOpen = !state.isOpen">
                 <i t-if="state.isOpen" class="fa fa-arrow-right"/>
                 <t t-else="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
