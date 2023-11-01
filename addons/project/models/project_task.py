@@ -1161,11 +1161,9 @@ class Task(models.Model):
             f"{field}.id": "id",
             f"{field}.name": "name",
         })
-        if not filtered_domain:
-            return False
         if additional_domain:
-            filtered_domain = expression.AND([filtered_domain, additional_domain])
-        return self.env[comodel].search(_change_operator(filtered_domain), order=order)
+            filtered_domain = expression.AND([_change_operator(filtered_domain), additional_domain])
+        return self.env[comodel].search(filtered_domain, order=order) if filtered_domain else False
 
     # ---------------------------------------------------
     # Subtasks
