@@ -17,7 +17,7 @@ class ReportProjectTaskUser(models.Model):
         select_to_append = """,
                 (t.effective_hours * 100) / NULLIF(t.planned_hours, 0) as progress,
                 t.effective_hours as hours_effective,
-                t.planned_hours - t.effective_hours - t.subtask_effective_hours as remaining_hours,
+                NULLIF(t.remaining_hours, 0) as remaining_hours,
                 NULLIF(t.planned_hours, 0) as hours_planned,
                 t.overtime as overtime
         """

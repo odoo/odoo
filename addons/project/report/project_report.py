@@ -141,6 +141,7 @@ class ReportProjectTaskUser(models.Model):
     def _where(self):
         return """
                 t.project_id IS NOT NULL
+                AND t.parent_id IS NULL
         """
 
     def init(self):
