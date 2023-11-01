@@ -1526,7 +1526,7 @@ export class Rtc {
         if (!channel) {
             return;
         }
-        const oldCount = Object.keys(channel.rtcSessions).length;
+        const oldCount = channel.rtcSessions.length;
         channel.rtcSessions = sessionsData;
         if (channel.rtcSessions.length > oldCount) {
             this.soundEffectsService.play("channel-join");
