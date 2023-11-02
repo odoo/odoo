@@ -36,7 +36,7 @@ export function clickOrderline(productName, quantity = "1.0") {
         ...clickLine(productName, quantity),
         {
             content: "Check the product page",
-            trigger: ".product-list-container .product-list",
+            trigger: ".product-list",
             isCheck: true,
         },
     ];
@@ -45,7 +45,7 @@ export function clickSubcategory(name) {
     return [
         {
             content: `selecting '${name}' subcategory`,
-            trigger: `.products-widget > .products-widget-control .category-button:contains("${name}")`,
+            trigger: `.product-screen .rightpane .category-button:contains("${name}")`,
         },
         {
             content: `'${name}' subcategory selected`,
