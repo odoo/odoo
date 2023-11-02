@@ -90,6 +90,16 @@ async function autoHideMenu(el, options) {
     }
 
     function _adapt() {
+        const wysiwyg = window.$ && $('#wrapwrap').data('wysiwyg');
+        const odooEditor = wysiwyg && wysiwyg.odooEditor;
+        if (odooEditor) {
+            odooEditor.withoutRollback(__adapt);
+            return;
+        }
+        __adapt();
+    }
+
+    function __adapt() {
         if (options.loadingStyleClasses.length) {
             el.classList.add(...options.loadingStyleClasses);
         }
