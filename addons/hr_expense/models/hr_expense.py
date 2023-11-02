@@ -145,9 +145,13 @@ class HrExpense(models.Model):
     @api.depends('product_id.standard_price')
     def _compute_product_has_cost(self):
         for expense in self:
-            expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
-            tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
-            expense.product_has_tax = bool(tax_ids)
+            if expense.state in {'draft', 'reported'}:
+                expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
+                expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
+            else:
+                expense.product_has_cost = expense.product_has_cost
+                expense.tax_ids = expense.tax_ids
+            expense.product_has_tax = bool(expense.tax_ids)
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
