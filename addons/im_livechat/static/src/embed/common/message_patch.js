@@ -3,14 +3,14 @@
 import { Message } from "@mail/core/common/message";
 
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 Message.props.push("isTypingMessage?");
 
 patch(Message.prototype, {
     setup() {
         super.setup();
-        this.session = session;
+        this.url = url;
     },
 
     get quickActionCount() {

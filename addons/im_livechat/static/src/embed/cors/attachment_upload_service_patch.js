@@ -3,11 +3,11 @@
 import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
 
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
 
 patch(AttachmentUploadService.prototype, {
     get uploadURL() {
-        return `${session.origin}/im_livechat/cors/attachment/upload`;
+        return url("/im_livechat/cors/attachment/upload");
     },
 
     _makeFormData() {
