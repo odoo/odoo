@@ -836,9 +836,11 @@ options.registry.WebsiteSaleProductTags = options.Class.extend({
      * @override
      */
     async willStart() {
-        this.productTemplateId = parseInt(this.$target.parentsUntil('#product_details')
-            .find('[data-oe-model="product.template"]').data('oe-id'));
-        this.productTagId = parseInt(this.$target.parent().find('[data-oe-model="product.tag"]').data('oe-id'));
+        this.productTemplateId = parseInt(
+            this.$target.parentsUntil('#product_details').find('[data-oe-model="product.template"]').data('oe-id'));
+        const productTagElem = this.$target.is('[data-oe-model="product.tag"]') ?
+            this.$target : this.$target.parent().find('[data-oe-model="product.tag"]')
+        this.productTagId = parseInt(productTagElem.data('oe-id'));
         return this._super(...arguments);
     },
 
