@@ -131,7 +131,7 @@
     <t t-if="allow_biography and object.can_display_biography and request.env.user.karma >= website.karma_profile_min" t-set="bio_popover_data">
         <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
             <div class="d-flex flex-column">
-                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
+                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
             </div>
             <div>
                 <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>
@@ -148,7 +148,7 @@
             <t t-set="user_profile_url" t-valuef="/forum/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }&amp;forum_origin=#{ request.httprequest.path }"/>
         </t>
         <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
-            <img t-attf-class="o_wforum_avatar rounded-circle #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
+            <img t-attf-class="o_wforum_avatar rounded-circle o_object_fit_cover #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
         </a>
         <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{ 'align-items-baseline' if compact else 'flex-column justify-content-around' } #{ 'ms-2' if show_image else '' }">
             <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{ 'small' if compact else ''}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
