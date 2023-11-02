@@ -270,15 +270,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {}
 
     @staticmethod
-    def _get_moved_index(items, index, move):
+    def _get_moved_index(length, index, move):
         if move == 'first':
             return 0
         elif move == 'left':
             return max(0, index - 1)
         elif move == 'right':
-            return min(len(items) - 1, index + 1)
+            return min(length - 1, index + 1)
         elif move == 'last':
-            return len(items) - 1
+            return length - 1
         raise NotFound()
 
     @http.route([
@@ -619,7 +619,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise ValidationError(_("Invalid image"))
 
         image_idx = product_images.index(image_to_resequence)
-        new_image_idx = self._get_moved_index(product_images, image_idx, move)
+        new_image_idx = self._get_moved_index(len(product_images), image_idx, move)
 
         # no-op resequences
         if new_image_idx == image_idx:
@@ -666,7 +666,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise ValidationError(_("Product tag not found"))
 
         tag_index = product_tags.index(product_tag)
-        new_tag_index = self._get_moved_index(product_tags, tag_index, move)
+        new_tag_index = self._get_moved_index(len(product_tags), tag_index, move)
         if new_tag_index == tag_index:
             return
 
