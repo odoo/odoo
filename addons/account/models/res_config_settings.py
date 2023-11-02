@@ -251,7 +251,7 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template)
-        self.has_accounting_entries = self.company_id._existing_accounting()
+        self.has_accounting_entries = self.company_id.root_id._existing_accounting()
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
