@@ -7,6 +7,8 @@ import logging
 import re
 import requests
 
+from stdnum.eu.vat import check_vies
+
 from odoo import api, fields, models, tools, _
 
 _logger = logging.getLogger(__name__)
@@ -136,6 +138,28 @@ class ResPartner(models.Model):
         if vies_vat_data:
             return [self._format_data_company(vies_vat_data)]
         else:
+            vies_result = None
+            try:
+                vies_result = check_vies(vat)
+            except Exception:
+                _logger.exception("Failed VIES VAT check.")
+            if vies_result:
+                name = vies_result['name']
+                if vies_result['valid'] and name != '---':
+                    address = list(filter(bool, vies_result['address'].split('\n')))
+                    street = address[0]
+                    zip_city = address[-1].split(' ', 1) if len(address) > 1 else [None, None]
+                    street2 = address[1] if len(address) > 2 else None
+                    return [self._iap_replace_location_codes({
+                        'name': name,
+                        'vat': vat,
+                        'street': street,
+                        'street2': street2,
+                        'city': zip_city[1],
+                        'zip': zip_city[0],
+                        'country_code': vies_result['countryCode'],
+                        'skip_enrich': True,
+                    })]
             return []
 
     @api.model
