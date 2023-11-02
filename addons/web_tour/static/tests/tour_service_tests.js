@@ -365,7 +365,7 @@ QUnit.module("Tour service", (hooks) => {
     QUnit.test("perform edit on next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
-            steps:() => [
+            steps: () => [
                 {
                     trigger: ".interval input",
                 },
@@ -435,6 +435,15 @@ QUnit.module("Tour service", (hooks) => {
     });
 
     QUnit.test("should show only 1 pointer at a time", async function (assert) {
+        const storage = new Map();
+        patchWithCleanup(browser.localStorage, {
+            getItem: (key) => storage.get(key),
+            setItem: (key, value) => storage.set(key, value),
+            removeItem: (key) => storage.delete(key),
+            tour__tour1__sequence: 0,
+            tour__tour2__sequence: 0,
+        });
+
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
             steps: () => [
