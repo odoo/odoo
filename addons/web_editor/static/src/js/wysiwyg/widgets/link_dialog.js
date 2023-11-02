@@ -21,6 +21,7 @@ export class LinkDialog extends Link {
         super.setup();
         onMounted(() => {
             this.$el.find('[name="link_style_color"]').on('change', this._onTypeChange.bind(this));
+            this.$el.find('input[name="label"]').on('input', this._adaptPreview.bind(this));
             const el = this.props.focusField === 'url' ? this.inputUrlRef.el : this.inputTextRef.el;
             el.focus();
         });
