@@ -113,6 +113,8 @@ patch(LinkTools.prototype, {
                 urlInputValue = urlInputValue.substr(0, urlInputValue.indexOf('#'));
             }
             $urlInput.val(urlInputValue + anchorValue);
+            // Updates the link in the DOM with the chosen anchor.
+            this.__onURLInput();
         }
         super._onPickSelectOption(...arguments);
     },
