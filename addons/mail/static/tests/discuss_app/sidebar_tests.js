@@ -299,23 +299,30 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
     assert.verifySteps(["action_unfollow"]);
 });
 
-QUnit.test("sidebar: unpin channel from bus", async () => {
+QUnit.test("sidebar: unpin chat from bus", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
 
-    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
+    await contains(".o-mail-Discuss-threadName", { value: "Demo" });
 
-    // Simulate receiving a leave channel notification
+    // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
 
-    await contains(".o-mail-Discuss-threadName", { count: 0, value: "General" });
+    await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
 
 QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {

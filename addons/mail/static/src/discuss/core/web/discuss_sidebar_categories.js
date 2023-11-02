@@ -84,7 +84,7 @@ export class DiscussSidebarCategories extends Component {
     filteredThreads(category) {
         return category.threads.filter((thread) => {
             return (
-                (thread.is_pinned || thread.group_based_subscription) &&
+                thread.displayToSelf &&
                 (!this.state.quickSearchVal ||
                     cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
             );
