@@ -12,11 +12,7 @@ class IAPActionButtonsWidget extends Component {
     }
 
     async onViewServicesClicked() {
-        const url = await this.orm.silent.call("iap.account", "get_account_url");
-        this.action.doAction({
-            type: "ir.actions.act_url",
-            url: url,
-        });
+        this.action.doAction("iap.iap_account_action");
     }
 
     async onBuyLinkClicked() {

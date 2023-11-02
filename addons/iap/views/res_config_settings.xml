@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="open_iap_account" model="ir.actions.server">
-        <field name="name">Open IAP Account</field>
-        <field name="model_id" ref="base_setup.model_res_config_settings"/>
-        <field name="binding_model_id" ref="base_setup.model_res_config_settings"/>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records._redirect_to_iap_account()
-        </field>
-    </record>
-
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.base.setup.iap</field>
         <field name="model">res.config.settings</field>

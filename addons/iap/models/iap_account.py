@@ -203,14 +203,6 @@ class IapAccount(models.Model):
     def action_toggle_show_token(self):
         for account in self:
             account.show_token = not account.show_token
-    @api.model
-    def get_account_url(self):
-        """ Called only by res settings """
-        route = '/iap/services'
-        endpoint = iap_tools.iap_get_endpoint(self.env)
-        d = {'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')}
-
-        return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(d))
 
     @api.model
     def get_config_account_url(self):
