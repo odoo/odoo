@@ -223,6 +223,9 @@ var DomainTree = DomainNode.extend({
     getDomain: function () {
         var childDomains = [];
         var nbChildren = 0;
+        if (!this.children.length) {
+            return [];
+        }
         this.children.forEach((child) => {
             var childDomain = child.getDomain();
             if (childDomain.length) {
