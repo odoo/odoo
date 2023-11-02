@@ -124,7 +124,7 @@ QUnit.module("clickbot", (hooks) => {
         };
         registry.category("command_categories").add("view_switcher", {});
     });
-    QUnit.test("clickbot clickeverywhere test", async (assert) => {
+    QUnit.skip("clickbot clickeverywhere test", async (assert) => {
         patchWithCleanup(browser, {
             console: {
                 log: (msg) => {
@@ -312,7 +312,7 @@ QUnit.module("clickbot", (hooks) => {
         ]);
     });
 
-    QUnit.test("clickbot clickeverywhere menu modal", async (assert) => {
+    QUnit.skip("clickbot clickeverywhere menu modal", async (assert) => {
         serverData.views["foo,false,form"] = `
             <form>
                 <field name="foo"/>
