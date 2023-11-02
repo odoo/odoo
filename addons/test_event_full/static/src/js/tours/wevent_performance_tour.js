@@ -4,6 +4,9 @@ import { registry } from "@web/core/registry";
 import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 var registerSteps = [{
+    content: "Open ticket modal",
+    trigger: 'button.btn-primary:contains("Register")',
+}, {
     content: "Select 2 units of 'Ticket1' ticket type",
     trigger: '#o_wevent_tickets_collapse .row.o_wevent_ticket_selector[name="Ticket1"] select',
     run: 'text 2',

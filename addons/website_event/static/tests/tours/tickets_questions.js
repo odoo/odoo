@@ -8,16 +8,20 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     content: "Click on the Design Fair event",
     trigger: 'article:contains("Design Fair New York")',
 }, {
+    content: "Click on Register modal tickets button",
+    trigger: 'button:contains("Register")',
+    run: 'click'
+}, {
     content: "Check Register button is disabled when no ticket selected",
     trigger: 'button:disabled:contains("Register")',
     isCheck: true,
 }, {
     content: "Select 2 'Free' tickets to buy",
-    trigger: 'div.row:contains("Free") select.form-select',
+    trigger: 'div.o_wevent_ticket_selector:contains("Free") select.form-select',
     run: 'text 2'
 }, {
-    content: "Click on Register tickets button",
-    trigger: 'button:contains("Register")',
+    content: "Click on Register (to fill tickets data) button",
+    trigger: 'div.modal-footer button:contains("Register")',
     run: 'click'
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="name"]',

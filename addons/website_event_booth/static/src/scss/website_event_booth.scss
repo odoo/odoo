@@ -21,8 +21,8 @@ label.o_wbooth_category_unavailable {
     }
 
     & > input + div {
-        padding: 10px;
-        border: 5px solid mix(map-get($theme-colors, 'secondary'), #e9ecef);
+        opacity: .4;
+        border: 3px solid $o-gray-600;
     }
 
     &:not(.o_wbooth_category_unavailable) > input + div {
@@ -30,40 +30,43 @@ label.o_wbooth_category_unavailable {
     }
 
     &:not(.o_wbooth_category_unavailable):hover > input + div {
-        border-color: map-get($theme-colors, 'secondary');
-    }
-
-    &:hover > input + div:before {
-        color: map-get($theme-colors, 'secondary');
+        opacity: .8;
     }
 
     & > input:checked + div,
     &:hover > input:checked + div {
-        border-color: map-get($theme-colors, 'primary');
-    }
-
-    & > input:checked + div:before,
-    &:hover > input:checked + div:before {
-        color: map-get($theme-colors, 'primary');
-    }
-
-    & > input:checked + div:before,
-    &:not(.o_wbooth_category_unavailable):hover > input + div:before {
-        content: "\f058";
-        font-family: "FontAwesome";
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        line-height: 40px;
-        top: -16px;
-        right: -16px;
-        background-color: $o-wevent-bg-color-base;
-        @include font-size(2em);
-        text-align: center;
+        opacity: 1;
     }
 
     & img {
         min-height: 250px;
+    }
+
+}
+
+.o_wbooth_booths .form-check{
+    position: relative;
+    padding-left: 0;
+
+    & > input {
+        visibility: hidden;
+        position: absolute;
+    }
+    & > input + label {
+        opacity: .4;
+        padding: 1rem;
+        border: 1px solid $o-gray-600;
+    }
+
+    &:hover > input + label  {
+        opacity: 1;
+    }
+
+    & > input:checked + label,
+    &:hover > input:checked + label {
+        opacity: 1;
+        background-color: $o-gray-600;
+        color: $o-white;
     }
 
 }
@@ -73,50 +76,9 @@ label.o_wbooth_category_unavailable {
 }
 
 .o_wevent_booth_order_progress {
-    $wevent-booth-order-progress-color: mix(map-get($theme-colors, 'primary'), $body-bg, 40%);
-    $wevent-booth-order-progress-color-2: mix(map-get($theme-colors, 'primary'), $body-bg, 33%);
-    $wevent-booth-order-progress-height: 48px;
-    height: $wevent-booth-order-progress-height;
     li {
-        border: 1px solid $wevent-booth-order-progress-color;
-        border-right-width: 0;
-        padding-left: 24px;
-        height: $wevent-booth-order-progress-height;
-        line-height: $wevent-booth-order-progress-height;
-        width: calc(100%/3);
         &.o_current_stage {
-            background: $wevent-booth-order-progress-color;
-            .chevron:before {
-                border-left: 24px solid $wevent-booth-order-progress-color;
-            }
-        }
-        &:first-child {
-            padding-left: 0px;
-            &:hover:not(.o_current_stage) {
-                background-color: $wevent-booth-order-progress-color-2 !important;
-                .chevron, .chevron::before {
-                    border-left-color: $wevent-booth-order-progress-color-2 !important;
-                }
-            }
-        }
-        &:last-child {
-            border-right-width: 1px !important;
-        }
-        .chevron {
-            top: -1px;
-            right: -24px;
-            z-index: 1;
-            border: 24px solid transparent;
-            border-right: 0;
-            border-left: 24px solid $wevent-booth-order-progress-color;
-            &:before {
-                @include o-position-absolute($top:-24px, $right:2px);
-                display: block;
-                border: 24px solid transparent;
-                border-right: 0;
-                border-left: 24px solid $o-wevent-bg-color-base;
-                content: "";
-            }
+            font-weight: bold;
         }
     }
 }

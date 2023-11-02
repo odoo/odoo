@@ -17,13 +17,15 @@
     .o_wesession_track_card {
         background-color: $o-wevent-bg-color-base;
         color: $o-wevent-color;
+
         .card-body {
             padding: 1rem;
-            background-color: $o-wevent-bg-color-base !important;
+            background-color: $o-wevent-bg-color-base  !important;
         }
 
         .card-footer {
             padding: 0.75rem 1rem;
+
             div {
                 color: $o-wevent-color;
             }
@@ -36,6 +38,7 @@
             padding: $card-spacer-y $card-spacer-x;
             text-align: right;
         }
+
         &.o_wesession_track_card_unpublished {
             opacity: 0.8;
         }
@@ -46,15 +49,20 @@
      */
 
     .o_wevent_online_page_container {
+
         // Main panel: current track
         .o_wesession_track_main {
+
             // Force side panel min-width to account for potential Youtube chat
             // And adapt main panel max-width accordingly.
-            @include media-breakpoint-up(md) {
-                max-width: calc(100% - 22rem);
+            &.o_youtube_chat {
+                @include media-breakpoint-up(md) {
+                    max-width: calc(100% - 22rem);
+                }
             }
 
             @media screen and (min-width: 1900px) {
+
                 // return to bootstrap value for col-lg-9 / 10 breakpoint if screen is big enough
                 &.col-lg-9 {
                     max-width: 75%;
@@ -68,9 +76,12 @@
 
         // Left panel: other tracks
         .o_wesession_track_aside {
+
             // Force side panel min-width to account for potential Youtube chat
-            @include media-breakpoint-up(md) {
-                min-width: 22rem;
+            &.o_youtube_chat {
+                @include media-breakpoint-up(md) {
+                    min-width: 22rem;
+                }
             }
 
             @media screen and (min-width: 1900px) {
