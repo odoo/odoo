@@ -7345,7 +7345,7 @@
         });
         return {
             chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+            background: getters.getStyleOfSingleCellChart(chart.background, dataRange).background,
         };
     }
 
@@ -8066,7 +8066,7 @@
             };
             baselineCell = getters.getEvaluatedCell(baselinePosition);
         }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        const { background, fontColor } = getters.getStyleOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
@@ -8074,7 +8074,7 @@
             baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
-            fontColor: chartFontColor(background),
+            fontColor,
             background,
             baselineStyle: chart.baselineMode !== "percentage" && baseline
                 ? getters.getCellStyle({
@@ -33725,7 +33725,7 @@
     }
 
     class EvaluationChartPlugin extends UIPlugin {
-        static getters = ["getChartRuntime", "getBackgroundOfSingleCellChart"];
+        static getters = ["getChartRuntime", "getStyleOfSingleCellChart"];
         charts = {};
         createRuntimeChart = chartRuntimeFactory(this.getters);
         handle(cmd) {
@@ -33763,25 +33763,26 @@
             return this.charts[figureId];
         }
         /**
-         * Get the background color of a chart based on the color of the first cell of the main range
-         * of the chart. In order of priority, it will return :
-         *
-         *  - the chart background color if one is defined
-         *  - the fill color of the cell if one is defined
-         *  - the fill color of the cell from conditional formats if one is defined
-         *  - the default chart color if no other color is defined
+         * Get the background and textColor of a chart based on the color of the first cell of the main range of the chart.
          */
-        getBackgroundOfSingleCellChart(chartBackground, mainRange) {
+        getStyleOfSingleCellChart(chartBackground, mainRange) {
             if (chartBackground)
-                return chartBackground;
+                return { background: chartBackground, fontColor: chartFontColor(chartBackground) };
             if (!mainRange) {
-                return BACKGROUND_CHART_COLOR;
+                return {
+                    background: BACKGROUND_CHART_COLOR,
+                    fontColor: chartFontColor(BACKGROUND_CHART_COLOR),
+                };
             }
             const col = mainRange.zone.left;
             const row = mainRange.zone.top;
             const sheetId = mainRange.sheetId;
             const style = this.getters.getCellComputedStyle({ sheetId, col, row });
-            return style.fillColor || BACKGROUND_CHART_COLOR;
+            const background = style.fillColor || BACKGROUND_CHART_COLOR;
+            return {
+                background,
+                fontColor: style.textColor || chartFontColor(background),
+            };
         }
     }
 
@@ -43562,6 +43563,7 @@
     line-height: 1.2;
     font-size: 13px;
     font-weight: 500;
+    background-color: #fff;
 
     .o-topbar-top {
       border-bottom: 1px solid ${SEPARATOR_COLOR};
@@ -46408,14 +46410,14 @@
      */
     function figureCoordinates(headers, position) {
         let currentPosition = 0;
-        for (const [headerIndex, header] of Object.entries(headers)) {
+        for (const [headerIndex, header] of headers.entries()) {
             if (currentPosition <= position && position < currentPosition + header.size) {
                 return {
-                    index: parseInt(headerIndex),
+                    index: headerIndex,
                     offset: convertDotValueToEMU(position - currentPosition + FIGURE_BORDER_WIDTH),
                 };
             }
-            else {
+            else if (headerIndex < headers.length - 1) {
                 currentPosition += header.size;
             }
         }
@@ -47794,9 +47796,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.15';
-    __info__.date = '2023-10-25T10:10:53.039Z';
-    __info__.hash = 'fb7c4dd';
+    __info__.version = '16.3.16';
+    __info__.date = '2023-11-02T09:47:14.707Z';
+    __info__.hash = '09607eb';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
