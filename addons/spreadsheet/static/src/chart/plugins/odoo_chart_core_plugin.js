@@ -86,15 +86,7 @@ export class OdooChartCorePlugin extends CorePlugin {
      * @returns {Array<string>}
      */
     getOdooChartIds() {
-        const ids = [];
-        for (const sheetId of this.getters.getSheetIds()) {
-            ids.push(
-                ...this.getters
-                    .getChartIds(sheetId)
-                    .filter((id) => this.getters.getChartType(id).startsWith("odoo_"))
-            );
-        }
-        return ids;
+        return Object.keys(this.charts);
     }
 
     /**
