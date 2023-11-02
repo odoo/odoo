@@ -639,6 +639,24 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
     });
 
+    QUnit.test("load state: in a form view, wrong id in the state", async function (assert) {
+        serverData.actions[1000] = {
+            id: 1000,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            view_type: "form",
+            red_id: 999,
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1000);
+        assert.containsOnce(target, ".o_list_view");
+    });
+
     QUnit.test("state with integer active_ids should not crash", async function (assert) {
         assert.expect(2);
 
