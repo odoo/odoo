@@ -94,13 +94,12 @@ export class LinkTools extends Link {
      */
     async start() {
         const ret = await super.start(...arguments);
-
-        this.$el.find('we-select we-button').on('click', this._onPickSelectOption.bind(this));
-        this.$el.find('we-checkbox').on('click', this._onClickCheckbox.bind(this));
-        this.$el.find('.link-custom-color-border input').on('change', this._onChangeCustomBorderWidth.bind(this));
-        this.$el.find('.link-custom-color-border input').on('keypress', this._onKeyPressCustomBorderWidth.bind(this));
-        this.$el.find('we-select [name="link_border_style"] we-button').on('click', this._onBorderStyleSelectOption.bind(this));
-        this.$el.find('input[name="label"]').on('input', this._onLabelInput.bind(this));
+        this.$el.on('click', 'we-select we-button', this._onPickSelectOption.bind(this));
+        this.$el.on('click', 'we-checkbox', this._onClickCheckbox.bind(this));
+        this.$el.on('change', '.link-custom-color-border input', this._onChangeCustomBorderWidth.bind(this));
+        this.$el.on('keypress', '.link-custom-color-border input', this._onKeyPressCustomBorderWidth.bind(this));
+        this.$el.on('click', 'we-select [name="link_border_style"] we-button', this._onBorderStyleSelectOption.bind(this));
+        this.$el.on('input', 'input[name="label"]', this._onLabelInput.bind(this));
 
         this._setSelectOptionFromLink();
         this._updateOptionsUI();

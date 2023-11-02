@@ -68,9 +68,17 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
     wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
     {
-        content: "Add a link to the homepage popup in the URL input",
+        content: "Add a link to the homepage in the URL input",
         trigger: "#o_link_dialog_url_input",
-        run: "text /#Win-%2420"
+        run: "text /"
+    },
+    {
+        content: "Open the page anchor selector",
+        trigger: ".o_link_dialog_page_anchor .dropdown-toggle",
+    },
+    {
+        content: "Click on the popup anchor to add it after the homepage link in the URL input",
+        trigger: ".o_link_dialog_page_anchor we-button:contains('#Win-%2420')",
     },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
