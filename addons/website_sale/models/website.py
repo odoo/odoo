@@ -476,7 +476,7 @@ class Website(models.Model):
             country = self.env['res.country'].search(
                 [('code', '=', request.geoip.country_code)],
                 limit=1,
-            ).id
+            )
             fpos = AccountFiscalPosition._get_fpos_by_region(country.id)
 
         if not fpos:
