@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
@@ -15,6 +15,7 @@ import {
     useGetDefaultLeafDomain,
 } from "@web/core/domain_selector/utils";
 import { treeFromDomain } from "@web/core/tree_editor/condition_tree";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class DomainField extends Component {
     static template = "web.DomainField";
@@ -48,17 +49,18 @@ export class DomainField extends Component {
         });
 
         this.debugDomain = null;
-        onWillStart(() => {
-            this.checkProps(); // not awaited
-            if (this.props.isFoldable) {
-                this.loadFacets();
-            }
-        });
-        onWillUpdateProps((nextProps) => {
+        useRecordObserver(async (record, nextProps) => {
+            nextProps = { ...nextProps, record };
             if (this.debugDomain && this.props.readonly !== nextProps.readonly) {
                 this.debugDomain = null;
             }
-            if (!this.debugDomain) {
+            if (this.debugDomain) {
+                this.state.isValid = await this.quickValidityCheck(nextProps);
+                if (!this.state.isValid) {
+                    this.state.recordCount = 0;
+                    nextProps.record.setInvalidField(nextProps.name);
+                }
+            } else {
                 this.checkProps(nextProps); // not awaited
             }
             if (nextProps.isFoldable) {

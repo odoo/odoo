@@ -349,6 +349,7 @@ QUnit.module("Fields", (hooks) => {
 
             // update display_name to trigger the onchange and reset foo
             await editInput(target, ".o_field_widget[name='display_name'] input", "new value");
+            await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "1 record(s)",
@@ -513,6 +514,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
 
         await clickSave(target);
+        await nextTick();
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "1 record(s)"
@@ -551,7 +553,7 @@ QUnit.module("Fields", (hooks) => {
 
             const webClient = await createWebClient({
                 serverData,
-                mockRPC(route, { method, args }) {
+                mockRPC(route, { method, args, domain }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
                     }
@@ -559,7 +561,7 @@ QUnit.module("Fields", (hooks) => {
                         throw new Error("should not save");
                     }
                     if (route === "/web/domain/validate") {
-                        return false;
+                        return JSON.stringify(domain) === '[["abc","=",1]]';
                     }
                 },
             });
@@ -632,6 +634,9 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, { method, args }) {
                     if (method === "search_count") {
                         assert.step(JSON.stringify(args[0]));
+                    }
+                    if (route === "/web/domain/validate") {
+                        return true;
                     }
                 },
             });
@@ -850,6 +855,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
 
         await editInput(target, ".o_field_widget[name=model_name] input", "partner");
+        await nextTick();
         assert.strictEqual(
             target
                 .querySelector('.o_field_widget[name="display_name"] .o_field_domain_panel')
@@ -1041,14 +1047,6 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="display_name" widget="domain" options="{'model': 'partner'}"/>
                 </form>`,
-                mockRPC: (route, { domain }) => {
-                    if (route === "/web/domain/validate") {
-                        if (domain.toString() === "id,=,1") {
-                            return true;
-                        }
-                        return false;
-                    }
-                },
             });
             await clickSave(target);
             const debugInput = findElement(target, dsHelpers.SELECTORS.debugArea);
@@ -1095,7 +1093,8 @@ QUnit.module("Fields", (hooks) => {
             );
             await editInput(target, dsHelpers.SELECTORS.debugArea, "[['id', '!=', False]]");
             await click(target, "button.o_form_button_save");
-            assert.verifySteps(["/web/domain/validate"]);
+            await nextTick();
+            assert.verifySteps(["/web/domain/validate", "/web/domain/validate"]);
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "6 record(s)"

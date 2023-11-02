@@ -291,6 +291,7 @@ QUnit.module('favorite filter widget', (hooks) => {
         fixture.querySelector('.o_field_mailing_filter input').autocomplete = 'widget';
         const $dropdown = fixture.querySelector('.o_field_mailing_filter .dropdown');
         await testUtils.click($dropdown.lastElementChild, 'li:first-of-type');
+        await testUtils.nextTick();
         assert.equal(fixture.querySelector('.o_domain_show_selection_button').textContent.trim(), '1 record(s)',
             "applied filter should only display single record (only Azure)");
         await testUtils.clickSave(fixture);
