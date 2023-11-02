@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "Discuss Push-to-talk",
+    "description": "Empowers Odoo Discuss with system-wide Push-to-Talk capabilities",
+    "version": "0.0.0.1",
+    "permissions": [
+        "storage"
+    ],
+    "action": {},
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "icons": {
+        "128": "assets/icons/icon_inactive.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "commands": {
+        "ptt-pressed": {
+            "suggested_key": "Alt+Shift+4",
+            "description": "Speak while key is held"
+        },
+        "toggle-voice": {
+            "suggested_key": "Alt+Shift+3",
+            "description": "Toggle voice on/off"
+        }
+    }
+}
