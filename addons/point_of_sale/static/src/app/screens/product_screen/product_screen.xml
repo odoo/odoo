@@ -43,16 +43,54 @@
                     </div>
                 </div>
             </div>
-            <div class="rightpane overflow-auto d-flex flex-grow-1 flex-column bg-300 w-60" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
-                <ProductsWidget />
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+                <div t-att-class="{'d-none': scrollDirection.down and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
+                    <CategorySelector categories="getCategories()" onClick="(id) => this.pos.setSelectedCategoryId(id)" />
+                    <Input tModel="[pos, 'searchProductWord']"
+                        class="'p-2'"
+                        isSmall="ui.isSmall"
+                        placeholder="'Search products...'"
+                        icon="{type: 'fa', value: 'fa-search'}"
+                        debounceMillis="100" />
+                </div>
+                <div t-ref="products" class="overflow-y-auto flex-grow-1">
+                    <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                        <ProductCard t-foreach="productsToDisplay" t-as="product" t-key="product.id"
+                            class="pos.productViewMode"
+                            name="product.display_name"
+                            productId="product.id"
+                            price="product.getFormattedUnitPrice()"
+                            imageUrl="product.getImageUrl()"
+                            onClick="() =>this.pos.addProductToCurrentOrder(product)"
+                            productInfo="true"
+                            onProductInfoClick="() => this.onProductInfoClick(product)"
+                        />
+                    </div>
+                    <div t-else="" class="flex-grow-1 text-center mt-5">
+                        <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                        <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                        <p t-elif="!state.loadingDemo" class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
+                        <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
+                            <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
+                                <div class="o_spinner d-flex flex-column mb-4">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                                    Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
+                        <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
+                    </div>
+                </div>
                 <t t-if="ui.isSmall">
                     <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="state.showProductReminder" t-key="animationKey" >
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
-                    <div class="switchpane d-flex h-12">
-                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ primaryPayButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="() => currentOrder.pay()">
+                    <div class="switchpane d-flex">
+                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => currentOrder.pay()">
                             <span class="fs-1 d-block">Pay</span>
-                            <span><t t-esc="total" /></span>
+                            <span t-esc="total" />
                         </button>
                         <button class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder review-button" t-on-click="switchPane">
                             <span class="fs-1 d-block">Review</span>

@@ -6,18 +6,20 @@ import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
-
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons_popup";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
-
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc_service";
+import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
+import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
+import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
-
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { ProductsWidget } from "@point_of_sale/app/screens/product_screen/product_list/product_list";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
@@ -26,9 +28,11 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     static components = {
         ActionpadWidget,
         Numpad,
-        ProductsWidget,
         Orderline,
         OrderWidget,
+        CategorySelector,
+        Input,
+        ProductCard,
     };
     static numpadActionName = _t("Payment");
 
@@ -42,8 +46,17 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
             showProductReminder: false,
+            previousSearchWord: "",
+            currentOffset: 0,
+            loadingDemo: false,
         });
-        onMounted(this.onMounted);
+        onMounted(() => {
+            this.pos.openCashControl();
+            // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
+            // We don't do this in the `mounted` lifecycle method because it is called before
+            // the callbacks in `onMounted` hook.
+            this.numberBuffer.reset();
+        });
         useExternalListener(window, "click", this.clickEvent.bind(this));
 
         useBarcodeReader({
@@ -56,19 +69,40 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             gs1: this._barcodeGS1Action,
         });
 
-        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
-        // We don't do this in the `mounted` lifecycle method because it is called before
-        // the callbacks in `onMounted` hook.
-        onMounted(() => this.numberBuffer.reset());
         this.numberBuffer.use({
             triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
+        this.scrollDirection = useScrollDirection("products");
     }
-    onMounted() {
-        this.pos.openCashControl();
+    /**
+     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
+     */
+    getCategories() {
+        return [
+            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+            this.pos.selectedCategoryId,
+            ...this.pos.db.get_category_childs_ids(this.pos.selectedCategoryId),
+        ]
+            .map((id) => this.pos.db.category_by_id[id])
+            .map((category) => {
+                const isRootCategory = category.id === this.pos.db.root_category_id;
+                return {
+                    id: category.id,
+                    name: !isRootCategory ? category.name : "",
+                    icon: isRootCategory ? "fa-home fa-2x" : "",
+                    showSeparator:
+                        !isRootCategory &&
+                        [
+                            ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
+                            this.pos.selectedCategoryId,
+                        ].includes(category.id),
+                    imageUrl:
+                        category?.has_image &&
+                        `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`,
+                };
+            });
     }
-
     getNumpadButtons() {
         return [
             { value: "1" },
@@ -409,43 +443,146 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     get showProductReminder() {
         return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
     }
-
-    primaryPayButton() {
-        return !this.currentOrder.is_empty();
-    }
-    // FIXME POSREF this is dead code, check if we need the business logic that's left in here
-    // If we do it should be in the model.
-    async onClickPay() {
-        if (this.pos.get_order().server_id) {
-            try {
-                const isPaid = await this.orm.call("pos.order", "is_already_paid", [
-                    this.pos.get_order().server_id,
-                ]);
-                if (isPaid) {
-                    const searchDetails = {
-                        fieldName: "RECEIPT_NUMBER",
-                        searchTerm: this.pos.get_order().uid,
-                    };
-                    this.pos.showScreen("TicketScreen", {
-                        ui: { filter: "SYNCED", searchDetails },
-                    });
-                    this.notification.add(_t("The order has been already paid."), 3000);
-                    this.pos.removeOrder(this.pos.get_order(), false);
-                    this.pos.add_new_order();
-                    return;
-                }
-            } catch (error) {
-                if (!(error instanceof ConnectionLostError)) {
-                    throw error;
-                }
-                // Reject error in a separate stack to display the offline popup, but continue the flow
-                Promise.reject(error);
-            }
-        }
-        this.currentOrder.pay();
-    }
     switchPane() {
         this.pos.switchPane();
+    }
+    get selectedCategoryId() {
+        return this.pos.selectedCategoryId;
+    }
+    get searchWord() {
+        return this.pos.searchProductWord.trim();
+    }
+    getProductListToNotDisplay() {
+        return [this.pos.config.tip_product_id];
+    }
+    get productsToDisplay() {
+        const { db } = this.pos;
+        let list = [];
+        if (this.searchWord !== "") {
+            list = db.search_product_in_category(this.selectedCategoryId, this.searchWord);
+        } else {
+            list = db.get_product_by_category(this.selectedCategoryId);
+        }
+        list = list.filter((product) => !this.getProductListToNotDisplay().includes(product.id));
+        return list.sort(function (a, b) {
+            return a.display_name.localeCompare(b.display_name);
+        });
+    }
+    async onPressEnterKey() {
+        const { searchProductWord } = this.pos;
+        if (!searchProductWord) {
+            return;
+        }
+        if (this.state.previousSearchWord !== searchProductWord) {
+            this.state.currentOffset = 0;
+        }
+        const result = await this.loadProductFromDB();
+        if (result.length > 0) {
+            this.notification.add(
+                _t('%s product(s) found for "%s".', result.length, searchProductWord),
+                3000
+            );
+        } else {
+            this.notification.add(_t('No more product found for "%s".', searchProductWord), 3000);
+        }
+        if (this.state.previousSearchWord === searchProductWord) {
+            this.state.currentOffset += result.length;
+        } else {
+            this.state.previousSearchWord = searchProductWord;
+            this.state.currentOffset = result.length;
+        }
+    }
+    async loadProductFromDB() {
+        const { searchProductWord } = this.pos;
+        if (!searchProductWord) {
+            return;
+        }
+
+        try {
+            const limit = 30;
+            const ProductIds = await this.orm.call(
+                "product.product",
+                "search",
+                [
+                    [
+                        "&",
+                        ["available_in_pos", "=", true],
+                        "|",
+                        "|",
+                        ["name", "ilike", searchProductWord],
+                        ["default_code", "ilike", searchProductWord],
+                        ["barcode", "ilike", searchProductWord],
+                    ],
+                ],
+                {
+                    offset: this.state.currentOffset,
+                    limit: limit,
+                }
+            );
+            if (ProductIds.length) {
+                await this.pos._addProducts(ProductIds, false);
+            }
+            this.pos.setSelectedCategoryId(0);
+            return ProductIds;
+        } catch (error) {
+            if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {
+                return this.popup.add(OfflineErrorPopup, {
+                    title: _t("Network Error"),
+                    body: _t(
+                        "Product is not loaded. Tried loading the product from the server but there is a network error."
+                    ),
+                });
+            } else {
+                throw error;
+            }
+        }
+    }
+    async loadDemoDataProducts() {
+        try {
+            this.state.loadingDemo = true;
+            const { models_data, successful } = await this.orm.call(
+                "pos.session",
+                "load_product_frontend",
+                [this.pos.pos_session.id]
+            );
+            if (!successful) {
+                this.popup.add(ErrorPopup, {
+                    title: _t("Demo products are no longer available"),
+                    body: _t(
+                        "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
+                    ),
+                });
+                // But the received models_data is still used to update the current session.
+            }
+            if (!models_data) {
+                this._showLoadDemoDataMissingDataError("models_data");
+                return;
+            }
+            for (const dataName of ["pos.category", "product.product", "pos.order"]) {
+                if (!models_data[dataName]) {
+                    this._showLoadDemoDataMissingDataError(dataName);
+                    return;
+                }
+            }
+            this.pos.updateModelsData(models_data);
+        } finally {
+            this.state.loadingDemo = false;
+        }
+    }
+    _showLoadDemoDataMissingDataError(missingData) {
+        console.error(
+            "Missing '",
+            missingData,
+            "' in pos.session:load_product_frontend server answer."
+        );
+    }
+
+    createNewProducts() {
+        window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
+    }
+    async onProductInfoClick(product) {
+        const info = await this.pos.getProductInfo(product, 1);
+        this.popup.add(ProductInfoPopup, { info: info, product: product });
     }
 }
 
