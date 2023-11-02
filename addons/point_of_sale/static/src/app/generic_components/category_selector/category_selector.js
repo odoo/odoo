@@ -20,18 +20,14 @@ export class CategorySelector extends Component {
                 id: Number,
                 name: { type: String, optional: true },
                 icon: { type: String, optional: true },
-                separator: { type: String, optional: true },
                 showSeparator: { type: Boolean, optional: true },
                 imageUrl: { type: String, optional: true },
             },
         },
         class: { type: String, optional: true },
-        showImage: { type: Boolean, optional: true },
         onClick: { type: Function },
     };
     static defaultProps = {
         class: "",
-        showImage: true,
-        showSeparator: false,
     };
 }

@@ -1104,9 +1104,6 @@ class PosOrder(models.Model):
         mail = self.env['mail.mail'].sudo().create(self._prepare_mail_values(name, client, ticket))
         mail.send()
 
-    def is_already_paid(self):
-        return self.state == "paid"
-
     @api.model
     def remove_from_ui(self, server_ids):
         """ Remove orders from the frontend PoS application
