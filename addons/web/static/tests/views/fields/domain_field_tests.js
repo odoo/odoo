@@ -1212,4 +1212,40 @@ QUnit.module("Fields", (hooks) => {
             '[("id", "=", 1)]'
         );
     });
+
+    QUnit.test(
+        "foldable domain field unfolds and hides caret when domain is invalid",
+        async function (assert) {
+            serverData.models.partner.records[0].foo = "[";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type', 'foldable': true}" />
+                        </group>
+                    </sheet>
+                </form>`,
+            });
+            assert.strictEqual(
+                target.querySelector(".o_field_domain span").textContent,
+                " Invalid domain "
+            );
+            assert.containsNone(target, ".fa-caret-down");
+            assert.strictEqual(
+                target.querySelector(".o_domain_selector_row").textContent,
+                " This domain is not supported. Reset domain"
+            );
+            await click(target, ".o_domain_selector_row button");
+            assert.strictEqual(
+                target.querySelector(".o_field_domain span").textContent,
+                "Match all records"
+            );
+        }
+    );
 });
