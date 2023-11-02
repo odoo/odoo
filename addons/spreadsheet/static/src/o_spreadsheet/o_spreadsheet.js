@@ -7123,7 +7123,7 @@
         });
         return {
             chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+            background: getters.getStyleOfSingleCellChart(chart.background, dataRange).background,
         };
     }
 
@@ -7807,7 +7807,7 @@
             };
             baselineCell = getters.getEvaluatedCell(baselinePosition);
         }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        const { background, fontColor } = getters.getStyleOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
@@ -7815,7 +7815,7 @@
             baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
-            fontColor: chartFontColor(background),
+            fontColor,
             background,
             baselineStyle: chart.baselineMode !== "percentage" && baseline
                 ? getters.getCellStyle({
@@ -32267,28 +32267,29 @@
             return this.charts[figureId];
         }
         /**
-         * Get the background color of a chart based on the color of the first cell of the main range
-         * of the chart. In order of priority, it will return :
-         *
-         *  - the chart background color if one is defined
-         *  - the fill color of the cell if one is defined
-         *  - the fill color of the cell from conditional formats if one is defined
-         *  - the default chart color if no other color is defined
+         * Get the background and textColor of a chart based on the color of the first cell of the main range of the chart.
          */
-        getBackgroundOfSingleCellChart(chartBackground, mainRange) {
+        getStyleOfSingleCellChart(chartBackground, mainRange) {
             if (chartBackground)
-                return chartBackground;
+                return { background: chartBackground, fontColor: chartFontColor(chartBackground) };
             if (!mainRange) {
-                return BACKGROUND_CHART_COLOR;
+                return {
+                    background: BACKGROUND_CHART_COLOR,
+                    fontColor: chartFontColor(BACKGROUND_CHART_COLOR),
+                };
             }
             const col = mainRange.zone.left;
             const row = mainRange.zone.top;
             const sheetId = mainRange.sheetId;
             const style = this.getters.getCellComputedStyle({ sheetId, col, row });
-            return style.fillColor || BACKGROUND_CHART_COLOR;
+            const background = style.fillColor || BACKGROUND_CHART_COLOR;
+            return {
+                background,
+                fontColor: style.textColor || chartFontColor(background),
+            };
         }
     }
-    EvaluationChartPlugin.getters = ["getChartRuntime", "getBackgroundOfSingleCellChart"];
+    EvaluationChartPlugin.getters = ["getChartRuntime", "getStyleOfSingleCellChart"];
 
     // -----------------------------------------------------------------------------
     // Constants
@@ -45533,9 +45534,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.20';
-    __info__.date = '2023-10-25T10:10:10.061Z';
-    __info__.hash = '25a402d';
+    __info__.version = '16.2.21';
+    __info__.date = '2023-11-02T09:46:21.826Z';
+    __info__.hash = 'cc30e85';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
