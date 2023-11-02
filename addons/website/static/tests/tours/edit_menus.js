@@ -116,6 +116,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Click on the 'Modnar' link",
         trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
