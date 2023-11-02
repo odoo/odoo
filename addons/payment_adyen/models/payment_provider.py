@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 import re
-import json
 import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import const
 
 _logger = logging.getLogger(__name__)
@@ -144,12 +145,14 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS - GETTERS ===#
 
-    def _adyen_get_inline_form_values(self, pm_code):
+    def _adyen_get_inline_form_values(self, pm_code, amount=None, currency=None):
         """ Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 
         :param str pm_code: The code of the payment method whose inline form to render.
+        :param float amount: The transaction amount.
+        :param res.currency currency: The transaction currency.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
@@ -158,5 +161,25 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             'client_key': self.adyen_client_key,
             'adyen_pm_code': const.PAYMENT_METHODS_MAPPING.get(pm_code, pm_code),
+            'formatted_amount': self._adyen_get_formatted_amount(amount, currency),
         }
         return json.dumps(inline_form_values)
+
+    def _adyen_get_formatted_amount(self, amount=None, currency=None):
+        """ Return the amount in the format required by Adyen.
+
+        The formatted amount is a dict with keys 'value' and 'currency'.
+
+        :param float amount: The transaction amount.
+        :param res.currency currency: The transaction currency.
+        :return: The Adyen-formatted amount.
+        :rtype: dict
+        """
+        currency_code = currency and currency.name
+        converted_amount = amount and currency_code and payment_utils.to_minor_currency_units(
+            amount, currency, const.CURRENCY_DECIMALS.get(currency_code)
+        )
+        return {
+            'value': converted_amount,
+            'currency': currency_code,
+        }
