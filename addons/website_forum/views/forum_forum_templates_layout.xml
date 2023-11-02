@@ -273,7 +273,7 @@
         <a t-attf-href="/forum/user/#{ uid }?forum_id=#{ forum.id if forum else '' }&amp;forum_origin=#{ request.httprequest.path }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
-            <img class="o_wforum_avatar rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
+            <img class="o_wforum_avatar rounded-circle o_object_fit_cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <h6 class="mb-1" t-out="user_id.name"/>
                 <small class="text-reset opacity-50"><t t-out="user_id.karma"/> XP</small>
