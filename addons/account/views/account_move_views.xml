@@ -610,6 +610,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1" js_class="account_documents_kanban">
+                    <field name="move_type" invisible="1"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="ref"/>
