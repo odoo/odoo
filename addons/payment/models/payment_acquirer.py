@@ -346,9 +346,10 @@ class PaymentAcquirer(models.Model):
             if external_id \
                and not external_id.startswith('__export__') \
                and not self._context.get(MODULE_UNINSTALL_FLAG):
-                raise UserError(
-                    _("You cannot delete the payment acquirer %s; archive it instead.", acquirer.name)
-                )
+                raise UserError(_(
+                    "You cannot delete the payment acquirer %s; disable it or uninstall it instead.",
+                    acquirer.name,
+                ))
         return super().unlink()
 
     def get_acquirer_extra_fees(self, amount, currency_id, country_id):
