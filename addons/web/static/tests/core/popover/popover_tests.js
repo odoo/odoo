@@ -4,7 +4,11 @@ import { Popover } from "@web/core/popover/popover";
 import { usePosition } from "@web/core/position_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { makeTestEnv } from "../../helpers/mock_env";
+import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 
+let env;
 let fixture;
 let popoverTarget;
 
@@ -19,11 +23,15 @@ QUnit.module("Popover", {
         registerCleanup(() => {
             popoverTarget.remove();
         });
+
+        registry.category("services").add("ui", uiService);
+        env = await makeTestEnv();
     },
 });
 
 QUnit.test("popover can have custom class", async (assert) => {
     await mount(Popover, fixture, {
+        env,
         props: { target: popoverTarget, class: "custom-popover" },
     });
 
@@ -32,6 +40,7 @@ QUnit.test("popover can have custom class", async (assert) => {
 
 QUnit.test("popover can have more than one custom class", async (assert) => {
     await mount(Popover, fixture, {
+        env,
         props: { target: popoverTarget, class: "custom-popover popover-custom" },
     });
 
@@ -46,6 +55,7 @@ QUnit.test("popover is rendered nearby target (default)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget },
     });
 });
@@ -58,6 +68,7 @@ QUnit.test("popover is rendered nearby target (bottom)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "bottom" },
     });
 });
@@ -70,6 +81,7 @@ QUnit.test("popover is rendered nearby target (top)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "top" },
     });
 });
@@ -82,6 +94,7 @@ QUnit.test("popover is rendered nearby target (left)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "left" },
     });
 });
@@ -94,6 +107,7 @@ QUnit.test("popover is rendered nearby target (right)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "right" },
     });
 });
@@ -106,6 +120,7 @@ QUnit.test("popover is rendered nearby target (bottom-start)", async (assert) =>
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "bottom-start" },
     });
 });
@@ -118,6 +133,7 @@ QUnit.test("popover is rendered nearby target (bottom-middle)", async (assert) =
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "bottom-middle" },
     });
 });
@@ -130,6 +146,7 @@ QUnit.test("popover is rendered nearby target (bottom-end)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "bottom-end" },
     });
 });
@@ -142,6 +159,7 @@ QUnit.test("popover is rendered nearby target (bottom-fit)", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget, position: "bottom-fit" },
     });
 });
@@ -190,7 +208,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
         }
     };
 
-    await mount(TestPopover, container, { props: { target: popoverTarget } });
+    await mount(TestPopover, container, { env, props: { target: popoverTarget } });
     const popover = container.querySelector("[role=tooltip]");
     const arrow = popover.firstElementChild;
 
@@ -234,6 +252,7 @@ QUnit.test("within iframe", async (assert) => {
 
     popoverTarget = iframe.contentDocument.getElementById("target");
     await mount(TestPopover, fixture, {
+        env,
         props: { target: popoverTarget },
     });
     assert.verifySteps(["bottom"]);
@@ -287,6 +306,7 @@ QUnit.test("popover fixed position", async (assert) => {
         }
     };
     await mount(TestPopover, fixture, {
+        env,
         props: { target: container, position: "bottom-fit", fixedPosition: true },
     });
 
