@@ -674,4 +674,49 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             "The video should be embedded as an iframe"
         );
     });
+
+    QUnit.module("Link");
+
+    QUnit.test("link preview in Link Dialog", async (assert) => {
+        assert.expect(4);
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "<p class='test_target'><a href='/test'>This website</a></p>",
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+
+        const p = document.querySelector(".test_target");
+        // Select link label to open the floating toolbar.
+        setSelection(p, 0, p, 1);
+        await nextTick();
+        // Click on create-link button to open the Link Dialog.
+        document.querySelector("#toolbar #create-link").click();
+        await nextTick();
+
+        const labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
+        const linkPreview = document.querySelector(".modal a#link-preview");
+        assert.strictEqual(labelInputField.value, 'This website',
+            "The label input field should match the link's content");
+        assert.strictEqual(linkPreview.innerText, 'This website',
+            "Link label in preview should match label input field");
+
+        // Edit link label.
+        await editInput(labelInputField, null, "New label");
+        assert.strictEqual(linkPreview.innerText, "New label",
+            "Preview should be updated on label input field change");
+        // Click "Save".
+        await click(document, ".modal .modal-footer button.btn-primary");
+        assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
+            "The link's label should be updated");
+    });
 });
