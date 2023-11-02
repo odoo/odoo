@@ -36,18 +36,6 @@ export class OrdersHistoryPage extends Component {
             : line.price_subtotal;
     }
 
-    clickOnLine(order, line) {
-        this.selfOrder.editedLine = line;
-        if (order.state === "draft") {
-            this.selfOrder.editedOrder = order;
-            this.router.navigate("product", { id: line.product_id });
-        } else {
-            this.selfOrder.notification.add(_t("You cannot edit an posted order!"), {
-                type: "danger",
-            });
-        }
-    }
-
     getOrderState(state) {
         return state === "draft" ? _t("Current") : state;
     }
