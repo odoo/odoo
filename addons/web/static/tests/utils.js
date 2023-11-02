@@ -226,6 +226,7 @@ if (window.QUnit) {
  *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
  *  to change soon, by checking with a preceding contains that all the expected elements are in DOM.
  * @property {boolean} [setFocus] if provided, focuses the first found element.
+ * @property {boolean} [shadowRoot] if provided, targets the shadowRoot of the found elements.
  * @property {number|"bottom"} [setScroll] if provided, sets the scrollTop on the first found
  *  element.
  * @property {HTMLElement} [target=getFixture()]
@@ -521,7 +522,9 @@ class Contains {
         if (!target) {
             return;
         }
-        const baseRes = [...target.querySelectorAll(this.selector)];
+        const baseRes = [...target.querySelectorAll(this.selector)]
+            .map((el) => (this.options.shadowRoot ? el.shadowRoot : el))
+            .filter((el) => el);
         /** @type {Contains[]} */
         this.childrenContains = [];
         const res = baseRes.filter((el, currentIndex) => {
