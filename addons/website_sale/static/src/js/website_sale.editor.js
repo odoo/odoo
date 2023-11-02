@@ -825,3 +825,31 @@ options.registry.ReplaceMedia.include({
         return this._super(...arguments);
     }
 });
+
+options.registry.WebsiteSaleProductTags = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
+    /**
+     * @override
+     */
+    async willStart() {
+        this.productTemplateId = parseInt(this.$target.parentsUntil('#product_details')
+            .find('[data-oe-model="product.template"]').data('oe-id'));
+        this.productTagId = parseInt(this.$target.parent().find('[data-oe-model="product.tag"]').data('oe-id'));
+        return this._super(...arguments);
+    },
+
+    /**
+     * Change sequence of product page tags
+     */
+    async setPosition(previewMode, widgetValue, params) {
+        this.rpc('/shop/product/resequence-tag', {
+            product_template_id: this.productTemplateId,
+            product_tag_id: this.productTagId,
+            move: widgetValue,
+        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: 'o_product_tags'}));
+    },
+});

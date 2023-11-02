@@ -1153,12 +1153,12 @@
             <t t-foreach="all_product_tags" t-as="tag">
                 <t t-if="tag.visible_on_ecommerce">
                     <span t-if="tag.image"
-                          class="order-0"
+                          class="o_product_tag"
                           t-field="tag.image"
                           t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
                     />
-                    <span t-else="" class="position-relative order-1 py-1 px-2">
-                        <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                    <span t-else="" class="position-relative py-1 px-2">
+                        <span class="o_product_tag position-absolute top-0 start-0 w-100 h-100 rounded"
                               t-attf-style="background-color: #{tag.color}; opacity: .2;"
                         />
                         <span class="text-nowrap small"

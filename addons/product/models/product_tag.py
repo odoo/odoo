@@ -7,6 +7,7 @@ from odoo.osv import expression
 class ProductTag(models.Model):
     _name = 'product.tag'
     _description = 'Product Tag'
+    _order = 'sequence, name'
 
     def _get_default_template_id(self):
         return self.env['product.template'].browse(self.env.context.get('product_template_id'))
@@ -15,6 +16,7 @@ class ProductTag(models.Model):
         return self.env['product.product'].browse(self.env.context.get('product_variant_id'))
 
     name = fields.Char(string="Name", required=True, translate=True)
+    sequence = fields.Integer(string='Sequence')
     color = fields.Char(string="Color", default='#3C3C3C')
     product_template_ids = fields.Many2many(
         string="Product Templates",

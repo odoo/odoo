@@ -269,6 +269,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
+    @staticmethod
+    def _get_moved_index(items, index, move):
+        if move == 'first':
+            return 0
+        elif move == 'left':
+            return max(0, index - 1)
+        elif move == 'right':
+            return min(len(items) - 1, index + 1)
+        elif move == 'last':
+            return len(items) - 1
+        raise NotFound()
+
     @http.route([
         '/shop',
         '/shop/page/<int:page>',
@@ -607,13 +619,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise ValidationError(_("Invalid image"))
 
         image_idx = product_images.index(image_to_resequence)
-        new_image_idx = 0
-        if move == 'left':
-            new_image_idx = max(0, image_idx - 1)
-        elif move == 'right':
-            new_image_idx = min(len(product_images) - 1, image_idx + 1)
-        elif move == 'last':
-            new_image_idx = len(product_images) - 1
+        new_image_idx = self._get_moved_index(product_images, image_idx, move)
 
         # no-op resequences
         if new_image_idx == image_idx:
@@ -640,6 +646,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
             other_image._onchange_video_url()
         if hasattr(image_to_resequence, 'video_url'):
             image_to_resequence._onchange_video_url()
+
+    @http.route(['/shop/product/resequence-tag'], type='json', auth='user', website=True)
+    def resequence_product_tag(self, product_template_id, product_tag_id, move):
+        if (
+                not request.env.user.has_group('website.group_website_restricted_editor')
+                or move not in ['first', 'left', 'right', 'last']
+        ):
+            raise NotFound()
+
+        product_template = request.env['product.template'].browse(product_template_id)
+        product_tag = request.env['product.tag'].browse(product_tag_id)
+
+        if not product_template:
+            raise ValidationError(_("Product not found"))
+
+        product_tags = list(product_template.product_tag_ids)
+        if product_tag not in product_tags:
+            raise ValidationError(_("Product tag not found"))
+
+        tag_index = product_tags.index(product_tag)
+        new_tag_index = self._get_moved_index(product_tags, tag_index, move)
+        if new_tag_index == tag_index:
+            return
+
+        tag_sequence = product_tag.sequence
+        product_tag.sequence = product_tags[new_tag_index].sequence
+        product_tags[new_tag_index].sequence = tag_sequence
+
 
     @http.route(['/shop/product/is_add_to_cart_allowed'], type='json', auth="public", website=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
