@@ -95,6 +95,7 @@ class MassMailController(http.Controller):
             render_values
         )
 
+<<<<<<< HEAD
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
@@ -105,7 +106,27 @@ class MassMailController(http.Controller):
             )
         except NotFound as e:  # avoid leaking ID existence
             raise Unauthorized() from e
+||||||| parent of b0740d31ec3b (temp)
+                contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
+                subscription_list_ids = contacts.mapped('subscription_list_ids').filtered('active')
+                # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
+                # assume that the user is not opt_out on both
+                # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
+                opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
+                opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
+                opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
+=======
+                contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
+                subscription_list_ids = contacts.mapped('subscription_list_ids')
+                # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
+                # assume that the user is not opt_out on both
+                # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
+                opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
+                opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
+                opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
+>>>>>>> b0740d31ec3b (temp)
 
+<<<<<<< HEAD
         if mailing_sudo.mailing_on_mailing_list:
             return self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
         return self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email_found, hash_token_found)
@@ -279,6 +300,35 @@ class MassMailController(http.Controller):
         if feedback:
             if not request.env.user._is_public():
                 author_name = f'{request.env.user.name} ({email_found})'
+||||||| parent of b0740d31ec3b (temp)
+                unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
+                list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
+                unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
+                return request.render('mass_mailing.page_unsubscribe', {
+                    'contacts': contacts,
+                    'list_ids': list_ids,
+                    'opt_out_list_ids': opt_out_list_ids,
+                    'unsubscribed_list': unsubscribed_list,
+                    'email': email,
+                    'mailing_id': mailing_id,
+                    'res_id': res_id,
+                    'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
+                })
+=======
+                unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
+                list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids).filtered('active')
+                unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
+                return request.render('mass_mailing.page_unsubscribe', {
+                    'contacts': contacts,
+                    'list_ids': list_ids,
+                    'opt_out_list_ids': opt_out_list_ids,
+                    'unsubscribed_list': unsubscribed_list,
+                    'email': email,
+                    'mailing_id': mailing_id,
+                    'res_id': res_id,
+                    'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
+                })
+>>>>>>> b0740d31ec3b (temp)
             else:
                 author_name = email_found
             message = Markup("<p>%s<br />%s</p>") % (
