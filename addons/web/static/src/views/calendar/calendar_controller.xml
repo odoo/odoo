@@ -32,7 +32,7 @@
                                 t-on-click.stop="() => this.setDate('next')"
                             ><i class="oi oi-arrow-right"/></button>
                         </div>
-                        <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility"/>
+                        <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility" dropdownClass="'order-3 order-lg-0'"/>
                         <button
                             class="btn btn-secondary o_calendar_button_today order-2 order-lg-0 ms-auto ms-lg-0"
                             t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
