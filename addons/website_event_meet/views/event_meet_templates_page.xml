@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_main" name="Meeting Room: Main Content">
-    <div t-att-class="'col-12 o_wemeet_room_main o_wevent_theme_bg_base border mt-3 p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+    <div t-att-class="'col-12 o_wemeet_room_main border mt-3 p-0 %s' % ('col-lg-9 col-xl-10' if option_widescreen else 'col-lg-8 col-xl-9')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
@@ -86,13 +86,13 @@
         </div>
         <!-- ROOM DESCRIPTION -->
         <div class="mx-3">
-            <div class="h5 my-3" t-out="meeting_room.name"/>
+            <h5 class="mt-3" t-out="meeting_room.name"/>
             <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
-                A chat among <t t-out="meeting_room.room_participant_count"/> <span class="fw-bold" t-out="meeting_room.target_audience"/>
+                A chat among <t t-out="meeting_room.room_participant_count"/> <span t-out="meeting_room.target_audience"/>
             </div>
         </div>
         <hr class="my-0"/>
-        <div t-field="meeting_room.summary" class="my-2 mx-3 oe_no_empty"/>
+        <div t-field="meeting_room.summary" class="my-4 mx-3 oe_no_empty"/>
      </div>
 </template>
 
@@ -101,27 +101,28 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_aside" name="Meeting Room: Aside">
-    <div t-att-class="'col-12 mt-3 ps-0 pe-0 border o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'o_wevent_online_page_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-3 col-xl-2' if option_widescreen else 'col-lg-4 col-xl-3')">
         <div class="o_wevent_online_page_aside_content">
             <div class="d-flex align-items-center justify-content-between me-2">
-                <span class="h5 m-3">Other Rooms</span>
+                <h5 class="m-3">Other Rooms</h5>
                 <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="oi oi-chevron-down d-lg-none"/>
                 </a>
             </div>
-            <ul id="collapse_meet_room_aside" class="list-unstyled collapse d-lg-block mb-0">
-                <li t-foreach="meeting_rooms_other" t-as="meeting_room_other">
-                    <a class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
+            <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-lg-block border-top">
+                <li class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
+                    <a class="text-decoration-none text-dark"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">
-                            <div class="text-truncate" t-out="meeting_room_other.name"/>
+                            <div class="text-truncate fw-bold" t-out="meeting_room_other.name"/>
                             <span class="text-muted" t-out="meeting_room_other.summary"></span>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="text-muted">
-                                    <b>&amp;#9900;&amp;nbsp;</b>
-                                    <small><t t-out="meeting_room_other.room_participant_count"/> <t t-out="meeting_room_other.target_audience"/></small>
-                                </div>
-                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-out="meeting_room_other.room_lang_id.name"/></small>
+                            <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-start align-items-xl-center">
+                                <p class="d-flex justify-content-between align-items-center gap-2 m-0 text-muted small">
+                                    <i class="fa fa-user"></i>
+                                    <t t-out="meeting_room_other.room_participant_count"/>
+                                    <t t-out="meeting_room_other.target_audience"/>
+                                </p>
+                                <small t-if="meeting_room_other.room_lang_id" class="badge text-bg-secondary"> <t t-out="meeting_room_other.room_lang_id.name"/></small>
                             </div>
                         </div>
                     </a>

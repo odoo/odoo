@@ -11,8 +11,12 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         trigger: '.o_wevent_events_list a:contains("Last ticket test")',
     },
     {
-        content: "Show available Tickets",
+        content: "Open Registration Page",
         trigger: '.btn-primary:contains("Register")',
+    },
+    {
+        content: "Open the register modal",
+        trigger: 'button:contains("Register")',
     },
     {
         content: "Select 2 units of `VIP` ticket type",

@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div t-else="" class="o_wevent_online o_weagenda_index">
+        <div t-else="" class="o_wevent_online o_weagenda_index container">
             <!-- Options -->
             <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.agenda_topbar_wishlist')"/>
             <!-- Topbar -->
@@ -29,10 +29,8 @@
             <!-- Drag/Drop Area -->
             <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
             <!-- Content -->
-            <div class="container-fluid">
-                <div class="row mb-5">
-                    <t t-call="website_event_track.agenda_main"/>
-                </div>
+            <div class="row mb-3">
+                <t t-call="website_event_track.agenda_main"/>
             </div>
             <!-- Drag/Drop Area -->
             <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
@@ -46,18 +44,18 @@
 
 <!-- Main topbar -->
 <template id="agenda_topbar" name="Agenda Tools">
-    <nav class="navbar navbar-light border-top shadow-sm d-print-none">
-        <div class="container-fluid">
-            <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
-                <ul class="o_weagenda_topbar_filters o_wevent_index_topbar_filters nav">
-                </ul>
-                <div class="d-flex ps-sm-3 pe-0">
-                    <label class="invisible text-muted me-2" id="search_summary"><span id="search_number" class="me-1">0</span>Results</label>
-                    <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
+    <div class="o_weagenda_topbar_filters o_wevent_index_topbar_filters d-print-none d-flex flex-wrap align-items-center justify-content-end gap-2 w-100 mb-3">
+        <h3 class="my-0 me-auto pe-sm-4">Agenda</h3>
+        <label class="invisible text-muted me-2" id="search_summary"><span id="search_number" class="me-1">0</span>Results</label>
+        <div class="o_wevent_search d-flex w-100 w-lg-auto">
+            <div class="input-group">
+                <input type="text" class="form-control search-query oe_search_box border-0 bg-light" placeholder="Search Tracks" id="event_track_search"/>
+                <div class="btn oe_search_button btn-light">
+                    <i class="oi oi-search"/>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
 </template>
 
 <!-- Option: Tracks display: optional favorites -->
@@ -65,7 +63,7 @@
     inherit_id="website_event_track.agenda_topbar"
     name="Allow Wishlists"
     active="True">
-    <xpath expr="//ul[hasclass('o_weagenda_topbar_filters')]" position="inside">
+    <xpath expr="//div[hasclass('o_weagenda_topbar_filters')]" position="inside">
     </xpath>
 </template>
 
@@ -77,18 +75,12 @@
 <template id="agenda_main" name="Tracks: Main Display">
     <section t-foreach="days" t-as="day" class="col-12">
         <!-- DAY HEADER -->
-        <div class="o_we_track_day_header mt-3 w-100 d-flex justify-content-between align-items-center">
-            <div class="d-flex">
-                <span class="h2 m-0 fw-bold" t-out="day"
-                    t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
-                <div class="d-flex flex-column ms-2">
-                    <span class="fw-bold" t-out="day"
-                        t-options="{'widget': 'date', 'format': 'MMMM'}"/>
-                    <span class="fw-bold" t-out="day"
-                        t-options="{'widget': 'date', 'format': 'YYYY'}"/>
-                </div>
-                <div class="flex-column align-self-center ms-2">
-                    <span class="small fw-light">(<t t-out="event.date_tz"/>)</span>
+        <div class="o_we_track_day_header d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex flex-column flex-grow-1">
+                <span class="m-0 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'EEEE '}"/>
+                <div class="d-flex align-items-center justify-content-start">
+                    <span class="h3 mb-0 fw-bold" t-out="day" t-options="{'widget': 'date', 'format': 'dd MMMM YYYY'}"/>
+                    <span class="small ms-2 fw-light">(<t t-out="event.date_tz"/>)</span>
                 </div>
             </div>
             <small class="float-end text-muted align-self-end"><t t-out="tracks_by_days[day]"/> tracks</small>
@@ -173,7 +165,7 @@
                    class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
             <span t-if="option_track_wishlist">
                 <t t-call="website_event_track.track_widget_reminder">
-                    <t t-set="reminder_light" t-value="True"/>
+                    <t t-set="reminder_light" t-value="False"/>
                     <t t-set="reminder_small" t-value="True"/>
                     <t t-set="light_theme" t-value="False"/>
                 </t>

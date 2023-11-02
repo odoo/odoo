@@ -25,7 +25,7 @@
         trigger: '.o_wbooth_booths div:contains("OpenWood Demonstrator 2") input',
     }, {
         content: "Validate attendees details",
-        trigger: 'button:contains("Book my Booths")',
+        trigger: 'button:enabled:contains("Book my Booth(s)")',
         run: 'click',
     }, {
         content: "Fill booth details",
