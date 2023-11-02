@@ -18,7 +18,9 @@ import {
     patchWithCleanup,
 } from "../helpers/utils";
 import { Dialog } from "../../src/core/dialog/dialog";
-
+import { popoverService } from "@web/core/popover/popover_service";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useAutofocus } from "@web/core/utils/hooks";
 import { Component, onMounted, xml } from "@odoo/owl";
 
 let env;
@@ -141,6 +143,44 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
     dialogModal = target.querySelector(".o_dialog:not(.o_inactive_modal) .modal");
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
+});
+
+QUnit.test("a popover with an autofocus child can become the UI active element", async (assert) => {
+    class TestPopover extends Component {
+        static template = xml`<input type="text" t-ref="autofocus" />`;
+        setup() {
+            useAutofocus();
+        }
+    }
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog title="props.title">
+            <button class="btn test" t-on-click="showPopover">show</button>
+        </Dialog>`;
+        setup() {
+            this.popover = usePopover(TestPopover);
+        }
+        showPopover(event) {
+            this.popover.open(event.target, {});
+        }
+    }
+    serviceRegistry.add("popover", popoverService);
+    await nextTick(); // wait for the popover service to be started
+    await mount(PseudoWebClient, target, { env });
+    assert.strictEqual(env.services.ui.activeElement, document);
+    assert.strictEqual(document.activeElement, document.body);
+
+    env.services.dialog.add(CustomDialog, { title: "Hello" });
+    await nextTick();
+    const dialogModal = target.querySelector(".o_dialog:not(.o_inactive_modal) .modal");
+    assert.strictEqual(env.services.ui.activeElement, dialogModal);
+    assert.strictEqual(document.activeElement, dialogModal.querySelector(".btn.o-default-button"));
+
+    await click(dialogModal, ".btn.test");
+    const popover = target.querySelector(".o_popover");
+    const input = popover.querySelector("input");
+    assert.strictEqual(env.services.ui.activeElement, popover);
+    assert.strictEqual(document.activeElement, input);
 });
 
 QUnit.test("Interactions between multiple dialogs", async (assert) => {
