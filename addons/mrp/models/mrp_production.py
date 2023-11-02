@@ -1518,11 +1518,13 @@ class MrpProduction(models.Model):
             for move in order.move_raw_ids:
                 quantity = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
                 rounding = move.product_id.uom_id.rounding
-                if not (move.product_id in expected_qty_by_product or float_is_zero(quantity, precision_rounding=rounding)) or not move.picked:
-                    issues.append((order, move.product_id, quantity, 0.0))
+                # extra lines with non-zero qty picked
+                if move.product_id not in expected_qty_by_product and move.picked and not float_is_zero(quantity, precision_rounding=rounding):
+                    issues.append((order, move.product_id, 0.0, quantity))
                     continue
-                done_qty_by_product[move.product_id] += quantity
+                done_qty_by_product[move.product_id] += quantity if move.picked else 0.0
 
+            # origin lines from bom with different qty
             for product, qty_to_consume in expected_qty_by_product.items():
                 quantity = done_qty_by_product.get(product, 0.0)
                 if float_compare(qty_to_consume, quantity, precision_rounding=product.uom_id.rounding) != 0:
