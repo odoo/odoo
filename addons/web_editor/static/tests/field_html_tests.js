@@ -547,6 +547,60 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('link dialog - test preview', async function (assert) {
+            assert.expect(4);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 3,
+            });
+            let $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">This website</a></p>',
+                "should have rendered a div with correct content in readonly");
+
+            const promise = new Promise((resolve) => _formResolveTestPromise = resolve);
+            await testUtils.form.clickEdit(form);
+            await promise;
+            $field = form.$('.oe_form_field[name="body"]');
+            // the dialog load some xml assets
+            const defLinkDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(LinkDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+                }
+            });
+
+            let pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            const $labelInputField = $('input#o_link_dialog_label_input');
+            const $linkPreview = $('a#link-preview');
+            assert.strictEqual($labelInputField.val().replace(/\u200B/g, ''), 'This website',
+                "The label input field should match the link's content");
+            assert.strictEqual($linkPreview.text().replace(/\u200B/g, ''), 'This website',
+                "Link label in preview should match label input field");
+            await testUtils.fields.editAndTrigger($labelInputField, "New label", ['input']);
+            await testUtils.nextTick();
+            assert.strictEqual($linkPreview.text(), "New label",
+                "Preview should be updated on label input field change");
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+
+            await testUtils.form.clickSave(form);
+
+            testUtils.mock.unpatch(LinkDialog);
+            form.destroy();
+        });
+
         QUnit.test('link dialog - external link - new', async function (assert) {
             assert.expect(2);
 
