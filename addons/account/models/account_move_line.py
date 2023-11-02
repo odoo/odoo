@@ -447,8 +447,9 @@ class AccountMoveLine(models.Model):
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
         if res['views'].get('list') and self.env['ir.ui.view'].browse(res['views']['list']['id']).name == "account.move.line.payment.tree":
-            # We dont want any additionnal action in the "account.move.line.payment.tree" view toolbar
-            res['views']['list']['toolbar']['action'] = []
+            if toolbar := res['views']['list'].get('toolbar'):
+                # We dont want any additionnal action in the "account.move.line.payment.tree" view toolbar
+                toolbar['action'] = []
         return res
 
     # -------------------------------------------------------------------------
