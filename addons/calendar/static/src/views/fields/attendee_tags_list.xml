@@ -14,5 +14,9 @@
                 <div t-if="tag.status &amp;&amp; tag.statusIcon" t-attf-class="attendee_tag_status o_attendee_status_{{tag.status}} fa fa-fw {{tag.statusIcon}} rounded-circle"/>
             </div>
         </xpath>
+
+        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
+            <attribute name="class" remove="text-center" separator=" "/>
+        </xpath>
     </t>
 </templates>
