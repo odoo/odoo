@@ -172,7 +172,7 @@ class AccountChartTemplate(models.AbstractModel):
         reload_template = template_code == company.chart_template
         company.chart_template = template_code
 
-        if not reload_template and (not company._existing_accounting() or self.env.ref('base.module_account').demo):
+        if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
                     self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
@@ -376,7 +376,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Set the currency to the fiscal country's currency
         vals = {key: val for key, val in template_data.items() if filter_properties(key)}
-        if not company._existing_accounting():
+        if not company.root_id._existing_accounting():
             if company.parent_id:
                 vals['currency_id'] = company.parent_id.currency_id.id
             else:
