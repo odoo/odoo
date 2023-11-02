@@ -607,7 +607,10 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for field in self:
-            safe_eval(field.domain or '[]')
+            try:
+                literal_eval(field.domain or '[]')
+            except (ValueError, TypeError, SyntaxError):
+                ValidationError(_("Invalid literal domain: %r", field.domain))
 
     @api.constrains('name')
     def _check_name(self):
@@ -1232,7 +1235,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
-            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+            attrs['domain'] = literal_eval(field_data['domain'] or '[]')
             attrs['group_expand'] = '_read_group_expand_full' if field_data['group_expand'] else None
         elif field_data['ttype'] == 'one2many':
             if not self.pool.loaded and not (
@@ -1243,7 +1246,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['inverse_name'] = field_data['relation_field']
-            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+            attrs['domain'] = literal_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'many2many':
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
@@ -1252,7 +1255,7 @@ class IrModelFields(models.Model):
             attrs['relation'] = field_data['relation_table'] or rel
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
-            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+            attrs['domain'] = literal_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'monetary':
             # be sure that custom monetary field are always instanciated
             if not self.pool.loaded and \
