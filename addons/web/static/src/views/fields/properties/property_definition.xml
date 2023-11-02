@@ -138,10 +138,8 @@
                     || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('default')" class="o_form_label align-self-center text-900">
-                        <b>
-                            <t t-if="state.propertyDefinition.type === 'boolean'">Default State</t>
-                            <t t-else="">Default Value</t>
-                         </b>
+                        <t t-if="state.propertyDefinition.type === 'boolean'">Default State</t>
+                        <t t-else="">Default Value</t>
                     </label>
                     <PropertyValue
                         id="getUniqueDomID('default')"
