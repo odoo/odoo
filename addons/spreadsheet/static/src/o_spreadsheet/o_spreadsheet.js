@@ -4704,7 +4704,7 @@
         });
         return {
             chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+            background: getters.getStyleOfSingleCellChart(chart.background, dataRange).background,
         };
     }
 
@@ -5381,7 +5381,7 @@
             };
             baselineCell = getters.getEvaluatedCell(baselinePosition);
         }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        const { background, fontColor } = getters.getStyleOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
@@ -5389,7 +5389,7 @@
             baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
-            fontColor: chartFontColor(background),
+            fontColor,
             background,
             baselineStyle: chart.baselineMode !== "percentage" && baseline
                 ? getters.getCellStyle({
@@ -29926,7 +29926,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     let sizes = [...this.sizes[cmd.sheetId][cmd.dimension]];
                     const addIndex = getAddHeaderStartIndex(cmd.position, cmd.base);
                     const baseSize = sizes[cmd.base];
-                    sizes.splice(addIndex, 0, ...Array(cmd.quantity).fill(baseSize));
+                    const sizesToInsert = range(0, cmd.quantity).map(() => ({
+                        manualSize: baseSize.manualSize,
+                        computedSize: lazy(baseSize.computedSize()),
+                    }));
+                    sizes.splice(addIndex, 0, ...sizesToInsert);
                     sizes = sizes.map((size, row) => {
                         if (cmd.dimension === "ROW" && row > cmd.base + cmd.quantity) {
                             // invalidate sizes
@@ -32659,28 +32663,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.charts[figureId];
         }
         /**
-         * Get the background color of a chart based on the color of the first cell of the main range
-         * of the chart. In order of priority, it will return :
-         *
-         *  - the chart background color if one is defined
-         *  - the fill color of the cell if one is defined
-         *  - the fill color of the cell from conditional formats if one is defined
-         *  - the default chart color if no other color is defined
+         * Get the background and textColor of a chart based on the color of the first cell of the main range of the chart.
          */
-        getBackgroundOfSingleCellChart(chartBackground, mainRange) {
+        getStyleOfSingleCellChart(chartBackground, mainRange) {
             if (chartBackground)
-                return chartBackground;
+                return { background: chartBackground, fontColor: chartFontColor(chartBackground) };
             if (!mainRange) {
-                return BACKGROUND_CHART_COLOR;
+                return {
+                    background: BACKGROUND_CHART_COLOR,
+                    fontColor: chartFontColor(BACKGROUND_CHART_COLOR),
+                };
             }
             const col = mainRange.zone.left;
             const row = mainRange.zone.top;
             const sheetId = mainRange.sheetId;
             const style = this.getters.getCellComputedStyle({ sheetId, col, row });
-            return style.fillColor || BACKGROUND_CHART_COLOR;
+            const background = style.fillColor || BACKGROUND_CHART_COLOR;
+            return {
+                background,
+                fontColor: style.textColor || chartFontColor(background),
+            };
         }
     }
-    EvaluationChartPlugin.getters = ["getChartRuntime", "getBackgroundOfSingleCellChart"];
+    EvaluationChartPlugin.getters = ["getChartRuntime", "getStyleOfSingleCellChart"];
 
     // -----------------------------------------------------------------------------
     // Constants
@@ -44434,9 +44439,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.25';
-    __info__.date = '2023-10-25T10:07:58.129Z';
-    __info__.hash = '708e3d8';
+    __info__.version = '16.1.26';
+    __info__.date = '2023-11-02T09:45:34.991Z';
+    __info__.hash = '1ddd8d0';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
