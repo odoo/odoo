@@ -1201,7 +1201,7 @@ var SnippetEditor = Widget.extend({
             this.$dropZones = this.$dropZones.not('[data-oe-sanitize][data-oe-sanitize!="allow_form"] .oe_drop_zone');
         }
         this.$dropZones.droppable({
-            over: function () {
+            over: function (ev) {
                 if (self.dropped) {
                     self.$target.detach();
                 }
@@ -1303,6 +1303,9 @@ var SnippetEditor = Widget.extend({
                     self.dragState.backgroundGridEl = backgroundGridEl;
                     self.onDragMove = self._onDragMove.bind(self);
                     self.$body[0].addEventListener('mousemove', self.onDragMove, false);
+                    // Triggering first move right away without waiting for a
+                    // mousemove event.
+                    self._dragMove(ev.pageX, ev.pageY);
                 }
             },
             out: function () {
@@ -1374,8 +1377,9 @@ var SnippetEditor = Widget.extend({
             // Defining the column grid area with its position.
             const gridProp = gridUtils._getGridProperties(rowEl);
 
-            const top = parseFloat(this.$target[0].style.top);
-            const left = parseFloat(this.$target[0].style.left);
+            const style = window.getComputedStyle(this.$target[0]);
+            const top = parseFloat(style.top);
+            const left = parseFloat(style.left);
 
             const rowStart = Math.round(top / (gridProp.rowSize + gridProp.rowGap)) + 1;
             const columnStart = Math.round(left / (gridProp.columnSize + gridProp.columnGap)) + 1;
@@ -1682,6 +1686,18 @@ var SnippetEditor = Widget.extend({
      * @param {Event} ev
      */
     _onDragMove(ev) {
+        this._dragMove(ev.pageX, ev.pageY);
+    },
+    /**
+     * Helper method for drag move.
+     * Kept in handler section to ease future forward porting because its
+     * content returns into _onDragMove in a future version.
+     *
+     * @private
+     * @param {Number} pageX
+     * @param {Number} pageY
+     */
+    _dragMove(pageX, pageY) {
         const columnEl = this.$target[0];
         const rowEl = columnEl.parentNode;
 
@@ -1696,9 +1712,9 @@ var SnippetEditor = Widget.extend({
         const columnMiddle = columnWidth / 2;
 
         // Placing the column where the mouse is.
-        const top = ev.pageY - rowElTop;
+        const top = pageY - rowElTop;
         const bottom = top + columnHeight;
-        let left = ev.pageX - rowElLeft - columnMiddle;
+        let left = pageX - rowElLeft - columnMiddle;
 
         // Horizontal overflow.
         left = confine(left, 0, rowEl.clientWidth - columnWidth);
