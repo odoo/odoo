@@ -30,7 +30,7 @@
                 <div class="o_domain_selector_row d-flex align-items-center">
                     This domain is not supported.
                     <t t-if="!props.readonly">
-                        <button t-on-click="() => this.resetDomain()">Reset domain</button>
+                        <button class="btn btn-sm btn-primary ms-2" t-on-click="() => this.resetDomain()">Reset domain</button>
                     </t>
                 </div>
             </t>
