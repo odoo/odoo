@@ -26,7 +26,7 @@ from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
 from odoo.tools.translate import _, xml_translate
-from odoo.tools import escape_psql, pycompat
+from odoo.tools import escape_psql, pycompat, SQL, Query
 
 logger = logging.getLogger(__name__)
 
@@ -1795,7 +1795,6 @@ class Website(models.Model):
         """
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
-        lang = self.env.lang or 'en_US'
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]
@@ -1804,60 +1803,18 @@ class Website(models.Model):
             domain = search_detail['base_domain'].copy()
             fields = set(fields).intersection(model._fields)
 
+            query = Query(self.env.cr, model._table, model._table_query)
+
             unaccent = self.env.registry.unaccent
-
-            # Specific handling for fields being actually part of another model
-            # through the `inherits` mechanism.
-            # It gets the list of fields requested to search upon and that are
-            # actually not part of the requested model itself but part of a
-            # `inherits` model:
-            #     {
-            #       'name': {
-            #           'table': 'ir_ui_view',
-            #           'fname': 'view_id',
-            #       },
-            #       'url': {
-            #           'table': 'ir_ui_view',
-            #           'fname': 'view_id',
-            #       },
-            #       'another_field': {
-            #           'table': 'another_table',
-            #           'fname': 'record_id',
-            #       },
-            #     }
-            inherits_fields = {
-                inherits_model_fname: {
-                    'table': self.env[inherits_model_name]._table,
-                    'fname': inherits_field_name,
-                }
-                for inherits_model_name, inherits_field_name in model._inherits.items()
-                for inherits_model_fname in self.env[inherits_model_name]._fields.keys()
-                if inherits_model_fname in fields
-            }
-            similarities = []
-            for field in fields:
-                # Field might belong to another model (`inherits` mechanism)
-                table = inherits_fields[field]['table'] if field in inherits_fields else model._table
-                similarities.append(
-                    sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL("{table}.{field}").format(
-                            table=sql.Identifier(table),
-                            field=sql.Identifier(field)
-                        )) if not model._fields[field].translate else
-                        unaccent(sql.SQL("COALESCE({table}.{field}->>{lang}, {table}.{field}->>'en_US')").format(
-                            table=sql.Identifier(table),
-                            field=sql.Identifier(field),
-                            lang=sql.Literal(lang)
-                        )),
+            similarities = [
+                SQL("word_similarity(%(search)s, %(field)s)",
+                    search=unaccent(SQL('%s', search)),
+                    field=unaccent(model._field_to_sql(model._table, field, query)),
                     )
-                )
+                for field in fields
+            ]
+            best_similarity = SQL('GREATEST(%(similarities)s)', similarities=SQL(', ').join(similarities))
 
-            best_similarity = sql.SQL('GREATEST({similarities})').format(
-                similarities=sql.SQL(', ').join(similarities)
-            )
-
-            where_clause = sql.SQL("")
             # Filter unpublished records for portal and public user for
             # performance.
             # TODO: Same for `active` field?
@@ -1867,36 +1824,15 @@ class Website(models.Model):
                 and not self.env.user.has_group('base.group_user')
             )
             if filter_is_published:
-                where_clause = sql.SQL("WHERE is_published")
+                query.add_where('is_published')
 
-            from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
-            # Specific handling for fields being actually part of another model
-            # through the `inherits` mechanism.
-            for table_to_join in {
-                field['table']: field['fname'] for field in inherits_fields.values()
-            }.items():  # Removes duplicate inherits model
-                from_clause = sql.SQL("""
-                    {from_clause}
-                    LEFT JOIN {inherits_table} ON {table}.{inherits_field} = {inherits_table}.id
-                """).format(
-                    from_clause=from_clause,
-                    table=sql.Identifier(model._table),
-                    inherits_table=sql.Identifier(table_to_join[0]),
-                    inherits_field=sql.Identifier(table_to_join[1]),
-                )
-            query = sql.SQL("""
-                SELECT {table}.id, {best_similarity} AS _best_similarity
-                {from_clause}
-                {where_clause}
-                ORDER BY _best_similarity desc
-                LIMIT 1000
-            """).format(
-                table=sql.Identifier(model._table),
-                best_similarity=best_similarity,
-                from_clause=from_clause,
-                where_clause=where_clause,
-            )
-            self.env.cr.execute(query, {'search': search})
+            query.order = '_best_similarity desc'
+            query.limit = 1000
+
+            self.env.cr.execute(query.select(
+                SQL.identifier(model._table, 'id'),
+                SQL('%s AS _best_similarity', best_similarity),
+            ))
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
