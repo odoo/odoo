@@ -24,13 +24,25 @@ function checkLoginColumn(translation) {
     ]
 }
 
-registry.category("web_tour.tours").add('ir_model_fields_translation_tour', {
+registry.category("web_tour.tours").add('ir_model_fields_translation_en_tour', {
+    test: true,
+    url: '/web',
+    steps: () => checkLoginColumn('Login')
+});
+
+registry.category("web_tour.tours").add('ir_model_fields_translation_en_tour2', {
+    test: true,
+    url: '/web',
+    steps: () => checkLoginColumn('Login2')
+});
+
+registry.category("web_tour.tours").add('ir_model_fields_translation_fr_tour', {
     test: true,
     url: '/web',
     steps: () => checkLoginColumn('Identifiant')
 });
 
-registry.category("web_tour.tours").add('ir_model_fields_translation_tour2', {
+registry.category("web_tour.tours").add('ir_model_fields_translation_fr_tour2', {
     test: true,
     url: '/web',
     steps: () => checkLoginColumn('Identifiant2')
