@@ -140,7 +140,7 @@ export class DomainField extends Component {
             throw new Error(`Invalid model: ${resModel}`);
         }
 
-        let promises;
+        let promises = [];
         const domain = this.getDomain(props);
         try {
             const tree = treeFromDomain(domain, { distributeNot: !this.env.debug });
