@@ -10,87 +10,10 @@
  */
 
 import { delay } from "@web/core/utils/concurrency";
-import { localization } from "@web/core/l10n/localization";
 
 var dom = {
     DEBOUNCE: 400,
 
-    /**
-     * Autoresize a $textarea node, by recomputing its height when necessary
-     * @param {number} [options.min_height] by default, 50.
-     * @param {Widget} [options.parent] if set, autoresize will listen to some
-     *   extra events to decide when to resize itself.  This is useful for
-     *   widgets that are not in the dom when the autoresize is declared.
-     */
-    autoresize: function ($textarea, options) {
-        if ($textarea.data("auto_resize")) {
-            return;
-        }
-
-        var $fixedTextarea;
-        var minHeight;
-
-        function resize() {
-            $fixedTextarea.insertAfter($textarea);
-            var heightOffset = 0;
-            var style = window.getComputedStyle($textarea[0], null);
-            if (style.boxSizing === 'border-box') {
-                var paddingHeight = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-                var borderHeight = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-                heightOffset = borderHeight + paddingHeight;
-            }
-            $fixedTextarea.width($textarea.width());
-            $fixedTextarea.val($textarea.val());
-            var height = $fixedTextarea[0].scrollHeight;
-            $textarea.css({height: Math.max(height + heightOffset, minHeight)});
-        }
-
-        function removeVerticalResize() {
-            // We already compute the correct height:
-            // we don't want the user to resize it vertically.
-            // On Chrome this needs to be called after the DOM is ready.
-            var style = window.getComputedStyle($textarea[0], null);
-            if (style.resize === 'vertical') {
-                $textarea[0].style.resize = 'none';
-            } else if (style.resize === 'both') {
-                $textarea[0].style.resize = 'horizontal';
-            }
-        }
-
-        options = options || {};
-        minHeight = 'min_height' in options ? options.min_height : 50;
-
-        $fixedTextarea = $('<textarea disabled>', {
-            class: $textarea[0].className,
-        });
-
-        var direction = localization.direction === 'rtl' ? 'right' : 'left';
-        $fixedTextarea.css({
-            position: 'absolute',
-            opacity: 0,
-            height: 10,
-            borderTopWidth: 0,
-            borderBottomWidth: 0,
-            padding: 0,
-            overflow: 'hidden',
-            top: -10000,
-        }).css(direction, -10000);
-        $fixedTextarea.data("auto_resize", true);
-
-        // The following line is necessary to prevent the scrollbar to appear
-        // on the textarea on Firefox when adding a new line if the current line
-        // has just enough characters to completely fill the line.
-        // This fix should be fine since we compute the height depending on the
-        // content, there should never be an overflow.
-        // TODO ideally understand why and fix this another way if possible.
-        $textarea.css({'overflow-y': 'hidden'});
-
-        resize();
-        removeVerticalResize();
-        $textarea.data("auto_resize", true);
-
-        $textarea.on('input focus change', resize);
-    },
     /**
      * jQuery find function behavior is::
      *
