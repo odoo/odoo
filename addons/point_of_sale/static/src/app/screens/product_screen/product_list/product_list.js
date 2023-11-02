@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useEffect, useRef } from "@odoo/owl";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
@@ -21,12 +21,30 @@ export class ProductsWidget extends Component {
             previousSearchWord: "",
             currentOffset: 0,
             loadingDemo: false,
+            isControlPanelThin: false,
         });
+        this.controlPanelRef = useRef("products-widget-control");
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
+        useEffect(() => {
+            // set the flag isControlPanelThin if the height of the control panel is less than 64px (approximate 4rem)
+            const controlPanel = this.controlPanelRef.el;
+            if (!controlPanel) {
+                return;
+            }
+            const observer = new ResizeObserver((entries) => {
+                if (!entries.length) {
+                    return;
+                }
+                const height = entries[0].contentRect.height;
+                this.state.isControlPanelThin = height < 64;
+            });
+            observer.observe(controlPanel);
+            return () => observer.disconnect();
+        });
     }
     /**
      * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
