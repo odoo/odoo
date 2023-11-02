@@ -23,7 +23,7 @@
                         <th t-if="data['show_replenishments']" class="text-center">Status</th>
                         <th t-attf-class="{{ 'text-center' if data['show_uom'] else 'text-end' }}" t-attf-colspan="{{ 2 if data['show_uom'] else 1 }}">Quantity</th>
                         <th t-if="data['show_availabilities']" class="text-end">Free to use / On Hand</th>
-                        <th t-if="data['show_availabilities']" class="text-end">Quantity</th>
+                        <th t-if="data['show_availabilities']" class="text-end">Reserved</th>
                         <th t-if="data['show_receipts']" class="text-end">Receipt</th>
                         <th class="text-end" t-if="data['show_unit_costs']">Unit Cost</th>
                         <th t-if="data['show_mo_costs']" class="text-end">MO Cost</th>
