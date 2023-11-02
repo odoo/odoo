@@ -187,7 +187,7 @@ const ODOO_PIVOT_TABLE = {
         const _includeColumnHeaders = toBoolean(includeColumnHeaders.value);
         const cells = table.getPivotCells(toBoolean(includeTotal.value), _includeColumnHeaders);
         const headerRows = _includeColumnHeaders ? table.getNumberOfHeaderRows() : 0;
-        const pivotTitle = _t("Pivot #%s", _pivotId);
+        const pivotTitle = this.getters.getPivotDisplayName(_pivotId);
         const _rowCount = toNumber(rowCount.value);
         if (_rowCount < 0) {
             throw new Error(_t("The number of rows must be positive."));
