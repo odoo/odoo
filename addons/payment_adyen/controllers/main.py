@@ -16,7 +16,6 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
-from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
 
@@ -26,22 +25,16 @@ class AdyenController(http.Controller):
     _webhook_url = '/payment/adyen/notification'
 
     @http.route('/payment/adyen/payment_methods', type='json', auth='public')
-    def adyen_payment_methods(self, provider_id, amount=None, currency_id=None, partner_id=None):
+    def adyen_payment_methods(self, provider_id, formatted_amount=None, partner_id=None):
         """ Query the available payment methods based on the payment context.
 
         :param int provider_id: The provider handling the transaction, as a `payment.provider` id
-        :param float amount: The transaction amount
-        :param int currency_id: The transaction currency, as a `res.currency` id
+        :param dict formatted_amount: The Adyen-formatted amount.
         :param int partner_id: The partner making the transaction, as a `res.partner` id
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
-        currency = request.env['res.currency'].browse(currency_id)
-        currency_code = currency_id and currency.name
-        converted_amount = amount and currency_code and payment_utils.to_minor_currency_units(
-            amount, currency, CURRENCY_DECIMALS.get(currency_code)
-        )
         partner_sudo = partner_id and request.env['res.partner'].sudo().browse(partner_id).exists()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
@@ -52,7 +45,7 @@ class AdyenController(http.Controller):
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
-            'amount': converted_amount,
+            'amount': formatted_amount,
             'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,

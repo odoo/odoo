@@ -48,24 +48,22 @@ paymentForm.include({
         // Extract and deserialize the inline form values.
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
         const inlineFormValues = JSON.parse(radio.dataset['inlineFormValues']);
+        const formatted_amount = inlineFormValues['formatted_amount'];
+        const formattedAmount = inlineFormValues['formatted_amount'];
 
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
             await this.rpc('/payment/adyen/payment_methods', { // Await the RPC to let it create AdyenCheckout before using it.
                 'provider_id': providerId,
                 'partner_id': parseInt(this.paymentContext['partnerId']),
-                'amount': this.paymentContext['amount']
-                    ? parseFloat(this.paymentContext['amount'])
-                    : undefined,
-                'currency_id': this.paymentContext['currencyId']
-                    ? parseInt(this.paymentContext['currencyId'])
-                    : undefined,
+                'formatted_amount': formattedAmount,
             }).then(async response => {
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
                 const configuration = {
                     paymentMethodsResponse: response,
                     clientKey: inlineFormValues['client_key'],
+                    amount: formattedAmount,
                     locale: (this._getContext().lang || 'en-US').replace('_', '-'),
                     environment: providerState === 'enabled' ? 'live' : 'test',
                     onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),

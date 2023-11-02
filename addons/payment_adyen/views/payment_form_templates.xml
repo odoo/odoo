@@ -19,7 +19,7 @@
     <template id="payment_adyen.method_form" inherit_id="payment.method_form">
         <xpath expr="//input[@name='o_payment_radio']" position="attributes">
             <attribute name="t-att-data-inline-form-values">
-                provider_sudo._adyen_get_inline_form_values(pm_sudo.code)
+                provider_sudo._adyen_get_inline_form_values(pm_sudo.code, amount, currency)
             </attribute>
         </xpath>
     </template>
