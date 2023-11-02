@@ -204,8 +204,9 @@ class HrExpense(models.Model):
 
     @api.depends('product_has_cost')
     def _compute_currency_id(self):
-        for expense in self.filtered("product_has_cost"):
-            expense.currency_id = expense.company_currency_id
+        for expense in self:
+            if expense.product_has_cost and expense.state in {'draft', 'reported'}:
+                expense.currency_id = expense.company_currency_id
 
     @api.depends('sheet_id.is_editable')
     def _compute_is_editable(self):
@@ -218,7 +219,7 @@ class HrExpense(models.Model):
     @api.onchange('product_has_cost')
     def _onchange_product_has_cost(self):
         """ Reset quantity to 1, in case of 0-cost product. To make sure switching non-0-cost to 0-cost doesn't keep the quantity."""
-        if not self.product_has_cost:
+        if not self.product_has_cost and self.state in {'draft', 'reported'}:
             self.quantity = 1
 
     @api.depends_context('lang')
@@ -399,6 +400,8 @@ class HrExpense(models.Model):
            when edited after creation.
         """
         for expense in self:
+            if expense.state not in {'draft', 'reported'}:
+                continue
             product_id = expense.product_id
             if product_id and expense.product_has_cost and not expense.nb_attachment:
                 expense.price_unit = product_id._price_compute(

@@ -9,7 +9,7 @@ class ProductProduct(models.Model):
     @api.onchange('standard_price')
     def _compute_standard_price_update_warning(self):
         undone_expenses = self.env['hr.expense']._read_group(
-            domain=[('state', 'in', ['draft', 'reported', 'approved']), ('product_id', 'in', self.ids)],
+            domain=[('state', 'in', ['draft', 'reported']), ('product_id', 'in', self.ids)],
             groupby=['price_unit'],
             )
         # The following list is composed of all the unit_amounts of expenses that use this product and should NOT trigger a warning.
@@ -21,7 +21,7 @@ class ProductProduct(models.Model):
                 rounded_price = self.env.company.currency_id.round(product.standard_price)
                 if rounded_price and (len(unit_amounts_no_warning) > 1 or (len(unit_amounts_no_warning) == 1 and rounded_price not in unit_amounts_no_warning)):
                     product.standard_price_update_warning = _(
-                            "There are unposted expenses linked to this category. Updating the category cost will change expense amounts. "
+                            "There are unsubmitted expenses linked to this category. Updating the category cost will change expense amounts. "
                             "Make sure it is what you want to do."
                         )
 
@@ -34,8 +34,24 @@ class ProductProduct(models.Model):
                 ('state', 'in', ['reported', 'draft']),
             ])
             for expense_sudo in expenses_sudo:
-                expense_sudo.write({
-                    'product_has_cost': expense_sudo.product_id and not expense_sudo.company_currency_id.is_zero(expense_sudo.product_id.standard_price),
-                    'product_has_tax': bool(expense_sudo.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense_sudo.company_id))),
-                })
+                expense_product_sudo = expense_sudo.product_id
+                tax_domain = self.env['account.tax']._check_company_domain(expense_sudo.company_id)
+                product_has_cost = (
+                        expense_product_sudo
+                        and not expense_sudo.company_currency_id.is_zero(expense_product_sudo.standard_price)
+                )
+                expense_vals = {
+                    'product_has_cost': product_has_cost,
+                    'product_has_tax': bool(expense_product_sudo.supplier_taxes_id.filtered_domain(tax_domain)),
+                }
+                if product_has_cost:
+                    expense_vals.update({
+                        'price_unit': expense_product_sudo.standard_price,
+                    })
+                else:
+                    expense_vals.update({
+                        'quantity': 1,
+                        'price_unit': expense_sudo.total_amount
+                    })
+                expense_sudo.write(expense_vals)
         return result
