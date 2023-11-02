@@ -92,19 +92,8 @@ export class ListController extends Component {
         });
         useSetupView({
             rootRef: this.rootRef,
-            beforeLeave: async () => {
-                return this.model.root.leaveEditMode();
-            },
-            beforeUnload: async (ev) => {
-                const editedRecord = this.model.root.editedRecord;
-                if (editedRecord) {
-                    const isValid = await editedRecord.urgentSave();
-                    if (!isValid) {
-                        ev.preventDefault();
-                        ev.returnValue = "Unsaved changes";
-                    }
-                }
-            },
+            beforeLeave: this.beforeLeave.bind(this),
+            beforeUnload: this.beforeUnload.bind(this),
             getLocalState: () => {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
@@ -229,6 +218,43 @@ export class ListController extends Component {
             this.render();
         } else {
             await this.props.createRecord();
+        }
+    }
+
+    async beforeLeave() {
+        const editedRecord = this.model.root.editedRecord;
+        let result = await this.model.root.leaveEditMode();
+        const proms = [];
+        for (const record of this.model.root.records.filter((record) => record.dirty)) {
+            if (editedRecord && editedRecord.id === record.id) {
+                continue;
+            }
+            proms.push(record.save());
+        }
+        result = result && (await Promise.all(proms)).every((isSaved) => isSaved);
+        return result;
+    }
+
+    async beforeUnload(ev) {
+        const editedRecord = this.model.root.editedRecord;
+        if (editedRecord) {
+            const isValid = await editedRecord.urgentSave();
+            if (!isValid) {
+                ev.preventDefault();
+                ev.returnValue = "Unsaved changes";
+            }
+        }
+        const proms = [];
+        for (const record of this.model.root.records.filter((record) => record.dirty)) {
+            if (editedRecord && editedRecord.id === record.id) {
+                continue;
+            }
+            proms.push(record.save());
+        }
+        const isValid = (await Promise.all(proms)).every((isSaved) => isSaved);
+        if (!isValid) {
+            ev.preventDefault();
+            ev.returnValue = "Unsaved changes";
         }
     }
 

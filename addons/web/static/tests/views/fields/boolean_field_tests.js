@@ -186,10 +186,10 @@ QUnit.module("Fields", (hooks) => {
         assert.ok(cell.querySelector(".o-checkbox input").checked);
 
         await click(cell.querySelector("div > div"));
-        assert.hasClass(
+        assert.doesNotHaveClass(
             document.querySelector("tr.o_data_row:nth-child(1)"),
             "o_selected_row",
-            "the row is now selected, in edition"
+            "the row is not selected, don't switch in edition"
         );
         assert.notOk(
             cell.querySelector(".o-checkbox input").disabled,

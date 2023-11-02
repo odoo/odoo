@@ -5973,8 +5973,8 @@ QUnit.module("Fields", (hooks) => {
 
             await addRow(target);
             assert.containsOnce(target, ".modal");
-            assert.containsOnce(target, ".o_readonly_modifier");
-            assert.equal(target.querySelector(".o_readonly_modifier").textContent, 5);
+            assert.containsOnce(target, ".modal .o_readonly_modifier");
+            assert.equal(target.querySelector(".modal .o_readonly_modifier").textContent, 5);
         }
     );
 

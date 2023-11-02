@@ -13664,7 +13664,7 @@ QUnit.module("Views", (hooks) => {
         await click(rows[0].querySelector(".o_data_cell"));
         const enabledCell = rows[0].querySelector("div[name=bar]");
         assert.containsOnce(enabledCell, ":checked:not(:disabled)");
-        await click(rows[0].querySelector("div[name=bar] div"));
+        await click(rows[0].querySelector("div[name=bar] div > div"));
         assert.containsNone(
             enabledCell,
             ":checked",

@@ -26,8 +26,9 @@ export class BooleanField extends Component {
         return this.props.record.update({ [this.props.name]: value });
     }
 
-    onClick() {
-        if (!this.props.readonly) {
+    onClick(ev) {
+        if (!this.props.readonly && !this.props.record.isInEdition) {
+            ev.stopPropagation();
             return this.updateValue(!this.props.record.data[this.props.name]);
         }
     }
@@ -37,17 +38,6 @@ export class BooleanField extends Component {
      */
     onChange(newValue) {
         return this.updateValue(newValue);
-    }
-}
-
-export class ListBooleanField extends BooleanField {
-    static template = "web.ListBooleanField";
-
-    async onClick() {
-        if (!this.props.readonly && this.props.record.isInEdition) {
-            const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
-            await this.props.record.update(changes);
-        }
     }
 }
 
