@@ -97,14 +97,15 @@ class HrEmployee(models.Model):
             start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
             end_tz = now_tz
             end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
-            attendances = self.env['hr.attendance'].search([
-                ('employee_id', '=', employee.id),
-                '&',
-                ('check_in', '>=', start_naive),
-                ('check_out', '<=', end_naive),
-            ])
 
-            employee.hours_last_month = round(sum([att.worked_hours for att in attendances]), 2)
+            hours = sum(
+                att.worked_hours or 0
+                for att in employee.attendance_ids.filtered(
+                    lambda att: att.check_in >= start_naive and att.check_out <= end_naive
+                )
+            )
+
+            employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
 
     def _compute_hours_today(self):
