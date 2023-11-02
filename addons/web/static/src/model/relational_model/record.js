@@ -1002,7 +1002,7 @@ export class Record extends DataPoint {
             throw e;
         }
         if (reload && !records.length) {
-            throw new FetchRecordError(nextId || this.resId);
+            throw new FetchRecordError(nextId || this.resId, this.resModel);
         }
         if (creation) {
             const resId = records[0].id;
