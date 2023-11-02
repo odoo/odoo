@@ -544,9 +544,6 @@ class Field(MetaField('DummyField', (object,), {})):
             if not isinstance(self.readonly, bool):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
 
-            if self.states:
-                warnings.warn(f'Since Odoo 17, property {self}.states is no longer supported.')
-
             self._setup_done = True
 
     #
