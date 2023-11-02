@@ -1331,6 +1331,10 @@ export class Order extends PosModel {
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
+        this.trackingNumber = (
+            (this.session_id % 10) * 100 +
+            (this.sequence_number % 100)
+        ).toString();
     }
 
     getEmailItems() {
@@ -1451,7 +1455,6 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
-        this.trackingNumber = json.tracking_number || "";
     }
     export_as_JSON() {
         var orderLines, paymentLines;
