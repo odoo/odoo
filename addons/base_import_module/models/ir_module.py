@@ -63,17 +63,20 @@ class IrModule(models.Model):
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
-        if unmet_dependencies:
-            if (unmet_dependencies == set(['web_studio']) and
-                    _is_studio_custom(path)):
-                err = _("Studio customizations require Studio")
-            else:
-                err = _("Unmet module dependencies: \n\n - %s", '\n - '.join(
-                    known_mods.filtered(lambda mod: mod.name in unmet_dependencies).mapped('shortdesc')
-                ))
-            raise UserError(err)
-        elif 'web_studio' not in installed_mods and _is_studio_custom(path):
+        if 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
+        immediate_install_modules = self
+        to_install_modules = set()
+        for unmet_dependencie in unmet_dependencies:
+            if unmet_dependencie in known_mods_names:
+                immediate_install_modules += known_mods_names[unmet_dependencie]
+                to_install_modules.add(unmet_dependencie)
+        unknown_dependencies = unmet_dependencies.difference(to_install_modules)
+        if unknown_dependencies:
+            err = _("Unknown module dependencies: \n\n - %s") % '\n - '.join(unknown_dependencies)
+            raise UserError(err)
+        if immediate_install_modules:
+            immediate_install_modules.button_immediate_install()
 
         mod = known_mods_names.get(module)
         if mod:
@@ -84,7 +87,10 @@ class IrModule(models.Model):
             self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
-        for kind in ['data', 'init_xml', 'update_xml']:
+        kinds = ['data', 'init_xml', 'update_xml']
+        if self._context.get('import_with_demo_data', False):
+            kinds.append('demo')
+        for kind in kinds:
             for filename in terp.get(kind, []):
                 ext = os.path.splitext(filename)[1].lower()
                 if ext not in ('.xml', '.csv', '.sql'):
@@ -207,7 +213,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []):
+                    demo_data = []
+                    if self._context.get('import_with_demo_data', False):
+                        demo_data = terp.get('demo', [])
+                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []) + demo_data:
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))

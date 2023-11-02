@@ -23,7 +23,7 @@ class ProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('service_to_purchase'):
+            if vals.get('service_to_purchase') and self._context.get("create_product_product"):
                 self._check_vendor_for_service_to_purchase(vals.get('seller_ids'))
         return super().create(vals_list)
 

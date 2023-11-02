@@ -246,7 +246,7 @@ class xml_import(object):
             assert '.' not in id, """The ID reference "%s" must contain
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
-            if module != self.module:
+            if module != self.module and module != '__export__':
                 modcnt = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
@@ -376,7 +376,7 @@ form: module.record_id""" % (xml_id,)
                 return None
             # else create it normally
 
-        if xid and xid.partition('.')[0] != self.module:
+        if xid and xid.partition('.')[0] != self.module and xid.partition('.')[0] != '__export__':
             # updating a record created by another module
             record = self.env['ir.model.data']._load_xmlid(xid)
             if not record:
