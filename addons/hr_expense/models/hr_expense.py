@@ -117,13 +117,14 @@ class HrExpense(models.Model):
 
     @api.depends('product_has_cost')
     def _compute_currency_id(self):
-        for expense in self.filtered("product_has_cost"):
-            expense.currency_id = expense.company_currency_id
+        for expense in self:
+            if expense.product_has_cost and expense.state == 'draft':
+                expense.currency_id = expense.company_currency_id
 
     @api.onchange('product_has_cost')
     def _onchange_product_has_cost(self):
         # Reset quantity to 1, in case of 0-cost product
-        if not self.product_has_cost:
+        if not self.product_has_cost and self.state == 'draft':
             self.quantity = 1
 
     @api.depends('date', 'currency_id', 'company_currency_id', 'company_id')
@@ -149,6 +150,9 @@ class HrExpense(models.Model):
             expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
             tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
             expense.product_has_tax = bool(tax_ids)
+            if not expense.product_has_cost and expense.state == 'draft':
+                expense.unit_amount = expense.total_amount_company
+                expense.quantity = 1
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -293,6 +297,8 @@ class HrExpense(models.Model):
     @api.depends('product_id', 'attachment_number', 'currency_rate')
     def _compute_unit_amount(self):
         for expense in self:
+            if expense.state != 'draft':
+                continue
             product_id = expense.product_id
             if product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
                 expense.unit_amount = product_id.price_compute(
