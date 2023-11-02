@@ -76,18 +76,12 @@ class HrEmployee(models.Model):
             end_tz = now_tz + relativedelta(day=1, hour=0, minute=0, second=0, microsecond=0)
             end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
 
-            attendances = self.env['hr.attendance'].search([
-                ('employee_id', '=', employee.id),
-                '&',
-                ('check_in', '<=', end_naive),
-                ('check_out', '>=', start_naive),
-            ])
-
-            hours = 0
-            for attendance in attendances:
-                check_in = max(attendance.check_in, start_naive)
-                check_out = min(attendance.check_out, end_naive)
-                hours += (check_out - check_in).total_seconds() / 3600.0
+            hours = sum(
+                att.worked_hours or 0
+                for att in employee.attendance_ids.filtered(
+                    lambda att: att.check_in <= end_naive and att.check_out >= start_naive
+                )
+            )
 
             employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
