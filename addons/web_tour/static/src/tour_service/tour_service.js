@@ -66,14 +66,13 @@ export const tourService = {
             tours[name] = {
                 name: tour.saveAs || name,
                 get steps() {
-                    if(typeof tour.steps === "function") {
+                    if (typeof tour.steps === "function") {
                         return tour.steps().map((step) => {
                             step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
                             return step;
                         });
-                    }
-                    else {
-                        throw new Error(`tour.steps has to be a function that returns TourStep[]`)
+                    } else {
+                        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
                     }
                 },
                 shadow_dom: tour.shadow_dom,
@@ -106,6 +105,8 @@ export const tourService = {
         const consumedTours = new Set(session.web_tours);
 
         const pointers = reactive({});
+        /** @type {Set<string>} */
+        const runningTours = new Set();
 
         function createPointer(tourName, config) {
             const { state: pointerState, methods } = createPointerState();
@@ -214,6 +215,7 @@ export const tourService = {
                     pointer.stop();
                     // Used to signal the python test runner that the tour finished without error.
                     browser.console.log("test successful");
+                    runningTours.delete(name);
                 },
             });
         }
@@ -259,6 +261,10 @@ export const tourService = {
         }
 
         function startTour(tourName, options = {}) {
+            if (runningTours.has(tourName)) {
+                return;
+            }
+            runningTours.add(tourName);
             const defaultOptions = {
                 stepDelay: 0,
                 keepWatchBrowser: false,
@@ -303,6 +309,10 @@ export const tourService = {
         }
 
         function resumeTour(tourName) {
+            if (runningTours.has(tourName)) {
+                return;
+            }
+            runningTours.add(tourName);
             const tour = tours[tourName];
             const stepDelay = tourState.get(tourName, "stepDelay");
             const keepWatchBrowser = tourState.get(tourName, "keepWatchBrowser");
