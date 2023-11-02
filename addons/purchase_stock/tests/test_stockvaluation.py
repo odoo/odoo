@@ -829,8 +829,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(layers[0].value, 4951.88)
         self.assertEqual(round(layers[1].value, company.currency_id.decimal_places), 15)
 
-    def test_valuation_multicurecny_with_tax(self):
-        """ Check that a tax without account will increment the stock value.
+    def test_valuation_multicurrency_with_tax(self):
+        """ Check that the amount_currency does not include the tax.
         """
 
         company = self.env.user.company_id
@@ -843,7 +843,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
         # SetUp currency and rates 1$ = 2Euros
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
         self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': date_po,
@@ -851,7 +850,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'currency_id': self.usd_currency.id,
             'company_id': company.id,
         })
-
         self.env['res.currency.rate'].create({
             'name': date_po,
             'rate': 2,
@@ -859,12 +857,21 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'company_id': company.id,
         })
 
-        tax_with_no_account = self.env['account.tax'].create({
-            'name': "Tax with no account",
-            'amount_type': 'fixed',
-            'amount': 5,
-            'sequence': 8,
-            'price_include': True,
+        repartition_line_vals = [
+            (0, 0, {"repartition_type": "base"}),
+            (0, 0, {
+                "factor_percent": 100,
+                "repartition_type": "tax",
+                "account_id": self.company_data['default_account_tax_sale'].id,
+            }),
+        ]
+        tax = self.env['account.tax'].create({
+            "name": "Tax with no account",
+            "amount_type": "fixed",
+            "amount": 5,
+            "price_include": 5,
+            "invoice_repartition_line_ids": repartition_line_vals,
+            "refund_repartition_line_ids": repartition_line_vals,
         })
 
         # Create PO
@@ -877,8 +884,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
                     'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 100.0, # 50$
-                    'taxes_id': [(4, tax_with_no_account.id)],
+                    'price_unit': 100.0,  # 50$
+                    'taxes_id': [(4, tax.id)],
                     'date_planned': date_po,
                 }),
             ],
@@ -911,11 +918,64 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         invoice_aml = inv.invoice_line_ids
-        picking_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        picking_am = receipt.move_ids.stock_valuation_layer_ids.account_move_id.ensure_one()
+        picking_aml = picking_am.line_ids.filtered(lambda line: line.account_id.id == self.stock_valuation_account.id)
 
         # check EUR
         self.assertAlmostEqual(invoice_aml.amount_currency, 100, msg="Total debit value should be equal to the original PO price of the product.")
         self.assertAlmostEqual(picking_aml.amount_currency, 95, msg="credit value for stock should be equal to the untaxed price of the product.")
+
+    def test_valuation_multicurrency_with_tax_without_account(self):
+        """ Similar test as test_valuation_multicurrency_with_tax, but without the accounts in the tax.
+        Tax without accounts will increment the stock value (check test_valuation_from_increasing_tax).
+        In this test, we verify that the amount_currency is also impacted by these changes.
+        """
+
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        # SetUp currency and rates 1$ = 2Euros
+        self.env['res.currency.rate'].create({'currency_id': self.usd_currency.id, 'rate': 1})
+        self.env['res.currency.rate'].create({'currency_id': self.eur_currency.id, 'rate': 2})
+
+        tax_without_account = self.env['account.tax'].create({
+            "name": "Tax with no account",
+            "amount_type": "fixed",
+            "amount": 5,
+            "price_include": 5,
+        })
+
+        # Create PO
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,  # 50$
+                    'taxes_id': [(4, tax_without_account.id)],
+                }),
+            ],
+        })
+
+        po.button_confirm()
+
+        # Receive the goods
+        receipt = po.picking_ids[0]
+        receipt.move_line_ids.qty_done = 1
+        receipt.button_validate()
+
+        picking_am = receipt.move_ids.stock_valuation_layer_ids.account_move_id.ensure_one()
+        picking_aml = picking_am.line_ids.filtered(lambda line: line.account_id.id == self.stock_valuation_account.id)
+
+        self.assertAlmostEqual(picking_aml.amount_currency, 100, msg="The tax without account should be included in the stock value, and impact the amount_currency.")
 
     def test_average_realtime_anglo_saxon_valuation_multicurrency_same_date(self):
         """
