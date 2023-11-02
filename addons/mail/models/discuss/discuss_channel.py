@@ -1223,7 +1223,7 @@ class Channel(models.Model):
                  'type': 'customer',
                  'groups': [],
                  }
-                for partner in chat_channels.mapped("channel_partner_ids")
+                for partner in chat_channels.channel_member_ids.filtered(lambda member: not member.mute_until_dt).partner_id
             ]
         else:
             channel_rdata = recipients_data

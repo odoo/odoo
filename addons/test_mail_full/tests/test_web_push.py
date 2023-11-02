@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import socket
+from datetime import datetime
 
 import odoo
 from odoo.tools.misc import mute_logger
@@ -167,7 +168,23 @@ class TestWebPushNotification(SMSCommon):
 
         self._assert_notification_count_for_cron(0)
         push_to_end_point.assert_called_once()
+        self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
 
+        # Reset the mock counter
+        push_to_end_point.reset_mock()
+
+        # Test Direct Message with channel Muted
+        self.env['discuss.channel.member'].search([
+            ('partner_id', '=', self.user_inbox.partner_id.id),
+            ('channel_id', '=', self.direct_message_channel.id),
+        ]).write({
+            'mute_until_dt': datetime(9999, 1, 1, 14, 00),
+        })
+        self.direct_message_channel.with_user(self.user_email).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self._assert_notification_count_for_cron(0)
+        push_to_end_point.assert_not_called()
 
         # Reset the mock counter
         push_to_end_point.reset_mock()
