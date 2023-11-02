@@ -933,9 +933,11 @@ class Base(models.AbstractModel):
             missing_names = [fname for fname in fields_spec if fname not in values]
             defaults = self.default_get(missing_names)
             for field_name in missing_names:
-                values[field_name] = defaults.get(field_name, False)
                 if field_name in defaults:
+                    values[field_name] = defaults[field_name]
                     field_names.append(field_name)
+                elif not self._fields[field_name].compute:
+                    values[field_name] = False
 
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
         # computing fields on new records as much as possible, as that can be
