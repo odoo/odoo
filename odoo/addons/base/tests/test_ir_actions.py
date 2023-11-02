@@ -850,7 +850,7 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
         self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
         with self.assertLogs('odoo.addons.base.models.ir_model') as log_catcher:
             # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
-            field.write({'field_description': 'foo'})
+            self.env.registry.setup_models(self.cr)
             self.assertIn(
                 f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
             )
