@@ -6,6 +6,8 @@ import json
 import logging
 import requests
 
+from stdnum.eu.vat import check_vies
+
 from odoo import api, fields, models, tools, _
 
 _logger = logging.getLogger(__name__)
@@ -124,12 +126,21 @@ class ResPartner(models.Model):
 
     @api.model
     def read_by_vat(self, vat, timeout=15):
+        check_vies_res = check_vies(vat)
+        del check_vies_res['requestDate']
+        vies_result = {res: check_vies_res[res] for res in check_vies_res}
         vies_vat_data, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_vat', {
             'vat': vat,
+            'vies_result': vies_result,
         }, timeout=timeout)
         if vies_vat_data:
             return [self._format_data_company(vies_vat_data)]
         else:
+            if vies_result.get('valid'):
+                return [{
+                    'name': vies_result.get('name'),
+                    'vat': f"{vies_result.get('countryCode')}{vies_result.get('vatNumber')}",
+                }]
             return []
 
     @api.model
