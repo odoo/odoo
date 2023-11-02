@@ -100,6 +100,8 @@ export class Message extends Component {
             emailHeaderOpen: false,
             showTranslation: false,
         });
+        /** @type {ShadowRoot} */
+        this.shadowRoot;
         this.root = useRef("root");
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
@@ -136,11 +138,7 @@ export class Message extends Component {
                 this.prepareMessageBody(this.messageBody.el);
             }
             if (this.shadowBody.el) {
-                const shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
-                const body = document.createElement("span");
-                body.innerHTML =
-                    this.props.messageSearch?.highlight(this.message.body) ?? this.message.body;
-                this.prepareMessageBody(body);
+                this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
                 shadowStyle.innerHTML = `
@@ -159,11 +157,32 @@ export class Message extends Component {
                     }
                 `;
                 if (cookie.get("color_scheme") === "dark") {
-                    shadowRoot.appendChild(shadowStyle);
+                    this.shadowRoot.appendChild(shadowStyle);
                 }
-                shadowRoot.appendChild(body);
             }
         });
+        useEffect(
+            () => {
+                if (this.shadowBody.el) {
+                    const body = document.createElement("span");
+                    body.innerHTML = this.state.showTranslation
+                        ? this.message.translationValue
+                        : this.props.messageSearch?.highlight(this.message.body) ??
+                          this.message.body;
+                    this.prepareMessageBody(body);
+                    this.shadowRoot.appendChild(body);
+                    return () => {
+                        this.shadowRoot.removeChild(body);
+                    };
+                }
+            },
+            () => [
+                this.state.showTranslation,
+                this.message.translationValue,
+                this.props.messageSearch?.searchTerm,
+                this.message.body,
+            ]
+        );
     }
 
     get attClass() {
