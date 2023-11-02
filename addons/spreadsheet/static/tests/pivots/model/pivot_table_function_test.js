@@ -24,7 +24,7 @@ QUnit.test("full ODOO.PIVOT.TABLE() values", async function (assert) {
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D7", "42"), [
-        ["Pivot #1",    "xphone",       "xpad",         "Total"],
+        ["(#1) Partner Pivot",    "xphone",       "xpad",         "Total"],
         ["",            "Probability",  "Probability",  "Probability"],
         [1,             "",             11,             11],
         [2,             "",             15,             15],
@@ -52,10 +52,10 @@ QUnit.test("ODOO.PIVOT.TABLE(row_count=1)", async function (assert) {
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", 1)`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D4", "42"), [
-        ["Pivot #1",    "xphone",       "xpad",         "Total"],
-        ["",            "Probability",  "Probability",  "Probability"],
-        [1,             "",             11,             11],
-        ["",            "",             "",             ""],
+        ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
+        ["",                    "Probability",  "Probability",  "Probability"],
+        [1,                     "",             11,             11],
+        ["",                    "",             "",             ""],
     ]);
 });
 
@@ -63,9 +63,9 @@ QUnit.test("ODOO.PIVOT.TABLE(row_count=0)", async function (assert) {
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", 0)`, "42");
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D3", "42"), [
-        ["Pivot #1",    "xphone",       "xpad",         "Total"],
-        ["",            "Probability",  "Probability",  "Probability"],
-        ["",            "",             "",             ""],
+        ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
+        ["",                    "Probability",  "Probability",  "Probability"],
+        ["",                    "",             "",             ""],
     ]);
 });
 
@@ -123,7 +123,7 @@ QUnit.test(
         setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",0,FALSE,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D1", "42"), [
-            ["Pivot #1", "", "", ""],
+            ["(#1) Partner Pivot", "", "", ""],
         ]);
     }
 );
@@ -134,7 +134,7 @@ QUnit.test(
         setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",0,TRUE,FALSE)`, "42");
         // prettier-ignore
         assert.deepEqual(getEvaluatedGrid(model, "A1:D1", "42"), [
-            ["Pivot #1", "", "", ""],
+            ["(#1) Partner Pivot", "", "", ""],
         ]);
     }
 );
@@ -170,32 +170,43 @@ QUnit.test("ODOO.PIVOT.TABLE with multiple row groups", async function (assert) 
     // values from the ODOO.PIVOT.TABLE function
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D11", "42"), [
-        ["Pivot #1",    "xphone",       "xpad",         "Total"],
-        ["",            "Probability",  "Probability",  "Probability"],
-        [1,             "",             11,             11],
-        [2,             "",             11,             11],
-        [2,             "",             15,             15],
-        [4,             "",             15,             15],
-        [12,            10,             "",             10],
-        [1,             10,             "",             10],
-        [17,            "",             95,             95],
-        [3,             "",             95,             95],
-        ["Total",       10,             121,              131],
+        ["(#1) Partner Pivot",  "xphone",       "xpad",         "Total"],
+        ["",                    "Probability",  "Probability",  "Probability"],
+        [1,                     "",             11,             11],
+        [2,                     "",             11,             11],
+        [2,                     "",             15,             15],
+        [4,                     "",             15,             15],
+        [12,                    10,             "",             10],
+        [1,                     10,             "",             10],
+        [17,                    "",             95,             95],
+        [3,                     "",             95,             95],
+        ["Total",               10,             121,              131],
     ]);
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
     // values from the ODOO.PIVOT.TABLE function without any group totals
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D11", "42"), [
-        ["Pivot #1", "xphone",       "xpad",         ""],
-        ["",         "Probability",  "Probability",  ""],
-        [1,          "",             "",             ""], // group header but without total values
-        [2,          "",             11,             ""],
-        [2,          "",             "",             ""], // group header but without total values
-        [4,          "",             15,             ""],
-        [12,         "",             "",             ""], // group header but without total values
-        [1,          10,             "",             ""],
-        [17,         "",             "",             ""], // group header but without total values
-        [3,          "",             95,             ""],
-        ["",         "",             "",             ""],
+        ["(#1) Partner Pivot", "xphone",       "xpad",         ""],
+        ["",                   "Probability",  "Probability",  ""],
+        [1,                    "",             "",             ""], // group header but without total values
+        [2,                    "",             11,             ""],
+        [2,                    "",             "",             ""], // group header but without total values
+        [4,                    "",             15,             ""],
+        [12,                   "",             "",             ""], // group header but without total values
+        [1,                    10,             "",             ""],
+        [17,                   "",             "",             ""], // group header but without total values
+        [3,                    "",             95,             ""],
+        ["",                   "",             "",             ""],
     ]);
+});
+
+QUnit.test("Renaming the pivot reevaluates the ODOO.PIVOT.TABLE function", async function (assert) {
+    const pivotId = model.getters.getPivotIds()[0];
+    setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1")`, "42");
+    assert.equal(getEvaluatedCell(model, "A1", "42").value, "(#1) Partner Pivot");
+    model.dispatch("RENAME_ODOO_PIVOT", {
+        pivotId,
+        name: "New Name",
+    });
+    assert.equal(getEvaluatedCell(model, "A1", "42").value, "(#1) New Name");
 });
