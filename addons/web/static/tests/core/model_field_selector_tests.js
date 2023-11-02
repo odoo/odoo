@@ -963,4 +963,42 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_model_field_selector .fa.fa-times");
         assert.verifySteps([`path is ""`]);
     });
+
+    QUnit.test("Modify path in popover debug input and click away", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.path = "foo";
+            }
+            onUpdate(path) {
+                this.path = path;
+                assert.step(path);
+                this.render();
+            }
+        }
+        Parent.components = { ModelFieldSelector };
+        Parent.template = xml`
+                    <ModelFieldSelector
+                        readonly="false"
+                        resModel="'partner'"
+                        path="path"
+                        isDebugMode="true"
+                        update="(pathInfo) => this.onUpdate(pathInfo)"
+                    />
+                `;
+
+        await mountComponent(Parent);
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Foo"]);
+
+        await openModelFieldSelectorPopover(target);
+        const input = target.querySelector(
+            ".o_model_field_selector_popover .o_model_field_selector_debug"
+        );
+        input.value = "foooooo";
+        await triggerEvent(input, null, "input");
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Foo"]);
+
+        await click(target);
+        assert.deepEqual(getModelFieldSelectorValues(target), ["foooooo"]);
+        assert.verifySteps(["foooooo"]);
+    });
 });
