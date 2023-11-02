@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import sql
 import re
 
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import escape_psql
+from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
 
 
@@ -242,30 +241,27 @@ class Page(models.Model):
             domain=expression.AND(base_domain), order=order
         )
         results = most_specific_pages.filtered_domain(domain)  # already sudo
+        v_arch_db = self.env['ir.ui.view']._field_to_sql('v', 'arch_db')
 
         if with_description and search:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
-            query = sql.SQL("""
-                SELECT DISTINCT {table}.id
-                FROM {table}
-                LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
-                WHERE (v.name ILIKE {search}
-                OR COALESCE(v.arch_db->>{lang}, v.arch_db->>'en_US') ILIKE {search})
-                AND {table}.id IN {ids}
-                LIMIT {limit}
-            """).format(
-                table=sql.Identifier(self._table),
-                search=sql.Placeholder('search'),
-                lang=sql.Literal(self.env.lang or 'en_US'),
-                ids=sql.Placeholder('ids'),
-                limit=sql.Placeholder('limit'),
-            )
-            self.env.cr.execute(query, {
-                'search': '%%%s%%' % escape_psql(search),
-                'ids': tuple(most_specific_pages.ids),
-                'limit': len(most_specific_pages.ids),
-            })
+            self.env.cr.execute(SQL(
+                """
+                SELECT DISTINCT %(table)s.id
+                FROM %(table)s
+                LEFT JOIN ir_ui_view v ON %(table)s.view_id = v.id
+                WHERE (v.name ILIKE %(search)s
+                OR %(v_arch_db)s ILIKE %(search)s)
+                AND %(table)s.id IN %(ids)s
+                LIMIT %(limit)s
+                """,
+                table=SQL.identifier(self._table),
+                search=f"%{escape_psql(search)}%",
+                v_arch_db=v_arch_db,
+                ids=tuple(most_specific_pages.ids),
+                limit=len(most_specific_pages.ids),
+            ))
             ids = {row[0] for row in self.env.cr.fetchall()}
             if ids:
                 ids.update(results.ids)
