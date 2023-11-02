@@ -37,7 +37,8 @@ class ResPartner(models.Model):
         )
         partner_country_is_chile = country.code == "CL" or identification_type.country_id.code == "CL"
         if partner_country_is_chile and \
-                values.get('l10n_latam_identification_type_id') in identification_types and values.get('vat'):
+                values.get('l10n_latam_identification_type_id') in identification_types and values.get('vat') and\
+                stdnum.util.get_cc_module('cl', 'vat').is_valid(values['vat']):
             return stdnum.util.get_cc_module('cl', 'vat').format(values['vat']).replace('.', '').replace(
                 'CL', '').upper()
         else:
