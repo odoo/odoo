@@ -2,7 +2,6 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
-import dom from "@web/legacy/js/core/dom";
 import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 
@@ -16,6 +15,7 @@ import {
     serializeDateTime,
     serializeDate,
 } from "@web/core/l10n/dates";
+import { resizeTextArea } from "@web/core/utils/autoresize";
 const { DateTime } = luxon;
 
 var isMac = navigator.platform.toUpperCase().includes('MAC');
@@ -832,7 +832,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     */
     _initTextArea: function () {
         this.$('textarea').each(function () {
-            dom.autoresize($(this));
+            resizeTextArea(this);
         });
     },
 
