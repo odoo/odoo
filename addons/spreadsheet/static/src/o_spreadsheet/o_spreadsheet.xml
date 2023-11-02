@@ -58,7 +58,7 @@
   <t t-name="o-spreadsheet-BorderEditor" owl="1">
     <Popover t-props="popoverProps">
       <div
-        class="d-flex bg-white o-border-selector"
+        class="d-flex o-border-selector"
         t-on-click.stop=""
         t-att-class="props.class ? props.class : ''">
         <div class="o-border-selector-section">
@@ -1158,7 +1158,7 @@
   <t t-name="o-spreadsheet-Border" owl="1">
     <div
       class="o-border"
-      t-on-mousedown="onMouseDown"
+      t-on-mousedown.prevent="onMouseDown"
       t-att-style="style"
       t-att-class="{
           'o-moving': props.isMoving,
@@ -1173,7 +1173,7 @@
   <t t-name="o-spreadsheet-Corner" owl="1">
     <div
       class="o-corner"
-      t-on-mousedown="onMouseDown"
+      t-on-mousedown.prevent="onMouseDown"
       t-att-style="style"
       t-att-class="{
           'o-resizing': props.isResizing,
@@ -3796,7 +3796,7 @@
 
   <t t-name="o-spreadsheet-TopBar" owl="1">
     <div
-      class="o-spreadsheet-topbar o-two-columns bg-white d-flex flex-column user-select-none"
+      class="o-spreadsheet-topbar o-two-columns d-flex flex-column user-select-none"
       t-on-click="props.onClick">
       <div class="o-topbar-top d-flex justify-content-between">
         <!-- Menus -->
@@ -3976,7 +3976,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.10';
-  __info__.date = '2023-10-19T15:28:21.023Z';
-  __info__.hash = 'bc7546f';
+  __info__.version = '16.4.12';
+  __info__.date = '2023-11-02T10:04:36.012Z';
+  __info__.hash = '7fdc589';
 -->

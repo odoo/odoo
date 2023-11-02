@@ -4201,70 +4201,71 @@
         CommandResult[CommandResult["InvalidFigureId"] = 29] = "InvalidFigureId";
         CommandResult[CommandResult["InputAlreadyFocused"] = 30] = "InputAlreadyFocused";
         CommandResult[CommandResult["MaximumRangesReached"] = 31] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 32] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 33] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 34] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 35] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 36] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 37] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 38] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 39] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 40] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 41] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 42] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 43] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 44] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 45] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 46] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 47] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 48] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 49] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 50] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 51] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 52] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 53] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 54] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 55] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 56] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 57] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 58] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 59] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 60] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 61] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 62] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 63] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 64] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 65] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 66] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 67] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 68] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 69] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 70] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 71] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 72] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 73] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 74] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 75] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 76] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 77] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 78] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 79] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 80] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 81] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 82] = "NonContinuousTargets";
-        CommandResult[CommandResult["DuplicatedFigureId"] = 83] = "DuplicatedFigureId";
-        CommandResult[CommandResult["InvalidSelectionStep"] = 84] = "InvalidSelectionStep";
-        CommandResult[CommandResult["DuplicatedChartId"] = 85] = "DuplicatedChartId";
-        CommandResult[CommandResult["ChartDoesNotExist"] = 86] = "ChartDoesNotExist";
-        CommandResult[CommandResult["InvalidHeaderIndex"] = 87] = "InvalidHeaderIndex";
-        CommandResult[CommandResult["InvalidQuantity"] = 88] = "InvalidQuantity";
-        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 89] = "MoreThanOneColumnSelected";
-        CommandResult[CommandResult["EmptySplitSeparator"] = 90] = "EmptySplitSeparator";
-        CommandResult[CommandResult["SplitWillOverwriteContent"] = 91] = "SplitWillOverwriteContent";
-        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 92] = "NoSplitSeparatorInSelection";
-        CommandResult[CommandResult["NoActiveSheet"] = 93] = "NoActiveSheet";
-        CommandResult[CommandResult["InvalidLocale"] = 94] = "InvalidLocale";
-        CommandResult[CommandResult["AlreadyInPaintingFormatMode"] = 95] = "AlreadyInPaintingFormatMode";
+        CommandResult[CommandResult["MinimumRangesReached"] = 32] = "MinimumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 33] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 34] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 35] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 36] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 37] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 38] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 39] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 40] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 41] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 42] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 43] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 44] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 45] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 46] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 47] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 48] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 49] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 50] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 51] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 52] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 53] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 54] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 55] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 56] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 57] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 58] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 59] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 60] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 61] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 62] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 63] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 64] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 65] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 66] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 67] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 68] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 69] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 70] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 71] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 72] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 73] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 74] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 75] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 76] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 77] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 78] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 79] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 80] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 81] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 82] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 83] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 84] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 85] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 86] = "DuplicatedChartId";
+        CommandResult[CommandResult["ChartDoesNotExist"] = 87] = "ChartDoesNotExist";
+        CommandResult[CommandResult["InvalidHeaderIndex"] = 88] = "InvalidHeaderIndex";
+        CommandResult[CommandResult["InvalidQuantity"] = 89] = "InvalidQuantity";
+        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 90] = "MoreThanOneColumnSelected";
+        CommandResult[CommandResult["EmptySplitSeparator"] = 91] = "EmptySplitSeparator";
+        CommandResult[CommandResult["SplitWillOverwriteContent"] = 92] = "SplitWillOverwriteContent";
+        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 93] = "NoSplitSeparatorInSelection";
+        CommandResult[CommandResult["NoActiveSheet"] = 94] = "NoActiveSheet";
+        CommandResult[CommandResult["InvalidLocale"] = 95] = "InvalidLocale";
+        CommandResult[CommandResult["AlreadyInPaintingFormatMode"] = 96] = "AlreadyInPaintingFormatMode";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
@@ -16028,11 +16029,11 @@
         if (definition.dataSets) {
             const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
             if (invalidRanges) {
-                return 33 /* CommandResult.InvalidDataSet */;
+                return 34 /* CommandResult.InvalidDataSet */;
             }
             const zones = definition.dataSets.map(toUnboundedZone);
             if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 33 /* CommandResult.InvalidDataSet */;
+                return 34 /* CommandResult.InvalidDataSet */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -16041,7 +16042,7 @@
         if (definition.labelRange) {
             const invalidLabels = !rangeReference.test(definition.labelRange || "");
             if (invalidLabels) {
-                return 34 /* CommandResult.InvalidLabelRange */;
+                return 35 /* CommandResult.InvalidLabelRange */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -16128,22 +16129,22 @@
     const CfTerms = {
         Errors: {
             [26 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [52 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [53 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [54 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [55 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [56 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [57 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [58 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [48 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [51 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [50 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [49 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [59 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [61 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [60 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [62 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [63 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [53 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [54 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [55 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [56 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [57 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [58 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [59 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [49 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [52 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [51 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [50 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [60 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [62 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [61 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [63 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [64 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
             [25 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
             Unexpected: _lt("The rule is invalid for an unknown reason"),
         },
@@ -16171,20 +16172,20 @@
         Errors: {
             Unexpected: _lt("The chart definition is invalid for an unknown reason"),
             // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [33 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [34 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            [34 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [35 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
             // SCORECARD CHART ERRORS
-            [35 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [36 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            [36 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [37 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
             // GAUGE CHART ERRORS
-            [37 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [38 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [39 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [40 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [41 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [43 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [44 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+            [38 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [39 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [40 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [41 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [42 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [43 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [44 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [45 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
     };
     const CustomCurrencyTerms = {
@@ -16194,9 +16195,9 @@
     const SplitToColumnsTerms = {
         Errors: {
             Unexpected: _lt("Cannot split the selection for an unknown reason"),
-            [92 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
-            [89 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
-            [91 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
+            [93 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
+            [90 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
+            [92 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
         },
     };
 
@@ -16601,7 +16602,7 @@
 
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 37 /* CommandResult.InvalidGaugeDataRange */
+            ? 38 /* CommandResult.InvalidGaugeDataRange */
             : 0 /* CommandResult.Success */;
     }
     function checkRangeLimits(check, batchValidations) {
@@ -16633,7 +16634,7 @@
     function checkRangeMinBiggerThanRangeMax(definition) {
         if (definition.sectionRule) {
             if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+                return 43 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -16642,9 +16643,9 @@
         if (value === "") {
             switch (valueName) {
                 case "rangeMin":
-                    return 38 /* CommandResult.EmptyGaugeRangeMin */;
+                    return 39 /* CommandResult.EmptyGaugeRangeMin */;
                 case "rangeMax":
-                    return 40 /* CommandResult.EmptyGaugeRangeMax */;
+                    return 41 /* CommandResult.EmptyGaugeRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -16653,13 +16654,13 @@
         if (isNaN(value)) {
             switch (valueName) {
                 case "rangeMin":
-                    return 39 /* CommandResult.GaugeRangeMinNaN */;
+                    return 40 /* CommandResult.GaugeRangeMinNaN */;
                 case "rangeMax":
-                    return 41 /* CommandResult.GaugeRangeMaxNaN */;
+                    return 42 /* CommandResult.GaugeRangeMaxNaN */;
                 case "lowerInflectionPointValue":
-                    return 43 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                    return 44 /* CommandResult.GaugeLowerInflectionPointNaN */;
                 case "upperInflectionPointValue":
-                    return 44 /* CommandResult.GaugeUpperInflectionPointNaN */;
+                    return 45 /* CommandResult.GaugeUpperInflectionPointNaN */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -17455,12 +17456,12 @@
 
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 35 /* CommandResult.InvalidScorecardKeyValue */
+            ? 36 /* CommandResult.InvalidScorecardKeyValue */
             : 0 /* CommandResult.Success */;
     }
     function checkBaseline(definition) {
         return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 36 /* CommandResult.InvalidScorecardBaseline */
+            ? 37 /* CommandResult.InvalidScorecardBaseline */
             : 0 /* CommandResult.Success */;
     }
     class ScorecardChart extends AbstractChart {
@@ -17987,7 +17988,7 @@
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
+        if (result.isCancelledBecause(82 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddMergeInteractiveContent.MergeInFilter);
         }
         else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
@@ -18014,7 +18015,7 @@
             else if (result.reasons.includes(23 /* CommandResult.WrongFigurePasteOption */)) {
                 env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
             }
-            else if (result.reasons.includes(76 /* CommandResult.FrozenPaneOverlap */)) {
+            else if (result.reasons.includes(77 /* CommandResult.FrozenPaneOverlap */)) {
                 env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
             }
         }
@@ -19190,7 +19191,7 @@
                 });
             }
         }
-        if (result.isCancelledBecause(64 /* CommandResult.InvalidSortZone */)) {
+        if (result.isCancelledBecause(65 /* CommandResult.InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
             env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
@@ -19204,13 +19205,13 @@
     };
     function interactiveAddFilter(env, sheetId, target) {
         const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(79 /* CommandResult.FilterOverlap */)) {
+        if (result.isCancelledBecause(80 /* CommandResult.FilterOverlap */)) {
             env.raiseError(AddFilterInteractiveContent.filterOverlap);
         }
-        else if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
+        else if (result.isCancelledBecause(82 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddFilterInteractiveContent.mergeInFilter);
         }
-        else if (result.isCancelledBecause(82 /* CommandResult.NonContinuousTargets */)) {
+        else if (result.isCancelledBecause(83 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
     }
@@ -19647,7 +19648,7 @@
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(66 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(67 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
@@ -20685,16 +20686,11 @@
             this.triggerChange();
         }
         reset() {
-            const existingSelectionRanges = this.env.model.getters.getSelectionInput(this.id);
-            for (const range of existingSelectionRanges) {
-                this.env.model.dispatch("REMOVE_RANGE", {
-                    id: this.id,
-                    rangeId: range.id,
-                });
-            }
-            for (const range of this.previousRanges) {
-                this.env.model.dispatch("ADD_RANGE", { id: this.id, value: range });
-            }
+            this.env.model.dispatch("ENABLE_NEW_SELECTION_INPUT", {
+                id: this.id,
+                initialRanges: this.previousRanges,
+                hasSingleRange: this.props.hasSingleRange,
+            });
             this.confirm();
         }
         confirm() {
@@ -20703,11 +20699,13 @@
             const existingSelectionXcs = [];
             for (const range of existingSelectionRanges) {
                 if (range.xc === "") {
-                    this.env.model.dispatch("REMOVE_RANGE", {
+                    const result = this.env.model.dispatch("REMOVE_RANGE", {
                         id: this.id,
                         rangeId: range.id,
                     });
-                    continue;
+                    if (result.isSuccessful) {
+                        continue;
+                    }
                 }
                 existingSelectionXcs.push(range.xc);
                 if (this.env.model.getters.isRangeValid(range.xc)) {
@@ -20790,10 +20788,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDatasetInvalid() {
-            return !!this.state.datasetDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidDataSet */);
+            return !!this.state.datasetDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidDataSet */);
         }
         get isLabelInvalid() {
-            return !!this.state.labelsDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidLabelRange */);
+            return !!this.state.labelsDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidLabelRange */);
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart(this.props.figureId, {
@@ -21467,7 +21465,7 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDataRangeInvalid() {
-            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(37 /* CommandResult.InvalidGaugeDataRange */);
+            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(38 /* CommandResult.InvalidGaugeDataRange */);
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -21551,25 +21549,25 @@
             });
         }
         isRangeMinInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(38 /* CommandResult.EmptyGaugeRangeMin */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.GaugeRangeMinNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.EmptyGaugeRangeMin */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.GaugeRangeMinNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         isRangeMaxInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.EmptyGaugeRangeMax */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMaxNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.EmptyGaugeRangeMax */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMaxNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(46 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         get isUpperInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(46 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         updateSectionColor(target, color) {
             const sectionRule = deepCopy(this.state.sectionRule);
@@ -21657,10 +21655,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isKeyValueInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidScorecardKeyValue */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidScorecardKeyValue */);
         }
         get isBaselineInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidScorecardBaseline */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(37 /* CommandResult.InvalidScorecardBaseline */);
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -22555,10 +22553,10 @@
          * Cell Is Rule
          ****************************************************************************/
         get isValue1Invalid() {
-            return !!this.state.errors?.includes(52 /* CommandResult.FirstArgMissing */);
+            return !!this.state.errors?.includes(53 /* CommandResult.FirstArgMissing */);
         }
         get isValue2Invalid() {
-            return !!this.state.errors?.includes(53 /* CommandResult.SecondArgMissing */);
+            return !!this.state.errors?.includes(54 /* CommandResult.SecondArgMissing */);
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -22575,17 +22573,17 @@
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(59 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(51 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(48 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(54 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(60 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(52 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(49 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(55 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(60 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(55 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(50 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(61 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(56 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(51 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(61 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(56 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(62 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(57 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -22633,13 +22631,13 @@
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(58 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(63 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(59 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(64 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(50 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(57 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(62 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(58 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(63 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(50 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -23002,7 +23000,7 @@
     };
     function interactiveSplitToColumns(env, separator, addNewColumns) {
         let result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", { separator, addNewColumns });
-        if (result.isCancelledBecause(91 /* CommandResult.SplitWillOverwriteContent */)) {
+        if (result.isCancelledBecause(92 /* CommandResult.SplitWillOverwriteContent */)) {
             env.askConfirmation(SplitToColumnsInteractiveContent.SplitIsDestructive, () => {
                 result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", {
                     separator,
@@ -23066,8 +23064,8 @@
             const errors = new Set();
             for (const reason of cancelledReasons) {
                 switch (reason) {
-                    case 91 /* CommandResult.SplitWillOverwriteContent */:
-                    case 90 /* CommandResult.EmptySplitSeparator */:
+                    case 92 /* CommandResult.SplitWillOverwriteContent */:
+                    case 91 /* CommandResult.EmptySplitSeparator */:
                         break;
                     default:
                         errors.add(SplitToColumnsTerms.Errors[reason] || SplitToColumnsTerms.Errors.Unexpected);
@@ -23082,8 +23080,8 @@
                 addNewColumns: this.state.addNewColumns,
                 force: false,
             }).reasons;
-            if (cancelledReasons.includes(91 /* CommandResult.SplitWillOverwriteContent */)) {
-                warnings.push(SplitToColumnsTerms.Errors[91 /* CommandResult.SplitWillOverwriteContent */]);
+            if (cancelledReasons.includes(92 /* CommandResult.SplitWillOverwriteContent */)) {
+                warnings.push(SplitToColumnsTerms.Errors[92 /* CommandResult.SplitWillOverwriteContent */]);
             }
             return warnings;
         }
@@ -23517,7 +23515,7 @@
                 left: `${x - 1}px`,
                 border: `1px solid ${color}`,
                 "background-color": color,
-                opacity: this.props.active ? "opacity:1 !important" : undefined,
+                opacity: this.props.active ? "1 !important" : undefined,
             });
         }
     }
@@ -32317,13 +32315,13 @@
         }
         checkChartDuplicate(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
-                ? 85 /* CommandResult.DuplicatedChartId */
+                ? 86 /* CommandResult.DuplicatedChartId */
                 : 0 /* CommandResult.Success */;
         }
         checkChartExists(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
                 ? 0 /* CommandResult.Success */
-                : 86 /* CommandResult.ChartDoesNotExist */;
+                : 87 /* CommandResult.ChartDoesNotExist */;
         }
     }
 
@@ -32535,10 +32533,10 @@
                 return 28 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 72 /* CommandResult.InvalidConditionalFormatId */;
+                return 73 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 72 /* CommandResult.InvalidConditionalFormatId */;
+                return 73 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32579,10 +32577,10 @@
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(52 /* CommandResult.FirstArgMissing */);
+                        errors.push(53 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(53 /* CommandResult.SecondArgMissing */);
+                        errors.push(54 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -32594,15 +32592,15 @@
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 54 /* CommandResult.MinNaN */;
+                        return 55 /* CommandResult.MinNaN */;
                     case "max":
-                        return 56 /* CommandResult.MaxNaN */;
+                        return 57 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 55 /* CommandResult.MidNaN */;
+                        return 56 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 57 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 58 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 58 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 59 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -32616,15 +32614,15 @@
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 59 /* CommandResult.MinInvalidFormula */;
+                        return 60 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 61 /* CommandResult.MaxInvalidFormula */;
+                        return 62 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 60 /* CommandResult.MidInvalidFormula */;
+                        return 61 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 62 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 63 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 63 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 64 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -32641,7 +32639,7 @@
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 49 /* CommandResult.LowerBiggerThanUpper */;
+                return 50 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32651,7 +32649,7 @@
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 48 /* CommandResult.MinBiggerThanMax */;
+                return 49 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32662,7 +32660,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 50 /* CommandResult.MidBiggerThanMax */;
+                return 51 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32673,7 +32671,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 51 /* CommandResult.MinBiggerThanMid */;
+                return 52 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32805,13 +32803,13 @@
         }
         checkFigureExists(sheetId, figureId) {
             if (this.figures[sheetId]?.[figureId] === undefined) {
-                return 71 /* CommandResult.FigureDoesNotExist */;
+                return 72 /* CommandResult.FigureDoesNotExist */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkFigureDuplicate(figureId) {
             if (Object.values(this.figures).find((sheet) => sheet?.[figureId])) {
-                return 83 /* CommandResult.DuplicatedFigureId */;
+                return 84 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32923,12 +32921,12 @@
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 82 /* CommandResult.NonContinuousTargets */;
+                        return 83 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 79 /* CommandResult.FilterOverlap */;
+                            return 80 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -32936,7 +32934,7 @@
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 81 /* CommandResult.MergeInFilter */;
+                                return 82 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -32946,7 +32944,7 @@
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 81 /* CommandResult.MergeInFilter */;
+                                return 82 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -33308,10 +33306,10 @@
                         : this.getters.getNumberRows(cmd.sheetId);
                     const hiddenElements = new Set((hiddenGroup || []).flat().concat(cmd.elements));
                     if (hiddenElements.size >= elements) {
-                        return 67 /* CommandResult.TooManyHiddenElements */;
+                        return 68 /* CommandResult.TooManyHiddenElements */;
                     }
                     else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 88 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
                         return 0 /* CommandResult.Success */;
@@ -33875,7 +33873,7 @@
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 66 /* CommandResult.MergeOverlap */;
+                        return 67 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -33889,7 +33887,7 @@
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 76 /* CommandResult.FrozenPaneOverlap */;
+                    return 77 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -34522,10 +34520,10 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (cmd.base < 0 || cmd.base > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 88 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (cmd.quantity <= 0) {
-                        return 88 /* CommandResult.InvalidQuantity */;
+                        return 89 /* CommandResult.InvalidQuantity */;
                     }
                     return 0 /* CommandResult.Success */;
                 case "REMOVE_COLUMNS_ROWS": {
@@ -34533,7 +34531,7 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 88 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (this.checkElementsIncludeAllNonFrozenHeaders(cmd.sheetId, cmd.dimension, cmd.elements)) {
                         return 8 /* CommandResult.NotEnoughElements */;
@@ -35013,18 +35011,18 @@
         checkRowFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 75 /* CommandResult.InvalidFreezeQuantity */;
+                : 76 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkColFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 75 /* CommandResult.InvalidFreezeQuantity */;
+                : 76 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkRowFreezeOverlapMerge(cmd) {
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                    return 66 /* CommandResult.MergeOverlap */;
+                    return 67 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -35033,7 +35031,7 @@
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                    return 66 /* CommandResult.MergeOverlap */;
+                    return 67 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -35368,7 +35366,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_LOCALE":
-                    return isValidLocale(cmd.locale) ? 0 /* CommandResult.Success */ : 94 /* CommandResult.InvalidLocale */;
+                    return isValidLocale(cmd.locale) ? 0 /* CommandResult.Success */ : 95 /* CommandResult.InvalidLocale */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -35594,9 +35592,9 @@
          */
         getCellsDependingOn(positionIds) {
             const visited = new JetSet();
-            const queue = Array.from(positionIds);
+            const queue = Array.from(positionIds).reverse();
             while (queue.length > 0) {
-                const node = queue.shift();
+                const node = queue.pop();
                 visited.add(node);
                 const adjacentNodes = this.inverseDependencies.get(node) || new Set();
                 for (const adjacentNode of adjacentNodes) {
@@ -37116,7 +37114,7 @@
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 46 /* CommandResult.InvalidAutofillSelection */;
+                    return 47 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -37733,7 +37731,7 @@
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 73 /* CommandResult.InvalidCellPopover */;
+                        return 74 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -39881,6 +39879,11 @@
                         return 31 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
+                case "REMOVE_RANGE":
+                    if (this.ranges.length === 1) {
+                        return 32 /* CommandResult.MinimumRangesReached */;
+                    }
+                    break;
                 case "CHANGE_RANGE":
                     if (this.inputHasSingleRange && cmd.value.split(",").length > 1) {
                         return 31 /* CommandResult.MaximumRangesReached */;
@@ -40244,7 +40247,7 @@
             /*Test the presence of single cells*/
             const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
             if (singleCells) {
-                return 64 /* CommandResult.InvalidSortZone */;
+                return 65 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40263,7 +40266,7 @@
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 64 /* CommandResult.InvalidSortZone */;
+                return 65 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40701,7 +40704,7 @@
             const sheetId = "sheetId" in cmd ? cmd.sheetId : this.getters.tryGetActiveSheetId();
             const zones = this.getters.getCommandZones(cmd);
             if (!sheetId && zones.length > 0) {
-                return 93 /* CommandResult.NoActiveSheet */;
+                return 94 /* CommandResult.NoActiveSheet */;
             }
             if (sheetId && zones.length > 0) {
                 return this.getters.checkZonesExistInSheet(sheetId, zones);
@@ -41183,13 +41186,13 @@
         }
         checkSingleColSelected() {
             if (!this.getters.isSingleColSelected()) {
-                return 89 /* CommandResult.MoreThanOneColumnSelected */;
+                return 90 /* CommandResult.MoreThanOneColumnSelected */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkNonEmptySelector(cmd) {
             if (cmd.separator === "") {
-                return 90 /* CommandResult.EmptySplitSeparator */;
+                return 91 /* CommandResult.EmptySplitSeparator */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -41200,7 +41203,7 @@
             const selection = this.getters.getSelectedZones()[0];
             const splitted = this.getSplittedCols(selection, cmd.separator);
             if (this.willSplittedColsOverwriteContent(selection, splitted)) {
-                return 91 /* CommandResult.SplitWillOverwriteContent */;
+                return 92 /* CommandResult.SplitWillOverwriteContent */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -41211,7 +41214,7 @@
                     return 0 /* CommandResult.Success */;
                 }
             }
-            return 92 /* CommandResult.NoSplitSeparatorInSelection */;
+            return 93 /* CommandResult.NoSplitSeparatorInSelection */;
         }
     }
 
@@ -41359,7 +41362,7 @@
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 76 /* CommandResult.FrozenPaneOverlap */;
+                    return 77 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -41811,7 +41814,7 @@
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 74 /* CommandResult.EmptyTarget */;
+                return 75 /* CommandResult.EmptyTarget */;
             }
             if (option?.pasteOption !== undefined) {
                 return 23 /* CommandResult.WrongFigurePasteOption */;
@@ -42044,7 +42047,7 @@
                 }
                 case "ACTIVATE_PAINT_FORMAT": {
                     if (this.paintFormatStatus !== "inactive") {
-                        return 95 /* CommandResult.AlreadyInPaintingFormatMode */;
+                        return 96 /* CommandResult.AlreadyInPaintingFormatMode */;
                     }
                 }
             }
@@ -42618,7 +42621,7 @@
         validateSelection(length, start, end) {
             return start >= 0 && start <= length && end >= 0 && end <= length
                 ? 0 /* CommandResult.Success */
-                : 47 /* CommandResult.WrongComposerSelection */;
+                : 48 /* CommandResult.WrongComposerSelection */;
         }
         onColumnsRemoved(cmd) {
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
@@ -42999,7 +43002,7 @@
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd)) {
-                        return 80 /* CommandResult.FilterNotFound */;
+                        return 81 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
@@ -43557,11 +43560,19 @@
             }
         }
         getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = new Set();
+            for (const zone of this.gridSelection.zones) {
+                for (const { col, row } of positions(zone)) {
+                    if (this.getters.isRowHidden(sheetId, row) || this.getters.isColHidden(sheetId, col)) {
+                        continue; // Skip hidden cells
+                    }
+                    const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (evaluatedCell.type !== CellValueType.empty) {
+                        cells.add(evaluatedCell);
+                    }
+                }
+            }
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
@@ -44594,7 +44605,7 @@
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 69 /* CommandResult.InvalidViewportSize */;
+                return 70 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -44604,7 +44615,7 @@
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 77 /* CommandResult.ValuesNotChanged */;
+                return 78 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -44612,7 +44623,7 @@
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 70 /* CommandResult.InvalidScrollingDirection */;
+                return 71 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -46145,6 +46156,7 @@
     css /* scss */ `
   .o-border-selector {
     padding: 4px;
+    background-color: white;
   }
   .o-divider {
     border-right: 1px solid #e0e2e4;
@@ -46505,6 +46517,7 @@
     line-height: 1.2;
     font-size: 13px;
     font-weight: 500;
+    background-color: #fff;
 
     .o-topbar-top {
       border-bottom: 1px solid ${SEPARATOR_COLOR};
@@ -48069,7 +48082,7 @@
          */
         moveAnchorCell(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(85 /* CommandResult.InvalidSelectionStep */);
             }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
@@ -48115,7 +48128,7 @@
          */
         resizeAnchorZone(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(85 /* CommandResult.InvalidSelectionStep */);
             }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
@@ -49356,14 +49369,14 @@
      */
     function figureCoordinates(headers, position) {
         let currentPosition = 0;
-        for (const [headerIndex, header] of Object.entries(headers)) {
+        for (const [headerIndex, header] of headers.entries()) {
             if (currentPosition <= position && position < currentPosition + header.size) {
                 return {
-                    index: parseInt(headerIndex),
+                    index: headerIndex,
                     offset: convertDotValueToEMU(position - currentPosition + FIGURE_BORDER_WIDTH),
                 };
             }
-            else {
+            else if (headerIndex < headers.length - 1) {
                 currentPosition += header.size;
             }
         }
@@ -50469,10 +50482,10 @@
             const command = createCommand(type, payload);
             let status = this.status;
             if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                return new DispatchResult(68 /* CommandResult.Readonly */);
+                return new DispatchResult(69 /* CommandResult.Readonly */);
             }
             if (!this.session.canApplyOptimisticUpdate()) {
-                return new DispatchResult(65 /* CommandResult.WaitingSessionConfirmation */);
+                return new DispatchResult(66 /* CommandResult.WaitingSessionConfirmation */);
             }
             switch (status) {
                 case 0 /* Status.Ready */:
@@ -50761,9 +50774,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.10';
-    __info__.date = '2023-10-19T15:28:18.011Z';
-    __info__.hash = 'bc7546f';
+    __info__.version = '16.4.12';
+    __info__.date = '2023-11-02T10:04:32.198Z';
+    __info__.hash = '7fdc589';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
