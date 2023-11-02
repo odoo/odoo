@@ -18,7 +18,7 @@
                         <span class="d-flex flex-grow-1 align-items-center">
                             <span class="mx-2 text-truncate fs-6" t-esc="persona.name"/>
                             <div class="flex-grow-1"/>
-                            <button t-if="persona.eq(store.self)" class="btn btn-light fa fa-trash rounded-pill o-bg-inherit border-0" title="Remove" t-on-click.stop="() => this.messageService.removeReaction(state.reaction)"/>
+                            <button t-if="persona.eq(store.self)" class="btn btn-light fa fa-trash rounded-pill bg-inherit border-0" title="Remove" t-on-click.stop="() => this.messageService.removeReaction(state.reaction)"/>
                         </span>
                     </div>
                 </div>
