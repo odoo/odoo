@@ -4,7 +4,7 @@
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
         <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'text-muted': props.muted === 1, 'opacity-50': props.muted === 2 }" t-on-click="onClick" t-ref="root">
-            <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
+            <div class="position-relative bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
