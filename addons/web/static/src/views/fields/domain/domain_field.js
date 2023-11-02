@@ -28,8 +28,14 @@ export class DomainField extends Component {
             this.displayedDomain = this.props.value;
             this.loadCount(this.props);
         });
-        onWillUpdateProps((nextProps) => {
+        onWillUpdateProps(async (nextProps) => {
             this.isDebugEdited = this.isDebugEdited && this.props.readonly === nextProps.readonly;
+            // Check the manually edited domain and reflect it in the widget if its valid
+            if (this.isDebugEdited) {
+                const proms = [];
+                this.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+                await Promise.all([...proms]);
+            }
             if (!this.isDebugEdited) {
                 this.displayedDomain = nextProps.value;
                 this.loadCount(nextProps);
