@@ -25,9 +25,11 @@ export class CategorySelector extends Component {
             },
         },
         class: { type: String, optional: true },
+        showImage: { type: Boolean, optional: true },
         onClick: { type: Function },
     };
     static defaultProps = {
         class: "",
+        showImage: true,
     };
 }
