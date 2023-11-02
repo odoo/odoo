@@ -163,14 +163,6 @@ class Field(MetaField('DummyField', (object,), {})):
         ``default=None`` to discard default values for the field
     :type default: value or callable
 
-    :param dict states: a dictionary mapping state values to lists of UI attribute-value
-        pairs; possible attributes are: ``readonly``, ``required``.
-
-        .. warning:: Any state-based condition requires the ``state`` field value to be
-            available on the client-side UI. This is typically done by including it in
-            the relevant views, possibly made invisible if not relevant for the
-            end-user.
-
     :param str groups: comma-separated list of group xml ids (string); this
         restricts the field access to the users of the given groups only
 
@@ -321,7 +313,7 @@ class Field(MetaField('DummyField', (object,), {})):
     help = None                         # field tooltip
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
-    states = None                       # set readonly and required depending on state
+    states = None                       # set readonly and required depending on state (deprecated)
     groups = None                       # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
 
