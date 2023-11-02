@@ -10,7 +10,8 @@ export class MovesListRenderer extends ListRenderer {
     processAllColumn(allColumns, list) {
         let cols = super.processAllColumn(...arguments);
         if (list.resModel === "stock.move") {
-            cols.push({
+            const index = cols.findLastIndex((col) => col.type === "button_group");
+            cols.splice(index, 0, {
                 type: 'opendetailsop',
                 id: `column_detailOp_${cols.length}`,
                 column_invisible: 'parent.state=="draft"',
