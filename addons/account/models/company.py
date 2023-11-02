@@ -383,7 +383,7 @@ class ResCompany(models.Model):
 
             #forbid the change of currency_id if there are already some accounting entries existing
             if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
-                if company._existing_accounting():
+                if company.root_id._existing_accounting():
                     raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
 
         return super(ResCompany, self).write(values)
@@ -524,7 +524,7 @@ class ResCompany(models.Model):
     def _existing_accounting(self) -> bool:
         """Return True iff some accounting entries have already been made for the current company."""
         self.ensure_one()
-        return bool(self.env['account.move.line'].search([('company_id', 'child_of', self.root_id.id)], limit=1))
+        return bool(self.env['account.move.line'].search([('company_id', 'child_of', self.id)], limit=1))
 
     def _chart_template_selection(self):
         return self.env['account.chart.template']._select_chart_template(self.country_id)
