@@ -301,11 +301,7 @@ export class Message extends Component {
     }
 
     get translatable() {
-        return (
-            this.store.hasMessageTranslationFeature &&
-            this.env.inChatter &&
-            !this.message.isSelfAuthored
-        );
+        return this.store.hasMessageTranslationFeature && this.env.inChatter;
     }
 
     get translatedFromText() {
