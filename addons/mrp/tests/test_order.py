@@ -3566,9 +3566,9 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
 
-        self.assertEqual(len(consumption_warning.mrp_consumption_warning_line_ids), 2)
+        self.assertEqual(len(consumption_warning.mrp_consumption_warning_line_ids), 1)
         self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 0)
-        self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_expected_qty_uom, 0)
+        self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_expected_qty_uom, 1)
         # Force the warning
         consumption_warning.action_confirm()
         self.assertEqual(mo.state, 'done')
