@@ -58,7 +58,7 @@ function resizeInput(input) {
     input.style.width = input.scrollWidth + 5 + (isSafari16 ? 8 : 0) + "px";
 }
 
-function resizeTextArea(textarea, options) {
+export function resizeTextArea(textarea, options = {}) {
     const minimumHeight = options.minimumHeight || 0;
     let heightOffset = 0;
     const style = window.getComputedStyle(textarea);
