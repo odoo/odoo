@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for invoice 3 -->
+    <record id="demo_refund_invoice_1" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_uy')]}">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_1'), 0)]"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_uy_account.demo_invoice_1').journal_id"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <!-- Create draft refund for invoice 4 -->
+    <record id="demo_refund_invoice_2" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_4'), 0)]"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy_account.dc_cn_e_inv')"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_uy_account.demo_invoice_4').journal_id"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_refund_invoice_3" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">refund</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_5'), 0)]"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_uy_account.demo_invoice_5').journal_id"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy_account.dc_cn_e_inv_exp')"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_refund_invoice_4" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_6'), 0)]"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_uy_account.demo_invoice_6').journal_id"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy_account.dc_cn_e_ticket')"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_1')]"/>
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_2')]"/>
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_3')]"/>
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_4')]"/>
+
+</odoo>

@@ -2,10 +2,48 @@
 <odoo>
 
     <record model='res.partner' id='partner_company'>
+        <field name='name'>Company (UY)</field>
+        <field name='l10n_latam_identification_type_id' ref="it_rut"/>
+        <field name='vat'>218296790015</field>
+        <field name='country_id' ref='base.uy'/>
+    </record>
+
+    <record model='res.partner' id='demo_partner_4'>
         <field name='name'>IEB Internacional</field>
         <field name='l10n_latam_identification_type_id' ref="it_rut"/>
         <field name='vat'>218435730016</field>
         <field name='country_id' ref='base.uy'/>
+     </record>
+
+    <record model='res.partner' id='demo_partner_5'>
+        <field name='name'>MELI URUGUAY S.R.L.</field>
+        <field name='l10n_latam_identification_type_id' ref='l10n_uy.it_rut'/>
+        <field name='vat'>216748870015</field>
+        <field name='country_id' ref='base.uy'/>
+    </record>
+
+    <record model='res.partner' id='demo_partner_6'>
+        <field name='name'>CORREO URUGUAYO</field>
+        <field name='l10n_latam_identification_type_id' ref='l10n_uy.it_rut'/>
+        <field name='vat'>214130990011</field>
+        <field name='country_id' ref='base.uy'/>
+    </record>
+
+    <!-- Foreign Partner -->
+    <record model="res.partner" id="res_partner_foreign">
+        <field name="name">Foreign Inc</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="street">7841 Red Road</field>
+        <field name="city">San Francisco</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">95380</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="email">foreing@example.com</field>
+        <field name="phone">(123)-456-7890</field>
+        <field name="website">http://www.foreign-inc.com</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_uy.it_nie"/>
+        <field name='vat'>93:402.010-1</field>
     </record>
 
 </odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="partner_demo_company_uy" model="res.partner">
+        <field name='name'>(UY) Company</field>
+        <field name='l10n_latam_identification_type_id' ref='it_rut'/>
+        <field name='vat'>219999830019</field>
+        <field name="street">Calle Falsa 123</field>
+        <field name="city">Montevideo</field>
+        <field name="country_id" ref="base.uy"/>
+        <field name="zip">2000</field>
+        <field name="phone">+1 555 123 8069</field>
+        <field name="email">info@yourcompany.example.com</field>
+        <field name="website">www.example.com</field>
+    </record>
+
+    <record id="demo_company_uy" model="res.company">
+        <field name='currency_id' ref='base.UYU'/>
+        <field name='partner_id' ref='partner_demo_company_uy'/>
+        <field name='name'>(UY) Company</field>
+    </record>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_admin'), ref('base.user_root')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_uy.demo_company_uy'))], 'company_id': ref('l10n_uy.demo_company_uy')}"/>
+    </function>
+
+</odoo>

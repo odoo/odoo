@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <record id="demo_sup_refund_invoice_3" model="account.move.reversal" context="{'allowed_company_ids': [ref('demo_company_uy')]}">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="refund_method">refund</field>
+        <field name="l10n_latam_document_number">01234567</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_1'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_uy.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy.dc_cn_e_inv')"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_3')]"/>
+
+    <record id="demo_sup_refund_invoice_2" model="account.move.reversal" context="{'allowed_company_ids': [ref('demo_company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="l10n_latam_document_number">01234568</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_2'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_uy.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy.dc_cn_e_inv_exp')"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_2')]"/>
+
+    <record id="demo_sup_refund_invoice_1" model="account.move.reversal" context="{'allowed_company_ids': [ref('demo_company_uy')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="l10n_latam_document_number">01234569</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_7'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_uy.demo_company_uy')), ('type', '=', 'purchase')]"/>
+        <field name="l10n_latam_document_type_id" model="l10n_latam.document.type" eval="obj().env.ref('l10n_uy.dc_cn_e_ticket')"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_sup_refund_invoice_1')]"/>
+
+</odoo>

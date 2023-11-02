@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- reset root on main company so that other modules can install without issues -->
+    <record id="base.user_root" model="res.users">
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+</odoo>
