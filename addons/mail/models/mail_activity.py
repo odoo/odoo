@@ -538,17 +538,20 @@ class MailActivity(models.Model):
             activity_attachments[activity_id].append(attachment['id'])
 
         for model, activity_data in self._classify_by_model().items():
-            records = self.env[model].browse(activity_data['record_ids'])
-            for record, activity in zip(records, activity_data['activities']):
+            # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
+            # method, the activity is unlinked or archived which ensure the user has enough right on the activities.
+            records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
+            for record_sudo, activity in zip(records_sudo, activity_data['activities']):
                 # extract value to generate next activities
                 if activity.chaining_type == 'trigger':
                     vals = activity.with_context(activity_previous_deadline=activity.date_deadline)._prepare_next_activity_values()
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                activity_message = record.message_post_with_source(
+                activity_message = record_sudo.message_post_with_source(
                     'mail.message_activity_done',
                     attachment_ids=attachment_ids,
+                    author_id=self.env.user.partner_id.id,
                     render_values={
                         'activity': activity,
                         'feedback': feedback,
