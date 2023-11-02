@@ -10,7 +10,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules.module import get_manifest
-from odoo.tools import escape_psql, split_every
+from odoo.tools import escape_psql, split_every, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -536,21 +536,26 @@ class IrModuleModule(models.Model):
         if not default_menu:
             return res
 
-        o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in langs if lang != 'en_US']
-        o_menu_name = ['jsonb_build_object(' + ', '.join(items) + ')' for items in split_every(50, o_menu_name)]
-        o_menu_name = ' || '.join(o_menu_name)
-        self.env.cr.execute(f"""
-                        UPDATE website_menu menu
-                           SET name = {'menu.name || ' + o_menu_name if overwrite else o_menu_name + ' || menu.name'}
-                          FROM website_menu o_menu
-                         INNER JOIN website_menu s_menu
-                            ON o_menu.name->>'en_US' = s_menu.name->>'en_US' AND o_menu.url = s_menu.url
-                         INNER JOIN website_menu root_menu
-                            ON s_menu.parent_id = root_menu.id AND root_menu.parent_id IS NULL
-                         WHERE o_menu.website_id IS NULL AND o_menu.parent_id = %s
-                           AND s_menu.website_id IS NOT NULL
-                           AND menu.id = s_menu.id
-            """, (default_menu.id,))
+        lang_value_list = [SQL("%(lang)s, o_menu.name->>%(lang)s", lang=lang) for lang in langs if lang != 'en_US']
+        update_jsonb_list = [SQL('jsonb_build_object(%s)', SQL(', ').join(items)) for items in split_every(50, lang_value_list)]
+        update_jsonb = SQL(' || ').join(update_jsonb_list)
+        o_menu_name = SQL('menu.name || %s' if overwrite else '%s || menu.name', update_jsonb)
+        self.env.cr.execute(SQL(
+            """
+            UPDATE website_menu menu
+               SET name = %(o_menu_name)s
+              FROM website_menu o_menu
+             INNER JOIN website_menu s_menu
+                ON o_menu.name->>'en_US' = s_menu.name->>'en_US' AND o_menu.url = s_menu.url
+             INNER JOIN website_menu root_menu
+                ON s_menu.parent_id = root_menu.id AND root_menu.parent_id IS NULL
+             WHERE o_menu.website_id IS NULL AND o_menu.parent_id = %(default_menu_id)s
+               AND s_menu.website_id IS NOT NULL
+               AND menu.id = s_menu.id
+            """,
+            o_menu_name=o_menu_name,
+            default_menu_id=default_menu.id
+        ))
 
         return res
 
