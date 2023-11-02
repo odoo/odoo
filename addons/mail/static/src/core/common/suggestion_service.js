@@ -100,7 +100,7 @@ export class SuggestionService {
             thread &&
             (thread.type === "group" ||
                 thread.type === "chat" ||
-                (thread.type === "channel" && thread.group_based_subscription));
+                (thread.type === "channel" && thread.authorizedGroupFullName));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
