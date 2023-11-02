@@ -103,6 +103,10 @@
             <setting id="flexible_taxes" position="attributes">
                 <attribute name="invisible">is_kiosk_mode</attribute>
             </setting>
+
+            <xpath expr="//field[@name='pos_payment_method_ids']" position='attributes'>
+                <attribute name="required">pos_self_ordering_mode != 'kiosk' and pos_company_has_template</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
