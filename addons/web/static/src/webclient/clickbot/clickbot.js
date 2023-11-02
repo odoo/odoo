@@ -96,7 +96,9 @@ async function waitForNextAnimationFrame() {
  */
 async function triggerClick(target, elDescription) {
     if (target) {
-        browser.console.log(`Clicking on: ${elDescription}`);
+        if (elDescription) {
+            browser.console.log(`Clicking on: ${elDescription}`);
+        }
     } else {
         throw new Error(`No element "${elDescription}" found.`);
     }
@@ -268,7 +270,7 @@ async function testFilters() {
         return;
     }
     // Open the search bar menu dropdown
-    await triggerClick(searchBarMenu, "Control Panel menu");
+    await triggerClick(searchBarMenu);
     const filterMenuButton = document.querySelector(
         ".o_control_panel .o_dropdown_container.o_filter_menu"
     );
