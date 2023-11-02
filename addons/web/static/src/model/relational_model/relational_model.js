@@ -5,7 +5,6 @@ import { EventBus, markRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { registry } from "@web/core/registry";
 import { shallowEqual, unique } from "@web/core/utils/arrays";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
@@ -88,15 +87,6 @@ const DEFAULT_HOOKS = {
     onWillSetInvalidField: () => {},
     onRecordChanged: () => {},
 };
-
-export function fetchRecordErrorHandler(env, error, originalError) {
-    if (originalError instanceof FetchRecordError) {
-        env.services.notification.add(originalError.message, { sticky: true, type: "danger" });
-        return true;
-    }
-}
-const errorHandlerRegistry = registry.category("error_handlers");
-errorHandlerRegistry.add("fetchRecordErrorHandler", fetchRecordErrorHandler);
 
 export class RelationalModel extends Model {
     static services = ["action", "company", "dialog", "notification", "orm", "user"];
@@ -306,7 +296,6 @@ export class RelationalModel extends Model {
             if (!config.resId) {
                 return this._loadNewRecord(config, { evalContext });
             }
-
             const records = await this._loadRecords(
                 {
                     ...config,
@@ -531,7 +520,7 @@ export class RelationalModel extends Model {
             };
             const records = await this.orm.webRead(resModel, resIds, kwargs);
             if (!records.length) {
-                throw new FetchRecordError(resIds);
+                throw new FetchRecordError(resIds, resModel);
             }
 
             return records;

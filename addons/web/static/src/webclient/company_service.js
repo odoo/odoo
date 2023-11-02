@@ -6,6 +6,8 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { cookie } from "@web/core/browser/cookie";
+import { redirect } from "@web/core/utils/urls";
+import { routeToUrl } from "@web/core/browser/router_service";
 
 const CIDS_HASH_SEPARATOR = "-";
 
@@ -64,12 +66,10 @@ function accessErrorHandler(env, error, originalError) {
         if (!model || !id || view_type !== "form") {
             return false;
         }
-        router.pushState({ view_type: undefined });
-
-        browser.setTimeout(() => {
-            // Force the WebClient to reload the state contained in the hash.
-            env.bus.trigger("ROUTE_CHANGE");
-        });
+        const route = { ...env.services.router.current };
+        delete route.hash.id;
+        delete route.hash.view_type;
+        redirect(routeToUrl(route));
         if (error.event) {
             error.event.preventDefault();
         }
