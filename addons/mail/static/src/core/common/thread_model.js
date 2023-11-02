@@ -324,6 +324,10 @@ export class Thread extends Record {
         return this.name;
     }
 
+    get displayToSelf() {
+        return this.is_pinned || (["channel", "group"].includes(this.type) && this.hasSelfAsMember);
+    }
+
     /** @type {import("models").Persona[]} */
     get correspondents() {
         return this.channelMembers
