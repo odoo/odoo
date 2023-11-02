@@ -52,7 +52,7 @@
             </div>
             <t t-if="props.isDebugMode">
                 <div class="o_model_field_selector_popover_footer">
-                    <input type="text" class="o_model_field_selector_debug o_input" t-att-value="state.page.path" t-on-change="(ev) => this.loadNewPath(ev.target.value)" t-on-keydown="onDebugInputKeydown"/>
+                    <input type="text" class="o_model_field_selector_debug o_input" t-att-value="state.page.path" t-on-change="(ev) => this.loadNewPath(ev.target.value)" t-on-keydown="onDebugInputKeydown" t-on-input="(ev) => this.props.update(ev.target.value, true)"/>
                 </div>
             </t>
         </div>
