@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { createWebClient } from "./helpers";
-import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
@@ -124,7 +124,8 @@ QUnit.module("clickbot", (hooks) => {
         };
         registry.category("command_categories").add("view_switcher", {});
     });
-    QUnit.skip("clickbot clickeverywhere test", async (assert) => {
+    QUnit.test("clickbot clickeverywhere test", async (assert) => {
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         patchWithCleanup(browser, {
             console: {
                 log: (msg) => {
@@ -148,14 +149,12 @@ QUnit.module("clickbot", (hooks) => {
             "Testing app menu: app1",
             "Testing menu App1 app1",
             'Clicking on: menu item "App1"',
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
             'Clicking on: filter option "October"',
             "Testing view switch: kanban",
             "Clicking on: kanban view switcher",
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
@@ -164,21 +163,18 @@ QUnit.module("clickbot", (hooks) => {
             "Testing app menu: app2",
             "Testing menu App2 app2",
             'Clicking on: menu item "App2"',
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
             'Clicking on: filter option "October"',
             "Testing menu menu 1 app2_menu1",
             'Clicking on: menu item "menu 1"',
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
             'Clicking on: filter option "October"',
             "Testing menu menu 2 app2_menu1",
             'Clicking on: menu item "menu 2"',
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
@@ -312,7 +308,8 @@ QUnit.module("clickbot", (hooks) => {
         ]);
     });
 
-    QUnit.skip("clickbot clickeverywhere menu modal", async (assert) => {
+    QUnit.test("clickbot clickeverywhere menu modal", async (assert) => {
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.views["foo,false,form"] = `
             <form>
                 <field name="foo"/>
@@ -362,14 +359,12 @@ QUnit.module("clickbot", (hooks) => {
             "Testing app menu: app1",
             "Testing menu App1 app1",
             'Clicking on: menu item "App1"',
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
             'Clicking on: filter option "October"',
             "Testing view switch: kanban",
             "Clicking on: kanban view switcher",
-            "Clicking on: Control Panel menu",
             "Testing 2 filters",
             'Clicking on: filter "Not Bar"',
             'Clicking on: filter "Date"',
