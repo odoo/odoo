@@ -1074,22 +1074,52 @@ class TestExpenses(TestExpenseCommon):
             'name': 'Product',
             'standard_price': 100.0,
         })
-        expense = self.env['hr.expense'].create({
+        sheet_no_update, sheet_update = sheets = self.env['hr.expense.sheet'].create([{
+            'company_id': self.env.company.id,
             'employee_id': self.expense_employee.id,
-            'name': 'Expense 1',
-            'product_id': product.id,
-            'total_amount': 1,
-        })
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expenses paid by employee',
-            'employee_id': self.expense_employee.id,
-            'expense_line_ids': expense,
-        })
-        product.standard_price = 120.0
-        self.assertEqual(expense.total_amount, 120.0,
-                         "Expense price should be updated when the expense category's product price is updated.")
+            'name': name,
+            'expense_line_ids': [
+                Command.create({
+                    'name': name,
+                    'date': '2016-01-01',
+                    'product_id': product.id,
+                    'total_amount': 100.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        } for name in ('test sheet no update', 'test sheet update')])
 
-        expense_sheet.action_submit_sheet()
+        sheet_no_update.action_submit_sheet()  # No update when sheet is submitted
         product.standard_price = 100.0
-        self.assertEqual(expense.total_amount, 120.0,
-                         "Expense price should not be updated since it has been submitted.")
+
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+        ])
+
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+        ])
+        product.standard_price = 50.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit':  50.0, 'quantity': 1, 'total_amount':  50.0},  # price_unit is updated
+        ])
+        sheet_update.expense_line_ids.quantity = 5
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit':  50.0, 'quantity': 5, 'total_amount': 250.0},  # quantity & total are updated
+        ])
+        product.standard_price = 0.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit': 250.0, 'quantity': 1, 'total_amount': 250.0},  # quantity & price_unit only are updated
+        ])
+
+        sheet_update.action_submit_sheet()  # This sheet should not be updated any more
+        product.standard_price = 300.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'price_unit': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'price_unit': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
+        ])
