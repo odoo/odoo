@@ -116,7 +116,7 @@ var PartnerAutocompleteMixin = {
         var self = this;
 
         var removeUselessFields = function (company) {
-            var fields = 'label,description,domain,logo,legal_name,ignored,email'.split(',');
+            var fields = 'label,description,domain,logo,legal_name,ignored,email,skip_enrich'.split(',');
             fields.forEach(function (field) {
                 delete company[field];
             });
@@ -129,7 +129,7 @@ var PartnerAutocompleteMixin = {
 
         return new Promise(function (resolve) {
             // Fetch additional company info via Autocomplete Enrichment API
-            var enrichPromise = self._enrichCompany(company);
+            var enrichPromise = !company.skip_enrich ? self._enrichCompany(company) : false;
 
             // Get logo
             var logoPromise = company.logo ? self._getCompanyLogo(company.logo) : false;
