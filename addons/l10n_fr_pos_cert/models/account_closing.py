@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from odoo import models, api, fields
 from odoo.fields import Datetime as FieldDateTime
+from dateutil.relativedelta import relativedelta
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
@@ -129,13 +130,10 @@ class AccountClosing(models.Model):
             interval_from = date_stop - timedelta(days=1)
             name_interval = _('Daily Closing')
         elif frequency == 'monthly':
-            month_target = date_stop.month > 1 and date_stop.month - 1 or 12
-            year_target = month_target < 12 and date_stop.year or date_stop.year - 1
-            interval_from = date_stop.replace(year=year_target, month=month_target)
+            interval_from = date_stop - relativedelta(months=1)
             name_interval = _('Monthly Closing')
         elif frequency == 'annually':
-            year_target = date_stop.year - 1
-            interval_from = date_stop.replace(year=year_target)
+            interval_from = date_stop - relativedelta(years=1)
             name_interval = _('Annual Closing')
 
         return {'interval_from': FieldDateTime.to_string(interval_from),
