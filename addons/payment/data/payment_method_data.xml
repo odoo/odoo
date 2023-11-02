@@ -36,28 +36,6 @@
         <field name="support_refund">partial</field>
     </record>
 
-    <record id="payment_method_alipay_plus" model="payment.method">
-        <field name="name">Alipay+</field>
-        <field name="code">alipay_plus</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/alipay_plus.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-    </record>
-
-    <record id="payment_method_apple_pay" model="payment.method">
-        <field name="name">Apple Pay</field>
-        <field name="code">apple_pay</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/apple_pay.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">partial</field>
-    </record>
-
     <record id="payment_method_bancontact" model="payment.method">
         <field name="name">Bancontact</field>
         <field name="code">bancontact</field>
@@ -77,17 +55,6 @@
                          ref('base.EUR'),
                      ])]"
         />
-    </record>
-
-    <record id="payment_method_western_union" model="payment.method">
-        <field name="name">Western Union</field>
-        <field name="code">western_union</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/western_union.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
     </record>
 
     <record id="payment_method_sepa_direct_debit" model="payment.method">
@@ -242,7 +209,6 @@
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.EUR'),
-                         ref('base.PLN'),
                      ])]"
         />
     </record>
@@ -256,7 +222,6 @@
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund"></field>
-        <field name="support_refund">full_only</field>
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.ke'),
@@ -270,7 +235,7 @@
     </record>
 
     <record id="payment_method_ussd" model="payment.method">
-        <field name="name">USSD by Flutterwave</field>
+        <field name="name">USSD</field>
         <field name="code">ussd</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
@@ -278,19 +243,6 @@
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund"></field>
-        <field name="support_refund">full_only</field>
-    </record>
-
-    <record id="payment_method_nqr_by_flutterwave" model="payment.method">
-        <field name="name">QR payment by Flutterwave</field>
-        <field name="code">nqr_by_flutterwave</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/flutterwave.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="support_refund">full_only</field>
     </record>
 
     <record id="payment_method_mada" model="payment.method">
@@ -461,27 +413,6 @@
                          ref('base.GBP'),
                          ref('base.USD'),
                          ref('base.SGD'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_cetelem" model="payment.method">
-        <field name="name">Cetelem</field>
-        <field name="code">cetelem</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cetelem.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.fr'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.EUR'),
                      ])]"
         />
     </record>
@@ -780,39 +711,6 @@
         />
     </record>
 
-    <record id="payment_method_sepa_transfer" model="payment.method">
-        <field name="name">SEPA Transfer</field>
-        <field name="code">sepa_transfer</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/sepa.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">partial</field>
-    </record>
-
-    <record id="payment_method_google_pay" model="payment.method">
-        <field name="name">Google Pay</field>
-        <field name="code">google_pay</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/google_pay.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">True</field>
-        <field name="support_refund">partial</field>
-    </record>
-
-    <record id="payment_method_link" model="payment.method">
-        <field name="name">Link</field>
-        <field name="code">link</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/link.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">True</field>
-        <field name="support_refund">partial</field>
-    </record>
-
     <record id="payment_method_mobile_pay" model="payment.method">
         <field name="name">MobilePay</field>
         <field name="code">mobile_pay</field>
@@ -825,8 +723,6 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.dk'),
-                         ref('base.no'),
-                         ref('base.se'),
                          ref('base.fi'),
                      ])]"
         />
@@ -926,15 +822,11 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"
                eval="[Command.set([
-                         ref('base.es'),
-                         ref('base.fr'),
-                         ref('base.it'),
                          ref('base.uk'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
-                         ref('base.EUR'),
                          ref('base.GBP'),
                      ])]"
         />
@@ -1685,12 +1577,11 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.uk'),
-                         ref('base.de'),
+
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
-                         ref('base.GBP'),
                          ref('base.GBP'),
                      ])]"
         />
@@ -2986,17 +2877,6 @@
         />
     </record>
 
-    <record id="payment_method_masterpass" model="payment.method">
-        <field name="name">Masterpass</field>
-        <field name="code">masterpass</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mastercard.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-    </record>
-
     <record id="payment_method_octopus" model="payment.method">
         <field name="name">Octopus</field>
         <field name="code">octopus</field>
@@ -3027,27 +2907,6 @@
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund"></field>
-    </record>
-
-    <record id="payment_method_payconiq" model="payment.method">
-        <field name="name">Payconiq</field>
-        <field name="code">payconiq</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/payconiq.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.be'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.EUR'),
-                     ])]"
-        />
     </record>
 
     <record id="payment_method_in3" model="payment.method">
@@ -3198,29 +3057,6 @@
         />
     </record>
 
-    <record id="payment_method_visa_electron" model="payment.method">
-        <field name="name">Visa Electron</field>
-        <field name="code">visa_electron</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/visa.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.EUR'),
-                         ref('base.GBP'),
-                         ref('base.PLN'),
-                         ref('base.DKK'),
-                         ref('base.NOK'),
-                         ref('base.SEK'),
-                         ref('base.CHF'),
-                         ref('base.USD'),
-                     ])]"
-        />
-    </record>
-
     <record id="payment_method_vpay" model="payment.method">
         <field name="name">V PAY</field>
         <field name="code">vpay</field>
@@ -3244,9 +3080,9 @@
         />
     </record>
 
-    <record id="payment_method_mobile_money_ghana" model="payment.method">
-        <field name="name">Mobile money Ghana</field>
-        <field name="code">mobile_money_ghana</field>
+    <record id="payment_method_mobile_money" model="payment.method">
+        <field name="name">Mobile money</field>
+        <field name="code">mobile_money</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
@@ -3256,98 +3092,22 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.gh'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.GHS'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_mobile_money_francophone_africa" model="payment.method">
-        <field name="name">Mobile money Francophone Africa</field>
-        <field name="code">mobile_money_francophone_africa</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
                          ref('base.cm'),
                          ref('base.ci'),
                          ref('base.ml'),
                          ref('base.sn'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.XAF'),
-                         ref('base.XOF'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_mobile_money_uganda" model="payment.method">
-        <field name="name">Mobile money Uganda</field>
-        <field name="code">mobile_money_uganda</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
                          ref('base.ug'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.UGX'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_mobile_money_rwanda" model="payment.method">
-        <field name="name">Mobile money Rwanda</field>
-        <field name="code">mobile_money_rwanda</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
                          ref('base.rw'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.RWF'),
-                     ])]"
-        />
-    </record>
-
-    <record id="payment_method_mobile_money_zambia" model="payment.method">
-        <field name="name">Mobile money Zambia</field>
-        <field name="code">mobile_money_zambia</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund"></field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
                          ref('base.zm'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
+                         ref('base.GHS'),
+                         ref('base.XAF'),
+                         ref('base.XOF'),
+                         ref('base.UGX'),
+                         ref('base.RWF'),
                          ref('base.ZMW'),
                      ])]"
         />
@@ -3467,7 +3227,7 @@
         <field name="image" type="base64" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
-        <field name="support_refund">partial</field>
+        <field name="support_refund"></field>
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.INR'),
@@ -3835,15 +3595,6 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/caixa.png"/>
-    </record>
-
-    <record id="payment_method_ceconsund" model="payment.method">
-        <field name="name">Ceconsund</field>
-        <field name="code">ceconsund</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cencosud.png"/>
     </record>
 
     <record id="payment_method_cmr" model="payment.method">

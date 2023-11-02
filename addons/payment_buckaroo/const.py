@@ -13,7 +13,6 @@ PAYMENT_METHODS_MAPPING = {
     'sepa_direct_debit': 'SepaDirectDebit',
     'sofort': 'sofortueberweisung',
     'tinka': 'Tinka',
-    'sepa_transfer': 'transfer',
     'trustly': 'Trustly',
     'wechat_pay': 'WeChatPay',
     'klarna': 'klarnakp',
