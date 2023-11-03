@@ -9,6 +9,7 @@ import {
     buildDomain,
     buildDomainSelectorTree,
     extractPathsFromDomain,
+    formatValueFromFieldType,
     useGetDefaultLeafDomain,
 } from "@web/core/domain_selector/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
@@ -261,5 +262,9 @@ export class DomainSelector extends Component {
         for (const className of classNames.split(/\s+/i)) {
             nodeEl.classList.toggle(className, toggle);
         }
+    }
+
+    formatValue(value, fieldDef) {
+        return formatValueFromFieldType(value, fieldDef);
     }
 }

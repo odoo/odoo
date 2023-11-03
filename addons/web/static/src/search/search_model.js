@@ -20,7 +20,7 @@ import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 
 import { EventBus, toRaw } from "@odoo/owl";
 import { toDomain, toTree } from "@web/core/domain_tree";
-import { extractPathsFromDomain } from "@web/core/domain_selector/utils";
+import { extractPathsFromDomain, formatValueFromFieldType } from "@web/core/domain_selector/utils";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
     DomainValueExpr,
@@ -257,7 +257,7 @@ export function getDomainTreeDescription(
         const values = Array.isArray(value) ? value : [value];
         const formatValue = (value) => {
             if (typeof value === "string") {
-                return value;
+                return formatValueFromFieldType(value, fieldDef);
             } else if (value instanceof DomainValueExpr) {
                 return value.expr;
             } else if (Array.isArray(value)) {
