@@ -5,6 +5,12 @@ import { getDefaultFieldValue, getDefaultOperator } from "./domain_selector_fiel
 import { toDomain, toTree } from "@web/core/domain_tree";
 import { toDomainSelectorTree } from "@web/core/domain_selector/domain_selector_nodes";
 import { useService } from "@web/core/utils/hooks";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    formatDate,
+    formatDateTime,
+} from "@web/core/l10n/dates";
 
 /**
  * @param {BranchDomainNode} domainSelectorTree
@@ -62,4 +68,14 @@ export function useGetDefaultLeafDomain() {
         const fieldDefs = await fieldService.loadFields(resModel);
         return getDefaultDomain(fieldDefs);
     };
+}
+
+export function formatValueFromFieldType(value, fieldDef = {}) {
+    if (fieldDef?.type === "datetime") {
+        return formatDateTime(deserializeDateTime(value));
+    } else if (fieldDef?.type === "date") {
+        return formatDate(deserializeDate(value));
+    } else {
+        return value;
+    }
 }

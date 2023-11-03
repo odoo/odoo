@@ -9,6 +9,7 @@ import {
     nextTick,
     patchDate,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
 import { Component, useState, xml } from "@odoo/owl";
@@ -26,6 +27,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
 import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
+import { localization } from "@web/core/l10n/localization";
 
 let serverData;
 let target;
@@ -80,6 +82,7 @@ QUnit.module("Components", (hooks) => {
                             relation: "product",
                             searchable: true,
                         },
+                        date: { string: "Date", type: "date", searchable: true },
                         datetime: { string: "Date Time", type: "datetime", searchable: true },
                         int: { string: "Integer", type: "integer", searchable: true },
                         json_field: { string: "Json Field", type: "json", searchable: true },
@@ -1287,5 +1290,35 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".o_model_field_selector");
         await click(target, ".o_model_field_selector_popover_item[data-name=foo] button");
+    });
+
+    QUnit.test("datetime domain in readonly mode (check localization)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateTimeFormat: "MM.dd.yyyy HH:mm:ss",
+        });
+        patchTimeZone(120);
+        await makeDomainSelector({
+            domain: `["&", ("datetime", ">=", "2023-11-03 11:41:23"), ("datetime", "<=", "2023-11-13 09:45:11")]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf").textContent,
+            `Date Time is between "11.03.2023 13:41:23" and  "11.13.2023 11:45:11"`
+        );
+    });
+
+    QUnit.test("date domain in readonly mode (check localization)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateFormat: `dd|MM|yyyy`,
+        });
+        patchTimeZone(120);
+        await makeDomainSelector({
+            domain: `["&", ("date", ">=", "2023-11-03"), ("date", "<=", "2023-11-13")]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf").textContent,
+            `Date is between "03|11|2023" and  "13|11|2023"`
+        );
     });
 });
