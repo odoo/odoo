@@ -504,7 +504,7 @@ class Task(models.Model):
     @api.depends('child_ids.allocated_hours')
     def _compute_subtask_allocated_hours(self):
         for task in self:
-            task.subtask_allocated_hours = sum(child_task.allocated_hours + child_task.subtask_allocated_hours for child_task in task.child_ids)
+            task.subtask_allocated_hours = sum(task.child_ids.mapped('allocated_hours'))
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
