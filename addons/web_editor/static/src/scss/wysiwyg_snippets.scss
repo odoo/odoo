@@ -1295,17 +1295,22 @@
                             border: 2px solid $o-we-color-success !important;
                         }
                         // Text highlight related style.
-                        &[data-set-text-highlight] > div {
-                            flex: none;
-                            position: relative;
-                            width: 60%;
-                            font-size: $o-we-sidebar-font-size * 1.3;
-                            font-weight: bold;
-                            overflow: visible;
+                        &[data-set-text-highlight] {
+                            --text-highlight-width: .15em;
+                            --text-highlight-color: #{$o-we-fg-light};
 
-                            > svg {
-                                stroke: currentColor;
-                                stroke-width: .15em;
+                            > div {
+                                flex: none;
+                                position: relative;
+                                width: 60%;
+                                font-size: $o-we-sidebar-font-size * 1.3;
+                                font-weight: bold;
+                                overflow: visible;
+                                isolation: isolate;
+
+                                svg {
+                                    z-index: -1;
+                                }
                             }
                         }
                     }
