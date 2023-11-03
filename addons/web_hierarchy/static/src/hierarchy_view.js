@@ -18,7 +18,7 @@ export const hierarchyView = {
     Model: HierarchyModel,
     Renderer: HierarchyRenderer,
     buttonTemplate: "web_hierarchy.HierarchyButtons",
-    searchMenuTypes: [],
+    searchMenuTypes: ["filter"],
 
     props: (genericProps, view) => {
         const { ArchParser, Model, Renderer, buttonTemplate: viewButtonTemplate } = view;
