@@ -322,7 +322,7 @@
                     </button>
                 </li>
             </ul>
-            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile vh-100" id="top_menu_collapse_mobile">
+            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile" id="top_menu_collapse_mobile">
                 <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
@@ -532,7 +532,7 @@
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                 </ul>
-                <div class="offcanvas offcanvas-start o_navbar_mobile vh-100" id="top_menu_collapse">
+                <div class="offcanvas offcanvas-start o_navbar_mobile" id="top_menu_collapse">
                     <div class="offcanvas-header justify-content-end">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                     </div>
