@@ -2,8 +2,7 @@
 
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
-from odoo.tests import tagged
-from odoo.tests.common import Form
+from odoo.tests import Form, tagged
 
 @tagged('-at_install', 'post_install')
 class TestProjectSubtasks(TestProjectCommon):

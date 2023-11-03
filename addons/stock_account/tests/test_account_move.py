@@ -3,7 +3,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.tests.common import tagged, Form
+from odoo.tests import Form, tagged
 from odoo import fields
 
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):

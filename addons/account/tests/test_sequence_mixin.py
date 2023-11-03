@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from odoo import fields, api, SUPERUSER_ID, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger

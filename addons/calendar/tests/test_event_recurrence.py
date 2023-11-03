@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests import Form, TransactionCase
 from freezegun import freeze_time
 
 

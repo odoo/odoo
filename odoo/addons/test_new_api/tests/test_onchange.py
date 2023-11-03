@@ -4,7 +4,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests import common, Form
+from odoo.tests import TransactionCase, Form
 from odoo import Command
 from odoo.tools import submap
 
@@ -428,7 +428,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'name': 'X',
             'country_id': self.env.ref('base.be').id,
         })
-        with common.Form(self.env['test_new_api.multi']) as form:
+        with Form(self.env['test_new_api.multi']) as form:
             form.partner = partner
             self.assertEqual(form.partner, partner)
             self.assertEqual(form.name, partner.name)
@@ -697,7 +697,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             """,
         })
 
-        form = common.Form(self.env['test_new_api.multi.tag'])
+        form = Form(self.env['test_new_api.multi.tag'])
         self.assertEqual(form.name, False)
         self.assertEqual(form.display_name, "")
 
@@ -897,7 +897,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         })
 
 
-class TestComputeOnchange2(common.TransactionCase):
+class TestComputeOnchange2(TransactionCase):
 
     def test_create(self):
         model = self.env['test_new_api.compute.onchange']
@@ -1052,7 +1052,7 @@ class TestComputeOnchange2(common.TransactionCase):
 
     def test_onchange(self):
         # check computations of 'bar' (readonly) and 'baz' (editable)
-        form = common.Form(self.env['test_new_api.compute.onchange'])
+        form = Form(self.env['test_new_api.compute.onchange'])
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, False)
         form.active = True
@@ -1086,7 +1086,7 @@ class TestComputeOnchange2(common.TransactionCase):
         self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "foo3z")
 
-        form = common.Form(record)
+        form = Form(record)
         self.assertEqual(form.bar, "foo3r")
         self.assertEqual(form.baz, "foo3z")
         form.foo = "foo4"
@@ -1103,7 +1103,7 @@ class TestComputeOnchange2(common.TransactionCase):
         self.assertEqual(form.baz, "baz5")
 
     def test_onchange_default(self):
-        form = common.Form(self.env['test_new_api.compute.onchange'].with_context(
+        form = Form(self.env['test_new_api.compute.onchange'].with_context(
             default_active=True, default_foo="foo", default_baz="baz",
         ))
         # 'baz' is computed editable, so when given a default value it should
@@ -1135,7 +1135,7 @@ class TestComputeOnchange2(common.TransactionCase):
         self.assertEqual(record.cost, 22)
 
         # modifying a line should not recompute the cost on other lines
-        with common.Form(record) as form:
+        with Form(record) as form:
             with form.child_ids.edit(1) as line:
                 line.name = 'XXX'
             self.assertEqual(form.cost, 15)

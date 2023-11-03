@@ -9,7 +9,7 @@ from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.tests.common import tagged, Form, users
+from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 

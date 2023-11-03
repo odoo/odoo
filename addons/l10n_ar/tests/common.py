@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
-from odoo.tests.common import Form, tagged
+from odoo.tests import Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 import random
 import logging

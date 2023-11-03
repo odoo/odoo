@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.test_mail_template import TestMailTemplateCommon
-from odoo.tests import tagged, users
-from odoo.tests.common import Form
+from odoo.tests import Form, tagged, users
 
 @tagged('mail_template', 'multi_lang')
 class TestMailTemplateTools(TestMailTemplateCommon):

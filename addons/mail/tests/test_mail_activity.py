@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import Form, tagged, HttpCase
+from odoo.tests import Form, tagged, HttpCase
 
 
 class ActivityScheduleCase(MailCommon):

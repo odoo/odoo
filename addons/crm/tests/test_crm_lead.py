@@ -11,7 +11,7 @@ from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.mail.tests.mail_tracking_duration_mixin_case import MailTrackingDurationMixinCase
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, tagged, users
+from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 

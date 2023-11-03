@@ -1,6 +1,6 @@
 import base64
 import json
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests import Form, TransactionCase
 from odoo.exceptions import ValidationError
 
 class ValidateSpreadsheetMixinData(TransactionCase):

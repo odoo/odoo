@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestProjectTaskQuickCreate(TestCommonTimesheet):

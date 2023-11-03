@@ -14,7 +14,7 @@ import psycopg2
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
-from odoo.tests import common
+from odoo.tests import TransactionCase, tagged, Form
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
@@ -2850,7 +2850,7 @@ class TestFields(TransactionCaseWithUserDemo):
             records.mapped('rare_description')  # fetch that field only
 
 
-class TestX2many(common.TransactionCase):
+class TestX2many(TransactionCase):
     def test_definition_many2many(self):
         """ Test the definition of inherited many2many fields. """
         field = self.env['test_new_api.multi.line']._fields['tags']
@@ -3137,7 +3137,7 @@ class TestX2many(common.TransactionCase):
         self.assertTrue(field.unlink())
 
 
-class TestHtmlField(common.TransactionCase):
+class TestHtmlField(TransactionCase):
 
     def setUp(self):
         super(TestHtmlField, self).setUp()
@@ -3268,7 +3268,7 @@ class TestHtmlField(common.TransactionCase):
         new_record.with_user(internal_user).comment5
 
 
-class TestMagicFields(common.TransactionCase):
+class TestMagicFields(TransactionCase):
 
     def test_write_date(self):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
@@ -3311,7 +3311,7 @@ class TestMagicFields(common.TransactionCase):
         self.assertTrue(field.store)
 
 
-class TestParentStore(common.TransactionCase):
+class TestParentStore(TransactionCase):
 
     def setUp(self):
         super(TestParentStore, self).setUp()
@@ -3495,7 +3495,7 @@ class TestParentStore(common.TransactionCase):
             self.assertEqual(cat.depth, 2)
 
 
-class TestRequiredMany2one(common.TransactionCase):
+class TestRequiredMany2one(TransactionCase):
 
     def test_explicit_ondelete(self):
         field = self.env['test_new_api.req_m2o']._fields['foo']
@@ -3517,7 +3517,7 @@ class TestRequiredMany2one(common.TransactionCase):
             field.setup_nonrelated(Model)
 
 
-class TestRequiredMany2oneTransient(common.TransactionCase):
+class TestRequiredMany2oneTransient(TransactionCase):
 
     def test_explicit_ondelete(self):
         field = self.env['test_new_api.req_m2o_transient']._fields['foo']
@@ -3539,8 +3539,8 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
             field.setup_nonrelated(Model)
 
 
-@common.tagged('m2oref')
-class TestMany2oneReference(common.TransactionCase):
+@tagged('m2oref')
+class TestMany2oneReference(TransactionCase):
 
     def test_delete_m2o_reference_records(self):
         m = self.env['test_new_api.model_many2one_reference']
@@ -3568,8 +3568,8 @@ class TestMany2oneReference(common.TransactionCase):
         self.assertIn(record, records)
 
 
-@common.tagged('selection_abstract')
-class TestSelectionDeleteUpdate(common.TransactionCase):
+@tagged('selection_abstract')
+class TestSelectionDeleteUpdate(TransactionCase):
 
     MODEL_ABSTRACT = 'test_new_api.state_mixin'
 
@@ -3586,8 +3586,8 @@ class TestSelectionDeleteUpdate(common.TransactionCase):
         ], limit=1).unlink()
 
 
-@common.tagged('selection_update_base')
-class TestSelectionUpdates(common.TransactionCase):
+@tagged('selection_update_base')
+class TestSelectionUpdates(TransactionCase):
     MODEL_BASE = 'test_new_api.model_selection_base'
     MODEL_RELATED = 'test_new_api.model_selection_related'
     MODEL_RELATED_UPDATE = 'test_new_api.model_selection_related_updatable'
@@ -3623,8 +3623,8 @@ class TestSelectionUpdates(common.TransactionCase):
             record.related_selection = 'bar'
 
 
-@common.tagged('selection_ondelete_base')
-class TestSelectionOndelete(common.TransactionCase):
+@tagged('selection_ondelete_base')
+class TestSelectionOndelete(TransactionCase):
 
     MODEL_BASE = 'test_new_api.model_selection_base'
     MODEL_REQUIRED = 'test_new_api.model_selection_required'
@@ -3779,8 +3779,8 @@ class TestSelectionOndelete(common.TransactionCase):
         self.assertEqual(rec.my_selection, 'foo')
 
 
-@common.tagged('selection_ondelete_advanced')
-class TestSelectionOndeleteAdvanced(common.TransactionCase):
+@tagged('selection_ondelete_advanced')
+class TestSelectionOndeleteAdvanced(TransactionCase):
 
     MODEL_BASE = 'test_new_api.model_selection_base'
     MODEL_REQUIRED = 'test_new_api.model_selection_required'
@@ -3863,7 +3863,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
             self.registry.setup_models(self.env.cr)
 
 
-class TestFieldParametersValidation(common.TransactionCase):
+class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
 
         class Foo(models.Model):
@@ -3911,7 +3911,7 @@ def update(model, *fnames):
     )
 
 
-class TestSubqueries(common.TransactionCase):
+class TestSubqueries(TransactionCase):
     """ Test the subqueries made by search() with relational fields. """
     maxDiff = None
 
@@ -4259,7 +4259,7 @@ class TestSubqueries(common.TransactionCase):
             ])
 
 
-class TestComputeQueries(common.TransactionCase):
+class TestComputeQueries(TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
     def test_compute_readonly(self):
@@ -4386,7 +4386,7 @@ class test_shared_cache(TransactionCaseWithUserDemo):
         self.env.invalidate_all()  # Start fresh, as it would be the case on 2 different sessions.
 
         task = task.with_user(self.user_demo)
-        with common.Form(task) as task_form:
+        with Form(task) as task_form:
             # Use demo has no access to the already existing line
             self.assertEqual(len(task_form.line_ids), 0)
             # But see the real total_amount
@@ -4398,8 +4398,8 @@ class test_shared_cache(TransactionCaseWithUserDemo):
             self.assertEqual(task_form.total_amount, 2)
 
 
-@common.tagged('unlink_constraints')
-class TestUnlinkConstraints(common.TransactionCase):
+@tagged('unlink_constraints')
+class TestUnlinkConstraints(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -4437,8 +4437,8 @@ class TestUnlinkConstraints(common.TransactionCase):
             self.undeletable_foo_uninstall.unlink()
 
 
-@common.tagged('wrong_related_path')
-class TestWrongRelatedError(common.TransactionCase):
+@tagged('wrong_related_path')
+class TestWrongRelatedError(TransactionCase):
     def test_wrong_related_path(self):
         class Foo(models.Model):
             _module = None
@@ -4457,7 +4457,7 @@ class TestWrongRelatedError(common.TransactionCase):
             self.registry.setup_models(self.env.cr)
 
 
-class TestPrecomputeModel(common.TransactionCase):
+class TestPrecomputeModel(TransactionCase):
 
     def test_precompute_consistency(self):
         Model = self.registry['test_new_api.precompute']
@@ -4511,7 +4511,7 @@ class TestPrecomputeModel(common.TransactionCase):
             self.registry.get_trigger_tree(Model._fields.values())
 
 
-class TestPrecompute(common.TransactionCase):
+class TestPrecompute(TransactionCase):
 
     def test_precompute(self):
         model = self.env['test_new_api.precompute']
@@ -4689,7 +4689,7 @@ class TestPrecompute(common.TransactionCase):
             model.create({})
 
 
-class TestModifiedPerformance(common.TransactionCase):
+class TestModifiedPerformance(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

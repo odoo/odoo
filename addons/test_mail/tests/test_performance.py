@@ -6,8 +6,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import users, warmup, Form
-from odoo.tests import tagged
+from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger, formataddr
 
 

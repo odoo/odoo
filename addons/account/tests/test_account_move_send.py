@@ -10,8 +10,7 @@ from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, users, warmup
-from odoo.tests import tagged
+from odoo.tests import users, warmup, tagged
 from odoo.tools import formataddr, mute_logger
 
 

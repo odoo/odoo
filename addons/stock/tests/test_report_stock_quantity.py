@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, tests
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestReportStockQuantity(tests.TransactionCase):

@@ -10,8 +10,7 @@ from pytz import timezone
 from odoo import fields, Command
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
-from odoo.tests.common import Form
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.exceptions import UserError
 
