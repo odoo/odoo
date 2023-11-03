@@ -2648,9 +2648,10 @@ export class Wysiwyg extends Component {
         }
     }
     _onSelectionChange() {
-        if (this.odooEditor.autohideToolbar) {
-            const isVisible = this.linkPopover && this.linkPopover.el.offsetParent;
-            if (isVisible && !this.odooEditor.document.getSelection().isCollapsed) {
+        if (this.odooEditor.autohideToolbar && this.linkPopover) {
+            const selectionInLink = getInSelection(this.odooEditor.document, 'a') === this.linkPopover.target;
+            const isVisible = this.linkPopover.el.offsetParent;
+            if (isVisible && !selectionInLink) {
                 this.linkPopover.hide();
             }
         }
