@@ -4,7 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, pay } from "./helpers/receipt_helpers";
 
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             PaymentScreen.clickValidate(),
             // verify that the pos requires the selection of a partner
             Dialog.confirm(),
-            PartnerListScreen.clickPartner(""),
+            PartnerList.clickPartner(""),
 
             PaymentScreen.isInvoiceOptionSelected(),
             PaymentScreen.clickValidate(),

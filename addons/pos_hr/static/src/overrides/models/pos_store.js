@@ -7,7 +7,7 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
-            this.showTempScreen("LoginScreen");
+            this.showScreen("LoginScreen");
         }
     },
     async _processData(loadedData) {
@@ -16,6 +16,11 @@ patch(PosStore.prototype, {
             this.employees = loadedData["hr.employee"];
             this.employee_by_id = loadedData["employee_by_id"];
             this.reset_cashier();
+        }
+    },
+    async actionAfterIdle() {
+        if (this.mainScreen.component?.name !== "LoginScreen") {
+            return super.actionAfterIdle();
         }
     },
     async after_load_server_data() {

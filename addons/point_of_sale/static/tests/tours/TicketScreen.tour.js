@@ -4,7 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
@@ -111,8 +111,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
             Dialog.confirm(),
-            PartnerListScreen.isShown(),
-            PartnerListScreen.clickPartner("Partner Test 3"),
+            PartnerList.clickPartner("Partner Test 3"),
             TicketScreen.invoicePrinted(),
             TicketScreen.clickBackToMainTicketScreen(),
             TicketScreen.partnerIs("Partner Test 3"),

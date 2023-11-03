@@ -430,7 +430,11 @@ export class PosDB {
                 this.partner_by_barcode[partner.barcode] = partner;
             }
             updated[partner.id] = partner;
-            this.partner_by_id[partner.id] = partner;
+            if (this.partner_by_id[partner.id]) {
+                Object.assign(this.partner_by_id[partner.id], partner);
+            } else {
+                this.partner_by_id[partner.id] = partner;
+            }
         }
 
         this.partner_write_date = new_write_date || this.partner_write_date;

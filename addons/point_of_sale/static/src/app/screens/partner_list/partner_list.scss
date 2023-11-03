@@ -1,10 +1,5 @@
-.partner-list th.partner-line-last-column-placeholder,
-.partner-list td.partner-line-last-column-placeholder {
-    padding: 0;
-}
-.partnerlist-screen {
+.partner-list {
     tr {
-        &.partner-line {
             &:hover {
                 cursor: pointer;
                 background: $o-gray-200;
@@ -12,21 +7,21 @@
             &:active {
                 background-color: $o-component-active-bg;
             }
-        }
     }
 }
 
 @include media-breakpoint-down(lg) {
-
-    .table {
-        border: transparent;
-    }
     .partner-list {
-        thead {
-            display: none;
+        table {
+            border: transparent;
         }
-        td {
-            padding: 0;
+        .partner-list {
+            thead {
+                display: none;
+            }
+            td {
+                padding: 0;
+            }
         }
     }
 }

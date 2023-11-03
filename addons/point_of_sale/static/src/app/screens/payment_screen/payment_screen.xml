@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.PaymentScreen">
         <t t-if="ui.isSmall">
-            <div class="payment-screen screen d-flex flex-column h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
+            <div class="payment-screen screen d-flex flex-column h-100 bg-100">
                 <PaymentScreenStatus order="currentOrder" />
                 <t t-call="point_of_sale.PaymentScreenMethods" />
                 <t t-call="point_of_sale.PaymentScreenButtons" />
@@ -11,7 +11,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="payment-screen screen d-flex flex-column h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
+            <div class="payment-screen screen d-flex flex-column h-100 bg-100">
                 <t t-call="point_of_sale.PaymentScreenTop" />
                 <div class="main-content d-flex overflow-auto h-100">
                     <div class="left-content d-flex flex-column w-25 bg-400">
@@ -68,7 +68,7 @@
         <div class="payment-buttons d-flex flex-column flex-wrap">
             <button class="button partner-button btn btn-light py-3 text-start rounded-0 border-bottom" 
                 t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
-                t-on-click="() => this.selectPartner(false, [])">
+                t-on-click="() => this.pos.selectPartner()">
                 <i class="fa fa-user me-2" role="img" title="Customer" />
                 <span class="partner-name" t-esc="currentOrder.get_partner()?.name or 'Customer'" /> 
             </button>

@@ -8,7 +8,6 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/Product
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/helpers/SplitBillScreenTourMethods";
-import * as BillScreen from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
 
@@ -46,9 +45,8 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test PrintBillButton
             ProductScreen.controlButton("Bill"),
-            Dialog.confirm(),
-            BillScreen.isShown(),
-            BillScreen.clickOk(),
+            Dialog.is({ title: "Bill Printing" }),
+            Dialog.cancel(),
 
             // Test GuestButton
             ProductScreen.controlButton("Guests"),

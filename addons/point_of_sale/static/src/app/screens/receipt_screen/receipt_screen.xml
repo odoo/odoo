@@ -16,8 +16,8 @@
                         <div class="d-flex flex-column m-4">
                             <h1>Payment Successful</h1>
                             <div class="buttons my-3">
-                                <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="printReceipt">
-                                    <i class="fa fa-print ms-2" t-ref="order-print-receipt-button"></i> Print Receipt
+                                <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => this.pos.printReceipt()">
+                                    <i t-attf-class="fa {{printer.state.isPrinting ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
                             <form t-on-submit.prevent="onSendEmail" class="send-email d-flex">

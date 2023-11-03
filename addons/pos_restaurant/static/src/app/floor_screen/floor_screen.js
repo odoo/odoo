@@ -28,7 +28,7 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 export class FloorScreen extends Component {
     static components = { EditableTable, EditBar, Table };
     static template = "pos_restaurant.FloorScreen";
-    static props = { isShown: Boolean, floor: { type: true, optional: true } };
+    static props = { floor: { type: true, optional: true } };
     static storeOnOrder = false;
 
     setup() {

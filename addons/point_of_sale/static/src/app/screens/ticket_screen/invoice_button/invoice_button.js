@@ -4,7 +4,8 @@ import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useRef } from "@odoo/owl";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { PartnerList } from "../../partner_list/partner_list";
 
 export class InvoiceButton extends Component {
     static template = "point_of_sale.InvoiceButton";
@@ -81,12 +82,10 @@ export class InvoiceButton extends Component {
             if (!_confirmed) {
                 return;
             }
-            const { confirmed: confirmedTempScreen, payload: newPartner } =
-                await this.pos.showTempScreen("PartnerListScreen");
-            if (!confirmedTempScreen) {
+            const newPartner = await makeAwaitable(this.dialog, PartnerList);
+            if (!newPartner) {
                 return;
             }
-
             await this.orm.write("pos.order", [orderId], { partner_id: newPartner.id });
         }
 
