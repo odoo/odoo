@@ -1446,10 +1446,27 @@
                                     </div>
                                 </div>
                             </div>
-                            <t t-call="website_sale.navigation_buttons">
-                                <t t-set="_form_send_navigation" t-value="True"/>
-                                <t t-set="_cta_classes" t-valuef="s_website_form_send"/>
-                            </t>
+                            <div class="s_website_form_submit s_website_form_no_submit_option d-flex flex-column flex-lg-row align-items-lg-center pt-4">
+                                <a role="button"
+                                   name="website_sale_main_button"
+                                   class="s_website_form_send btn btn-primary order-lg-3 w-100 w-lg-auto ms-lg-auto"
+                                   href="/shop/confirm_order">
+                                    Continue checkout
+                                    <i class="fa fa-angle-right ms-2 fw-light"/>
+                                </a>
+
+                                <div class="position-relative d-flex d-lg-none w-100 justify-content-center align-items-center my-2 opacity-75">
+                                    <hr class="w-100"/>
+                                    <span class="px-3">or</span>
+                                    <hr class="w-100"/>
+                                </div>
+
+                                <a href="/shop/checkout" class="text-center">
+                                    <i class="fa fa-angle-left me-2 fw-light"/>
+                                    Return to shipping
+                                </a>
+                                <span id="s_website_form_result"/>
+                            </div>
                         </div>
                     </form>
                 </div>
