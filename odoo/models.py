@@ -1813,7 +1813,7 @@ class BaseModel(metaclass=MetaModel):
         ``tools.ormcache``.
         """
         warnings.warn("Deprecated model.clear_cache(), use registry.clear_cache() instead", DeprecationWarning)
-        cls.pool.clear_all_cache()
+        cls.pool.clear_all_caches()
 
     @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
