@@ -25,14 +25,13 @@ class MailActivityPlanTemplate(models.Model):
     )
     summary = fields.Char('Summary', compute="_compute_summary", store=True, readonly=False)
     responsible_type = fields.Selection([
-        ('on_demand', 'On demand'),
-        ('other', 'Other'),
-    ], default='on_demand', string='Responsible', required=True)
+        ('on_demand', 'Ask at launch'),
+        ('other', 'Default user'),
+    ], default='on_demand', string='Assignment', required=True)
     responsible_id = fields.Many2one(
         'res.users',
-        'Other Responsible',
-        check_company=True, store=True, compute="_compute_responsible_id", readonly=False,
-        help='Specific responsible of activity if not linked to the employee.')
+        'Assigned to',
+        check_company=True, store=True, compute="_compute_responsible_id", readonly=False)
     note = fields.Html('Note')
 
     @api.constrains('activity_type_id', 'plan_id')
@@ -58,7 +57,7 @@ class MailActivityPlanTemplate(models.Model):
         """ Ensure that responsible_id is set when responsible is set to "other". """
         for template in self:
             if template.responsible_type == 'other' and not template.responsible_id:
-                raise ValidationError(_('When selecting responsible "other", you must specify a responsible.'))
+                raise ValidationError(_('When selecting "Default user" assignment, you must specify a responsible.'))
 
     @api.depends('activity_type_id')
     def _compute_summary(self):

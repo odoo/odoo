@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
-from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -66,13 +66,13 @@ class ActivityScheduleCase(MailCommon):
         self.assertIn(activity_type.name, last_message.body)
         self.assertIn('done', last_message.body)
 
-    def assertActivitiesFromPlan(self, plan, record, force_date_deadline=None, force_responsible_id=None):
+    def assertActivitiesFromPlan(self, plan, record, force_base_date_deadline=None, force_responsible_id=None):
         """ Check that the last activities on the record correspond to the one
         that the plan must create (number of activities and activities content).
 
         :param <mail.activity.plan> plan: activity plan that has been applied on the record
         :param recordset record: record on which the plan has been applied
-        :param date force_date_deadline: deadline provided when scheduling the plan
+        :param date force_base_date_deadline: base plan date provided when scheduling the plan
         :param <res.user> force_responsible_id: responsible provided when scheduling the plan
         """
         expected_number_of_activity = len(plan.template_ids)
@@ -83,10 +83,10 @@ class ActivityScheduleCase(MailCommon):
 
         for activity, template in zip(activities, plan.template_ids):
             self.assertEqual(activity.activity_type_id, template.activity_type_id)
-            if force_date_deadline:
-                self.assertEqual(activity.date_deadline, force_date_deadline)
-            else:
-                self.assertEqual(activity.date_deadline, fields.Date.today() + timedelta(days=template.activity_type_id.delay_count))
+            self.assertEqual(
+                activity.date_deadline,
+                (force_base_date_deadline or fields.Date.today()) + relativedelta(
+                    **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count}))
             self.assertEqual(activity.note, template.note)
             self.assertEqual(activity.summary, template.summary)
             if force_responsible_id:
@@ -94,23 +94,21 @@ class ActivityScheduleCase(MailCommon):
             else:
                 self.assertEqual(activity.user_id, template.responsible_id or self.env.user)
 
-    def assertMessagesFromPlan(self, plan, record, force_date_deadline=None, force_responsible_id=None):
+    def assertMessagesFromPlan(self, plan, record, force_base_date_deadline=None, force_responsible_id=None):
         """ Check that the last posted message on the record correspond to the one
         that the plan must generate (number of activities and activities content).
 
         :param <mail.activity.plan> plan: activity plan that has been applied on the record
         :param recordset record: record on which the plan has been applied
-        :param date force_date_deadline: deadline provided when scheduling the plan
+        :param date force_base_date_deadline: deadline provided when scheduling the plan
         :param <res.user> force_responsible_id: responsible provided when scheduling the plan
         """
         message = record.message_ids[0]
         self.assertIn(f'The plan "{plan.name}" has been started', message.body)
 
         for template in plan.template_ids:
-            if force_date_deadline:
-                date_deadline = force_date_deadline
-            else:
-                date_deadline = fields.Date.today() + timedelta(days=template.activity_type_id.delay_count)
+            date_deadline = (force_base_date_deadline or fields.Date.today()) + relativedelta(
+                **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count})
             if force_responsible_id:
                 responsible_id = force_responsible_id
             else:
@@ -120,19 +118,19 @@ class ActivityScheduleCase(MailCommon):
             self.assertIn(f'{template.summary or template.activity_type_id.name}, '
                           f'assigned to {responsible_id.name}, due on the {date_deadline}', message.body)
 
-    def assertPlanExecution(self, plan, records, force_date_deadline=None, force_responsible_id=None):
+    def assertPlanExecution(self, plan, records, force_base_date_deadline=None, force_responsible_id=None):
         """ Check that the plan has created the right activities and send the
         right message on the records (see assertActivitiesFromPlan and
         assertMessagesFromPlan). """
         for record in records:
             self.assertActivitiesFromPlan(
                 plan, record,
-                force_date_deadline=force_date_deadline,
+                force_base_date_deadline=force_base_date_deadline,
                 force_responsible_id=force_responsible_id,
             )
             self.assertMessagesFromPlan(
                 plan, record,
-                force_date_deadline=force_date_deadline,
+                force_base_date_deadline=force_base_date_deadline,
                 force_responsible_id=force_responsible_id,
             )
 
