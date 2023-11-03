@@ -12,13 +12,20 @@
                         <field name="name" readonly="not datas and type != 'url'"/>
                     </h1>
                     <group>
-                        <field name="type" readonly="datas or id"/>
-                        <field name="datas" filename="name" invisible="type == 'url'" required="type == 'binary'"/>
+                        <field name="type" readonly="datas or id" class="oe_inline"/>
+                        <field name="datas"
+                               filename="name"
+                               invisible="type == 'url'"
+                               required="type == 'binary'"
+                               class="oe_inline"/>
                         <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
                     </group>
                     <group string="Attached To" groups="base.group_no_one">
                         <field name="res_name"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="company_id"
+                               groups="base.group_multi_company"
+                               options="{'no_create': True}"
+                               class="oe_inline"/>
                     </group>
                     <group string="History" groups="base.group_no_one" invisible="not create_date">
                         <label for="create_uid" string="Creation"/>
@@ -64,8 +71,8 @@
                                     <div t-else="" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                 </div>
                             </div>
-                            <div class="o_kanban_details">
-                                <div class="o_kanban_details_wrapper">
+                            <div class="o_kanban_details h-100">
+                                <div class="o_kanban_details_wrapper h-100 justify-content-between">
                                     <div class="o_kanban_record_title">
                                         <field name="name" class="o_text_overflow"/>
                                     </div>
