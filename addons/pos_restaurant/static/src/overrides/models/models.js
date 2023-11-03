@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 // New orders are now associated with the current table, if any.
 patch(Order.prototype, {
-    setup(options) {
+    setup(_defaultObj, options) {
         super.setup(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (this.defaultTableNeeded(options)) {
