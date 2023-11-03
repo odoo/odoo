@@ -643,6 +643,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
         this.addDomListener(this.document, 'scroll', this._onScroll, true);
+        this.addDomListener(this.document, 'dblclick', this._onDoubleClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -2469,6 +2470,10 @@ export class OdooEditor extends EventTarget {
                 ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
             ) {
                 // Handle selecting an empty cell.
+                this._selectTableCells(range);
+                appliedCustomSelection = true;
+            } else if (startTd === endTd && ev.type === 'dblclick') {
+                // Single cell should be selected on double click.
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
@@ -4487,6 +4492,12 @@ export class OdooEditor extends EventTarget {
         // Close Table UI.
         this._rowUi.classList.remove('o_open');
         this._columnUi.classList.remove('o_open');
+    }
+
+    _onDoubleClick(ev) {
+        if (closestElement(ev.target, 'td')) {
+            this._handleSelectionInTable(ev);
+        }
     }
 
     /**
