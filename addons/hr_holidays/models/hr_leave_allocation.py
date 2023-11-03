@@ -609,17 +609,26 @@ class HolidaysAllocation(models.Model):
 
     def _add_lastcalls(self):
         for allocation in self:
-            if allocation.allocation_type != 'accrual' or allocation.lastcall:
+            if allocation.allocation_type != 'accrual':
                 continue
             today = fields.Date.today()
-            current_level = allocation._get_current_accrual_plan_level_id(today)[0]
-            if not current_level:
-                allocation.lastcall = today
-                continue
-            allocation.lastcall = max(
-                current_level._get_previous_date(today),
-                allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
-            )
+            (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(today)
+            if not allocation.lastcall:
+                if not current_level:
+                    allocation.lastcall = today
+                    continue
+                allocation.lastcall = max(
+                    current_level._get_previous_date(today),
+                    allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
+                )
+            if not allocation.nextcall and allocation.lastcall < today:
+                accrual_plan = allocation.accrual_plan_id
+                next_level = False
+                allocation.nextcall = current_level._get_next_date(allocation.lastcall)
+                if current_level_idx < (len(accrual_plan.level_ids) - 1) and accrual_plan.transition_mode == 'immediately':
+                    next_level = allocation.accrual_plan_id.level_ids[current_level_idx + 1]
+                    next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
+                    allocation.nextcall = min(allocation.nextcall, next_level_start)
 
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
