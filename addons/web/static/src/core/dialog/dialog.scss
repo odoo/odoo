@@ -51,7 +51,7 @@
                     .modal-header {
                         background: $o-navbar-background;
 
-                        .modal-title, button.close {
+                        .modal-title, .btn {
                             color: $o-navbar-entry-color;
                         }
                     }
@@ -88,20 +88,6 @@
                 align-items: center;
                 height: $o-navbar-height;
                 padding: 0 1rem;
-
-                .btn {
-                    color: white;
-                    background-color: transparent;
-                    border-color: transparent;
-
-                    &, .btn-sm {
-                        padding: 14px; // according to the padding for touch device
-                    }
-
-                    &.fa {
-                        padding: 10px; // according to the padding for touch device
-                    }
-                }
             }
 
             .modal-footer {
