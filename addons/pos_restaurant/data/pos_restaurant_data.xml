@@ -15,11 +15,5 @@
         <function model="pos.config" name="_setup_main_restaurant_defaults">
             <value eval="[ref('pos_config_main_restaurant')]"/>
         </function>
-
-        <function model="restaurant.floor" name="unlink">
-            <value model="restaurant.floor" eval="obj().search([
-                    ('pos_config_ids', 'in', ref('pos_config_main_restaurant')),
-                ]).id"/>
-        </function>
     </data>
 </odoo>
