@@ -542,7 +542,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         # add field as an attribute and in cls._fields (for reflection)
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
@@ -556,7 +556,7 @@ class BaseModel(metaclass=MetaModel):
         """ Remove the field with the given ``name`` from the model.
             This method should only be used for manual fields.
         """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         field = cls._fields.pop(name, None)
         discardattr(cls, name)
         if cls._rec_name == name:
@@ -748,7 +748,7 @@ class BaseModel(metaclass=MetaModel):
                 return func(self)
             return wrapper
 
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = []
         for attr, func in getmembers(cls, is_constraint):
             if callable(func._constrains):
@@ -771,7 +771,7 @@ class BaseModel(metaclass=MetaModel):
         def is_ondelete(func):
             return callable(func) and hasattr(func, '_ondelete')
 
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = [func for _, func in getmembers(cls, is_ondelete)]
         # optimization: memoize results on cls, it will not be recomputed
         cls._ondelete_methods = methods
@@ -784,7 +784,7 @@ class BaseModel(metaclass=MetaModel):
             return callable(func) and hasattr(func, '_onchange')
 
         # collect onchange methods on the model's class
-        cls = type(self)
+        cls = self.env.registry[self._name]
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
             missing = []
@@ -998,7 +998,7 @@ class BaseModel(metaclass=MetaModel):
             # collect all the tuples in "lines" (along with their coordinates)
             for i, line in enumerate(lines):
                 for j, cell in enumerate(line):
-                    if type(cell) is tuple:
+                    if isinstance(cell, tuple):
                         bymodels[cell[0]].add(cell[1])
                         xidmap[cell].append((i, j))
             # for each model, xid-export everything and inject in matrix
@@ -1705,7 +1705,7 @@ class BaseModel(metaclass=MetaModel):
         # columns should be displayed even if they don't contain any record.
         group_expand = field.group_expand
         if isinstance(group_expand, str):
-            group_expand = getattr(type(self), group_expand)
+            group_expand = getattr(self.env.registry[self._name], group_expand)
         assert callable(group_expand)
 
         # determine all groups that should be returned
@@ -2691,13 +2691,13 @@ class BaseModel(metaclass=MetaModel):
                     field.required = True
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
-                type(self)._inherits = {**self._inherits, field.comodel_name: field.name}
+                self.pool[self._name]._inherits = {**self._inherits, field.comodel_name: field.name}
                 self.pool[field.comodel_name]._inherits_children.add(self._name)
 
     @api.model
     def _prepare_setup(self):
         """ Prepare the setup of the model. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         cls._setup_done = False
 
         # changing base classes is costly, do it only when necessary
@@ -2711,7 +2711,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_base(self):
         """ Determine the inherited and custom fields of the model. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
         if cls._setup_done:
             return
 
@@ -2796,7 +2796,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_fields(self):
         """ Setup the fields, except for recomputation triggers. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
 
         # set up fields
         bad_fields = []
@@ -2819,7 +2819,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _setup_complete(self):
         """ Setup recomputation triggers, and complete the model setup. """
-        cls = type(self)
+        cls = self.env.registry[self._name]
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
@@ -5940,7 +5940,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if isinstance(key, str):
             # important: one must call the field's getter
-            return self._fields[key].__get__(self, type(self))
+            return self._fields[key].__get__(self, self.env.registry[self._name])
         elif isinstance(key, slice):
             return self.browse(self._ids[key])
         else:

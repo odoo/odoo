@@ -371,7 +371,7 @@ class IrModel(models.Model):
             'model': model._name,
             'name': model._description,
             'order': model._order,
-            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
         }
@@ -1672,7 +1672,7 @@ class IrModelConstraint(models.Model):
         # map each constraint on the name of the module where it is defined
         constraint_module = {
             constraint[0]: cls._module
-            for cls in reversed(type(model).mro())
+            for cls in reversed(self.env.registry[model._name].mro())
             if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }

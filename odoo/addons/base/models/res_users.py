@@ -1299,7 +1299,7 @@ class UsersImplied(models.Model):
                 user = self.new(values)
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
+                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):
