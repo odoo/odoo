@@ -134,6 +134,28 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         self.test_move.line_ids[0].account_id = custom_account
 
+    def test_fiscal_position_multicompany(self):
+        """A move is assigned a fiscal position that matches its own company."""
+        company1 = self.company_data["company"]
+        company2 = self.company_data_2["company"]
+        partner = self.env['res.partner'].create({'name': 'Belouga'})
+        fpos1 = self.env["account.fiscal.position"].create(
+            {
+                "name": company1.name,
+                "company_id": company1.id,
+            }
+        )
+        fpos2 = self.env["account.fiscal.position"].create(
+            {
+                "name": company2.name,
+                "company_id": company2.id,
+            }
+        )
+        partner.with_company(company1).property_account_position_id = fpos1
+        partner.with_company(company2).property_account_position_id = fpos2
+        self.test_move.sudo().with_company(company2).partner_id = partner
+        self.assertEqual(self.test_move.fiscal_position_id, fpos1)
+
     def test_misc_fiscalyear_lock_date_1(self):
         self.test_move.action_post()
 
