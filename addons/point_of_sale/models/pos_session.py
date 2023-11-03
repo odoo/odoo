@@ -1681,7 +1681,7 @@ class PosSession(models.Model):
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
-        loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products_ids()
+        loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
 
     @api.model
@@ -2215,7 +2215,7 @@ class PosSession(models.Model):
         self.message_post(body=body, author_id=partner_id)
 
     def _pos_has_valid_product(self):
-        return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>=', 0), ('id', 'not in', self.env['pos.config']._get_special_products_ids()), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
+        return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>=', 0), ('id', 'not in', self.env['pos.config']._get_special_products().ids), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
 
     @api.model
     def _load_onboarding_data(self):
