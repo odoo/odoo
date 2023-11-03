@@ -35809,9 +35809,6 @@
             }
         }
         setEvaluatedCell(positionId, evaluatedCell) {
-            if (this.nextPositionsToUpdate.has(positionId)) {
-                this.nextPositionsToUpdate.delete(positionId);
-            }
             this.evaluatedCells.set(positionId, evaluatedCell);
         }
         computeCell(positionId) {
@@ -50774,9 +50771,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.12';
-    __info__.date = '2023-11-02T10:04:32.198Z';
-    __info__.hash = '7fdc589';
+    __info__.version = '16.4.13';
+    __info__.date = '2023-11-03T12:31:52.391Z';
+    __info__.hash = '001985e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
