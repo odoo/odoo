@@ -5,12 +5,11 @@
             <header class="modal-header h2" t-esc="props.product.display_name"/>
             <main class="body">
                 <div t-foreach="props.product.combo_ids" t-as="combo_id" t-key="combo_id"
-                    class="d-flex flex-column m-3">
+                    class="d-flex flex-column m-3 mb-4">
                     <t t-set="combo" t-value="pos.db.combo_by_id[combo_id]"/>
                     <h3 class="me-auto mb-3" t-esc="combo.name"/>
-                    <div class="d-flex">
-                        <div t-foreach="combo.combo_line_ids" t-as="combo_line_id" t-key="combo_line_id"
-                            class="m-2">
+                    <div class="product-list d-grid gap-1">
+                        <div t-foreach="combo.combo_line_ids" t-as="combo_line_id" t-key="combo_line_id">
                             <t t-set="combo_line" t-value="pos.db.combo_line_by_id[combo_line_id]"/>
                             <t t-set="product" t-value="pos.db.product_by_id[combo_line.product_id[0]]"/>
                             <input 
@@ -20,8 +19,9 @@
                                 t-attf-value="{{combo_line_id}}" 
                                 t-model="state.combo[combo_id]"
                                 />
-                            <label t-attf-for="combo-{{combo_id}}-combo_line-{{combo_line_id}}" class="combo-line">
+                            <label t-attf-for="combo-{{combo_id}}-combo_line-{{combo_line_id}}" class="combo-line h-100 w-100 rounded cursor-pointer transition-base">
                                 <ProductCard
+                                    class="'flex-column h-100 border'"
                                     name="product.display_name"
                                     productId="product.id"
                                     price="formattedComboPrice(combo_line)"
