@@ -17,12 +17,7 @@ const ROUTES_TO_IGNORE = [
     "/hr_attendance/attendance_user_data",
 ];
 const WEBCLIENT_PARAMETER_NAMES = new Set(["mockRPC", "serverData", "target", "webClientClass"]);
-const SERVICES_PARAMETER_NAMES = new Set([
-    "legacyServices",
-    "loadingBaseDelayDuration",
-    "messagingBus",
-    "services",
-]);
+const SERVICES_PARAMETER_NAMES = new Set(["legacyServices", "services"]);
 
 /**
  * @param {import("@web/core/registry").Registry} source
@@ -116,13 +111,11 @@ export const setupManager = {
      *
      * @param {Object} param0
      * @param {Object} [param0.services]
-     * @param {number} [param0.loadingBaseDelayDuration=0]
-     * @param {EventBus} [param0.messagingBus]
      * @param {Function} [param0.mockRPC]
      * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
      * to the webClient as a legacy parameter.
      */
-    setupServiceRegistries({ loadingBaseDelayDuration = 0, messagingBus, services = {} } = {}) {
+    setupServiceRegistries({ services = {} } = {}) {
         const OriginalAudio = window.Audio;
         patchWithCleanup(window, {
             Audio: function () {
@@ -133,17 +126,6 @@ export const setupManager = {
             },
         });
         patchWithCleanup(session, { show_effect: true });
-        services["messagingValues"] = services["messagingValues"] ?? {
-            start() {
-                return {
-                    isInQUnitTest: true,
-                    disableAnimation: true,
-                    loadingBaseDelayDuration,
-                    messagingBus,
-                    userNotificationManager: { canPlayAudio: false },
-                };
-            },
-        };
         if (!webServicesRegistry.contains("file_upload")) {
             webServicesRegistry.add("file_upload", {
                 ...fileUploadService,
@@ -172,8 +154,6 @@ export const setupManager = {
  * @param {Object} param0
  * @param {Object} [param0.serverData]
  * @param {Object} [param0.services]
- * @param {Object} [param0.loadingBaseDelayDuration]
- * @param {EventBus} [param0.messagingBus] The event bus to be used by messaging.
  * @returns {WebClient}
  */
 async function getWebClientReady(param0) {

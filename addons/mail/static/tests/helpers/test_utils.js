@@ -8,8 +8,6 @@ import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notificat
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
-import { EventBus } from "@odoo/owl";
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session as sessionInfo } from "@web/session";
@@ -134,7 +132,6 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time with
  *   `messaging.browser.setTimeout` are fully controlled by test itself.
- * @param {integer} [param0.loadingBaseDelayDuration=0]
  * @returns {Object}
  */
 export async function start(param0 = {}) {
@@ -164,8 +161,6 @@ export async function start(param0 = {}) {
         target.style.opacity = "";
     });
     param0["target"] = target;
-    const messagingBus = new EventBus();
-
     const pyEnv = await getPyEnv();
     patchWithCleanup(sessionInfo, {
         user_context: {
@@ -182,7 +177,7 @@ export async function start(param0 = {}) {
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-    const webClient = await getWebClientReady({ ...param0, messagingBus });
+    const webClient = await getWebClientReady({ ...param0 });
     if (webClient.env.services.ui.isSmall) {
         target.style.width = "100%";
     }
