@@ -4,18 +4,6 @@
     <t t-name="ProductsWidgetControlPanel" owl="1">
         <div class="products-widget-control">
             <div class="rightpane-header">
-                <div class="search-bar-container sb-product">
-                    <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
-                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
-                    </span>
-                    <t t-if="!env.isMobile || state.mobileSearchBarIsShown">
-                        <div class="pos-search-bar">
-                            <i class="fa fa-search" />
-                            <input t-model="this.state.searchInput" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
-                            <i t-if="state.searchInput" class="fa fa-times" t-on-click="_clearSearch"/>
-                        </div>
-                    </t>
-                </div>
                 <t t-if="!props.hasNoCategories">
                     <div class="categories-header">
                     <!-- Breadcrumbs -->
@@ -46,7 +34,18 @@
                         </div>
                     </div>
                 </t>
-            </div>
+                <div class="search-bar-container sb-product">
+                    <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
+                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                    </span>
+                    <t t-if="!env.isMobile || state.mobileSearchBarIsShown">
+                        <div class="pos-search-bar">
+                            <i class="fa fa-search" />
+                            <input t-model="this.state.searchInput" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                            <i t-if="state.searchInput" class="fa fa-times" t-on-click="_clearSearch"/>
+                        </div>
+                    </t>
+                </div>
             <t t-if="props.subcategories.length > 0 and displayCategImages">
                 <div class="categories">
                     <div class="category-list-scroller">
