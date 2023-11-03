@@ -941,7 +941,7 @@ var DomainLeaf = DomainNode.extend({
         }
 
         if (this.options.operators) {
-            operators = pick(operators, ...Object.keys(operators).concat(this.options.operators));
+            operators = pick(operators, ...Object.keys(operators).filter(operator =>  this.options.operators.includes(operator)));
         }
 
         return operators;
