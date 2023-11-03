@@ -3,8 +3,9 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { ProductConfiguratorDialog } from "@sale_product_configurator/js/product_configurator_dialog/product_configurator_dialog";
 import "@website_sale/js/website_sale";
-import { getCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
+
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 import { serializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
@@ -43,12 +44,8 @@ publicWidget.registry.WebsiteSale.include({
                     optional_products: JSON.stringify(optionalProducts),
                     ...this._getOptionalCombinationInfoParam(),
                 });
-                if (goToShop) {
-                    window.location.pathname = "/shop/cart";
-                } else {
-                    wSaleUtils.updateCartNavBar(values);
-                    wSaleUtils.showCartNotification(callService, values.notification_info);
-                }
+                wSaleUtils.updateCartNavBar(values);
+                wSaleUtils.showCartNotification(this.call.bind(this), values.notification_info);
                 this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
             },
             discard: () => {},

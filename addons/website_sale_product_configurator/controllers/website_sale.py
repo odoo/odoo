@@ -24,21 +24,7 @@ class WebsiteSale(main.WebsiteSale):
         multilang=False,
     )
     def cart_options_update_json(self, main_product, optional_products, **kwargs):
-        """This route is called when submitting the optional product modal.
-            The product without parent is the main product, the other are options.
-            Options need to be linked to their parents with a unique ID.
-            The main product is the first product in the list and the options
-            need to be right after their parent.
-            product_and_options {
-                'product_id',
-                'product_template_id',
-                'quantity',
-                'parent_unique_id',
-                'unique_id',
-                'product_custom_attribute_values',
-                'no_variant_attribute_values'
-            }
-        """
+        """This route is called when validating the product configurator """
         order = request.website.sale_get_order(force_create=True)
         if order.state != 'draft':
             request.session['sale_order_id'] = None
@@ -50,8 +36,8 @@ class WebsiteSale(main.WebsiteSale):
         values = order._cart_update(
             product_id=main_product['id'],
             add_qty=main_product['quantity'],
-            product_custom_attribute_values=main_product['product_custom_attribute_values'],
-            no_variant_attribute_values=main_product['no_variant_attribute_values'],
+            # product_custom_attribute_values=main_product['product_custom_attribute_values'],
+            # no_variant_attribute_values=main_product['no_variant_attribute_values'],
             **kwargs
         )
 
@@ -66,8 +52,8 @@ class WebsiteSale(main.WebsiteSale):
                     product_id=option['product_id'],
                     set_qty=option['quantity'],
                     linked_line_id=option_parent[parent_unique_id],
-                    product_custom_attribute_values=option['product_custom_attribute_values'],
-                    no_variant_attribute_values=option['no_variant_attribute_values'],
+                    # product_custom_attribute_values=option['product_custom_attribute_values'],
+                    # no_variant_attribute_values=option['no_variant_attribute_values'],
                     **kwargs
                 )
                 option_parent[option['unique_id']] = option_values['line_id']
