@@ -72,12 +72,12 @@ class HrExpense(models.Model):
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
-    total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False, inverse='_inverse_total_amount')
+    total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', precompute=True, store=True, currency_field='currency_id', tracking=True, readonly=False, inverse='_inverse_total_amount')
     untaxed_amount = fields.Monetary("Total Untaxed Amount In Currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
     total_amount_company = fields.Monetary('Total', compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', precompute=True, default=lambda self: self.env.company.currency_id)
     currency_rate = fields.Float(compute='_compute_currency_rate')
     account_id = fields.Many2one('account.account', compute='_compute_account_id', store=True, readonly=False, precompute=True, string='Account',
         domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
@@ -104,7 +104,7 @@ class HrExpense(models.Model):
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
     product_has_cost = fields.Boolean("Is product with non zero cost selected", compute='_compute_product_has_cost')
-    product_has_tax = fields.Boolean("Whether tax is defined on a selected product", compute='_compute_product_has_cost')
+    product_has_tax = fields.Boolean("Whether tax is defined on a selected product", compute='_compute_product_has_tax')
     same_currency = fields.Boolean("Is currency_id different from the company_currency_id", compute='_compute_same_currency')
     duplicate_expense_ids = fields.Many2many('hr.expense', compute='_compute_duplicate_expense_ids')
 
@@ -145,13 +145,10 @@ class HrExpense(models.Model):
     @api.depends('product_id.standard_price')
     def _compute_product_has_cost(self):
         for expense in self:
-            if expense.state in {'draft', 'reported'}:
+            if not expense.sheet_id or expense.sheet_id.state == 'draft':
                 expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
-                expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
             else:
                 expense.product_has_cost = expense.product_has_cost
-                expense.tax_ids = expense.tax_ids
-            expense.product_has_tax = bool(expense.tax_ids)
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -301,12 +298,18 @@ class HrExpense(models.Model):
             else:  # Even if we don't add a product, the unit_amount is still used for the move.line balance computation
                 expense.unit_amount = expense.company_currency_id.round(expense.total_amount_company / (expense.quantity or 1))
 
-    @api.depends('product_id', 'company_id')
+    @api.depends('product_id.supplier_taxes_id', 'company_id')
     def _compute_tax_ids(self):
         for expense in self:
             expense = expense.with_company(expense.company_id)
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
+            if not expense.sheet_id or expense.sheet_id.state == 'draft':
+                expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
+                # taxes only from the same company
 
+    @api.depends('tax_ids')
+    def _compute_product_has_tax(self):
+        for expense in self:
+            expense.product_has_tax = bool(expense.tax_ids)
 
     @api.depends('product_id', 'company_id')
     def _compute_account_id(self):

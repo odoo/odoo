@@ -13,12 +13,10 @@ class SaleOrderLine(models.Model):
         date_today = fields.Date.context_today(self)
         expense_lines = self.filtered('expense_id')
         for line in expense_lines:
-            if line.expense_id.product_has_cost:
-                product_cost = line.expense_id.untaxed_amount / line.expense_id.quantity
-            else:
-                product_cost = line.expense_id.untaxed_amount
+            expense = line.expense_id
+            product_cost = expense.untaxed_amount / (expense.quantity or 1.0)
 
-            from_currency = line.expense_id.currency_id
+            from_currency = expense.currency_id
             to_currency = line.currency_id or line.order_id.currency_id
 
             if to_currency and product_cost and from_currency != to_currency:

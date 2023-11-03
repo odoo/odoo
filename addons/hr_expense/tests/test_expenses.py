@@ -694,6 +694,58 @@ class TestExpenses(TestExpenseCommon):
         move.button_cancel()
         self.assertEqual(sheet.state, 'done', 'Sheet state must not change when the payment linked to that sheet is canceled')
 
+    def test_expense_product_update(self):
+        #pylint: disable=bad-whitespace
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'supplier_taxes_id': False,
+        })
+
+        sheet_no_update, sheet_update = sheets = self.env['hr.expense.sheet'].create([{
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': name,
+            'expense_line_ids': [
+                Command.create({
+                    'name': name,
+                    'date': '2016-01-01',
+                    'product_id': product.id,
+                    'total_amount': 100.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        } for name in ('test sheet no update', 'test sheet update')])
+
+        sheet_no_update.action_submit_sheet()  # No update when sheet is submitted
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'product_has_cost': False, 'unit_amount': 100.0, 'tax_ids': [], 'total_amount': 100.0},
+            {'name':    'test sheet update', 'product_has_cost': False, 'unit_amount': 100.0, 'tax_ids': [], 'total_amount': 100.0},
+        ])
+        product.write({'standard_price': 50.0})
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'product_has_cost': False, 'unit_amount': 100.0, 'tax_ids': [], 'total_amount': 100.0},
+            {'name':    'test sheet update', 'product_has_cost':  True, 'unit_amount':  50.0, 'tax_ids': [], 'total_amount': 100.0},
+        ])
+
+        product.write({'supplier_taxes_id': [Command.set(self.tax_purchase_a.ids)]})
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'product_has_cost': False, 'unit_amount': 100.0, 'tax_ids': [], 'total_amount': 100.0},
+            {'name':    'test sheet update', 'product_has_cost':  True, 'unit_amount':  50.0, 'tax_ids': [self.tax_purchase_a.id], 'total_amount':  50.0},
+        ])
+
+        sheet_update.action_submit_sheet()  # This sheet should not be updated any more
+        product.write({'standard_price': 300.0, 'supplier_taxes_id': [Command.set([])]})
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'product_has_cost': False, 'unit_amount': 100.0, 'tax_ids': [], 'total_amount': 100.0},
+            {'name':    'test sheet update', 'product_has_cost': False, 'unit_amount':  50.0, 'tax_ids': [self.tax_purchase_a.id], 'total_amount':  50.0},
+        ])
+
+
     def test_expense_amount_total_signed_compute(self):
         sheet = self.env['hr.expense.sheet'].create({
             'company_id': self.env.company.id,
