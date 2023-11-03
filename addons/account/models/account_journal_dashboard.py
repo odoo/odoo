@@ -9,7 +9,7 @@ from odoo import models, api, _, fields
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 
 
@@ -81,13 +81,15 @@ class account_journal(models.Model):
         activities = defaultdict(list)
         # search activity on move on the journal
         lang = self.env.user.lang or get_lang(self.env).code
-        sql_query = """
+        act_type_name = self.with_context(lang=lang).env['mail.activity.type']._field_to_sql('act_type', 'name')
+        sql_query = SQL(
+            """
             SELECT activity.id,
                    activity.res_id,
                    activity.res_model,
                    activity.summary,
                    CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
-                   COALESCE(act_type.name->> %(lang)s, act_type.name->>'en_US') as act_type_name,
+                   %(act_type_name)s as act_type_name,
                    act_type.category as activity_category,
                    activity.date_deadline,
                    move.date,
@@ -98,13 +100,13 @@ class account_journal(models.Model):
          LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
              WHERE move.journal_id = ANY(%(ids)s)
                AND move.company_id = ANY(%(company_ids)s)
-        """
-        self.env.cr.execute(sql_query, {
-            'ids': self.ids,
-            'company_ids': self.env.companies.ids,
-            'today': today,
-            'lang': lang,
-        })
+            """,
+            today=today,
+            act_type_name=act_type_name,
+            ids=self.ids,
+            company_ids=self.env.companies.ids,
+        )
+        self.env.cr.execute(sql_query)
         for activity in self.env.cr.dictfetchall():
             act = {
                 'id': activity['id'],
