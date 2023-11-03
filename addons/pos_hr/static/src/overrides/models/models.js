@@ -4,7 +4,7 @@ import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(Order.prototype, {
-    setup(options) {
+    setup(_defaultObj, options) {
         super.setup(...arguments);
         if (!options.json && this.pos.config.module_pos_hr) {
             this.cashier = this.pos.get_cashier();
