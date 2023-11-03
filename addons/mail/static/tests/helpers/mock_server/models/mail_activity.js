@@ -4,7 +4,7 @@ import { Domain } from "@web/core/domain";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import { deserializeDate } from "@web/core/l10n/dates";
+import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 
 const { DateTime} = luxon;
 
@@ -84,8 +84,7 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     _mockMailActivityActionDone(ids) {
-        const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
-        this.mockUnlink("mail.activity", [activities.map((activity) => activity.id)]);
+        this._mockMailActivityActionFeedback(ids);
     },
     /**
      * Simulates `action_feedback` on `mail.activity`.
@@ -96,7 +95,24 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     _mockMailActivityActionFeedback(ids, attachment_ids= null) {
-        this._mockMailActivityActionDone(ids);
+        const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
+        const activityTypes = this.getRecords("mail.activity.type", [
+            ["id", "in", unique(activities.map((a) => a.activity_type_id))],
+        ]);
+        const activityTypeById = Object.fromEntries(
+            activityTypes.map((actType) => [actType.id, actType])
+        );
+        this.mockWrite("mail.activity", [
+            activities
+                .filter((act) => activityTypeById[act.activity_type_id].keep_done)
+                .map((act) => act.id),
+            { active: false, date_done: serializeDate(today()), state: "done" },
+        ]);
+        this.mockUnlink("mail.activity", [
+            activities
+                .filter((act) => !activityTypeById[act.activity_type_id].keep_done)
+                .map((act) => act.id),
+        ]);
     },
     /**
      * Simulates `action_feedback_schedule_next` on `mail.activity`.
