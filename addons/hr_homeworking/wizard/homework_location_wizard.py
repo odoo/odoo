@@ -3,6 +3,7 @@
 
 from odoo import fields, models, api
 
+from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 class HomeworkLocationWizard(models.TransientModel):
     _name = 'homework.location.wizard'
@@ -31,8 +32,8 @@ class HomeworkLocationWizard(models.TransientModel):
             ('date', '=', self.date),
             ('employee_id', '=', employee_id.id)
         ])
-        date_week_name = self.day_week_string.lower()  # convert Tuesday to tuesday
-        default_location_for_current_date = f"{date_week_name}_location_id"
+        weekday = self.date.weekday()
+        default_location_for_current_date = DAYS[weekday]
         if self.weekly:
             # delete any exceptions on the current date
             if employee_location:
