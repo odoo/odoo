@@ -28,9 +28,11 @@
                 <div class="s_events_event_title text-white" t-field="record.name"/>
                 <time itemprop="startDate" t-att-datetime="record.date_begin" class="text-white">
                     <span t-out="record.date_begin"
-                          t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long'}"/> -
+                          t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                    -
                     <span t-out="record.date_begin"
-                          t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short'}"/>
+                          t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                    (<span t-out="record.date_tz"/>)
                 </time>
             </figcaption>
         </a>
@@ -48,8 +50,10 @@
                     <t t-set="_resize_width" t-value="256"/>
 
                     <div class="s_events_event_date o_wevent_theme_bg_base position-absolute shadow-sm text-dark">
-                        <span t-field="record.date_begin" t-options="{'format': 'LLL'}" class="s_events_event_month"/>
-                        <span t-field="record.date_begin" t-options="{'format': 'dd'}" class="s_events_event_day"/>
+                        <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
+                              class="s_events_event_month"/>
+                        <span t-field="record.date_begin" t-options="{'format': 'dd', 'tz_name': record.date_tz}"
+                              class="s_events_event_day"/>
                     </div>
                 </t>
             </a>
@@ -57,8 +61,12 @@
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                 <h5 class="mb-0 text-truncate" t-field="record.name"/>
                 <time itemprop="startDate" t-att-datetime="record.date_begin">
-                    <span t-field="record.date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
-                    <span t-field="record.date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                    <span t-field="record.date_begin"
+                          t-options="{'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                    -
+                    <span t-field="record.date_begin"
+                          t-options="{'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                    (<span t-out="record.date_tz"/>)
                 </time>
                 <div itemprop="location" t-field="record.address_id"
                      t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
