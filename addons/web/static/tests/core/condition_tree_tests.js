@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
     complexCondition,
     condition,
@@ -838,22 +838,6 @@ QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", functi
 
     const record = { foo: 1, foo_ids: [1, 2], uid: 7, expr: "abc" };
 
-    function toBool(val) {
-        if (val instanceof Set) {
-            return Boolean(val.size);
-        }
-        if (Array.isArray(val)) {
-            return Boolean(val.length);
-        }
-        if (val === null) {
-            return false;
-        }
-        if (typeof val === "object") {
-            return Boolean(Object.keys(val).length);
-        }
-        return Boolean(val);
-    }
-
     const toTest = [
         condition("foo", "=", false),
         condition("foo", "=", false, true),
@@ -884,7 +868,7 @@ QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", functi
     ];
     for (const tree of toTest) {
         assert.strictEqual(
-            toBool(evaluateExpr(expressionFromTree(tree, options), record)),
+            evaluateBooleanExpr(expressionFromTree(tree, options), record),
             new Domain(domainFromTree(tree)).contains(record)
         );
     }
