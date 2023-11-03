@@ -59,6 +59,7 @@
             <field name="res_id" ref="im_livechat.livechat_channel_session_7"/>
             <field name="author_id" ref="base.public_partner"/>
             <field name="subtype_id" ref="mail.mt_note"/>
+            <field name="message_type">notification</field>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=50)" name="date"/>
         </record>
         <record id="livechat_channel_session_7_rating" model="rating.rating">
