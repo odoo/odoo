@@ -80,7 +80,7 @@ class HrLeave(models.Model):
                 else:
                     leave.l10n_fr_date_to_changed = False
 
-    def _get_duration(self, resource_calendar=None):
+    def _get_duration(self, check_leave_type=True, resource_calendar=None):
         """
         In french time off laws, if an employee has a part time contract, when taking time off
         before one of his off day (compared to the company's calendar) it should also count the time
