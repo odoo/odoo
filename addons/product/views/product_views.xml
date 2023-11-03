@@ -89,7 +89,6 @@
                                     </div>
                                     <field name="categ_id" string="Product Category"/>
                                     <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
-                                    <button name="%(product_tag_action)d" icon="oi-arrow-right" type="action" class="btn-link ps-0" colspan="2" string="Configure tags"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
@@ -293,7 +292,6 @@
                             <group name="tags" string="Tags">
                                 <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
-                                <button name="%(product_tag_action)d" icon="oi-arrow-right" type="action" class="btn-link ps-0" colspan="2" string="Configure tags"/>
                             </group>
                         </group>
                         <group>

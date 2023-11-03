@@ -319,7 +319,9 @@ class ProductProduct(models.Model):
     @api.depends('product_tag_ids', 'additional_product_tag_ids')
     def _compute_all_product_tag_ids(self):
         for product in self:
-            product.all_product_tag_ids = product.product_tag_ids | product.additional_product_tag_ids
+            product.all_product_tag_ids = (
+                product.product_tag_ids | product.additional_product_tag_ids
+            ).sorted('sequence')
 
     def _search_all_product_tag_ids(self, operator, operand):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
