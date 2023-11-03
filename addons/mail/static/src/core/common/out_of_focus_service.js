@@ -19,10 +19,7 @@ export class OutOfFocusService {
      */
     constructor(env, services) {
         this.env = env;
-        this.audio = new Audio();
-        this.audio.src = this.audio.canPlayType("audio/ogg; codecs=vorbis")
-            ? url("/mail/static/src/audio/ting.ogg")
-            : url("/mail/static/src/audio/ting.mp3");
+        this.audio = undefined;
         this.counter = 0;
         this.multiTab = services.multi_tab;
         this.busService = services.bus_service;
@@ -146,6 +143,12 @@ export class OutOfFocusService {
 
     async _playSound() {
         if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
+            if (!this.audio) {
+                this.audio = new Audio();
+                this.audio.src = this.audio.canPlayType("audio/ogg; codecs=vorbis")
+                    ? url("/mail/static/src/audio/ting.ogg")
+                    : url("/mail/static/src/audio/ting.mp3");
+            }
             try {
                 await this.audio.play();
             } catch {
