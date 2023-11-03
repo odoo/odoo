@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 def _create_accounting_data(env):

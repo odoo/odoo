@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from odoo.tools import html2plaintext
 
-from odoo.tests.common import Form, tagged
+from odoo.tests import Form, tagged
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 

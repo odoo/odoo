@@ -3,7 +3,7 @@ from itertools import chain
 import base64
 import json
 import re
-from odoo.tests.common import TransactionCase, Form
+from odoo.tests import TransactionCase
 from odoo.exceptions import ValidationError
 
 markdown_link_regex = r"^\[([^\[]+)\]\((.+)\)$"

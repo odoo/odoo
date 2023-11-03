@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestProjectTaskQuickCreate(TestProjectCommon):

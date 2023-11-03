@@ -15,7 +15,7 @@ from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
-from odoo.tests.common import Form, users
+from odoo.tests import Form, users
 
 
 class TestActivityCommon(MailCommon):

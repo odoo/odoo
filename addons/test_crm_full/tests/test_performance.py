@@ -4,8 +4,7 @@
 from freezegun import freeze_time
 
 from odoo.addons.test_crm_full.tests.common import TestCrmFullCommon
-from odoo.tests.common import users, warmup, Form
-from odoo.tests import tagged
+from odoo.tests import Form, users, warmup, tagged
 
 
 @tagged('crm_performance', 'post_install', '-at_install', '-standard')

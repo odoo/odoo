@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import Form, tagged, users
+from odoo.tests import Form, tagged, users
 
 
 @tagged('mailing_list')

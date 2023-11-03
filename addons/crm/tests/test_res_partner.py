@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.tests.common import Form
-from odoo.tests import tagged, users
+from odoo.tests import Form, tagged, users
 
 
 @tagged('res_partner')

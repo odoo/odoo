@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestStockLot(TestStockCommon):

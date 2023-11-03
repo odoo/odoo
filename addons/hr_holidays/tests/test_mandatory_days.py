@@ -5,8 +5,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo import tests
-from odoo.tests import new_test_user
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, new_test_user, TransactionCase
 from odoo.exceptions import ValidationError
 
 

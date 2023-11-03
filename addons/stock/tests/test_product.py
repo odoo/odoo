@@ -6,7 +6,7 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestVirtualAvailable(TestStockCommon):

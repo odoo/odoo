@@ -8,7 +8,7 @@ from ast import literal_eval
 from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 

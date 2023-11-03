@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests.common import Form
+from odoo.tests import Form
 from odoo.exceptions import UserError
 
 
