@@ -199,11 +199,20 @@ class FleetVehicle(models.Model):
         res.append(('id', search_operator, res_ids))
         return res
 
+    def _clean_vals_internal_user(self, vals):
+        # Fleet administrator may not have rights to write on partner
+        # related fields when the driver_id is a res.user.
+        # This trick is used to prevent access right error.
+        su_vals = {}
+        if self.env.su:
+            return su_vals
+        if 'plan_to_change_car' in vals:
+            su_vals['plan_to_change_car'] = vals.pop('plan_to_change_car')
+        return su_vals
+
     @api.model
     def create(self, vals):
-        # Fleet administrator may not have rights to create the plan_to_change_car value when the driver_id is a res.user
-        # This trick is used to prevent access right error.
-        ptc_value = 'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')}
+        ptc_value = self._clean_vals_internal_user(vals)
         res = super(FleetVehicle, self).create(vals)
         if ptc_value:
             res.sudo().write(ptc_value)
@@ -228,7 +237,9 @@ class FleetVehicle(models.Model):
             if not state_waiting_list or state_waiting_list.id not in states:
                 future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
                 future_driver.sudo().write({'plan_to_change_car': True})
-
+        su_vals = self._clean_vals_internal_user(vals)
+        if su_vals:
+            self.sudo().write(su_vals)
         res = super(FleetVehicle, self).write(vals)
         if 'active' in vals and not vals['active']:
             self.mapped('log_contracts').write({'active': False})
