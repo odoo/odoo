@@ -23,7 +23,6 @@ class BaseImportModule(models.TransientModel):
         fp = BytesIO()
         fp.write(zip_data)
         res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
-        self.write({'state': 'done', 'import_message': res[0]})
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
