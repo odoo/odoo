@@ -62,6 +62,7 @@
             <field name="res_id" ref="im_livechat.livechat_channel_session_10"/>
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_10_guest"/>
             <field name="subtype_id" ref="mail.mt_note"/>
+            <field name="message_type">notification</field>
             <field eval="datetime.now() - timedelta(days=1, seconds=-60)" name="date"/>
         </record>
         <record id="livechat_channel_session_10_rating" model="rating.rating">
