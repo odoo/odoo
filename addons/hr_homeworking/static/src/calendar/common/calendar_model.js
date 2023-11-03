@@ -72,7 +72,9 @@ patch(AttendeeCalendarModel.prototype, {
                     } else {
                         previousDay = dayISO;
                     }
-                    events[dayISO] = currentEvent;
+                    if (currentEvent.title) {
+                        events[dayISO] = currentEvent;
+                    }
                 }
             }
         }
