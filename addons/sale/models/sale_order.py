@@ -1224,6 +1224,7 @@ class SaleOrder(models.Model):
         so_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
         if self.env.context.get('mark_so_as_sent'):
             so_ctx['mail_notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
+        so_ctx['lang'] = self.partner_id.lang
         return super(SaleOrder, self.with_context(**so_ctx)).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
