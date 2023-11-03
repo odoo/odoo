@@ -103,12 +103,12 @@ class ResConfigSettings(models.TransientModel):
 
             for table in table_ids:
                 qr_images.append({
-                    'image': self._generate_single_qr_code(self.pos_config_id._get_self_order_url(table.id)),
+                    'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
                     'name': f"{table.floor_id.name} - {table.name}",
                 })
         else:
             qr_images.append({
-                'image': self._generate_single_qr_code(self.pos_config_id._get_self_order_url()),
+                'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
                 'name': "generic",
             })
 

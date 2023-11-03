@@ -14,7 +14,6 @@ export class CartPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        this.sendInProgress = false;
         this.state = useState({
             selectTable: false,
             cancelConfirmation: false,
