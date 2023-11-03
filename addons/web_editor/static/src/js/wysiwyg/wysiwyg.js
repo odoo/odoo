@@ -2167,9 +2167,7 @@ export class Wysiwyg extends Component {
                 }
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
-                    this.odooEditor.observerUnactive();
                     const removeTooltip = this.popover.add(e.target, Tooltip, { tooltip: _t('Double-click to edit') });
-                    this.odooEditor.observerActive();
                     this.tooltipTimeouts.push(setTimeout(() => removeTooltip(), 800));
                 });
             }, 400));
