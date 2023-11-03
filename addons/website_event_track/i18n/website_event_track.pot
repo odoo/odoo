@@ -57,11 +57,6 @@ msgid "%s Online Events Application"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "&amp;bull;"
-msgstr ""
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
 msgid "10 DIY Furniture Ideas For Absolute Beginners"
 msgstr ""
@@ -94,16 +89,6 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Speaker Profile</b>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Talk Intro</b>"
 msgstr ""
 
 #. module: website_event_track
@@ -140,12 +125,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
-msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
 msgstr ""
 
 #. module: website_event_track
@@ -157,7 +137,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
+msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 msgstr ""
 
 #. module: website_event_track
@@ -224,22 +204,8 @@ msgid "<span>New track proposal</span>"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<strong>Location:</strong>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
-"                                    alocated in slots of 60 minutes."
 msgstr ""
 
 #. module: website_event_track
@@ -322,6 +288,7 @@ msgstr ""
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 #, python-format
 msgid "Agenda"
 msgstr ""
@@ -352,7 +319,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
+"                            presentation, for publishing on our website."
 msgstr ""
 
 #. module: website_event_track
@@ -498,6 +465,11 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 msgid "Climate positive"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Close"
 msgstr ""
 
 #. module: website_event_track
@@ -879,13 +851,13 @@ msgid "Favorites"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
-msgid "Filter Tracks..."
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Filter by Tags"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
-msgid "Filter by Tags"
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Filters"
 msgstr ""
 
 #. module: website_event_track
@@ -1299,6 +1271,11 @@ msgid "Life at Home Around the World: William’s Story"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Lightning Talks"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
 msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
@@ -1666,6 +1643,11 @@ msgid "Refused"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Regular Talks"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
 msgid "Relative time compared to track start (seconds)"
 msgstr ""
@@ -1714,6 +1696,11 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "Search Tracks"
 msgstr ""
 
 #. module: website_event_track
@@ -1795,6 +1782,11 @@ msgid "Speaker Photo"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker Profile"
+msgstr ""
+
+#. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
@@ -1869,6 +1861,11 @@ msgid "Tags"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Intro"
+msgstr ""
+
+#. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
@@ -1900,6 +1897,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -1957,6 +1955,18 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"These are 30 minutes talks on many different topics. Most topics are "
+"accepted in lightning talks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "These are standard talks with slides, alocated in slots of 60 minutes."
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
 "They will be created automatically once attendees start browsing your "
@@ -2009,7 +2019,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
-"                                    for publishing on our website."
+"                            for publishing on our website."
 msgstr ""
 
 #. module: website_event_track
