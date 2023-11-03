@@ -36,7 +36,11 @@ class AccountReport(models.Model):
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     section_report_ids = fields.Many2many(string="Sections", comodel_name='account.report', relation="account_report_section_rel", column1="main_report_id", column2="sub_report_id")
     section_main_report_ids = fields.Many2many(string="Section Of", comodel_name='account.report', relation="account_report_section_rel", column1="sub_report_id", column2="main_report_id")
-    use_sections = fields.Boolean(string="Composite Report", store=True, readonly=False, compute="_compute_use_sections")
+    use_sections = fields.Boolean(
+        string="Composite Report",
+        compute="_compute_use_sections", store=True, readonly=False,
+        help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
+    )
     chart_template = fields.Selection(string="Chart of Accounts", selection=lambda self: self.env['account.chart.template']._select_chart_template())
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(
