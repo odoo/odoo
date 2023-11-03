@@ -583,6 +583,8 @@ class AccountBankStatementLine(models.Model):
             else:
                 new_balance = 0.0
         else:
+            if not isinstance(balance, float):
+                balance = 0.0
             journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
             trans_amount_currency = transaction_currency.round(journ_amount_currency * rate_journal2foreign_curr)
             new_balance = balance
