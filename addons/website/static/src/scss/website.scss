@@ -2393,6 +2393,11 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_text_highlight {
     --text-highlight-color: currentColor;
 
+    // Default style for irregular text highlights.
+    &.o_text_highlight_fill {
+        --text-highlight-color: var(--primary);
+        --text-highlight-width: 0px !important;
+    }
     // Text highlight SVG container.
     > .o_text_highlight_item {
         position: relative;
