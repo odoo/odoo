@@ -847,7 +847,7 @@ options.registry.WebsiteSaleProductTags = options.Class.extend({
     /**
      * Change sequence of product page tags
      */
-    async setPosition(previewMode, widgetValue, params) {
+    async resequence(previewMode, widgetValue, params) {
         this.rpc('/shop/product/resequence-tag', {
             product_template_id: this.productTemplateId,
             product_tag_id: this.productTagId,

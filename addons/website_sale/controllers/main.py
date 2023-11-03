@@ -670,6 +670,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if new_tag_index == tag_index:
             return
 
+        # TODO(loti): simply swapping the sequences isn't great, especially for 'first' and 'last' moves. We should
+        # resequence all tags instead.
         tag_sequence = product_tag.sequence
         product_tag.sequence = product_tags[new_tag_index].sequence
         product_tags[new_tag_index].sequence = tag_sequence
