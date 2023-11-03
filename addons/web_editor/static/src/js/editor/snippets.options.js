@@ -1779,7 +1779,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
         }
         this.colorPaletteWrapper?.destroy();
-        const sidebarDocument = this.colorPaletteEl.ownerDocument; 
+        const sidebarDocument = this.colorPaletteEl.ownerDocument;
         if (!(this.colorPaletteEl instanceof sidebarDocument.defaultView.HTMLElement)) {
             // When inside an iframe, the element for mounting a component must
             // be an instance of the iframe's HTMLElement, or else target
@@ -4582,6 +4582,15 @@ registry.sizing = SnippetOptionWidget.extend({
                 return;
             }
 
+            // Locking the mutex during the resize. Started here to avoid
+            // empty returns.
+            let resizeResolve;
+            const prom = new Promise(resolve => resizeResolve = () => resolve());
+            self.trigger_up("snippet_edition_request", { exec: () => {
+                self.trigger_up("disable_loading_effect");
+                return prom;
+            }});
+
             // If we are in grid mode, add a background grid and place it in
             // front of the other elements.
             const rowEl = self.$target[0].parentNode;
@@ -4695,12 +4704,22 @@ registry.sizing = SnippetOptionWidget.extend({
 
                 self.options.wysiwyg.odooEditor.automaticStepActive('resizing');
 
+                // Freeing the mutex once the resizing is done.
+                resizeResolve();
+                self.trigger_up("enable_loading_effect");
+
                 if (directions.every(dir => dir.begin === dir.current)) {
                     return;
                 }
 
                 setTimeout(function () {
                     self.options.wysiwyg.odooEditor.historyStep();
+
+                    self.trigger_up("snippet_edition_request", { exec: async () => {
+                        await new Promise(resolve => {
+                            self.trigger_up("snippet_option_update", { onSuccess: () => resolve() });
+                        });
+                    }});
                 }, 0);
             };
             $body.on('mousemove', bodyMouseMove);
@@ -4980,10 +4999,6 @@ registry['sizing_x'] = registry.sizing.extend({
      * @override
      */
     async _notifyResizeChange() {
-        this.trigger_up("option_update", {
-            optionName: "layout_column",
-            name: "change_column_size",
-        });
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
             name: 'change_column_size',
@@ -5209,15 +5224,6 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      */
     cleanUI() {
         this._removeGridPreview();
-    },
-    /**
-     * @override
-     */
-    notify(name) {
-        if (name === "change_column_size") {
-            this.updateUI();
-        }
-        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
