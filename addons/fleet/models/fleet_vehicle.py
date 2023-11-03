@@ -235,11 +235,22 @@ class FleetVehicle(models.Model):
         res.append(('id', search_operator, res_ids))
         return res
 
+    def _clean_vals_internal_user(self, vals):
+        # Fleet administrator may not have rights to write on partner
+        # related fields when the driver_id is a res.user.
+        # This trick is used to prevent access right error.
+        su_vals = {}
+        if self.env.su:
+            return su_vals
+        if 'plan_to_change_car' in vals:
+            su_vals['plan_to_change_car'] = vals.pop('plan_to_change_car')
+        if 'plan_to_change_bike' in vals:
+            su_vals['plan_to_change_bike'] = vals.pop('plan_to_change_bike')
+        return su_vals
+
     @api.model
     def create(self, vals):
-        # Fleet administrator may not have rights to create the plan_to_change_car value when the driver_id is a res.user
-        # This trick is used to prevent access right error.
-        ptc_value = 'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')}
+        ptc_value = self._clean_vals_internal_user(vals)
         res = super(FleetVehicle, self).create(vals)
         if ptc_value:
             res.sudo().write(ptc_value)
@@ -281,6 +292,9 @@ class FleetVehicle(models.Model):
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
             self.env['fleet.vehicle.log.services'].search([('vehicle_id', 'in', self.ids)]).active = False
 
+        su_vals = self._clean_vals_internal_user(vals)
+        if su_vals:
+            self.sudo().write(su_vals)
         res = super(FleetVehicle, self).write(vals)
         return res
 
