@@ -493,7 +493,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 
 def prepend_html_content(html_body, html_content):
     """Prepend some HTML content at the beginning of an other HTML content."""
-    html_content = type(html_content)(re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content))
+    replacement = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = markupsafe.Markup(replacement) if isinstance(html_content, markupsafe.Markup) else replacement
     html_content = html_content.strip()
 
     body_match = re.search(r'<body[^>]*>', html_body) or re.search(r'<html[^>]*>', html_body)

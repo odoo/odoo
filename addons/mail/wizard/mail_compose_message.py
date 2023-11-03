@@ -1271,7 +1271,7 @@ class MailComposer(models.TransientModel):
             blacklist = {x[0] for x in self._cr.fetchall()}
             if not blacklist:
                 return blacklisted_rec_ids
-            if issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+            if isinstance(self.env[self.model], self.pool['mail.thread.blacklist']):
                 targets = self.env[self.model].browse(mail_values_dict.keys())
                 targets.fetch(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist

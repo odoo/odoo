@@ -24,7 +24,7 @@ class MailThread(models.AbstractModel):
         if not self:
             return groups
 
-        portal_enabled = isinstance(self, type(self.env['portal.mixin']))
+        portal_enabled = isinstance(self, self.env.registry['portal.mixin'])
         if not portal_enabled:
             return groups
 
