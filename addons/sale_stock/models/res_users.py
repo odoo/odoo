@@ -28,6 +28,6 @@ class Users(models.Model):
 
         init_res = super().__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + sale_stock_writeable_fields
-        type(self).SELF_WRITEABLE_FIELDS = type(self).SELF_WRITEABLE_FIELDS + sale_stock_writeable_fields
+        pool[self._name].SELF_READABLE_FIELDS = pool[self._name].SELF_READABLE_FIELDS + sale_stock_writeable_fields
+        pool[self._name].SELF_WRITEABLE_FIELDS = pool[self._name].SELF_WRITEABLE_FIELDS + sale_stock_writeable_fields
         return init_res

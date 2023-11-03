@@ -16,7 +16,7 @@ class User(models.Model):
         """
         init_res = super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['employee_cars_count']
+        pool[self._name].SELF_READABLE_FIELDS = pool[self._name].SELF_READABLE_FIELDS + ['employee_cars_count']
         return init_res
 
     def action_get_claim_report(self):

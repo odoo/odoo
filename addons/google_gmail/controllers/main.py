@@ -43,7 +43,7 @@ class GoogleGmailController(http.Controller):
 
         model = request.env[model_name]
 
-        if not issubclass(type(model), request.env.registry['google.gmail.mixin']):
+        if not isinstance(model, request.env.registry['google.gmail.mixin']):
             # The model must inherits from the "google.gmail.mixin" mixin
             raise Forbidden()
 
