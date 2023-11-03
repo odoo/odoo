@@ -77,6 +77,13 @@ export function areSimilarElements(node, node2) {
     );
 }
 
+function shouldPreserveCursor(node, root) {
+    const selection = root.ownerDocument.getSelection();
+    return node.isConnected && selection &&
+        selection.anchorNode && root.contains(selection.anchorNode) &&
+        selection.focusNode && root.contains(selection.focusNode);
+}
+
 class Sanitize {
     constructor(root) {
         this.root = root;
@@ -112,8 +119,7 @@ class Sanitize {
                 !isUnbreakable(node)
             ) {
                 getDeepRange(this.root, { select: true });
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 const nodeP = node.previousSibling;
                 moveNodes(...endPos(node.previousSibling), node);
                 if (restoreCursor) {
@@ -146,8 +152,7 @@ class Sanitize {
                 !isBlock(node.parentElement) &&
                 anchor !== node
             ) {
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("oe-zws-empty-inline");
                 if (restoreCursor) {
@@ -162,8 +167,7 @@ class Sanitize {
                 isEmptyBlock(node)
             ) {
                 const parent = node.parentElement;
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
@@ -204,7 +208,7 @@ class Sanitize {
             // Unwrap the contents of SPAN and FONT elements without attributes.
             if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
                 getDeepRange(this.root, { select: true });
-                const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 firstChild = unwrapContents(node)[0];
                 if (restoreCursor) {
                     restoreCursor();
