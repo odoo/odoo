@@ -317,6 +317,14 @@ QUnit.test("expressionFromTree", function (assert) {
             result: `foo in [1]`,
         },
         {
+            expressionTree: condition("foo", "in", expression("expr")),
+            result: `foo in expr`,
+        },
+        {
+            expressionTree: condition("foo_ids", "in", expression("expr")),
+            result: `set(foo_ids).intersection(expr)`,
+        },
+        {
             expressionTree: condition("y", "in", []),
             result: `"y" in []`,
         },
@@ -836,7 +844,7 @@ QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", functi
         },
     };
 
-    const record = { foo: 1, foo_ids: [1, 2], uid: 7, expr: "abc" };
+    const record = { foo: 1, foo_ids: [1, 2], uid: 7, expr: "abc", expr2: [1] };
 
     const toTest = [
         condition("foo", "=", false),
@@ -865,6 +873,8 @@ QUnit.test("evaluation . expressionFromTree = contains . domainFromTree", functi
         condition("y", "not in", []),
         condition("y", "not in", [1]),
         condition("y", "not in", 1),
+        condition("foo", "in", expression("expr2")),
+        condition("foo_ids", "in", expression("expr2")),
     ];
     for (const tree of toTest) {
         assert.strictEqual(

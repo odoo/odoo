@@ -639,12 +639,16 @@ function _expressionFromTree(tree, options, isRoot = false) {
         return formatAST(operator === "=" ? not(pathAST) : pathAST);
     }
 
-    if (pathAST.type === 5 && isX2Many(pathAST, options) && ["in", "not in"].includes(operator)) {
-        const valueAST = toAST(value);
-        const otherIteratorAST = [4, 10].includes(valueAST.type)
-            ? valueAST
-            : { type: 4, value: [valueAST] };
+    let valueAST = toAST(value);
+    if (
+        ["in", "not in"].includes(operator) &&
+        !(value instanceof Expression) &&
+        ![4, 10].includes(valueAST.type)
+    ) {
+        valueAST = { type: 4, value: [valueAST] };
+    }
 
+    if (pathAST.type === 5 && isX2Many(pathAST, options) && ["in", "not in"].includes(operator)) {
         const ast = {
             type: 8,
             fn: {
@@ -659,14 +663,9 @@ function _expressionFromTree(tree, options, isRoot = false) {
                 },
                 key: "intersection",
             },
-            args: [otherIteratorAST],
+            args: [valueAST],
         };
         return formatAST(operator === "not in" ? not(ast) : ast);
-    }
-
-    let valueAST = toAST(value);
-    if (["in", "not in"].includes(operator) && ![4, 10].includes(valueAST.type)) {
-        valueAST = { type: 4, value: [valueAST] };
     }
 
     // add case true for boolean fields
