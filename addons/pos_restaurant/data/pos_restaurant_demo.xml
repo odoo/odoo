@@ -231,6 +231,54 @@
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-fanta.jpg"/>
         </record>
 
+        <!-- Combo -->
+        <record id="cheeseburger_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="pos_food_cheeseburger"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="bacon_burger_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="pos_food_bacon"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="burger_combo" model="pos.combo">
+            <field name="name">Burger Choice</field>
+            <field name="combo_line_ids" eval="[(6, 0, [ref('cheeseburger_combo_line'), ref('bacon_burger_combo_line')])]"/>
+        </record>
+
+        <record id="coke_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="coke"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="water_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="water"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="maid_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="minute_maid"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="milkshake_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="milkshake_banana"/>
+            <field name="combo_price">2</field>
+        </record>
+        <record id="drink_combo" model="pos.combo">
+            <field name="name">Desks Combo</field>
+            <field name="combo_line_ids" eval="[(6, 0, [ref('coke_combo_line'), ref('water_combo_line'), ref('maid_combo_line'), ref('milkshake_combo_line')])]"/>
+        </record>
+
+        <record id="burger_drink_combo" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">10</field>
+          <field name="name">Burger Menu Combo</field>
+          <field name="type">combo</field>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
+          <field name="image_1920" type="base64" file="pos_restaurant/static/img/combo-hamb.jpg"/>
+          <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('burger_combo')])]"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
+          <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
+        </record>
+
         <!-- Pos Config -->
         <record model="pos.config" id="pos_config_main_restaurant">
             <field name="iface_printbill">True</field>
