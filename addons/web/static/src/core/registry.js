@@ -20,14 +20,21 @@ export class DuplicatedKeyError extends Error {}
  *   (for example, the FunctionRegistry subclass this for this purpose)
  * 2. it throws an error when the get operation fails
  * 3. it provides a chained API to add items to the registry.
+ *
+ * @template [K=string] keys type
+ * @template [V=any] values type
  */
 export class Registry extends EventBus {
-    constructor() {
+    /**
+     * @param {string} [name]
+     */
+    constructor(name) {
         super();
         this.content = {};
         this.subRegistries = {};
         this.elements = null;
         this.entries = null;
+        this.name = name;
 
         this.addEventListener("UPDATE", () => {
             this.elements = null;
@@ -42,14 +49,16 @@ export class Registry extends EventBus {
      * Note that this also returns the registry, so another add method call can
      * be chained
      *
-     * @param {string} key
-     * @param {any} value
-     * @param {{force?: boolean, sequence?: number}} [options]
-     * @returns {Registry}
+     * @param {K} key
+     * @param {V} value
+     * @param {{ force?: boolean; sequence?: number }} [options]
+     * @returns {Registry<K, V>}
      */
     add(key, value, { force, sequence } = {}) {
         if (!force && key in this.content) {
-            throw new DuplicatedKeyError(`Cannot add '${key}' in this registry: it already exists`);
+            throw new DuplicatedKeyError(
+                `Cannot add key "${key}" in the "${this.name}" registry: it already exists`
+            );
         }
         let previousSequence;
         if (force) {
@@ -66,12 +75,12 @@ export class Registry extends EventBus {
     /**
      * Get an item from the registry
      *
-     * @param {string} key
-     * @returns {any}
+     * @param {K} key
+     * @returns {V}
      */
     get(key, defaultValue) {
         if (arguments.length < 2 && !(key in this.content)) {
-            throw new KeyNotFoundError(`Cannot find ${key} in this registry!`);
+            throw new KeyNotFoundError(`Cannot find key "${key}" in the "${this.name}" registry`);
         }
         const info = this.content[key];
         return info ? info[1] : defaultValue;
@@ -80,7 +89,7 @@ export class Registry extends EventBus {
     /**
      * Check the presence of a key in the registry
      *
-     * @param {string} key
+     * @param {K} key
      * @returns {boolean}
      */
     contains(key) {
@@ -91,7 +100,7 @@ export class Registry extends EventBus {
      * Get a list of all elements in the registry. Note that it is ordered
      * according to the sequence numbers.
      *
-     * @returns {any[]}
+     * @returns {V[]}
      */
     getAll() {
         if (!this.elements) {
@@ -104,7 +113,7 @@ export class Registry extends EventBus {
     /**
      * Return a list of all entries, ordered by sequence numbers.
      *
-     * @returns {[string, any][]}
+     * @returns {[K, V][]}
      */
     getEntries() {
         if (!this.entries) {
@@ -117,7 +126,7 @@ export class Registry extends EventBus {
     /**
      * Remove an item from the registry
      *
-     * @param {string} key
+     * @param {K} key
      */
     remove(key) {
         const value = this.content[key];
@@ -129,12 +138,14 @@ export class Registry extends EventBus {
     /**
      * Open a sub registry (and create it if necessary)
      *
+     * @template [SK=string]
+     * @template [SV=any]
      * @param {string} subcategory
-     * @returns {Registry}
+     * @returns {Registry<SK, SV>}
      */
     category(subcategory) {
         if (!(subcategory in this.subRegistries)) {
-            this.subRegistries[subcategory] = new Registry();
+            this.subRegistries[subcategory] = new Registry(subcategory);
         }
         return this.subRegistries[subcategory];
     }
