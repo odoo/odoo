@@ -100,7 +100,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${strong(`b`)}</p><p>${strong(`c`)}d]e</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd]`)}e</p>`,
+                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with bold text fully bold', async () => {
@@ -267,7 +267,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${em(`b`)}</p><p>${em(`c`)}d]e</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`cd]`)}e</p>`,
+                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with italic text fully italic', async () => {
@@ -348,7 +348,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${u(`b`)}</p><p>${u(`c`)}d]e</p>`,
                 stepFunction: underline,
-                contentAfter: `<p>${u(`[ab`)}</p><p>${u(`cd]`)}e</p>`,
+                contentAfter: `<p>${u(`[ab`)}</p><p>${u(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with underline text fully underline', async () => {
@@ -485,7 +485,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${s(`b`)}</p><p>${s(`c`)}d]e</p>`,
                 stepFunction: strikeThrough,
-                contentAfter: `<p>${s(`[ab`)}</p><p>${s(`cd]`)}e</p>`,
+                contentAfter: `<p>${s(`[ab`)}</p><p>${s(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with strikeThrough text fully strikeThrough', async () => {
