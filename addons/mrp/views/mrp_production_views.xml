@@ -402,7 +402,7 @@
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0"/>
                                     <!-- TODO put forecast back -->
-                                    <field name="forecast_availability" string="Forecast" widget="forecast_widget"/>
+                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
                                     <field name="quantity" string="Quantity"
                                         decoration-success="product_uom_qty - quantity &gt; 0.0001"
                                         decoration-warning="quantity - product_uom_qty &gt; 0.0001"
