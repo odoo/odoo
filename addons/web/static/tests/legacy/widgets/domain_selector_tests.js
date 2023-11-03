@@ -80,4 +80,24 @@ QUnit.module("Widgets", {}, function () {
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, "[]");
         domainSelector.destroy();
     });
+
+    QUnit.test("operators option filter available operators", async (assert) => {
+        const target = getFixture();
+        const domainSelector = new DomainSelector(null, "partner", [], {
+            readonly: false,
+            debugMode: true,
+            operators: ["=", "set"],
+        });
+        await testUtilsMock.addMockEnvironment(domainSelector, {
+            data: serverData,
+        });
+        await domainSelector.appendTo(target);
+        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_field_selector_value");
+        await click(target, ".o_field_selector_item[data-name=bar]");
+        const operators = Array.from(target.querySelectorAll(".o_domain_leaf_operator_select option"))
+            .map(element => element.getAttribute("value"));
+        assert.deepEqual(operators, ["="]);
+        domainSelector.destroy();
+    });
 });
