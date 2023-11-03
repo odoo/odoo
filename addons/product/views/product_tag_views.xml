@@ -36,6 +36,7 @@
         <field name="model">product.tag</field>
         <field name="arch" type="xml">
             <tree string="Product Tags" multi_edit="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="product_template_ids" widget="many2many_tags" optional="show"/>
                 <field name="product_product_ids" widget="many2many_tags" string="Product Variant" optional="show"/>
