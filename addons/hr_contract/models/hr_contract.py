@@ -85,7 +85,7 @@ class Contract(models.Model):
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
     def _expand_states(self, states, domain, order):
-        return [key for key, val in type(self).state.selection]
+        return [key for key, val in self._fields['state'].selection]
 
     @api.depends('employee_id')
     def _compute_employee_contract(self):
