@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
     import publicWidget from '@web/legacy/js/public/public_widget';
-    import Dialog from '@web/legacy/js/core/dialog';
+    import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
     import { renderToElement } from "@web/core/utils/render";
+    import { escape } from "@web/core/utils/strings";
     import { session } from "@web/session";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
@@ -549,17 +550,27 @@
         },
 
         /**
-         * When clicking on the delete button of a question it
-         * toggles a modal to confirm the deletion
+         * When clicking on the delete button of a question it toggles a modal
+         * to confirm the deletion. When confirming it sends an RPC request to
+         * delete the Question and triggers an event to delete it from the UI.
          * @param ev
          * @private
          */
         _onDeleteQuestionClick: function (ev) {
-            var question = $(ev.currentTarget).closest('.o_wslides_js_lesson_quiz_question');
-            new ConfirmationDialog(this, {
-                questionId: question.data('questionId'),
-                questionTitle: question.data('title')
-            }).open();
+            const question = ev.currentTarget.closest('.o_wslides_js_lesson_quiz_question');
+            const questionId = parseInt(question.dataset.questionId);
+            this.call('dialog', 'add', ConfirmationDialog, {
+                title: _t('Delete Question'),
+                body: markup(_t('Are you sure you want to delete this question "<strong>%s</strong>"?', escape(question.dataset.title))),
+                cancel: () => {
+                },
+                cancelLabel: _t('No'),
+                confirm: async () => {
+                    await this.orm.unlink('slide.question', [questionId]);
+                    this.trigger_up('delete_question', { questionId });
+                },
+                confirmLabel: _t('Yes'),
+            });
         },
 
         /**
@@ -636,46 +647,6 @@
                 this.$('.o_wslides_js_lesson_quiz_validation').addClass('d-none');
             }
         },
-    });
-
-    /**
-     * Dialog box shown when clicking the deletion button on a Question.
-     * When confirming it sends a RPC request to delete the Question.
-     */
-    var ConfirmationDialog = Dialog.extend({
-        template: 'slide.quiz.confirm.deletion',
-        /**
-         * @override
-         * @param parent
-         * @param options
-         */
-        init: function (parent, options) {
-            options = Object.assign({
-                title: _t('Delete Question'),
-                buttons: [
-                    { text: _t('Yes'), classes: 'btn-primary', click: this._onConfirmClick },
-                    { text: _t('No'), close: true}
-                ],
-                size: 'medium'
-            }, options || {});
-            this.questionId = options.questionId;
-            this.questionTitle = options.questionTitle;
-            this._super.apply(this, arguments);
-        },
-
-        /**
-         * Handler when the user confirm the deletion by clicking on 'Yes'
-         * it sends a RPC request to the server and triggers an event to
-         * visually delete the question.
-         * @private
-         */
-        _onConfirmClick: function () {
-            var self = this;
-            this.orm.unlink("slide.question", [this.questionId]).then(function () {
-                self.trigger_up('delete_question', { questionId: self.questionId });
-                self.close();
-            });
-        }
     });
 
     publicWidget.registry.websiteSlidesQuizNoFullscreen = SlideCoursePage.extend({
@@ -824,5 +795,4 @@
     });
 
     export var Quiz = Quiz;
-    export var ConfirmationDialog = ConfirmationDialog;
     export const websiteSlidesQuizNoFullscreen = publicWidget.registry.websiteSlidesQuizNoFullscreen;
