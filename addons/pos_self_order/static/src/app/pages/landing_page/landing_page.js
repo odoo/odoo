@@ -22,6 +22,7 @@ export class LandingPage extends Component {
                 this.selfOrder.orders = [];
                 this.selfOrder.editedOrder = null;
             }
+            this.selfOrder.rpcLoading = false;
         });
 
         onMounted(() => {

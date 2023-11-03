@@ -4,6 +4,9 @@
         <div t-if="!selfOrder.ordering" class="o-self-closed w-100 m-0 text-center bg-black text-white">
             <p>We're currently closed.</p>
         </div>
+        <div t-if="selfOrder.rpcLoading">
+            <LoadingOverlay />
+        </div>
         <Router t-if="selfIsReady" pos_config_id="selfOrder.pos_config_id">
             <t t-set-slot="default" route="`/pos-self/${selfOrder.pos_config_id}`">
                 <LandingPage />
