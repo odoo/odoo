@@ -36,9 +36,3 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_set_tip_after_payment = res_config.pos_config_id.set_tip_after_payment
             else:
                 res_config.pos_set_tip_after_payment = False
-
-    @api.onchange('pos_module_pos_restaurant')
-    def _onchange_pos_module_pos_restaurant(self):
-        if self.pos_module_pos_restaurant:
-            self.pos_config_id._setup_default_floor(self.pos_config_id)
-            self.pos_floor_ids = self.pos_config_id.floor_ids

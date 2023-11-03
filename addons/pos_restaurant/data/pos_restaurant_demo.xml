@@ -279,6 +279,12 @@
           <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
         </record>
 
+        <function model="restaurant.floor" name="unlink">
+            <value model="restaurant.floor" eval="obj().search([
+                    ('pos_config_ids', 'in', ref('pos_config_main_restaurant')),
+                ]).id"/>
+        </function>
+
         <!-- Pos Config -->
         <record model="pos.config" id="pos_config_main_restaurant">
             <field name="iface_printbill">True</field>
