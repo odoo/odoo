@@ -45,6 +45,19 @@ class IrModule(models.Model):
             module.installed_version = module.latest_version
         super(IrModule, self - imported_modules)._get_latest_version()
 
+    @api.depends('icon')
+    def _get_icon_image(self):
+        super()._get_icon_image()
+        IrAttachment = self.env["ir.attachment"]
+        for module in self.filtered('imported'):
+            attachment = IrAttachment.sudo().search([
+                ('url', '=', module.icon),
+                ('type', '=', 'binary'),
+                ('res_model', '=', 'ir.ui.view')
+            ], limit=1)
+            if attachment:
+                module.icon_image = attachment.datas
+
     def _import_module(self, module, path, force=False, with_demo=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
