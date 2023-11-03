@@ -51,11 +51,11 @@ class MailActivitySchedule(models.TransientModel):
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
     plan_assignation_summary = fields.Html(related='plan_id.assignation_summary')
     plan_on_demand_user_id = fields.Many2one(
-        'res.users', 'Assigned To (On demand)',
+        'res.users', 'Assigned To',
         help='Choose assignation for activities with on demand assignation.',
         default=lambda self: self.env.user)
     plan_date_deadline = fields.Date(
-        'Plan Due Date', compute='_compute_plan_date_deadline',
+        'Plan Date', compute='_compute_plan_date_deadline',
         store=True, readonly=False)
     # activity-based
     activity_type_id = fields.Many2one(
@@ -212,7 +212,7 @@ class MailActivitySchedule(models.TransientModel):
                 else:
                     responsible = template._determine_responsible(self.plan_on_demand_user_id, record)['responsible']
                 date_deadline = self.env['mail.activity']._calculate_date_deadline(
-                    template.activity_type_id) if not self.plan_date_deadline else self.plan_date_deadline
+                    template.activity_type_id, force_base_date=self.plan_date_deadline)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
                     summary=template.summary,

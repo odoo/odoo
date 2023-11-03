@@ -32,7 +32,6 @@
             <field name="arch" type="xml">
                 <form string="Planning">
                     <field name="company_id" invisible="1"/>
-                    <field name="res_model" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -53,10 +52,13 @@
                                 <field name="template_ids" nolabel="1">
                                     <tree default_order="sequence, id">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
+                                        <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"
+                                               options="{'no_quick_create': True}"/>
                                         <field name="summary"/>
                                         <field name="responsible_type"/>
-                                        <field name="responsible_id" readonly="responsible_type != 'other'" optional="hide"/>
+                                        <field name="responsible_id" readonly="responsible_type != 'other'"/>
+                                        <field name="note"/>
+                                        <field name="company_id" optional="hide"/>
                                     </tree>
                                 </field>
                             </page>
@@ -73,7 +75,12 @@
             <field name="priority">10</field>
             <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='plan_res_model']" position="replace"/>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+                <xpath expr="//group[@name='plan_res_model']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -82,17 +89,26 @@
             <field name="res_model">mail.activity.plan</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="mail_activity_plan_view_search"/>
-            <!-- Force the admin view that allows to modify the target models of the plan. -->
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('mail.mail_activity_plan_view_tree')}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('mail.mail_activity_plan_view_form')}),
-                         ]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Add a new plan
                 </p>
             </field>
+        </record>
+
+        <record id="mail_activity_plan_view_tree_action" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="act_window_id" ref="mail.mail_activity_plan_action"/>
+        </record>
+
+        <!-- Force the admin view that allows to modify the target models of the plan. -->
+        <record id="mail_activity_plan_view_form_action" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mail.mail_activity_plan_view_form"/>
+            <field name="act_window_id" ref="mail.mail_activity_plan_action"/>
         </record>
 
     </data>
