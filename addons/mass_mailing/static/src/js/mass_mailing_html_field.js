@@ -641,7 +641,7 @@ export const massMailingHtmlField = {
         props.iframeHtmlClass = attrs.iframeHtmlClass;
         return props;
     },
-    fieldDependencies: [{ name: 'body_html', type: 'html' }],
+    fieldDependencies: [{ name: 'body_html', type: 'html', readonly: 'false' }],
 };
 
 registry.category("fields").add("mass_mailing_html", massMailingHtmlField);
