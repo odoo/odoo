@@ -798,5 +798,5 @@ class PosConfig(models.Model):
                 return pm
         return False
 
-    def _get_special_products_ids(self):
-        return [self.env.ref('point_of_sale.product_product_tip').id]
+    def _get_special_products(self):
+        return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
