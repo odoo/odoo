@@ -442,19 +442,6 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         else:
             return self._assertRaises(exception, **kwargs)
 
-    if sys.version_info < (3, 10):
-        # simplified backport of assertNoLogs()
-        @contextmanager
-        def assertNoLogs(self, logger: str, level: str):
-            # assertLogs ensures there is at least one log record when
-            # exiting the context manager. We insert one dummy record just
-            # so we pass that silly test while still capturing the logs.
-            with self.assertLogs(logger, level) as capture:
-                logging.getLogger(logger).log(getattr(logging, level), "Dummy log record")
-                yield
-                if len(capture.output) > 1:
-                    raise self.failureException(f"Unexpected logs found: {capture.output[1:]}")
-
     @contextmanager
     def assertQueries(self, expected, flush=True):
         """ Check the queries made by the current cursor. ``expected`` is a list
