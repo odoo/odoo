@@ -165,8 +165,8 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="move_id" column_invisible="True"/>
-                    <field name="date" readonly="1"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide"/>
+                    <field name="date" readonly="1"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
@@ -313,8 +313,8 @@
                         ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="date"/>
                     <field name="date_maturity" string="Due Date"/>
                     <field name="discount_date" string="Discount Date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
@@ -461,8 +461,8 @@
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="made_sequence_hole" column_invisible="True"/>
-                    <field name="date" readonly="state in ['cancel', 'posted']"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
+                    <field name="date" readonly="state in ['cancel', 'posted']"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
                     <field name="ref" optional="show"/>
@@ -1403,8 +1403,8 @@
                     <field name="name" string="Journal Entry" filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="date"/>
                     <field name="amount_total"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
