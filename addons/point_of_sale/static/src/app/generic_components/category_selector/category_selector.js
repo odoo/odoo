@@ -21,6 +21,7 @@ export class CategorySelector extends Component {
                 name: { type: String, optional: true },
                 icon: { type: String, optional: true },
                 separator: { type: String, optional: true },
+                showSeparator: { type: Boolean, optional: true },
                 imageUrl: { type: String, optional: true },
             },
         },
@@ -31,5 +32,6 @@ export class CategorySelector extends Component {
     static defaultProps = {
         class: "",
         showImage: true,
+        showSeparator: false,
     };
 }
