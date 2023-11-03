@@ -7,6 +7,7 @@ from . import test_embed_detection
 from . import test_karma
 from . import test_resources
 from . import test_security
+from . import test_slide_slide
 from . import test_slide_utils
 from . import test_statistics
 from . import test_ui_wslides
