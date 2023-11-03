@@ -1200,12 +1200,13 @@ class MrpProduction(models.Model):
             if move.manual_consumption and move.picked:
                 continue
 
-            if move._should_bypass_set_qty_producing():
+            # sudo needed for portal users
+            if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
-            if (not move.manual_consumption and not move._origin.manual_consumption):
+            if not move.manual_consumption:
                 move.picked = True
 
     def _update_raw_moves(self, factor):
