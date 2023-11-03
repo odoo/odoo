@@ -58,7 +58,7 @@ export class ProductsWidget extends Component {
             .map((id) => this.pos.db.category_by_id[id])
             .map((category) => {
                 const isRootCategory = category.id === this.pos.db.root_category_id;
-                const hasSeparator =
+                const showSeparator =
                     !isRootCategory &&
                     [
                         ...this.pos.db.get_category_ancestors_ids(this.pos.selectedCategoryId),
@@ -68,7 +68,8 @@ export class ProductsWidget extends Component {
                     id: category.id,
                     name: !isRootCategory ? category.name : "",
                     icon: isRootCategory ? "fa-home fa-2x" : "",
-                    separator: hasSeparator ? "fa-caret-right" : "",
+                    separator: "fa-caret-right",
+                    showSeparator,
                     imageUrl:
                         category?.has_image &&
                         `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`,
