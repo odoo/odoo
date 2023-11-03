@@ -12,7 +12,6 @@ import logging
 import re
 import smtplib
 import ssl
-import sys
 import threading
 
 from socket import gaierror, timeout
@@ -678,20 +677,7 @@ class IrMailServer(models.Model):
         try:
             message_id = message['Message-Id']
 
-            if sys.version_info < (3, 7, 4):
-                # header folding code is buggy and adds redundant carriage
-                # returns, it got fixed in 3.7.4 thanks to bpo-34424
-                message_str = message.as_string()
-                message_str = re.sub('\r+(?!\n)', '', message_str)
-
-                mail_options = []
-                if any((not is_ascii(addr) for addr in smtp_to_list + [smtp_from])):
-                    # non ascii email found, require SMTPUTF8 extension,
-                    # the relay may reject it
-                    mail_options.append("SMTPUTF8")
-                smtp.sendmail(smtp_from, smtp_to_list, message_str, mail_options=mail_options)
-            else:
-                smtp.send_message(message, smtp_from, smtp_to_list)
+            smtp.send_message(message, smtp_from, smtp_to_list)
 
             # do not quit() a pre-established smtp_session
             if not smtp_session:

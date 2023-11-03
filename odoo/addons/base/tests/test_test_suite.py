@@ -5,7 +5,6 @@ import contextlib
 import difflib
 import logging
 import re
-import sys
 from contextlib import contextmanager
 from pathlib import PurePath
 from unittest import SkipTest, skip
@@ -20,14 +19,12 @@ _logger = logging.getLogger(__name__)
 from odoo.tests import MetaCase
 
 
-if sys.version_info >= (3, 8):
-    # this is mainly to ensure that simple tests will continue to work even if BaseCase should be used
-    # this only works if doClassCleanup is available on testCase because of the vendoring of suite.py.
-    # this test will only work in python 3.8 +
-    class TestTestSuite(TestCase, metaclass=MetaCase):
+# this is mainly to ensure that simple tests will continue to work even if BaseCase should be used
+# this only works if doClassCleanup is available on testCase because of the vendoring of suite.py.
+class TestTestSuite(TestCase, metaclass=MetaCase):
 
-        def test_test_suite(self):
-            """ Check that OdooSuite handles unittest.TestCase correctly. """
+    def test_test_suite(self):
+        """ Check that OdooSuite handles unittest.TestCase correctly. """
 
 
 class TestRunnerLoggingCommon(TransactionCase):
@@ -324,9 +321,6 @@ Traceback (most recent call last):
     self.fail(msg % (login, count, expected, funcname, filename, linenum))
 AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at base/tests/test_test_suite.py:$line
 ''')
-        if self._python_version < (3, 10, 0):
-            message = message.replace("with self.assertQueryCount(system=0):", "self.env.cr.execute('SELECT 1')")
-
         self.expected_logs = [
             (logging.INFO, '=' * 70),
             (logging.ERROR, message),
