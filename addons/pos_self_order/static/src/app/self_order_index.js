@@ -16,6 +16,7 @@ import { ConfirmationPage } from "@pos_self_order/app/pages/confirmation_page/co
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
+import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
 
 class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -32,6 +33,7 @@ class selfOrderIndex extends Component {
         EatingLocationPage,
         StandNumberPage,
         LandingPage,
+        LoadingOverlay,
         MainComponentsContainer,
     };
 
