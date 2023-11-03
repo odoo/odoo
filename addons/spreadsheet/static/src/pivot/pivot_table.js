@@ -191,9 +191,14 @@ export class SpreadsheetPivotTable {
     getPivotCells(includeTotal = true, includeColumnHeaders = true) {
         const key = JSON.stringify({ includeTotal, includeColumnHeaders });
         if (!this._pivotCells[key]) {
-            const pivotHeight = this.getNumberOfHeaderRows() + this.getNumberOfDataRows();
-            let pivotWidth = 1 /*(row headers)*/ + this.getNumberOfDataColumns();
-            if (!includeTotal) {
+            const numberOfDataRows = this.getNumberOfDataRows();
+            const numberOfDataColumns = this.getNumberOfDataColumns();
+            let pivotHeight = this.getNumberOfHeaderRows() + numberOfDataRows;
+            let pivotWidth = 1 /*(row headers)*/ + numberOfDataColumns;
+            if (!includeTotal && numberOfDataRows !== 1) {
+                pivotHeight -= 1;
+            }
+            if (!includeTotal && numberOfDataColumns !== this._measures.length) {
                 pivotWidth -= this._measures.length;
             }
             const domainArray = [];
@@ -201,7 +206,7 @@ export class SpreadsheetPivotTable {
             for (let col = 0; col < pivotWidth; col++) {
                 domainArray.push([]);
                 for (let row = startRow; row < pivotHeight; row++) {
-                    if (!includeTotal && row === pivotHeight - 1) {
+                    if (!includeTotal && row === pivotHeight) {
                         continue;
                     }
                     domainArray[col].push(this._getPivotCell(col, row, includeTotal));

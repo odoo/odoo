@@ -91,6 +91,118 @@ QUnit.test("ODOO.PIVOT.TABLE(include_column_titles=FALSE)", async function (asse
 });
 
 QUnit.test(
+    "ODOO.PIVOT.TABLE(include_total=FALSE) with no groupbys applied",
+    async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+        <pivot>
+            <field name="probability" type="measure"/>
+        </pivot>`,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:B3", "42"), [
+            ["(#1) Partner Pivot",  "Total"],
+            ["",                    "Probability"],
+            ["Total",               131],
+        ]);
+    }
+);
+
+QUnit.test(
+    "ODOO.PIVOT.TABLE(include_total=FALSE) with multiple measures and no groupbys applied",
+    async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+        <pivot>
+            <field name="probability" type="measure"/>
+            <field name="foo" type="measure"/>
+        </pivot>`,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:C3", "42"), [
+            ["(#1) Partner Pivot",  "Total",        ""],
+            ["",                    "Probability",  "Foo"],
+            ["Total",               131,            32],
+        ]);
+    }
+);
+
+QUnit.test(
+    "ODOO.PIVOT.TABLE(include_total=FALSE) with only row groupby applied",
+    async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+        <pivot>
+                <field name="foo" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:C7", "42"), [
+            ["(#1) Partner Pivot",  "Total",        ""],
+            ["",                    "Probability",  ""],
+            [1,                     11,             ""],
+            [2,                     15,             ""],
+            [12,                    10,             ""],
+            [17,                    95,             ""],
+            ["",                    "",             ""],
+        ]);
+    }
+);
+
+QUnit.test(
+    "ODOO.PIVOT.TABLE(include_total=FALSE) with multiple measures and only row groupby applied",
+    async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+        <pivot>
+                <field name="product_id" type="row"/>
+                <field name="probability" type="measure"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:D5", "42"), [
+            ["(#1) Partner Pivot",      "Total",            "",        ""],
+            ["",                        "Probability",      "Foo",     ""],
+            ["xphone",                  10,                 12,        ""],
+            ["xpad",                    121,                20,        ""],
+            ["",                        "",                 "",        ""],
+        ]);
+    }
+);
+
+QUnit.test(
+    "ODOO.PIVOT.TABLE(include_total=FALSE) with only col groupby applied",
+    async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+        <pivot>
+            <field name="product_id" type="col"/>
+            <field name="probability" type="measure"/>
+        </pivot>`,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE)`, "42");
+        // prettier-ignore
+        assert.deepEqual(getEvaluatedGrid(model, "A1:D4", "42"), [
+            ["(#1) Partner Pivot",     "xphone",          "xpad",            ""],
+            ["",                       "Probability",     "Probability",     ""],
+            ["Total",                  10,                121,               ""],
+            ["",                       "",                "",                ""],
+        ]);
+    }
+);
+
+QUnit.test(
     "ODOO.PIVOT.TABLE(include_total=FALSE, include_column_titles=FALSE)",
     async function (assert) {
         setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1",,FALSE,FALSE)`, "42");
