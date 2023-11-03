@@ -49,7 +49,7 @@ class GroupOnSelection(models.Model):
 
     def _expand_states(self, states, domain, order):
         # return all possible states, in order
-        return [key for key, val in type(self).state.selection]
+        return [key for key, val in self._fields['state'].selection]
 
 
 class FillTemporal(models.Model):
