@@ -17,6 +17,7 @@ class PosPrinterService extends PrinterService {
         this.setup(...args);
     }
     setup(env, { hardware_proxy, dialog, renderer }) {
+        super.setup(...arguments);
         this.renderer = renderer;
         this.hardware_proxy = hardware_proxy;
         this.dialog = dialog;

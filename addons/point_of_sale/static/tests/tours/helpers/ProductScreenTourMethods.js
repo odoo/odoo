@@ -3,6 +3,7 @@
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
@@ -104,23 +105,14 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: ".pos-content .partnerlist-screen",
+            trigger: PartnerList.clickPartner().trigger,
+            in_modal: true,
             run: () => {},
         },
     ];
 }
 export function clickCustomer(name) {
-    return [
-        {
-            content: `select customer '${name}'`,
-            trigger: `.partnerlist-screen .partner-line td:contains("${name}")`,
-        },
-        {
-            content: "go back to the products",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        },
-    ];
+    return [PartnerList.clickPartner(name), goBackToMainScreen()];
 }
 export function clickRefund() {
     return [
@@ -228,13 +220,11 @@ export function scan_ean13_barcode(barcode) {
     ];
 }
 export function goBackToMainScreen() {
-    return [
-        {
-            content: "go back to the products",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        },
-    ];
+    return {
+        content: "go back to the products",
+        trigger: ".pos-rightheader .floor-button",
+        mobile: true,
+    };
 }
 export function clickLotIcon() {
     return [

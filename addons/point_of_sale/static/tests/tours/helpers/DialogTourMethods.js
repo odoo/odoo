@@ -20,10 +20,14 @@ export function cancel() {
         in_modal: true,
     };
 }
-export function is() {
+export function is({ title } = {}) {
+    let trigger = ".modal-content";
+    if (title) {
+        trigger += ` .modal-header:contains("${title}")`;
+    }
     return {
         content: "dialog is open",
-        trigger: ".modal-body",
+        trigger,
         in_modal: true,
         isCheck: true,
     };

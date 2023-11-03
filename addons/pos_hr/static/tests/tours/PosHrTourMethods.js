@@ -24,7 +24,7 @@ export function clickCashierName() {
     return [
         {
             content: "click cashier name",
-            trigger: ".oe_status .username",
+            trigger: ".oe_status .cashier-name",
         },
     ];
 }
@@ -42,6 +42,13 @@ export function cashierNameIs(name) {
         {
             content: `logged cashier is '${name}'`,
             trigger: `.pos .oe_status .username:contains("${name}")`,
+            mobile: false,
+            run: () => {},
+        },
+        {
+            content: `logged cashier is '${name}'`,
+            trigger: `.pos .oe_status img[alt="${name}"]`,
+            mobile: true,
             run: () => {},
         },
     ];

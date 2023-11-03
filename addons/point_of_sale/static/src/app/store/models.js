@@ -24,6 +24,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 
 const { DateTime } = luxon;
 
@@ -221,21 +222,14 @@ export class Product extends PosModel {
 
         // Take the weight if necessary.
         if (this.to_weight && this.pos.config.iface_electronic_scale) {
-            // Show the ScaleScreen to weigh the product.
             if (this.isScaleAvailable) {
-                const product = this;
-                const { confirmed, payload } = await this.env.services.pos.showTempScreen(
-                    "ScaleScreen",
-                    {
-                        product,
-                    }
-                );
-                if (confirmed) {
-                    quantity = payload.weight;
-                } else {
-                    // do not add the product;
+                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen, {
+                    product: this,
+                });
+                if (!weight) {
                     return;
                 }
+                quantity = weight;
             } else {
                 await this._onScaleNotAvailable();
             }

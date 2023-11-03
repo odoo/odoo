@@ -102,23 +102,6 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.selected_paymentline;
     }
-    async selectPartner(isEditMode = false, missingFields = []) {
-        // IMPROVEMENT: This code snippet is repeated multiple times.
-        // Maybe it's better to create a function for it.
-        const currentPartner = this.currentOrder.get_partner();
-        const partnerScreenProps = { partner: currentPartner };
-        if (isEditMode && currentPartner) {
-            partnerScreenProps.editModeProps = true;
-            partnerScreenProps.missingFields = missingFields;
-        }
-        const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
-            "PartnerListScreen",
-            partnerScreenProps
-        );
-        if (confirmed) {
-            this.currentOrder.set_partner(newPartner);
-        }
-    }
     addNewPaymentLine(paymentMethod) {
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
@@ -425,7 +408,7 @@ export class PaymentScreen extends Component {
                 body: _t("Customer is required for %s payment method.", paymentMethod.name),
             });
             if (confirmed) {
-                this.selectPartner();
+                this.pos.selectPartner();
             }
             return false;
         }
@@ -441,7 +424,7 @@ export class PaymentScreen extends Component {
                 ),
             });
             if (confirmed) {
-                this.selectPartner();
+                this.pos.selectPartner();
             }
             return false;
         }

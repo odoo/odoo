@@ -5,34 +5,50 @@ import { getDataURLFromFile } from "@web/core/utils/urls";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
-export class PartnerDetailsEdit extends Component {
-    static template = "point_of_sale.PartnerDetailsEdit";
+export class PartnerEditor extends Component {
+    static template = "point_of_sale.PartnerEditor";
+    static props = {
+        partner: { type: Object, optional: true },
+        missingFields: { type: Array, optional: true, element: String },
+        closePartnerList: Function,
+        getPayload: Function,
+        close: Function,
+    };
+    static defaultProps = {
+        missingFields: [],
+    };
+    static components = { Dialog };
 
     setup() {
         this.pos = usePos();
+        this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
         this.changes = useState({
-            name: partner.name || "",
-            street: partner.street || "",
-            city: partner.city || "",
-            zip: partner.zip || "",
+            ...Object.fromEntries(
+                [
+                    "name",
+                    "street",
+                    "city",
+                    "zip",
+                    "lang",
+                    "email",
+                    "phone",
+                    "mobile",
+                    "barcode",
+                    "vat",
+                ].map((field) => [field, partner[field] || ""])
+            ),
             state_id: partner.state_id && partner.state_id[0],
             country_id: partner.country_id && partner.country_id[0],
-            lang: partner.lang || "",
-            email: partner.email || "",
-            phone: partner.phone || "",
-            mobile: partner.mobile || "",
-            barcode: partner.barcode || "",
-            vat: partner.vat || "",
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
-        Object.assign(this.props.imperativeHandle, {
-            save: () => this.saveChanges(),
-        });
+        this.confirm = useAsyncLockedMethod(this.confirm);
     }
     // FIXME POSREF naming
     setDefaultPricelist(partner) {
@@ -41,11 +57,6 @@ export class PartnerDetailsEdit extends Component {
         }
         return this.pos.default_pricelist?.id ?? false;
     }
-
-    get missingFields() {
-        return this.props.missingFields ? this.props.missingFields : [];
-    }
-
     get partnerImageUrl() {
         // We prioritize image_1920 in the `changes` field because we want
         // to show the uploaded image without fetching new data from the server.
@@ -58,7 +69,22 @@ export class PartnerDetailsEdit extends Component {
             return false;
         }
     }
-    saveChanges() {
+    goToOrders() {
+        this.props.closePartnerList();
+        this.props.close();
+        const partnerHasActiveOrders = this.pos
+            .get_order_list()
+            .some((order) => order.partner?.id === this.props.partner.id);
+        const ui = {
+            searchDetails: {
+                fieldName: "PARTNER",
+                searchTerm: this.props.partner.name,
+            },
+            filter: partnerHasActiveOrders ? "" : "SYNCED",
+        };
+        this.pos.showScreen("TicketScreen", { ui });
+    }
+    async confirm() {
         const processedChanges = {};
         for (const [key, value] of Object.entries(this.changes)) {
             if (this.intFields.includes(key)) {
@@ -81,7 +107,9 @@ export class PartnerDetailsEdit extends Component {
             });
         }
         processedChanges.id = this.props.partner.id || false;
-        this.props.saveChanges(processedChanges);
+        await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
+        await this.pos.load_new_partners();
+        this.props.close();
     }
     async uploadImage(event) {
         const file = event.target.files[0];

@@ -16,14 +16,13 @@ export class ReceiptScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.printer = useService("printer");
+        this.printer = useState(useService("printer"));
         useErrorHandlers();
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");
         this.renderer = useService("renderer");
         this.dialog = useService("dialog");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
-        this.buttonPrintReceipt = useRef("order-print-receipt-button");
         this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
@@ -118,25 +117,6 @@ export class ReceiptScreen extends Component {
     }
     isResumeVisible() {
         return this.pos.get_order_list().length > 1;
-    }
-    async printReceipt() {
-        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
-        const isPrinted = await this.printer.print(
-            OrderReceipt,
-            {
-                data: this.pos.get_order().export_for_printing(),
-                formatCurrency: this.env.utils.formatCurrency,
-            },
-            { webPrintFallback: true }
-        );
-
-        if (isPrinted) {
-            this.currentOrder._printed = true;
-        }
-
-        if (this.buttonPrintReceipt.el) {
-            this.buttonPrintReceipt.el.className = "fa fa-print";
-        }
     }
     async _sendReceiptToCustomer() {
         const partner = this.currentOrder.get_partner();
