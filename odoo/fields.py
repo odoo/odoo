@@ -2890,7 +2890,7 @@ class _Relational(Field):
             else:
                 cid = "id" if self.model_name == "res.company" else "company_id"
             company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cid))
-            return f"({cid} and {company_domain} or []) + ({domain})"
+            return f"({cid} and {company_domain} or []) + ({domain or []})"
         return domain
 
 
