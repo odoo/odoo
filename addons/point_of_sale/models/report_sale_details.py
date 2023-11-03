@@ -6,6 +6,7 @@ import pytz
 
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
+from odoo.tools import SQL
 
 class ReportSaleDetails(models.AbstractModel):
 
@@ -91,15 +92,16 @@ class ReportSaleDetails(models.AbstractModel):
 
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
-            self.env.cr.execute("""
-                SELECT method.id as id, payment.session_id as session, COALESCE(method.name->>%s, method.name->>'en_US') as name, method.is_cash_count as cash,
+            method_name = self.env['pos.payment.method']._field_to_sql('method', 'name')
+            self.env.cr.execute(SQL("""
+                SELECT method.id as id, payment.session_id as session, %(method_name)s as name, method.is_cash_count as cash,
                      sum(amount) total, method.journal_id journal_id
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
-                    AND payment.id IN %s
+                    AND payment.id IN %(payment_ids)s
                 GROUP BY method.name, method.is_cash_count, payment.session_id, method.id, journal_id
-            """, (self.env.lang, tuple(payment_ids),))
+            """, method_name=method_name, payment_ids=tuple(payment_ids)))
             payments = self.env.cr.dictfetchall()
         else:
             payments = []

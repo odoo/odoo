@@ -2,7 +2,7 @@
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
 import io
-from odoo.tools import float_is_zero, pycompat
+from odoo.tools import float_is_zero, pycompat, SQL
 from odoo import fields, models, api
 from odoo.tools.misc import get_lang
 from stdnum.fr import siren
@@ -28,58 +28,56 @@ class FecExportWizard(models.TransientModel):
         if not self.test_file:
             self.export_type = 'official'
 
-    def _get_where_query(self):
-        where_params = {'company_id': self.env.company.id}
-        where_query = "am.company_id = %(company_id)s\n"
+    def _get_where_query(self) -> SQL:
+        search_conditions = [SQL("am.company_id = %s\n", self.env.company.id)]
         # For official report: only use posted entries
         if self.export_type == "official":
-            where_query += "AND am.state = 'posted'\n"
+            search_conditions.append(SQL("am.state = 'posted'\n"))
         if self.excluded_journal_ids:
-            where_params['excluded_journal_ids'] = tuple(self.excluded_journal_ids.ids)
-            where_query += "AND am.journal_id NOT IN %(excluded_journal_ids)s\n"
-        return where_query, where_params
+            search_conditions.append(SQL("am.journal_id NOT IN %s\n", tuple(self.excluded_journal_ids.ids)))
+        return SQL("AND ").join(search_conditions)
 
     def _do_query_unaffected_earnings(self):
-        ''' Compute the sum of ending balances for all accounts that are of a type that does not bring forward the balance in new fiscal years.
+        """ Compute the sum of ending balances for all accounts that are of a type that does not bring forward the balance in new fiscal years.
             This is needed because we have to display only one line for the initial balance of all expense/revenue accounts in the FEC.
-        '''
-        where_query, where_params = self._get_where_query()
-        sql_query = f'''
-           SELECT
-               'OUV' AS JournalCode,
-               'Balance initiale' AS JournalLib,
-               'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
-               %(formatted_date_from)s AS EcritureDate,
-               '120/129' AS CompteNum,
-               'Benefice (perte) reporte(e)' AS CompteLib,
-               '' AS CompAuxNum,
-               '' AS CompAuxLib,
-               '-' AS PieceRef,
-               %(formatted_date_from)s AS PieceDate,
-               '/' AS EcritureLib,
-               replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
-               replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
-               '' AS EcritureLet,
-               '' AS DateLet,
-               %(formatted_date_from)s AS ValidDate,
-               '' AS Montantdevise,
-               '' AS Idevise
-           FROM
-               account_move_line aml
-               LEFT JOIN account_move am ON am.id=aml.move_id
-               JOIN account_account aa ON aa.id = aml.account_id
-           WHERE
-               {where_query}
-               AND am.date < %(date_from)s
-               AND aa.include_initial_balance IS NOT TRUE
-           '''
+        """
+        sql_query = SQL(
+            '''
+            SELECT
+                'OUV' AS JournalCode,
+                'Balance initiale' AS JournalLib,
+                'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                %(formatted_date_from)s AS EcritureDate,
+                '120/129' AS CompteNum,
+                'Benefice (perte) reporte(e)' AS CompteLib,
+                '' AS CompAuxNum,
+                '' AS CompAuxLib,
+                '-' AS PieceRef,
+                %(formatted_date_from)s AS PieceDate,
+                '/' AS EcritureLib,
+                replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                '' AS EcritureLet,
+                '' AS DateLet,
+                %(formatted_date_from)s AS ValidDate,
+                '' AS Montantdevise,
+                '' AS Idevise
+            FROM
+                account_move_line aml
+                LEFT JOIN account_move am ON am.id=aml.move_id
+                JOIN account_account aa ON aa.id = aml.account_id
+            WHERE
+                %(where_query)s
+                AND am.date < %(date_from)s
+                AND aa.include_initial_balance IS NOT TRUE
+            ''',
+            formatted_date_year=self.date_from.year,
+            formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            where_query=self._get_where_query(),
+            date_from=self.date_from,
+        )
         self.env.flush_all()
-        self._cr.execute(sql_query, {
-            **where_params,
-            'formatted_date_year': self.date_from.year,
-            'formatted_date_from': fields.Date.to_string(self.date_from).replace('-', ''),
-            'date_from': self.date_from,
-        })
+        self._cr.execute(sql_query)
         return list(self._cr.fetchone())
 
     def _get_company_legal_data(self, company):
@@ -144,52 +142,50 @@ class FecExportWizard(models.TransientModel):
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
-        if self.pool['account.account'].name.translate:
-            lang = self.env.user.lang or get_lang(self.env).code
-            aa_name = f"COALESCE(aa.name->>'{lang}', aa.name->>'en_US')"
-        else:
-            aa_name = "aa.name"
+        lang = self.env.user.lang or get_lang(self.env).code
+        aa_name = self.with_context(lang=lang).env['account.account']._field_to_sql('aa', 'name')
+        where_query = self._get_where_query()
 
-        where_query, where_params = self._get_where_query()
-        sql_query = f'''
-        SELECT
-            'OUV' AS JournalCode,
-            'Balance initiale' AS JournalLib,
-            'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
-            %(formatted_date_from)s AS EcritureDate,
-            MIN(aa.code) AS CompteNum,
-            replace(replace(MIN({aa_name}), '|', '/'), '\t', '') AS CompteLib,
-            '' AS CompAuxNum,
-            '' AS CompAuxLib,
-            '-' AS PieceRef,
-            %(formatted_date_from)s AS PieceDate,
-            '/' AS EcritureLib,
-            replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
-            '' AS EcritureLet,
-            '' AS DateLet,
-            %(formatted_date_from)s AS ValidDate,
-            '' AS Montantdevise,
-            '' AS Idevise,
-            MIN(aa.id) AS CompteID
-        FROM
-            account_move_line aml
-            LEFT JOIN account_move am ON am.id=aml.move_id
-            JOIN account_account aa ON aa.id = aml.account_id
-        WHERE
-            {where_query}
-            AND am.date < %(date_from)s
-            AND aa.include_initial_balance = 't'
-        GROUP BY aml.account_id, aa.account_type
-        HAVING aa.account_type not in ('asset_receivable', 'liability_payable')
-        '''
-        params = {
-            **where_params,
-            'formatted_date_year': self.date_from.year,
-            'formatted_date_from': fields.Date.to_string(self.date_from).replace('-', ''),
-            'date_from': self.date_from,
-        }
-        self._cr.execute(sql_query, params)
+        sql_query = SQL(
+            '''
+            SELECT
+                'OUV' AS JournalCode,
+                'Balance initiale' AS JournalLib,
+                'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                %(formatted_date_from)s AS EcritureDate,
+                MIN(aa.code) AS CompteNum,
+                replace(replace(MIN(%(aa_name)s), '|', '/'), '\t', '') AS CompteLib,
+                '' AS CompAuxNum,
+                '' AS CompAuxLib,
+                '-' AS PieceRef,
+                %(formatted_date_from)s AS PieceDate,
+                '/' AS EcritureLib,
+                replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                '' AS EcritureLet,
+                '' AS DateLet,
+                %(formatted_date_from)s AS ValidDate,
+                '' AS Montantdevise,
+                '' AS Idevise,
+                MIN(aa.id) AS CompteID
+            FROM
+                account_move_line aml
+                LEFT JOIN account_move am ON am.id=aml.move_id
+                JOIN account_account aa ON aa.id = aml.account_id
+            WHERE
+                %(where_query)s
+                AND am.date < %(date_from)s
+                AND aa.include_initial_balance = 't'
+            GROUP BY aml.account_id, aa.account_type
+            HAVING aa.account_type not in ('asset_receivable', 'liability_payable')
+            ''',
+            formatted_date_year=self.date_from.year,
+            formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_name=aa_name,
+            where_query=where_query,
+            date_from=self.date_from,
+        )
+        self._cr.execute(sql_query)
 
         currency_digits = 2
         for row in self._cr.fetchall():
@@ -228,51 +224,58 @@ class FecExportWizard(models.TransientModel):
             rows_to_write.append(unaffected_earnings_results)
 
         # INITIAL BALANCE - receivable/payable
-        sql_query = f'''
-        SELECT
-            'OUV' AS JournalCode,
-            'Balance initiale' AS JournalLib,
-            'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
-            %(formatted_date_from)s AS EcritureDate,
-            MIN(aa.code) AS CompteNum,
-            replace(MIN({aa_name}), '|', '/') AS CompteLib,
-            CASE WHEN MIN(aa.account_type) IN ('asset_receivable', 'liability_payable')
-            THEN
-                CASE WHEN rp.ref IS null OR rp.ref = ''
-                THEN rp.id::text
-                ELSE replace(rp.ref, '|', '/')
+        sql_query = SQL(
+            '''
+            SELECT
+                'OUV' AS JournalCode,
+                'Balance initiale' AS JournalLib,
+                'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+                %(formatted_date_from)s AS EcritureDate,
+                MIN(aa.code) AS CompteNum,
+                replace(MIN(%(aa_name)s), '|', '/') AS CompteLib,
+                CASE WHEN MIN(aa.account_type) IN ('asset_receivable', 'liability_payable')
+                THEN
+                    CASE WHEN rp.ref IS null OR rp.ref = ''
+                    THEN rp.id::text
+                    ELSE replace(rp.ref, '|', '/')
+                    END
+                ELSE ''
                 END
-            ELSE ''
-            END
-            AS CompAuxNum,
-            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
-            THEN COALESCE(replace(rp.name, '|', '/'), '')
-            ELSE ''
-            END AS CompAuxLib,
-            '-' AS PieceRef,
-            %(formatted_date_from)s AS PieceDate,
-            '/' AS EcritureLib,
-            replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
-            '' AS EcritureLet,
-            '' AS DateLet,
-            %(formatted_date_from)s AS ValidDate,
-            '' AS Montantdevise,
-            '' AS Idevise,
-            MIN(aa.id) AS CompteID
-        FROM
-            account_move_line aml
-            LEFT JOIN account_move am ON am.id=aml.move_id
-            LEFT JOIN res_partner rp ON rp.id=aml.partner_id
-            JOIN account_account aa ON aa.id = aml.account_id
-        WHERE
-            {where_query}
-            AND am.date < %(date_from)s
-            AND aa.include_initial_balance = 't'
-        GROUP BY aml.account_id, aa.account_type, rp.ref, rp.id
-        HAVING aa.account_type in ('asset_receivable', 'liability_payable')
-        '''
-        self._cr.execute(sql_query, params)
+                AS CompAuxNum,
+                CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
+                THEN COALESCE(replace(rp.name, '|', '/'), '')
+                ELSE ''
+                END AS CompAuxLib,
+                '-' AS PieceRef,
+                %(formatted_date_from)s AS PieceDate,
+                '/' AS EcritureLib,
+                replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
+                '' AS EcritureLet,
+                '' AS DateLet,
+                %(formatted_date_from)s AS ValidDate,
+                '' AS Montantdevise,
+                '' AS Idevise,
+                MIN(aa.id) AS CompteID
+            FROM
+                account_move_line aml
+                LEFT JOIN account_move am ON am.id=aml.move_id
+                LEFT JOIN res_partner rp ON rp.id=aml.partner_id
+                JOIN account_account aa ON aa.id = aml.account_id
+            WHERE
+                %(where_query)s
+                AND am.date < %(date_from)s
+                AND aa.include_initial_balance = 't'
+            GROUP BY aml.account_id, aa.account_type, rp.ref, rp.id
+            HAVING aa.account_type in ('asset_receivable', 'liability_payable')
+            ''',
+            formatted_date_year=self.date_from.year,
+            formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
+            aa_name=aa_name,
+            where_query=where_query,
+            date_from=self.date_from,
+        )
+        self._cr.execute(sql_query)
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -280,73 +283,77 @@ class FecExportWizard(models.TransientModel):
             rows_to_write.append(listrow)
 
         # LINES
-        if self.pool['account.journal'].name.translate:
-            lang = self.env.user.lang or get_lang(self.env).code
-            aj_name = f"COALESCE(aj.name->>'{lang}', aj.name->>'en_US')"
-        else:
-            aj_name = "aj.name"
+        lang = self.env.user.lang or get_lang(self.env).code
+        aj_name = self.with_context(lang=lang).env['account.journal']._field_to_sql('aj', 'name')
 
         query_limit = int(self.env['ir.config_parameter'].sudo().get_param('l10n_fr_fec.batch_size', 500000)) # To prevent memory errors when fetching the results
 
-        sql_query = f'''
-        SELECT
-            REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
-            REGEXP_REPLACE(replace({aj_name}, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
-            REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
-            TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
-            aa.code AS CompteNum,
-            REGEXP_REPLACE(replace({aa_name}, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
-            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
-            THEN
-                CASE WHEN rp.ref IS null OR rp.ref = ''
-                THEN rp.id::text
-                ELSE replace(rp.ref, '|', '/')
+        sql_query = SQL(
+            '''
+            SELECT
+                REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
+                REGEXP_REPLACE(replace(%(aj_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+                REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
+                TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
+                aa.code AS CompteNum,
+                REGEXP_REPLACE(replace(%(aa_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
+                CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
+                THEN
+                    CASE WHEN rp.ref IS null OR rp.ref = ''
+                    THEN rp.id::text
+                    ELSE replace(rp.ref, '|', '/')
+                    END
+                ELSE ''
                 END
-            ELSE ''
-            END
-            AS CompAuxNum,
-            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
-            THEN COALESCE(REGEXP_REPLACE(replace(rp.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
-            ELSE ''
-            END AS CompAuxLib,
-            CASE WHEN am.ref IS null OR am.ref = ''
-            THEN '-'
-            ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
-            END
-            AS PieceRef,
-            TO_CHAR(COALESCE(am.invoice_date, am.date), 'YYYYMMDD') AS PieceDate,
-            CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
-                WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
-                ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
-            replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
-            CASE WHEN rec.id IS NULL THEN ''::text ELSE rec.id::text END AS EcritureLet,
-            CASE WHEN aml.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(rec.create_date, 'YYYYMMDD') END AS DateLet,
-            TO_CHAR(am.date, 'YYYYMMDD') AS ValidDate,
-            CASE
-                WHEN aml.amount_currency IS NULL OR aml.amount_currency = 0 THEN ''
-                ELSE replace(to_char(aml.amount_currency, '000000000000000D99'), '.', ',')
-            END AS Montantdevise,
-            CASE WHEN aml.currency_id IS NULL THEN '' ELSE rc.name END AS Idevise
-        FROM
-            account_move_line aml
-            LEFT JOIN account_move am ON am.id=aml.move_id
-            LEFT JOIN res_partner rp ON rp.id=aml.partner_id
-            JOIN account_journal aj ON aj.id = am.journal_id
-            JOIN account_account aa ON aa.id = aml.account_id
-            LEFT JOIN res_currency rc ON rc.id = aml.currency_id
-            LEFT JOIN account_full_reconcile rec ON rec.id = aml.full_reconcile_id
-        WHERE
-            {where_query}
-            AND am.date >= %(date_from)s
-            AND am.date <= %(date_to)s
-        ORDER BY
-            am.date,
-            am.name,
-            aml.id
-        LIMIT %(limit)s
-        OFFSET %(offset)s
-        '''
+                AS CompAuxNum,
+                CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
+                THEN COALESCE(REGEXP_REPLACE(replace(rp.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
+                ELSE ''
+                END AS CompAuxLib,
+                CASE WHEN am.ref IS null OR am.ref = ''
+                THEN '-'
+                ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
+                END
+                AS PieceRef,
+                TO_CHAR(COALESCE(am.invoice_date, am.date), 'YYYYMMDD') AS PieceDate,
+                CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
+                    WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
+                    ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
+                replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
+                replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
+                CASE WHEN rec.id IS NULL THEN ''::text ELSE rec.id::text END AS EcritureLet,
+                CASE WHEN aml.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(rec.create_date, 'YYYYMMDD') END AS DateLet,
+                TO_CHAR(am.date, 'YYYYMMDD') AS ValidDate,
+                CASE
+                    WHEN aml.amount_currency IS NULL OR aml.amount_currency = 0 THEN ''
+                    ELSE replace(to_char(aml.amount_currency, '000000000000000D99'), '.', ',')
+                END AS Montantdevise,
+                CASE WHEN aml.currency_id IS NULL THEN '' ELSE rc.name END AS Idevise
+            FROM
+                account_move_line aml
+                LEFT JOIN account_move am ON am.id=aml.move_id
+                LEFT JOIN res_partner rp ON rp.id=aml.partner_id
+                JOIN account_journal aj ON aj.id = am.journal_id
+                JOIN account_account aa ON aa.id = aml.account_id
+                LEFT JOIN res_currency rc ON rc.id = aml.currency_id
+                LEFT JOIN account_full_reconcile rec ON rec.id = aml.full_reconcile_id
+            WHERE
+                %(where_query)s
+                AND am.date >= %(date_from)s
+                AND am.date <= %(date_to)s
+            ORDER BY
+                am.date,
+                am.name,
+                aml.id
+            LIMIT %(limit)s
+            ''',
+            aj_name=aj_name,
+            aa_name=aa_name,
+            where_query=where_query,
+            date_from=self.date_from,
+            date_to=self.date_to,
+            limit=query_limit + 1,
+        )
 
         with io.BytesIO() as fecfile:
             csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
@@ -362,7 +369,7 @@ class FecExportWizard(models.TransientModel):
             query_offset = 0
             has_more_results = True
             while has_more_results:
-                self._cr.execute(sql_query, {**params, 'date_to': self.date_to, 'limit': query_limit + 1, 'offset': query_offset})
+                self._cr.execute(SQL('%s OFFSET %s', sql_query, query_offset))
                 query_offset += query_limit
                 has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
                 query_results = self._cr.fetchall()
