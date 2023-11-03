@@ -365,6 +365,15 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
+        modules = self._get_missing_dependencies_modules(zip_data)
+        description = ''
+        if modules:
+            description = _('The following modules will be also installed:\n')
+            for mod in modules:
+                description += "- " + mod.shortdesc + "\n"
+        return description
+
+    def _get_missing_dependencies_modules(self, zip_data):
         dependencies_to_install = self.env['ir.module.module']
         known_mods = self.search([])
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -385,12 +394,7 @@ class IrModule(models.Model):
                     continue
                 unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
                 dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
-        description = ''
-        if dependencies_to_install:
-            description = _('The following modules will be also installed:\n')
-            for mod in dependencies_to_install:
-                description += "- " + mod.shortdesc + "\n"
-        return description
+        return dependencies_to_install
 
 
 def _is_studio_custom(path):
