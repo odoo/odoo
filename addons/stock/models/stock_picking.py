@@ -1498,8 +1498,7 @@ class Picking(models.Model):
 
             quantity_move_line_ids = self.move_line_ids.filtered(
                 lambda ml:
-                    float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
-                    not ml.result_package_id
+                    float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
             )
             move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
             if not move_line_ids:
