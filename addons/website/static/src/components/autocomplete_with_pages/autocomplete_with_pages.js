@@ -140,6 +140,14 @@ export class AutoCompleteWithPages extends AutoComplete {
     /**
      * @override
      */
+    onInputFocus(ev) {
+        this.targetDropdown.setSelectionRange(0, this.targetDropdown.value.length);
+        this.props.onFocus(ev);
+    }
+
+    /**
+     * @override
+     */
     close() {
         this.props.onInput({
             inputValue: this.inputRef.el.value,
