@@ -138,9 +138,11 @@ class StockMove(models.Model):
     @api.depends('state', 'product_id', 'operation_id')
     def _compute_manual_consumption(self):
         for move in self:
-            if move.state != 'draft':
-                continue
-            move.manual_consumption = move._is_manual_consumption()
+            # when computed for new_id in onchange, use value from _origin
+            if move != move._origin:
+                move.manual_consumption = move._origin.manual_consumption
+            elif move.state == 'draft':
+                move.manual_consumption = move._is_manual_consumption()
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
