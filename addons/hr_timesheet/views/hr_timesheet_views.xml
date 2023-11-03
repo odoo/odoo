@@ -5,7 +5,8 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                <tree editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True"
+                    js_class="timesheet_list">
                     <field name="readonly_timesheet" invisible="1"/>
                     <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="employee_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
