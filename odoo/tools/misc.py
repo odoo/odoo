@@ -1592,7 +1592,7 @@ class DotDict(dict):
     """
     def __getattr__(self, attrib):
         val = self.get(attrib)
-        return DotDict(val) if type(val) is dict else val
+        return DotDict(val) if isinstance(val, dict) else val
 
 
 def get_diff(data_from, data_to, custom_style=False):
