@@ -18,10 +18,7 @@ QUnit.module("utils", () => {
     QUnit.test("groupBy parameter validations", function (assert) {
         // Safari: TypeError: undefined is not a function
         // Other navigator: array is not iterable
-        assert.throws(
-            () => groupBy({}),
-            /array is not iterable|TypeError: undefined is not a function/
-        );
+        assert.throws(() => groupBy({}), /TypeError: \w+ is not iterable/);
         assert.throws(
             () => groupBy([], true),
             /Expected criterion of type 'string' or 'function' and got 'boolean'/
@@ -66,7 +63,7 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("sortBy parameter validation", function (assert) {
-        assert.throws(() => sortBy({}), /array.slice is not a function/);
+        assert.throws(() => sortBy({}), /TypeError: \w+ is not iterable/);
         assert.throws(
             () => sortBy([Symbol("b"), Symbol("a")]),
             /(Cannot convert a (Symbol value)|(symbol) to a number)|(can't convert symbol to number)/
