@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderReceipt">
-        <div class="pos-receipt">
+        <div class="pos-receipt p-2">
             <ReceiptHeader data="props.data.headerData" />
             <OrderWidget lines="props.data.orderlines" t-slot-scope="scope">
                 <t t-set="line" t-value="scope.line"/>

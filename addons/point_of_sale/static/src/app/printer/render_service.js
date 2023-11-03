@@ -90,7 +90,9 @@ const applyWhenMounted = async ({ el, container, callback }) => {
  * This function assumes that the `renderer` service is available.
  */
 export const htmlToCanvas = async (el, options) => {
-    el.classList.add(options.addClass || "");
+    if (options.addClass) {
+        el.classList.add(options.addClass);
+    }
     // html2canvas expects the given element to be in the DOM
     return await applyWhenMounted({
         el,

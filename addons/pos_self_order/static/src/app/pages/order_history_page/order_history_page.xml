@@ -19,13 +19,16 @@
                                         <h6 class="m-0" t-esc="order.pos_reference"/>
                                         <span class="text-muted">Order number: <t t-esc="order.trackingNumber" /></span>
                                     </div>
-                                    <span
-                                        class="badge py-2 rounded-pill text-capitalize"
-                                        t-att-class="{
-                                            'text-bg-success': order.state == 'paid',
-                                            'text-bg-primary': order.state != 'paid'
-                                        }"
-                                        t-esc="getOrderState(order.state)"/>
+                                    <div class="d-flex justify-content-around gap-5 align-items-center">
+                                        <i t-if="selfOrder.showDownloadButton(order)" class="fa fa-download" aria-hidden="true" t-on-click="() => this.selfOrder.downloadReceipt(order)"/>
+                                        <span class="badge py-2 rounded-pill text-capitalize"
+                                            t-att-class="{
+                                                'text-bg-success': order.state == 'paid',
+                                                'text-bg-primary': order.state != 'paid'
+                                            }"
+                                            t-esc="getOrderState(order.state)"/>
+                                    </div>
+                                    
                                 </div>
                                 <p class="small m-0 fst-italic text-muted"
                                     t-esc="order.date"/>

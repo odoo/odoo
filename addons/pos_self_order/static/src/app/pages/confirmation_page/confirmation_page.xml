@@ -22,6 +22,9 @@
                 <t t-else="" t-esc="confirmedOrder.table_stand_number" />
             </h3>
             <h3 t-else="">Order to pick-up at the counter</h3>
+            <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder)" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)">
+                Download your receipt here 
+            </span>
         </div>
         <div class="px-3 py-4 text-center">
             <button class="btn btn-primary btn-lg" t-on-click="backToHome">
