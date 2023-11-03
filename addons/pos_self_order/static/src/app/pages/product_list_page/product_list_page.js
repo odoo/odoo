@@ -19,6 +19,7 @@ export class ProductListPage extends Component {
         this.router = useService("router");
         this.productsList = useRef("productsList");
         this.categoryList = useRef("categoryList");
+        this.searchInput = useRef("searchInput");
         this.currentProductCard = useChildRef();
         this.state = useState({
             search: false,
@@ -28,6 +29,15 @@ export class ProductListPage extends Component {
             Array.from(this.selfOrder.categoryList).map((category) => {
                 return [category.id, useRef(`category_${category.id}`)];
             })
+        );
+
+        useEffect(
+            () => {
+                if (this.state.search) {
+                    this.searchInput.el.focus();
+                }
+            },
+            () => [this.state.search]
         );
 
         useEffect(

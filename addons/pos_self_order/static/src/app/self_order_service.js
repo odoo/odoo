@@ -45,6 +45,7 @@ export class SelfOrder extends Reactive {
         this.currentProduct = 0;
         this.attributeById = {};
         this.priceLoading = false;
+        this.rpcLoading = false;
         this.productByIds = {};
         this.paymentError = false;
         this.editedOrder = null;

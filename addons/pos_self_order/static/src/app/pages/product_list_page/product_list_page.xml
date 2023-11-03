@@ -32,11 +32,12 @@
                     <i class="oi oi-search"/>
                 </button>
 
-                <div t-if="this.state.search" t-attf-class="position-absolute top-0 start-0 w-100 h-100 px-3 pe-4 d-flex align-items-center bg-view">
+                <div t-att-class="{ 'd-none': !this.state.search }" t-attf-class="position-absolute top-0 start-0 w-100 h-100 px-3 pe-4 d-flex align-items-center bg-view">
                     <input type="text"
+                        t-ref="searchInput"
                         class="form-control py-3 ps-0 border-0 shadow-none"
                         placeholder="Search product"
-                        t-model="state.searchInput"/>
+                        t-model="state.searchInput" />
                     <button class="btn-close" t-on-click="focusSearch"/>
                 </div>
             </div>

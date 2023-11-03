@@ -52,7 +52,7 @@ export class CartPage extends Component {
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
 
-        if (this.sendInProgress || !this.selfOrder.verifyCart()) {
+        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
             return;
         }
 
@@ -61,9 +61,9 @@ export class CartPage extends Component {
             return;
         }
 
-        this.sendInProgress = true;
+        this.selfOrder.rpcLoading = true;
         await this.selfOrder.confirmOrder();
-        this.sendInProgress = false;
+        this.selfOrder.rpcLoading = false;
     }
 
     selectTable(table) {
