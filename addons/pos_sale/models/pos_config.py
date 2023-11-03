@@ -14,7 +14,6 @@ class PosConfig(models.Model):
         string="Down Payment Product",
         help="This product will be used as down payment on a sale order.")
 
-    def _get_special_products_ids(self):
-        res = super()._get_special_products_ids()
-        res += self.env['pos.config'].search([]).mapped('down_payment_product_id').ids
-        return res
+    def _get_special_products(self):
+        res = super()._get_special_products()
+        return res | self.env['pos.config'].search([]).mapped('down_payment_product_id')
