@@ -24,6 +24,6 @@ patch(Navbar.prototype, {
     },
     async showLoginScreen() {
         this.pos.reset_cashier();
-        await this.pos.showTempScreen("LoginScreen");
+        this.pos.showScreen("LoginScreen");
     },
 });

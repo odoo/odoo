@@ -7,25 +7,16 @@ import { Component } from "@odoo/owl";
 
 export class LoginScreen extends Component {
     static template = "pos_hr.LoginScreen";
+    static storeOnOrder = false;
     setup() {
-        super.setup(...arguments);
+        this.pos = usePos();
         this.selectCashier = useCashierSelector({
-            onCashierChanged: () => this.back(),
+            onCashierChanged: () => {
+                this.pos.showScreen(this.pos.previousScreen || "ProductScreen");
+                this.pos.hasLoggedIn = true;
+            },
             exclusive: true, // takes exclusive control on the barcode reader
         });
-        this.pos = usePos();
-    }
-
-    back() {
-        this.props.resolve({ confirmed: false, payload: false });
-        this.pos.closeTempScreen();
-        this.pos.hasLoggedIn = true;
-        this.pos.openCashControl();
-    }
-
-    get shopName() {
-        return this.pos.config.name;
     }
 }
-
 registry.category("pos_screens").add("LoginScreen", LoginScreen);

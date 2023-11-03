@@ -1,18 +1,22 @@
 /** @odoo-module **/
 
+import { Reactive } from "@web/core/utils/reactive";
+
 export const printerService = {
     dependencies: ["renderer"],
     start(env, { renderer }) {
         return new PrinterService(env, { renderer });
     },
 };
-export class PrinterService {
+export class PrinterService extends Reactive {
     constructor(...args) {
+        super(...args);
         this.setup(...args);
     }
     setup(env, { renderer }) {
         this.renderer = renderer;
         this.device = null;
+        this.state = { isPrinting: false };
     }
     setPrinter(newDevice) {
         this.device = newDevice;
@@ -47,8 +51,13 @@ export class PrinterService {
         };
     }
     async print(component, props, options) {
+        this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
-        return await this.printHtml(el, options);
+        try {
+            return await this.printHtml(el, options);
+        } finally {
+            this.state.isPrinting = false;
+        }
     }
     is = () => Boolean(this.device?.printReceipt);
 }

@@ -44,11 +44,11 @@ export class Input extends TModelInput {
     setup() {
         this.state = useState({ isOpen: false });
         this.setValue = debounce(this.setValue, this.props.debounceMillis);
-        this.props.getRef?.(
+        const ref =
             (this.props.autofocus &&
                 useAutofocus({ refName: "input", mobile: this.props.autofocusMobile })) ||
-                useRef("input")
-        );
+            useRef("input");
+        this.props.getRef?.(ref);
     }
     setValue(newValue, tModel = this.props.tModel) {
         super.setValue(newValue, tModel);

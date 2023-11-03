@@ -1,22 +1,18 @@
 /** @odoo-module */
 
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
-import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, onWillUnmount, useExternalListener, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
-
-    /**
-     * @param {Object} props
-     * @param {Object} props.product The product to weight.
-     */
+    static components = { Dialog };
+    static props = ["product"];
     setup() {
         this.pos = usePos();
         this.hardwareProxy = useService("hardware_proxy");
-        useExternalListener(document, "keyup", this._onHotkeys);
         this.state = useState({ weight: 0 });
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
@@ -30,23 +26,9 @@ export class ScaleScreen extends Component {
         // stop the scale reading
         this.shouldRead = false;
     }
-    back() {
-        this.props.resolve({ confirmed: false, payload: null });
-        this.pos.closeTempScreen();
-    }
     confirm() {
-        this.props.resolve({
-            confirmed: true,
-            payload: { weight: this.state.weight },
-        });
-        this.pos.closeTempScreen();
-    }
-    _onHotkeys(event) {
-        if (event.key === "Escape") {
-            this.back();
-        } else if (event.key === "Enter") {
-            this.confirm();
-        }
+        this.props.getPayload(this.state.weight);
+        this.props.close();
     }
     _readScale() {
         this.shouldRead = true;
@@ -89,9 +71,6 @@ export class ScaleScreen extends Component {
         const product = this.props.product;
         return (product ? product.get_price(this._activePricelist, this.state.weight) : 0) || 0;
     }
-    get productName() {
-        return this.props.product?.display_name || "Unnamed Product";
-    }
     get productUom() {
         if (!this.props.product) {
             return "";
@@ -99,5 +78,3 @@ export class ScaleScreen extends Component {
         return this.pos.units_by_id[this.props.product.uom_id[0]].name;
     }
 }
-
-registry.category("pos_screens").add("ScaleScreen", ScaleScreen);

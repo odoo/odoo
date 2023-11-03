@@ -1,29 +1,20 @@
 /** @odoo-module */
 
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { Dialog } from "@web/core/dialog/dialog";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { registry } from "@web/core/registry";
+import { Component, useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
-export class BillScreen extends ReceiptScreen {
+export class BillScreen extends Component {
     static template = "pos_restaurant.BillScreen";
-    static components = { OrderReceipt };
-    confirm() {
-        if (!this.env.isMobile) {
-            this.props.resolve({ confirmed: true, payload: null });
-            this.pos.closeTempScreen();
-        }
+    static components = { OrderReceipt, Dialog };
+    setup() {
+        this.pos = usePos();
+        this.printer = useState(useService("printer"));
     }
-    /**
-     * @override
-     */
-    async printReceipt() {
-        await super.printReceipt();
-        this.currentOrder._printed = false;
-    }
-
-    get isBill() {
-        return true;
+    print() {
+        this.pos.printReceipt();
+        this.pos.get_order()._printed = false;
     }
 }
-
-registry.category("pos_screens").add("BillScreen", BillScreen);

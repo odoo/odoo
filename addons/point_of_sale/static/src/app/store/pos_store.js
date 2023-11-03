@@ -13,6 +13,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -22,6 +23,7 @@ import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { PartnerList } from "../screens/partner_list/partner_list";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -74,7 +76,6 @@ export class PosStore extends Reactive {
     hasBigScrollBars = false;
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
-    tempScreen = null;
 
     static serviceDependencies = [
         "orm",
@@ -83,13 +84,17 @@ export class PosStore extends Reactive {
         "hardware_proxy",
         "ui",
         "dialog",
+        "printer",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, dialog }) {
+    async setup(
+        env,
+        { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, dialog, printer }
+    ) {
         this.env = env;
         this.orm = orm;
         this.popup = popup;
@@ -97,6 +102,7 @@ export class PosStore extends Reactive {
         this.barcodeReader = barcode_reader;
         this.ui = ui;
         this.dialog = dialog;
+        this.printer = printer;
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
@@ -665,7 +671,9 @@ export class PosStore extends Reactive {
                 }
             }
         }
-        if(!missingProductIds.size) return;
+        if (!missingProductIds.size) {
+            return;
+        }
         const products = await this.orm.call(
             "pos.session",
             "get_pos_ui_product_product_by_params",
@@ -675,13 +683,15 @@ export class PosStore extends Reactive {
         this._loadProductProduct(products);
     }
     async _loadMissingPricelistItems(products) {
-        if(!products.length) return;
-        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
-        const product_ids = products.map(product => product.id);
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
 
         const pricelistItems = await this.orm.call(
-            'pos.session',
-            'get_pos_ui_product_pricelist_item_by_product',
+            "pos.session",
+            "get_pos_ui_product_pricelist_item_by_product",
             [odoo.pos_session_id, product_tmpl_ids, product_ids]
         );
 
@@ -691,9 +701,9 @@ export class PosStore extends Reactive {
         // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
         // for reference check order of the Product Pricelist Item model
         for (const pricelist of this.pricelists) {
-            const itemIds = new Set(pricelist.items.map(item => item.id));
+            const itemIds = new Set(pricelist.items.map((item) => item.id));
 
-            const _pricelistItems = pricelistItems.filter(item => {
+            const _pricelistItems = pricelistItems.filter((item) => {
                 return item.pricelist_id[0] === pricelist.id && !itemIds.has(item.id);
             });
             pricelist.items = [..._pricelistItems, ...pricelist.items];
@@ -1679,11 +1689,25 @@ export class PosStore extends Reactive {
         ]);
     }
     showScreen(name, props) {
+        this.previousScreen = this.mainScreen.component?.name;
         const component = registry.category("pos_screens").get(name);
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
         if (component.storeOnOrder ?? true) {
             this.get_order()?.set_screen_data({ name, props });
+        }
+    }
+    async printReceipt() {
+        const isPrinted = await this.printer.print(
+            OrderReceipt,
+            {
+                data: this.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { webPrintFallback: true }
+        );
+        if (isPrinted) {
+            this.get_order()._printed = true;
         }
     }
 
@@ -1797,7 +1821,7 @@ export class PosStore extends Reactive {
             }
         }
     }
-    async selectPartner() {
+    async selectPartner({ missingFields = [] } = {}) {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
         if (!currentOrder) {
@@ -1814,12 +1838,12 @@ export class PosStore extends Reactive {
             });
             return;
         }
-        const { confirmed, payload: newPartner } = await this.showTempScreen("PartnerListScreen", {
+        this.dialog.add(PartnerList, {
             partner: currentPartner,
+            missingFields,
+            getPayload: (newPartner) => currentOrder.set_partner(newPartner),
         });
-        if (confirmed) {
-            currentOrder.set_partner(newPartner);
-        }
+        return currentPartner;
     }
     // FIXME: POSREF, method exist only to be overrided
     async addProductFromUi(product, options) {
@@ -1863,20 +1887,6 @@ export class PosStore extends Reactive {
         return { modifiedPackLotLines, newPackLotLines };
     }
 
-    // FIXME POSREF get rid of temp screens entirely?
-    showTempScreen(name, props = {}) {
-        return new Promise((resolve) => {
-            this.tempScreen = {
-                name,
-                component: registry.category("pos_screens").get(name),
-                props: { ...props, resolve },
-            };
-        });
-    }
-
-    closeTempScreen() {
-        this.tempScreen = null;
-    }
     openCashControl() {
         if (this.shouldShowCashControl()) {
             this.dialog.add(

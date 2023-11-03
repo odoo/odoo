@@ -98,7 +98,7 @@ export class Dialog extends Component {
             ref: this.modalRef,
             elements: ".modal-content",
             handle: ".modal-header",
-            ignore: "button",
+            ignore: "button, input",
             edgeScrolling: { enabled: false },
             onDrop: ({ top, left }) => {
                 this.position.left += left;

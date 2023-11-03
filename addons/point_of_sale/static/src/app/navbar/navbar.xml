@@ -3,7 +3,6 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader d-flex w-100 p-0 m-0 bg-white border-bottom">
-            <div t-if="pos.tempScreen" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-inherit z-1000" />
             <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start">
                 <img class="pos-logo h-75 ms-3 me-auto align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>

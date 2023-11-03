@@ -6,6 +6,7 @@ import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_list";
 
 const mutex = new Mutex(); // Used for sequential cache updates
 const updateRewardsMutex = new Mutex();
@@ -178,13 +179,9 @@ patch(Order.prototype, {
                 body: _t("eWallet requires a customer to be selected"),
             });
             if (confirmed) {
-                const { confirmed, payload: newPartner } =
-                    await this.env.services.pos.showTempScreen("PartnerListScreen", {
-                        partner: null,
-                    });
-                if (confirmed) {
-                    this.set_partner(newPartner);
-                }
+                this.pos.dialog.add(PartnerList, {
+                    getPayload: (newPartner) => this.set_partner(newPartner),
+                });
             }
         } else {
             return super.pay(...arguments);

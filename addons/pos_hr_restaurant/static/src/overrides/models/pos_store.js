@@ -6,6 +6,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 
 patch(PosStore.prototype, {
     shouldResetIdleTimer() {
-        return this.tempScreen?.name !== "LoginScreen" && super.shouldResetIdleTimer(...arguments);
+        return this.mainScreen?.name !== "LoginScreen" && super.shouldResetIdleTimer(...arguments);
     },
 });

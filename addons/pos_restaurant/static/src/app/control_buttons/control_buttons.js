@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { BillScreen } from "@pos_restaurant/app/bill_screen/bill_screen";
 
 patch(ControlButtons.prototype, {
     setup() {
@@ -20,7 +21,7 @@ patch(ControlButtons.prototype, {
         (await this.printer.print(OrderReceipt, {
             data: this.pos.get_order().export_for_printing(),
             formatCurrency: this.env.utils.formatCurrency,
-        })) || this.pos.showTempScreen("BillScreen");
+        })) || this.dialog.add(BillScreen);
     },
     clickTableGuests() {
         this.dialog.add(NumberPopup, {

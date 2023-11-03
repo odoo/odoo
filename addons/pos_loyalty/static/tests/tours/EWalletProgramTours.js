@@ -4,7 +4,7 @@ import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
-import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import { registry } from "@web/core/registry";
 
 //#region EWalletProgramTour1
@@ -22,8 +22,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
             ProductScreen.clickPayButton(false),
             // If there's no partner, we asked to redirect to the partner list screen.
             Dialog.confirm(),
-            PartnerListScreen.isShown(),
-            PartnerListScreen.clickPartner("AAAAAAA"),
+            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "50"),
 
             // Topup 10$ for partner_bbb
