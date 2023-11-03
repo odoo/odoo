@@ -1221,7 +1221,10 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-        return super(SaleOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
+        return super(SaleOrder, self.with_context(
+            mail_post_autofollow=self.env.context.get('mail_post_autofollow', True),
+            lang=self.partner_id.lang,
+        )).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
