@@ -3948,13 +3948,16 @@
             super(...arguments);
             this.spreadsheetPosition = useSpreadsheetPosition();
         }
+        get maxHeight() {
+            return Math.max(0, this.viewportDimension.height - BOTTOMBAR_HEIGHT - SCROLLBAR_WIDTH$1);
+        }
         get style() {
             // the props's position is expressed relative to the "body" element
             // but we teleport the element in ".o-spreadsheet" to keep everything
             // within our control and to avoid leaking into external DOM
             const horizontalPosition = `left:${this.horizontalPosition() - this.spreadsheetPosition.x}`;
             const verticalPosition = `top:${this.verticalPosition() - this.spreadsheetPosition.y}`;
-            const maxHeight = Math.max(0, this.viewportDimension.height - BOTTOMBAR_HEIGHT - SCROLLBAR_WIDTH$1);
+            const maxHeight = this.maxHeight;
             const height = `max-height:${maxHeight}`;
             const shadow = maxHeight !== 0 ? "box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);" : "";
             return `
@@ -3978,7 +3981,7 @@
         }
         get shouldRenderBottom() {
             const { y } = this.props.position;
-            return (y + this.props.childHeight <
+            return (y + Math.min(this.props.childHeight, this.maxHeight) <
                 this.viewportDimension.height + (this.env.isDashboard() ? 0 : TOPBAR_HEIGHT));
         }
         horizontalPosition() {
@@ -7685,7 +7688,7 @@
         });
         return {
             chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+            background: getters.getStyleOfSingleCellChart(chart.background, dataRange).background,
         };
     }
 
@@ -8359,7 +8362,7 @@
             const baselineZone = chart.baseline.zone;
             baselineCell = getters.getCell(chart.baseline.sheetId, baselineZone.left, baselineZone.top);
         }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        const { background, fontColor } = getters.getStyleOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
@@ -8367,7 +8370,7 @@
             baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
-            fontColor: chartFontColor(background),
+            fontColor,
             background,
             baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
             keyValueStyle: keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.style,
@@ -28846,6 +28849,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onDeleteColumnsRows(cmd) {
             for (const table of this.getFilterTables(cmd.sheetId)) {
+                // Remove the filter tables whose data filter headers are in the removed rows.
+                if (cmd.dimension === "ROW" && cmd.elements.includes(table.zone.top)) {
+                    const tables = { ...this.tables[cmd.sheetId] };
+                    delete tables[table.id];
+                    this.history.update("tables", cmd.sheetId, tables);
+                    continue;
+                }
                 const zone = reduceZoneOnDeletion(table.zone, cmd.dimension === "COL" ? "left" : "top", cmd.elements);
                 if (!zone) {
                     const tables = { ...this.tables[cmd.sheetId] };
@@ -32751,27 +32761,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.charts[figureId];
         }
         /**
-         * Get the background color of a chart based on the color of the first cell of the main range
-         * of the chart. In order of priority, it will return :
-         *
-         *  - the chart background color if one is defined
-         *  - the fill color of the cell if one is defined
-         *  - the fill color of the cell from conditional formats if one is defined
-         *  - the default chart color if no other color is defined
+         * Get the background and textColor of a chart based on the color of the first cell of the main range of the chart.
          */
-        getBackgroundOfSingleCellChart(chartBackground, mainRange) {
+        getStyleOfSingleCellChart(chartBackground, mainRange) {
             if (chartBackground)
-                return chartBackground;
+                return { background: chartBackground, fontColor: chartFontColor(chartBackground) };
             if (!mainRange) {
-                return BACKGROUND_CHART_COLOR;
+                return {
+                    background: BACKGROUND_CHART_COLOR,
+                    fontColor: chartFontColor(BACKGROUND_CHART_COLOR),
+                };
             }
             const col = mainRange.zone.left;
             const row = mainRange.zone.top;
-            const style = this.getters.getCellComputedStyle(mainRange.sheetId, col, row);
-            return style.fillColor || BACKGROUND_CHART_COLOR;
+            const sheetId = mainRange.sheetId;
+            const style = this.getters.getCellComputedStyle(sheetId, col, row);
+            const background = style.fillColor || BACKGROUND_CHART_COLOR;
+            return {
+                background,
+                fontColor: style.textColor || chartFontColor(background),
+            };
         }
     }
-    EvaluationChartPlugin.getters = ["getChartRuntime", "getBackgroundOfSingleCellChart"];
+    EvaluationChartPlugin.getters = ["getChartRuntime", "getStyleOfSingleCellChart"];
 
     // -----------------------------------------------------------------------------
     // Constants
@@ -33199,6 +33211,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "HIDE_COLUMNS_ROWS":
                 case "UNHIDE_COLUMNS_ROWS":
+                case "ADD_COLUMNS_ROWS":
+                case "REMOVE_COLUMNS_ROWS":
                     this.updateHiddenRows();
                     break;
                 case "UPDATE_FILTER":
@@ -42996,9 +43010,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.22';
-    __info__.date = '2023-10-19T15:24:20.617Z';
-    __info__.hash = '7f76b56';
+    __info__.version = '16.0.23';
+    __info__.date = '2023-11-02T09:44:15.595Z';
+    __info__.hash = '06ef793';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
