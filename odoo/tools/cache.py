@@ -111,7 +111,7 @@ class ormcache(object):
     def clear(self, model, *args):
         """ Clear the registry cache """
         warnings.warn('Deprecated method ormcache.clear(model, *args), use registry.clear_cache() instead')
-        model.pool.clear_all_cache()
+        model.pool.clear_all_caches()
 
 
 class ormcache_context(ormcache):
