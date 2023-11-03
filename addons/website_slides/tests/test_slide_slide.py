@@ -81,6 +81,23 @@ class TestSlideInternals(slides_common.SlidesCase):
             slide.user_has_completed = True
         self.assertTrue(category_slides[0].user_has_completed_category)
 
+    def test_change_content_type(self):
+        """ To prevent constraint violation when changing type from video to article and vice-versa """
+        slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True).create({
+            'name': 'dummy',
+            'channel_id': self.channel.id,
+            'slide_category': 'video',
+            'is_published': True,
+            'url': 'https://youtu.be/W0JQcpGLSFw',
+        })
+
+        slide.write({'slide_category': 'article', 'html_content': '<p>Hello</p>'})
+        self.assertTrue(slide.html_content)
+        self.assertFalse(slide.url)
+
+        slide.slide_category = 'document'
+        self.assertFalse(slide.html_content)
+
 class TestVideoFromURL(slides_common.SlidesCase):
     def test_video_youtube(self):
         youtube_urls = {
