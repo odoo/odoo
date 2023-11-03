@@ -323,7 +323,7 @@ class AccountMoveSend(models.Model):
         # Render the invoice PDF but allow to set a custom report_name and custom values.
         # That way, all invoice reports are separated from the main one but don't need an
         # extra report every time.
-        IrActionsReport = type(self.env['ir.actions.report'])
+        IrActionsReport = self.env.registry['ir.actions.report']
         _render_template = IrActionsReport._render_template
         inv_report, inv_report_values = self._get_invoice_pdf_report_to_render(invoice, invoice_data)
 

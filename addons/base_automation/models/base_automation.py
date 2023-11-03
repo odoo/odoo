@@ -498,7 +498,7 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                ModelClass = type(model)
+                ModelClass = model.env.registry[model._name]
                 method.origin = getattr(ModelClass, name)
                 setattr(ModelClass, name, method)
 
