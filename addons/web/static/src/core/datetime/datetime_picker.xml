@@ -139,9 +139,9 @@
             class="o_datetime_picker d-flex flex-column gap-1 user-select-none"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
         >
-            <nav class="o_datetime_picker_header d-flex align-items-center justify-content-between">
+            <nav class="o_datetime_picker_header btn-group">
                 <button
-                    class="o_zoom_out o_datetime_button btn btn-light btn-sm px-1 text-truncate"
+                    class="o_zoom_out o_datetime_button btn btn-light d-flex align-items-center justify-content-between px-0 text-truncate"
                     t-att-class="isLastPrecisionLevel ? 'pe-none' : ''"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
                     t-on-click="zoomOut"
