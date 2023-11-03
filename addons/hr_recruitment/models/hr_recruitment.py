@@ -315,7 +315,29 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if vals.get('email_from'):
             vals['email_from'] = vals['email_from'].strip()
-        return super(Applicant, self).create(vals)
+        applicants = super(Applicant, self).create(vals)
+
+        for applicant in applicants:
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
+                partner_by_email = self.env['res.partner'].search([
+                    ('email', '=', applicant.email_from),
+                ], limit=1)
+                if not partner_by_email:
+                    applicant.partner_id = self.env['res.partner'].create({
+                        'is_company': False,
+                        'name': applicant.partner_name,
+                        'email': applicant.email_from,
+                        'phone': applicant.partner_phone,
+                        'mobile': applicant.partner_mobile
+                    })
+                else:
+                    applicant.partner_id = partner_by_email
+
+            applicant.message_subscribe(partner_ids=applicant.partner_id.ids)
+
+        return applicants
 
     def write(self, vals):
         # user_id change: update date_open

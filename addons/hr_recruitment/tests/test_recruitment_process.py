@@ -88,7 +88,7 @@ class TestRecruitmentProcess(TestHrCommon):
             }
         )
         application = self.env["hr.applicant"].create(
-            {"name": "Test Job Application for Notification", "job_id": job.id}
+            {"name": "Test Job Application for Notification", "job_id": job.id, "partner_name": "applicant 1"}
         )
         new_application_message = application.message_ids.filtered(
             lambda m: m.subtype_id == new_application_mt
