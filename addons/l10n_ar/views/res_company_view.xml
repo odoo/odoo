@@ -6,7 +6,7 @@
         <field name="model">res.company</field>
         <field name="arch" type="xml">
             <field name="vat" position="after">
-                <field name="l10n_ar_afip_responsibility_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
+                <field name="l10n_ar_afip_responsibility_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('country_code', '!=', 'AR')], 'readonly': [('parent_id', '!=', False)]}"/>
                 <label for="l10n_ar_gross_income_number" string="Gross Income" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
                 <div attrs="{'invisible': [('country_code', '!=', 'AR')]}" name="gross_income">
                     <field name="l10n_ar_gross_income_type" class="oe_inline"/>
