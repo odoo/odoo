@@ -425,6 +425,8 @@ export class SelfOrder extends Reactive {
     }
 
     handleErrorNotification(error, accessToken = []) {
+        this.rpcLoading = false;
+
         let message = _t("An error has occurred");
         let cleanOrders = false;
 
