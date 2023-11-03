@@ -118,6 +118,13 @@ export function deduceURLfromText(text, link) {
    return null;
 }
 
+function shouldPreserveCursor(node, root) {
+    const selection = root.ownerDocument.getSelection();
+    return node.isConnected && selection &&
+        selection.anchorNode && root.contains(selection.anchorNode) &&
+        selection.focusNode && root.contains(selection.focusNode);
+}
+
 /**
  * Sanitize the given node and return it.
  *
@@ -142,10 +149,10 @@ function sanitizeNode(node, root) {
     if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });
-        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         const parent = node.parentElement;
         unwrapContents(node);
-        restoreCursor?.();
+        restoreCursor && restoreCursor();
         node = parent; // The node has been removed, update the reference.
     } else if (
         areSimilarElements(node, node.previousSibling) &&
@@ -160,9 +167,9 @@ function sanitizeNode(node, root) {
     ) {
         // Merge identical elements together.
         getDeepRange(root, { select: true });
-        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         moveNodes(...startPos(node), node.previousSibling);
-        restoreCursor?.();
+        restoreCursor && restoreCursor();
     } else if (node.nodeType === Node.COMMENT_NODE) {
         // Remove comment nodes to avoid issues with mso comments.
         const parent = node.parentElement;
@@ -174,14 +181,14 @@ function sanitizeNode(node, root) {
     ) {
         // Remove empty paragraphs in <li>.
         const parent = node.parentElement;
-        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         if (isEmptyBlock(node)) {
             node.remove();
         } else {
             unwrapContents(node);
         }
         fillEmpty(parent);
-        restoreCursor?.(new Map([[node, parent]]));
+        restoreCursor && restoreCursor(new Map([[node, parent]]));
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
