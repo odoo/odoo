@@ -35,9 +35,9 @@ class MailMail(models.Model):
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
+        if self._context.get('default_type') not in self._fields['message_type'].base_field.selection:
             self = self.with_context(dict(self._context, default_type=None))
-        if self._context.get('default_state') not in type(self).state.base_field.selection:
+        if self._context.get('default_state') not in self._fields['state'].base_field.selection:
             self = self.with_context(dict(self._context, default_state='outgoing'))
         return super(MailMail, self).default_get(fields)
 
@@ -173,9 +173,8 @@ class MailMail(models.Model):
         SQL queries.
         """
         super()._add_inherited_fields()
-        cls = type(self)
         for field in ('email_from', 'reply_to', 'subject'):
-            cls._fields[field].related_sudo = True
+            self._fields[field].related_sudo = True
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()

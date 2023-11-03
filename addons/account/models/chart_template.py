@@ -61,7 +61,7 @@ class AccountChartTemplate(models.AbstractModel):
         def is_template(func):
             return callable(func) and hasattr(func, '_l10n_template')
         template_register = defaultdict(lambda: defaultdict(list))
-        cls = type(self)
+        cls = self.env.registry[self._name]
         for _attr, func in getmembers(cls, is_template):
             template, model = func._l10n_template
             template_register[template][model].append(func)
@@ -70,7 +70,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _setup_complete(self):
         super()._setup_complete()
-        type(self)._template_register = AccountChartTemplate._template_register
+        self.env.registry[self._name]._template_register = AccountChartTemplate._template_register
 
 
     # --------------------------------------------------------------------------------
