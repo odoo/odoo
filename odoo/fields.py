@@ -313,7 +313,6 @@ class Field(MetaField('DummyField', (object,), {})):
     help = None                         # field tooltip
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
-    states = None                       # set readonly and required depending on state (deprecated)
     groups = None                       # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
 
@@ -535,9 +534,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
             if not isinstance(self.readonly, bool):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
-
-            if self.states:
-                warnings.warn(f'Since Odoo 17, property {self}.states is no longer supported.')
 
             self._setup_done = True
 
