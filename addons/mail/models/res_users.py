@@ -273,7 +273,9 @@ class Users(models.Model):
 
     @api.model
     def systray_get_activities(self):
-        activities = self.env["mail.activity"].search([("user_id", "=", self.env.uid)])
+        search_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.systray.limit', 1000))
+        activities = self.env["mail.activity"].search(
+            [("user_id", "=", self.env.uid)], order='id desc', limit=search_limit)
         activities_by_record_by_model_name = defaultdict(lambda: defaultdict(lambda: self.env["mail.activity"]))
         for activity in activities:
             record = self.env[activity.res_model].browse(activity.res_id)
