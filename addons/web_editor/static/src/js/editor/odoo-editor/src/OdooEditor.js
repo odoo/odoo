@@ -81,6 +81,7 @@ import {
     boundariesOut,
     rightLeafOnlyNotBlockPath,
     lastLeaf,
+    isUnbreakable,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -4664,10 +4665,11 @@ export class OdooEditor extends EventTarget {
                                 // Break line by inserting new paragraph and
                                 // remove current paragraph's bottom margin.
                                 const p = closestElement(sel.anchorNode, 'p');
-                                if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
+                                if (isUnbreakable(closestBlock(sel.anchorNode))) {
                                     this._applyCommand('oShiftEnter');
-                                } else if (p) {
-                                    p.style.marginBottom = '0px';
+                                } else {
+                                    this._applyCommand('oEnter');
+                                    p && (p.style.marginBottom = '0px');
                                 }
                             }
                             textIndex++;
