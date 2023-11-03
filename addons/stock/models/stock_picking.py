@@ -1220,8 +1220,8 @@ class Picking(models.Model):
             if picking.picking_type_id.create_backorder != 'ask':
                 continue
             if any(
-                    float_compare(move.quantity, move.product_uom_qty, precision_digits=prec) < 0 or
-                    (move.product_uom_qty and not move.picked)
+                    (move.product_uom_qty and not move.picked) or
+                    float_compare(move._get_picked_quantity(), move.product_uom_qty, precision_digits=prec) < 0
                     for move in picking.move_ids
                     if move.state != 'cancel'
             ):

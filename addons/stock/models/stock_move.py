@@ -1509,6 +1509,18 @@ Please change the quantity done or the rounding precision of your unit of measur
         location = forced_location or self.location_id
         return location.should_bypass_reservation() or self.product_id.type != 'product'
 
+    def _get_picked_quantity(self):
+        self.ensure_one()
+        if self.picked and any(not ml.picked for ml in self.move_line_ids):
+            picked_qty = 0
+            for ml in self.move_line_ids:
+                if not ml.picked:
+                    continue
+                picked_qty += ml.product_uom_id._compute_quantity(ml.quantity, self.product_uom, round=False)
+            return picked_qty
+        else:
+            return self.quantity
+
     # necessary hook to be able to override move reservation to a restrict lot, owner, pack, location...
     def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         self.ensure_one()
@@ -1796,10 +1808,16 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
         # this operation could trigger a merge of moves.
+        ml_ids_to_unlink = OrderedSet()
         for move in moves:
+            if move.picked:
+                # in theory, we should only have a mix of picked and non-picked mls in the barcode use case
+                # where non-scanned mls = not picked => we definitely don't want to validate them
+                ml_ids_to_unlink |= move.move_line_ids.filtered(lambda ml: not ml.picked).ids
             if (move.quantity <= 0 or not move.picked) and not move.is_inventory:
                 if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0 or cancel_backorder:
                     move._action_cancel()
+        self.env['stock.move.line'].browse(ml_ids_to_unlink).unlink()
 
         # Create extra moves where necessary
         for move in moves:
