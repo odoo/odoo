@@ -54,6 +54,8 @@ class MrpConsumptionWarning(models.TransientModel):
                             problem_tracked_products |= line.product_id
                             break
                         move.quantity = qty_expected
+                    # move should be set to picked to correctly consume the product
+                    move.picked = True
                     # in case multiple lines with same product => set others to 0 since we have no way to know how to distribute the qty done
                     line.product_expected_qty_uom = 0
                 # move was deleted before confirming MO or force deleted somehow
