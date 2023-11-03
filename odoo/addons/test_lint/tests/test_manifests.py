@@ -2,6 +2,8 @@
 
 import logging
 from ast import literal_eval
+import inspect
+import sys
 
 from odoo.modules import get_modules
 from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path, get_module_resource
@@ -77,6 +79,8 @@ class ManifestLinter(BaseCase):
                             key, module)
             elif key == 'icon':
                 self._test_manifest_icon_value(module, value)
+            if key in ('pre_init_hook', 'post_init_hook', 'uninstall_hook'):
+                self._test_manifest_hooks(module, value)
 
     def _test_manifest_icon_value(self, module, value):
         self.assertTrue(
@@ -103,3 +107,14 @@ class ManifestLinter(BaseCase):
                     "Icon value specified in manifest of module %s wasn't found in given path."
                     " Please specify a correct value or remove this key from the manifest.",
                     module)
+
+    def _test_manifest_hooks(self, module, hook):
+        qualname = f'odoo.addons.{module}'
+        __import__(qualname)
+        py_module = sys.modules[qualname]
+        hook_func = getattr(py_module, hook)
+
+        if len(inspect.signature(hook_func).parameters) != 1:
+            _logger.warning(
+                "Hook %s in module %s should take a single argument `env`",
+                hook, module)
