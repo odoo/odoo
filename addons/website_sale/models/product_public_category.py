@@ -40,7 +40,9 @@ class ProductPublicCategory(models.Model):
     @api.depends('parents_and_self')
     def _compute_display_name(self):
         for category in self:
-            category.display_name = " / ".join(category.parents_and_self.mapped('name'))
+            category.display_name = " / ".join(category.parents_and_self.mapped(
+                lambda cat: cat.name or _("New")
+            ))
 
     def _compute_parents_and_self(self):
         for category in self:
