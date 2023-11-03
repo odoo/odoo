@@ -3,8 +3,7 @@
 from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
-from odoo.tests.common import Form
+from odoo.tests import Form, tagged
 from odoo import Command, fields
 
 

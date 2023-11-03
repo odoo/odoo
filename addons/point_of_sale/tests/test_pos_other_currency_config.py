@@ -4,7 +4,6 @@
 import odoo
 
 from odoo import tools
-from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 @odoo.tests.tagged('post_install', '-at_install')

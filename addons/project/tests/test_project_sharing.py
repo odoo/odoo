@@ -4,8 +4,7 @@
 from odoo import Command
 from odoo.osv import expression
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
-from odoo.tests.common import Form
+from odoo.tests import Form, tagged
 
 from .test_project_base import TestProjectCommon
 

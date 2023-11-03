@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
-from odoo.tests.common import Form, users
+from odoo.tests import Form, users
 
 
 class TestMailingListSms(MassSMSCommon):

@@ -8,7 +8,7 @@ from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests.common import users, Form, tagged
+from odoo.tests import Form, users, tagged
 from odoo.tools import mute_logger
 
 

@@ -4,8 +4,7 @@ from datetime import datetime
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests.common import Form
-from odoo.tests import tagged
+from odoo.tests import Form
 
 import logging
 

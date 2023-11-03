@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import Form
+from odoo.tests import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 

@@ -17,8 +17,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
-from odoo.tests.common import users, Form
+from odoo.tests import Form, tagged, users
 from odoo.tools import email_normalize, mute_logger, formataddr
 
 

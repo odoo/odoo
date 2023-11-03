@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from .common import PurchaseTestCommon
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 
 class TestPurchaseLeadTime(PurchaseTestCommon):

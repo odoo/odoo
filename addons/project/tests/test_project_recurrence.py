@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
