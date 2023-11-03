@@ -17,6 +17,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/printer/printer_service";
 import { qrCodeSrc } from "@point_of_sale/utils";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -24,13 +25,14 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { rpc, notification, router, printer }) {
+    async setup(env, { rpc, notification, router, printer, renderer }) {
         // services
         this.notification = notification;
         this.router = router;
         this.env = env;
         this.rpc = rpc;
         this.printer = printer;
+        this.renderer = renderer;
 
         // data
         Object.assign(this, {
@@ -582,12 +584,34 @@ export class SelfOrder extends Reactive {
                 ),
         };
     }
+    showDownloadButton(order) {
+        return this.config.self_ordering_mode === "mobile" && order.state === "paid";
+    }
+
+    async downloadReceipt(order) {
+        const link = document.createElement("a");
+        const currentDate = formatDateTime(luxon.DateTime.now(), {
+            format: "MM_dd_yyyy-HH_mm_ss",
+        });
+        const companyName = this.company.name.replaceAll(" ", "_");
+        link.download = `${companyName}-${currentDate}.png`;
+        const png = await this.renderer.toCanvas(
+            OrderReceipt,
+            {
+                data: this.export_for_printing(order),
+                formatCurrency: this.formatMonetary,
+            },
+            {}
+        );
+        link.href = png.toDataURL().replace("data:image/jpeg;base64,", "");
+        link.click();
+    }
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router", "printer"],
-    async start(env, { rpc, notification, router, printer }) {
-        return new SelfOrder(env, { rpc, notification, router, printer }).ready;
+    dependencies: ["rpc", "notification", "router", "printer", "renderer"],
+    async start(env, { rpc, notification, router, printer, renderer }) {
+        return new SelfOrder(env, { rpc, notification, router, printer, renderer }).ready;
     },
 };
 
