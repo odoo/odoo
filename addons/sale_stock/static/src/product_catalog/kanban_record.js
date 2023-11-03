@@ -9,7 +9,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
             super.updateQuantity(...arguments);
         } else if (
             this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&
-            quantity < this.productCatalogData.quantity
+            quantity <= this.productCatalogData.quantity
         ) {
             // This condition is only triggered when the product was already at the minimum quantity
             // possible, as stated in the sale_stock module, then the user inputs a quantity lower
