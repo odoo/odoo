@@ -197,7 +197,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 self.assertFalse(form.plan_assignation_summary)
                 form.plan_id = self.plan_onboarding
                 self.assertEqual(form.plan_assignation_summary,
-                                 '<ul><li>To-Do - Other: Plan training</li><li>To-Do - Other: Training</li></ul>')
+                                 '<ul><li>To-Do: Plan training</li><li>To-Do: Training</li></ul>')
                 self.assertTrue(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 form.plan_id = self.plan_party
                 self.assertIn('Book a place', form.plan_assignation_summary)
@@ -208,11 +208,11 @@ class TestActivitySchedule(ActivityScheduleCase):
                 self.assertPlanExecution(self.plan_party, test_records)
 
                 # date_deadline specified, responsible specified
-                force_date_deadline = date(2050, 1, 15)
+                force_base_date_deadline = date(2050, 1, 15)
                 force_responsible_id = self.user_admin
                 form = self._instantiate_activity_schedule_wizard(test_records)
                 form.plan_id = self.plan_party
-                form.plan_date_deadline = force_date_deadline
+                form.plan_date_deadline = force_base_date_deadline
                 form.plan_on_demand_user_id = self.env['res.users']
                 self.assertTrue(form.has_error)
                 self.assertIn(f'No responsible specified for {self.activity_type_todo.name}: Book a place',
@@ -224,7 +224,7 @@ class TestActivitySchedule(ActivityScheduleCase):
 
                 self.assertPlanExecution(
                     self.plan_party, test_records,
-                    force_date_deadline=force_date_deadline,
+                    force_base_date_deadline=force_base_date_deadline,
                     force_responsible_id=force_responsible_id)
 
     @users('admin')
