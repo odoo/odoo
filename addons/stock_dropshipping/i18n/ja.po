@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_dropshipping
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_dropshipping
@@ -37,19 +36,24 @@ msgstr "直送"
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__dropship_picking_count
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__dropship_picking_count
 msgid "Dropship Count"
-msgstr ""
+msgstr "直送数"
 
 #. module: stock_dropshipping
 #: model:ir.actions.act_window,name:stock_dropshipping.action_picking_tree_dropship
 #: model:ir.ui.menu,name:stock_dropshipping.dropship_picking
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_picking_internal_search_inherit_stock_dropshipping
 msgid "Dropships"
-msgstr ""
+msgstr "直送"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__is_dropship
 msgid "Is a Dropship"
-msgstr ""
+msgstr "直送か"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "ロット/シリアル"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
@@ -60,6 +64,11 @@ msgstr "ピッキングタイプ"
 #: model:ir.model,name:stock_dropshipping.model_procurement_group
 msgid "Procurement Group"
 msgstr "調達グループ"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_product_replenish
+msgid "Product Replenish"
+msgstr "製品補充"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
@@ -89,9 +98,9 @@ msgstr "在庫規則"
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking
 msgid "Transfer"
-msgstr "運送"
+msgstr "移動"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "処理タイプ"

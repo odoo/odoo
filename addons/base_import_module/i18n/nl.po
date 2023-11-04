@@ -20,6 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "Activeer"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+#, python-format
+msgid "Apps"
+msgstr "Apps"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
 msgstr "Annuleren"
@@ -28,6 +41,20 @@ msgstr "Annuleren"
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "Afsluiten"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed, the module %s cannot be downloaded."
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -89,6 +116,11 @@ msgid "Import Module"
 msgstr "Importeer module"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Import demo data"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr ""
@@ -101,12 +133,12 @@ msgstr "Geïmporteerde module"
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
 msgid "Industries"
-msgstr ""
+msgstr "Industrieën"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install"
-msgstr ""
+msgstr "Installeren"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -141,7 +173,7 @@ msgstr ""
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Module file (.zip)"
-msgstr ""
+msgstr "Module bestand (.zip)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
@@ -203,14 +235,28 @@ msgstr "Studio aanpassingen vereisen de Odoo Studio app."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+msgid "The following modules will be also installed:\n"
 msgstr ""
-"Ontbrekende benodigde modules: \n"
-"\n"
-" - %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"The list of industry applications cannot be fetched. Please try again later"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "The module %s cannot be downloaded"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "Upgraden"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

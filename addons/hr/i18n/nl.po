@@ -3,7 +3,10 @@
 # 	* hr
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +79,11 @@ msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 dagen per jaar, waarvan <br>6 naar keuze."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "12345678901"
+msgstr "12345678901"
+
+#. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -117,13 +125,13 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Bedrijf\" title=
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"E-mail\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Telefoon\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -316,7 +324,7 @@ msgstr "Activiteit uitzondering decoratie"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Activiteitsplan"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
@@ -341,12 +349,12 @@ msgstr "Activiteit door"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Sjabloon activiteitsplan"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Wizard activiteitenplanning"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -705,13 +713,13 @@ msgstr "Coach van werknemer %s is niet ingesteld."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Color"
-msgstr ""
+msgstr "Kleur"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -839,7 +847,7 @@ msgstr "Geboorteland"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Cover Image"
-msgstr ""
+msgstr "Omslagafbeelding"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
@@ -1085,6 +1093,8 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Toon instellingen voor telewerk voor elke werknemer en specifieke rapporten."
+" Aanwezigheidsicoontjes worden bijgewerkt met de telewerkplek."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1209,7 +1219,7 @@ msgstr "Naam werknemer"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Eigenschappen werknemer"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1496,7 +1506,7 @@ msgstr "HR Werknemer: check geldigheid werkvergunning"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR aanwezigheidsstatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1530,7 +1540,7 @@ msgstr "Aangenomen werknemers"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
-msgstr ""
+msgstr "Startpagina"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -1900,6 +1910,11 @@ msgid "Manager of employee %s is not set."
 msgstr "Manager van werknemer %s is niet ingesteld."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2039,7 +2054,7 @@ msgstr "Nieuwe werknemers in deze periode"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Newly Hired"
-msgstr ""
+msgstr "Nieuw aangenomen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
@@ -2201,7 +2216,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Kantoor"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2332,6 +2347,10 @@ msgid ""
 " to company policies. Strong communication, problem-solving, and work ethic "
 "required. Adaptability, initiative, and willingness to learn are valued."
 msgstr ""
+"Voer toegewezen verantwoordelijkheden uit, werk samen met teamleden en houd "
+"je aan het bedrijfsbeleid. Sterke communicatie, probleemoplossend denken en "
+"werkethiek zijn vereist. Aanpassingsvermogen, initiatiefname en bereidheid "
+"om te leren worden geapprecieerd."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2392,6 +2411,8 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for employee "
 "plans."
 msgstr ""
+"Het plan %(plan_names)s kan geen afdeling gebruiken omdat dit alleen wordt "
+"gebruikt voor werknemersplannen."
 
 #. module: hr
 #. odoo-python
@@ -2401,6 +2422,9 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Activiteitsplannen %(template_names)s kunnen geen coach, manager of "
+"verantwoordelijke gebruiken omdat dit alleen wordt gebruikt voor "
+"werknemersplannen."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2553,7 +2577,7 @@ msgstr "Professionele diensten"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2581,7 +2605,7 @@ msgstr "R&D USA"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__rating_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Beoordelingen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -2608,7 +2632,7 @@ msgstr "Reden"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Reden code"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2656,7 +2680,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Telewerk"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2825,6 +2849,11 @@ msgstr "BSN nummer"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "BSN nummer"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Software Developer"
+msgstr "Software Developer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3014,6 +3043,8 @@ msgid ""
 "The fields %r you try to read is not available on the public employee "
 "profile."
 msgstr ""
+"De velden %r die je probeert te lezen zijn niet beschikbaar op het openbare "
+"werknemersprofiel."
 
 #. module: hr
 #. odoo-python
@@ -3086,7 +3117,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Deze types verantwoordelijken zijn beperkt tot werknemersplannen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3220,7 +3251,7 @@ msgstr "Geldig werkvisum voor België"
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
 msgid "View profile"
-msgstr ""
+msgstr "Bekijk profiel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -3535,4 +3566,4 @@ msgstr "beperkt tot werknemers"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
-msgstr ""
+msgstr "work_permit_name"

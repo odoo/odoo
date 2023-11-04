@@ -3,7 +3,10 @@
 # 	* account
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -243,7 +246,7 @@ msgstr "(inbegrepen)."
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
-msgstr ""
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -319,9 +322,29 @@ msgid "10 Days after End of Next Month"
 msgstr "10 dagen na het einde van de maand"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "100.0"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "100.00 USD"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "1000.0"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "11.05"
 msgstr "11.05"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "12345"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -333,6 +356,11 @@ msgstr "15 dagen"
 #: model:account.tax,name:account.1_sale_tax_template
 msgid "15%"
 msgstr "15%"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "1500.0"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
@@ -348,6 +376,31 @@ msgstr "20.00"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2021-09-19"
 msgstr "2021-09-19"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "2023-01-01"
+msgstr "01-01-2023"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "2023-01-05"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-11"
+msgstr "11-08-2023"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-15"
+msgstr "15-08-2023"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "2023-08-31"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -373,6 +426,16 @@ msgstr "2024-01-01"
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
 msgstr "21 dagen"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "25.0 USD"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "25.00 USD"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -424,6 +487,21 @@ msgstr "4.05"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 dagen"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "50 USD"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "50.00 EUR"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "534677881234"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1248,6 +1326,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Een Python bibliotheek dat zal worden gebruikt om standaardwaarden te bieden"
+" bij het maken van nieuwe records voor deze alias."
 
 #. module: account
 #. odoo-python
@@ -2239,17 +2319,17 @@ msgstr "Sneltoets voor aggregatieformule"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Aliasdomein"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Aliasdomeinnaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
@@ -2476,11 +2556,13 @@ msgstr "Bedrag:"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_payment_items
 #: model:ir.ui.menu,name:account.menu_action_open_payment_items
+#: model:ir.ui.menu,name:account.menu_action_open_sale_payment_items
 msgid "Amounts to Settle"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
+#: model_terms:ir.actions.act_window,help:account.action_open_sale_payment_items
 msgid "Amounts to settle"
 msgstr ""
 
@@ -2873,12 +2955,12 @@ msgstr "Automatische reeks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatically compute tax rates"
-msgstr ""
+msgstr "Automatisch BTW-tarieven berekenen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "AvaTax"
-msgstr ""
+msgstr "AvaTax"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -3000,6 +3082,11 @@ msgstr "Bankrekening %s bijgewerkt"
 #, python-format
 msgid "Bank Account %s with number %s deleted"
 msgstr "Bankrekening %s met nummer %s verwijderd"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "Bank Account Name"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -3126,6 +3213,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_cash
 msgid "Bank and Cash"
 msgstr "Bank en kas"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "Bank of odoo"
+msgstr "Bank van Odoo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -3982,6 +4074,11 @@ msgid "Communication Type"
 msgstr "Communicatiesoort"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Communication history"
+msgstr "Communicatiegeschiedenis"
+
+#. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
@@ -4209,10 +4306,13 @@ msgstr ""
 "dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_open_sale_payment_items
+msgid "Cool, it looks like you don't have any customer credit notes to pay."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
-msgid ""
-"Cool, it looks like you don't have anything to pay either for vendor bills "
-"or for customer credit notes."
+msgid "Cool, it looks like you don't have any vendor bills to pay."
 msgstr ""
 
 #. module: account
@@ -4463,6 +4563,13 @@ msgid "Create a new tax group"
 msgstr "Een nieuwe BTW-groep maken"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report__use_sections
+msgid ""
+"Create a structured report with multiple sections for convenient navigation "
+"and simultaneous printing."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
 msgstr "Maak een leveranciersfactuur"
@@ -4698,6 +4805,11 @@ msgid "Credit To Invoice"
 msgstr "Te factureren krediet"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Credit card"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
 msgstr "Creditdagboek items die afgeletterd zijn met dit dagboek item."
@@ -4857,6 +4969,11 @@ msgstr "Klant"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
 msgstr "Adressen van klanten"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_open_sale_payment_items
+msgid "Customer Amounts to Settle"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5274,7 +5391,7 @@ msgstr "Standaard algemene voorwaarden als webpagina"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "Standaardwaarden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
@@ -5513,7 +5630,7 @@ msgstr "Negeren"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__discount
 #, python-format
 msgid "Discount"
-msgstr ""
+msgstr "Korting"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_percentage
@@ -6371,12 +6488,12 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "False"
-msgstr ""
+msgstr "Onwaar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_aml_ir_filters
 msgid "Favorite Filters"
-msgstr ""
+msgstr "Favoriete filters"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -7112,11 +7229,6 @@ msgid "Highest Name"
 msgstr "Hoogste naam"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "History"
-msgstr "Geschiedenis"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "Hoe het BTW totaal berekend is in orders en facturen"
@@ -7187,6 +7299,16 @@ msgstr "INV/2023/00001"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/0001"
 msgstr "INV/2023/0001"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "INV0001"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "INV001"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_exception_icon
@@ -7307,6 +7429,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
+"Indien ingesteld, wordt deze rekening gebruikt om automatisch boekingen "
+"sluitend te maken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -8438,6 +8562,7 @@ msgstr "Boekingsregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
+#: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Journal Name"
 msgstr "Dagboeknaam"
 
@@ -8649,7 +8774,7 @@ msgstr "Vorig kwartaal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
 msgid "Last Statement"
-msgstr ""
+msgstr "Laatste afschrift"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__last_tax_period
@@ -9087,6 +9212,12 @@ msgstr ""
 "Batchstorting: Verzamel meerdere klantcheques tegelijk en genereer een batchstorting en dien deze in bij je bank. Module account_batch_payment is noodzakelijk.\n"
 "SEPA Credit Transfer: Betaal in de SEPA-zone door een SEPA Credit Transfer-bestand in te dienen bij je bank. Module account_sepa is noodzakelijk.\n"
 "SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je relatie je hebt gegeven. Module account_sepa is noodzakelijk.\n"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+#: model_terms:ir.ui.view,arch_db:account.report_statement
+msgid "Marc Demo"
+msgstr "Marc Demo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -10010,7 +10141,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Online betalingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -10366,6 +10497,11 @@ msgid "P&L Accounts"
 msgstr "winst- en verliesrekeningen"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "PAY001"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_pdf_report_id
@@ -10382,7 +10518,7 @@ msgstr "PDF-bestand"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Document Invoicing"
-msgstr ""
+msgstr "PEPPOL Elektronische facturatie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -10392,7 +10528,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr ""
+msgstr "Geschikt voor PEPPOL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10715,9 +10851,15 @@ msgid "Payment Receipt:"
 msgstr "Betalingsbewijs:"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Payment Ref"
+msgstr "Betalingsreferentie"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
+#: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Payment Reference"
 msgstr "Betaalreferentie"
 
@@ -12080,6 +12222,16 @@ msgid "Same Currency"
 msgstr "Zelfde valuta"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Sample Memo"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Sample Ref"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12411,7 +12563,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Send message"
-msgstr ""
+msgstr "Verzend bericht"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -12893,6 +13045,7 @@ msgstr "Bankafschriftregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
+#: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
 msgstr "Naam bankafschrift"
 
@@ -14146,6 +14299,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"De naam van de e-mailalias, bijvoorbeeld: 'vacature' als je alle e-mails van"
+" vacature@uwbedrijf.nl wilt afvangen."
 
 #. module: account
 #. odoo-python
@@ -15357,7 +15512,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "True"
-msgstr ""
+msgstr "Waar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17185,7 +17340,7 @@ msgstr "bv. Betalingstermijnen: 30 dagen na factuurdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "bijv. domain.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17226,7 +17381,7 @@ msgstr "hier"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "id"
-msgstr ""
+msgstr "ID"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
@@ -17417,7 +17572,7 @@ msgstr "eenheden"
 #: code:addons/account/static/src/js/search/search_bar/search_bar.js:0
 #, python-format
 msgid "until"
-msgstr ""
+msgstr "t/m"
 
 #. module: account
 #. odoo-python

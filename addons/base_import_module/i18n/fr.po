@@ -21,6 +21,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "Activer"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+#, python-format
+msgid "Apps"
+msgstr "Applications"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
 msgstr "Annuler"
@@ -29,6 +42,22 @@ msgstr "Annuler"
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "Fermer"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+"Échec de la connexion à %s. La liste des modules des secteurs d'activité ne "
+"peut pas être récupérée"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Connection to %s failed, the module %s cannot be downloaded."
+msgstr "Échec de la connexion à %s, le module %s ne peut pas être téléchargé."
 
 #. module: base_import_module
 #. odoo-python
@@ -90,6 +119,11 @@ msgid "Import Module"
 msgstr "Importer un module"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Import demo data"
+msgstr "Importer les données de démonstration"
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "Importer les données de démonstration d'un module"
@@ -117,12 +151,12 @@ msgstr "Installer l'application"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -205,14 +239,30 @@ msgstr "Les personnalisations Studio nécessitent l'application Studio."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
+msgid "The following modules will be also installed:\n"
+msgstr "Les modules suivants seront également installés :\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
 msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+"The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
-"Dépendances de modules non satisfaites : \n"
-"\n"
-"- %s"
+"La liste des demandes des secteurs d'activité ne peut pas être récupérée. "
+"Veuillez réessayez plus tard"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "The module %s cannot be downloaded"
+msgstr "Le module %s ne peut pas être téléchargé"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "Mettre à niveau"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm
-#
+# 
 # Translators:
-# Paweł Wodyński <pw@myodoo.pl>, 2022
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_crm
@@ -37,14 +30,14 @@ msgid "# Page Views"
 msgstr "# Widoki strony"
 
 #. module: website_crm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a sales team."
 msgstr "Przypisz sygnały/szanse do zespołu sprzedaży."
 
 #. module: website_crm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a salesperson."
@@ -53,7 +46,9 @@ msgstr "Przypisz sygnały/szanse do sprzedawcy."
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr "Domyślny zespół sprzedażowy dla nowych sygnałów utworzonych przez formularz kontaktowy."
+msgstr ""
+"Domyślny zespół sprzedażowy dla nowych sygnałów utworzonych przez formularz "
+"kontaktowy."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
@@ -68,7 +63,9 @@ msgstr "Domyślny sprzedawca"
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr "Domyślny sprzedawca dla sygnałów utworzonych przez formularz kontaktowy na stronie internetowej."
+msgstr ""
+"Domyślny sprzedawca dla sygnałów utworzonych przez formularz kontaktowy na "
+"stronie internetowej."
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -99,18 +96,32 @@ msgid "Page views"
 msgstr "Widoki strony"
 
 #. module: website_crm
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Numer Telefonu"
+
+#. module: website_crm
+#. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Sales Team"
 msgstr "Zespół sprzedaży"
 
 #. module: website_crm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Salesperson"
 msgstr "Sprzedawca"
+
+#. module: website_crm
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Subject"
+msgstr "Temat"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
@@ -125,7 +136,7 @@ msgstr "Odwiedzający stronę:"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "Strona WWW"
+msgstr "Strona internetowa"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -136,3 +147,31 @@ msgstr "Formularz kontaktowy"
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
 msgstr "Odwiedzający stronę"
+
+#. module: website_crm
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Your Company"
+msgstr ""
+
+#. module: website_crm
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Twój email"
+
+#. module: website_crm
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Twoja nazwa"
+
+#. module: website_crm
+#. odoo-javascript
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Your Question"
+msgstr ""

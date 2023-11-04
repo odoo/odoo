@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">Units</span>"
-msgstr "<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">Đơn vị</span>"
+msgid "<span invisible=\"not show_availability\">Units</span>"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -55,8 +54,12 @@ msgstr "Kính gửi quý khách, "
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default availability mode set on newly created storable products. This can be changed at the product level."
-msgstr "Chế độ tình trạng còn hàng mặc định được thiết lập cho các sản phẩm lưu kho mới tạo; có thể thay đổi ở cấp sản phẩm."
+msgid ""
+"Default availability mode set on newly created storable products. This can "
+"be changed at the product level."
+msgstr ""
+"Chế độ tình trạng còn hàng mặc định được thiết lập cho các sản phẩm lưu kho "
+"mới tạo; có thể thay đổi ở cấp sản phẩm."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -64,7 +67,7 @@ msgid "Default visibility for custom messages."
 msgstr "Tính hiển thị mặc định cho thông báo tùy chỉnh. "
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
@@ -76,13 +79,14 @@ msgid "How to display products having low quantities (on hand - reserved)"
 msgstr "Cách hiển thị sản phẩm có số lượng ít (hiện có - được dự trữ)"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
 msgstr "Email không hợp lệ"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
@@ -94,7 +98,7 @@ msgid "Inventory Defaults"
 msgstr "Mặc định tồn kho"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Only"
@@ -106,7 +110,7 @@ msgid "Order Now"
 msgstr "Đặt hàng ngay"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
@@ -125,6 +129,7 @@ msgid "Out-of-Stock Message"
 msgstr "Thông báo hết hàng"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #: model:ir.model,name:website_sale_stock.model_product_template
 #, python-format
@@ -138,8 +143,6 @@ msgstr "Biến thể sản phẩm"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
-#: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
 msgstr "Sản phẩm: gửi email thông báo tình trạng còn hàng của sản phẩm"
 
@@ -156,7 +159,7 @@ msgstr "Đơn bán hàng"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -179,10 +182,15 @@ msgid "Show availability Qty"
 msgstr "Hiển thị số lượng hiện có"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience."
-msgstr "Một số sản phẩm không còn hàng và giỏ hàng của bạn đã được cập nhật. Chúng tôi rất tiếc về điều này."
+msgid ""
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
+msgstr ""
+"Một số sản phẩm không còn hàng và giỏ hàng của bạn đã được cập nhật. Chúng "
+"tôi rất tiếc về điều này."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -190,13 +198,14 @@ msgid "The following product is now available."
 msgstr "Sản phẩm sau hiện đã có hàng. "
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "Sản phẩm '%(product_name)s' hiện đã có hàng"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
@@ -220,7 +229,7 @@ msgid "Warehouse"
 msgstr "Kho hàng"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
@@ -235,30 +244,32 @@ msgstr "Trang web"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr "Trang web mà đơn hàng này được đặt, đối với đơn hàng Thương mại điện tử."
+msgstr ""
+"Trang web mà đơn hàng này được đặt, đối với đơn hàng Thương mại điện tử."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Bạn đã thêm"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
 msgstr "Bạn vừa thêm tất cả sản phẩm còn hàng vào giỏ hàng. "
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
-msgstr "Bạn đã có %s đơn vị trong giỏ hàng."
+msgstr "Bạn đã có %s sản phẩm trong giỏ hàng."
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
 #, python-format
@@ -266,21 +277,22 @@ msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "Bạn yêu cầu %(desired_qty)s sản phẩm nhưng chỉ còn %(new_qty)s "
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
 msgstr "Bạn yêu cầu %s đơn vị nhưng chỉ còn %s."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "trong giỏ hàng."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
@@ -293,7 +305,7 @@ msgid "only if below"
 msgstr "chỉ khi dưới"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"

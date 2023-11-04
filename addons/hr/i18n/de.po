@@ -3,6 +3,7 @@
 # 	* hr
 # 
 # Translators:
+# Michael Hofer, 2023
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2023
 # 
@@ -75,6 +76,11 @@ msgstr "1 Telefonanruf"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 Tage/Jahr, davon <br>6 nach Wahl."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "12345678901"
+msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -346,7 +352,7 @@ msgstr "Vorlage des Aktivitätsplans"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Assistent zur Aktivitätsplanung"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -840,7 +846,7 @@ msgstr "Geburtsland"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Cover Image"
-msgstr ""
+msgstr "Titelbild"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
@@ -1086,6 +1092,8 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Home-Office-Einstellungen für jeden Mitarbeiter und die entsprechenden Berichte anzeigen.\n"
+"Die Anwesenheitssymbole werden entsprechend dem Home-Office-Ort aktualisiert."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1210,7 +1218,7 @@ msgstr "Name des Mitarbeiters"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Mitarbeitereigenschaften"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1501,7 +1509,7 @@ msgstr "HR-Mitarbeiter: Gültigkeit der Arbeitserlaubnis prüfen"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR-Anwesenheitsstatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1535,7 +1543,7 @@ msgstr "Eingestellte Mitarbeiter"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -1906,6 +1914,11 @@ msgid "Manager of employee %s is not set."
 msgstr "Der Manager des Mitarbeiters %s ist nicht festgelegt."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2045,7 +2058,7 @@ msgstr "Überstunden neuer Mitarbeiter"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Newly Hired"
-msgstr ""
+msgstr "Neu eingestellt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
@@ -2168,7 +2181,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2207,7 +2220,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Büro"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2338,6 +2351,10 @@ msgid ""
 " to company policies. Strong communication, problem-solving, and work ethic "
 "required. Adaptability, initiative, and willingness to learn are valued."
 msgstr ""
+"Erfüllung der zugewiesenen Aufgaben, Zusammenarbeit mit Teammitgliedern und "
+"Einhaltung der Unternehmensrichtlinien. Ausgeprägte Kommunikationsfähigkeit,"
+" Problemlösungsfähigkeit und Arbeitsethik erforderlich. Anpassungsfähigkeit,"
+" Initiative und Lernbereitschaft werden geschätzt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2409,6 +2426,9 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Aktivitätsplan %(template_names)s kann nicht Coach, Manager oder Mitarbeiter"
+" als Verantwortliche verwenden, da er nur für Mitarbeiterpläne verwenden "
+"werden kann."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2592,7 +2612,7 @@ msgstr "F&E USA"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__rating_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Bewertungen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -2620,7 +2640,7 @@ msgstr "Begründung"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Code für Grund"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2668,7 +2688,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Home-Office"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2838,6 +2858,11 @@ msgstr "Alters- und Hinterlassenenversicherungsnummer"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "Sozialversicherungsnummer"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Software Developer"
+msgstr "Programmierer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3029,6 +3054,8 @@ msgid ""
 "The fields %r you try to read is not available on the public employee "
 "profile."
 msgstr ""
+"Das Feld %r, das Sie zu lesen versuchen, ist im öffentlichen "
+"Mitarbeiterprofil nicht verfügbar."
 
 #. module: hr
 #. odoo-python
@@ -3103,7 +3130,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Diese Verantwortlichkeitstypen sind auf Mitarbeiterpläne beschränkt."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3237,7 +3264,7 @@ msgstr "Gültige Arbeitserlaubnis für Belgien"
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
 msgid "View profile"
-msgstr ""
+msgstr "Profil anzeigen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire

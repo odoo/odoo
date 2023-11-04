@@ -32,24 +32,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                    <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>"
+"                                        <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                    <span>Sorry, verschillende stands zijn nu uitverkocht. Wijzig je keuzes voordat je opnieuw bevestigt.</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "<i class=\"fa fa-map-o me-2\"/>View Plan"
 msgstr "<i class=\"fa fa-map-o me-2\"/>Plan bekijken"
-
-#. module: website_event_booth
-#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_order_progress
-msgid ""
-"<span class=\"d-block\">Booth Selection</span><span class=\"chevron "
-"position-absolute d-block\"/>"
-msgstr ""
-"<span class=\"d-block\">Stand selecteren</span><span class=\"chevron "
-"position-absolute d-block\"/>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -63,9 +52,20 @@ msgstr "<span class=\"text-nowrap\">Uitverkocht</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
+msgid "<span>Book my Booth(s)</span>"
+msgstr ""
+
+#. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "<span>Book my Booths</span>"
 msgstr "<span>Mijn stands boeken</span>"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_order_progress
+msgid ""
+"<span>Booth Selection</span><span class=\"fa fa-angle-right d-inline-block "
+"align-middle mx-sm-3 text-muted fs-5\"/>"
+msgstr ""
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_order_progress
@@ -91,11 +91,6 @@ msgstr ""
 "                            <span> *</span>"
 
 #. module: website_event_booth
-#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
-msgid "<strong>Contact Details</strong>"
-msgstr "<strong>Contactgegevens</strong>"
-
-#. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_type_view_form
 msgid "Booth Menu Item"
 msgstr "Menu-item stand"
@@ -114,22 +109,10 @@ msgstr "Standregistratie voltooid!"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/xml/event_booth_registration_templates.xml:0
-#, python-format
-msgid "Booth Selection"
-msgstr "Standselectie"
-
-#. module: website_event_booth
-#. odoo-javascript
 #: code:addons/website_event_booth/static/src/js/booth_register.js:0
 #, python-format
 msgid "Booth registration failed."
 msgstr "Standregistratie mislukt."
-
-#. module: website_event_booth
-#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
-msgid "Booths"
-msgstr "Stands"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_type__booth_menu
@@ -142,23 +125,21 @@ msgid "Check our"
 msgstr "Bekijk onze"
 
 #. module: website_event_booth
-#. odoo-javascript
-#: code:addons/website_event_booth/static/src/xml/event_booth_registration_templates.xml:0
-#, python-format
-msgid "Confirmed"
-msgstr "Bevestigd"
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
+msgid "Choose your type of booth"
+msgstr ""
 
 #. module: website_event_booth
-#. odoo-javascript
-#: code:addons/website_event_booth/static/src/xml/event_booth_registration_templates.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Contact Details"
 msgstr "Contactgegevens"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_order_progress
-msgid "Contact Details<span class=\"chevron position-absolute d-block\"/>"
-msgstr "Contactgegevens<span class=\"chevron position-absolute d-block\"/>"
+msgid ""
+"Contact Details<span class=\"fa fa-angle-right d-inline-block align-middle "
+"mx-sm-3 text-muted fs-5\"/>"
+msgstr ""
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -217,6 +198,11 @@ msgstr "Link naar de lijst met toekomstige evenementen"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
 msgid "List of Future Events"
 msgstr "Lijst met toekomstige evenementen"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
+msgid "Location"
+msgstr "Locatie"
 
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__menu_type

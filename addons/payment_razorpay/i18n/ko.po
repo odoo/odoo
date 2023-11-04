@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_razorpay
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
+msgstr "결제를 처리하는 중 오류가 발생했습니다. 다시 시도해 주세요."
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "API 연결을 설정할 수 없습니다."
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Key Id"
+msgstr "키 Id"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Key Secret"
+msgstr "보안 키"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_razorpay
+#: model:ir.model,name:payment_razorpay.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
+
+#. module: payment_razorpay
+#: model:ir.model,name:payment_razorpay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: payment_razorpay
+#: model:ir.model.fields.selection,name:payment_razorpay.selection__payment_provider__code__razorpay
+msgid "Razorpay"
+msgstr "Razorpay"
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
+msgid "Razorpay Key Id"
+msgstr "Razorpay 키 Id"
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_secret
+msgid "Razorpay Key Secret"
+msgstr "Razorpay 보안 키"
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_webhook_secret
+msgid "Razorpay Webhook Secret"
+msgstr "Razorpay Webhook 보안"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid status: %s"
+msgstr "잘못된 상태의 데이터를 수신했습니다: %s"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing entity id."
+msgstr "entity id가 없이 수신된 데이터입니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference."
+msgstr "참조가 누락된 데이터가 수신되었습니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing status."
+msgstr "누락된 상태의 데이터가 수신되었습니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Received incomplete refund data."
+msgstr "불완전한 환불 데이터가 수신되었습니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. Razorpay gave us the following "
+"information: '%s'"
+msgstr "API와의 통신에 실패했습니다. Razorpay에서 다음 정보를 확인했습니다: '%s'"
+
+#. module: payment_razorpay
+#: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
+msgid "The key solely used to identify the account with Razorpay."
+msgstr "Razorpay에서 계정을 식별하는 데 사용되는 키입니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "The phone number is missing."
+msgstr "전화번호가 누락되었습니다."
+
+#. module: payment_razorpay
+#: model:ir.model.fields,help:payment_razorpay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+#, python-format
+msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
+msgstr "Razorpay에서 처리한 거래 내역은 Odoo에서 수동으로 취소할 수 없습니다."
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Webhook Secret"
+msgstr "Webhook 보안"

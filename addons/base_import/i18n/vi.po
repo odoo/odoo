@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import
@@ -24,28 +25,32 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s ở nhiều dòng"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s tập dữ liệu đã được nhập thành công"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr ""
+"Chỉ có một cột được tìm thấy trong tệp. Điều này thường đồng nghĩa với việc "
+"dấu phân tách tệp không chính xác."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Additional Fields"
-msgstr "Các trường bổ sung"
+msgstr "Trường bổ sung"
 
 #. module: base_import
 #. odoo-javascript
@@ -65,13 +70,21 @@ msgstr "Cho phép khớp với trường phụ"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "Đã xảy ra sự cố không xác định trong quá trình nạp tập tin (có thể bị mất kết nối, vượt quá giới hạn dữ liệu hoặc vượt quá giới hạn bộ nhớ). Vui lòng thử lại trong trường hợp vấn đề là nhất thời. Nếu sự cố vẫn xảy ra, hãy thử chia nhỏ tệp thay vì nhập cùng một lúc."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Đã xảy ra sự cố không xác định trong quá trình nạp tập tin (có thể bị mất "
+"kết nối, vượt quá giới hạn dữ liệu hoặc vượt quá giới hạn bộ nhớ). Vui lòng "
+"thử lại trong trường hợp vấn đề là nhất thời. Nếu sự cố vẫn xảy ra, hãy thử "
+"chia nhỏ tệp thay vì nhập cùng một lúc."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr "Cơ bản"
+msgstr "Cơ sở"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -88,7 +101,7 @@ msgstr "Base Import Mapping"
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Batch"
-msgstr ""
+msgstr "Loạt"
 
 #. module: base_import
 #. odoo-javascript
@@ -116,14 +129,16 @@ msgstr "Hủy"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr ""
+msgstr "Bấm vào 'Tiếp tục' để tiếp tục nhập, tiếp tục tại dòng %s."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "Cột %s chứa giá trị không hợp lệ (giá trị: %s không đáp ứng định dạng ngày tháng"
+msgstr ""
+"Cột %s chứa giá trị không hợp lệ (giá trị: %s không đáp ứng định dạng ngày "
+"tháng"
 
 #. module: base_import
 #. odoo-python
@@ -140,6 +155,8 @@ msgstr "Tên cột"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Dấy phẩy"
@@ -155,8 +172,12 @@ msgstr "Bình luận"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
-msgstr "Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -179,6 +200,7 @@ msgstr "Được tạo vào"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -203,7 +225,7 @@ msgstr "Định dạng Ngày giờ"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Dấu thập phân"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -213,6 +235,7 @@ msgstr "Tên hiển thị"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
@@ -245,7 +268,28 @@ msgstr "Lỗi xử lý Ngày [%s:L%d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
+msgstr "Lỗi tại dòng %s: \"%s\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
 msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Lỗi khi nhập tập dữ liệu: tất cả các dòng phải có cùng kích thước, nhưng "
+"dòng tiêu đề có mục %d trong khi dòng đầu tiên có %d. Bạn có thể cần phải "
+"thay đổi ký tự phân cách."
 
 #. module: base_import
 #. odoo-javascript
@@ -271,14 +315,15 @@ msgstr "Khuyên dùng tệp Excel vì định dạng tự động."
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
-msgstr "External ID"
+msgstr "ID bên ngoài"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr "Tên trường"
+msgstr "Tên Trường"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
@@ -295,7 +340,7 @@ msgstr "Cột tệp"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr "Tên tập tin"
+msgstr "Tên Tệp"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
@@ -304,6 +349,7 @@ msgstr "Kiểu Tập tin"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -339,8 +385,12 @@ msgstr "Định dạng"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr "Found invalid image data, images should be imported as either URLs or base64-encoded data."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
 
 #. module: base_import
 #. odoo-javascript
@@ -354,7 +404,7 @@ msgstr "Đi tới nhập câu hỏi thường gặp"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Help"
-msgstr "Trợ giúp"
+msgstr "Hỗ trợ"
 
 #. module: base_import
 #. odoo-javascript
@@ -388,7 +438,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr "Kích cỡ ảnh quá lớn, ảnh được nhập phải nhỏ hơn 42 triệu pixel."
 
 #. module: base_import
@@ -424,7 +475,7 @@ msgstr "Tệp nhập không có nội dung hoặc bị hỏng"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Xem trước nội dung nhập không thành công do: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -432,13 +483,6 @@ msgstr ""
 #, python-format
 msgid "Import records"
 msgstr "Import dữ liệu"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#, python-format
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-msgstr "Đã hết thời gian nhập. Hãy thử lại. Nếu bạn vẫn gặp phải sự cố này, tệp có thể quá lớn so với cấu hình của hệ thống, hãy thử tách nó (nhập ít bản ghi hơn cho mỗi tệp)."
 
 #. module: base_import
 #. odoo-javascript
@@ -465,7 +509,7 @@ msgstr "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -492,12 +536,12 @@ msgstr "Đang tải tệp..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 #, python-format
 msgid "Loading..."
-msgstr ""
+msgstr "Đang tải..."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr "Model"
+msgstr "Mô hình"
 
 #. module: base_import
 #. odoo-javascript
@@ -525,7 +569,7 @@ msgstr "No Separator"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Không tìm thấy tập dữ liệu trùng khớp cho tên sau"
 
 #. module: base_import
 #. odoo-javascript
@@ -553,7 +597,7 @@ msgstr "Xem trước"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Nhập lại"
 
 #. module: base_import
 #. odoo-javascript
@@ -579,7 +623,7 @@ msgstr "Tiếp tục"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "Tìm kiếm một trường..."
 
 #. module: base_import
 #. odoo-javascript
@@ -614,7 +658,7 @@ msgstr "Phân cách:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Đặt là: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -647,6 +691,7 @@ msgstr "Bảng tính:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "Bỏ qua hồ sơ"
@@ -674,6 +719,7 @@ msgstr "Start at line"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -747,7 +793,7 @@ msgstr "Phân cách phần nghìn:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Để nhập nhiều giá trị, hãy phân cách chúng bằng dấu phẩy"
 
 #. module: base_import
 #. odoo-javascript
@@ -768,14 +814,19 @@ msgstr "Truy xuất lịch sử trong quá trình import"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Không thể nạp tập tin \"{extension}\": bắt buộc phải có Python module \"{modname}\""
+msgstr ""
+"Không thể nạp tập tin \"{extension}\": bắt buộc phải có Python phân hệ "
+"\"{modname}\""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Định dạng tập tin không được hỗ trợ \"{}\", import chỉ hỗ trợ các tập tin CSV, ODS, XLS và XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Định dạng tập tin không được hỗ trợ \"{}\", import chỉ hỗ trợ các tập tin "
+"CSV, ODS, XLS và XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -802,15 +853,29 @@ msgstr "Tải lên tệp Excel hoặc CSV để nhập"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Sử dụng HH cho giờ trong hệ thống 24h, sử dụng II kết hợp với 'p' cho hệ "
+"thống 12h. Ngoài các đề xuất được cung cấp, bạn có thể sử dụng định dạng tùy"
+" chỉnh. Để trống để Odoo đoán định dạng (được khuyến nghị)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
 msgstr ""
+"Sử dụng YYYY để biểu thị năm, MM cho tháng và DD cho ngày. Bao gồm các dấu "
+"phân cách như dấu chấm, dấu gạch chéo hoặc dấu gạch ngang. Ngoài các đề xuất"
+" được cung cấp, bạn có thể sử dụng định dạng tùy chỉnh. Để trống để Odoo "
+"đoán định dạng (được khuyến nghị)"
 
 #. module: base_import
 #. odoo-javascript
@@ -835,8 +900,12 @@ msgstr "Khi giá trị không thể khớp:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "Không thể nạp hình ảnh thông qua URL, liên hệ với quản trị hoặc người hỗ trợ để biết được nguyên nhân."
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Không thể nạp hình ảnh thông qua URL, liên hệ với quản trị hoặc người hỗ trợ"
+" để biết được nguyên nhân."
 
 #. module: base_import
 #. odoo-javascript
@@ -885,21 +954,21 @@ msgstr "phút"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "thêm"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "trong số"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "seconds"
-msgstr ""
+msgstr "giây"
 
 #. module: base_import
 #. odoo-python

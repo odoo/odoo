@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr "Konfigurationseinstellungen"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Online Payment"
-msgstr ""
+msgstr "Online-Zahlung"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -41,6 +42,7 @@ msgstr "Bestellung"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
+#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 #: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Pay"
@@ -56,7 +58,7 @@ msgstr "Beim Kassierer bezahlen"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Pay at cashier if empty"
-msgstr ""
+msgstr "Beim Kassierer bezahlen, wenn leer"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -68,7 +70,7 @@ msgstr "Zahlungsmethoden"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Payment in progress"
-msgstr ""
+msgstr "Zahlung im Gange"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -85,17 +87,17 @@ msgstr "Kassenaufträge"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Zum Bezahlen, den QR-Code scannen"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Self Online Payment"
-msgstr ""
+msgstr "Online-Zahlung der Selbstbestellung"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/cart_page/cart_page.js:0
+#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
 msgstr ""
@@ -124,15 +126,6 @@ msgstr ""
 "Kassensystem-Konfiguration verwendet wird, muss es mindestens einen "
 "veröffentlichten Zahlungsanbieter haben, der die Währung dieser "
 "Kassensystem-Konfiguration unterstützt."
-
-#. module: pos_online_payment_self_order
-#. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/cart_page/cart_page.js:0
-#, python-format
-msgid "The order could not be saved, therefore its payment is unavailable."
-msgstr ""
-"Die Bestellung konnte nicht gespeichert werden, daher ist ihre Zahlung nicht"
-" verfügbar."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment

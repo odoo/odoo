@@ -427,7 +427,7 @@ msgid ""
 "For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
-"Pour certaines pièces, il y a une différence entre la demande initiale et la quantité actuelle consommée.<br/>\n"
+"Pour certaines pièces, il y a une différence entre la demande initiale et la quantité actuelle utilisée.<br/>\n"
 " Êtes-vous sûr de vouloir continuer ?"
 
 #. module: repair
@@ -538,12 +538,32 @@ msgid "Is Repairable"
 msgstr "Est réparable"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Jane Smith"
+msgstr "Jane Smith"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "John Doe"
+msgstr "John Doe"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "L12345"
+msgstr "L12345"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Laptop"
+msgstr "Ordinateur portable"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_warn_uncomplete_move__write_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_date
@@ -551,7 +571,7 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:repair.field_repair_warn_uncomplete_move__write_date
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__late
@@ -735,6 +755,11 @@ msgid "Parts Availability State"
 msgstr "Statut de disponibilité des pièces"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Pending"
+msgstr "En attente"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_ids
 msgid "Picking Product"
 msgstr "Produit de transfert"
@@ -763,6 +788,16 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Product A"
+msgstr "Produit A"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Product B"
+msgstr "Produit B"
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
 msgstr "Mouvements de produits"
@@ -788,11 +823,6 @@ msgid "Product Variant"
 msgstr "Variante de produit"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__repair_request
-msgid "Product from which the Repair Order was created."
-msgstr "Produit duquel l'ordre de réparation a été créé."
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
 msgstr "Produit à réparer"
@@ -813,6 +843,11 @@ msgstr "Qté"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
 msgstr "Quantité"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "RO123456"
+msgstr "RO123456"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__rating_ids
@@ -1029,6 +1064,11 @@ msgid "Sale Order Line"
 msgstr "Ligne de commande"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__repair_request
+msgid "Sale Order Line Description."
+msgstr "Description de la ligne de commande"
+
+#. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
 msgstr "Ligne de commande de laquelle provient l'ordre de réparation."
@@ -1169,6 +1209,11 @@ msgstr ""
 "que l'unité de mesure du produit."
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "This is a repair note."
+msgstr "Ceci est une note de réparation."
+
+#. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid ""
 "This is the default recycle destination location when you create a repair "
@@ -1272,6 +1317,11 @@ msgstr "Sous garantie"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Units"
+msgstr "Unités"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form

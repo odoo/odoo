@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Emily Jia <eji@odoo.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_presence
@@ -34,6 +31,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    亲爱的<t t-out=\"object.name or ''\">Abigail Peterson</t>，<br><br>\n"
+"                    如非我们出错，您似乎不在办公室，系统并无您的请假记录。<br>\n"
+"                    请采取适当措施，以补回此次缺勤。<br>\n"
+"                    请随时联系您的经理或人力资源部门。\n"
+"                    <br>祝好<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -179,7 +184,9 @@ msgstr "短信息"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
-msgid "Sent manually in presence module when an employee wasn't working despite not being off"
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
 msgstr "当员工不工作时，尽管没有休假，在出勤模块中手动发送。"
 
 #. module: hr_presence
@@ -231,6 +238,8 @@ msgstr "用户日志"
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
+#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr "您无权执行此操作。请联系管理员。"
@@ -238,4 +247,4 @@ msgstr "您无权执行此操作。请联系管理员。"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr "网页登录消息处理"
+msgstr "websocket消息处理"

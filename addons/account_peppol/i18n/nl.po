@@ -53,6 +53,13 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "A purchase journal must be used to receive Peppol documents."
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr "Account EDI-proxygebruiker"
@@ -106,6 +113,8 @@ msgid ""
 "Can't cancel an active registration. Please request a migration or "
 "deregister instead."
 msgstr ""
+"Kan een actieve registratie niet annuleren. Vraag in de plaats daarvan een "
+"migratie aan of meld je af."
 
 #. module: account_peppol
 #. odoo-python
@@ -215,7 +224,7 @@ msgstr "E-mailadres en telefoonnummer van contactpersoon zijn vereist."
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_mode_constraint__demo
 #, python-format
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -274,7 +283,7 @@ msgstr "Dagboek binnenkomende facturen"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Dagboek"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
@@ -291,7 +300,7 @@ msgstr "Laatste Peppol eindpuntverificatie"
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_edi_mode__prod
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_mode_constraint__prod
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -561,7 +570,7 @@ msgstr "E-mailadres hoofdcontactpersoon voor Peppol gerelateerde communicatie"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
-msgstr ""
+msgstr "Type proxy"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -622,7 +631,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_mode_constraint__test
 #, python-format
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

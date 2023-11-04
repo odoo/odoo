@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,14 +98,14 @@ msgstr "#{task.stage_id.name}"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -417,6 +419,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"Tevreden\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"Oké\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"Ontevreden\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -461,12 +466,12 @@ msgstr "<small class=\"text-end\">Fase:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Toegewezen personen</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Klant</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -490,22 +495,22 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Relatie\" title=\"Relatie\"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Gereed</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Taken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">Gesloten</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">Subtaken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -545,6 +550,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Een beoordelingsverzoek wordt verzonden zodra een taak een fase bereikt waarin een beoordelingsmailsjabloon is voorzien.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Beoordelingsverzoeken worden verzonden zolang de taak zich in een fase bevindt waarin een beoordelingsmailsjabloon is voorzien.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -693,7 +703,7 @@ msgstr "Activiteit uitzondering decoratie"
 #. module: project
 #: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_task
 msgid "Activity Plan"
-msgstr ""
+msgstr "Activiteitsplan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
@@ -725,7 +735,7 @@ msgstr "Voeg milestone toe"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Add a new plan"
-msgstr ""
+msgstr "Een nieuw abonnement toevoegen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -791,17 +801,17 @@ msgstr "Alias contact beveiliging"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Aliasdomein"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Aliasdomeinnaam"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
@@ -1280,12 +1290,12 @@ msgstr "Aantal gesloten subtaken"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "Aantal gesloten taken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "Percentage gesloten taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1355,6 +1365,11 @@ msgstr ""
 "ontwerpers naar de arbeiders die het t-shirt bedrukken kan vloeien."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "Communication history"
+msgstr "Communicatiegeschiedenis"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_project_stage__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
@@ -1419,7 +1434,7 @@ msgstr "Contact"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "Taak omzetten"
 
 #. module: project
 #. odoo-python
@@ -1427,7 +1442,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "Omzetten naar taak/subtaak"
 
 #. module: project
 #. odoo-javascript
@@ -1820,6 +1835,9 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"Als je een taak verwijdert, worden de bijbehorende subtaken ook verwijdert. "
+"Als je de subtaken wilt behouden, moet je ze eerst loskoppelen van hun "
+"bovenliggende taak. Weet je zeker dat je verder wilt gaan?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1990,16 +2008,21 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project_task_type.py:0
+#, python-format
+msgid ""
+"Each user should have at least one personal stage. Create a new stage to "
+"which the tasks can be transferred after the selected ones are deleted."
+msgstr ""
+"Elke gebruiker moet minstens een persoonlijke fase hebben. Maak een nieuwe "
+"fase waarnaar de taken kunnen worden overgedragen nadat de geselecteerde "
+"taken zijn verwijderd."
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
 msgid "Edit"
 msgstr "Bewerken"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_header.js:0
-#, python-format
-msgid "Edit Personal Stage"
-msgstr "Bewerk persoonlijke fase"
 
 #. module: project
 #. odoo-javascript
@@ -2017,7 +2040,7 @@ msgstr "E-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
@@ -2134,12 +2157,12 @@ msgstr "Gevouwen in kanban"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Volg en reageer op taken van je projecten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Volg de voortgang van je projecten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2218,7 +2241,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid "Grant Portal Access"
-msgstr ""
+msgstr "Portaaltoegang verlenen"
 
 #. module: project
 #. odoo-python
@@ -2573,7 +2596,7 @@ msgstr "Is milestone overschreden"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "Toggle-modus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2775,7 +2798,7 @@ msgstr "Live"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Lokale deelgebaseerde inkomende detectie"
 
 #. module: project
 #. odoo-javascript
@@ -2873,11 +2896,6 @@ msgstr "Bericht"
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
 msgstr "Bericht afleverfout"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "Message and communication history"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_ids
@@ -3051,7 +3069,7 @@ msgstr "Nieuwe orders"
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "Nieuw project"
 
 #. module: project
 #. odoo-javascript
@@ -3072,7 +3090,7 @@ msgstr "Nieuw verzoek"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "Nieuwe taak"
 
 #. module: project
 #. odoo-python
@@ -3413,6 +3431,8 @@ msgstr ""
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"Personen die uitgenodigd zijn om samen te werken op het project zullen "
+"portaaltoegangsrechten hebben."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3470,7 +3490,7 @@ msgstr "Persoonlijke fases status"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "Persoonlijke fases"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3597,6 +3617,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
+"Privé taken kunnen niet worden omgezet in substaken. Bepaal een project voor"
+" de taak om deze functie te kunnen gebruiken."
 
 #. module: project
 #. odoo-javascript
@@ -4536,7 +4558,7 @@ msgstr "Subtaken"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "Toegewezen tijd aan subtaken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4657,7 +4679,7 @@ msgstr "Taak logs"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "Taakplannen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4737,7 +4759,7 @@ msgstr "Taak:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Taak: beoordelingsverzoek"
 
 #. module: project
 #. odoo-python
@@ -4984,6 +5006,10 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Ze kunnen gedeelde projecttaken bewerken en specifieke document in alleen-"
+"lezen modus op je website bekijken. Dit omvat leads/verkoopkansen, "
+"offertes/verkooporders, inkooporders, klantfacturen en leveranciersfacturen,"
+" urenstaten en tickets."
 
 #. module: project
 #. odoo-python
@@ -5023,6 +5049,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"Dit project is geassocieerd met %s, terwijl de geselecteerde fase tot %s "
+"behoort. Er zijn een paar opties om te overwegen: verwijder het bedrijf van "
+"het project of van de fase. Je kan ook de bedrijfsgegevens van deze records "
+"bijwerken zodat ze onder hetzelfde bedrijf vallen."
 
 #. module: project
 #. odoo-python
@@ -5034,6 +5064,10 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"Dit project is niet geassocieerd aan een bedrijf, terwijl de fase tot %s "
+"behoort. Er zijn een paar opties om te overwegen: wijzig het bedrijf van het"
+" project zodat het overeenkomt met het bedrijf van de fase of verwijder het "
+"bedrijf van de fase"
 
 #. module: project
 #. odoo-javascript
@@ -5131,6 +5165,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Om een taak in een subtaak om te zetten, selecteer een bovenliggende taak. "
+"Je kan ook het veld van de bovenliggende taak leeg laten om een subtaak in "
+"een zelfstandige taak om te zetten."
 
 #. module: project
 #. odoo-python
@@ -5185,6 +5222,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"Volg de kosten, inkomsten en marge van het project door de kostenplaats die "
+"bij het project hoort in te stellen op relevante documenten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5494,6 +5533,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"Als je een project deelt in de bewerkmodus, geef je mensen toegang tot de kanban- en lijstweergaves van je taken. \n"
+"Medewerkers kunnen een deel van de informatie over de taken bekijken en wijzigen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5501,6 +5542,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"Als je een project deelt in de alleen-lezen modus, geef je mensen toegang tot de taken in hun portaal. \n"
+"Deze mensen kunnen de taken bekijken, maar niet bewerken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5591,6 +5634,10 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Je kan het bedrijf van deze fase niet wijzigen naar %(company_name)s omdat "
+"het momenteel projecten bevat die zijn gekoppeld aan "
+"%(project_company_name)s. Zorg ervoor dat deze fase uitsluitend bestaat uit "
+"projecten gekoppeld aan %(company_name)s."
 
 #. module: project
 #. odoo-python
@@ -5667,6 +5714,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"Je hebt volledige controle en kan de portaaltoegang op elk moment intrekken."
+" Ben je klaar om verder te gaan?"
 
 #. module: project
 #. odoo-python
@@ -5681,17 +5730,6 @@ msgstr "Je hebt geen schrijftoegang tot het veld %s."
 #, python-format
 msgid "You must be"
 msgstr "Je moet zijn"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task_type.py:0
-#, python-format
-msgid ""
-"You should at least have one personal stage. Create a new stage to which the"
-" tasks can be transferred after this one is deleted."
-msgstr ""
-"Je moet op zijn minst één persoonlijke fase hebben. Maak een nieuwe fase aan"
-" waarnaar de taken kunnen worden overgedragen nadat deze is verwijderd."
 
 #. module: project
 #. odoo-javascript
@@ -5782,13 +5820,13 @@ msgstr "bijv. Taken"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "bijv. To Do"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "bijv. domain.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5803,7 +5841,7 @@ msgstr "bijvoorbeeld: productlancering"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "fs-4"
-msgstr ""
+msgstr "fs-4"
 
 #. module: project
 #. odoo-javascript

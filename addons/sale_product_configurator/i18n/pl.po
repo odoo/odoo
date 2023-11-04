@@ -1,32 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_product_configurator
-#
+# 
 # Translators:
-# Slawomir Adamus <melthalion@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
-# Maja Stawicka <mjstwck@wp.pl>, 2022
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Martin Trigaux, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
-# Tomasz Leppich <t.leppich@gmail.com>, 2022
-# Karol Rybak <karolrybak85@gmail.com>, 2022
-# Paweł Wodyński <pw@myodoo.pl>, 2022
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "Add"
+msgstr "Dodaj"
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -37,9 +35,9 @@ msgstr "Dodaj jeden"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
 #, python-format
-msgid "Add to cart"
+msgid "Add optional products"
 msgstr ""
 
 #. module: sale_product_configurator
@@ -49,17 +47,10 @@ msgstr "Wartość atrybutu"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
-#, python-format
-msgid "Available Options:"
-msgstr "Dostępne Opcje:"
-
-#. module: sale_product_configurator
-#. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #, python-format
-msgid "Back"
-msgstr "Powrót"
+msgid "Cancel"
+msgstr "Anuluj"
 
 #. module: sale_product_configurator
 #: model:product.template,name:sale_product_configurator.product_product_1_product_template
@@ -70,8 +61,8 @@ msgstr "Ochrona podłogi na krzesło"
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 #, python-format
-msgid "Configure"
-msgstr "Konfiguruj"
+msgid "Configure your product"
+msgstr ""
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -79,6 +70,13 @@ msgstr "Konfiguruj"
 #, python-format
 msgid "Confirm"
 msgstr "Potwierdź"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#, python-format
+msgid "Enter a customized value"
+msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -91,13 +89,6 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Krzesła biurowe mogą uszkodzić podłogę: chroń ją."
 
 #. module: sale_product_configurator
-#. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
-#, python-format
-msgid "Option not available"
-msgstr "Opcja niedostępna"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__optional_product_ids
 msgid "Optional Products"
@@ -106,8 +97,13 @@ msgstr "Produkty opcjonalne"
 #. module: sale_product_configurator
 #: model:ir.model.fields,help:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale_product_configurator.field_product_template__optional_product_ids
-msgid "Optional Products are suggested whenever the customer hits *Add to Cart* (cross-sell strategy, e.g. for computers: warranty, software, etc.)."
-msgstr "Produkty opcjonalne są sugerowane za każdym razem, gdy klient kliknie *Dodaj do koszyka* (strategia sprzedaży krzyżowej, np. dla komputerów: gwarancja, oprogramowanie itp.)."
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
+msgstr ""
+"Produkty opcjonalne są sugerowane za każdym razem, gdy klient kliknie *Dodaj"
+" do koszyka* (strategia sprzedaży krzyżowej, np. dla komputerów: gwarancja, "
+"oprogramowanie itp.)."
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -126,6 +122,7 @@ msgstr "Produkt"
 
 #. module: sale_product_configurator
 #. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #, python-format
 msgid "Product Image"
@@ -156,20 +153,27 @@ msgid "Remove one"
 msgstr "Usuń jeden"
 
 #. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "Remove product"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #, python-format
-msgid "Total:"
+msgid "This option or combination of options is not available"
 msgstr ""
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
 #, python-format
-msgid "custom"
-msgstr ""
+msgid "Total:"
+msgstr "Suma:"

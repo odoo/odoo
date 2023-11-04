@@ -21,16 +21,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
-
-#. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
-msgid "<b>&amp;#9900;&amp;nbsp;</b>"
-msgstr "<b>&amp;#9900;&amp;nbsp;</b>"
-
-#. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid ""
 "<i class=\"fa fa-spin fa-circle-o-notch me-3\"/>\n"
@@ -43,21 +33,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "<span class=\"badge text-bg-danger\">Unpublished</span>"
 msgstr "<span class=\"badge text-bg-danger\">Non publié</span>"
-
-#. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
-msgid "<span class=\"h5 m-3\">Other Rooms</span>"
-msgstr "<span class=\"h5 m-3\">Autres salles</span>"
-
-#. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
-msgid "<span>Create a Room</span>"
-msgstr "<span>Créer une salle</span>"
-
-#. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
-msgid "<span>Join a room</span>"
-msgstr "<span>Rejoindre une salle</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -276,6 +251,11 @@ msgid "Is Published"
 msgstr "Est publié"
 
 #. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
+msgid "Join a room"
+msgstr "Rejoindre une salle"
+
+#. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "Join us next time to chat about"
@@ -302,12 +282,12 @@ msgstr "Menu des langues"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_last_activity
@@ -363,6 +343,11 @@ msgstr "Type de Menu"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "No Room Open"
 msgstr "Pas de salle ouverte"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
+msgid "Other Rooms"
+msgstr "Autres salles"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_participant_count

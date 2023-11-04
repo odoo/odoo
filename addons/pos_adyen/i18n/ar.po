@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_adyen
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: pos_adyen
@@ -32,7 +31,7 @@ msgstr "مفتاح الواجهة البرمجية لـ Adyen "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
 msgstr "خطأ في Adyen "
@@ -59,7 +58,7 @@ msgstr "وضع الاختبار لـ Adyen "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
 msgstr "حدث خطأ غير متوقع. رسالة من Adyen: %s "
@@ -71,21 +70,24 @@ msgstr "اطلب البقشيش من العملاء "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "فشلت عملية المصادقة. يرجى التحقق من بيانات اعتماد Adyen. "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
-msgid "Cancelling the payment failed. Please cancel it manually on the payment terminal."
-msgstr "لقد فشلت عملية إلغاء الدفع. يرجى إلغاؤها يدوياً في جهاز الدفع بالبطاقة. "
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
+msgstr ""
+"لقد فشلت عملية إلغاء الدفع. يرجى إلغاؤها يدوياً في جهاز الدفع بالبطاقة. "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
 msgstr "لا يمكن معالجة المعاملات التي بها مبلغ قيمته سالبة. "
@@ -97,14 +99,18 @@ msgstr "تهيئة الإعدادات "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
-msgid "Could not connect to the Odoo server, please check your internet connection and try again."
-msgstr "تعذر الاتصال بخادم أودو. يرجى التحقق من اتصالك بالإنترنت ثم المحاولة من جديد. "
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"تعذر الاتصال بخادم أودو. يرجى التحقق من اتصالك بالإنترنت ثم المحاولة من "
+"جديد. "
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "رسالة من Adyen: %s "
@@ -113,7 +119,8 @@ msgstr "رسالة من Adyen: %s "
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
-msgid "Please configure a tip product for POS %s to support tipping with Adyen."
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr "يرجى تهيئة منتج بقشيش لنقطة البيع %s لدعم منح البقشيش مع Adyen. "
 
 #. module: pos_adyen
@@ -157,10 +164,16 @@ msgstr "جهاز الدفع بالبطاقة %s مستخدم بالفعل في �
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
-msgid "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
-msgstr "يستخدم عند الاتصال بـ Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description "
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"يستخدم عند الاتصال بـ Adyen: https://docs.adyen.com/user-management/how-to-"
+"get-the-api-key/#description "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr "[نموذج جهاز الدفع بالبطاقة]-[الرقم التسلسلي]، على سبيل المثال: P400Plus-123456789 "
+msgstr ""
+"[نموذج جهاز الدفع بالبطاقة]-[الرقم التسلسلي]، على سبيل المثال: "
+"P400Plus-123456789 "

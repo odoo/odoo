@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +24,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #, python-format
-msgid "Add one"
-msgstr "Voeg één toe"
+msgid "Add"
+msgstr "Toevoegen"
 
 #. module: sale_product_configurator
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #, python-format
-msgid "Add to cart"
-msgstr "Toevoegen aan winkelmandje"
+msgid "Add one"
+msgstr "Voeg één toe"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#, python-format
+msgid "Add optional products"
+msgstr "Voeg optionele producten toe"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
@@ -40,17 +48,10 @@ msgstr "Kenmerkwaardes"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
-#, python-format
-msgid "Available Options:"
-msgstr "Beschikbare opties:"
-
-#. module: sale_product_configurator
-#. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #, python-format
-msgid "Back"
-msgstr "Terug"
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: sale_product_configurator
 #: model:product.template,name:sale_product_configurator.product_product_1_product_template
@@ -61,8 +62,8 @@ msgstr "Stoel vloerbescherming"
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 #, python-format
-msgid "Configure"
-msgstr "Configureren"
+msgid "Configure your product"
+msgstr "Configureer je product"
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -70,6 +71,13 @@ msgstr "Configureren"
 #, python-format
 msgid "Confirm"
 msgstr "Bevestigen"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#, python-format
+msgid "Enter a customized value"
+msgstr "Geef een gepersonaliseerde waarde op"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -80,13 +88,6 @@ msgstr "Is het product configureerbaar?"
 #: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
 msgstr "Kantoorstoelen kunnen je vloer beschadigingen: bescherm je vloer."
-
-#. module: sale_product_configurator
-#. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
-#, python-format
-msgid "Option not available"
-msgstr "Optie niet beschikbaar"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__optional_product_ids
@@ -153,9 +154,23 @@ msgid "Remove one"
 msgstr "Verwijder één"
 
 #. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "Remove product"
+msgstr "Verwijder product"
+
+#. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Verkooporderregel"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "This option or combination of options is not available"
+msgstr "Deze optie of combinatie van opties is niet beschikbaar"
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -163,10 +178,3 @@ msgstr "Verkooporderregel"
 #, python-format
 msgid "Total:"
 msgstr "Totaal:"
-
-#. module: sale_product_configurator
-#. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
-#, python-format
-msgid "custom"
-msgstr "aangepast"

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_adyen
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_adyen
@@ -31,7 +31,7 @@ msgstr "Adyen API 金鑰"
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
 msgstr "Adyen 錯誤"
@@ -58,7 +58,7 @@ msgstr "Adyen 測試模式"
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
 msgstr ""
@@ -70,21 +70,23 @@ msgstr "向顧客詢問小費"
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "驗證失敗. 請檢查您的 Adyen 憑證."
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
-msgid "Cancelling the payment failed. Please cancel it manually on the payment terminal."
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
 msgstr ""
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
 msgstr ""
@@ -96,14 +98,16 @@ msgstr "配置設定"
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
-msgid "Could not connect to the Odoo server, please check your internet connection and try again."
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
 msgstr ""
 
 #. module: pos_adyen
 #. odoo-javascript
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "來自 Adyen 的訊息: %s"
@@ -112,7 +116,8 @@ msgstr "來自 Adyen 的訊息: %s"
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
-msgid "Please configure a tip product for POS %s to support tipping with Adyen."
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr "請為 POS %s 設定小費產品以支援使用 Adyen 支付小費."
 
 #. module: pos_adyen
@@ -156,8 +161,12 @@ msgstr "終端 %s 已用於付款方式 %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
-msgid "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
-msgstr "連接到 Adyen 時使用: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"連接到 Adyen 時使用: https://docs.adyen.com/user-management/how-to-get-the-api-"
+"key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier

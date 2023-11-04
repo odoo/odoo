@@ -30,7 +30,7 @@ msgstr "%s ore disponibili"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr ""
+msgstr "Livello del piano di maturazione"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
@@ -40,7 +40,7 @@ msgstr "Presenza"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Presenze"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -100,7 +100,7 @@ msgstr "Ore extra disponibili"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
 msgid "Frequency Hourly Source"
-msgstr ""
+msgstr "Origine frequenza oraria"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -122,6 +122,10 @@ msgid ""
 " time). Otherwise, the amount of worked hours will be based on Attendance "
 "records."
 msgstr ""
+"Se l'origine è impostata sul Calendario, il numero di ore di lavoro verrà "
+"calcolato dal calendario del dipendente e dalle ferie (se il piano si basa "
+"sulle ore di lavoro). Altrimenti, l'importo di ore di lavoro si baserà sui "
+"resoconti presenza."
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
@@ -157,7 +161,7 @@ msgstr "Salva"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
 msgid "Source"
-msgstr ""
+msgstr "Sorgente"
 
 #. module: hr_holidays_attendance
 #. odoo-python

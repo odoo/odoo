@@ -199,7 +199,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
-"<strong>Warning</strong> Make sure your are logged in as the\n"
+"<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
 msgstr ""
 "<strong>Avertissement</strong> Assurez-vous d'être connecté comme\n"
@@ -407,6 +407,11 @@ msgstr "Montant autorisé"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Availability"
 msgstr "Disponibilité"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_search
+msgid "Available methods"
+msgstr "Modes disponibles"
 
 #. module: payment
 #. odoo-python
@@ -950,7 +955,7 @@ msgstr "Date du dernier changement de statut"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_date
@@ -961,7 +966,7 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: payment
 #: model:onboarding.onboarding.step,button_text:payment.onboarding_onboarding_step_payment_provider
@@ -1196,7 +1201,7 @@ msgstr "Assistant de capture de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr "Données de paiement"
+msgstr "Détails du paiement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1299,7 +1304,7 @@ msgstr "Transactions de paiement liées au jeton"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr "Données de paiement enregistrées le %(date)s"
+msgstr "Détails de paiement enregistrés le %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
@@ -1507,12 +1512,13 @@ msgstr "Sélectionner des pays. Laisser vide pour autoriser tous les pays."
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
-"Sélectionner des pays. Laisser vide pour rendre ceci disponible partout."
+"Pays sélectionnés. Laissez cette case vide pour rendre ceci disponible "
+"partout."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr "Sélectionner des devises. Laisser vide pour ne pas en restreindre."
+msgstr "Sélectionnez les devises. Laissez vide pour ne pas en restreindre."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -1695,7 +1701,7 @@ msgstr "Les transactions enfants de la transaction."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr "La partie claire des données de paiement du mode de paiement."
+msgstr "La partie claire des détails de paiement du mode de paiement."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
@@ -2016,6 +2022,17 @@ msgid ""
 msgstr ""
 "Ce partenaire n'a pas d'email, ce qui pourrait poser problème à certains fournisseurs de paiement. \n"
 "Il est recommandé de configurer un email pour ce partenaire."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#, python-format
+msgid ""
+"This payment method needs a partner in crime; you should enable a payment "
+"provider supporting this method first."
+msgstr ""
+"Ce mode de paiement a besoin d'un complice ; vous devez d'abord activer un "
+"fournisseur de paiement prenant en charge ce mode de paiement."
 
 #. module: payment
 #. odoo-python

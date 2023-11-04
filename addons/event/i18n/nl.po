@@ -3,7 +3,9 @@
 # 	* event
 # 
 # Translators:
+# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,6 +119,11 @@ msgstr ""
 "'Volledige pagina ticket - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
+msgid "+123456789"
+msgstr ""
+
+#. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
@@ -138,6 +145,11 @@ msgstr ""
 #: model:event.tag,name:event.event_tag_category_1_tag_2
 msgid "10-14"
 msgstr "10-14"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
+msgid "1000 Brussels"
+msgstr ""
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
@@ -309,6 +321,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pijl icoon\" "
+"title=\"Pijl\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -368,7 +382,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "<span class=\"o_stat_text\">Registration Desk</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Registratiebalie</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1284,7 +1298,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
 msgid "A6"
-msgstr ""
+msgstr "A6"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -1410,7 +1424,7 @@ msgstr "Aangekondigd"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Answers"
-msgstr ""
+msgstr "Antwoorden"
 
 #. module: event
 #. odoo-javascript
@@ -1529,7 +1543,7 @@ msgstr "Beschikbare plaatsen"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr ""
+msgstr "Badge"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -1551,7 +1565,7 @@ msgstr ""
 #: code:addons/event/controllers/main.py:0
 #, python-format
 msgid "Badges"
-msgstr ""
+msgstr "Badges"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -1571,17 +1585,17 @@ msgstr "Barcode"
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
 msgid "Barcode Interface"
-msgstr ""
+msgstr "Barcode interface"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Barcode nomenclatuur"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
-msgstr ""
+msgstr "Barcode moet uniek zijn"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -1663,7 +1677,7 @@ msgstr "Inschrijving annuleren"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Canceled registration"
-msgstr ""
+msgstr "Geannuleerde inschrijving"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_cancelled
@@ -1696,12 +1710,12 @@ msgstr ""
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Afsluiten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 msgid "Color"
-msgstr ""
+msgstr "Kleur"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -1749,7 +1763,7 @@ msgstr "Bedrijf"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Company Logo"
-msgstr ""
+msgstr "Bedrijfslogo"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__company_name
@@ -1812,7 +1826,7 @@ msgstr "Bevestig inschrijving"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Confirm attendance for"
-msgstr ""
+msgstr "Bevestig aanwezigheid voor"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2682,7 +2696,7 @@ msgstr "Ongeldige keuze voor evenement / ticket"
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Ongeldige ticket"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -2777,7 +2791,7 @@ msgstr "Sleutel"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
 msgid "Language"
-msgstr ""
+msgstr "Taal"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2901,6 +2915,11 @@ msgstr "E-mail verzonden"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
 msgstr "Beheer & publiceer een planning met tracks"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
+msgid "Marc Demo"
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3031,7 +3050,7 @@ msgstr "Nog geen deelnemers!"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "Nomenclature"
 
 #. module: event
 #. odoo-python
@@ -3111,6 +3130,11 @@ msgstr "Aantal berichten met leveringsfout"
 #: model_terms:event.event,description:event.event_2
 msgid "Objectives"
 msgstr "Doelstellingen"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
+msgid "Odoo Community Days"
+msgstr "Odoo Community Days"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3237,7 +3261,7 @@ msgstr "Relatie"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Payment"
-msgstr ""
+msgstr "Betaling"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__phone
@@ -3247,7 +3271,7 @@ msgstr "Telefoon"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
-msgstr ""
+msgstr "Telefoonnummer"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -3277,7 +3301,7 @@ msgstr "Vorige status"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3293,7 +3317,7 @@ msgstr "Projectbeheer, Human Resources en Contractbeheer."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3306,7 +3330,7 @@ msgstr "Inkoop, Verkoop &amp; Inkoopbeheer en Boekhouding."
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "QR Code"
-msgstr ""
+msgstr "QR code"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -3352,7 +3376,7 @@ msgstr "Rood kanban label"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registered"
-msgstr ""
+msgstr "Geregistreerd"
 
 #. module: event
 #. odoo-python
@@ -3421,7 +3445,7 @@ msgstr "Start registratie"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 #, python-format
 msgid "Registration confirmed"
-msgstr ""
+msgstr "Registratie bevestigd"
 
 #. module: event
 #. odoo-python
@@ -3497,6 +3521,11 @@ msgid "Responsive Html Full Page Ticket"
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
+msgid "Rue de la Paix 123"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
 msgid "Running"
 msgstr "Actief"
@@ -3512,7 +3541,7 @@ msgstr "SMS fout bij versturen"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Scan a badge"
-msgstr ""
+msgstr "Scan een badge"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3559,7 +3588,7 @@ msgstr "Geheim"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Select Attendee"
-msgstr ""
+msgstr "Selecteer deelnemer"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3757,7 +3786,7 @@ msgstr "Labels"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
-msgstr ""
+msgstr "Genomen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
@@ -3872,7 +3901,7 @@ msgstr "De plaats is gereserveerd"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "De inschrijving moet betaald worden"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3977,14 +4006,14 @@ msgstr "Deze stap is gedaan. Klik op blokkeer of zet op gereed."
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "This ticket is for another event"
-msgstr ""
+msgstr "Dit ticket is voor een ander evenement"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "Dit ticket is niet voor een huidig evenement"
 
 #. module: event
 #. odoo-python
@@ -4066,7 +4095,7 @@ msgstr "Totaal"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Total Attendees"
-msgstr ""
+msgstr "Totaal aantal deelnemers"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4127,6 +4156,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Onbevestigd: registraties in afwachting van een actie (specifiek geval, met name met verkoopstatus)\n"
+"Geregistreerd: registraties die worden beschouwd als genomen door een klant\n"
+"Aanwezig: registraties waarvan de deelnemer het evenement heeft bijgewoond\n"
+"Geannuleerd: handmatig geannuleerde registraties"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4224,7 +4257,7 @@ msgstr "Locatie (opgemaakt voor gebruik op één lijn)"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "View"
-msgstr ""
+msgstr "Bekijk"
 
 #. module: event
 #. odoo-python
@@ -4254,7 +4287,7 @@ msgstr "Vorraadbeheer, Productie (MRP) &amp; Verkoop, Import/Export."
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4291,7 +4324,7 @@ msgstr "Weken"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Welkom bij"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4407,6 +4440,11 @@ msgid "events@yourcompany.com"
 msgstr "events@yourcompany.com"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
+msgid "https://www.example.com"
+msgstr ""
+
+#. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
@@ -4418,14 +4456,14 @@ msgstr "in %d dagen"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "is already registered"
-msgstr ""
+msgstr "is al geregistreerd"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "is successfully registered"
-msgstr ""
+msgstr "is succesvol geregistreerd"
 
 #. module: event
 #. odoo-python
@@ -4453,6 +4491,11 @@ msgstr "op %(date)s"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "or"
+msgstr "of"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
+msgid "organizer@email.com"
 msgstr ""
 
 #. module: event
@@ -4467,7 +4510,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved"
-msgstr ""
+msgstr "gereserveerd"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form

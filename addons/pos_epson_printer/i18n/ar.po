@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_epson_printer
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
-#
+# Wil Odoo, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
-"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: pos_epson_printer
@@ -28,22 +27,17 @@ msgstr "درج النقد "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
-msgid "Check on the printer configuration for the 'Device ID' setting. It should be set to: "
+msgid ""
+"Check on the printer configuration for the 'Device ID' setting. It should be"
+" set to: "
 msgstr "تحقق من تهيئة الطابعة لإعدادات \"معرف الجهاز\". يجب أن يتم تعيينها كـ: "
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_res_config_settings
 msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
-
-#. module: pos_epson_printer
-#. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
-#, python-format
-msgid "Connection to the printer failed"
-msgstr "تعذر الاتصال بالطابعة "
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -53,14 +47,14 @@ msgstr "عنوان IP لطابعة Epson "
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_printer__epson_printer_ip
 msgid "Epson Printer IP Address"
-msgstr ""
+msgstr "عنوان IP لطابعة Epson "
 
 #. module: pos_epson_printer
 #. odoo-python
 #: code:addons/pos_epson_printer/models/pos_printer.py:0
 #, python-format
 msgid "Epson Printer IP Address cannot be empty."
-msgstr ""
+msgstr "لا يمكن أن يكون عنوان IP لطابعة Epson فارغاً. "
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -70,10 +64,12 @@ msgstr "عنوان IP لطابعة إيصالات Epson "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
-msgid "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s"
-msgstr "إذا كنت في خادم آمن (HTTPS) تحقق من قبولك للشهادة يدوياً عن طريق الوصول إلى %s "
+msgid ""
+"If you are on a secure server (HTTPS) please make sure you manually accepted"
+" the certificate by accessing %s. "
+msgstr ""
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -83,28 +79,17 @@ msgstr "عنوان IP محلي لطابعة إيصالات Epson "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "No paper was detected by the printer"
 msgstr "لم يتم رصد أي أوراق من قِبَل الطابعة "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "Please check if the printer has enough paper and is ready to print."
 msgstr "يرجى التحقق مما إذا كانت الطابعة بها ورق كافٍ وأنها مستعدة للطباعة. "
-
-#. module: pos_epson_printer
-#. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
-#, python-format
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
-msgstr ""
-"يرجى التحقق مما إذا كانت الطابعة لا تزال متصلة. \n"
-"لا تسمح بعض المتصفحات باستدعاءات HTTP من المواقع الإلكترونية وإلى الأجهزة في الشبكة (لأسباب أمنية). إذا كان الأمر كذلك، ستحتاج إلى متابعة وثائق أودو عن 'الشهادة الموقعة ذاتياً لطابعات نقاط البيع الإلكترونية' و 'والاتصال الآمن (HTTPS)' لحل المشكلة "
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
@@ -114,12 +99,12 @@ msgstr "تهيئة نقطة البيع "
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_printer
 msgid "Point of Sale Printer"
-msgstr ""
+msgstr "طابعة نقطة البيع "
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "جلسة نقطة البيع"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_res_config_settings__pos_epson_printer_ip
@@ -129,11 +114,11 @@ msgstr "عنوان IP لطابعة Epson في نقطة البيع "
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "نوع الطابعة "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "Printing failed"
 msgstr "فشلت الطباعة "
@@ -141,26 +126,30 @@ msgstr "فشلت الطباعة "
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.res_config_settings_view_form
-msgid "The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box."
-msgstr "سوف يتم استخدام طابعة إيصالات Epson عوضاً عن طابعة الإيصالات المتصلة بجهاز IoT. "
+msgid ""
+"The Epson receipt printer will be used instead of the receipt printer "
+"connected to the IoT Box."
+msgstr ""
+"سوف يتم استخدام طابعة إيصالات Epson عوضاً عن طابعة الإيصالات المتصلة بجهاز "
+"IoT. "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The following error code was given by the printer:"
 msgstr "أظهرت الطابعة كود الخطأ التالي: "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The printer was successfully reached, but it wasn't able to print."
 msgstr "تم الوصول إلى الطابعة بنجاح، ولكن لم نتمكن من الطباعة. "
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "To find more details on the error reason, please search online for:"
 msgstr "للمزيد من التفاصيل حول سبب الخطأ، يرجى البحث عبر الإنترنت عن: "
@@ -168,4 +157,4 @@ msgstr "للمزيد من التفاصيل حول سبب الخطأ، يرجى �
 #. module: pos_epson_printer
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
-msgstr ""
+msgstr "استخدام طابعة Epson "

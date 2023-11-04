@@ -109,32 +109,22 @@ msgid "Employee Name"
 msgstr "Nom de l'employé"
 
 #. module: hr_fleet
-#. odoo-python
-#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
-#, python-format
-msgid "Employee's vehicle %s is not linked to a fleet manager."
-msgstr ""
-"Le véhicule de l'employé %s n'est pas lié à un gestionnaire du parc "
-"automobile."
-
-#. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
 msgstr "Gestionnaire du parc automobile"
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
-msgid "Fleet Mobility Card"
-msgstr "Carte mobilité"
-
-#. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
-msgid "Fleet manager responsible is limited to Employee plans."
+msgid "Fleet Manager is limited to Employee plans."
 msgstr ""
-"La responsabilité du gestionnaire du parc automobile est limité aux plans "
-"pour employés."
+"Le gestionnaire du parc automobile est limité aux plans pour employés."
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Fleet Mobility Card"
+msgstr "Carte mobilité"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
@@ -189,6 +179,15 @@ msgstr "Responsable"
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
 msgstr "Interventions associées aux véhicules"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr ""
+"Le véhicule de l'employé %(employee)s n'est pas lié à un gestionnaire de "
+"parc automobile."
 
 #. module: hr_fleet
 #. odoo-javascript
