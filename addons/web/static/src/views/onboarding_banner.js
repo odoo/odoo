@@ -4,20 +4,20 @@ import { loadCSS, loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/view_hook";
 
-import { Component, markup, onWillStart, useRef, xml } from "@odoo/owl";
+import { Component, useState, markup, onWillStart, useRef, xml } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 
 export class OnboardingBanner extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.user = useService("user");
+        this.state = useState({})
         this.onboardingContainerRef = useRef("onboardingContainer");
         const resModel = "searchModel" in this.env ? this.env.searchModel.resModel : undefined;
         this._handleActionLinks = useActionLinks({
             resModel,
             reload: async () => {
-                this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
-                this.render();
+                this.state.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
             },
         });
         this.transition = useTransition({
@@ -38,14 +38,16 @@ export class OnboardingBanner extends Component {
     }
 
     async onWillStart() {
-        this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
+        this.loadBanner(this.env.config.bannerRoute).then((bannerHTML) => {
+            this.state.bannerHTML = bannerHTML;
+        } )
     }
 
     async loadBanner(bannerRoute) {
-        let response = await this.rpc(bannerRoute, { context: this.user.context });
+        let response = await this.rpc(bannerRoute, { context: this.user.context }, { silent: true });
         if (response.code === 503) {
             // Sent by Onboarding Controller when rare concurrent `create` transactions occur
-            response = await this.rpc(bannerRoute, { context: this.user.context });
+            response = await this.rpc(bannerRoute, { context: this.user.context }, { silent: true });
         }
         if (!response.html) {
             return;
@@ -66,5 +68,5 @@ export class OnboardingBanner extends Component {
     }
 }
 
-OnboardingBanner.template = xml`<div t-if="transition.shouldMount" t-attf-class="o_onboarding_container w-100 {{transition.className}}" t-ref="onboardingContainer" t-on-click="handleActionLinks" t-out="bannerHTML"/>`;
+OnboardingBanner.template = xml`<div t-if="transition.shouldMount" t-attf-class="o_onboarding_container w-100 {{transition.className}}" t-ref="onboardingContainer" t-on-click="handleActionLinks" t-out="state.bannerHTML"/>`;
 OnboardingBanner.props = {};

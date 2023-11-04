@@ -16,7 +16,7 @@ import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
-import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
 import { CallbackRecorder } from "@web/webclient/actions/action_hook";
 
 const serviceRegistry = registry.category("services");
@@ -1174,6 +1174,62 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["mah_method"]);
         execRegisteredTimeouts();
         assert.containsNone(target, ".o_onboarding_container");
+    });
+
+    QUnit.test("banner loading is asynchronous", async (assert) => {
+        assert.expect(6);
+
+        const mountedProm = makeDeferred();
+        const callProm = makeDeferred();
+        patchWithCleanup(OnboardingBanner.prototype, {
+            setup() {
+                super.setup();
+                onMounted(() => {
+                    assert.step("mounted");
+                    mountedProm.resolve();
+                })
+            }
+        })
+
+        serviceRegistry.add("action", actionService, { force: true });
+
+        serverData.views["animal,1,toy"] = `
+            <toy banner_route="/onboarding/xyz">
+                <Banner t-if="env.config.bannerRoute" />
+                <div class="async">Hello owl</div>
+            </toy>`;
+
+        const banner = {
+            html: `
+                <div class="banner2">
+                    MyBanner
+                </div>`
+        };
+
+        const mockRPC = async  (route) => {
+            if (route === "/onboarding/xyz") {
+                await mountedProm; // call is returned after the component is mounted
+                await callProm;
+                assert.step(route);
+                return banner;
+            }
+        };
+        const config = {
+            views: [[1, "toy"]],
+        };
+        const env = await makeTestEnv({ serverData, mockRPC, config });
+        const props = {
+            resModel: "animal",
+            type: "toy",
+        };
+        mount(View, target, { env, props });
+        await nextTick();
+        assert.verifySteps(["mounted"]);
+        assert.containsOnce(target, ".async")
+        callProm.resolve();
+        await nextTick();
+        assert.verifySteps(["/onboarding/xyz"]);
+        assert.containsOnce(target, ".banner2");
     });
 
     ////////////////////////////////////////////////////////////////////////////
