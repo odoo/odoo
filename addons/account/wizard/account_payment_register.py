@@ -112,7 +112,6 @@ class AccountPaymentRegister(models.TransientModel):
         string="Difference Account",
         copy=False,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
-        compute='_compute_writeoff_account_id',
         store=True,
         readonly=False,
     )
