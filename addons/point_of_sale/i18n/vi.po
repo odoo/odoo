@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - closing"
-msgstr ""
+msgstr " - đóng"
 
 #. module: point_of_sale
 #. odoo-python
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - opening"
-msgstr ""
+msgstr "- mở"
 
 #. module: point_of_sale
 #. odoo-python
@@ -990,7 +990,7 @@ msgstr "Đã hủy"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "Không thể sửa tiền tip"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1736,8 +1736,8 @@ msgid "Customer Screen Warning"
 msgstr "Cảnh báo màn hình khách hàng"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -1749,7 +1749,7 @@ msgstr "Yêu cầu khách hàng cho phương thức thanh toán %s.  "
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "Tiền tip của khách hàng, không thể sửa trực tiếp"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2351,7 +2351,7 @@ msgstr "Vị thế tài chính"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Fiscal Position not found"
-msgstr ""
+msgstr "Không tìm thấy vị trí tài chính"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -3704,6 +3704,8 @@ msgstr "Chỉ áp dụng Làm tròn tiền mặt"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"Chỉ những sổ nhật ký thuộc loại 'Tiền mặt' hoặc 'Ngân hàng' mới có thể được "
+"sử dụng với các phương thức thanh toán."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3921,8 +3923,8 @@ msgstr ""
 "Dòng đơn hàng trong trường này là dòng đã hoàn tiền cho dòng đơn hàng này. "
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4078,8 +4080,8 @@ msgid "Pay Order"
 msgstr "Thanh toán Đơn hàng"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4469,6 +4471,8 @@ msgid "Point Of Sale"
 msgstr "Điểm bán lẻ"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4482,6 +4486,7 @@ msgstr "Điểm bán lẻ"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Điểm bán lẻ"
 
@@ -6275,6 +6280,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
+"Vị trí tài chính được sử dụng theo thứ tự ban đầu không được tải. Hãy đảm "
+"bảo vị trí tài chính được tải bằng cách thêm nó vào cấu hình POS."
 
 #. module: point_of_sale
 #. odoo-python
