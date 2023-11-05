@@ -49,7 +49,7 @@ msgstr "<strong>Помилка:</strong> Валюта відсутня або н
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid ""
 "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>Помилка:</strong> Виникла проблема під час процесу оплати."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -57,20 +57,22 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/> If you "
 "believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Не вдалося знайти відповідний варіант оплати.</strong><br/> Якщо ви "
+"вважаєте, що це помилка, зверніться до адміністратора сайту."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 #, python-format
 msgid "A POS config cannot have more than one online payment method."
-msgstr ""
+msgstr "У конфігурації POS не може бути більше одного методу онлайн-платежів."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "Необхідно вказати опцію оплати."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -79,11 +81,13 @@ msgstr ""
 msgid ""
 "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
+"Підтверджувальний платіж не можна використовувати для онлайн-платежів у "
+"точках продажу."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "Усі доступні провайдери"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -94,11 +98,14 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"Усі постачальники платежів, налаштовані для онлайн-платежів, повинні "
+"використовувати ту саму валюту, що й журнал продажів, або валюту компанії, "
+"якщо її не встановлено в конфігурації POS."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "Дозволені провайдери"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -119,7 +126,7 @@ msgstr "Скасувати"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "Скасувати платіж"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -127,7 +134,7 @@ msgstr ""
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "Неможливо створити POS онлайн-платіж без платежу по бухобліку."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -137,13 +144,15 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"Неможливо створити POS-платіж за допомогою неонлайнового способу оплати та "
+"онлайн платежу по бухобліку."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot edit a POS online payment essential data."
-msgstr ""
+msgstr "Неможливо редагувати важливі дані онлайн-платежів POS."
 
 #. module: pos_online_payment
 #. odoo-python

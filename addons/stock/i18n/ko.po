@@ -137,7 +137,7 @@ msgstr " - 품목: %s, 일련번호: %s"
 msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
-msgstr "0이 아닌 경우, 이 위치에 보관되어 있는 품목에 대해서 정의해놓은 빈도대로 재고 실사 날짜가 자동으로 설정됩니다. "
+msgstr "0이 아닌 경우, 이 위치에 보관되어 있는 품목에 대해서 재고 실사 날짜가 정의된 주기대로 자동 설정됩니다. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -174,7 +174,7 @@ msgstr "%s [되돌림]"
 msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
-msgstr "%s 는 보관 처리할 %s 창고를 기본 장소 또는 최종 위치로 지정합니다."
+msgstr "%s는 보관할 %s 창고를 기본 장소 또는 최종 위치로 지정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -224,7 +224,7 @@ msgstr "'선별 작업 - %s - %s' % (object.partner_id.name or '', object.name)"
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "(copy of) %s"
-msgstr "(다음의 사본) %s"
+msgstr "%s (사본) "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -262,7 +262,7 @@ msgstr ""
 "* 다른 이동 대기 중: 이 이동 전에 연결된 재고 이동이 먼저 완료되어야 합니다.\n"
 "* 예약 대기 중: 재고 이동이 확인되었으나 품목을 예약할 수 없습니다.\n"
 "* 사용 가능: 재고 이동 품목이 예약되었습니다.\n"
-"* 완료: 품목 이전 후 승인되었습니다."
+"* 완료: 품목 이전 후 승인 완료되었습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -293,7 +293,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr "+ %d 일"
+msgstr "+ %d일"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -322,7 +322,7 @@ msgstr "1 일"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__month
 msgid "1 Month"
-msgstr "1달"
+msgstr "1 달"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__week
@@ -510,7 +510,7 @@ msgstr "<span class=\"o_stat_text\">위치</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Lot/Serial Numbers</span>"
-msgstr "<span class=\"o_stat_text\">로트 및 일련번호</span>"
+msgstr "<span class=\"o_stat_text\">Lot/일련번호</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -572,25 +572,25 @@ msgstr "<span class=\"o_stat_text\">추적가능성</span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>고객주소 : </strong></span>"
+msgstr "<span><strong>고객주소:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr "<span><strong>배송 주소 : </strong></span>"
+msgstr "<span><strong>배송 주소:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr "<span><strong>공급업체 주소 : </strong></span>"
+msgstr "<span><strong>거래처 주소:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>창고 주소 : </strong></span>"
+msgstr "<span><strong>창고 주소:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -655,7 +655,7 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
-"<strong>초기 업데이트된 수량과 현재 수량 사이에 재고 이동이 발생하여, 수량 차이가 더 이상 일정하게 확인되지 "
+"<strong>초기에 업데이트된 수량과 현재 수량 사이에 일부 재고 이동이 발생하여 수량 차이가 더 이상 일정하게 확인되지 "
 "않습니다.</strong>"
 
 #. module: stock
@@ -693,7 +693,7 @@ msgstr "<strong>보유 수량</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order:</strong>"
-msgstr "<strong>주문 : </strong>"
+msgstr "<strong>주문:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -741,12 +741,12 @@ msgstr "<strong>수신인 주소</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>예약된 날짜 : </strong>"
+msgstr "<strong>예약 날짜:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr "<strong>선적 날짜 : </strong>"
+msgstr "<strong>배송 날짜:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -756,7 +756,7 @@ msgstr "<strong>서명</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr "<strong>상태 : </strong>"
+msgstr "<strong>상태:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -880,7 +880,7 @@ msgstr "활동 유형 아이콘"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
-msgstr "상품 추가"
+msgstr "품목 추가"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -891,12 +891,12 @@ msgstr "LOT/일련번호 추가하기"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
-msgstr "새 장소 추가하기"
+msgstr "새 위치 추가"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid "Add a new route"
-msgstr "새 경로 추가하기"
+msgstr "새 경로 추가"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_storage_category
@@ -1349,7 +1349,7 @@ msgstr "예정일 전"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr "아래의 내용은 참고용으로만 제시되는 내용이며 Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
+msgstr "아래는 참고용으로만 제시되는 내용이며, Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2110,8 +2110,8 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"현재 품목의 수량.\n"
-"재고 공간이 하나인 경우에는 이 공간에 저장된 상품 또는 그 하위 퓸목을 포함합니다.\n"
+"품목의 현재 수량입니다.\n"
+"재고 공간이 하나인 경우에는 이 공간 또는 하위 공간에 저장된 상품을 포함합니다.\n"
 "창고가 하나인 경우에는 이 창고의 재고 공간 또는 그 하위 재고 공간에 저장된 품목을 포함합니다.\n"
 "이 상점의 창고 또는 그 하위의 재고 공간에 보관합니다.\n"
 "그렇지 않으면 '내부' 유형의 모든 저장 공간에 저장된 품목이 포함됩니다."
@@ -6222,7 +6222,7 @@ msgstr "품목 양식"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr "상품 서식"
+msgstr "품목 서식"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
