@@ -6640,7 +6640,7 @@ msgstr "銷售歷史"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "預定交貨日期"
+msgstr "預定日期"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -9130,6 +9130,14 @@ msgstr "您尚未輸入 <i>完成 </i> 數量, 點選 <i> 套用</i> 系統將�
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "您已經處理了初始需求的部分產品。"
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
