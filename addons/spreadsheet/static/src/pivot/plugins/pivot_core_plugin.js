@@ -279,7 +279,7 @@ export class PivotCorePlugin extends CorePlugin {
      */
     _insertPivot(sheetId, position, id, table) {
         this._resizeSheet(sheetId, position, table);
-        const pivotCells = table.pivotCells;
+        const pivotCells = table.getPivotCells();
         for (let col = 0; col < pivotCells.length; col++) {
             for (let row = 0; row < pivotCells[col].length; row++) {
                 const pivotCell = pivotCells[col][row];
