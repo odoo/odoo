@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
-# Antoine Lorence <antoine.lorence@gmail.com>, 2020
+# Antoine Lorence <alorence@flokod.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
@@ -52,7 +52,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Données Récupérées"
+msgstr "Données récupérées"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
@@ -102,7 +102,7 @@ msgid ""
 " verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
 "<i class=\"fa fa-check text-muted\" title=\"Ce mode de paiement n'a pas été "
-"vérifié par notre système.\" role=\"img\" aria-label=\"non vérifié\"/>"
+"vérifié par notre système.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -110,15 +110,13 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
-"<i class=\"fa fa-close text-danger\" title=\"Ce mode de paiement n'a pas été"
-" vérifié par notre système.\"/>"
+"<i class=\"fa fa-check text-success\" title=\"Ce mode de paiement a été "
+"vérifié par notre système.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Réunions\" role=\"img\" "
-"title=\"Réunions\"/>"
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Page d'accueil\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -133,7 +131,7 @@ msgstr "<i class=\"fa fa-plus-circle\"/>Ajouter une nouvelle carte "
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr "<i class=\"fa fa-trash\"/>"
+msgstr "<i class=\"fa fa-trash\"/> Supprimer"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -2129,8 +2127,12 @@ msgstr ""
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
-msgid "You cannot delete the payment acquirer %s; archive it instead."
-msgstr "Vous ne pouvez pas supprimer l'acquéreur %s ; archivez-le plutôt."
+msgid ""
+"You cannot delete the payment acquirer %s; disable it or uninstall it "
+"instead."
+msgstr ""
+"Vous ne pouvez pas supprimer l'acquéreur de paiement %s ; désactivez-le ou "
+"désinstallez-le plutôt."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
