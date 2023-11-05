@@ -679,7 +679,7 @@ class IrActionsServer(models.Model):
             pretty_path.append(field_id.field_description)
         return ' > '.join(pretty_path)
 
-    @api.depends('state', 'webhook_field_ids', 'name')
+    @api.depends('state', 'model_id', 'webhook_field_ids', 'name')
     def _compute_webhook_sample_payload(self):
         for action in self:
             if action.state != 'webhook':
@@ -690,13 +690,14 @@ class IrActionsServer(models.Model):
                 '_model': self.model_id.model,
                 '_name': action.name,
             }
-            sample_record = self.env[self.model_id.model].with_context(active_test=False).search([], limit=1)
-            for field in action.webhook_field_ids:
-                if sample_record:
-                    payload['id'] = sample_record.id
-                    payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
-                else:
-                    payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
+            if self.model_id:
+                sample_record = self.env[self.model_id.model].with_context(active_test=False).search([], limit=1)
+                for field in action.webhook_field_ids:
+                    if sample_record:
+                        payload['id'] = sample_record.id
+                        payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
+                    else:
+                        payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
             action.webhook_sample_payload = json.dumps(payload, indent=4, sort_keys=True, default=str)
 
     @api.depends('model_id')
