@@ -9,7 +9,6 @@
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
 # Pablo Rojas <rojaspablo88@gmail.com>, 2023
 # José Vicente <txusev@gmail.com>, 2023
-# Lucia Pacheco, 2023
 # Mariana Torres <mt@adhoc.com.ar>, 2023
 # Patricia Lorenzo Bartolomé, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
@@ -35,6 +34,8 @@
 # Rolando Duarte [Vauxoo], 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Lucia Pacheco, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 14:39+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,6 +227,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -237,7 +245,7 @@ msgstr "%s.copy"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
-msgstr ""
+msgstr "(Descuento)"
 
 #. module: account
 #. odoo-python
@@ -255,7 +263,7 @@ msgstr "(incluido)."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ").<br/>"
-msgstr ""
+msgstr ").<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -323,7 +331,7 @@ msgstr "1 Pago"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "10 Days after End of Next Month"
-msgstr ""
+msgstr "10 días después del fin del siguiente mes"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -11442,7 +11450,7 @@ msgstr "Raíz"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__root_report_id
 msgid "Root Report"
-msgstr ""
+msgstr "Reporte raíz"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -12527,7 +12535,7 @@ msgstr "Cadena de texto para Hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr ""
+msgstr "Subfórmula"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_subject

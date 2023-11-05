@@ -9,8 +9,8 @@
 # 226408 台北 <226408@so8d.com>, 2023
 # Yan-Kuan Wu, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Wil Odoo, 2023
 # Tony Ng, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 14:39+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,6 +202,13 @@ msgid ""
 msgstr ""
 "%s 就其相關的結單資料行，已達到無效狀態。\n"
 "為保持一致，該日記賬記項必須始終只有一個暫記資料行。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s 結單 %s"
 
 #. module: account
 #. odoo-python
@@ -3266,7 +3273,7 @@ msgstr "不能建立未使用的科目代碼."
 msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
-msgstr ""
+msgstr "無法生成未使用的日記賬代碼。請更改日記賬名稱%s。"
 
 #. module: account
 #. odoo-python
@@ -4398,7 +4405,7 @@ msgstr "貸記單"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only send sales documents"
-msgstr ""
+msgstr "您只能發送銷售文檔"
 
 #. module: account
 #. odoo-python
@@ -10841,7 +10848,7 @@ msgstr "重新載入"
 msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
-msgstr ""
+msgstr "如果發現不一致，請重新載入會計數據（稅款、賬戶等）。此操作不可撤回。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
