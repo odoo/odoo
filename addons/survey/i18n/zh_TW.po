@@ -233,6 +233,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    認證： <t t-out=\"object.survey_id.display_name or ''\">回應表格</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p><span t-out=\"object.partner_id.name or '參加者'\">參加者</span> 你好！</p>\n"
+"                <p>\n"
+"                    現附上你的\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">家具創作</strong>\n"
+"                    認證\n"
+"                </p>\n"
+"                <p>恭喜你測試合格並得分 <strong t-out=\"object.scoring_percentage\"></strong>%！</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -269,6 +295,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or '參加者'\">參加者</t> 你好！<br><br>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            你已獲邀請參加新的認證。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            我們正在進行一項調查，希望你能抽空回應。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    開始認證\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    開始回應問卷\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            請於 <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t> 之前回應問卷 / 接受認證。<br><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            祝你好運！\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            先感謝你的參與。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -4334,14 +4391,14 @@ msgstr "文本答案"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you for your participation, hope you had a blast!"
-msgstr ""
+msgstr "感謝你的參與，希望你玩得開心！"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
+msgstr "非常感謝您的反饋。您的意見至關重要！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4354,7 +4411,7 @@ msgstr "謝謝！"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you. We will contact you soon."
-msgstr ""
+msgstr "謝謝你，我們會盡快聯絡你。"
 
 #. module: survey
 #. odoo-python
@@ -4643,7 +4700,7 @@ msgstr "此調查不允許外部人員參與。 您應該建立使用者帳戶�
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
+msgstr "此調查現已結束。感謝您的關注！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
