@@ -3812,6 +3812,8 @@ msgstr "Toán tử tên miền không hợp lệ %s"
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
+"Toán hạng bên phải của miền không hợp lệ '%s'. Nó phải thuộc loại "
+"Integer/Float"
 
 #. module: stock
 #. odoo-python
@@ -7428,7 +7430,7 @@ msgstr "Trả về trình tự"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Sequences %s already exist."
-msgstr ""
+msgstr "Số thứ tự %s đã tồn tại."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -10016,6 +10018,8 @@ msgstr ""
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Bạn không thể tách một dịch chuyển tồn kho đã được chuyển sang trạng thái "
+"'Hoàn tất' hoặc \"Huỷ\"."
 
 #. module: stock
 #. odoo-python
@@ -10084,6 +10088,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Bạn đã xử lý ít sản phẩm hơn nhu cầu ban đầu."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
 
 #. module: stock
 #. odoo-python

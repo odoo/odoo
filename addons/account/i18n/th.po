@@ -14,6 +14,7 @@
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,6 +218,13 @@ msgid ""
 msgstr ""
 "%s ถึงสถานะที่ไม่ถูกต้องเกี่ยวกับรายการใบแจ้งยอดที่เกี่ยวข้อง\n"
 "เพื่อให้สอดคล้องกัน รายการบันทึกประจำวันจะต้องมีบรรทัดย่อยหนึ่งบรรทัดเสมอ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s รายการเดินบัญชี %s"
 
 #. module: account
 #. odoo-python
@@ -4264,7 +4272,7 @@ msgstr "เชื่อมต่อบัญชีการเงินของ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "ถือว่าคำตอบเป็นเธรดใหม่"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -6060,7 +6068,7 @@ msgstr "อีเมล"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_add_signature
 msgid "Email Add Signature"
-msgstr ""
+msgstr "เพิ่มลายเซ็นอีเมล"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
@@ -6072,7 +6080,7 @@ msgstr "นามแฝงอีเมล"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "รูปแบบการแจ้งเตือนทางอีเมล"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_thread
@@ -9059,7 +9067,7 @@ msgstr "ทำรายการคงค้าง"
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
-msgstr ""
+msgstr "จัดการคำตอบเป็นอีเมลขาเข้าใหม่ แทนที่จะตอบกลับไปที่ชุดข้อความเดียวกัน"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -10216,6 +10224,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"การสนทนาต้นฉบับ: คำตอบอยู่ในหัวข้อการสนทนาในเอกสารต้นฉบับ\n"
+"ที่อยู่อีเมลอื่น: คำตอบไปที่ที่อยู่อีเมลที่กล่าวถึงในรหัสข้อความติดตาม แทนที่จะเป็นชุดการสนทนาในเอกสารต้นฉบับ\n"
+"สิ่งนี้มีผลกระทบต่อรหัสข้อความที่สร้างขึ้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -11672,7 +11683,7 @@ msgstr "ภาษีที่แทนที่"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "ตอบกลับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
@@ -14996,6 +15007,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"ตัวเลือกนี้จะลบการติดตามอีเมลหลังจากถูกส่งอย่างถาวร "
+"รวมถึงจากเมนูทางเทคนิคในการตั้งค่า "
+"เพื่อรักษาพื้นที่จัดเก็บข้อมูลของฐานข้อมูล Odoo ของคุณ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
