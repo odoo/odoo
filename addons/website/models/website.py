@@ -737,6 +737,41 @@ class Website(models.Model):
                     'noupdate': True,
                 })
 
+        def fallback_create_missing_industry_image(image_name, fallback_img_name):
+            """ If an industry did not specify an image, this method allows that
+            specific image to be using the same image as another fallback one.
+            """
+            image_name = f'website.{image_name}'
+            if (
+                image_name not in images.keys()
+                and f'website.{fallback_img_name}' in images.keys()
+            ):
+                extn_identifier = 'configurator_%s_%s' % (website.id, image_name.split('.')[1])
+                if extn_identifier not in names:
+                    attachment = self.env['ir.attachment'].create({
+                        'name': image_name,
+                        'website_id': website.id,
+                        'key': image_name,
+                        'type': 'binary',
+                        'raw': self.env.ref(f'website.configurator_{website.id}_{fallback_img_name}').raw,
+                        'public': True,
+                    })
+                    self.env['ir.model.data'].create({
+                        'name': extn_identifier,
+                        'module': 'website',
+                        'model': 'ir.attachment',
+                        'res_id': attachment.id,
+                        'noupdate': True,
+                    })
+
+        try:
+            # TODO: Remove this try/except, safety net because it was merged
+            #       to close to OXP.
+            fallback_create_missing_industry_image('s_banner_default_image_2', 's_image_text_default_image')
+            fallback_create_missing_industry_image('s_banner_default_image_3', 's_product_list_default_image_1')
+        except Exception:
+            pass
+
         return {'url': redirect_url, 'website_id': website.id}
 
     # ----------------------------------------------------------
