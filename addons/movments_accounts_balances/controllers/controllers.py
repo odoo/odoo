@@ -1,60 +1,81 @@
-from odoo import models, api
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+
 
 class AccountBalance(models.Model):
     _inherit = 'account.account'
 
     @api.model
-    def getbalance(self, start_date, end_date, selected_account_id):
-        results = []
-
-        try:
-            # Convert the selected account ID to an integer
-            selected_account_id = int(selected_account_id)
-
-            # Retrieve the selected account based on the provided account ID
-            selected_account = self.env['account.account'].browse(selected_account_id)
-
-            if selected_account:
-                if not start_date:  # Check if start_date is not provided
-                    # Apply query 2 when start_date is not provided
-                    query = """
-                        SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
-                               l.date AS date, COALESCE(SUM(debit - credit), 0) AS balance
-                        FROM account_move_line AS l
-                        LEFT JOIN account_account AS a ON l.account_id = a.id
-                        WHERE l.account_id = %s AND l.date <= %s
-                        GROUP BY a.id, a.name, a.root_id, l.date
-                    """
-                    self.env.cr.execute(query, (selected_account_id, end_date))
-                else:
-                    # Apply query 1 when start_date is provided
-                    query = """
-                        SELECT a.id AS account_id, a.name AS account_name, a.root_id AS root_id,
-                               l.date AS date, COALESCE(SUM(debit - credit), 0) AS balance
-                        FROM account_move_line AS l
-                        LEFT JOIN account_account AS a ON l.account_id = a.id
-                        WHERE l.account_id = %s AND l.date >= %s AND l.date <= %s
-                        GROUP BY a.id, a.name, a.root_id, l.date
-                    """
-                    self.env.cr.execute(query, (selected_account_id, start_date, end_date))
-
-                results = self.env.cr.dictfetchall()
-        except ValidationError as e:
-            # Handle validation error
-            main_error_message = e.args[0]
-            print("Validation Error:", main_error_message)
-        except Exception as e:
-            # Handle other exceptions
-            error_message = str(e)
-            print("Error:", error_message)
-
-        return results
-    @api.model
     def get_all_accounts(self):
         accounts = self.env['account.account'].search([])
 
-        account_ids = [str(account.id) for account in accounts]
+        account_data = [{'id': account.id, 'name': account.name} for account in accounts]
 
-        return account_ids
+        return account_data
+
+    @api.model
+    def get_balance(self, account_id, end_date):
+        # Define search criteria to filter account move lines
+        domain = [('account_id', '=', account_id),
+                  ('date', '<=', end_date)]
+
+        # Retrieve the most recent account move line based on the criteria
+        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
+
+        # Prepare ledger data or return an empty list if no move lines are found
+        balance_info = [{
+            'name': move_line.name,
+            'date': move_line.date,
+            'balance': move_line.balance,
+        }] if move_line else []
+
+        # Return the general ledger data
+        return {'balance_info': balance_info}
+
+    @api.model
+    def general_ledger_report(self, account_id, start_date, end_date):
+        domain = [
+            ('account_id', '=', account_id),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ]
+        move_lines = self.env['account.move.line'].search(domain)
+
+        ledger_data = []
+
+        for line in move_lines:
+            analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
+            analytic_account_id = analytic_info.account_id if analytic_info else "",
+            analytic_account_name = analytic_account_id.name if analytic_info else "",
+            analytic_account_amount = analytic_info.amount if analytic_info else "",
+            partner_id = line.partner_id.id if line.partner_id else "",
+            partner_type = None
+            if line.partner_id:
+                partner = line.partner_id
+                if partner.customer_rank > 0 and partner.supplier_rank > 0:
+                    partner_type = 'Customer/Vendor'
+                elif partner.customer_rank > 0:
+                    partner_type = 'Customer'
+                elif partner.supplier_rank > 0:
+                    partner_type = 'Vendor'
+
+            else:
+                partner_type = ""
+
+            ledger_data.append({
+                'date': line.date,
+                'debit': line.debit,
+                'credit': line.credit,
+                'account_root_id': line.account_root_id.id,
+                'analytic_move_id': analytic_info.id,
+                'analytic_account_amount': analytic_account_amount,
+                'analytic_account_name': analytic_account_name,
+                'partner_id': partner_id,
+                'partner_type': partner_type,
+
+            })
+
+        return {
+            'ledger_data': ledger_data,
+        }
 
