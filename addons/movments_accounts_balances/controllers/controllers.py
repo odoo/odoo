@@ -79,3 +79,32 @@ class AccountBalance(models.Model):
             'ledger_data': ledger_data,
         }
 
+    @api.model
+    def create_bill(self, partner_id, invoice_date, due_date, reference, line_data, global_narration):
+        # Retrieve the currency ID for USD
+        currency_usd_id = self.env.ref('base.USD').id
+
+        Bill = self.env['account.move']
+        invoice_lines = []
+        for line in line_data:
+            invoice_line_vals = {
+                'name': line['description'],
+                'quantity': 1,
+                'price_unit': line['amount'],
+                'account_id': line['account_id'],
+                'analytic_account_id': line.get('analytic_account_id', False),  # Add analytic account if provided
+            }
+            invoice_lines.append((0, 0, invoice_line_vals))
+
+        bill = Bill.create({
+            'move_type': 'in_invoice',  # Vendor Bill
+            'partner_id': partner_id,
+            'invoice_date': invoice_date,
+            'invoice_date_due': due_date,
+            'invoice_line_ids': invoice_lines,
+            'currency_id': currency_usd_id,  # Specify the currency as USD
+            'ref': reference,
+            'narration': global_narration,  # Global note for the entire bill
+        })
+        return bill
+
