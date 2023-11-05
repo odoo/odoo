@@ -271,68 +271,61 @@ const STRING = {
     },
 };
 
-function applyFunc(key, func, set, ...args) {
-    // we always receive at least one argument: kwargs (return fnValue(...args, kwargs); in FunctionCall case)
-    if (args.length === 1) {
-        return new Set(set);
-    }
-    if (args.length > 2) {
-        throw new EvaluationError(
-            `${key}: py_js supports at most 1 argument, got (${args.length - 1})`
-        );
-    }
-    return execOnIterable(args[0], func);
+function getModifiedFunc(key, func, set) {
+    return (...args) => {
+        // we always receive at least one argument: kwargs (return fnValue(...args, kwargs); in FunctionCall case)
+        if (args.length === 1) {
+            return new Set(set);
+        }
+        if (args.length > 2) {
+            throw new EvaluationError(
+                `${key}: py_js supports at most 1 argument, got (${args.length - 1})`
+            );
+        }
+        return execOnIterable(args[0], func);
+    };
 }
 
 const SET = {
     intersection(set) {
-        return (...args) => {
-            return applyFunc(
-                "intersection",
-                (iterable) => {
-                    const intersection = new Set();
-                    for (const i of iterable) {
-                        if (set.has(i)) {
-                            intersection.add(i);
-                        }
+        return getModifiedFunc(
+            "intersection",
+            (iterable) => {
+                const intersection = new Set();
+                for (const i of iterable) {
+                    if (set.has(i)) {
+                        intersection.add(i);
                     }
-                    return intersection;
-                },
-                set,
-                ...args
-            );
-        };
+                }
+                return intersection;
+            },
+            set
+        );
     },
     difference(set) {
-        return (...args) => {
-            return applyFunc(
-                "difference",
-                (iterable) => {
-                    iterable = new Set(iterable);
-                    const difference = new Set();
-                    for (const e of set) {
-                        if (!iterable.has(e)) {
-                            difference.add(e);
-                        }
+        return getModifiedFunc(
+            "difference",
+            (iterable) => {
+                iterable = new Set(iterable);
+                const difference = new Set();
+                for (const e of set) {
+                    if (!iterable.has(e)) {
+                        difference.add(e);
                     }
-                    return difference;
-                },
-                set,
-                ...args
-            );
-        };
+                }
+                return difference;
+            },
+            set
+        );
     },
     union(set) {
-        return (...args) => {
-            return applyFunc(
-                "union",
-                (iterable) => {
-                    return new Set([...set, ...iterable]);
-                },
-                set,
-                ...args
-            );
-        };
+        return getModifiedFunc(
+            "union",
+            (iterable) => {
+                return new Set([...set, ...iterable]);
+            },
+            set
+        );
     },
 };
 
