@@ -130,6 +130,7 @@ class AccountMoveSend(models.TransientModel):
                     xml_file = invoice.ubl_cii_xml_id.raw
                     filename = invoice.ubl_cii_xml_id.name
                 else:
+                    invoice.peppol_move_state = 'skipped'
                     continue
 
                 if not invoice.partner_id.peppol_eas or not invoice.partner_id.peppol_endpoint:
