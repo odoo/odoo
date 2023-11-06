@@ -88,3 +88,10 @@ class PaymentProvider(models.Model):
         shasign = hashnew(self.asiapay_secure_hash_function)
         shasign.update(signing_string.encode())
         return shasign.hexdigest()
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'asiapay':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES

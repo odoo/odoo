@@ -5,6 +5,8 @@ import logging
 
 from odoo import fields, models
 
+from odoo.addons.payment_aps import const
+
 
 _logger = logging.getLogger(__name__)
 
@@ -58,3 +60,10 @@ class PaymentProvider(models.Model):
         key = self.aps_sha_response if incoming else self.aps_sha_request
         signing_string = ''.join([key, sign_data, key])
         return hashlib.sha256(signing_string.encode()).hexdigest()
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'aps':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES

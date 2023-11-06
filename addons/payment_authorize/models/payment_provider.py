@@ -8,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
+from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
 _logger = logging.getLogger(__name__)
@@ -121,3 +122,10 @@ class PaymentProvider(models.Model):
             'client_key': self.authorize_client_key,
         }
         return json.dumps(inline_form_values)
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'authorize':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES

@@ -37,6 +37,18 @@ PAYMENT_STATUS_MAPPING = {
     'error': ['failed'],
 }
 
+# The codes of the payment methods to activate when Flutterwave is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'card',
+    'mpesa',
+    # Brand payment methods.
+    'visa',
+    'mastercard',
+    'amex',
+    'discover',
+]
+
 PAYMENT_METHODS_MAPPING = {
     'bank_transfer': 'banktransfer',
 }
