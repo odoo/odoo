@@ -12,12 +12,12 @@ from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch
 
-from odoo import api, Command
+from odoo import api, Command, fields
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import common, tagged, users
-from odoo.tools import formataddr, mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import formataddr, mute_logger
 
 
 @tagged('mail_mail')
@@ -246,8 +246,8 @@ class TestMailMail(MailCommon):
             # datetimes (UTC/GMT +10 hours for Australia/Brisbane)
             now, pytz.timezone('Australia/Brisbane').localize(now),
             # string
-            (now - timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            (now + timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            fields.Datetime.to_string(now - timedelta(days=1)),
+            fields.Datetime.to_string(now + timedelta(days=1)),
             (now + timedelta(days=1)).strftime("%H:%M:%S %d-%m-%Y"),
             # tz: is actually 1 hour before now in UTC
             (now + timedelta(hours=3)).strftime("%H:%M:%S %d-%m-%Y") + " +0400",
