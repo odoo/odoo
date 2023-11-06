@@ -74,22 +74,6 @@ def find_in_path(name):
         path.append(config['bin_path'])
     return which(name, path=os.pathsep.join(path))
 
-def _exec_pipe(prog, args, env=None):
-    warnings.warn("Since 16.0, just use `subprocess`.", DeprecationWarning, stacklevel=3)
-    cmd = (prog,) + args
-    # on win32, passing close_fds=True is not compatible
-    # with redirecting std[in/err/out]
-    close_fds = os.name=="posix"
-    pop = subprocess.Popen(cmd, bufsize=-1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=close_fds, env=env)
-    return pop.stdin, pop.stdout
-
-def exec_command_pipe(name, *args):
-    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
-    prog = find_in_path(name)
-    if not prog:
-        raise Exception('Command `%s` not found.' % name)
-    return _exec_pipe(prog, args)
-
 #----------------------------------------------------------
 # Postgres subprocesses
 #----------------------------------------------------------
@@ -125,22 +109,6 @@ def exec_pg_environ():
     if odoo.tools.config['db_password']:
         env['PGPASSWORD'] = odoo.tools.config['db_password']
     return env
-
-def exec_pg_command(name, *args):
-    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
-    prog = find_pg_tool(name)
-    env = exec_pg_environ()
-    with open(os.devnull) as dn:
-        args2 = (prog,) + args
-        rc = subprocess.call(args2, env=env, stdout=dn, stderr=subprocess.STDOUT)
-        if rc:
-            raise Exception('Postgres subprocess %s error %s' % (args2, rc))
-
-def exec_pg_command_pipe(name, *args):
-    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
-    prog = find_pg_tool(name)
-    env = exec_pg_environ()
-    return _exec_pipe(prog, args, env)
 
 #----------------------------------------------------------
 # File paths
@@ -412,10 +380,6 @@ except ImportError:
     xlsxwriter = None
 
 
-def to_xml(s):
-    warnings.warn("Since 16.0, use proper escaping methods (e.g. `markupsafe.escape`).", DeprecationWarning, stacklevel=2)
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
@@ -484,96 +448,6 @@ def human_size(sz):
         s /= 1024
         i += 1
     return "%0.2f %s" % (s, units[i])
-
-def logged(f):
-    warnings.warn("Since 16.0, it's never been super useful.", DeprecationWarning, stacklevel=2)
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        from pprint import pformat
-
-        vector = ['Call -> function: %r' % f]
-        for i, arg in enumerate(args):
-            vector.append('  arg %02d: %s' % (i, pformat(arg)))
-        for key, value in kwargs.items():
-            vector.append('  kwarg %10s: %s' % (key, pformat(value)))
-
-        timeb4 = time.time()
-        res = f(*args, **kwargs)
-
-        vector.append('  result: %s' % pformat(res))
-        vector.append('  time delta: %s' % (time.time() - timeb4))
-        _logger.debug('\n'.join(vector))
-        return res
-
-    return wrapper
-
-class profile(object):
-    def __init__(self, fname=None):
-        warnings.warn("Since 16.0.", DeprecationWarning, stacklevel=2)
-        self.fname = fname
-
-    def __call__(self, f):
-        @wraps(f)
-        def wrapper(*args, **kwargs):
-            profile = cProfile.Profile()
-            result = profile.runcall(f, *args, **kwargs)
-            profile.dump_stats(self.fname or ("%s.cprof" % (f.__name__,)))
-            return result
-
-        return wrapper
-
-def detect_ip_addr():
-    """Try a very crude method to figure out a valid external
-       IP or hostname for the current machine. Don't rely on this
-       for binding to an interface, but it could be used as basis
-       for constructing a remote URL to the server.
-    """
-    warnings.warn("Since 16.0.", DeprecationWarning, stacklevel=2)
-    def _detect_ip_addr():
-        from array import array
-        from struct import pack, unpack
-
-        try:
-            import fcntl
-        except ImportError:
-            fcntl = None
-
-        ip_addr = None
-
-        if not fcntl: # not UNIX:
-            host = socket.gethostname()
-            ip_addr = socket.gethostbyname(host)
-        else: # UNIX:
-            # get all interfaces:
-            nbytes = 128 * 32
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            names = array('B', '\0' * nbytes)
-            #print 'names: ', names
-            outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
-            namestr = names.tostring()
-
-            # try 64 bit kernel:
-            for i in range(0, outbytes, 40):
-                name = namestr[i:i+16].split('\0', 1)[0]
-                if name != 'lo':
-                    ip_addr = socket.inet_ntoa(namestr[i+20:i+24])
-                    break
-
-            # try 32 bit kernel:
-            if ip_addr is None:
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
-
-                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
-                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
-                    break
-
-        return ip_addr or 'localhost'
-
-    try:
-        ip_addr = _detect_ip_addr()
-    except Exception:
-        ip_addr = 'localhost'
-    return ip_addr
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
