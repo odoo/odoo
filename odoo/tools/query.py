@@ -105,7 +105,7 @@ class Query(object):
 
     def add_where(self, where_clause: str | SQL, where_params=()):
         """ Add a condition to the where clause. """
-        self._where_clauses.append(SQL(where_clause, *where_params))
+        self._where_clauses.append(SQL(where_clause, *where_params)) # pylint: disable = sql-injection
         self._ids = None
 
     def join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str):
@@ -146,7 +146,7 @@ class Query(object):
 
     @order.setter
     def order(self, value: SQL | str | None):
-        self._order = SQL(value) if value is not None else None
+        self._order = SQL(value) if value is not None else None # pylint: disable = sql-injection
 
     @property
     def table(self) -> str:

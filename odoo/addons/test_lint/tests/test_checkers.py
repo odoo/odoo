@@ -411,12 +411,12 @@ class TestSqlLint(TransactionCase):
             return 'a',var
         """)
         with self.assertMessages():
-            checker.visit_call(node)
+            checker.visit_functiondef(node)
 
         node = _odoo_checker_sql_injection.astroid.extract_node("""
         def injectable4(var):
             a, _ =  return_tuple(var)
-            cr.execute(a)#@
+            cr.execute(a) #@
         """)
         with self.assertMessages():
             checker.visit_call(node)
@@ -442,3 +442,19 @@ class TestSqlLint(TransactionCase):
         """)
         with self.assertMessages():
             checker.visit_call(node)
+
+        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        def wrapper1(var):
+            query = SQL(var) #@
+            return query
+        """)
+        with self.assertMessages("sql-injection"):
+            checker.visit_call(list(node.get_children())[1])
+
+        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        def wrapper2(var):
+            query = tools.SQL(var) #@
+            return query
+        """)
+        with self.assertMessages("sql-injection"):
+            checker.visit_call(list(node.get_children())[1])

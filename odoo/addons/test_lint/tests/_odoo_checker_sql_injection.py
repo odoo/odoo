@@ -22,6 +22,8 @@ DFTL_CURSOR_EXPR = [
     'self.env.cr', 'self._cr',  # new api
     'self.cr',  # controllers and test
     'cr',  # old api
+    'odoo.tools',
+    'tools'
 ]
 # <attribute> or <name>.<attribute> or <call>.<attribute>
 ATTRIBUTE_WHITELIST = [
@@ -30,7 +32,7 @@ ATTRIBUTE_WHITELIST = [
 
 FUNCTION_WHITELIST = [
     'create', 'read', 'write', 'browse', 'select', 'get', 'strip', 'items', '_select', '_from', '_where',
-    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_get_query', '_where_calc'
+    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_get_query', '_where_calc', 'SQL'
 ]
 
 func_call = {}
@@ -102,6 +104,8 @@ class OdooBaseChecker(BaseChecker):
 
     def _evaluate_function_call(self, node, args_allowed, position):
         name = node.func.attrname if isinstance(node.func, astroid.Attribute) else node.func.name
+        if isinstance(node.scope(), astroid.GeneratorExp):
+            return True
         if name == node.scope().name:
             return True
         if  name not in func_called_for_query:
@@ -330,13 +334,13 @@ class OdooBaseChecker(BaseChecker):
         if not (
             # .execute() or .executemany()
             isinstance(node, astroid.Call) and node.args and
-            isinstance(node.func, astroid.Attribute) and
-            node.func.attrname in ('execute', 'executemany') and
-            # cursor expr (see above)
-            self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR and
+            ((isinstance(node.func, astroid.Attribute) and node.func.attrname in ('execute', 'executemany', 'SQL') and self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR) or
+            (isinstance(node.func, astroid.Name) and node.func.name == 'SQL')) and
             # ignore in test files, probably not accessible
             not current_file_bname.startswith('test_')
         ):
+            return False
+        if len(node.args) == 0:
             return False
         first_arg = node.args[0]
         is_concatenation = self._check_concatenation(first_arg)
