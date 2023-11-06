@@ -51,21 +51,6 @@ def clean_filename(name, replacement=''):
         return "Untitled"
     return re.sub(r'[^\w_.()\[\] -]+', replacement, name).lstrip('.-') or "Untitled"
 
-def listdir(dir, recursive=False):
-    """Allow to recursively get the file listing following symlinks, returns
-    paths relative to the provided `dir` except completely broken if the symlink
-    it follows leaves `dir`...
-    """
-    assert recursive, "use `os.listdir` or `pathlib.Path.iterdir`"
-    warnings.warn("Since 16.0, use os.walk or a recursive glob", DeprecationWarning, stacklevel=2)
-    dir = os.path.normpath(dir)
-
-    res = []
-    for root, _, files in os.walk(dir, followlinks=True):
-        r = os.path.relpath(root, dir)
-        yield from (opj(r, f) for f in files)
-    return res
-
 def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ignore list
     """
     : param fnct_sort : Function to be passed to "key" parameter of built-in
