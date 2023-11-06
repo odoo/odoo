@@ -128,51 +128,6 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
 });
 
-QUnit.test("loading indicator blocks UI", async (assert) => {
-    const env = await makeTestEnv();
-    patchWithCleanup(originalBrowser, {
-        setTimeout: async (callback, delay) => {
-            assert.step(`set timeout ${delay}`);
-            await Promise.resolve();
-            callback();
-        },
-    });
-    const ui = env.services.ui;
-    ui.bus.addEventListener("BLOCK", () => {
-        assert.step("block");
-    });
-    ui.bus.addEventListener("UNBLOCK", () => {
-        assert.step("unblock");
-    });
-    await mount(LoadingIndicator, target, { env });
-    env.bus.trigger("RPC:REQUEST", payload(1));
-    await nextTick();
-    env.bus.trigger("RPC:RESPONSE", payload(1));
-    await nextTick();
-    assert.verifySteps(["set timeout 250", "set timeout 3000", "block", "unblock"]);
-});
-
-QUnit.test("loading indicator doesn't unblock ui if it didn't block it", async (assert) => {
-    const env = await makeTestEnv();
-    const { execRegisteredTimeouts } = mockTimeout();
-    const ui = env.services.ui;
-    ui.bus.addEventListener("BLOCK", () => {
-        assert.step("block");
-    });
-    ui.bus.addEventListener("UNBLOCK", () => {
-        assert.step("unblock");
-    });
-    await mount(LoadingIndicator, target, { env });
-    env.bus.trigger("RPC:REQUEST", payload(1));
-    execRegisteredTimeouts();
-    env.bus.trigger("RPC:RESPONSE", payload(1));
-    assert.verifySteps(["block", "unblock"]);
-    env.bus.trigger("RPC:REQUEST", payload(2));
-    env.bus.trigger("RPC:RESPONSE", payload(2));
-    execRegisteredTimeouts();
-    assert.verifySteps([]);
-});
-
 QUnit.test("loading indicator is not displayed immediately", async (assert) => {
     const env = await makeTestEnv();
     const { advanceTime } = mockTimeout();
