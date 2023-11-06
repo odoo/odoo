@@ -31,18 +31,6 @@ export function _t(term, ...values) {
     }
 }
 
-/**
- * Lazy translation function, only performs the translation when actually
- * printed (e.g. inserted into a template).
- * Useful when defining translatable strings in code evaluated before the
- * translations are loaded, as class attributes or at the top-level of
- * an Odoo Web module
- *
- * @param {string} term
- * @returns {LazyTranslatedString}
- */
-export const _lt = (term, ...values) => _t(term, ...values);
-
 class LazyTranslatedString extends String {
     constructor(term, ...values) {
         super(term);
