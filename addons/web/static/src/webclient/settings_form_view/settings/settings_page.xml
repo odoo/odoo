@@ -3,11 +3,11 @@
     <t t-name="web.SettingsPage">
         <div class="o_setting_container">
             <div class="position-sticky top-0 flex-grow-0 z-index-1">
-                <div class="settings_tab h-100 border-end" t-if="!env.isSmall or state.search.value.length === 0">
+                <div class="settings_tab h-100 border-end" t-if="!env.isSmall or state.search.value.length === 0" t-ref="settings_tab">
                     <t t-foreach="props.modules" t-as="module" t-key="module.key">
                         <div class="tab" t-if="!module.isVisible"
                              t-att-class="{
-                                'selected': state.selectedTab === module.key and state.search.value.length === 0, 'position-sticky start-0 end-0 text-bg-primary z-index-1 shadow-none': state.selectedTab === module.key and state.search.value.length === 0 and env.isSmall
+                                'selected': state.selectedTab === module.key and state.search.value.length === 0, 'text-bg-primary shadow-none': state.selectedTab === module.key and state.search.value.length === 0 and env.isSmall
                              }" t-att-data-key="module.key" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
                             <div class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="module.string"/></span>
                         </div>
