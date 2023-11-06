@@ -215,8 +215,8 @@ export class RecordList extends Array {
     }
     /** @param {R[]} records */
     unshift(...records) {
-        for (const val of records) {
-            const r = this._insert(val, (r3) => {
+        for (let i = records.length - 1; i >= 0; i--) {
+            const r = this._insert(records[i], (r3) => {
                 this.data.unshift(r3.localId);
                 r3.__uses__.add(this);
             });
