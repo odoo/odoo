@@ -15,6 +15,9 @@
         });
     });
 
+    // avoid uncaught rejection
+    deferredPrompt.catch(function() {});
+
     import publicWidget from "@web/legacy/js/public/public_widget";
     import { utils as uiUtils } from "@web/core/ui/ui_service";
 
