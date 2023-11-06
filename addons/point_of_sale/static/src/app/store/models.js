@@ -1332,7 +1332,7 @@ export class Order extends PosModel {
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
         this.trackingNumber = (
-            (this.session_id % 10) * 100 +
+            (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
     }
