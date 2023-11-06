@@ -29,13 +29,13 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     }
 
     async skillTypesAction() {
-        return this.actionService.doAction("hr_skills.hr_skill_type_action");
+        return this.action.doAction("hr_skills.hr_skill_type_action");
     }
 
     async openSkillsReport() {
         // fetch id through employee or public.employee
         const id = this.env.model.root.data.id || this.env.model.root.data.employee_id[0];
--        this.actionService.doAction({
+        this.action.doAction({
             type: "ir.actions.act_window",
             name: _t("Skills Report"),
             res_model: "hr.employee.skill.log",
