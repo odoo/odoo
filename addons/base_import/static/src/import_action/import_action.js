@@ -45,6 +45,7 @@ export class ImportAction extends Component {
                 step: 1,
             },
             isPaused: false,
+            isTested: false,
             previewError: "",
         });
 
@@ -176,11 +177,15 @@ export class ImportAction extends Component {
             this.state.isPaused = true;
         }
 
-        if (!isTest && res.ids.length) {
-            this.notification.add(_t("%s records successfully imported", res.ids.length), {
-                type: "success",
-            });
-            this.exit();
+        if (res.ids.length) {
+            if (!isTest) {
+                this.notification.add(_t("%s records successfully imported", res.ids.length), {
+                    type: "success",
+                });
+                this.exit();
+            } else {
+                this.state.isTested = true;
+            }
         }
     }
 
