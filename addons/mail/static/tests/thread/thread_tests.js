@@ -49,7 +49,7 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async () => 
     });
     for (let i = 0; i <= 60; i++) {
         pyEnv["mail.message"].create({
-            body: "not empty",
+            body: i.toString(),
             model: "discuss.channel",
             res_id: channelId,
         });
@@ -60,6 +60,7 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async () => 
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", { count: 60 });
+    await contains(".o-mail-Message", { text: "30", after: [".o-mail-Message", { text: "29" }] });
 });
 
 QUnit.test("show message subject when subject is not the same as the thread name", async () => {
