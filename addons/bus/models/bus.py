@@ -3,7 +3,6 @@ import contextlib
 import datetime
 import json
 import logging
-import random
 import selectors
 import threading
 import time
@@ -12,7 +11,6 @@ from psycopg2 import InterfaceError
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import date_utils
 
 _logger = logging.getLogger(__name__)
@@ -50,8 +48,8 @@ class ImBus(models.Model):
 
     @api.autovacuum
     def _gc_messages(self):
-        timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
-        domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT*2)
+        domain = [('create_date', '<', timeout_ago)]
         return self.sudo().search(domain).unlink()
 
     @api.model
@@ -87,8 +85,8 @@ class ImBus(models.Model):
     def _poll(self, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
-            timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
-            domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+            timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
+            domain = [('create_date', '>', timeout_ago)]
         else:  # else returns the unread notifications
             domain = [('id', '>', last)]
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]

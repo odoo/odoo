@@ -181,7 +181,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         member_of_operator.channel_id.with_user(self.operators.filtered(
             lambda operator: operator.partner_id == member_of_operator.partner_id
         ))._channel_seen(message.id)
-        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
 
@@ -189,6 +189,6 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
-        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")

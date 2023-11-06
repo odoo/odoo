@@ -1719,7 +1719,7 @@ class MailThread(models.AbstractModel):
                              'with message-id %r, assuming current date/time.',
                              message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()
-            msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            msg_dict['date'] = fields.Datetime.to_string(stored_date)
 
         msg_dict.update(self._message_parse_extract_from_parent(self._get_parent_message(msg_dict)))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))

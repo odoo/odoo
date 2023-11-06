@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
-import time
 
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models
 from odoo import tools
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 UPDATE_PRESENCE_DELAY = 60
 DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
@@ -57,10 +55,8 @@ class BusPresence(models.Model):
     def _update_presence(self, inactivity_period, identity_field, identity_value):
         presence = self.search([(identity_field, '=', identity_value)], limit=1)
         # compute last_presence timestamp
-        last_presence = datetime.datetime.now() - datetime.timedelta(milliseconds=inactivity_period)
-        values = {
-            'last_poll': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        }
+        last_presence = fields.Datetime.now() - datetime.timedelta(milliseconds=inactivity_period)
+        values = {"last_poll": fields.Datetime.now()}
         # update the presence or a create a new one
         if not presence:  # create a new presence for the user
             values[identity_field] = identity_value
