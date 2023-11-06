@@ -117,7 +117,7 @@ class MassMailingList(models.Model):
         return super(MassMailingList, self).write(vals)
 
     def name_get(self):
-        return [(list.id, "%s (%s)" % (list.name, list.contact_count)) for list in self]
+        return [(list.id, list.name) for list in self]
 
     def copy(self, default=None):
         self.ensure_one()
