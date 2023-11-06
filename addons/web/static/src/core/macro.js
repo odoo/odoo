@@ -221,6 +221,7 @@ export class MacroEngine {
             browser.clearTimeout(this.timeout);
             this.timeout = null;
             this.observer.disconnect();
+            this.iframeObserver.disconnect();
         }
     }
 
