@@ -585,7 +585,8 @@ describe('Collaboration', () => {
                     clientInfos.c1.editor.historyStep();
                     const pTrue = clientInfos.c1.editor.editable.querySelector('#true');
                     setSelection(pTrue, 0);
-                    clientInfos.c1.editor.execCommand('insert', 'a');
+                    pTrue.prepend(clientInfos.c1.editor.document.createTextNode('a'));
+                    clientInfos.c1.editor.historyStep();
                     const pFalse = clientInfos.c1.editor.editable.querySelector('#false');
                     setSelection(pFalse, 0);
                     clientInfos.c1.editor.execCommand('insert', 'a');
