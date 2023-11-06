@@ -32,8 +32,8 @@
                 </div>
                 <button t-if="props.node.nodes.length or props.node.canShowChildNodes"
                         name="hierarchy_search_subsidiaries"
+                        class="o_hierarchy_node_button btn rounded-0 d-grid"
                         t-att-class="{
-                            'o_hierarchy_node_button w-100 btn pt-1': true,
                             'btn-primary': !props.node.nodes.length,
                             'btn-secondary': props.node.nodes.length > 0,
                         }"
