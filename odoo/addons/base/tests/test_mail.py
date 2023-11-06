@@ -10,6 +10,7 @@ import threading
 
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_normalize, email_split, email_split_and_format,
@@ -414,7 +415,7 @@ class TestEmailTools(BaseCase):
             'deboulonneur@example.com',
             'deboulonneur@example.comdéboulonneur',
             False,
-            '@example.com',  # funny
+            False,  # need fix over 'getadresses'
             'deboulonneur.😊@example.com',
             'déboulonneur@examplé.com',
             'DéBoulonneur@examplé.com',
@@ -424,7 +425,7 @@ class TestEmailTools(BaseCase):
             f'"{format_name}" <deboulonneur@example.com>',
             f'"{format_name}" <deboulonneur@example.comdéboulonneur>',
             f'"{format_name}" <@>',
-            f'"{format_name}" <@example.com>',
+            f'"{format_name}" <@>',
             f'"{format_name}" <deboulonneur.😊@example.com>',
             f'"{format_name}" <déboulonneur@examplé.com>',
             f'"{format_name}" <DéBoulonneur@examplé.com>',
@@ -434,7 +435,7 @@ class TestEmailTools(BaseCase):
             f'{format_name_ascii} <deboulonneur@example.com>',
             f'{format_name_ascii} <deboulonneur@example.xn--comdboulonneur-ekb>',
             f'{format_name_ascii} <@>',
-            f'{format_name_ascii} <@example.com>',
+            f'{format_name_ascii} <@>',
             f'{format_name_ascii} <deboulonneur.😊@example.com>',
             f'{format_name_ascii} <déboulonneur@xn--exampl-gva.com>',
             f'{format_name_ascii} <DéBoulonneur@xn--exampl-gva.com>',
@@ -456,9 +457,57 @@ class TestEmailTools(BaseCase):
             ("'(ss)' <123@gmail.com>, 'foo' <foo@bar>", ['123@gmail.com', 'foo@bar']),  # comma + single-quoting
             ('"john@gmail.com"<johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting
             ('"<jg>" <johnny@gmail.com>', ['johnny@gmail.com']),  # double-quoting with brackets
+            ('@gmail.com', ['@gmail.com']),  # no left-part
+            # '@domain' corner cases -- all those return a '@gmail.com' (or equivalent)
+            # email address when going through 'getaddresses'
+            # - multi @
+            ('fr@ncois.th@notgmail.com', ['fr@ncois.th']),
+            ('f@r@nc.gz,ois@notgmail.com', ['r@nc.gz', 'ois@notgmail.com']),  # still failing, but differently from 'getaddresses' alone
+            ('@notgmail.com esteban_gnole@coldmail.com@notgmail.com', ['esteban_gnole@coldmail.com']),
+            # - multi emails (with invalid)
+            (
+                'Ivan@dezotos.com Cc iv.an@notgmail.com',
+                ['Ivan@dezotos.com', 'iv.an@notgmail.com']
+            ),
+            (
+                'ivan-dredi@coldmail.com ivan.dredi@notgmail.com',
+                ['ivan-dredi@coldmail.com', 'ivan.dredi@notgmail.com']
+            ),
+            (
+                '@notgmail.com ivan@coincoin.com.ar jeanine@coincoin.com.ar',
+                ['ivan@coincoin.com.ar', 'jeanine@coincoin.com.ar']
+            ),
+            (
+                '@notgmail.com whoareyou@youhou.com.   ivan.dezotos@notgmail.com',
+                ['whoareyou@youhou.com', 'ivan.dezotos@notgmail.com']
+            ),
+            (
+                'francois@nc.gz CC: ois@notgmail.com ivan@dezotos.com',
+                ['francois@nc.gz', 'ois@notgmail.com', 'ivan@dezotos.com']
+            ),
+            (
+                'francois@nc.gz CC: ois@notgmail.com,ivan@dezotos.com',
+                ['francois@nc.gzCC', 'ois@notgmail.com', 'ivan@dezotos.com']
+            ),
+            # - separated with '/''
+            (
+                'ivan.plein@dezotos.com / ivan.plu@notgmail.com',
+                ['ivan.plein@dezotos.com', 'ivan.plu@notgmail.com']
+            ),
+            (
+                '@notgmail.com ivan.parfois@notgmail.com/ ivan.souvent@notgmail.com',
+                ['ivan.parfois@notgmail.com', 'ivan.souvent@notgmail.com']
+            ),
+            # - separated with '-''
+            ('ivan@dezotos.com - ivan.dezotos@notgmail.com', ['ivan@dezotos.com', 'ivan.dezotos@notgmail.com']),
+            (
+                'car.pool@notgmail.com - co (TAMBO) Registration car.warsh@notgmail.com',
+                ['car.pool@notgmail.com', 'car.warsh@notgmail.com']
+            ),
         ]
-        for text, expected in cases:
-            self.assertEqual(email_split(text), expected, 'email_split is broken')
+        for source, expected in cases:
+            with self.subTest(source=source):
+                self.assertEqual(email_split(source), expected)
 
     def test_email_split_and_format(self):
         """ Test 'email_split_and_format', notably in case of multi encapsulation
@@ -492,7 +541,7 @@ class TestEmailTools(BaseCase):
             # multi
             ['deboulonneur@example.com'],
             ['deboulonneur@example.com', 'deboulonneur2@example.com'],
-            ['@example.com'],  # funny one
+            ['deboulonneur@example.com', 'deboulonneur2@example.com'],  # need fix over 'getadresses'
             # format / misc
             ['deboulonneur@example.com'],
             ['"Super Déboulonneur" <deboulonneur@example.com>', '"Super Déboulonneur 2" <deboulonneur2@example.com>'],
@@ -506,16 +555,16 @@ class TestEmailTools(BaseCase):
                 self.assertEqual(email_split_and_format(source), expected)
 
     def test_email_formataddr(self):
-        email = 'joe@example.com'
+        email_base = 'joe@example.com'
         email_idna = 'joe@examplé.com'
         cases = [
             # (name, address),          charsets            expected
-            (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
-            (('joe', email),            ['ascii', 'utf-8'], '"joe" <joe@example.com>'),
-            (('joe doe', email),        ['ascii', 'utf-8'], '"joe doe" <joe@example.com>'),
-            (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
-            (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
-            (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
+            (('', email_base),          ['ascii', 'utf-8'], 'joe@example.com'),
+            (('joe', email_base),       ['ascii', 'utf-8'], '"joe" <joe@example.com>'),
+            (('joe doe', email_base),   ['ascii', 'utf-8'], '"joe doe" <joe@example.com>'),
+            (('joe"doe', email_base),   ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
+            (('joé', email_base),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
+            (('joé', email_base),       ['utf-8'],          '"joé" <joe@example.com>'),
             (('', email_idna),          ['ascii'],          'joe@xn--exampl-gva.com'),
             (('', email_idna),          ['utf-8'],          'joe@examplé.com'),
             (('joé', email_idna),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@xn--exampl-gva.com>'),
@@ -527,6 +576,20 @@ class TestEmailTools(BaseCase):
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
                     self.assertEqual(formataddr(pair, charset), expected)
+
+    def test_extract_rfc2822_addresses(self):
+        cases = [
+            ('robert@notgmail.com', ['robert@notgmail.com']),
+            # formatted input
+            ('Robert <robert@notgmail.com>', ['robert@notgmail.com']),
+            ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
+            ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
+            # accents
+            ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
+        ]
+        for source, expected in cases:
+            with self.subTest(source=source):
+                self.assertEqual(extract_rfc2822_addresses(source), expected)
 
 
 class EmailConfigCase(SavepointCase):
