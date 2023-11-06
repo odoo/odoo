@@ -144,7 +144,8 @@ registry
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.totalAmountIs(34.5),
-            ProductScreen.checkOrderlinesNumber(3),
+            ProductScreen.totalAmountIs(40.25),
+            ProductScreen.do.clickOrderline("Product A", 0.5),
+            ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
     });
