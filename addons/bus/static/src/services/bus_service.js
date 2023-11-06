@@ -98,6 +98,7 @@ export const busService = {
             }
             send("initialize_connection", {
                 websocketURL: `${params.serverURL.replace("http", "ws")}/websocket`,
+                db: session.db,
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue("last_notification_id", 0),
                 uid,
