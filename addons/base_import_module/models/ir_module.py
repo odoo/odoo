@@ -15,9 +15,10 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, UserError
 from odoo.modules.module import MANIFEST_NAMES
+from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
-from odoo.tools import file_open, file_open_temporary_directory
+from odoo.tools import file_open, file_open_temporary_directory, ormcache
 
 _logger = logging.getLogger(__name__)
 
@@ -281,13 +282,15 @@ class IrModule(models.Model):
 
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
-        res = super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
-        if any(dom[0] == 'module_type' and dom[-1] == 'industries' for dom in domain):
+        if _domain_asks_for_industries(domain):
             fields_name = list(specification.keys())
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False)
-            res['length'] += len(modules_list)
-            res['records'].extend(modules_list)
-        return res
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
+            return {
+                'length': len(modules_list),
+                'records': modules_list,
+            }
+        else:
+            return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
 
     def more_info(self):
         return {
@@ -309,12 +312,16 @@ class IrModule(models.Model):
             return super().web_read(specification)
 
     @api.model
-    def _get_modules_from_apps(self, fields, module_type, module_name):
+    @ormcache('fields', 'module_type', 'module_name', 'domain', 'limit', 'offset')
+    def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
         payload = {
             'series': major_version,
             'module_fields': fields,
-            'module_type':module_type,
-            'module_name': module_name
+            'module_type': module_type,
+            'module_name': module_name,
+            'domain': domain,
+            'limit': limit,
+            'offset': offset,
         }
         try:
             resp = requests.post(
@@ -322,29 +329,44 @@ class IrModule(models.Model):
                 json={'params': payload},
                 timeout=5.0,
             )
-            if resp.status_code == 200:
-                modules_list = resp.json().get('result', [])
-                for mod in modules_list:
-                    mod['id'] = -1
-                    module_name = mod.get('name', module_name)
-                    if 'icon' in fields:
-                        mod['icon'] = f"{APPS_URL}{mod['icon']}"
-                    if 'state' in fields:
-                        existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
-                        if existing_mod:
-                            mod['state'] = 'installed'
-                        else:
-                            mod['state'] = 'uninstalled'
-                    if 'module_type' in fields:
-                        mod['module_type'] = module_type
-                    if 'website' in fields:
-                        mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
-                return modules_list
             resp.raise_for_status()
+            modules_list = resp.json().get('result', [])
+            for mod in modules_list:
+                mod['id'] = -1
+                module_name = mod.get('name', module_name)
+                if 'icon' in fields:
+                    mod['icon'] = f"{APPS_URL}{mod['icon']}"
+                if 'state' in fields:
+                    existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
+                    if existing_mod:
+                        mod['state'] = 'installed'
+                    else:
+                        mod['state'] = 'uninstalled'
+                if 'module_type' in fields:
+                    mod['module_type'] = module_type
+                if 'website' in fields:
+                    mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
+            return modules_list
         except requests.exceptions.HTTPError:
             raise UserError(_('The list of industry applications cannot be fetched. Please try again later'))
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
+
+    @api.model
+    @ormcache()
+    def _get_industry_categories_from_apps(self):
+        try:
+            resp = requests.post(
+                f"{APPS_URL}/loempia/listindustrycategory",
+                json={'params': {}},
+                timeout=5.0,
+            )
+            resp.raise_for_status()
+            return resp.json().get('result', [])
+        except requests.exceptions.HTTPError:
+            return []
+        except requests.exceptions.ConnectionError:
+            return []
 
     def button_immediate_install_app(self):
         if not self.env.is_admin():
@@ -355,22 +377,21 @@ class IrModule(models.Model):
                 f"{APPS_URL}/loempia/download/data_app/{module_name}/{major_version}",
                 timeout=5.0,
             )
-            if resp.status_code == 200:
-                import_module = self.env['base.import.module'].create({
-                    'module_file': base64.b64encode(resp.content),
-                    'state': 'init',
-                    'modules_dependencies': self._get_missing_dependencies(resp.content)
-                })
-                return {
-                    'name': 'Install an App',
-                    'view_mode': 'form',
-                    'target': 'new',
-                    'res_id': import_module.id,
-                    'res_model': 'base.import.module',
-                    'type': 'ir.actions.act_window',
-                    'context': {'data_module': True}
-                }
             resp.raise_for_status()
+            import_module = self.env['base.import.module'].create({
+                'module_file': base64.b64encode(resp.content),
+                'state': 'init',
+                'modules_dependencies': self._get_missing_dependencies(resp.content)
+            })
+            return {
+                'name': 'Install an App',
+                'view_mode': 'form',
+                'target': 'new',
+                'res_id': import_module.id,
+                'res_model': 'base.import.module',
+                'type': 'ir.actions.act_window',
+                'context': {'data_module': True}
+            }
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
@@ -408,6 +429,26 @@ class IrModule(models.Model):
                 unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
                 dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
         return dependencies_to_install
+
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        if field_name == 'category_id' and _domain_asks_for_industries(kwargs.get('category_domain', [])):
+            categories = self._get_industry_categories_from_apps()
+            return {
+                'parent_field': 'parent_id',
+                'values': categories,
+            }
+        return super().search_panel_select_range(field_name, **kwargs)
+
+
+def _domain_asks_for_industries(domain):
+    for dom in domain:
+        if is_leaf(dom) and dom[0] == 'module_type':
+            if dom[2] == 'industries':
+                if dom[1] != '=':
+                    raise UserError('%r is an unsupported leaf' % (dom,))
+                return True
+    return False
 
 
 def _is_studio_custom(path):
