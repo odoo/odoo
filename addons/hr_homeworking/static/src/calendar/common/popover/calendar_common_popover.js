@@ -45,7 +45,7 @@ patch(AttendeeCalendarCommonPopover.prototype, {
         return !('resModel' in this.props.record) || super.isEventViewable;
     },
     get isEventDeletable() {
-        return super.isEventDeletable && !this.props.record.ghostEvent;
+        return super.isEventDeletable;
     },
     get displayAttendeeAnswerChoice() {
         return !('resModel' in this.props.record) && super.displayAttendeeAnswerChoice;
