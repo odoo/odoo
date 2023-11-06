@@ -6594,8 +6594,8 @@ X[]
                     stepFunction: async editor => {
                         await insertText(editor, 'bc');
                         const protectedParagraph = editor.editable.querySelector('[data-oe-protected="true"] > p');
-                        setSelection(protectedParagraph, 1);
-                        await insertText(editor, 'b');
+                        protectedParagraph.append(document.createTextNode('b'));
+                        editor.historyStep();
                         editor.historyUndo();
                     },
                     contentAfterEdit: unformat(`
