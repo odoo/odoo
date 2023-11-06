@@ -785,12 +785,6 @@ class Environment(Mapping):
         if not ids:
             del self.all.tocompute[field]
 
-    @contextmanager
-    def norecompute(self):
-        """ Deprecated: It does nothing, recomputation is delayed by default. """
-        warnings.warn("`norecompute` is useless. Deprecated since 17.0.", DeprecationWarning, 2)
-        yield
-
     def cache_key(self, field):
         """ Return the cache key of the given ``field``. """
         try:
