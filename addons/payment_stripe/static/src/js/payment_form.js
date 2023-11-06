@@ -48,6 +48,13 @@ paymentForm.include({
             stripeInlineForm.dataset['stripeInlineFormValues']
         );
 
+        // Instantiate Stripe object if needed.
+        this.stripeJS ??= Stripe(
+            this.stripeInlineFormValues['publishable_key'],
+            // The values required by Stripe Connect are inserted into the dataset.
+            new StripeOptions()._prepareStripeOptions(stripeInlineForm.dataset),
+        );
+
         // Instantiate the elements.
         let elementsOptions =  {
             appearance: { theme: 'stripe' },
@@ -69,11 +76,6 @@ paymentForm.include({
             elementsOptions.mode = 'setup';
             elementsOptions.setupFutureUsage = 'off_session';
         }
-        this.stripeJS = Stripe(
-            this.stripeInlineFormValues['publishable_key'],
-            // The values required by Stripe Connect are inserted into the dataset.
-            new StripeOptions()._prepareStripeOptions(stripeInlineForm.dataset),
-        );
         this.stripeElements[paymentOptionId] = this.stripeJS.elements(elementsOptions);
 
         // Instantiate the payment element.
