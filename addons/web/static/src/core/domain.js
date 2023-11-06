@@ -216,8 +216,8 @@ function matchCondition(record, condition) {
         // eslint-disable-next-line no-fallthrough
         case "=":
         case "==":
-            if (Array.isArray(fieldValue) && Array.isArray(value)) {
-                return shallowEqual(fieldValue, value);
+            if (Array.isArray(fieldValue)) {
+                return shallowEqual(fieldValue, Array.isArray(value) ? value : [value]);
             }
             return fieldValue === value;
         case "!=":

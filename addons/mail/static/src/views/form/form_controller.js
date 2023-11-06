@@ -92,7 +92,7 @@ patch(FormController.prototype, "mail", {
         return thread.attachmentsInWebClientView.length > 0;
     },
     evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
+        return evalDomain(expr, record.evalContextForDomain);
     },
 });
 

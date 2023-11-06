@@ -68,7 +68,7 @@ export class FormRenderer extends Component {
     }
 
     evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
+        return evalDomain(expr, record.evalContextForDomain);
     }
 
     get compileParams() {

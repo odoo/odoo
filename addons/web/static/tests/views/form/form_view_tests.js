@@ -13525,4 +13525,26 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(target.querySelector(".o_tag_badge_text").innerHTML, 'gold');
         assert.verifySteps(['create', 'action'], 'Verify that create is called before action load');
     });
+
+    QUnit.test("notebook page with conditional invisible", async (assert) => {
+        serverData.models.partner.records[0].timmy = [12];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    '<field name="timmy" widget="many2many_tags"/>
+                    <sheet>
+                        <notebook>
+                            <page attrs='{"invisible": [["timmy","=",12]]}' string="Partner Yo">
+                                <field name="name"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsNone(target, ".o_notebook_headers");
+    });
 });
