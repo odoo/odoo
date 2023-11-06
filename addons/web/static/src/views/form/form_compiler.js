@@ -655,7 +655,12 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             if (compiled.nodeName === "ButtonBox") {
-                compiled.setAttribute("t-if", "__comp__.env.inDialog");
+                let isVisibleExpr = "__comp__.env.inDialog";
+                if (compiled.hasAttribute("t-if")) {
+                    const formerTif = compiled.getAttribute("t-if");
+                    isVisibleExpr = `( ${formerTif} ) and ${isVisibleExpr}`;
+                }
+                compiled.setAttribute("t-if", isVisibleExpr);
             }
             if (getTag(child, true) === "field") {
                 compiled.setAttribute("showTooltip", true);
