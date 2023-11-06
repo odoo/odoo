@@ -91,7 +91,7 @@ class TestMassMailing(models.TransientModel):
         mails_sudo.unlink()
 
         if notification_messages:
-            self.mass_mailing_id._message_log(body=Markup('<ul>%s</ul>') % ''.join(
+            self.mass_mailing_id._message_log(body=Markup('<ul>%s</ul>') % Markup().join(
                 [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
             ))
 
