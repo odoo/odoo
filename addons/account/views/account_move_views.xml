@@ -739,12 +739,12 @@
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         invisible="move_type != 'out_invoice' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="move_type not in ('out_invoice', 'out_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         invisible="move_type != 'in_invoice' or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
+                         invisible="move_type not in ('in_invoice', 'in_receipt') or not invoice_has_outstanding or payment_state not in ('not_paid', 'partial')">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
@@ -1169,7 +1169,7 @@
                                         <field name="invoice_outstanding_credits_debits_widget"
                                             class="oe_invoice_outstanding_credits_debits"
                                             colspan="2" nolabel="1" widget="payment"
-                                            invisible="state != 'posted' or move_type in ('out_receipt', 'in_receipt')"/>
+                                            invisible="state != 'posted'"/>
                                     </group>
                                 </group>
                             </page>
