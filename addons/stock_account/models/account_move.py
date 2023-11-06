@@ -258,8 +258,8 @@ class AccountMoveLine(models.Model):
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
 
     def _get_gross_unit_price(self):
-        price_unit = -self.price_unit if self.move_id.move_type == 'in_refund' else self.price_unit
-        price_unit = price_unit * (1 - (self.discount or 0.0) / 100.0)
+        price_unit = self.price_subtotal / self.quantity
+        price_unit = -price_unit if self.move_id.move_type == 'in_refund' else price_unit
         if not self.tax_ids:
             return price_unit
         prec = 1e+6
