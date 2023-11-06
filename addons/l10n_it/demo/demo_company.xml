@@ -18,6 +18,12 @@
         <field name="partner_id" ref="partner_demo_company_it"/>
     </record>
 
+    <record id="demo_bank_it" model="res.partner.bank">
+        <field name="acc_number">IT15O0300203280948111571821</field>
+        <field name="partner_id" ref="partner_demo_company_it"/>
+        <field name="company_id" ref="demo_company_it"/>
+    </record>
+
     <function model="res.company" name="_onchange_country_id">
         <value eval="[ref('demo_company_it')]"/>
     </function>
