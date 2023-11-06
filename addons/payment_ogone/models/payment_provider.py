@@ -132,3 +132,10 @@ class PaymentProvider(models.Model):
             _logger.exception("invalid API request at %s with data %s", url, payload)
             raise ValidationError("Ogone: " + _("The communication with the API failed."))
         return response.content
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'ogone':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES
