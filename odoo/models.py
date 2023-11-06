@@ -223,8 +223,6 @@ class MetaModel(api.Meta):
 
         if '__init__' in attrs and len(inspect.signature(attrs['__init__']).parameters) != 4:
             _logger.warning("The method %s.__init__ doesn't match the new signature in module %s", name, attrs.get('__module__'))
-        if callable(attrs.get('_read')):
-            warnings.warn(f"{self.__module__}.{self.__name__}: method BaseModel._read() has been replaced by BaseModel._fetch_query()")
 
         if not attrs.get('_register', True):
             return
@@ -2744,24 +2742,6 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    @api.model
-    def _inherits_join_calc(self, alias, fname, query):
-        """
-        Adds missing table select and join clause(s) to ``query`` for reaching
-        the field coming from an '_inherits' parent table (no duplicates).
-
-        :param alias: name of the initial SQL alias
-        :param fname: name of inherited field to reach
-        :param query: query object on which the JOIN should be added
-        :return: qualified name of field, to be used in SELECT clause
-
-        .. deprecated:: 17.0
-            Deprecated method, use _field_to_sql() instead
-        """
-        warnings.warn("Deprecated method _inherits_join_calc(), _field_to_sql() instead", DeprecationWarning, 2)
-        sql = self._field_to_sql(alias, fname, query)
-        return self.env.cr.mogrify(sql).decode()
-
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -5222,22 +5202,6 @@ class BaseModel(metaclass=MetaModel):
             sql_field = SQL("(%s -> %s)", sql_field, property_name)
 
         return SQL("%s %s %s", sql_field, direction, nulls)
-
-    @api.model
-    def _generate_order_by(self, order_spec, query):
-        """
-        Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
-        a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
-
-        :raise ValueError in case order_spec is malformed
-
-        .. deprecated:: 17.0
-            Deprecated method, use _order_to_sql() instead
-        """
-        warnings.warn("Deprecated method _generate_order_by(), _order_to_sql() instead", DeprecationWarning, 2)
-        sql = self._order_to_sql(order_spec, query)
-        order_by_clause = self.env.cr.mogrify(sql).decode()
-        return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
     def _flush_search(self, domain, fields=None, order=None, seen=None):
