@@ -53,6 +53,7 @@ export class WebsocketWorker {
         this.newestStartTs = undefined;
         this.websocketURL = "";
         this.currentUID = null;
+        this.currentDB = null;
         this.isWaitingForNewUID = true;
         this.channelsByClient = new Map();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
@@ -216,6 +217,7 @@ export class WebsocketWorker {
      * Initialize a client connection to this worker.
      *
      * @param {Object} param0
+     * @param {string} [param0.db] Database name.
      * @param {String} [param0.debug] Current debugging mode for the
      * given client.
      * @param {Number} [param0.lastNotificationId] Last notification id
@@ -227,7 +229,7 @@ export class WebsocketWorker {
      *     - undefined: not available (e.g. livechat support page)
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL, startTs }) {
+    _initializeConnection(client, { db, debug, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient[client] = debug;
             this.isDebug = Object.values(this.debugModeByClient).some(
@@ -248,8 +250,9 @@ export class WebsocketWorker {
             this.isWaitingForNewUID = false;
             this.currentUID = uid;
         }
-        if (this.currentUID !== uid && isCurrentUserKnown) {
+        if ((this.currentUID !== uid && isCurrentUserKnown) || this.currentDB !== db) {
             this.currentUID = uid;
+            this.currentDB = db;
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
@@ -390,7 +393,8 @@ export class WebsocketWorker {
      */
     _retryConnectionWithDelay() {
         this.connectRetryDelay =
-            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + this.RECONNECT_JITTER * Math.random();
+            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) +
+            this.RECONNECT_JITTER * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
