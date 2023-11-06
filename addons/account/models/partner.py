@@ -335,6 +335,10 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _credit_debit_get(self):
+        if not self.ids:
+            self.debit = False
+            self.credit = False
+            return
         tables, where_clause, where_params = self.env['account.move.line']._where_calc([
             ('parent_state', '=', 'posted'),
             ('company_id', 'child_of', self.env.company.root_id.id)
