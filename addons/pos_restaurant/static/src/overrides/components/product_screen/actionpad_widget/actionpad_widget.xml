@@ -9,14 +9,23 @@
         <xpath expr="//button[hasclass('validation')]" position="after">
             <button
                 t-if="this.swapButton"
-                t-attf-class="submit-order w-100 h-100 {{getMainButtonClasses()}}"
+                t-attf-class="submit-order h-100 {{getMainButtonClasses()}}"
                 t-att-class="swapButtonClasses"
-                t-on-click="submitOrder">
+                t-on-click="submitOrder"
+                style="width: 170px;">
                 <i class="fa fa-cutlery"></i>
                 Order
-                <div class="break-line">
-                    <t t-esc="categoryCount" />
+                <div t-if="displayCategoryCount.length" class="break-line fw-normal fs-6 w-100  border-top mt-1 pt-1">
+                    <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine.id">
+                        <div class="row g-0 my-1 w-100">
+                            <label class="col text-start text-truncate ps-0" ><t t-esc="categoryCountLine.name"/></label>
+                            <label class="col-3 text-center rounded p-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                        </div>
+                    </t>
                 </div>
+                <t t-if="isCategoryCountOverflow">
+                    <div class="position-absolute bottom-0">...</div>
+                </t>
             </button>
         </xpath>
         <xpath expr="//button[hasclass('validation')]" position="attributes">
