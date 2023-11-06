@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
         <record id="view_partner_form" model="ir.ui.view">
-            <field name="name">res.partner.vat.inherit</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="name">view.partner.base.vat.form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="string">VAT</attribute>
-                </xpath>
-                <xpath expr="//span[hasclass('o_vat_label')]" position="replace">
-                    <span class="o_vat_label">VAT</span>
+                <xpath expr="//div[hasclass('alert')]" position="after">
+                    <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('vies_failed_message', '=', False)]}">
+                        <field name="vies_failed_message" nolabel="1" readonly="1"/>
+                    </div>
                 </xpath>
             </field>
         </record>
+    </data>
 </odoo>
