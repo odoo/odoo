@@ -69,6 +69,11 @@ class ResConfigSettings(models.TransientModel):
         if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
             self.module_pos_preparation_display = True
 
+    @api.onchange('pos_self_ordering_mode', 'pos_payment_method_ids')
+    def _onchange_kiosk_payment_methods(self):
+        for rec in self.filtered(lambda cfg: cfg.pos_self_ordering_mode == 'kiosk'):
+            rec.pos_payment_method_ids = rec.pos_payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
+
     def custom_link_action(self):
         self.ensure_one()
         return {

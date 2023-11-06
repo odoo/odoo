@@ -12,6 +12,7 @@ from odoo.exceptions import UserError
 from odoo.tools import image_to_base64
 
 from odoo import api, fields, models, _, service, Command
+from odoo.exceptions import ValidationError
 from odoo.tools import file_open, split_every
 
 
@@ -153,6 +154,8 @@ class PosConfig(models.Model):
         return []
 
     def write(self, vals):
+        res = True
+        remaining_records = self
         for record in self:
             if vals.get('self_ordering_mode') == 'kiosk' or (vals.get('pos_self_ordering_mode') == 'mobile' and vals.get('pos_self_ordering_service_mode') == 'counter'):
                 vals['self_ordering_pay_after'] = 'each'
@@ -182,7 +185,64 @@ class PosConfig(models.Model):
 
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
-        return super().write(vals)
+
+            if vals.get('self_ordering_mode', record.self_ordering_mode) == 'kiosk':
+                provided_pms_vals = vals.get('payment_method_ids')
+                valid_pms_vals = None
+                is_set_cmd_provided = False
+
+                if provided_pms_vals:
+                    pms_to_link = set()
+                    for cmd in provided_pms_vals:
+                        if len(cmd) >= 2 and cmd[0] == Command.LINK:
+                            pms_to_link.add(cmd[1])
+                        elif len(cmd) == 3 and cmd[0] == Command.SET:
+                            pms_to_link.update(cmd[2])
+
+                    provided_cash_pms = set(self.env['pos.payment.method'].sudo().search(['&',
+                        ('id', 'in', list(pms_to_link)),
+                        ('is_cash_count', '=', True)
+                    ]).ids)
+
+                    if provided_cash_pms:
+                        valid_pms_vals = []
+                        for cmd in provided_pms_vals:
+                            if len(cmd) >= 2 and cmd[0] == Command.LINK:
+                                if cmd[1] not in provided_cash_pms:
+                                    valid_pms_vals.append(Command.link(cmd[1]))
+                            elif len(cmd) == 3 and cmd[0] == Command.SET:
+                                cmd_valid_pms = list(set(cmd[2]) - provided_cash_pms)
+                                if cmd_valid_pms:
+                                    valid_pms_vals.append(Command.set(cmd_valid_pms))
+                                    is_set_cmd_provided = True
+                            else:
+                                valid_pms_vals.append(cmd)
+                    else:
+                        valid_pms_vals = provided_pms_vals.copy()
+                        is_set_cmd_provided = any(len(cmd) == 3 and cmd[0] == Command.SET for cmd in provided_pms_vals)
+
+                if not is_set_cmd_provided:
+                    prev_cash_pms = record.payment_method_ids.filtered('is_cash_count')
+                    if prev_cash_pms:
+                        if valid_pms_vals is None:
+                            valid_pms_vals = []
+                        for cash_pm in prev_cash_pms:
+                            valid_pms_vals.append(Command.unlink(cash_pm.id))
+
+                if valid_pms_vals is not None:
+                    valid_vals = vals.copy()
+                    valid_vals['payment_method_ids'] = valid_pms_vals
+                    res = super(PosConfig, record).write(valid_vals) and res
+                    remaining_records -= record
+
+        if remaining_records:
+            res = super(PosConfig, remaining_records).write(vals) and res
+        return res
+
+    @api.constrains('self_ordering_mode', 'payment_method_ids')
+    def _check_kiosk_payment_methods(self):
+        if self.filtered(lambda cfg: cfg.self_ordering_mode == 'kiosk').payment_method_ids.filtered('is_cash_count'):
+            raise ValidationError(_("Cash payment method cannot be used for a kiosk."))
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
