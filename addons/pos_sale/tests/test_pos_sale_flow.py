@@ -305,6 +305,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Test',
             'category_id': uom_category.id,
             'uom_type': 'reference',
+            'rounding': 0.01
         })
         product_a = self.env['product.product'].create({
             'name': 'Product A',
@@ -320,7 +321,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
-                'product_uom_qty': 3,
+                'product_uom_qty': 3.5,
                 'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             })],
