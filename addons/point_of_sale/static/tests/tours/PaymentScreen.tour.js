@@ -217,7 +217,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test 40", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Nicole Ford"),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("40.00"),
@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test 41", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Nicole Ford"),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("41.00"),

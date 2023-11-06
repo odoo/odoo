@@ -3,16 +3,14 @@
 
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
+from odoo.addons.point_of_sale.tests.common import archive_products
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
         self.env = self.env(user=self.env.ref('base.user_admin'))
-        self.env.ref('base.user_demo').write({
-            'groups_id': [(4, self.env.ref('point_of_sale.group_pos_manager').id)],
-        })
-
+        archive_products(self.env)
         account_obj = self.env['account.account']
 
         account_receivable = account_obj.create({'code': 'X1012',
@@ -174,35 +172,46 @@ class TestFrontend(odoo.tests.HttpCase):
 
         self.pos_config = pos_config
 
+        self.pos_admin = self.env['res.users'].create({
+            'name': 'A powerfull PoS man!',
+            'login': 'pos_admin',
+            'password': 'pos_admin',
+            'groups_id': [
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+        })
+        self.pos_admin.partner_id.email = 'pos_admin@test.com'
+
     def test_01_pos_restaurant(self):
 
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.pos_config.with_user(self.pos_admin).open_ui()
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="demo")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="pos_admin")
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="demo")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="pos_admin")
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
     def test_02_others(self):
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="demo")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="demo")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="demo")
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="pos_admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="pos_admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="demo")
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="pos_admin")
 
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="demo")
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="pos_admin")
 
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
         order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
@@ -217,19 +226,20 @@ class TestFrontend(odoo.tests.HttpCase):
         self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
 
     def test_06_split_bill_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="demo")
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="pos_admin")
 
     def test_07_split_bill_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="demo")
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="pos_admin")
 
     def test_08_refund_stay_current_table(self):
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="demo")
+
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="pos_admin")
 
     def test_09_combo_split_bill(self):
-        combo_product = setup_pos_combo_items(self)
-        combo_product.write({'lst_price': 40})
-        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'SplitBillScreenTour4PosCombo', login="demo")
+        setup_pos_combo_items(self)
+        self.office_combo.write({'lst_price': 40})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'SplitBillScreenTour4PosCombo', login="pos_admin")

@@ -62,13 +62,13 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.orderIsEmpty(),
 
             // Check different subcategories
-            ProductScreen.clickSubcategory("Desks"),
+            ProductScreen.clickSubcategory("Desk test"),
             ProductScreen.productIsDisplayed("Desk Pad"),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.clickSubcategory("Misc"),
+            ProductScreen.clickSubcategory("Misc test"),
             ProductScreen.productIsDisplayed("Whiteboard Pen"),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.clickSubcategory("Chairs"),
+            ProductScreen.clickSubcategory("Chair test"),
             ProductScreen.productIsDisplayed("Letter Tray"),
             ProductScreen.clickHomeCategory(),
 
