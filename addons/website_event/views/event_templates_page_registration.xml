@@ -53,7 +53,7 @@
                             <div class="o_wevent_sidebar_block border-bottom pb-3 my-3">
                                 <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Date &amp; Time</h6>
                                 <div class="d-flex">
-                                    <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}" t-att-datetime="event.date_begin"/>
+                                    <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                                 </div>
                                 <t t-if="not event.is_one_day">Start -</t>
                                 <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
@@ -64,7 +64,7 @@
                                     (<span t-out="event.date_tz"/>)
                                     <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
                                     <div class="d-flex">
-                                        <h6 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}"/>
+                                        <h6 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}"/>
                                     </div>
                                     <t t-if="not event.is_one_day">End -</t>
                                 </t>
