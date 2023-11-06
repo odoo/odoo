@@ -657,8 +657,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     selector: 'header#top',
     disabledInEditableMode: false,
     events: {
-        'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
-        'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
         "show.bs.modal #o_search_modal": "_onSearchModalShow",
         "shown.bs.modal #o_search_modal": "_onSearchModalShown",
         "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
@@ -669,18 +667,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onCollapseShow() {
-        this.el.classList.add('o_top_menu_collapse_shown');
-    },
-    /**
-     * @private
-     */
-    _onCollapseHidden() {
-        this.el.classList.remove('o_top_menu_collapse_shown');
-    },
     /**
      * @private
      */
@@ -706,51 +692,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
         if (searchModalEl) {
             searchInputEl.focus();
         }
-    },
-});
-
-publicWidget.registry.navbarDropdown = animations.Animation.extend({
-    selector: "header .navbar",
-    disabledInEditableMode: false,
-    events: {
-        "shown.bs.collapse": "_onCollapseShown",
-        "hidden.bs.collapse": "_onCollapseHidden",
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Updates the Dropdowns to trigger the "_detectNavbar" function from the
-     * Bootstrap Dropdown class. This allows the dropdowns to adapt based on
-     * whether they are located within a hamburger menu. If they are not inside
-     * an "hamburger" style menu, automatic dropdown positioning is enabled
-     * using popper.js.
-     *
-     * @private
-     */
-    _updateDropdowns() {
-        for (const toggleEl of this.el.querySelectorAll(".nav .dropdown-toggle")) {
-            Dropdown.getOrCreateInstance(toggleEl).update();
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onCollapseShown() {
-        this._updateDropdowns();
-    },
-    /**
-     * @private
-     */
-    _onCollapseHidden() {
-        this._updateDropdowns();
     },
 });
 
