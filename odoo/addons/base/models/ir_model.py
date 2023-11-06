@@ -1002,7 +1002,7 @@ class IrModelFields(models.Model):
                             sql.Identifier(f'{table}_{newname}_index'),
                         ))
 
-        if column_rename or patched_models:
+        if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             self.pool.setup_models(self._cr)
@@ -1011,9 +1011,6 @@ class IrModelFields(models.Model):
             # update the database schema of the models to patch
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-
-        if translate_only:
-            self.clear_caches()
 
         return res
 
