@@ -222,6 +222,38 @@ QUnit.module("Form Compiler", (hooks) => {
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 
+    QUnit.test("properly compile buttonBox invisible in sheet", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="'display_name' == 'plop'">
+                        <div>Hello</div>
+                    </div>
+                </sheet>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <t>
+                <div class="o_form_renderer"
+                     t-att-class="__comp__.props.class"
+                     t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+                     t-ref="compiled_view_root">
+                    <div class="o_form_sheet_bg">
+                        <div class="o_form_sheet position-relative">
+                            <ButtonBox t-if="( !__comp__.evaluateBooleanExpr(&quot;'display_name' == 'plop'&quot;,__comp__.props.record.evalContextWithVirtualIds) ) and __comp__.env.inDialog">
+                                <t t-set-slot="slot_0" isVisible="true">
+                                    <div>Hello</div>
+                                </t>
+                            </ButtonBox>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        `;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
     QUnit.test("properly compile invisible", async (assert) => {
         // cf python side: def transfer_node_to_modifiers
         // modifiers' string are evaluated to their boolean or array form
