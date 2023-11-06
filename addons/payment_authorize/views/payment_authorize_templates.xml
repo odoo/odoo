@@ -4,7 +4,7 @@
     <template id="inline_form">
         <div name="o_authorize_form"
              class="o_authorize_form"
-             t-att-data-inline-form-values="provider_sudo._authorize_get_inline_form_values()"
+             t-att-data-authorize-inline-form-values="provider_sudo._authorize_get_inline_form_values()"
         >
             <t t-if="pm_sudo.code == 'card'">
                 <div class="mb-3">
