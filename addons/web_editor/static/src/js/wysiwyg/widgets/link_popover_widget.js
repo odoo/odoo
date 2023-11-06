@@ -261,6 +261,13 @@ export class LinkPopoverWidget {
                     this.$urlLink.text(ogTitle ? ogTitle.getAttribute('content') : title.text.trim());
                 }
                 this.$fullUrl.removeClass('d-none').addClass('o_we_webkit_box');
+            }).catch(error => {
+                // HTML error codes should not prevent to edit the links, so we
+                // only check for proper instances of Error.
+                if (error instanceof Error) {
+                    return Promise.reject(error);
+                }
+            }).finally(() => {
                 this.$target.popover('update');
             });
         }
