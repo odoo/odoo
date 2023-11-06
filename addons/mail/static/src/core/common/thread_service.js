@@ -118,6 +118,10 @@ export class ThreadService {
                 last_message_id: newestPersistentMessage.id,
             }).then(() => {
                 this.updateSeen(thread, newestPersistentMessage.id);
+            }).catch((e) => {
+                if (e.code !== 404) {
+                    throw e;
+                }
             });
         } else if (newestPersistentMessage) {
             this.updateSeen(thread);
