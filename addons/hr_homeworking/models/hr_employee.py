@@ -11,17 +11,13 @@ from .hr_homeworking import DAYS
 class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
-    @api.model
-    def _default_location_id(self):
-        return self.env.ref('hr.home_work_office', raise_if_not_found=False)
-
-    monday_location_id = fields.Many2one('hr.work.location', string='Monday', default=lambda self: self._default_location_id())
-    tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday', default=lambda self: self._default_location_id())
-    wednesday_location_id = fields.Many2one('hr.work.location', string='Wednesday', default=lambda self: self._default_location_id())
-    thursday_location_id = fields.Many2one('hr.work.location', string='Thursday', default=lambda self: self._default_location_id())
-    friday_location_id = fields.Many2one('hr.work.location', string='Friday', default=lambda self: self._default_location_id())
-    saturday_location_id = fields.Many2one('hr.work.location', string='Saturday', default=lambda self: self._default_location_id())
-    sunday_location_id = fields.Many2one('hr.work.location', string='Sunday', default=lambda self: self._default_location_id())
+    monday_location_id = fields.Many2one('hr.work.location', string='Monday')
+    tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')
+    wednesday_location_id = fields.Many2one('hr.work.location', string='Wednesday')
+    thursday_location_id = fields.Many2one('hr.work.location', string='Thursday')
+    friday_location_id = fields.Many2one('hr.work.location', string='Friday')
+    saturday_location_id = fields.Many2one('hr.work.location', string='Saturday')
+    sunday_location_id = fields.Many2one('hr.work.location', string='Sunday')
     exceptional_location_id = fields.Many2one(
         'hr.work.location', string='Current',
         compute='_compute_exceptional_location_id',
@@ -108,7 +104,7 @@ class HrEmployeeBase(models.AbstractModel):
                 'work_location_id': exception['work_location_id'][0],
             }
             employee_id = exception["employee_id"][0]
-            if "exception" not in work_locations_by_employee[employee_id]:
+            if "exceptions" not in work_locations_by_employee[employee_id]:
                 work_locations_by_employee[employee_id]["exceptions"] = {}
             work_locations_by_employee[employee_id]["exceptions"][date] = exception_value
 

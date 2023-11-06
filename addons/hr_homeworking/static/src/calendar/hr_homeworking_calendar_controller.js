@@ -45,19 +45,37 @@ patch(AttendeeCalendarController.prototype, {
         }
     },
     deleteRecord(record) {
-        if (record.id && record.homeworking && !record.ghostEvent) {
-            this.displayDialog(ConfirmationDialog, {
-                title: _t("Confirmation"),
-                body: _t("Are you sure you want to delete this exception?"),
-                confirm: () => {
-                    this.orm.call('hr.employee.location', "unlink", [
-                        record.id,
-                    ]);
-                    this.model.load();
-                },
-                cancel: () => {
-                },
-            });
+        if (record.id && record.homeworking) {
+            if (record.ghostEvent) {
+                this.displayDialog(ConfirmationDialog, {
+                    title: _t("Confirmation"),
+                    body: _t("Are you sure you want to delete this location?"),
+                    confirm: () => {
+                        const dayName = record.start.setLocale("en").weekdayLong.toLowerCase();
+                        const locationField = `${dayName}_location_id`;
+                        this.orm.call('hr.employee', "write", [
+                            [record.rawRecord.employee_id],
+                            {[locationField]: false}
+                        ]);
+                        this.model.load();
+                    },
+                    cancel: () => {
+                    },
+                });
+            } else {
+                this.displayDialog(ConfirmationDialog, {
+                    title: _t("Confirmation"),
+                    body: _t("Are you sure you want to delete this exception?"),
+                    confirm: () => {
+                        this.orm.call('hr.employee.location', "unlink", [
+                            record.id,
+                        ]);
+                        this.model.load();
+                    },
+                    cancel: () => {
+                    },
+                });
+            }
         } else {
             super.deleteRecord(...arguments)
         }
