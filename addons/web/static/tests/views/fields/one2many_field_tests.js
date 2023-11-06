@@ -557,7 +557,7 @@ QUnit.module("Fields", (hooks) => {
             target
                 .querySelector(".o_dialog:not(.o_inactive_modal) .modal-footer .o_form_button_save")
                 .getAttribute("disabled"),
-            ""
+            "1"
         );
         def.resolve();
         await nextTick();

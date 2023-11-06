@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -12,12 +13,13 @@ import {
 import { editSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/objects";
+import { session } from "@web/session";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { registerCleanup } from "../../helpers/cleanup";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { session } from "@web/session";
-import { pick } from "@web/core/utils/objects";
+import { makeServerError } from "../../helpers/mock_server";
 
 let target;
 let serverData;
@@ -1039,6 +1041,41 @@ QUnit.module("SettingsFormView", (hooks) => {
             "web_save",
             'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
         ]);
+    });
+
+    QUnit.test("click on save button which throws an error", async (assert) => {
+        registry.category("services").add("error", errorService);
+
+        await makeView({
+            type: "form",
+            arch: `
+                <form js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <field name="foo" />
+                    </app>
+                </form>`,
+            serverData,
+            resModel: "res.config.settings",
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_save") {
+                    throw makeServerError();
+                }
+            },
+        });
+        assert.verifySteps(["get_views", "onchange"]);
+        assert.containsOnce(target, ".o_form_button_save");
+        assert.notOk(target.querySelector(".o_form_button_save").disabled);
+
+        await click(target, ".o_field_boolean input[type='checkbox']");
+        await click(target, ".o_form_button_save");
+        await nextTick();
+        assert.containsOnce(target, ".o_error_dialog");
+
+        await click(target, ".o_error_dialog .btn-close");
+        assert.containsOnce(target, ".o_form_button_save");
+        assert.notOk(target.querySelector(".o_form_button_save").disabled);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("clicking a button with dirty settings -- discard", async (assert) => {

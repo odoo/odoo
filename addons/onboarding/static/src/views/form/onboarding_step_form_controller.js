@@ -17,8 +17,8 @@ export default class OnboardingStepFormController extends FormController {
      * If necessary, mark the step as done and reload the main view.
      * @override
      */
-    async saveButtonClicked({ closable, ...otherParams }) {
-        const saved = await super.saveButtonClicked(otherParams);
+    async save({ closable, ...otherParams }) {
+        const saved = await super.save(otherParams);
         if (saved) {
             const { reloadOnFirstValidation, reloadAlways } = this.stepConfig;
             const validationResponse = await this.orm.call(
@@ -28,8 +28,7 @@ export default class OnboardingStepFormController extends FormController {
             );
             if (reloadAlways || (reloadOnFirstValidation && validationResponse === "JUST_DONE")) {
                 this.action.restore(this.action.currentController.jsId);
-            }
-            else if (closable) {
+            } else if (closable) {
                 this.action.doAction({ type: "ir.actions.act_window_close" });
             }
         }

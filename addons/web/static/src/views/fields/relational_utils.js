@@ -21,7 +21,7 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { computeViewClassName, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
@@ -575,14 +575,6 @@ export class X2ManyFieldDialog extends Component {
         }
     }
 
-    disableButtons() {
-        const btns = this.modalRef.el.querySelectorAll(".modal-footer button");
-        for (const btn of btns) {
-            btn.setAttribute("disabled", "1");
-        }
-        return btns;
-    }
-
     async discard() {
         if (this.record.isInEdition) {
             await this.record.discard();
@@ -590,33 +582,21 @@ export class X2ManyFieldDialog extends Component {
         this.props.close();
     }
 
-    enableButtons(btns) {
-        for (const btn of btns) {
-            btn.removeAttribute("disabled");
-        }
-    }
-
-    async save({ saveAndNew }) {
-        const disabledButtons = this.disableButtons();
-        if (await this.record.checkValidity({ displayNotification: true })) {
-            try {
+    save({ saveAndNew }) {
+        return executeButtonCallback(this.modalRef.el, async () => {
+            if (await this.record.checkValidity({ displayNotification: true })) {
                 await this.props.save(this.record);
-            } catch (error) {
-                this.enableButtons(disabledButtons);
-                throw error;
+                if (saveAndNew) {
+                    this.record = await this.props.addNew();
+                }
+            } else {
+                return false;
             }
-            if (saveAndNew) {
-                this.record = await this.props.addNew();
+            if (!saveAndNew) {
+                this.props.close();
             }
-        } else {
-            this.enableButtons(disabledButtons);
-            return false;
-        }
-        if (!saveAndNew) {
-            this.props.close();
-        }
-        this.enableButtons(disabledButtons);
-        return true;
+            return true;
+        });
     }
 
     async remove() {
