@@ -60,6 +60,14 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     };
 }
 
+export function getFieldDomain(record, fieldName) {
+    const { domain } = record.fields[fieldName];
+    const evalContext = record.getEvalContext ? record.getEvalContext(false) : record.evalContext;
+    return typeof domain === "string"
+        ? new Domain(evaluateExpr(domain, evalContext)).toList()
+        : domain || [];
+}
+
 export class Field extends Component {
     setup() {
         if (this.props.fieldInfo) {
@@ -155,16 +163,13 @@ export class Field extends Component {
                         };
                     },
                     domain() {
-                        const evalContext = record.getEvalContext
-                            ? record.getEvalContext(true)
-                            : record.evalContext;
                         if (fieldInfo.domain) {
+                            const evalContext = record.getEvalContext
+                                ? record.getEvalContext(true)
+                                : record.evalContext;
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
-                        const { domain } = record.fields[fieldInfo.name];
-                        return typeof domain === "string"
-                            ? new Domain(evaluateExpr(domain, evalContext)).toList()
-                            : domain || [];
+                        return getFieldDomain(record, fieldInfo.name);
                     },
                     readonly: readonly || readonlyFromModifiers,
                     get required() {
