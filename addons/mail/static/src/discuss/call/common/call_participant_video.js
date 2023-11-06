@@ -6,11 +6,10 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").RtcSession} session
- * @property {MediaStream} [videoStream]
  * @extends {Component<Props, Env>}
  */
 export class CallParticipantVideo extends Component {
-    static props = ["session", "videoStream?"];
+    static props = ["session", "type", "inset?"];
     static template = "discuss.CallParticipantVideo";
 
     setup() {
@@ -27,10 +26,10 @@ export class CallParticipantVideo extends Component {
         if (!this.root.el) {
             return;
         }
-        if (!this.props.session || !this.props.videoStream) {
+        if (!this.props.session || !this.props.session.getStream(this.props.type)) {
             this.root.el.srcObject = undefined;
         } else {
-            this.root.el.srcObject = this.props.videoStream;
+            this.root.el.srcObject = this.props.session.getStream(this.props.type);
         }
         this.root.el.load();
     }
