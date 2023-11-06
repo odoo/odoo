@@ -488,8 +488,8 @@
                         <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
                     </span>
                 </div>
-                <div id="sale_invoices" t-if="invoices and state in ['sale', 'cancel']">
-                    <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
+                <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
+                <div id="sale_invoices" t-if="invoices and sale_order.state in ['sale', 'cancel']">
                     <div class="col-12 col-lg-5 mb-4">
                         <h5 class="mb-1">Invoices</h5>
                         <hr class="my-0"/>
