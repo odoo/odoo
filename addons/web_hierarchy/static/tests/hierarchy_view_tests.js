@@ -1,6 +1,14 @@
 /** @odoo-module **/
 
-import { click, drag, dragAndDrop, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import {
+    click,
+    drag,
+    dragAndDrop,
+    getFixture,
+    getNodesTextContent,
+    patchWithCleanup
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData, target;
@@ -684,5 +692,118 @@ QUnit.module("Views", (hooks) => {
             ["JosephineAlbert", "LisaJosephine", "LouisJosephine"]
         );
         assert.containsOnce(target, ".o_hierarchy_node_container button[name=hierarchy_search_parent_node]");
+    });
+
+    QUnit.test("cannot set the record dragged as parent", async function (assert) {
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views["hr.employee,false,hierarchy"].replace("<hierarchy>", "<hierarchy draggable='1'>");
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+            mockRPC(route, { method, model }) {
+                if (method === "write" && model === "hr.employee") {
+                    assert.step("setManager");
+                }
+            },
+        });
+
+        patchWithCleanup(browser, {
+            setTimeout: () => 1,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"]
+        );
+        const rows = target.querySelectorAll(".o_hierarchy_row");
+        await dragAndDrop(
+            target.querySelector(".o_hierarchy_node"), // select first node (Albert)
+            rows[1]
+        );
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"]
+        );
+        assert.containsOnce(target, ".o_notification");
+        assert.containsOnce(target, ".o_notification.border-danger");
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("cannot create cyclic", async function (assert) {
+        serverData.views["hr.employee,false,hierarchy"] = serverData.views["hr.employee,false,hierarchy"].replace("<hierarchy>", "<hierarchy draggable='1'>");
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+            mockRPC(route, { method, model }) {
+                if (method === "write" && model === "hr.employee") {
+                    assert.step("setManager");
+                }
+            },
+        });
+
+        patchWithCleanup(browser, {
+            setTimeout: () => 1,
+        });
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"]
+        );
+        let nodes = target.querySelectorAll(".o_hierarchy_node");
+        await dragAndDrop(
+            nodes[0], // albert node
+            nodes[1] // georges node
+        );
+        assert.containsN(target, ".o_hierarchy_row", 2);
+        assert.containsN(target, ".o_hierarchy_node", 3);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert"]
+        );
+        assert.containsOnce(target, ".o_notification");
+        assert.containsOnce(target, ".o_notification.border-danger");
+
+        await click(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        assert.containsN(target, ".o_hierarchy_node", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"]
+        );
+        nodes = target.querySelectorAll(".o_hierarchy_node");
+        await dragAndDrop(
+            nodes[0],
+            nodes[3]
+        );
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        assert.containsN(target, ".o_hierarchy_node", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"]
+        );
+        assert.containsN(target, ".o_notification", 2);
+        assert.containsN(target, ".o_notification.border-danger", 2);
+
+        const rows = target.querySelectorAll(".o_hierarchy_row");
+        await dragAndDrop(
+            nodes[0],
+            rows[2]
+        );
+        assert.containsN(target, ".o_hierarchy_row", 3);
+        assert.containsN(target, ".o_hierarchy_node", 4);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_hierarchy_node_content")),
+            ["Albert", "GeorgesAlbert", "JosephineAlbert", "LouisJosephine"]
+        );
+        assert.containsN(target, ".o_notification", 3);
+        assert.containsN(target, ".o_notification.border-danger", 3);
+
+        assert.verifySteps([]);
     });
 });

@@ -824,6 +824,14 @@ export class HierarchyModel extends Model {
                         }
                     );
                     return;
+                } else if (node.allSubsidiaryResIds.includes(parentNode.resId)) {
+                    this.notification.add(
+                        _t("Cannot change the parent because it will cause a cyclic."),
+                        {
+                            type: "danger",
+                        }
+                    );
+                    return;
                 }
                 domain = Domain.or([
                     domain,
