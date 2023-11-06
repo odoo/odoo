@@ -52,7 +52,7 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def _get_sale_order_fields(self):
-        return ["product_id", "name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
+        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
 
     def read_converted(self):
         field_names = self._get_sale_order_fields()
