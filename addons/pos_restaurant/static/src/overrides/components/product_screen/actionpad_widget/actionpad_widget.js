@@ -60,11 +60,15 @@ patch(ActionpadWidget.prototype, {
             }
             return acc;
         }, {});
-
-        return Object.values(categories)
-            .map((value) => {
-                return `${value.name} ${value.count}`;
-            })
-            .join(" | ");
+        return Object.values(categories);
+    },
+    get displayCategoryCount() {
+        return this.categoryCount.slice(0, 3);
+    },
+    get isCategoryCountOverflow() {
+        if (this.categoryCount.length > 3) {
+            return true;
+        }
+        return false;
     },
 });
