@@ -7,10 +7,8 @@ export class NewContentFormController extends formView.Controller {
     /**
      * @override
      */
-    async saveButtonClicked(params) {
-        await super.saveButtonClicked(
-            Object.assign({ computePath: () => this.computePath() }, params)
-        );
+    async save() {
+        return super.save({ computePath: () => this.computePath(), ...arguments });
     }
 
     /**
