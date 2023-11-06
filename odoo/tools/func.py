@@ -107,26 +107,6 @@ def frame_codeinfo(fframe, back=0):
     except Exception:
         return "<unknown>", ''
 
-def compose(a, b):
-    """ Composes the callables ``a`` and ``b``. ``compose(a, b)(*args)`` is
-    equivalent to ``a(b(*args))``.
-
-    Can be used as a decorator by partially applying ``a``::
-
-         @partial(compose, a)
-         def b():
-            ...
-    """
-    warnings.warn(
-        "Since 16.0, just byo or use a dedicated library like funcy.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    @wraps(b)
-    def wrapper(*args, **kwargs):
-        return a(b(*args, **kwargs))
-    return wrapper
-
 
 class _ClassProperty(property):
     def __get__(self, cls, owner):
