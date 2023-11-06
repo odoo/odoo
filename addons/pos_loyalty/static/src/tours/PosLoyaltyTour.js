@@ -280,3 +280,15 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour8', { test: true, url: '/pos/web', steps: () => {
+        ProductScreen.do.clickHomeCategory();
+        ProductScreen.do.confirmOpeningPopup();
+
+        ProductScreen.do.clickDisplayedProduct('Product B');
+        ProductScreen.do.clickDisplayedProduct('Product A');
+        ProductScreen.check.totalAmountIs('50.00');
+        return getSteps();
+    }});
