@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="discuss.CallParticipantVideo">
         <video class="w-100 h-100 rounded-1 cursor-pointer"
-            t-attf-class="{{ className }}"
+            t-att-class="{ 'o-inset': props.inset }"
+            t-att-type="props.type"
             playsinline="true"
             autoplay="true"
             muted="true"

@@ -19,7 +19,7 @@ QUnit.test("basic rendering", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
@@ -28,9 +28,9 @@ QUnit.test("basic rendering", async () => {
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
-    await contains("button[title='More']");
+    await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await click("button[title='More']");
+    await click("[title='More']");
     await contains("[title='Raise Hand']");
     await contains("[title='Share Screen']");
     await contains("[title='Enter Full Screen']");
@@ -48,7 +48,7 @@ QUnit.test("no call with odoobot", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Discuss-header");
-    await contains(".o-mail-Discuss-header button[title='Start a Call']", { count: 0 });
+    await contains("[title='Start a Call']", { count: 0 });
 });
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async () => {
@@ -57,7 +57,7 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await contains(".o-discuss-Call", { count: 0 });
@@ -97,7 +97,7 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
         },
     });
 
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
+    await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
     window.dispatchEvent(new Event("pagehide"), { bubble: true });
@@ -156,14 +156,14 @@ QUnit.test("can share screen", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-discuss-CallActionList [title='More']");
+    await click("[title='Start a Call']");
+    await click("[title='More']");
     await click("[title='Share Screen']");
-    await contains(".o-discuss-CallParticipantCard video");
+    await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click(".o-discuss-CallActionList [title='More']");
+    await click("[title='More']");
     await click("[title='Stop Sharing Screen']");
-    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
+    await contains("video", { count: 0 });
 });
 
 QUnit.test("can share user camera", async () => {
@@ -174,11 +174,11 @@ QUnit.test("can share user camera", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".o-discuss-CallParticipantCard video");
-    await click(".o-discuss-CallActionList button[title='Stop camera']");
-    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
+    await click("[title='Start a Call']");
+    await click("[title='Turn camera on']");
+    await contains("video");
+    await click("[title='Stop camera']");
+    await contains("video", { count: 0 });
 });
 
 QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
@@ -189,4 +189,37 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");
+});
+
+QUnit.test("Can share user camera and screen together", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='More']");
+    await click("[title='Share Screen']");
+    await click("[title='Turn camera on']");
+    await contains("video", { count: 2 });
+});
+
+QUnit.test("Click on inset card should replace the inset and active stream together", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click("[title='More']");
+    await click("[title='Share Screen']");
+    await click("[title='Turn camera on']");
+    await contains("video[type='screen']:not(.o-inset)");
+    await click("video[type='camera'].o-inset");
+    await contains("video[type='screen'].o-inset");
+    await contains("video[type='camera']:not(.o-inset)");
 });
