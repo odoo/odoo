@@ -3293,6 +3293,8 @@ class Order extends PosModel {
             const last_line = paymentlines ? paymentlines[paymentlines.length-1]: false;
             const last_line_is_cash = last_line ? last_line.payment_method.is_cash_count == true: false;
             if (!only_cash || (only_cash && last_line_is_cash)) {
+                var rounding_method = this.pos.cash_rounding[0].rounding_method;
+                var rounding = this.pos.cash_rounding[0].rounding;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
                 var sign = remaining > 0 ? 1.0 : -1.0;
@@ -3303,19 +3305,25 @@ class Order extends PosModel {
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimal_places)){
                     // https://xkcd.com/217/
                     return 0;
-                } else if(Math.abs(this.get_total_with_tax()) < this.pos.cash_rounding[0].rounding) {
+                } else if(Math.abs(this.get_total_with_tax()) < rounding ) {
                     return 0;
-                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
-                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                } else if(rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
+                    rounding_applied += rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
-                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                else if(rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
+                    rounding_applied -= rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
-                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                else if(rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
+                    rounding_applied -= rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
-                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+                    rounding_applied += rounding;
+                }else if(rounding_method  == "HALF-UP"){
+                    if(remaining > 0 && utils.float_is_zero(rounding_applied - rounding / -2, this.pos.currency.decimals)){
+                        rounding_applied = rounding / 2;
+                    }else if(remaining < 0 && utils.float_is_zero(rounding_applied - rounding / 2, this.pos.currency.decimals)){
+                        rounding_applied = -rounding /2;
+                    }
                 }
                 return sign * rounding_applied;
             }
