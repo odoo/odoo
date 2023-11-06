@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Thi Huong Nguyen, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2022\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,8 +25,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> đã yêu cầu bạn kích hoạt xác thực hai yếu tố để bảo vệ tài khoản của bạn.<br/><br/>\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> đã yêu cầu bạn kích hoạt xác thực hai yếu tố để bảo vệ tài khoản của bạn.<br><br>\n"
 "        Xác thực hai yếu tố (\"2FA\") là một hệ thống xác thực kép.\n"
 "        Bước đầu tiên được thực hiện với mật khẩu của bạn và bước thứ hai với mã bạn nhận được từ một ứng dụng dành riêng cho thiết bị di động.\n"
 "        Các ứng dụng phổ biến bao gồm Authy, Google Authenticator hoặc Microsoft Authenticator.\n"
@@ -58,6 +58,7 @@ msgstr ""
 "        "
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
@@ -69,6 +70,7 @@ msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr "Lời mời kích hoạt xác thực hai yếu tố trên tài khoản Odoo của bạn"
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid ""

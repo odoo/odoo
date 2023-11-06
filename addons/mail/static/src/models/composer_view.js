@@ -8,6 +8,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
 import { url } from '@web/core/utils/urls';
+import session from "web.session";
 
 registerModel({
     name: 'ComposerView',
@@ -522,6 +523,7 @@ registerModel({
 
             const action = {
                 type: 'ir.actions.act_window',
+                name: this.composer.isLog ? this.env._t('Log note') : this.env._t('Compose Email'),
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 views: [[false, 'form']],
@@ -570,6 +572,7 @@ registerModel({
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                params.context = Object.assign(params.context || {}, session.user_context);
                 const { threadView = {} } = this;
                 const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
@@ -598,7 +601,7 @@ registerModel({
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
                 }
-                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
+                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted && messageData.recipients.length) {
                     chatter.reloadParentView();
                 }
                 if (chatterThread) {
@@ -677,7 +680,7 @@ registerModel({
                 const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
                     await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
-                    if (this.composer.exists()) {
+                    if (this.exists() && this.composer) {
                         this.composer._reset();
                     }
                     return;
@@ -705,6 +708,7 @@ registerModel({
             let data = {
                 body: this._generateMessageBody(),
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
+                attachment_tokens: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.accessToken),
             };
             const messageViewInEditing = this.messageViewInEditing;
             await messageViewInEditing.message.updateContent(data);
@@ -850,6 +854,7 @@ registerModel({
         _getMessageData() {
             return {
                 attachment_ids: this.composer.attachments.map(attachment => attachment.id),
+                attachment_tokens: this.composer.attachments.map(attachment => attachment.accessToken),
                 body: this._generateMessageBody(),
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, Command, fields, models, _
-from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
@@ -107,7 +106,11 @@ class AccountJournal(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
-    payment_sequence = fields.Boolean(string='Dedicated Payment Sequence', help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal", default='_compute_payment_sequence')
+    payment_sequence = fields.Boolean(
+        string='Dedicated Payment Sequence',
+        compute='_compute_payment_sequence', readonly=False, store=True, precompute=True,
+        help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal",
+    )
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
@@ -315,7 +318,7 @@ class AccountJournal(models.Model):
         These will be then used to display or not payment method specific fields in the view.
         """
         for journal in self:
-            codes = [line.code for line in journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids]
+            codes = [line.code for line in journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids if line.code]
             journal.selected_payment_method_codes = ',' + ','.join(codes) + ','
 
     @api.depends('company_id', 'type')
@@ -546,8 +549,8 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
-                if len(journal_entry) > 0:
+                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
@@ -568,13 +571,14 @@ class AccountJournal(models.Model):
         return result
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company):
-        journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
+    def get_next_bank_cash_default_code(self, journal_type, company, protected_codes=False):
+        prefix_map = {'cash': 'CSH', 'general': 'GEN', 'bank': 'BNK'}
+        journal_code_base = prefix_map.get(journal_type)
+        journals = self.env['account.journal'].with_context(active_test=False).search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
-            if journal_code not in journals.mapped('code'):
+            if journal_code not in journals.mapped('code') and (protected_codes and journal_code not in protected_codes or not protected_codes):
                 return journal_code
 
     @api.model
@@ -588,12 +592,11 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    def _fill_missing_values(self, vals):
+    def _fill_missing_values(self, vals, protected_codes=False):
         journal_type = vals.get('type')
-        if 'import_file' in self.env.context and not journal_type:
-            vals['type'] = 'general'
-            if not vals.get('code'):
-                vals['code'] = vals.get('name')
+        is_import = 'import_file' in self.env.context
+        if is_import and not journal_type:
+            vals['type'] = journal_type = 'general'
 
         # 'type' field is required.
         if not journal_type:
@@ -636,6 +639,12 @@ class AccountJournal(models.Model):
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
+        if is_import and not vals.get('code'):
+            code = vals['name'][:5]
+            vals['code'] = code if not protected_codes or code not in protected_codes else self.get_next_bank_cash_default_code(journal_type, company, protected_codes)
+            if not vals['code']:
+                raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
+
         # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
@@ -643,7 +652,9 @@ class AccountJournal(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            self._fill_missing_values(vals)
+            # have to keep track of new journal codes when importing
+            codes = [vals['code'] for vals in vals_list if 'code' in vals] if 'import_file' in self.env.context else False
+            self._fill_missing_values(vals, protected_codes=codes)
 
         journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals_list)
 
@@ -766,6 +777,7 @@ class AccountJournal(models.Model):
     # REPORTING METHODS
     # -------------------------------------------------------------------------
 
+    # TODO move to `account_reports` in master (simple read_group)
     def _get_journal_bank_account_balance(self, domain=None):
         ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
 
@@ -826,6 +838,7 @@ class AccountJournal(models.Model):
             account_ids.add(line.payment_account_id.id or self.company_id.account_journal_payment_credit_account_id.id)
         return self.env['account.account'].browse(account_ids)
 
+    # TODO remove in master
     def _get_journal_outstanding_payments_account_balance(self, domain=None, date=None):
         ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
         journal's accounts.
@@ -892,6 +905,7 @@ class AccountJournal(models.Model):
                 total_balance += balance
         return total_balance, nb_lines
 
+    # TODO move to `account_reports` in master
     def _get_last_bank_statement(self, domain=None):
         ''' Retrieve the last bank statement created using this journal.
         :param domain:  An additional domain to be applied on the account.bank.statement model.
@@ -923,3 +937,11 @@ class AccountJournal(models.Model):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
         return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+
+    def _process_reference_for_sale_order(self, order_reference):
+        '''
+        returns the order reference to be used for the payment.
+        Hook to be overriden: see l10n_ch for an example.
+        '''
+        self.ensure_one()
+        return order_reference

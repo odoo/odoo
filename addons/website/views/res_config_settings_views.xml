@@ -26,7 +26,7 @@
                                 <div class="content-group">
                                     <div class="row flex-row flex-nowrap mt8 align-items-center">
                                         <label class="col ps-0 text-nowrap" string="Settings of Website" for="website_id"/>
-                                        <field name="website_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this website"/>
+                                        <field name="website_id" class="w-50" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this website"/>
                                         <button name="action_website_create_new" type="object" string="+ New Website" class="col-auto btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
                                     </div>
                                 </div>
@@ -115,6 +115,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="website_cookies_bar"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/websites/website/configuration/cookies_bar.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Display a customizable cookies bar on your website
                                 </div>
@@ -283,7 +284,7 @@
                                     </div>
                                 </div>
                                 <div attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/websites/website/optimize/plausible.html"
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/websites/website/reporting/plausible.html"
                                             class="oe_link" target="_blank">
                                         <i class="fa fa-arrow-right"/>
                                         How to create my Plausible Shared Link

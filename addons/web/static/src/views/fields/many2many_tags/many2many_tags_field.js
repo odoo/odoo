@@ -252,7 +252,7 @@ Many2ManyTagsField.isSet = (value) => value.count > 0;
 
 Many2ManyTagsField.extractProps = ({ attrs, field }) => {
     const noCreate = Boolean(attrs.options.no_create);
-    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
+    const canCreate = noCreate ? false : attrs.can_create && Boolean(JSON.parse(attrs.can_create));
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);
 

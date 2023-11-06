@@ -18,8 +18,7 @@ import threading
 from socket import gaierror, timeout
 from OpenSSL import crypto as SSLCrypto
 from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError
-from urllib3.contrib.pyopenssl import PyOpenSSLContext
+from OpenSSL.SSL import Context as SSLContext, Error as SSLError
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -195,19 +194,28 @@ class IrMailServer(models.Model):
 
     def _get_test_email_addresses(self):
         self.ensure_one()
+        email_to = "noreply@odoo.com"
         if self.from_filter:
             if "@" in self.from_filter:
                 # All emails will be sent from the same address
-                return self.from_filter, "noreply@odoo.com"
+                return self.from_filter, email_to
             # All emails will be sent from any address in the same domain
             default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
-            return f"{default_from}@{self.from_filter}", "noreply@odoo.com"
+            if "@" not in default_from:
+                return f"{default_from}@{self.from_filter}", email_to
+            elif self._match_from_filter(default_from, self.from_filter):
+                # the mail server is configured for a domain
+                # that match the default email address
+                return default_from, email_to
+            # the from_filter is configured for a domain different that the one
+            # of the full email configured in mail.default.from
+            return f"noreply@{self.from_filter}", email_to
         # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
                               'sending an email message via this outgoing server'))
-        return email_from, 'noreply@odoo.com'
+        return email_from, email_to
 
     def test_smtp_connection(self):
         for server in self:
@@ -326,15 +334,15 @@ class IrMailServer(models.Model):
                and mail_server.smtp_ssl_certificate
                and mail_server.smtp_ssl_private_key):
                 try:
-                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
                     smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
                     certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
                     smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
                     private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
-                    ssl_context._ctx.use_certificate(certificate)
-                    ssl_context._ctx.use_privatekey(private_key)
+                    ssl_context.use_certificate(certificate)
+                    ssl_context.use_privatekey(private_key)
                     # Check that the private key match the certificate
-                    ssl_context._ctx.check_privatekey()
+                    ssl_context.check_privatekey()
                 except SSLCryptoError as e:
                     raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
@@ -356,10 +364,11 @@ class IrMailServer(models.Model):
 
             if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
                 try:
-                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
-                    ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
+                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context.use_certificate_chain_file(smtp_ssl_certificate_filename)
+                    ssl_context.use_privatekey_file(smtp_ssl_private_key_filename)
                     # Check that the private key match the certificate
-                    ssl_context._ctx.check_privatekey()
+                    ssl_context.check_privatekey()
                 except SSLCryptoError as e:
                     raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
@@ -712,6 +721,8 @@ class IrMailServer(models.Model):
 
         if mail_servers is None:
             mail_servers = self.sudo().search([], order='sequence')
+        # 0. Archived mail server should never be used
+        mail_servers = mail_servers.filtered('active')
 
         # 1. Try to find a mail server for the right mail from
         mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)

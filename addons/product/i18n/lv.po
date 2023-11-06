@@ -11,7 +11,9 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Anzelika Adejanova, 2022
-# Armīns Jeltajevs, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Will Sensors, 2023
+# Aleksejs Ivanovs, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Armīns Jeltajevs, 2023\n"
-"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
+"Last-Translator: Aleksejs Ivanovs, 2023\n"
+"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -264,8 +266,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Uzglabājams produkts ir produkts, kuram jūs pārvaldāt krājumus.Lai to izmantotu, nepieciešams instalēt 'Inventory' moduli.\n"
-"Izejmateriāls ir produkts, kuram krājumi netiek pārvaldīti."
+"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
+"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
+"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -584,7 +587,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Izvēlieties lapas izkārtojumu, lai drukāt uzlīmes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -686,7 +689,7 @@ msgstr "Apstiprināt"
 #: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
 msgid "Consumable"
-msgstr "Patērējams"
+msgstr "Palīgmateriāls"
 
 #. module: product
 #. odoo-python
@@ -696,8 +699,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
-"Patērējami ir fiziski produkti, kuriem Jums nav jāpārvalda inventarizācija: "
-"tie vienmēr ir pieejami."
+"Palīgmateriāli ir fiziski produkti, kuriem Jums nav jāpārvalda krājumi: tie "
+"vienmēr ir pieejami."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1706,8 +1709,8 @@ msgstr "Kļūdu skaits"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -1977,7 +1980,7 @@ msgstr "Drukāt"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Print Labels"
-msgstr ""
+msgstr "Drukāt uzlīmes"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2010,7 +2013,7 @@ msgstr "Produkta atribūts"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Produkta atribūta pielāgota vērtība"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -2108,7 +2111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr ""
+msgstr "Proodukta iezīmes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2268,7 +2271,7 @@ msgstr "Iepirkuma aprakts"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "Pirkšanas mērvienība"
 
 #. module: product
 #. odoo-javascript
@@ -2472,11 +2475,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Norādiet fiksēto summu, lai pievienotu vai atņemtu (ja negatīva) summu, kas "
-"aprēķināta ar atlaidi."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2673,6 +2674,13 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
@@ -2760,6 +2768,8 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Šī piegādātāja preces kodu tiks izmantots printējot kvotas pieprasījumu. "
+"Atstājiet tukšu, lai izmantot iekšējo kodu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
@@ -2767,8 +2777,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
-"Šī pārdevēja produkta nosaukums tiks izmantots, kad tiks izdrukāts "
-"pieprasījums pēc kotēšanas. Lai izmantotu iekšējo, turiet tukšu."
+"Šī piegādātāja preces nosaukums tiks izmantots printējot kvotas "
+"pieprasījumu. Atstājiet tukšu, lai izmantot iekšējo nosaukumu."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -2807,7 +2817,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Unit Price"
-msgstr "Cena"
+msgstr "Vienības cena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
@@ -2837,7 +2847,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Piepārdošana & Savstarpējā pārdošana"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3192,7 +3202,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3212,6 +3223,13 @@ msgid ""
 "(%s)\n"
 ", they are used in other pricelist(s):\n"
 "%s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product

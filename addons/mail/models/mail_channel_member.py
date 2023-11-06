@@ -17,7 +17,7 @@ class ChannelMember(models.Model):
     # identity
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', index=True)
     guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True, index=True)
-    partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
+    partner_email = fields.Char('Email', related='partner_id.email', related_sudo=False)
     # channel
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
     # state
@@ -151,7 +151,7 @@ class ChannelMember(models.Model):
                 if member.partner_id:
                     persona = {'partner': member._get_partner_data(fields=fields.get('persona', {}).get('partner'))}
                 if member.guest_id:
-                    persona = {'guest': member.guest_id._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)}
+                    persona = {'guest': member.guest_id.sudo()._guest_format(fields=fields.get('persona', {}).get('guest')).get(member.guest_id)}
                 data['persona'] = persona
             members_formatted_data[member] = data
         return members_formatted_data

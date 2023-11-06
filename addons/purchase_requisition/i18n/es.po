@@ -3,17 +3,20 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2022
 # David Ramia, 2023
+# Richard Mouthier <rmo@odoo.com>, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Martin Trigaux, 2023
+# Ana Sanjuán, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: David Ramia, 2023\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Ana Sanjuán, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,6 +42,11 @@ msgstr "<strong>Fecha</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Description</strong>"
 msgstr "<strong>Descripción</strong>"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Product</strong>"
+msgstr "<strong>Producto</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -165,6 +173,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
 msgid "Analytic"
 msgstr "Analítico"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Búsqueda de distribución analítica"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -318,6 +331,9 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"Agregue solicitudes de cotización alternativas de diferentes proveedores para crear una licitación.\n"
+"Seleccione la mejor combinación de tiempo de espera, entregas cumplidas a tiempo o la cantidad total para tomar la decisión correcta.\n"
+"Al comparar líneas del producto también puede decidir ordenar algunos productos de un proveedor y otros productos de otro proveedor."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -487,12 +503,19 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"Si el proveedor elegido o cualquiera de los productos de la orden de compra "
+"original tienen una advertencia de bloqueo entonces no dejamos que cree "
+"órdenes de compra alternativas. Esto se debe a que normalmente estos campos "
+"se autorizan con un mensaje de advertencia dentro de la vista de formulario,"
+" pero no podemos recrearlo en este caso."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
+"Si esto está marcado, las cantidades de producto de la orden de compra "
+"original se copiarán"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -638,7 +661,7 @@ msgstr "Numero de errores"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Número de mensajes que requieren una acción"
 
 #. module: purchase_requisition

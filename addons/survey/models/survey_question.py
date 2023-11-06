@@ -8,7 +8,7 @@ import itertools
 import operator
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SurveyQuestion(models.Model):
@@ -49,7 +49,7 @@ class SurveyQuestion(models.Model):
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
     description = fields.Html(
-        'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
+        'Description', translate=True, sanitize=True, sanitize_overridable=True,
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
     question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
     background_image = fields.Image("Background Image", compute="_compute_background_image", store=True, readonly=False)
@@ -311,6 +311,19 @@ class SurveyQuestion(models.Model):
                 question.is_scored_question = True
             else:
                 question.is_scored_question = False
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_live_sessions_in_progress(self):
+        running_surveys = self.survey_id.filtered(lambda survey: survey.session_state == 'in_progress')
+        if running_surveys:
+            raise UserError(_(
+                'You cannot delete questions from surveys "%(survey_names)s" while live sessions are in progress.',
+                survey_names=', '.join(running_surveys.mapped('title')),
+            ))
 
     # ------------------------------------------------------------
     # VALIDATION

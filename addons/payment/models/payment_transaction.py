@@ -172,7 +172,8 @@ class PaymentTransaction(models.Model):
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
             values.update({
-                'partner_name': partner.name,
+                # Use the parent partner as fallback if the invoicing address has no name.
+                'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_address': payment_utils.format_partner_address(
@@ -291,7 +292,7 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
         for tx in self:
-            tx._send_refund_request(amount_to_refund)
+            tx._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -818,6 +819,7 @@ class PaymentTransaction(models.Model):
         - `state`: The transaction state: `draft`, `pending`, `authorized`, `done`, `cancel`, or
           `error`.
         - `state_message`: The information message about the state.
+        - `operation`: The operation of the transaction.
         - `is_post_processed`: Whether the transaction has already been post-processed.
         - `landing_route`: The route the user is redirected to after the transaction.
         - Additional provider-specific entries.
@@ -836,6 +838,7 @@ class PaymentTransaction(models.Model):
             'currency_code': self.currency_id.name,
             'state': self.state,
             'state_message': self.state_message,
+            'operation': self.operation,
             'is_post_processed': self.is_post_processed,
             'landing_route': self.landing_route,
         }

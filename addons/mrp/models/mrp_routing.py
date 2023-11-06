@@ -75,7 +75,7 @@ class MrpRoutingWorkcenter(models.Model):
                 ('qty_produced', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
-                order="date_finished desc")
+                order="date_finished desc, id desc")
             # To compute the time_cycle, we can take the total duration of previous operations
             # but for the quantity, we will take in consideration the qty_produced like if the capacity was 1.
             # So producing 50 in 00:10 with capacity 2, for the time_cycle, we assume it is 25 in 00:10
@@ -104,6 +104,12 @@ class MrpRoutingWorkcenter(models.Model):
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('blocked_by_operation_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
+
+    def action_archive(self):
+        res = super().action_archive()
+        bom_lines = self.env['mrp.bom.line'].search([('operation_id', 'in', self.ids)])
+        bom_lines.write({'operation_id': False})
+        return res
 
     def copy_to_bom(self):
         if 'bom_id' in self.env.context:

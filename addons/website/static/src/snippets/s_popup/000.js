@@ -2,6 +2,7 @@ odoo.define('website.s_popup', function (require) {
 'use strict';
 
 const config = require('web.config');
+const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
 const {getCookie, setCookie} = require('web.utils.cookies');
 
@@ -35,10 +36,12 @@ const SharedPopupWidget = publicWidget.Widget.extend({
             return;
         }
 
-        // Popup are always closed when entering/leaving edit mode (see
-        // PopupWidget), this allows to make sure the class is sync on the
-        // .s_popup parent after that moment too.
-        this.el.classList.add('d-none');
+        // Popup are always closed when entering edit mode (see PopupWidget),
+        // this allows to make sure the class is sync on the .s_popup parent
+        // after that moment too.
+        if (!this.editableMode) {
+            this.el.classList.add('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -73,6 +76,13 @@ const SharedPopupWidget = publicWidget.Widget.extend({
     _onModalHidden() {
         if (!this._isNormalCase()) {
             return;
+        }
+        if (this.el.querySelector('.s_popup_no_backdrop')) {
+            // We trigger a scroll event here to call the
+            // '_hideBottomFixedElements' method and re-display any bottom fixed
+            // elements that may have been hidden (e.g. the live chat button
+            // hidden when the cookies bar is open).
+            $().getScrollingElement()[0].dispatchEvent(new Event('scroll'));
         }
         this.el.classList.add('d-none');
     },
@@ -191,6 +201,108 @@ const PopupWidget = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.popup = PopupWidget;
+
+const noBackdropPopupWidget = publicWidget.Widget.extend({
+    selector: '.s_popup_no_backdrop',
+    disabledInEditableMode: false,
+    events: {
+        'shown.bs.modal': '_onModalNoBackdropShown',
+        'hide.bs.modal': '_onModalNoBackdropHide',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        this.throttledUpdateScrollbar = _.throttle(() => this._updateScrollbar(), 25);
+        if (this.editableMode && this.el.classList.contains('show')) {
+            // Use case: When the "Backdrop" option is disabled in edit mode.
+            // The page scrollbar must be adjusted and events must be added.
+            this._updateScrollbar();
+            this._addModalNoBackdropEvents();
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this._removeModalNoBackdropEvents();
+        // After destroying the widget, we need to trigger a resize event so that
+        // the scrollbar can adjust to its default behavior.
+        window.dispatchEvent(new Event('resize'));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _updateScrollbar() {
+        // When there is no backdrop the element with the scrollbar is
+        // '.modal-content' (see comments in CSS).
+        const modalContent = this.el.querySelector('.modal-content');
+        const isOverflowing = dom.hasScrollableContent(modalContent);
+        const modalInstance = window.Modal.getInstance(this.el);
+        if (isOverflowing) {
+            // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
+            // must be hidden. This is because if the two scrollbars overlap, it
+            // is no longer possible to scroll using the modal's scrollbar.
+            modalInstance._adjustDialog();
+        } else {
+            // If the "no-backdrop" modal does not have a scrollbar, the page
+            // scrollbar must be displayed because we must be able to scroll the
+            // page (e.g. a "cookies bar" popup at the bottom of the page must
+            // not prevent scrolling the page).
+            modalInstance._resetAdjustments();
+        }
+    },
+    /**
+     * @private
+     */
+    _addModalNoBackdropEvents() {
+        window.addEventListener('resize', this.throttledUpdateScrollbar);
+        this.resizeObserver = new window.ResizeObserver(() => {
+            // When the size of the modal changes, the scrollbar needs to be
+            // adjusted.
+            this._updateScrollbar();
+        });
+        this.resizeObserver.observe(this.el.querySelector('.modal-content'));
+    },
+    /**
+     * @private
+     */
+    _removeModalNoBackdropEvents() {
+        window.removeEventListener('resize', this.throttledUpdateScrollbar);
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+            delete this.resizeObserver;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onModalNoBackdropShown() {
+        this._updateScrollbar();
+        this._addModalNoBackdropEvents();
+    },
+    /**
+     * @private
+     */
+    _onModalNoBackdropHide() {
+        this._removeModalNoBackdropEvents();
+    },
+});
+
+publicWidget.registry.noBackdropPopup = noBackdropPopupWidget;
 
 // Extending the popup widget with cookiebar functionality.
 // This allows for refusing optional cookies for now and can be

@@ -31,8 +31,8 @@
                 <input
                     t-att-id="props.id"
                     class="o_input o_field_property_input"
-                    type="number"
-                    t-att-value="propertyValue"
+                    type="text"
+                    t-att-value="displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
@@ -40,8 +40,8 @@
                 <input
                     t-att-id="props.id"
                     class="o_input o_field_property_input"
-                    type="number"
-                    t-att-value="propertyValue"
+                    type="text"
+                    t-att-value="displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
@@ -66,6 +66,7 @@
                     deleteAction="'value'"
                     readonly="props.readonly"
                     canChangeTags="props.canChangeDefinition"
+                    checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess ? props.checkDefinitionWriteAccess : () => {}"
                     onValueChange.bind="onValueChange"
                     onTagsChange.bind="props.onTagsChange"/>
             </t>
@@ -92,6 +93,7 @@
                     </t>
                     <Many2XAutocomplete
                         t-else=""
+                        t-key="props.id + '_' + props.comodel + '_' + props.string"
                         value="propertyValue[1] || ''"
                         id="props.id"
                         resModel="props.comodel"
@@ -122,6 +124,7 @@
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
                         t-if="!props.readonly"
+                        t-key="props.id + '_' + props.comodel + '_' + props.string"
                         id="props.id"
                         resModel="props.comodel"
                         autoSelect="true"

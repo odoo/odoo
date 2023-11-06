@@ -1,16 +1,18 @@
 .din_page {
-    width: 180mm;
-    margin-left: -1rem;
     font-size: 9pt;
 
+    .container-fluid & { // center the invoice in portal preview
+       margin-left: auto;
+       margin-right: auto;
+    }
     &.header {
         table {
             width: 100%;
-            img, h3, td, tr {
+            img, h3, div.h3, td, tr {
                 padding: 0;
                 margin: 0;
             }
-            h3 {
+            h3, div.h3 {
                 color: $o-default-report-primary-color;
                 position: relative;
                 top: -10mm;
@@ -54,7 +56,7 @@
                 }
             }
         }
-        h2 {
+        h2, [name=payment_communication], [name=payment_term], [name=comment], [name=note], [name=incoterm] {
             margin-left: 5mm;
             margin-right: 10mm;
             margin-top: 8.46mm;
@@ -66,7 +68,7 @@
         .page {
             margin-left: 5mm;
             margin-right: 10mm;
-            > h2, h1, #informations {
+            > h2, h1, #informations, .mt-4 > h2 {
                 display: none;
             }
             [name=invoice_line_table], [name=stock_move_table], .o_main_table {
@@ -107,6 +109,11 @@
             }
         }
     }
+}
+
+.din_page_pdf {
+    width: 180mm;
+    margin-left: -1rem;
 }
 
 

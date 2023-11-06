@@ -7,10 +7,10 @@ import { ViewButton } from "@web/views/view_button/view_button";
 
 class MoveViewButton extends ViewButton {
     async onClick(ev) {
-        if (this.props.clickParams.name != "action_show_details") {
-            super.onClick(ev);
-        } else {
+        if (this.env.model.root.resModel == "stock.picking" && this.props.clickParams.name == "action_show_details") {
             await this.props.record.saveAndOpenDetails();
+        } else {
+            super.onClick(ev);
         }
     }
 
@@ -29,5 +29,6 @@ MovesListRenderer.components = { ...ListRenderer.components, ViewButton: MoveVie
 
 export class StockMoveX2ManyField extends X2ManyField {}
 StockMoveX2ManyField.components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };
+StockMoveX2ManyField.additionalClasses = ['o_field_one2many'];
 
 registry.category("fields").add("stock_move_one2many", StockMoveX2ManyField);

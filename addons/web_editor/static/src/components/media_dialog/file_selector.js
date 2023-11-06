@@ -3,6 +3,8 @@
 import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { Dialog } from '@web/core/dialog/dialog';
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from './search_media';
 
 import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
@@ -38,7 +40,7 @@ AttachmentError.template = xml `
             following pages or views:</p>
         <ul t-foreach="props.views"  t-as="view" t-key="view.id">
             <li>
-                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + view.id">
+                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + window.encodeURIComponent(view.id)">
                     <t t-esc="view.name"/>
                 </a>
             </li>
@@ -136,6 +138,9 @@ export class FileSelector extends Component {
     setup() {
         this.orm = useService('orm');
         this.uploadService = useService('upload');
+        this.keepLast = new KeepLast();
+
+        this.loadMoreButtonRef = useRef('load-more-button');
 
         this.state = useState({
             attachments: [],
@@ -144,11 +149,13 @@ export class FileSelector extends Component {
             needle: '',
         });
 
-        this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY = 10;
+        this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY = 30;
 
         onWillStart(async () => {
             this.state.attachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0);
         });
+
+        this.debouncedScroll = useDebounced(this.scrollToLoadMoreButton, 500);
     }
 
     get canLoadMore() {
@@ -198,10 +205,11 @@ export class FileSelector extends Component {
                     fields: ['name', 'mimetype', 'description', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
                     order: 'id desc',
                     // Try to fetch first record of next page just to know whether there is a next page.
-                    limit: limit + 1,
+                    limit,
                     offset,
                 }
             );
+            attachments.forEach(attachment => attachment.mediaType = 'attachment');
         } catch (e) {
             // Reading attachments as a portal user is not permitted and will raise
             // an access error so we catch the error silently and don't return any
@@ -215,14 +223,32 @@ export class FileSelector extends Component {
         return attachments;
     }
 
+    async handleLoadMore() {
+        await this.loadMore();
+        this.debouncedScroll();
+    }
+
     async loadMore() {
-        const newAttachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.state.attachments.length);
-        this.state.attachments.push(...newAttachments);
+        return this.keepLast.add(this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.state.attachments.length)).then((newAttachments) => {
+            // This is never reached if another search or loadMore occurred.
+            this.state.attachments.push(...newAttachments);
+        });
+    }
+
+    async handleSearch(needle) {
+        await this.search(needle);
+        this.debouncedScroll();
     }
 
     async search(needle) {
+        // Prepare in case loadMore results are obtained instead.
+        this.state.attachments = [];
+        // Fetch attachments relies on the state's needle.
         this.state.needle = needle;
-        this.state.attachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0);
+        return this.keepLast.add(this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0)).then((attachments) => {
+            // This is never reached if a new search occurred.
+            this.state.attachments = attachments;
+        });
     }
 
     async uploadFiles(files) {
@@ -256,6 +282,16 @@ export class FileSelector extends Component {
         return this.props.media
             && this.constructor.tagNames.includes(this.props.media.tagName)
             && !this.selectedAttachmentIds.length;
+    }
+
+    /**
+     * This is used (debounced) to be called after loading an attachment.
+     * This way, the user can always see the "load more" button.
+     */
+    scrollToLoadMoreButton() {
+        if (this.state.needle || this.state.attachments.length > this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY) {
+            this.loadMoreButtonRef.el.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
+        }
     }
 }
 FileSelector.template = 'web_editor.FileSelector';

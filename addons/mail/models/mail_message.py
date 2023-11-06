@@ -195,10 +195,11 @@ class Message(models.Model):
     @api.depends_context('guest', 'uid')
     def _compute_is_current_user_or_guest_author(self):
         user = self.env.user
+        guest = self.env['mail.guest']._get_guest_from_context()
         for message in self:
             if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
                 message.is_current_user_or_guest_author = True
-            elif user._is_public() and (message.author_guest_id and message.author_guest_id == self.env.context.get('guest')):
+            elif message.author_guest_id and message.author_guest_id == guest:
                 message.is_current_user_or_guest_author = True
             else:
                 message.is_current_user_or_guest_author = False
@@ -603,20 +604,43 @@ class Message(models.Model):
 
         messages = super(Message, self).create(values_list)
 
-        check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        # link back attachments to records, to filter out attachments linked to
+        # the same records as the message (considered as ok if message is ok)
+        # and check rights on other documents
+        attachments_tocheck = self.env['ir.attachment']
+        doc_to_attachment_ids = defaultdict(set)
+        if all(isinstance(command, int) or command[0] in (4, 6)
+               for values in values_list
+               for command in values.get('attachment_ids') or []):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                message_attachment_ids = set()
+                for command in values.get('attachment_ids') or []:
                     if isinstance(command, int):
-                        check_attachment_access += [command]
+                        message_attachment_ids.add(command)
                     elif command[0] == 6:
-                        check_attachment_access += command[2]
+                        message_attachment_ids |= set(command[2])
                     else:  # command[0] == 4:
-                        check_attachment_access += [command[1]]
+                        message_attachment_ids.add(command[1])
+                if message_attachment_ids:
+                    key = (values.get('model'), values.get('res_id'))
+                    doc_to_attachment_ids[key] |= message_attachment_ids
+
+            attachment_ids_all = {
+                attachment_id
+                for doc_attachment_ids in doc_to_attachment_ids
+                for attachment_id in doc_attachment_ids
+            }
+            AttachmentSudo = self.env['ir.attachment'].sudo().with_prefetch(list(attachment_ids_all))
+            for (model, res_id), doc_attachment_ids in doc_to_attachment_ids.items():
+                # check only attachments belonging to another model, access already
+                # checked on message for other attachments
+                attachments_tocheck += AttachmentSudo.browse(doc_attachment_ids).filtered(
+                    lambda att: att.res_model != model or att.res_id != res_id
+                ).sudo(False)
         else:
-            check_attachment_access = messages.mapped('attachment_ids').ids  # fallback on read if any unknow command
-        if check_attachment_access:
-            self.env['ir.attachment'].browse(check_attachment_access).check(mode='read')
+            attachments_tocheck = messages.attachment_ids  # fallback on read if any unknown command
+        if attachments_tocheck:
+            attachments_tocheck.check('read')
 
         for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
             if tracking_values_cmd:
@@ -653,15 +677,14 @@ class Message(models.Model):
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        # the cache of the related document doesn't need to be invalidate (see @_invalidate_documents)
+        # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
         self.check_access_rule('unlink')
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
-        for elem in self:
-            if elem.is_thread_message():
-                elem._invalidate_documents()
         return super(Message, self).unlink()
 
     @api.model
@@ -779,8 +802,8 @@ class Message(models.Model):
         self.ensure_one()
         self.check_access_rule('write')
         self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
             partner = self.env['res.partner']
         else:
             guest = self.env['mail.guest']
@@ -799,8 +822,8 @@ class Message(models.Model):
         self.ensure_one()
         self.check_access_rule('write')
         self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
             partner = self.env['res.partner']
         else:
             guest = self.env['mail.guest']
@@ -841,7 +864,7 @@ class Message(models.Model):
                     .display_name
             else:
                 record_name = False
-            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [{
@@ -1091,7 +1114,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):

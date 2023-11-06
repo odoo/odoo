@@ -212,25 +212,25 @@ class TestFields(TransactionCaseWithUserDemo):
             }
         )
         fields = self.env["test_new_api.foo"]._fields
-        triggers = self.env.registry.field_triggers
+        get_trigger_tree = self.registry.get_trigger_tree
         value1 = fields["value1"]
         valid_depends = fields["x_computed_custom_valid_depends"]
         valid_transitive_depends = fields["x_computed_custom_valid_transitive_depends"]
         invalid_depends = fields["x_computed_custom_invalid_depends"]
         invalid_transitive_depends = fields["x_computed_custom_invalid_transitive_depends"]
         # `x_computed_custom_valid_depends` in the triggers of the field `value1`
-        self.assertTrue(valid_depends in triggers[value1][None])
+        self.assertTrue(valid_depends in get_trigger_tree([value1]).root)
         # `x_computed_custom_valid_transitive_depends` in the triggers `x_computed_custom_valid_depends` and `value1`
-        self.assertTrue(valid_transitive_depends in triggers[valid_depends][None])
-        self.assertTrue(valid_transitive_depends in triggers[value1][None])
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([valid_depends]).root)
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([value1]).root)
         # `x_computed_custom_invalid_depends` not in any triggers, as it was invalid and was skipped
         self.assertEqual(
-            sum(invalid_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 0
+            sum(invalid_depends in get_trigger_tree([field]).root for field in fields.values()), 0
         )
         # `x_computed_custom_invalid_transitive_depends` in the triggers of `x_computed_custom_invalid_depends` only
-        self.assertTrue(invalid_transitive_depends in triggers[invalid_depends][None])
+        self.assertTrue(invalid_transitive_depends in get_trigger_tree([invalid_depends]).root)
         self.assertEqual(
-            sum(invalid_transitive_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 1
+            sum(invalid_transitive_depends in get_trigger_tree([field]).root for field in fields.values()), 1
         )
 
     @mute_logger('odoo.fields')
@@ -515,6 +515,38 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.baz, "<[Hi]>")
         record.foo = "Ho"
         self.assertEqual(record.baz, "<[Ho]>")
+
+    def test_12_unlink_cascade_active_store(self):
+        """ Test that `unlink` on many records doesn't raise a RecursionError
+        with a stored related `active` field.
+        """
+        message = self.env['test_new_api.message'].create({
+            'active': False,
+        })
+        self.env['test_new_api.emailmessage'].create(
+            [{'message': message.id}] * 101,
+        )
+        message.unlink()
+
+    def test_12_unlink_cascade_ir_rule_using_related(self):
+        """ Test that `unlink` on many records doesn't raise a RecursionError
+        when there is an ir.rule with a stored related field to compute.
+        """
+        message = self.env['test_new_api.message'].create({
+            'active': False,
+        })
+        self.env['test_new_api.emailmessage'].create(
+            [{'message': message.id}] * 101,
+        )
+
+        # Create an ir.rule, which forces to flush field 'active'
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get_id('test_new_api.emailmessage'),
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': str([('active', '=', False)]),
+        })
+
+        message.with_user(self.user_demo).unlink()
 
     def test_12_dynamic_depends(self):
         Model = self.registry['test_new_api.compute.dynamic.depends']
@@ -819,6 +851,44 @@ class TestFields(TransactionCaseWithUserDemo):
         records[0].foo = "x"
         records[1].foo = "assign"
         self.env.flush_all()
+
+    def test_17_compute_depends_on_many2many(self):
+        user1, user2, user3 = self.env['test_new_api.user'].create([{}, {}, {}])
+        group = self.env['test_new_api.group'].create({'user_ids': [Command.link(user1.id)]})
+        self.env.flush_all()
+
+        field = type(user1).group_count
+        self.assertFalse(self.env.records_to_compute(field))
+
+        # should mark user2 and user3 to compute only
+        group.write({'user_ids': [Command.link(user1.id), Command.link(user2.id), Command.link(user3.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user2 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.unlink(user2.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2)
+
+        # should mark user2 and user3 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.set([user1.id, user2.id])]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user3 to compute only
+        self.env.flush_all()
+        user3.write({'group_ids': [Command.link(group.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user3)
+
+        # similar with new records, but only check recomputation
+        user1 = self.env['test_new_api.user'].new({})
+        user2 = self.env['test_new_api.user'].new({})
+        group = self.env['test_new_api.group'].new({'user_ids': [user1.id]})
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 0)
+
+        group.user_ids += user2
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 1)
 
     def test_20_float(self):
         """ test rounding of float fields """
@@ -3323,6 +3393,11 @@ class TestParentStore(common.TransactionCase):
         self.assertEqual(self.cats(8).depth, 2)
         self.assertEqual(self.cats(9).depth, 2)
 
+        # add a new node: one query to INSERT, one query to UPDATE parent_path
+        with self.assertQueryCount(2):
+            cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
+            self.assertEqual(cat.depth, 2)
+
 
 class TestRequiredMany2one(common.TransactionCase):
 
@@ -3965,7 +4040,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
     def test_precompute_dependencies_many2one(self):
         Model = self.registry['test_new_api.precompute']
@@ -3989,7 +4064,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Line.size, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
 
 class TestPrecompute(common.TransactionCase):

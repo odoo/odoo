@@ -43,13 +43,15 @@ export class SignatureWidget extends Component {
         this.dialogService.add(SignatureDialog, dialogProps);
     }
 
-    uploadSignature({ signatureImage }) {
+    async uploadSignature({ signatureImage }) {
         const file = signatureImage[1];
-        const { resModel, resId } = this.props.record;
+        const { model, resModel, resId } = this.props.record;
 
-        this.orm.write(resModel, [resId], {
+        await this.env.services.orm.write(resModel, [resId], {
             [this.props.signatureField]: file,
         });
+        await this.props.record.load();
+        model.notify();
     }
 }
 

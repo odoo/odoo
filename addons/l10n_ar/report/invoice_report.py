@@ -18,4 +18,4 @@ class AccountInvoiceReport(models.Model):
         return super()._select() + ", contact_partner.state_id as l10n_ar_state_id, move.date"
 
     def _from(self):
-        return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_shipping_id"
+        return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = COALESCE(move.partner_shipping_id, move.partner_id)"

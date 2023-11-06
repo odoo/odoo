@@ -55,9 +55,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_note_url(self):
-        website = self.env['website'].get_current_website()
-        if website:
-            return website.get_base_url()
+        website_id = self._context.get('website_id')
+        if website_id:
+            return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
     @api.depends('order_line')
@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
             update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
             if update_values:
                 self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
+        elif quantity > 0:
             # Create new line
             order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
             order_line = self.env['sale.order.line'].sudo().create(order_line_values)
@@ -149,9 +149,6 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id).exists()
         if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-
-        if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
-            raise UserError(_("The given product does not have a price therefore it cannot be added to cart."))
 
         if line_id is not False:
             order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
@@ -192,6 +189,11 @@ class SaleOrder(models.Model):
             warning = ''
 
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
+
+        if order_line and order_line.price_unit == 0 and self.website_id.prevent_zero_price_sale:
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
 
         return {
             'line_id': order_line.id,
@@ -419,7 +421,7 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line)
+        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line if not line.display_type)
 
     def _filter_can_send_abandoned_cart_mail(self):
         self.website_id.ensure_one()
@@ -469,3 +471,11 @@ class SaleOrder(models.Model):
             # URL should always be relative, safety check
             action['url'] = f'/@{action["url"]}'
         return action
+
+    def _get_website_sale_extra_values(self):
+        """ Hook to provide additional rendering values for the cart template.
+        :return: additional values to be passed to the cart template
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}

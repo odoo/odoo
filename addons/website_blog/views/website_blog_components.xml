@@ -5,9 +5,9 @@
 <!-- ======   Template: Blogs Navbar   =========================================
 ============================================================================ -->
 <template id="blogs_nav" name="Blogs Bar Template">
-    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}" t-if="len(blogs) > 1">
+    <nav t-attf-class="navbar navbar-expand-sm navbar-light #{additionnal_classes}">
         <div class="container">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" t-if="len(blogs) > 1">
                 <li class="nav-item">
                     <span class="nav-link disabled ps-0">Blogs:</span>
                 </li>
@@ -29,6 +29,8 @@
                 <t t-set="display_description" t-valuef="true"/>
                 <t t-set="display_detail" t-valuef="false"/>
                 <input type="hidden" name="tag" t-att-value="tag"/>
+                <input type="hidden" name="date_begin" t-att-value="date_begin"/>
+                <input type="hidden" name="date_end" t-att-value="date_end"/>
             </t>
         </div>
     </nav>
@@ -64,7 +66,7 @@
         <optgroup t-foreach="nav_list" t-as="year" t-attf-label="#{year}">
             <option t-foreach="nav_list[year]" t-as="months"
                     t-att="[('selected' if date_begin and (months['date_begin'] == date_begin) else 'unselected' ) , 'true' ]"
-                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}">
+                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'], tag=tag)}">
                 <t t-esc="months['month']"/>
                 <t t-esc="year"/>
             </option>
@@ -126,7 +128,7 @@ Options:
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1">
+            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
                 <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
                 <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
@@ -218,7 +220,7 @@ Display a sidebar beside the post content.
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
 
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1">
+            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
                 <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-facebook-square text-facebook"/></a>
                 <a href="#" aria-label="Twitter" title="Share on Twitter" t-attf-class="o_twitter #{classes}"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>

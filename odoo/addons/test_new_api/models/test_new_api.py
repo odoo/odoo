@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+_logger = logging.getLogger('precompute_setter')
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
@@ -145,6 +146,7 @@ class Message(models.Model):
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
+    active = fields.Boolean(default=True)
 
     attributes = fields.Properties(
         string='Properties',
@@ -229,6 +231,7 @@ class EmailMessage(models.Model):
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
+    active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
 class DiscussionPartner(models.Model):
@@ -1374,6 +1377,24 @@ class ComputeMember(models.Model):
             member.container_id = container.search([('name', '=', member.name)], limit=1)
 
 
+class User(models.Model):
+    _name = _description = 'test_new_api.user'
+
+    group_ids = fields.Many2many('test_new_api.group')
+    group_count = fields.Integer(compute='_compute_group_count', store=True)
+
+    @api.depends('group_ids')
+    def _compute_group_count(self):
+        for user in self:
+            user.group_count = len(user.group_ids)
+
+
+class Group(models.Model):
+    _name = _description = 'test_new_api.group'
+
+    user_ids = fields.Many2many('test_new_api.user')
+
+
 class ComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 
@@ -1554,8 +1575,6 @@ class PrecomputeCombo(models.Model):
     _name = 'test_new_api.precompute.combo'
     _description = 'yet another model with precomputed fields'
 
-    _logger = logging.getLogger('precompute_setter')
-
     name = fields.Char()
     reader = fields.Char(compute='_compute_reader', precompute=True, store=True)
     editer = fields.Char(compute='_compute_editer', precompute=True, store=True, readonly=False)
@@ -1577,7 +1596,7 @@ class PrecomputeCombo(models.Model):
             record.setter = record.name
 
     def _inverse_setter(self):
-        self._logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
+        _logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
 
 
 class PrecomputeEditable(models.Model):
@@ -1723,6 +1742,20 @@ class RelatedTranslation2(models.Model):
     parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
     name = fields.Char('Name Related', related='parent_id.name', readonly=False)
     html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    computed_name = fields.Char('Name Computed', compute='_compute_name')
+    computed_html = fields.Char('HTML Computed', compute='_compute_html')
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.name')
+    def _compute_name(self):
+        for record in self:
+            record.computed_name = record.parent_id.name
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.html')
+    def _compute_html(self):
+        for record in self:
+            record.computed_html = record.parent_id.html
 
 
 class RelatedTranslation3(models.Model):
@@ -1745,3 +1778,48 @@ class EmptyChar(models.Model):
     _description = 'A model to test emtpy char'
 
     name = fields.Char('Name')
+
+class UnlinkContainer(models.Model):
+    _name = 'test_new_api.unlink.container'
+    _description = 'A container model to test unlink + trigger'
+
+    name = fields.Char('Name', translate=True)
+
+class UnlinkLine(models.Model):
+    _name = 'test_new_api.unlink.line'
+    _description = 'A line model to test unlink + trigger'
+
+    container_id = fields.Many2one('test_new_api.unlink.container')
+    container_name = fields.Char('Container Name', related='container_id.name', store=True)
+
+
+class Team(models.Model):
+    _name = 'test_new_api.team'
+    _description = 'Odoo Team'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_new_api.team')
+    member_ids = fields.One2many('test_new_api.team.member', 'team_id')
+
+
+class TeamMember(models.Model):
+    _name = 'test_new_api.team.member'
+    _description = 'Odoo Developer'
+
+    name = fields.Char('Name')
+    team_id = fields.Many2one('test_new_api.team')
+    parent_id = fields.Many2one('test_new_api.team', related='team_id.parent_id')
+
+class UnsearchableO2M(models.Model):
+    _name = 'test_new_api.unsearchable.o2m'
+    _description = 'Test non-stored unsearchable o2m'
+
+    name = fields.Char('Name')
+    stored_parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=True)
+    parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=False, compute="_compute_parent_id")
+    child_ids = fields.One2many('test_new_api.unsearchable.o2m', 'parent_id')
+
+    @api.depends('stored_parent_id')
+    def _compute_parent_id(self):
+        for r in self:
+            r.parent_id = r.stored_parent_id

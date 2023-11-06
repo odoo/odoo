@@ -10,23 +10,41 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
 # monchai7 <montchye@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-# Amin Cheloh <amincheloh@gmail.com>, 2022
+# Amin Cheloh <amincheloh@gmail.com>, 2023
+# Wichanon Jamwutthipreecha, 2023
+# Martin Trigaux, 2023
+# Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Amin Cheloh <amincheloh@gmail.com>, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr " - ปิด"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr " - เปิด"
 
 #. module: point_of_sale
 #. odoo-python
@@ -42,7 +60,7 @@ msgstr "การคืนเงิน"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "% Disc"
-msgstr ""
+msgstr "% ส่วนลด"
 
 #. module: point_of_sale
 #. odoo-python
@@ -63,7 +81,7 @@ msgstr "%s การชำระเงิน POS ของ %s ใน %s"
 #: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
 #, python-format
 msgid "%s customer(s) found for \"%s\"."
-msgstr ""
+msgstr "%s ลูกค้าที่พบสำหรับ \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -75,10 +93,10 @@ msgstr "%s มียอดรวมของ %s คุณแน่ใจหร�
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
-msgstr ""
+msgstr "พบสินค้า %s สำหรับ \"%s\""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -116,7 +134,7 @@ msgstr "(อัปเดต)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
-msgstr ""
+msgstr "+ ร้านค้าใหม่"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -143,11 +161,13 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle me-1\" title=\"การตั้งค่านี้เป็นปกติสำหรับ PoS "
+"ทั้งหมด\" pos-data-toggle=\"คำแนะนำ\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> แก้ไข"
 
 #. module: point_of_sale
 #. odoo-python
@@ -251,7 +271,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<strong>Amounting to:</strong>"
-msgstr ""
+msgstr "<strong>จํานวน:</strong>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -342,7 +362,7 @@ msgstr "รับชำระเงินด้วยหกสถานีกา
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Stripe payment terminal"
-msgstr ""
+msgstr "รับชำระเงินด้วยเครื่องชำระเงิน Stripe"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -466,13 +486,15 @@ msgid ""
 "Add a QR code on the ticket, which the user can scan to request the invoice "
 "linked to its order."
 msgstr ""
+"เพิ่มรหัส QR บนทิกเก็ต ซึ่งผู้ใช้สามารถสแกน "
+"เพื่อขอใบแจ้งหนี้ที่เชื่อมโยงกับคำสั่งซื้อได้"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Add a closing note..."
-msgstr ""
+msgstr "เพิ่มบันทึกปิดท้าย..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -497,7 +519,7 @@ msgstr "เพิ่มวิธีการชำระเงินใหม่
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Add an opening note..."
-msgstr ""
+msgstr "เพิ่มบันทึกการเปิด..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
@@ -507,17 +529,17 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Additional required information:"
-msgstr ""
+msgstr "ข้อมูลที่จำเป็นเพิ่มเติม:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Additional required invoicing information:"
-msgstr ""
+msgstr "ข้อมูลการออกใบแจ้งหนี้ที่จำเป็นเพิ่มเติม:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Additional required user information:"
-msgstr ""
+msgstr "ข้อมูลผู้ใช้ที่จำเป็นเพิ่มเติม:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -529,7 +551,7 @@ msgstr "ที่อยู่"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
-msgstr ""
+msgstr "เพิ่มปุ่มเพื่อกำหนดส่วนลดทั่วโลก"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -590,18 +612,18 @@ msgstr "ไลน์การขายทั้งหมด"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow Ship Later"
-msgstr ""
+msgstr "อนุญาตให้จัดส่งในภายหลัง"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow cashiers to set a discount per line"
-msgstr ""
+msgstr "อนุญาตให้พนักงานแคชเชียร์ตั้งค่าในส่วนลดต่อรายการได้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
-msgstr ""
+msgstr "อนุญาตให้บันทึกและสลับระหว่างพนักงานที่เลือก"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -713,8 +735,8 @@ msgstr "เร็วที่สุดเท่าที่เป็นไปไ
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
-msgid "At the session closing"
-msgstr ""
+msgid "At the session closing (faster)"
+msgstr "เมื่อปิดเซสชัน (เร็วขึ้น)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -806,7 +828,7 @@ msgstr "กลับ"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Backend"
-msgstr ""
+msgstr "การทำงานเบื้องหลัง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -885,7 +907,7 @@ msgstr "ส่วนต่างก่อนปิด"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Billing address:"
-msgstr ""
+msgstr "ที่อยู่เรียกเก็บเงิน:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
@@ -906,6 +928,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"เพิ่มยอดขายของคุณด้วยโปรแกรมหลายประเภท: คูปอง โปรโมชั่น บัตรของขวัญ "
+"บัตรสมาชิก สามารถกำหนดเงื่อนไขเฉพาะได้ (สินค้า, ลูกค้า, จำนวนซื้อขั้นต่ำ, "
+"ระยะเวลา) รางวัลอาจเป็นส่วนลด (% หรือจำนวน) หรือแถมสินค้าฟรี"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1004,6 +1029,13 @@ msgstr "ไม่สามารถปิดเซสชั่นขณะออ
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr "ไม่สามารถแก้ไขทิปได้"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1051,7 +1083,7 @@ msgstr "บันทึกเงินสด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
 msgid "Cash Lines"
-msgstr ""
+msgstr "รายการเงินสด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1074,7 +1106,7 @@ msgstr "การปัดเศษเงินสด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
 msgid "Cash Rounding (PoS)"
-msgstr ""
+msgstr "การปัดเศษเงินสด (PoS)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1086,14 +1118,14 @@ msgstr "การปัดเศษเงินสด"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Loss)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (ขาดทุน)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Profit)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (กำไร)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1107,7 +1139,7 @@ msgstr "เงินสดเข้า/ออกของ %s ถูกละเ�
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Cash register"
-msgstr ""
+msgstr "เครื่องบันทึกเงินสด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
@@ -1207,7 +1239,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
 msgid "Check products"
-msgstr ""
+msgstr "ตรวจสอบสินค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1316,7 +1348,7 @@ msgstr "วันที่ปิด"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Closing Session"
-msgstr ""
+msgstr "ปิดเซสชั่น"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1420,7 +1452,7 @@ msgstr "ยืนยัน ?"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect device to your PoS without an IoT Box"
-msgstr ""
+msgstr "เชื่อมต่ออุปกรณ์กับ PoS ของคุณโดยไม่ต้องใช้กล่อง IoT"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1655,7 +1687,7 @@ msgstr "กำหนดเอง"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
-msgstr ""
+msgstr "ส่วนหัวและส่วนท้ายแบบกำหนดเอง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1733,7 +1765,7 @@ msgstr "ความต้องการของลูกค้า"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CustomerFacingDisplayButton.xml:0
 #, python-format
 msgid "Customer Screen Connected"
-msgstr ""
+msgstr "เชื่อมต่อกับหน้าจอลูกค้าแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1748,7 +1780,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CustomerFacingDisplayButton.js:0
 #, python-format
 msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
-msgstr ""
+msgstr "หน้าจอลูกค้าไม่รองรับ โปรดอัปเกรดกล่อง IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1759,11 +1791,20 @@ msgid "Customer Screen Warning"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "ลูกค้าเป็นสิ่งจำเป็นสำหรับ %s วิธีการชำระเงิน"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr "เคล็ดลับลูกค้า ไม่สามารถแก้ไขได้โดยตรง"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1842,12 +1883,12 @@ msgstr "ภาษีการขายเริ่มต้น"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Temporary Account"
-msgstr ""
+msgstr "บัญชีชั่วคราวเริ่มต้น"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default journals for orders and invoices"
-msgstr ""
+msgstr "สมุดรายวันเริ่มต้นสำหรับใบสั่งซื้อและใบแจ้งหนี้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2075,6 +2116,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
+"คุณต้องการยอมรับส่วนต่างของการชำระเงินและผ่านรายการบันทึกกำไร/ขาดทุนหรือไม่?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2082,6 +2124,13 @@ msgstr ""
 #, python-format
 msgid "Do you want to open the customer list to select customer?"
 msgstr "คุณต้องการเปิดรายชื่อลูกค้าเพื่อเลือกลูกค้าหรือไม่?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr "คุณต้องการพิมพ์โดยใช้เครื่องพิมพ์เว็บหรือไม่?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2121,7 +2170,7 @@ msgstr "ดาวน์โหลดคำสั่งที่ยังไม่
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Download a report with all the sales of the current PoS Session"
-msgstr ""
+msgstr "ดาวน์โหลดรายงานพร้อมยอดขายทั้งหมดของเซสชัน PoS ปัจจุบัน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2326,6 +2375,13 @@ msgid "Fiscal Position"
 msgstr "ฐานะทางการเงิน"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "ไม่พบสถานะทางการเงิน"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2343,12 +2399,12 @@ msgstr "ข้อผิดพลาดของโมดูลข้อมูล
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Flexible Pricelists"
-msgstr ""
+msgstr "รายการราคาที่ยืดหยุ่น"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Flexible Taxes"
-msgstr ""
+msgstr "ภาษีที่ยืดหยุ่น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2432,7 +2488,7 @@ msgstr "การสร้างการอ้างอิงคำสั่ง
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Get my invoice"
-msgstr ""
+msgstr "รับใบแจ้งหนี้ของฉัน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
@@ -2507,7 +2563,7 @@ msgstr "มีการควบคุมเงินสด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__has_image
 msgid "Has Image"
-msgstr ""
+msgstr "มีรูปภาพ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__has_message
@@ -2659,8 +2715,8 @@ msgstr "หากต้องการลบการขาย จะต้อ�
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
-msgid "In real time (recommended)"
-msgstr ""
+msgid "In real time (accurate but slower)"
+msgstr "แบบเรียลไทม์ (แม่นยำ แต่ช้ากว่า)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2734,7 +2790,7 @@ msgstr "บัญชีตัวกลาง"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Intermediary account used for unidentified customers."
-msgstr ""
+msgstr "บัญชีตัวกลางที่ใช้สำหรับลูกค้าที่ไม่ระบุชื่อ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -2829,7 +2885,7 @@ msgstr "การแจ้งหนี้"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Invoicing confirmation"
-msgstr ""
+msgstr "การยืนยันการออกใบแจ้งหนี้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2846,7 +2902,7 @@ msgstr "ที่อยู่ IP ของกล่อง IoT"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_default_pricelist_displayed
 msgid "Is Default Pricelist Displayed"
-msgstr ""
+msgstr "เป็นการแสดงรายการราคาเริ่มต้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
@@ -2905,6 +2961,13 @@ msgid ""
 msgstr ""
 "ห้ามแก้ไขภาษีที่ใช้ในใบสั่ง POS ที่ไม่ได้ผ่านรายการ คุณต้องปิดเซสชัน POS "
 "ก่อนแก้ไขภาษี"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "It is not allowed to mix refunds and sales"
+msgstr "ไม่อนุญาตให้มีการคืนเงินและการขายรวมกัน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3054,11 +3117,13 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
+"เว้นว่างไว้เพื่อใช้บัญชีเริ่มต้นจากการตั้งค่าบริษัท\n"
+"แทนที่บัญชีลูกหนี้ของบริษัท (สำหรับระบบขายหน้าร้าน) ที่ใช้ในรายการสมุดรายวัน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the receivable account of customer"
-msgstr ""
+msgstr "เว้นว่างไว้เพื่อใช้บัญชีลูกหนี้ของลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -3069,6 +3134,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"เว้นว่างไว้เพื่อใช้บัญชีลูกหนี้ของลูกค้า\n"
+"กำหนดสมุดรายวันที่จะจองการชำระเงินสะสม (หรือการชำระเงินแต่ละรายการ ถ้าระบุลูกค้าเป็นจริง) หลังจากการปิดเซสชัน\n"
+"สำหรับสมุดรายวันเงินสด เราจะเขียนโดยตรงไปยังบัญชีเริ่มต้นในสมุดรายวันผ่านทางรายการใบแจ้งยอด\n"
+"สำหรับสมุดรายวันธนาคาร เราจะเขียนไปยังบัญชีคงค้างที่ระบุไว้ในวิธีการชำระเงินนี้\n"
+"อนุญาตให้เฉพาะเงินสดและสมุดรายวันธนาคารเท่านั้น"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -3109,7 +3179,7 @@ msgstr "กำลังโหลดสินค้าจำนวนจำกั
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_manual_discount
 msgid "Line Discounts"
-msgstr ""
+msgstr "รายการส่วนลด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -3215,34 +3285,34 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
-msgstr ""
+msgstr "จัดการโปรโมชั่นที่จะให้ส่วนลดหรือของขวัญแก่ลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__margin
 msgid "Margin"
-msgstr "อัตราส่วน"
+msgstr "กำไร"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin_percent
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin_percent
 msgid "Margin (%)"
-msgstr "อัตราส่วน (%)"
+msgstr "กำไร (%)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Margin:"
-msgstr "อัตราส่วน"
+msgstr "กำไร:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_margins_costs_accessible_to_every_user
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_margins_costs_accessible_to_every_user
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Margins & Costs"
-msgstr ""
+msgstr "กำไร & ต้นทุน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3256,7 +3326,7 @@ msgstr "เกินขีดจำกัดสูงสุด"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "ถึงมูลค่าสูงสุดแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3313,7 +3383,7 @@ msgstr "ข้อมูลเพิ่มเติม"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "More settings:"
-msgstr ""
+msgstr "การตั้งค่าเพิ่มเติม:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3375,7 +3445,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
@@ -3439,7 +3509,7 @@ msgstr "ไม่"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "No Point of Sale selected"
-msgstr ""
+msgstr "ไม่ได้เลือกการขายหน้าร้าน"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3457,14 +3527,6 @@ msgid ""
 msgstr "ไม่พบใบแจ้งยอดเงินสดสำหรับเซสชันนี้ ไม่สามาถบันทึกเงินสดคืนได้"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "No customer found for"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
@@ -3477,6 +3539,20 @@ msgstr "ยังไม่มีข้อมูล!"
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "ไม่มีลิงก์ไปยังใบแจ้งหนี้สำหรับ%s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
+#, python-format
+msgid "No more customer found for \"%s\"."
+msgstr "ไม่พบลูกค้าสำหรับ \"%s\""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid "No more product found for \"%s\"."
+msgstr "ไม่พบสินค้าเพิ่มเติมสำหรับ \"%s\""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3551,7 +3627,7 @@ msgstr "จำนวนสินค้าที่โหลด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of Refund Orders"
-msgstr ""
+msgstr "จำนวนคำสั่งซื้อที่ขอคืนเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -3561,17 +3637,31 @@ msgstr "จํานวนข้อผิดพลาด"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr ""
+msgstr "จำนวนสินค้าที่คืนเงินในคำสั่งซื้อนี้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "จํานวนข้อความที่ต้องดําเนินการ"
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of partners loaded can not be 0"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Number of product loaded can not be 0"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3585,7 +3675,7 @@ msgstr "โอเค"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "OPENING CASH CONTROL"
-msgstr ""
+msgstr "การเปิดการควบคุมเงินสด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3607,7 +3697,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Offline Orders"
-msgstr ""
+msgstr "การสั่งซื้อแบบออฟไลน์"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3650,12 +3740,24 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
+"อนุญาตให้ใช้เฉพาะปริมาณติดลบสำหรับรายการการคืนเงินนี้ คลิก +/- "
+"เพื่อแก้ไขจำนวนที่ต้องการคืนเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
+msgstr "ใช้การปัดเศษเป็นเงินสดเท่านั้น"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"เฉพาะสมุดรายวันประเภท 'เงินสด' หรือ 'ธนาคาร' "
+"เท่านั้นที่สามารถใช้กับวิธีการชำระเงินได้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3670,7 +3772,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "เฉพาะวิธีเงินสดเท่านั้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3680,6 +3782,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"เฉพาะผู้ใช้ที่มีสิทธิ์การเข้าถึงระดับผู้จัดการสำหรับแอป PoS "
+"เท่านั้นที่สามารถแก้ไขราคาสินค้าตามคำสั่งซื้อได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3687,6 +3791,7 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"รองรับเฉพาะรูปแบบรูปภาพที่เข้ากันได้กับเว็บ เช่น .png หรือ .jpeg เท่านั้น"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3694,12 +3799,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "เปิดกล่องเงินสด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "เปิดเซสชัน PoS ที่ใช้วิธีการชำระเงินนี้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3711,7 +3816,7 @@ msgstr "เปิดวาระการขาย"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr ""
+msgstr "เปิดเซสชัน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3719,13 +3824,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Open the money details popup"
-msgstr ""
+msgstr "เปิดป๊อปอัปรายละเอียดเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "เปิดโดย"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3737,20 +3842,20 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opened by"
-msgstr ""
+msgstr "เปิดโดย"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Opening"
-msgstr ""
+msgstr "เปิด"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opening Control"
-msgstr ""
+msgstr "เปิดการควบคุม"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__start_at
@@ -3761,19 +3866,19 @@ msgstr "วันที่เริ่มต้น"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_notes
 msgid "Opening Notes"
-msgstr ""
+msgstr "บันทึกการเปิด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Opening balance summed to all cash transactions."
-msgstr ""
+msgstr "ยอดคงเหลือยกมารวมเข้ากับธุรกรรมเงินสดทั้งหมด"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Opening cash"
-msgstr ""
+msgstr "เปิดเงินสด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -3786,7 +3891,7 @@ msgstr "ประเภทการปฏิบัติการ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "ประเภทการดำเนินการจะแสดงในแดชบอร์ดสินค้าคงคลัง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3804,7 +3909,7 @@ msgstr "คำสั่ง"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Order %s"
-msgstr ""
+msgstr "คำสั่งซื้อ %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3812,7 +3917,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "คำสั่งซื้อ %s ไม่ได้รับชำระเต็มจำนวน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -3830,12 +3935,12 @@ msgstr "วันที่สั่ง"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sequence_id
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "รหัสคำสั่งซื้อตามลำดับ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "ลำดับรหัสรายการสั่งซื้อ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -3852,14 +3957,14 @@ msgstr "อ้างอิงคำสั่ง"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
-msgstr ""
+msgstr "หมายเลขลำดับคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Order is empty"
-msgstr ""
+msgstr "คำสั่งซื้อว่างเปล่า"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3871,16 +3976,16 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
-msgstr ""
+msgstr "รายการสั่งซื้อในฟิลด์นี้คือรายการที่คืนเงินรายการสั่งซื้อนี้"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -3902,13 +4007,13 @@ msgstr "คำสั่ง"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
-msgstr ""
+msgstr "การวิเคราะห์คำสั่งซื้อ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_other_devices
 msgid "Other Devices"
-msgstr ""
+msgstr "อุปกรณ์อื่นๆ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3925,68 +4030,68 @@ msgstr "อื่น ๆ "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr ""
+msgstr "บัญชีคงค้าง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
 msgid "POS Order"
-msgstr ""
+msgstr "คำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "คำสั่งซื้อ POS %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr ""
+msgstr "คำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr ""
+msgstr "วิธีการชำระเงิน POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_tree_view
 msgid "POS Product Category"
-msgstr ""
+msgstr "หมวดหมู่สินค้า POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
 msgid "POS Sales"
-msgstr ""
+msgstr "การขาย POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
 msgid "POS Session"
-msgstr ""
+msgstr "เซสซัน POS"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ POS %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4033,14 +4138,14 @@ msgstr "จ่าย"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr ""
+msgstr "ชำระเงินคำสั่งซื้อ"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4080,7 +4185,7 @@ msgstr "วิธีการชำระเงิน"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "ข้อมูลใบเสร็จรับเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -4097,7 +4202,7 @@ msgstr "สถานะการชำระเงิน"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Payment Successful"
-msgstr ""
+msgstr "ชำระเงินสำเร็จ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4109,33 +4214,33 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "รหัสธุรกรรมการชำระเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Payment method"
-msgstr ""
+msgstr "วิธีการชำระเงิน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment methods available"
-msgstr ""
+msgstr "มีวิธีการชำระเงินให้เลือก"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "คำขอชำระเงินอยู่ระหว่างดำเนินการ"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "การชำระเงินกลับรายการแล้ว"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4160,25 +4265,32 @@ msgstr "การชำระเงิน"
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Payments Difference"
-msgstr ""
+msgstr "ส่วนต่างของการชำระเงิน"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr ""
+msgstr "วิธีการชำระเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Payments in"
-msgstr ""
+msgstr "ชำระเงินใน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #, python-format
 msgid "Payments:"
+msgstr "การชำระเงิน:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
 msgstr ""
 
 #. module: point_of_sale
@@ -4200,7 +4312,7 @@ msgstr "โทรศัพท์"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product categories are available"
-msgstr ""
+msgstr "เลือกหมวดหมู่สินค้าที่มีอยู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4212,14 +4324,14 @@ msgstr "การรับ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "จำนวนการเบิกสินค้า"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "การเลือก POS"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking_type
@@ -4247,14 +4359,14 @@ msgstr "รูปภาพ"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "พลาสติก"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr ""
+msgstr "โปรดยืนยันจำนวนเงินจำนวนมาก"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4279,6 +4391,8 @@ msgid ""
 "Please check if the printer is still connected. \n"
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
+"โปรดตรวจสอบว่าเครื่องพิมพ์ยังคงเชื่อมต่ออยู่หรือไม่\n"
+"เบราว์เซอร์บางตัวไม่อนุญาตให้มีการโทร HTTP จากเว็บไซต์ไปยังอุปกรณ์ในเครือข่าย (ด้วยเหตุผลด้านความปลอดภัย) หากเป็นกรณีนี้ คุณจะต้องปฏิบัติตามเอกสารของ Odoo สำหรับ 'ใบรับรองที่ลงนามด้วยตนเองสำหรับเครื่องพิมพ์ ePOS' และ 'การเชื่อมต่อที่ปลอดภัย (HTTPS)' เพื่อแก้ไขปัญหานี้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4295,6 +4409,8 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"กรุณาปิดเซสซันการขายหน้าร้านทั้งหมดในช่วงเวลานี้ก่อนที่จะปิด "
+"เซสชั่นที่เปิดคือ:%s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -4304,40 +4420,44 @@ msgid ""
 "Please close and validate the following open PoS Sessions before modifying this payment method.\n"
 "Open sessions: %s"
 msgstr ""
+"โปรดปิดและตรวจสอบเซสชัน PoS ที่เปิดอยู่ต่อไปนี้ก่อนที่จะแก้ไขวิธีการชำระเงินนี้\n"
+"เซสซันที่เปิดคือ: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr ""
+msgstr "โปรดกำหนดค่าวิธีการชำระเงินใน POS ของคุณ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Please create/select a Point of Sale above to show the configuration "
 "options."
-msgstr ""
+msgstr "โปรดสร้าง/เลือกการขายหน้าร้านด้านบน เพื่อแสดงตัวเลือกการกำหนดค่า"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "โปรดกำหนดบัญชีรายได้สำหรับสินค้านี้: \"%s\" (รหัส:%d)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please define income account for this product: '%s' (id:%d)."
-msgstr ""
+msgstr "โปรดกำหนดบัญชีรายได้สำหรับสินค้านี้: '%s' (รหัส:%d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
+"กรุณากรอกข้อมูลการเรียกเก็บเงินของคุณ <small class=\"text-"
+"muted\">หรือ</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4347,6 +4467,8 @@ msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีการสูญเสีย "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4356,34 +4478,36 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีกำไร "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "กรุณาพิมพ์ใบแจ้งหนี้จากการทำงานเบื้องหลัง"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "กรุณาระบุพาร์ทเนอร์สำหรับการขาย"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "กรุณาเลือกวิธีการชำระเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Please select the Customer"
-msgstr ""
+msgstr "กรุณาเลือกลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -4393,7 +4517,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "อินเตอร์เฟซ PoS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4409,19 +4533,21 @@ msgstr "คำสั่ง PoS"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "หมวดหมู่สินค้า PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "หมวดหมู่สินค้า PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
-msgstr ""
+msgstr "ระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
@@ -4435,6 +4561,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "การขายหน้าร้าน"
 
@@ -4444,7 +4571,7 @@ msgstr "การขายหน้าร้าน"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_pivot
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "การวิเคราะห์การขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
@@ -4456,7 +4583,7 @@ msgstr "หมวดจุดขาย"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "การกำหนดค่าการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
@@ -4474,38 +4601,38 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr ""
+msgstr "รายละเอียดการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr ""
+msgstr "รายงานรายละเอียดการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr ""
+msgstr "รายงานใบแจ้งหนี้ของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_journal_id
 msgid "Point of Sale Journal"
-msgstr ""
+msgstr "สมุดรายวันระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "โปรแกรมชำระเงินของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "กลุ่มผู้จัดการระบบขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "ประเภทการดำเนินงานของระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -4546,12 +4673,12 @@ msgstr "เซสชั่นการขายหน้าร้าน"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.qunit_suite
 msgid "Point of Sale Tests"
-msgstr ""
+msgstr "การทดสอบระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "กลุ่มผู้ใช้ระบบขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -4566,12 +4693,12 @@ msgstr "พอทัลสำหรับเข้าถึง URL"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_allowed_pricelist_ids
 msgid "Pos Allowed Pricelist"
-msgstr ""
+msgstr "รายการราคาที่อนุญาต POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "การกำหนดค่า Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -4592,14 +4719,14 @@ msgstr "จำนวนคำสั่ง Pos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อ Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_ids
 msgid "Pos Payment"
-msgstr ""
+msgstr "การชำระเงิน Pos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -4609,45 +4736,45 @@ msgstr "หมวดหมู่สินค้าสำหรับจุดข
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
 msgid "Pos Selectable Categ"
-msgstr ""
+msgstr "หมวดหมู่ที่เลือกได้ Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "เซสซัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr ""
+msgstr "ระยะเวลาเซสซัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "สถานะเซสชัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "ชื่อผู้ใช้เซสชัน POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr ""
+msgstr "เซสชัน Pos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_posbox
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Positive quantity not allowed"
-msgstr ""
+msgstr "ไม่อนุญาตให้ใช้ปริมาณที่เป็นบวก"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4682,31 +4809,31 @@ msgstr "ราคา"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Price Control"
-msgstr ""
+msgstr "การควบคุมราคา"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Price Unit"
-msgstr ""
+msgstr "ราคาต่อหน่วย"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Price discount from %s -> %s"
-msgstr ""
+msgstr "ลดราคาจาก %s -> %s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr ""
+msgstr "ราคาไม่รวม ภาษีมูลค่าเพิ่ม:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
 msgid "Price extra"
-msgstr ""
+msgstr "ราคาเพิ่ม"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4714,12 +4841,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/SetPricelistButton.xml:0
 #, python-format
 msgid "Price list"
-msgstr ""
+msgstr "รายการราคา"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__price
 msgid "Priced Product"
-msgstr ""
+msgstr "ราคาสินค้า"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4766,18 +4893,20 @@ msgid ""
 "Print a QR code on the receipt to allow the user to easily request the "
 "invoice for an order."
 msgstr ""
+"พิมพ์รหัส QR โค้ดบนใบเสร็จ "
+"เพื่อให้ผู้ใช้สามารถขอใบแจ้งหนี้สำหรับการสั่งซื้อได้อย่างง่ายดาย"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SaleDetailsButton.xml:0
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr ""
+msgstr "พิมพ์รายงานยอดขายทั้งหมดของเซสชัน PoS ปัจจุบัน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr ""
+msgstr "พิมพ์ใบเสร็จรับเงินโดยอัตโนมัติเมื่อลงทะเบียนการชำระเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -4847,7 +4976,7 @@ msgstr "ราคาสินค้า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "สินค้า หมวดหมู่สินค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
@@ -4890,28 +5019,30 @@ msgstr "ตัวแปรสินค้า"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Product information"
-msgstr ""
+msgstr "ข้อมูลสินค้า"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid ""
 "Product is not loaded. Tried loading the product from the server but there "
 "is a network error."
 msgstr ""
+"สินค้าไม่ได้โหลด พยายามโหลดสินค้าจากเซิร์ฟเวอร์ "
+"แต่มีข้อผิดพลาดของเครือข่ายอินเตอร์เน็ต"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
-msgstr ""
+msgstr "ราคาสินค้าในใบเสร็จรับเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "เคล็ดลับสินค้า"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -4926,12 +5057,12 @@ msgstr "สินค้า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Products:"
-msgstr ""
+msgstr "สินค้า:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "โปรโมชั่น คูปอง บัตรของขวัญ และโปรแกรมสะสมคะแนน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4939,7 +5070,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Connected"
-msgstr ""
+msgstr "เชื่อมต่อพร็อกซีแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4947,7 +5078,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Disconnected"
-msgstr ""
+msgstr "ยกเลิกการเชื่อมต่อพร็อกซีแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4955,7 +5086,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Warning"
-msgstr ""
+msgstr "คำเตือนพร็อกซี"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4978,14 +5109,14 @@ msgstr "ปริมาณ"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "REASON"
-msgstr ""
+msgstr "เหตุผล"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "อ่านเครื่องชั่งน้ำหนัก"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4993,7 +5124,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
-msgstr ""
+msgstr "พร้อมที่จะเปิดตัว <b>การขายหน้าร้าน</b> ของคุณแล้วหรือยัง?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5014,7 +5145,7 @@ msgstr "ใบเสร็จ"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "ใบเสร็จ %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -5047,26 +5178,26 @@ msgstr "เครื่องพิมพ์ใบเสร็จ"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "บันทึกการชำระเงินด้วยเครื่องเทอร์มินัลในสมุดรายวันนี้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "เซสชันการกู้คืน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Refresh Display"
-msgstr ""
+msgstr "รีเฟรชจอแสดงผล"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
 msgstr "คืนเงิน"
@@ -5074,31 +5205,38 @@ msgstr "คืนเงิน"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Refund Order Lines"
-msgstr ""
+msgstr "รายการใบสั่งคืนเงิน"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Refund Orders"
-msgstr ""
+msgstr "การคืนเงินคำสั่งซื้อ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Refund and Sales not allowed"
+msgstr "ไม่อนุญาตให้คืนเงินและการขาย"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderlineDetails.xml:0
 #, python-format
 msgid "Refunded"
-msgstr ""
+msgstr "คืนเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_ids
 msgid "Refunded Order"
-msgstr ""
+msgstr "คำสั่งซื้อที่คืนเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อที่คืนเงินแล้ว"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5106,24 +5244,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Refunded Orders"
-msgstr ""
+msgstr "คำสั่งซื้อที่คืนเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_orders_count
 msgid "Refunded Orders Count"
-msgstr ""
+msgstr "จำนวนคำสั่งซื้อที่คืนเงินแล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Refunded Quantity"
-msgstr ""
+msgstr "จำนวนที่คืนเงินแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/OrderlineDetails.js:0
 #, python-format
 msgid "Refunding %s in "
-msgstr ""
+msgstr "กำลังคืนเงิน %s ใน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5133,7 +5271,7 @@ msgstr "การคืนเงิน"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
-msgstr ""
+msgstr "โหลดเมนู POS อีกครั้ง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5147,7 +5285,7 @@ msgstr "เหลืออยู่"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "คำสั่งซื้อที่ไม่ซิงค์ที่เหลืออยู่"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5162,7 +5300,7 @@ msgstr "นำออก"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Replenishment"
-msgstr ""
+msgstr "การเติมสินค้า"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -5174,14 +5312,14 @@ msgstr "การรายงาน"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Reprint Invoice"
-msgstr ""
+msgstr "พิมพ์ใบแจ้งหนี้อีกครั้ง"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Request sent"
-msgstr ""
+msgstr "ส่งคำขอแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5204,18 +5342,18 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_limit_categories
 msgid "Restrict Categories"
-msgstr ""
+msgstr "จำกัดหมวดหมู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "จำกัดการแก้ไขราคาเฉพาะผู้จัดการ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "จำกัดการแก้ไขราคาให้กับผู้จัดการ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5242,14 +5380,21 @@ msgstr "ส่งคืนแล้ว"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Reversal of POS closing entry %s for order %s from session %s"
-msgstr ""
+msgstr "การกลับรายการปิด POS %s สำหรับคำสั่งซื้อ %s จากเซสชัน %s"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "การกลับรายการของ:%s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "คำขอกลับรายการส่งไปยังเทอร์มินัล"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5290,14 +5435,14 @@ msgstr "Rounding Factor"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "ข้อผิดพลาดในการปัดเศษในรายการการชำระเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/debug_manager.js:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "เรียกใช้การทดสอบ JS ระบบการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5310,19 +5455,19 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "SN"
-msgstr ""
+msgstr "SN"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "จำนวนรายการขาย"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "รายการขาย"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -5336,7 +5481,7 @@ msgstr "รายละเอียดการขาย"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
 msgid "Sales Journal"
-msgstr ""
+msgstr "สมุดรายวันการขาย"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5378,7 +5523,7 @@ msgstr "สแกน EAN-13"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Scan me to request an invoice for your purchase."
-msgstr ""
+msgstr "สแกนเพื่อขอใบแจ้งหนี้สำหรับการซื้อของคุณ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -5402,10 +5547,10 @@ msgstr "ค้นหาลูกค้า..."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Search Orders..."
-msgstr ""
+msgstr "ค้นหาคำสั่งซื้อ..."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5422,9 +5567,10 @@ msgstr "ค้นหาคำสั่งขาย"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
-msgid "Search database"
-msgstr ""
+msgid "Search more"
+msgstr "ค้นหาเพิ่มเติม"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -5443,21 +5589,21 @@ msgstr "เลือก"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js:0
 #, python-format
 msgid "Select Fiscal Position"
-msgstr ""
+msgstr "เลือกสถานะทางการเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select a payment method to validate the order."
-msgstr ""
+msgstr "เลือกวิธีการชำระเงินเพื่อตรวจสอบคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select an order"
-msgstr ""
+msgstr "เลือกคำสั่งซื้อ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5471,19 +5617,19 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
-msgstr ""
+msgstr "เลือกรายการราคา"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select the product(s) to refund and set the quantity"
-msgstr ""
+msgstr "เลือกสินค้าที่จะคืนเงินและกำหนดจำนวน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "ขายสินค้าและส่งมอบในภายหลัง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5498,7 +5644,7 @@ msgstr "ส่ง"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr ""
+msgstr "ส่งคำขอการชำระเงิน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5513,7 +5659,7 @@ msgstr "ส่งทางอีเมล"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "การส่งอีเมลล้มเหลว กรุณาลองอีกครั้ง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -5530,7 +5676,7 @@ msgstr "เลขลำดับ"
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListInput.xml:0
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "หมายเลขซีเรียล/ล็อต"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5568,7 +5714,7 @@ msgstr "วาระการขาย"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "รายการสมุดรายวันเซสชัน"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5580,7 +5726,7 @@ msgstr "วาระการขาย:"
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr ""
+msgstr "เซสชั่นเปิดมากกว่า 7 วัน"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -5595,7 +5741,7 @@ msgstr "เซสชั่น"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_set_maximum_difference
 msgid "Set Maximum Difference"
-msgstr ""
+msgstr "ตั้งค่าความแตกต่างสูงสุด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5610,6 +5756,7 @@ msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session"
 msgstr ""
+"กำหนดความแตกต่างสูงสุดที่อนุญาตระหว่างจำนวนเงินที่คาดหวังและที่นับได้ในระหว่างการปิดเซสชั่น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
@@ -5618,6 +5765,7 @@ msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session."
 msgstr ""
+"กำหนดความแตกต่างสูงสุดที่อนุญาตระหว่างจำนวนเงินที่คาดหวังและที่นับได้ในระหว่างการปิดเซสชั่น"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5625,7 +5773,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.xml:0
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "กำหนดสถานะทางการเงิน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5635,14 +5783,14 @@ msgstr "ตั้งราคาหลายรายการต่อสิน
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set of coins/bills that will be used in opening and closing control"
-msgstr ""
+msgstr "ชุดเหรียญ/ธนบัตร ที่จะใช้ควบคุมการเปิดปิด"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Set the new quantity"
-msgstr ""
+msgstr "กำหนดปริมาณใหม่"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -5653,7 +5801,7 @@ msgstr "การตั้งค่า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Settings on this page will apply to this point of sale."
-msgstr ""
+msgstr "การตั้งค่าในหน้านี้จะใช้กับระบบการขายหน้าร้านนี้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5662,7 +5810,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_ship_later
 #, python-format
 msgid "Ship Later"
-msgstr ""
+msgstr "จัดส่งในภายหลัง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -5687,7 +5835,7 @@ msgstr "รถเข็นสินค้า"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show checkout to customers through a second display"
-msgstr ""
+msgstr "แสดงการชำระเงินให้กับลูกค้าผ่านจอแสดงผลที่สอง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
@@ -5698,13 +5846,13 @@ msgstr "แสดงการชำระเงินให้กับลูก
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_customer_facing_display_local
 msgid "Show checkout to customers."
-msgstr ""
+msgstr "แสดงการชำระเงินให้กับลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "แสดงหน้าจอเข้าสู่ระบบของพนักงาน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5719,12 +5867,12 @@ msgstr "ลงชื่อเข้าใช้"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Six"
-msgstr ""
+msgstr "หก"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr ""
+msgstr "Six เทอร์มินัลการชำระเงิน"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -5742,19 +5890,19 @@ msgstr "ข้าม"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "ข้ามหน้าจอแสดงตัวอย่าง"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "ชั้นวางขนาดเล็ก"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "หมายเลขซีเรียล/ล็อตบางส่วนหายไป"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5765,6 +5913,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อบางรายการไปยังเซิร์ฟเวอร์ได้เนื่องจากข้อผิดพลาดในการกำหนดค่า"
+" คุณสามารถออกจากระบบขายหน้าร้านได้ "
+"แต่อย่าปิดเซสชันก่อนที่ปัญหาจะได้รับการแก้ไข"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5775,6 +5926,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อบางรายการไปยังเซิร์ฟเวอร์ได้เนื่องจากปัญหาการเชื่อมต่ออินเทอร์เน็ต"
+" คุณสามารถออกจากระบบขายหน้าร้านได้ "
+"แต่อย่าปิดเซสชันก่อนที่ปัญหาจะได้รับการแก้ไข"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5782,28 +5936,30 @@ msgstr ""
 #, python-format
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
+"การประมวลผลภายหลังการซิงค์คำสั่งซื้อบางส่วนอาจล้มเหลวทั้งหมด "
+"(หากไม่ใช่ทั้งหมด)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Specific route"
-msgstr ""
+msgstr "เส้นทางเฉพาะ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "ระบุล็อตสินค้า/หมายเลขซีเรียลในรายการใบสั่งซื้อ POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_route_id
 msgid "Spefic route for products delivered later."
-msgstr ""
+msgstr "เส้นทางเฉพาะสำหรับสินค้าที่จัดส่งในภายหลัง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_start_category
 msgid "Start Category"
-msgstr ""
+msgstr "เริ่มหมวดหมู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
@@ -5815,12 +5971,12 @@ msgstr "วันที่เริ่ม"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Start category should belong in the available categories."
-msgstr ""
+msgstr "หมวดหมู่เริ่มต้นควรอยู่ในหมวดหมู่ที่มีอยู่"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "เริ่มขายจากหมวดหมู่สินค้าเริ่มต้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -5875,19 +6031,19 @@ msgstr "กฎสต๊อก"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Stock input for %s"
-msgstr ""
+msgstr "ข้อมูลสต็อกสำหรับ %s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Stock output for %s"
-msgstr ""
+msgstr "สต็อกขาออกสำหรับ %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "ควรอัพเดตสต็อกเมื่อจะทำการปิด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5905,7 +6061,7 @@ msgstr "Stripe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
-msgstr ""
+msgstr "เทอร์มินัลการชำระเงิน Stripe "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5931,19 +6087,19 @@ msgstr "ยอดยังไม่ลด"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Successfully imported"
-msgstr ""
+msgstr "นำเข้าเรียบร้อยแล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "Successfully made a cash %s of %s."
-msgstr ""
+msgstr "สร้างเงินสด %s จาก %s สำเร็จแล้ว"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
-msgstr ""
+msgstr "ผลรวมของยอดรวมย่อย"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5958,7 +6114,7 @@ msgstr "สรุป"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connected"
-msgstr ""
+msgstr "เชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5966,7 +6122,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Connecting"
-msgstr ""
+msgstr "กำลังเชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5974,7 +6130,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Disconnected"
-msgstr ""
+msgstr "ยกเลิกการเชื่อมต่อการซิงโครไนซ์แล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5982,7 +6138,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SyncNotification.xml:0
 #, python-format
 msgid "Synchronisation Error"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการซิงโครไนซ์"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5990,7 +6146,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "ทั้งหมด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6009,7 +6165,7 @@ msgstr "ยอดภาษี"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tax_included
 msgid "Tax Display"
-msgstr ""
+msgstr "แสดงภาษี"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6023,7 +6179,7 @@ msgstr "เลขประจำตัวผู้เสียภาษี"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "ค่าการเลือกระบบภาษี"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
@@ -6048,7 +6204,7 @@ msgstr "ภาษี"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
 msgid "Taxes to Apply"
-msgstr ""
+msgstr "ภาษีที่จะใช้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6077,7 +6233,7 @@ msgstr "โทร:"
 #: code:addons/point_of_sale/controllers/main.py:0
 #, python-format
 msgid "The %s must be filled in your details."
-msgstr ""
+msgstr "จำเป็นต้องกรอก %s ในรายละเอียดของคุณ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6087,6 +6243,8 @@ msgid ""
 "The Point of Sale could not find any product, customer, employee or action "
 "associated with the scanned barcode."
 msgstr ""
+"ระบบขายหน้าร้านไม่พบสินค้า ลูกค้า พนักงาน หรือการกระทำใดๆ "
+"ที่เกี่ยวข้องกับบาร์โค้ดที่สแกน"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_rounding_form_view_inherited
@@ -6094,6 +6252,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"ระบบขายหน้าร้านรองรับเฉพาะกลยุทธ์การปัดเศษแบบ \"เพิ่มรายการปัดเศษ\" เท่านั้น"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6103,6 +6262,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"จำนวนเงินต้องไม่สูงกว่าจำนวนเงินที่ครบกำหนด "
+"หากคุณไม่ได้กำหนดค่าวิธีการชำระเงินด้วยเงินสด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6112,6 +6273,7 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"ยอดเงินของรายการการชำระเงินของคุณต้องถูกปัดเศษเพื่อตรวจสอบความถูกต้องของธุรกรรม"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6129,13 +6291,14 @@ msgstr ""
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr ""
+"กลยุทธ์การปัดเศษเงินสดของระบบขายหน้าร้าน %(pos)s ต้องเป็น: '%(value)s'"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องรวมอยู่ในรายการราคาที่มีอยู่"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6144,7 +6307,7 @@ msgstr ""
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องไม่เป็นของบริษัทหรือระบบการขายหน้าร้านใด"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6154,6 +6317,7 @@ msgid ""
 "The default tip product is missing. Please manually specify the tip product."
 " (See Tips field.)"
 msgstr ""
+"ทิปของสินค้าเริ่มต้นหายไป โปรดระบุทิปของสินค้าด้วยตนเอง (ดูช่องเคล็ดลับ)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6161,14 +6325,25 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
+msgstr "โมดูลข้อมูลทางการเงินเกิดข้อผิดพลาดขณะรับคำสั่งซื้อของคุณ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
 msgstr ""
+"สถานะทางบัญชีที่ใช้ในใบสั่งเดิมไม่ได้ถูกโหลด "
+"ตรวจสอบให้แน่ใจว่าได้โหลดแล้วโดยเพิ่มลงในการกำหนดค่า POS"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "The function to load %s has not been implemented."
-msgstr ""
+msgstr "ยังไม่ได้ใช้ฟังก์ชันในการโหลด %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -6176,6 +6351,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"ชื่อโฮสต์หรือที่อยู่ IP ของพร็อกซีฮาร์ดแวร์ "
+"จะถูกตรวจจับอัตโนมัติหากเว้นว่างไว้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6185,6 +6362,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"สมุดรายวันใบแจ้งหนี้จะต้องอยู่ในสกุลเงินเดียวกันกับสมุดรายวันการขายหรือสกุลเงินของบริษัท"
+" ถ้าไม่ได้ถูกตั้งค่าไว้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6203,6 +6382,16 @@ msgid ""
 "\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
+"ส่วนต่างสูงสุดที่อนุญาตคือ %s\n"
+"\n"
+"                        โปรดติดต่อผู้จัดการของคุณเพื่อยอมรับส่วนต่างในการปิดบัญชี"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "ชื่อ เหรียญ/ธนบัตร ต้องเป็นตัวเลข"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -6213,7 +6402,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "จำนวนใบสั่งขายหน้าร้านที่เกี่ยวข้องกับลูกค้ารายนี้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6221,6 +6410,8 @@ msgstr ""
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
+"ไม่สามารถส่งคำสั่งซื้อไปยังเซิร์ฟเวอร์ได้ "
+"เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6230,6 +6421,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"คำสั่งซื้อได้รับการซิงโครไนซ์ก่อนหน้านี้ "
+"โปรดสร้างใบแจ้งหนี้จากส่วนหลังสำหรับคำสั่งซื้อ:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6237,7 +6430,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
-msgstr ""
+msgstr "ไม่อนุญาตให้ใช้วิธีการชำระเงินที่เลือกในการกำหนดค่าของเซสชัน POS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6245,7 +6438,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr ""
+msgstr "วิธีการชำระเงินสำหรับการขายหน้าร้าน %s ต้องเป็นของบริษัท"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
@@ -6263,6 +6456,8 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
+"ระบบการขายหน้าร้านจะแสดงเฉพาะสินค้าที่อยู่ในแผนผังหมวดหมู่ที่เลือกเท่านั้น "
+"หากไม่มีการระบุหมวดหมู่ สินค้าที่มีอยู่ทั้งหมดจะแสดงขึ้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -6292,7 +6487,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "ใบเสร็จจะถูกพิมพ์โดยอัตโนมัติเมื่อสิ้นสุดการสั่งซื้อแต่ละครั้ง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6302,6 +6497,8 @@ msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
 msgstr ""
+"ปริมาณที่ขอคืนเงินสูงกว่าปริมาณที่สั่งซื้อ มีการร้องขอ %s "
+"ในขณะที่สามารถคืนเงินได้เพียง %s เท่านั้น"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6310,7 +6507,7 @@ msgstr ""
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity"
 " of %s."
-msgstr ""
+msgstr "ปริมาณที่ขอคืนเงินสูงกว่าปริมาณที่สามารถขอคืนได้ %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6324,7 +6521,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "ลูกค้าที่เลือกจำเป็นต้องมีที่อยู่"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6333,7 +6530,7 @@ msgstr ""
 msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
-msgstr ""
+msgstr "รายการราคาเริ่มต้นจะต้องไม่เป็นของบริษัทหรือระบบการขายหน้าร้านใด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6341,14 +6538,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr ""
+msgstr "เซิร์ฟเวอร์พบข้อผิดพลาดขณะรับคำสั่งซื้อของคุณ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
-msgstr ""
+msgstr "เซสชั่นนี้ถูกเปิดมาเป็นเวลานานผิดปกติ โปรดพิจารณาในการปิด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -6357,6 +6554,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Adyen ตั้งค่าข้อมูลประจำตัว Adyen "
+"ของคุณเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -6365,6 +6564,8 @@ msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Six ตั้งค่าที่อยู่ IP "
+"ของเครื่องเทอร์มินัลเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -6373,6 +6574,8 @@ msgid ""
 "The transactions are processed by Stripe. Set your Stripe credentials on the"
 " related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Stripe ตั้งค่าข้อมูลรับรอง Stripe "
+"ของคุณเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -6381,11 +6584,13 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"ธุรกรรมได้รับการประมวลผลโดย Vantiv ตั้งค่าข้อมูลประจำตัว Vantiv "
+"ของคุณเกี่ยวกับวิธีการชำระเงินที่เกี่ยวข้อง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "ยอดปิดบัญชีตามทฤษฎี"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6394,24 +6599,10 @@ msgstr "มี"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no customers."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no loaded customers."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "There are no products in this category."
-msgstr ""
+msgstr "ไม่มีสินค้าในหมวดนี้."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6421,13 +6612,15 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"ยังคงมีคำสั่งซื้ออยู่ในสถานะร่างบนเซสชัน ชำระเงินหรือยกเลิกคำสั่งซื้อต่อไปนี้เพื่อตรวจสอบเซสชัน:\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
-msgstr ""
+msgstr "มีคำสั่งซื้อที่ไม่ซิงค์กัน คุณต้องการซิงค์คำสั่งซื้อเหล่านี้หรือไม่"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6437,12 +6630,23 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
+"มีความแตกต่างระหว่างจำนวนเงินที่จะผ่านรายการและจำนวนใบสั่ง "
+"ซึ่งอาจเกิดจากการเปลี่ยนแปลงการตั้งค่าการกำหนดค่าทางบัญชีหรือภาษี"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
+msgstr "มีการชำระเงินทางอิเล็กทรอนิกส์อยู่ในระหว่างดำเนินการ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
 msgstr ""
 
 #. module: point_of_sale
@@ -6452,6 +6656,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"ไม่มีการกำหนดค่าผังบัญชีในบริษัท "
+"โปรดไปที่การตั้งค่าการออกใบแจ้งหนี้เพื่อติดตั้งผังบัญชี"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6471,14 +6677,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "There is no cash payment method for this PoS Session"
-msgstr ""
+msgstr "ไม่มีวิธีการชำระเงินด้วยเงินสดสำหรับเซสชัน PoS นี้"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "There is no cash register in this session."
-msgstr ""
+msgstr "ไม่มีเครื่องบันทึกเงินสดในเซสชั่นนี้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6495,6 +6701,7 @@ msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
 msgstr ""
+"ต้องมีสินค้าอย่างน้อยหนึ่งรายการในคำสั่งซื้อของคุณก่อนจึงจะสามารถตรวจสอบและออกใบแจ้งหนี้ได้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -6505,6 +6712,9 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"ฟิลด์นี้แสดงให้เห็นถึงผลต่างสูงสุดที่อนุญาตระหว่างยอดคงเหลือสิ้นสุดและเงินสดตามทฤษฎีเมื่อปิดเซสชันแล้วสำหรับผู้จัดการที่ไม่ใช่"
+" POS หากถึงค่าสูงสุดนี้ "
+"ผู้ใช้จะได้รับข้อความแสดงข้อผิดพลาดเมื่อปิดเซสชันโดยแจ้งว่าเขาจำเป็นต้องติดต่อกับผู้จัดการของเขา"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -6512,6 +6722,7 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"ช่องนี้มีไว้เพื่อส่งรหัสของกลุ่มผู้จัดการ POS ไปยังลูกค้าบนการขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -6519,13 +6730,14 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"ฟิลด์นี้มีไว้เพื่อส่ง ID ของกลุ่มผู้ใช้ POS ไปยังลูกค้าบนการขายหน้าร้าน"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "This invoice has been created from the point of sale session: %s"
-msgstr ""
+msgstr "ใบแจ้งหนี้นี้ถูกสร้างขึ้นจากเซสชันการขายหน้าร้าน: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -6533,6 +6745,7 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
+"สิ่งนี้มีประโยชน์สำหรับร้านอาหารที่มีบริการนอกสถานที่และบริการแบบซื้อกลับบ้านซึ่งระบุถึงอัตราภาษีที่เฉพาะเจาะจง"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6541,6 +6754,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
+"สมุดรายวันนี้เชื่อมโยงกับวิธีการชำระเงิน คุณไม่สามารถแก้ไขประเภทของมันได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6551,6 +6765,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"การดำเนินการนี้จะทำลายคำสั่งซื้อที่ค้างชำระทั้งหมดในเบราว์เซอร์ "
+"คุณจะสูญเสียข้อมูลที่ยังไม่ได้บันทึกทั้งหมดและออกจากระบบการขายหน้าร้าน "
+"การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6560,6 +6777,8 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"การดำเนินการนี้จะทำลายคำสั่งซื้อที่ชำระเงินทั้งหมดจากที่จัดเก็บในตัวเครื่องอย่างถาวร"
+" คุณจะสูญเสียข้อมูลทั้งหมดและการดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6569,13 +6788,27 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
+"คำสั่งซื้อนี้มีรายการการคืนเงินสำหรับ %s แล้ว "
+"เราไม่สามารถเปลี่ยนลูกค้าที่เกี่ยวข้องได้ "
+"สร้างคำสั่งซื้อใหม่สำหรับลูกค้าใหม่"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/OrderWidget.xml:0
 #, python-format
 msgid "This order is empty"
+msgstr "คำสั่งซื้อนี้ว่างเปล่า"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
 msgstr ""
+"คำสั่งนี้ยังไม่ได้ซิงค์กับเซิร์ฟเวอร์ "
+"ตรวจสอบให้แน่ใจว่ามีการซิงค์แล้วลองอีกครั้ง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -6589,6 +6822,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
+"ลำดับนี้ถูกสร้างขึ้นโดยอัตโนมัติโดย Odoo "
+"แต่คุณสามารถเปลี่ยนเพื่อกำหนดหมายเลขอ้างอิงของรายการคำสั่งซื้อของคุณได้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -6597,6 +6832,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"ลำดับนี้ถูกสร้างขึ้นโดยอัตโนมัติจาก Odoo "
+"แต่คุณสามารถเปลี่ยนเพื่อปรับแต่งหมายเลขอ้างอิงของคำสั่งซื้อของคุณได้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6606,12 +6843,12 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "เซสชันนี้ถูกปิดแล้ว"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
-msgstr ""
+msgstr "ภาษีนี้ใช้กับสินค้าใหม่ที่สร้างขึ้นในแค็ตตาล็อก"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6623,7 +6860,7 @@ msgstr "ทิป"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "จำนวนทิป"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -6641,7 +6878,7 @@ msgstr "เคล็ดลับ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Tips:"
-msgstr ""
+msgstr "เคล็ดลับ:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6660,13 +6897,13 @@ msgstr "ที่จะจ่าย"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/OrderlineDetails.js:0
 #, python-format
 msgid "To Refund: %s"
-msgstr ""
+msgstr "จำนวนเงินที่จะคืน: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "การชั่งน้ำหนักด้วยเครื่องชั่ง"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -6677,14 +6914,14 @@ msgstr "ออกใบแจ้งหนี้"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "หากต้องการบันทึกคำสั่งซื้อใหม่ ให้เริ่มเซสชันใหม่"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr ""
+msgstr "หากต้องการคืนสินค้า คุณต้องเปิดเซสชั่นใน POS %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_ship
@@ -6713,7 +6950,7 @@ msgstr "ธุรกรรมเงินสดทั้งหมด"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Cost:"
-msgstr ""
+msgstr "ค่าใช้จ่ายทั้งหมด:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__total_discount
@@ -6725,24 +6962,24 @@ msgstr "ส่วนลดทั้งหมด"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Total Due"
-msgstr ""
+msgstr "ครบกำหนดชำระทั้งหมด"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Margin:"
-msgstr ""
+msgstr "กำไรทั้งหมด:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "ชำระแล้วทั้งหมด (มีการปัดเศษ)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "จำนวนเงินที่ชำระทั้งหมด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -6754,7 +6991,7 @@ msgstr "ราคารวม"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Price excl. VAT:"
-msgstr ""
+msgstr "ราคารวม ไม่รวมภาษีมูลค่าเพิ่ม:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6766,17 +7003,17 @@ msgstr "ภาษีทั้งหมด"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr ""
+msgstr "จำนวนเงินที่ชำระทั้งหมด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__total_cost
 msgid "Total cost"
-msgstr ""
+msgstr "ค่าใช้จ่ายทั้งหมด"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Total qty"
-msgstr ""
+msgstr "จำนวนรวม"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6798,7 +7035,7 @@ msgstr "ธุรกรรม"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr ""
+msgstr "ธุรกรรมถูกยกเลิก"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
@@ -6814,7 +7051,7 @@ msgstr "ประเภท"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
 msgid "Type of card used"
-msgstr ""
+msgstr "ประเภทของบัตรที่ใช้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
@@ -6830,13 +7067,16 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"ไม่สามารถปิดและตรวจสอบเซสชันได้\n"
+"โปรดตั้งค่าบัญชีภาษีที่เกี่ยวข้องในแต่ละรายการการแบ่งส่วนของภาษีต่อไปนี้:\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Unable to download invoice."
-msgstr ""
+msgstr "ไม่สามารถดาวน์โหลดใบแจ้งหนี้ได้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6853,6 +7093,8 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"ไม่สามารถแก้ไขการกำหนดค่า PoS นี้ได้ เนื่องจากคุณไม่สามารถแก้ไข %s "
+"ในขณะที่เซสชันเปิดอยู่"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6866,14 +7108,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Unable to show information about this error."
-msgstr ""
+msgstr "ไม่สามารถแสดงข้อมูลเกี่ยวกับข้อผิดพลาดนี้ได้"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unable to sync order"
-msgstr ""
+msgstr "ไม่สามารถซิงค์คำสั่งซื้อได้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -6885,7 +7127,7 @@ msgstr "ราคาต่อหน่วย"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorBarcodePopup.xml:0
 #, python-format
 msgid "Unknown Barcode"
-msgstr ""
+msgstr "ไม่ทราบบาร์โค้ด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6894,7 +7136,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "ไม่ทราบข้อผิดพลาด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6909,7 +7151,14 @@ msgstr "ข้อผิดพลาดที่ไม่รู้จัก"
 #: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerDetailsEdit.js:0
 #, python-format
 msgid "Unsupported File Format"
-msgstr ""
+msgstr "รูปแบบไฟล์ที่ไม่รองรับ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "คำสั่งที่ยังไม่ได้ซิงค์"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -6921,34 +7170,34 @@ msgstr "หน่วยวัด"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "อัปเดตจำนวนในสต็อก"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
 msgid "Use QR code on ticket"
-msgstr ""
+msgstr "ใช้รหัส QR โค้ดบนทิกเก็ต"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Use a Payment Terminal"
-msgstr ""
+msgstr "ใช้เทอร์มินัลการชำระเงิน"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_pricelist
 msgid "Use a pricelist."
-msgstr ""
+msgstr "ใช้รายการราคา"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "ใช้บาร์โค้ดเพื่อสแกนสินค้า บัตรลูกค้า และอื่นๆ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr ""
+msgstr "ใช้สถานะทางการเงินเพื่อรับภาษีที่แตกต่างกันตามคำสั่งซื้อ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6956,6 +7205,7 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
+"ใช้ในการบันทึกการเลือกสินค้า สินค้าถูกใช้จากตำแหน่งที่ตั้งแหล่งที่มาเริ่มต้น"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
@@ -6969,12 +7219,12 @@ msgstr "ผู้ใช้"
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "ป้ายกำกับผู้ใช้"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6989,7 +7239,7 @@ msgstr "ภาษี:"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Valid product lot"
-msgstr ""
+msgstr "ล็อตสินค้าที่ถูกต้อง"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7002,12 +7252,12 @@ msgstr "ตรวจสอบ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Vantiv (US & Canada)"
-msgstr ""
+msgstr "Vantiv (สหรัฐอเมริกาและแคนาดา)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Vantiv Payment Terminal"
-msgstr ""
+msgstr "เทอร์มินัลการชำระเงิน Vantiv"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session_check_product_wizard
@@ -7026,12 +7276,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Waiting for card"
-msgstr ""
+msgstr "รอรับบัตร"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "ชั้นวางของติดผนัง"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -7043,7 +7293,7 @@ msgstr "โกดังสินค้า"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr ""
+msgstr "คลังสินค้า (PoS)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
@@ -7060,7 +7310,7 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "การชั่งน้ำหนัก"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
@@ -7079,6 +7329,8 @@ msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
 msgstr ""
+"เมื่อปิดใช้งาน ผู้จัดการ PoS "
+"เท่านั้นที่สามารถดูส่วนต่างและต้นทุนของสินค้าในข้อมูลสินค้าได้"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7087,6 +7339,9 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
+"เมื่อใดก็ตามที่คุณปิดเซสชัน "
+"รายการหนึ่งรายการจะถูกสร้างขึ้นในสมุดรายวันการบัญชีต่อไปนี้สำหรับใบสั่งทั้งหมดที่ไม่ได้รับการออกใบแจ้งหนี้"
+" ใบแจ้งหนี้จะถูกบันทึกในการบัญชีแยกต่างหาก"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_product_template
@@ -7096,7 +7351,7 @@ msgstr "ไวท์บอร์ด"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_pen_product_template
 msgid "Whiteboard Pen"
-msgstr ""
+msgstr "ปากกาไวท์บอร์ด"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7120,13 +7375,15 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"คุณไม่ได้รับอนุญาตให้เปลี่ยนการกำหนดค่าการปัดเศษเงินสดในขณะที่เซสชั่น POS "
+"ที่ใช้งานนั้นเปิดอยู่แล้ว"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "You are not allowed to change this quantity"
-msgstr ""
+msgstr "คุณไม่ได้รับอนุญาตให้เปลี่ยนแปลงปริมาณนี้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7136,6 +7393,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"คุณกำลังพยายามขายสินค้าที่มีหมายเลขซีเรียล/ล็อต แต่บางรายการไม่ได้ตั้งค่าไว้\n"
+"คุณต้องการดำเนินการต่อหรือไม่?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
@@ -7146,10 +7405,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
-msgid "You can only have one cash payment method."
+msgid ""
+"You can only unlink PoS order lines that are related to orders in new or "
+"cancelled state."
 msgstr ""
+"คุณสามารถยกเลิกการเชื่อมโยงรายการคำสั่งซื้อ PoS "
+"ที่เกี่ยวข้องกับคำสั่งซื้อในสถานะใหม่หรือสถานะที่ถูกยกเลิกได้เท่านั้น"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7160,6 +7423,18 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"คุณไม่สามารถ: สร้างคำสั่งซื้อ POS จากอินเทอร์เฟซแบ็กเอนด์ "
+"หรือยกเลิกการตั้งค่ารายการราคา หรือสร้าง pos.order ในการทดสอบ python "
+"ด้วยเครื่องมือแบบฟอร์มได้ หรือแก้ไขมุมมองแบบฟอร์มในสตูดิโอหากไม่มีคำสั่งซื้อ"
+" PoS อยู่"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+#, python-format
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr ""
+"คุณไม่สามารถเก็บถาวร '%s' ได้ เนื่องจากถูกใช้โดยการกำหนดค่า POS '%s' แล้ว"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7169,6 +7444,8 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"คุณไม่สามารถปิด POS ได้ เมื่อไม่มีการลงรายการบัญชีใบแจ้งหนี้\n"
+"ใบแจ้งหนี้: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7176,22 +7453,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "คุณไม่สามารถปิด POS ได้เมื่อใบสั่งยังคงอยู่ในแบบร่าง"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างเซสชันก่อนวันที่ล็อคบัญชีได้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7199,7 +7468,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
-msgstr ""
+msgstr "คุณไม่สามารถลบหมวดหมู่การขายหน้าร้านในขณะที่เซสชันยังคงเปิดอยู่ได้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7210,6 +7479,7 @@ msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
+"คุณไม่สามารถลบสินค้าที่ขายในการขายหน้าร้านในขณะที่เซสชันยังคงเปิดอยู่ได้"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7225,16 +7495,27 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr "คุณไม่มีสิทธิ์เข้าถึงข้อมูลการควบคุมการปิดระบบการขายหน้าร้านได้"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
 msgstr ""
+"คุณได้เปิดใช้งานตัวเลือก \"ระบุลูกค้า\" สำหรับวิธีการชำระเงิน "
+"%sแต่คำสั่งซื้อ %s ไม่มีลูกค้า"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "คุณต้องปัดเศษรายการการชำระเงินของคุณ ไม่ถูกปัดเศษ"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7308,6 +7589,8 @@ msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
 msgstr ""
+"ที่อยู่ของคุณหายไปหรือไม่สมบูรณ์ <br/>\n"
+"                                กรุณาตรวจสอบให้แน่ใจว่า"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7334,7 +7617,7 @@ msgstr "มีอยู่"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "before continuing."
-msgstr ""
+msgstr "ก่อนที่จะดำเนินการต่อ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7379,12 +7662,12 @@ msgstr "เช่น น้ำอัดลม"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "ePos Printer"
-msgstr ""
+msgstr "เครื่องพิมพ์ ePos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "fill all relevant information"
-msgstr ""
+msgstr "กรอกข้อมูลที่เกี่ยวข้องทั้งหมด"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7417,7 +7700,7 @@ msgstr "in"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "in this category."
-msgstr ""
+msgstr "ในหมวดหมู่นี้"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7441,7 +7724,7 @@ msgstr "เปิดเซสชั่น"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "orders:"
-msgstr ""
+msgstr "คำสั่งซื้อ:"
 
 #. module: point_of_sale
 #. odoo-javascript

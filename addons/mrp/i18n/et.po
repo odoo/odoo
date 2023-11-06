@@ -4,32 +4,33 @@
 # 
 # Translators:
 # Ants Peetsalu <ants@avalah.ee>, 2022
+# Rivo Zängov <eraser@eraser.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Gert Valdek <gert@airobot.ee>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
-# Leaanika Randmets, 2022
 # Patrick-Jordan Kiudorv, 2022
 # Anna, 2023
-# Jana Jaakson, 2023
+# JanaAvalah, 2023
+# Leaanika Randmets, 2023
+# Katrin Kampura, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jana Jaakson, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Katrin Kampura, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -105,7 +106,7 @@ msgstr "%(qty)s %(measure)s välja ehitamata %(order)s"
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "%i work orders"
-msgstr "%i töökäsud"
+msgstr "%i töökäsul"
 
 #. module: mrp
 #. odoo-python
@@ -222,6 +223,11 @@ msgstr ""
 "                    </p>"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
@@ -234,8 +240,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Tootma</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -559,7 +565,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr "Lisage oma töökäskudele kvaliteedikontroll"
+msgstr "Lisage oma töökäskudele kvaliteedikontrolli punktid"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
@@ -743,8 +749,8 @@ msgid "Attachment URL"
 msgstr "Manuse URL"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -815,8 +821,8 @@ msgid ""
 " which components should be sent to the subcontractor."
 msgstr ""
 "Toote tootmiseks kuluv keskmine aeg päevades. Mitmetasandilise retsepti "
-"puhul lisanduvad komponentide valmistamisele kuluv aeg. Kui toode on seotud "
-"allhankelepinguga, saab selle põhjal määrata kuupäeva, millal komponendid "
+"puhul lisandub ka komponentide valmistamisele kuluv aeg. Kui toode on seotud"
+" allhankelepinguga, saab selle põhjal määrata kuupäeva, millal komponendid "
 "alltöövõtjale saata."
 
 #. module: mrp
@@ -981,7 +987,7 @@ msgstr "Blokeeritud"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__blocked_by_workorder_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Blocked By"
-msgstr "Blokeeris"
+msgstr "Sõltuv operatsioon"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
@@ -1304,9 +1310,9 @@ msgstr "Arvutage retseptist"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
-"Arvutage päevad arv, mis on vajalik kõikide retsepti komponentide "
-"varustamiseks, kas ostes või valmistades komponente ja/või alamkoostisosi."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1500,11 +1506,9 @@ msgstr "Loo uus töökäskude tootlikkus."
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Looge ja kinnitage tootmistellimused mitu päeva ette, et Teil oleks piisavalt aega komponentide varumiseks või pooltoodete valmistamiseks.\n"
-"Pange tähele, et see ei mõjuta MO kavandatud kuupäeva."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1514,7 +1518,7 @@ msgstr "Loo järeltellimus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr "Looge oma kvaliteedikontrolli jaoks kohandatavaid töölehti"
+msgstr "Loo kvaliteedikontrolli jaoks kohandatavaid töölehti"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
@@ -1701,10 +1705,10 @@ msgid ""
 "production will only be counted once."
 msgstr ""
 "Vaikimisi tükkide arv (toote UoM), mida saab selles töökeskuses "
-"paralleelselt (samal ajal) toota. Näiteks: võimsus on 5 ja teil on vaja "
-"toota 10 ühikut, siis korrutatakse BOM-is märgitud tööaeg kahega. Kuid pange"
-" tähele, et nii tootmiseelset kui ka tootmisjärgset aega arvestatakse ainult"
-" üks kord."
+"paralleelselt (samal ajal) toota. Näiteks: masina võimsus on toota korraga 5"
+" ühikut ja teil on vaja toota 10 ühikut, sellisel juhul korrutatakse BOM-is "
+"märgitud tööaeg kahega. Kuid pange tähele, et nii tootmiseelset kui ka "
+"tootmisjärgset aega arvestatakse ainult üks kord."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2711,17 +2715,6 @@ msgid "Line of issue consumption"
 msgstr "Line of issue consumption"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Asukoht"
@@ -2862,6 +2855,11 @@ msgstr "Halda töökäsu operatsioone"
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "Käsitsi kasutamine"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
+msgid "Manual Consumption Readonly"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -3110,8 +3108,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Miinimumlao reegel"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3366,8 +3364,8 @@ msgstr "Loodud MOde arv"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Tegutsemist nõudvate sõnumite arv"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -3412,8 +3410,7 @@ msgstr "Laos"
 #, python-format
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr ""
-"%s.c võivad olla ainult mustandis või kinnitatud olekus tootmistellimused"
+msgstr "Tootmistellimused peavad olema \"Mustand\" või \"Kinnitatud\" olekus%s"
 
 #. module: mrp
 #. odoo-python
@@ -3464,8 +3461,8 @@ msgstr ""
 "Iga tegevus viidakse läbi kindlas töökeskuses ning selle on kindel kestus."
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3563,7 +3560,7 @@ msgstr "Masinate efektiivsus: töö- ega tõrkeaega pole"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Overview"
-msgstr "Ülevaade"
+msgstr "BoMi struktuur ja kulu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet
@@ -3603,7 +3600,7 @@ msgstr "Pane pausile"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Pending"
-msgstr "Ootel"
+msgstr "Töökäsu ootel"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__performance
@@ -3791,7 +3788,7 @@ msgstr "Prioriteet"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process operations at specific work centers"
-msgstr "Vii läbi töötegevused kindlates töökeskustes "
+msgstr "Võimalus töötegevused läbi viia kindlates töökeskustes "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
@@ -3817,12 +3814,12 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
 msgid "Produce residual products"
-msgstr "Tooda jääkprodukte"
+msgstr "Tooda kõrvalsaadusi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr "Tooda jääkprodukte (A + B -&gt; C + D)"
+msgstr "Tooda kõrvalsaadusi (A + B -&gt; C + D)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4351,6 +4348,11 @@ msgid "Scheduled Date by Month"
 msgstr "Planeeritud kuu järgi"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr "Planeeritud kuupäev: viimased 365 päeva"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
 msgid "Scheduled End Date"
@@ -4484,6 +4486,11 @@ msgstr "Järjesta ladu peale tootmist"
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Serial Mass Produce"
 msgstr "Serial Mass Produce"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
+msgid "Set Quantities & Validate"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4662,7 +4669,7 @@ msgstr "Lähtekoht"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Specific Capacities"
-msgstr "Spetsiifilised võimsused"
+msgstr "Tootmise võimsus"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
@@ -4849,7 +4856,7 @@ msgstr "Alam-BOM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "Kasuta mõnede toodete tootmisel alltöövõttu"
+msgstr "Võimalus kasutada toodete tootmisel alltöövõttu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -4958,6 +4965,14 @@ msgstr "Komponent %s ei tohiks olla sama mis toodetav toode."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5227,13 +5242,13 @@ msgstr "Ajaarvestus: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Time in minutes for the cleaning."
-msgstr "Puhastamise aeg minutites."
+msgid "Additional time in minutes for the cleaning."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Time in minutes for the setup."
-msgstr "Seadistamise aeg minutites"
+msgid "Additional time in minutes for the setup."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5241,8 +5256,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
-"Aeg minutites: - Manuaalselt, kasutatud aeg. - Automaatselt, arvatud esmane "
-"aeg, kui töökäske veel pole"
+"Aeg minutites: Manuaalselt sisestatud aeg. Automaatselt, arvatud esmane aeg,"
+" kui töökäske veel pole"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -5627,6 +5642,16 @@ msgid "Validate"
 msgstr "Kinnita"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -5660,7 +5685,7 @@ msgstr "Tootmismarsruutidel rakendatud nähtavuspäevad."
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Waiting"
-msgstr "Ootel"
+msgstr "Komponentide ootel"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__waiting
@@ -6216,7 +6241,7 @@ msgstr "Te ei saa kasutada sama seerianumbrit kaks korda."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "You cannot unbuild a undone manufacturing order."
+msgstr "Tootmistellimust ei saa lahti võtta ega mitte tehtuks märkida."
 
 #. module: mrp
 #. odoo-python
@@ -6420,7 +6445,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
-msgstr "viimane"
+msgstr "viimasel"
 
 #. module: mrp
 #. odoo-python
@@ -6486,4 +6511,4 @@ msgstr "poolita"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "töökäsud"
+msgstr "töökäsul"

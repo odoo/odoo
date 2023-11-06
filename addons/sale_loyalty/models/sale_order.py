@@ -66,13 +66,14 @@ class SaleOrder(models.Model):
         # Claiming a reward for that program will require either an automated check or a manual input again.
         reward_coupons = self.order_line.coupon_id
         self.coupon_point_ids.filtered(
-            lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons)\
-            .coupon_id.sudo().unlink()
+            lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons
+        ).coupon_id.sudo().unlink()
         # Add/remove the points to our coupons
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
             coupon.points += change
+        res = super().action_confirm()
         self._send_reward_coupon_mail()
-        return super(SaleOrder, self).action_confirm()
+        return res
 
     def _action_cancel(self):
         previously_confirmed = self.filtered(lambda s: s.state in ('sale', 'done'))
@@ -106,7 +107,7 @@ class SaleOrder(models.Model):
         for order in self:
             coupons |= order._get_reward_coupons()
         if coupons:
-            coupons._send_creation_communication()
+            coupons._send_creation_communication(force_send=True)
 
     def _get_applied_global_discount_lines(self):
         """
@@ -199,7 +200,8 @@ class SaleOrder(models.Model):
 
         discountable_lines = self.env['sale.order.line']
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
-            if not line.reward_id and line.product_id in reward.all_discount_product_ids:
+            domain = reward._get_discount_product_domain()
+            if not line.reward_id and line.product_id.filtered_domain(domain):
                 discountable_lines |= line
         return discountable_lines
 
@@ -222,7 +224,8 @@ class SaleOrder(models.Model):
             if not line.product_uom_qty or not line.price_unit:
                 continue
             remaining_amount_per_line[line] = line.price_total
-            if not line.reward_id and line.product_id in reward.all_discount_product_ids:
+            domain = reward._get_discount_product_domain()
+            if not line.reward_id and line.product_id.filtered_domain(domain):
                 lines_to_discount |= line
             elif line.reward_id.reward_type == 'discount':
                 discount_lines[line.reward_identifier_code] |= line
@@ -294,8 +297,6 @@ class SaleOrder(models.Model):
             discountable, discountable_per_tax = self._discountable_specific(reward)
         elif reward_applies_on == 'cheapest':
             discountable, discountable_per_tax = self._discountable_cheapest(reward)
-        # Discountable should never surpass the order's current total amount
-        discountable = min(self.amount_total, discountable)
         if not discountable:
             if not reward.program_id.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
                 return [{
@@ -313,9 +314,15 @@ class SaleOrder(models.Model):
                 }]
             raise UserError(_('There is nothing to discount'))
         max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
+        # discount should never surpass the order's current total amount
+        max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
+            points = self._get_real_points_for_coupon(coupon)
+            if reward.program_type == 'loyalty':
+                # Rewards cannot be partially offered to customers
+                points = points // reward.required_points * reward.required_points
             max_discount = min(max_discount,
-                reward.currency_id._convert(reward.discount * self._get_real_points_for_coupon(coupon),
+                reward.currency_id._convert(reward.discount * points,
                     self.currency_id, self.company_id, fields.Date.today()))
         elif reward.discount_mode == 'per_order':
             max_discount = min(max_discount,
@@ -489,11 +496,12 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         points = coupon.points
-        if (coupon.program_id.applies_on != 'future' and self.state not in ('sale', 'done')) or post_confirm:
+        if coupon.program_id.applies_on != 'future' and self.state not in ('sale', 'done'):
             # Points that will be given by the order upon confirming the order
             points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
         # Points already used by rewards
         points -= sum(self.order_line.filtered(lambda l: l.coupon_id == coupon).mapped('points_cost'))
+        points = coupon.currency_id.round(points)
         return points
 
     def _add_points_for_coupon(self, coupon_points):

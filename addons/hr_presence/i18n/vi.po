@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,22 +24,14 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
+"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
-"                    <br/>Best Regards,<br/><br/>\n"
+"                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div>\n"
-"                    Thân gửi <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
-"                    Sẽ có ngoại lệ nếu lỗi ở phía chúng tôi. Có vẻ như bạn không có mặt ở văn phòng và không có yêu cầu nghỉ phép.<br/>\n"
-"                    Vui lòng thực hiện đúng quy trình nghỉ phép.<br/>\n"
-"                    Đừng ngại liên hệ với quản lý hoặc phòng nhân sự.\n"
-"                    <br/>Trân trọng,<br/><br/>\n"
-"                </div>\n"
-"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -63,6 +56,7 @@ msgid "Companies"
 msgstr "Công ty"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Compose Email"
@@ -86,6 +80,13 @@ msgid "Email Sent"
 msgstr "Email Sent"
 
 #. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, python-format
+msgid "Employee's Presence to Define"
+msgstr ""
+
+#. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
 msgstr "Employee: Presence Reminder"
@@ -96,6 +97,7 @@ msgid "Employees"
 msgstr "Nhân viên"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
@@ -111,7 +113,6 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 #: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
-#: model:ir.cron,name:hr_presence.ir_cron_presence_control
 msgid "HR Presence: cron"
 msgstr "Nhân sự có mặt: định kỳ"
 
@@ -193,12 +194,14 @@ msgid "Set as present"
 msgstr "Set as present"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
 msgstr "There is no professional email address for this employee."
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
@@ -227,6 +230,7 @@ msgid "Users Log"
 msgstr "Lịch sử tài khoản"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -237,4 +241,4 @@ msgstr "You don't have the right to do this. Please contact an Administrator."
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "xử lý thông báo websocket"

@@ -33,8 +33,8 @@
             for (const callback of cbs) {
                 this.removeEventListener(type, callback);
             }
-            delete cbs[type];
-            if (Object.keys(cbs).length === 0) {
+            delete listeners[type];
+            if (Object.keys(listeners).length === 0) {
                 this.targetsCallbacks.delete(target);
             }
         }

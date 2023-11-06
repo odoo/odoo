@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -245,7 +245,11 @@ msgid ""
 "                but any data created after this could potentially be corrupted,\n"
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
-msgstr "المهلة بعد تاريخ التشغيل "
+msgstr ""
+"سيمَكِّنك تعطيل هذا الإجراء المؤتمت من متابعة سير عملك\n"
+"                ولكن قد تتلف أي بيانات يتم إنشاؤها بعد ذلك،\n"
+"                حيث إنك تقوم بتعطيل تخصيصات قد تكون أعدت\n"
+"                حقولاً مهمة أو/و مطلوبة. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -281,6 +285,8 @@ msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
 msgstr ""
+"لا يمكن استخدام أنواع إجراءات الأنشطة أو البريد الإلكتروني أو المتابعين عند "
+"حذف السجلات. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -297,7 +303,7 @@ msgstr "الحقول التي تقوم بتشغيل onchange. "
 #, python-format
 msgid ""
 "Form Modification based actions can only be used with code action type."
-msgstr ""
+msgstr "يمكن استخدام إجراءات التعديل \"من\" فقط مع نوع إجراء الكود. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -356,7 +362,7 @@ msgstr "آخر تحديث في"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr "Least Delay Msg"
+msgstr "رسالة أقل تأخير "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
@@ -366,7 +372,7 @@ msgstr "حقل الرابط "
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
 msgid "Minutes"
-msgstr "دقائق "
+msgstr "الدقائق"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
@@ -408,6 +414,8 @@ msgstr "ملاحظة "
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
+"يرجى ملاحظة أنه يمكن تشغيل هذا الإجراء بعد فترة تصل إلى %d دقيقة من وقت "
+"جدولته. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -630,10 +638,10 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"استخدم الإجراءات الآلية لتفعيل الإجراءات تلقائيًا على\n"
-"                شاشات مختلفة. مثلًا: يمكن لترشيح مُقدم من قبل مستخدم ما\n"
-"                أن يُعين تلقائيًا لفريق مبيعات محدد، أو لفرصة بيع لا تزال\n"
-"                معلقة لـ14 يومًا أن تُفعل تلقائيًا رسالة بريد تذكيرية."
+"استخدم الإجراءات المؤتمتة لتفعيل الإجراءات تلقائياً على\n"
+"                شاشات مختلفة. مثال: يمكن لعميل مهتم أُنشئ من قِبَل مستخدم ما\n"
+"                أن يُعين تلقائياً لفريق مبيعات محدد، أو قد تقوم فرصة لا تزال\n"
+"                معلقة لـ 14 يوم أن تُفعل تلقائياً رسالة بريد إلكتروني تذكيرية. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -643,7 +651,7 @@ msgstr "اسم حقل المستخدم"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
-msgstr "تعيين القيمة "
+msgstr "تخطيط القيمة "
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -687,7 +695,7 @@ msgid ""
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "متى يتم تفعيل الشرط.\n"
-"                إذا كان موجوداً، سيتم التحقق منع من قِبَل المجدوِل. إذا كان فارغاً، سيتم التحقق منه عند الإنشاء والتحديث. "
+"                إذا كان موجوداً، سيتم التحقق منه من قِبَل المجدوِل. إذا كان فارغاً، سيتم التحقق منه عند الإنشاء والتحديث. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

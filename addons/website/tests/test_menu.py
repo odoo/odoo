@@ -2,6 +2,9 @@
 
 import json
 
+from hashlib import sha256
+from lxml import html
+
 from odoo.tests import common
 
 
@@ -185,3 +188,35 @@ class TestMenuHttp(common.HttpCase):
         self.assertFalse(self.menu.page_id, "M2o should have been unset as this is an anchor URL.")
         self.assertEqual(self.menu.url, self.page_url + '#anchor', "Page URL should have been properly prefixed with the referer url")
         self.assertEqual(self.page.url, self.page_url, "Page URL should not have changed")
+
+    def test_03_mega_menu_translate(self):
+        # Setup
+        fr = self.env['res.lang']._activate_lang('fr_FR')
+        Menu = self.env['website.menu']
+        website = self.env['website'].browse(1)
+        website.language_ids += fr
+        menu = Menu.create({
+            'name': 'Test Mega Menu Content Translation Edit Mode',
+            'mega_menu_content': '<p>something</p>',
+            'parent_id': website.menu_id.id,
+            'website_id': website.id,
+        })
+        self.env['ir.module.module']._load_module_terms(['website'], [fr.code])
+
+        # Load cache
+        self.url_open('/%s' % fr.url_code)
+        self.url_open('/%s?edit_translations=1' % fr.url_code)
+
+        # Translate
+        root = html.fromstring(menu.mega_menu_content)
+        to_translate = root.text_content()
+        sha = sha256(to_translate.encode()).hexdigest()
+        menu.update_field_translations_sha('mega_menu_content', {fr.code: {sha: 'french_mega_menu_content'}})
+        self.assertIn("french_mega_menu_content",
+                      menu.with_context(lang=fr.code, website_id=website.id).mega_menu_content)
+
+        # Checks
+        page = self.url_open('/%s' % fr.url_code)
+        self.assertIn(b"french_mega_menu_content", page.content)
+        page = self.url_open('/%s?edit_translations=1' % fr.url_code)
+        self.assertIn(b"french_mega_menu_content", page.content)

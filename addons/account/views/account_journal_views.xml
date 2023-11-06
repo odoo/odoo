@@ -17,6 +17,7 @@
                     <field name="default_account_id" optional="show"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -63,12 +64,9 @@
                                                attrs="{'invisible': [('type', '!=', 'sale')]}" groups="account.group_account_readonly"/>
                                         <label for="default_account_id" string="Default Expense Account"
                                                attrs="{'invisible': [('type', '!=', 'purchase')]}" groups="account.group_account_readonly"/>
-                                        <label for="default_account_id" string="Default Account"
-                                               help="If set, this account is used to automatically balance entries."
-                                               attrs="{'invisible': [('type', '!=', 'general')]}" groups="account.group_account_readonly"/>
                                         <field name="default_account_id" nolabel="1"
                                                attrs="{'required': ['|', '&amp;', ('id', '!=', False), ('type', 'in', ('bank', 'cash')), ('type', 'in', ('sale', 'purchase'))],
-                                                       'invisible': [('type', '=', False)]}"
+                                                       'invisible': [('type', 'in', (False, 'general'))]}"
                                                options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <field name="suspense_account_id"

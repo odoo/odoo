@@ -18,14 +18,18 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
 
     def test_website_event_pages_seo(self):
+        website = self.env['website'].get_current_website()
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
+            'website_id': website.id,
         })
         intro_event_menu = event.introduction_menu_ids
         url = intro_event_menu.menu_id.clean_url()
         self.start_tour(self.env['website'].get_client_action_url(url), 'website_event_pages_seo', login='admin')
-        self.assertEqual(intro_event_menu.view_id.website_meta_title, "Hello, world!")
+        view_key = intro_event_menu.view_id.key
+        specific_view = website.with_context(website_id=website.id).viewref(view_key)
+        self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
 @tagged('-at_install', 'post_install')

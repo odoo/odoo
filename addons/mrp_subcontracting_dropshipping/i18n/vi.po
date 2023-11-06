@@ -3,16 +3,17 @@
 # 	* mrp_subcontracting_dropshipping
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,6 +27,9 @@ msgid ""
 "company. Note that standard subcontracting routes will be adapted so as to "
 "take these into account automatically."
 msgstr ""
+"Chọn ô này để tạo một địa điểm thầu phụ mới dành riêng cho công ty này. Lưu "
+"ý rằng các tuyến thầu phụ tiêu chuẩn sẽ được điều chỉnh để tự động tính cả "
+"chúng."
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_res_company
@@ -35,7 +39,7 @@ msgstr "Công ty"
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_res_company__dropship_subcontractor_pick_type_id
 msgid "Dropship Subcontractor Pick Type"
-msgstr ""
+msgstr "Loại lấy hàng Dropship cho nhà thầu phụ"
 
 #. module: mrp_subcontracting_dropshipping
 #. odoo-python
@@ -45,36 +49,34 @@ msgstr ""
 #: model:stock.route,name:mrp_subcontracting_dropshipping.route_subcontracting_dropshipping
 #, python-format
 msgid "Dropship Subcontractor on Order"
-msgstr ""
+msgstr "Dropship cho nhà thầu phụ theo đơn hàng"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
 msgid "Dropship Subcontractors"
-msgstr ""
+msgstr "Dropship cho nhà thầu phụ"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
 msgid "Dropship subcontractors with components"
-msgstr ""
+msgstr "Dropship nguyên liệu cho nhà thầu phụ"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
 msgid "Is a Subcontracting Location?"
-msgstr ""
+msgstr "Là một địa điểm thầu phụ?"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Quy tắc hàng tồn kho tối thiểu"
 
 #. module: mrp_subcontracting_dropshipping
 #. odoo-python
 #: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
 #, python-format
-msgid ""
-"It appears some components in this RFQ are not meant for subcontracting. "
-"Please create a separate order for these."
-msgstr ""
-
-#. module: mrp_subcontracting_dropshipping
-#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Quy tắc tồn kho tối thiểu"
+msgid "Please note this purchase order is for subcontracting purposes."
+msgstr "Lưu ý rằng đơn mua hàng được dùng cho thầu phụ."
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_purchase_order
@@ -84,17 +86,17 @@ msgstr "Đơn mua hàng"
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển kho"
+msgstr "Dịch chuyển tồn kho"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_rule
 msgid "Stock Rule"
-msgstr "Tuyến cung ứng"
+msgstr "Quy tắc tồn kho"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_pull_id
 msgid "Subcontracting-Dropshipping MTS Rule"
-msgstr ""
+msgstr "Thầu phụ-Dropshipping theo qui tắc MTS"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_picking
@@ -104,4 +106,11 @@ msgstr "Điều chuyển"
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse
 msgid "Warehouse"
-msgstr "Kho"
+msgstr "Kho hàng"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid "Warning"
+msgstr "Cảnh báo"

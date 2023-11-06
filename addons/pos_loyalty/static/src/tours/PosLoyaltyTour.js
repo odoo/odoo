@@ -38,7 +38,7 @@ ProductScreen.exec.addOrderline('Desk Organizer', '9');
 PosLoyalty.check.hasRewardLine('on the cheapest product', '-4.59');
 PosLoyalty.exec.removeRewardLine('90% on the cheapest product');
 PosLoyalty.check.orderTotalIs('45.90');
-PosLoyalty.do.enterCode('invalid_code', false);
+PosLoyalty.do.enterCode('invalid_code');
 PosLoyalty.do.enterCode('1234');
 PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-15.30');
 PosLoyalty.exec.finalizeOrder('Cash', '50');
@@ -66,7 +66,7 @@ ProductScreen.exec.addOrderline('Desk Organizer', '3') // 5.1
 ProductScreen.exec.addOrderline('Letter Tray', '4') // 4.8 tax 10%
 PosLoyalty.check.hasRewardLine('90% on the cheapest product', '-1.78')
 PosLoyalty.check.orderTotalIs('54.44')
-PosLoyalty.do.enterCode('promocode', false)
+PosLoyalty.do.enterCode('promocode')
 PosLoyalty.check.hasRewardLine('50% on specific products', '-16.66') // 17.55 - 1.78*0.5
 PosLoyalty.check.orderTotalIs('37.78')
 PosLoyalty.exec.finalizeOrder('Cash', '50')
@@ -129,7 +129,7 @@ PosLoyalty.exec.finalizeOrder('Cash', '65');
 ProductScreen.exec.addOrderline('Desk Organizer', '6'); // 5.1 per item
 PosLoyalty.check.hasRewardLine('on the cheapest product', '-4.59');
 PosLoyalty.exec.removeRewardLine('90% on the cheapest product');
-PosLoyalty.do.enterCode('promocode', false);
+PosLoyalty.do.enterCode('promocode');
 PosLoyalty.check.hasRewardLine('50% on specific products', '-15.30');
 PosLoyalty.do.enterCode('1357');
 PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-10.20');
@@ -206,3 +206,28 @@ PosLoyalty.do.clickConfirmButton();
 ProductScreen.check.totalAmountIs('92.00');
 
 Tour.register('PosLoyaltyTour5', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+PosLoyalty.do.clickRewardButton();
+ProductScreen.check.totalAmountIs('138.50');
+
+Tour.register('PosLoyaltyTour6', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Test Product', '1');
+PosLoyalty.check.orderTotalIs('100');
+PosLoyalty.do.enterCode('abcda');
+PosLoyalty.check.orderTotalIs('90');
+
+Tour.register('PosLoyaltyTour7', { test: true, url: '/pos/web' }, getSteps());

@@ -3,6 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { getColor } from "../colors";
+import { getFormattedDateSpan } from '@web/views/calendar/utils';
 
 import { Component } from "@odoo/owl";
 
@@ -30,7 +31,7 @@ export class CalendarYearPopover extends Component {
             modifiedRecord.startHour =
                 !record.isAllDay && duration < 1 ? start.toFormat("HH:mm") : "";
 
-            const formattedDate = this.getFormattedDate(start, end);
+            const formattedDate = getFormattedDateSpan(start, end);
             if (!(formattedDate in recordGroups)) {
                 recordGroups[formattedDate] = {
                     title: formattedDate,
@@ -70,17 +71,6 @@ export class CalendarYearPopover extends Component {
             }
             return a.start.toMillis() - b.start.toMillis();
         });
-    }
-    getFormattedDate(start, end) {
-        const isSameDay = start.hasSame(end, "days");
-        if (!isSameDay && start.hasSame(end, "month")) {
-            // Simplify date-range if an event occurs into the same month (eg. "August 4-5, 2019")
-            return start.toFormat("LLLL d") + "-" + end.toFormat("d, y");
-        } else {
-            return isSameDay
-                ? start.toFormat("DDD")
-                : start.toFormat("DDD") + " - " + end.toFormat("DDD");
-        }
     }
 
     onCreateButtonClick() {

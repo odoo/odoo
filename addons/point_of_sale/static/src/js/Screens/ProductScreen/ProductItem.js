@@ -3,8 +3,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service')
-    const { identifyError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     class ProductItem extends PosComponent {
         /**
@@ -47,7 +46,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
                 const info = await this.env.pos.getProductInfo(this.props.product, 1);
                 this.showPopup('ProductInfoPopup', { info: info , product: this.props.product });
             } catch (e) {
-                if (identifyError(e) instanceof ConnectionLostError||ConnectionAbortedError) {
+                if (isConnectionError(e)) {
                     this.showPopup('ErrorPopup', {
                         title: this.env._t('OfflineErrorPopup'),
                         body: this.env._t('Cannot access product information screen if offline.'),

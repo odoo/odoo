@@ -36,12 +36,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.$currentAnimatedText = $();
 
         this.__onSelectionChange = ev => {
             this._toggleAnimatedTextButton();
         };
-        this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
 
         // editor_has_snippets is, amongst other things, in charge of hiding the
         // backend navbar with a CSS animation. But we also need to make it
@@ -58,7 +57,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     destroy() {
         this._super(...arguments);
-        this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
         clearTimeout(this._hideBackendNavbarTimeout);
         this.el.ownerDocument.body.classList.remove('editor_has_snippets_hide_backend_navbar');
@@ -117,6 +116,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 </we-select>
             </div>
         `, _t("Position"), _t("Cover"), _t("Contain"))));
+        // TODO remove me in master
+        $html.find('[data-attribute-name="interval"]')[0].dataset.attributeName = "bsInterval";
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -207,7 +208,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     async _validateGMapAPIKey(key) {
         try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(key)}`);
             const isValid = (response.status === 200);
             return {
                 isValid: isValid,
@@ -298,7 +299,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
         const animatedText = this._getAnimatedTextElement();
         this.$('.o_we_animate_text').toggleClass('active', !!animatedText);
-        this.$currentAnimatedText = animatedText ? $(animatedText) : $();
     },
     /**
      * Displays the button that allows to highlight the animated text if there
@@ -437,8 +437,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
         const editable = this.options.wysiwyg.$editable[0];
         const range = getDeepRange(editable, { splitText: true, select: true, correctTripleClick: true });
-        if (this.$currentAnimatedText.length) {
-            this.$currentAnimatedText.contents().unwrap();
+        const animatedText = this._getAnimatedTextElement();
+        if (animatedText) {
+            $(animatedText).contents().unwrap();
             this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
             this._toggleHighlightAnimatedTextButton();
             ev.target.classList.remove('active');
@@ -498,11 +499,28 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @private
      */
     _onReloadBundles(ev) {
-        if (this._currentTab === this.tabs.THEME) {
-            const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
-            for (const editor of this.snippetEditors) {
-                if (!editor.$target[0].matches(excludeSelector)) {
-                    this._mutex.exec(() => editor.destroy());
+        const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
+        for (const editor of this.snippetEditors) {
+            if (!editor.$target[0].matches(excludeSelector)) {
+                if (this._currentTab === this.tabs.THEME) {
+                    this._mutex.exec(() => {
+                        editor.destroy();
+                    });
+                } else {
+                    this._mutex.exec(async () => {
+                        // TODO In master: add a rerender parameter to
+                        // updateOptionsUI.
+                        Object.values(editor.styles).map(opt => {
+                            opt.rerender = true;
+                        });
+                        await editor.updateOptionsUI();
+                        Object.values(editor.styles).map(opt => {
+                            if (opt.rerender) {
+                                // 'rerender' was irrelevant for option.
+                                delete opt.rerender;
+                            }
+                        });
+                    });
                 }
             }
         }

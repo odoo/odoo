@@ -4,9 +4,11 @@ import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services
 import {
     click,
     clickCreate,
+    clickDiscard,
     clickSave,
     editInput,
     getFixture,
+    patchDate,
     patchTimeZone,
     patchWithCleanup,
     triggerEvent,
@@ -68,7 +70,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DateField");
 
-    QUnit.test("DateField: toggle datepicker [REQUIRE FOCUS]", async function (assert) {
+    QUnit.test("DateField: toggle datepicker", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -85,7 +87,7 @@ QUnit.module("Fields", (hooks) => {
             "datepicker should be closed initially"
         );
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -93,7 +95,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // focus another field
-        target.querySelector(".o_field_widget[name='foo'] input").focus();
+        await click(target, ".o_field_widget[name='foo'] input");
         assert.containsNone(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -101,51 +103,48 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "DateField: toggle datepicker far in the future [REQUIRE FOCUS]",
-        async function (assert) {
-            serverData.models.partner.records = [
-                {
-                    id: 1,
-                    date: "9999-12-30",
-                    foo: "yop",
-                },
-            ];
+    QUnit.test("DateField: toggle datepicker far in the future", async function (assert) {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                date: "9999-12-30",
+                foo: "yop",
+            },
+        ];
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
                     <form>
                         <field name="foo" />
                         <field name="date" />
                     </form>`,
-            });
+        });
 
-            assert.containsNone(
-                document.body,
-                ".bootstrap-datetimepicker-widget",
-                "datepicker should be closed initially"
-            );
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be closed initially"
+        );
 
-            await click(target, ".o_datepicker input");
-            assert.containsOnce(
-                document.body,
-                ".bootstrap-datetimepicker-widget",
-                "datepicker should be opened"
-            );
+        await click(target, ".o_datepicker .o_datepicker_input");
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be opened"
+        );
 
-            // focus another field
-            target.querySelector(".o_field_widget[name='foo'] input").focus();
-            assert.containsNone(
-                document.body,
-                ".bootstrap-datetimepicker-widget",
-                "datepicker should close itself when the user clicks outside"
-            );
-        }
-    );
+        // focus another field
+        await click(target, ".o_field_widget[name='foo'] input");
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should close itself when the user clicks outside"
+        );
+    });
 
     QUnit.test("date field is empty if no date is set", async function (assert) {
         await makeView({
@@ -158,7 +157,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_field_widget input",
+            ".o_field_widget .o_datepicker_input",
             "should have one input in the form view"
         );
         assert.strictEqual(
@@ -217,7 +216,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="date"/></form>',
         });
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         // open datepicker and select a date
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='date'] input").value,
@@ -227,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".day[data-day*='/22/']");
 
         // re-open datepicker
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.strictEqual(
             document.body.querySelector(".day.active").textContent,
             "22",
@@ -336,7 +335,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -385,7 +384,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // open datepicker and select another value
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         await click(
             document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
         );
@@ -656,7 +655,7 @@ QUnit.module("Fields", (hooks) => {
                 done();
             });
 
-            await click(target, ".o_datepicker input");
+            await click(target, ".o_datepicker .o_datepicker_input");
         }
     );
 
@@ -691,7 +690,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const dateViewForm = target.querySelector(".o_field_date input").value;
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
 
         assert.strictEqual(
             target.querySelector(".o_datepicker_input").value,
@@ -726,19 +725,50 @@ QUnit.module("Fields", (hooks) => {
         const input = target.querySelector(".o_field_widget[name='date'] input");
 
         input.value = "01/08";
-        await triggerEvent(input, null, "change");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
+        await triggerEvent(input, null, "change");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='date'] input").value,
             `01/08/${year}`
         );
 
         input.value = "08/01";
-        await triggerEvent(input, null, "change");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
+        await triggerEvent(input, null, "change");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='date'] input").value,
             `08/01/${year}`
         );
+    });
+
+    QUnit.test("DateField: allow to use compute dates (+5d for instance)", async function (assert) {
+        patchDate(2021, 1, 15, 10, 0, 0); // current date : 15 Feb 2021 10:00:00
+        serverData.models.partner.fields.date.default = "2019-09-15";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"></field></form>',
+        });
+
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+
+        // Calculate a new date from current date + 5 days
+        await editInput(target, ".o_field_widget[name=date] .o_datepicker_input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Discard and do it again
+        await clickDiscard(target);
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "09/15/2019"); // default date
+        await editInput(target, ".o_field_widget[name=date] .o_datepicker_input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+
+        // Save and do it again
+        await clickSave(target);
+        // new computed date (current date + 5 days) is saved
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
+        await editInput(target, ".o_field_widget[name=date] .o_datepicker_input", "+5d");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
     });
 });

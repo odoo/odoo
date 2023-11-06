@@ -958,4 +958,23 @@ QUnit.module("Search", (hooks) => {
         model.toggleSearchItem(1);
         assert.deepEqual(model.domain, [["date_deadline", "<", "2021-09-17"]]);
     });
+
+    QUnit.test("no search items created for search panel sections", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch: `
+                        <search>
+                            <searchpanel>
+                                <field name="company_id"/>
+                                <field name="company_id" select="multi"/>
+                            </searchpanel>
+                        </search>
+                    `,
+            resModel: "partner",
+            config: { viewType: "kanban" },
+        });
+        const sections = model.getSections();
+        assert.strictEqual(sections.length, 2);
+        assert.deepEqual(sanitizeSearchItems(model), []);
+    });
 });

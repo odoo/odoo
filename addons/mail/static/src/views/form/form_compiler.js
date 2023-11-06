@@ -146,11 +146,7 @@ registry.category("form_compilers").add("chatter_compiler", {
 
 registry.category("form_compilers").add("attachment_preview_compiler", {
     selector: "div.o_attachment_preview",
-    fn: (node) =>
-        compileAttachmentPreview(node, {
-            threadId: "props.record.resId or undefined",
-            threadModel: "props.record.resModel",
-        }),
+    fn: () => createElement("t"),
 });
 
 patch(FormCompiler.prototype, 'mail', {

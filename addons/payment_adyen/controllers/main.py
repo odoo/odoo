@@ -47,7 +47,7 @@ class AdyenController(http.Controller):
         :param float amount: The transaction amount
         :param int currency_id: The transaction currency, as a `res.currency` id
         :param int partner_id: The partner making the transaction, as a `res.partner` id
-        :return: The JSON-formatted content of the response
+        :return: The JSON-formatted content of the response and formatted amount
         :rtype: dict
         """
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
@@ -64,22 +64,26 @@ class AdyenController(http.Controller):
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
         lang_code = (request.context.get('lang') or 'en-US').replace('_', '-')
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
+        amount = {
+            'value': converted_amount,
+            'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
+        }
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
-            'amount': converted_amount,
+            'amount': amount,
             'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
             'channel': 'Web',
         }
-        response_content = provider_sudo._adyen_make_request(
+        payment_methods_data = provider_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/paymentMethods',
             payload=data,
             method='POST'
         )
-        _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
-        return response_content
+        _logger.info("paymentMethods request response:\n%s", pprint.pformat(payment_methods_data))
+        return {'payment_methods_data': payment_methods_data, 'amount_formatted': amount}
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(
@@ -268,6 +272,11 @@ class AdyenController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'adyen', notification_data
                 )
+            except ValidationError:
+                # Warn rather than log the traceback to avoid noise when a POS payment notification
+                # is received and the corresponding `payment.transaction` record is not found.
+                _logger.warning("unable to find the transaction; skipping to acknowledge")
+            else:
                 self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
@@ -282,11 +291,13 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-
-                # Handle the notification data as if they were feedback of a S2S payment request
-                tx_sudo._handle_notification_data('adyen', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                _logger.exception("unable to handle the notification data; skipping to acknowledge")
+                try:
+                    # Handle the notification data as if they were feedback of a S2S payment request
+                    tx_sudo._handle_notification_data('adyen', notification_data)
+                except ValidationError:  # Acknowledge the notification to avoid getting spammed
+                    _logger.exception(
+                        "unable to handle the notification data;skipping to acknowledge"
+                    )
 
         return '[accepted]'  # Acknowledge the notification
 

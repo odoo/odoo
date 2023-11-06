@@ -160,7 +160,7 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
         async _updateSelectedOrderline(event) {
             const selectedLine = this.currentOrder.get_selected_orderline();
             if (event.detail.key === '-') {
-                if (selectedLine.eWalletGiftCardProgram) {
+                if (selectedLine && selectedLine.eWalletGiftCardProgram) {
                     // Do not allow negative quantity or price in a gift card or ewallet orderline.
                     // Refunding gift card or ewallet is not supported.
                     this.showNotification(this.env._t('You cannot set negative quantity or price to gift card or ewallet.'), 4000);
@@ -223,6 +223,12 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
             }
             if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === 'remove')) {
                 selectedLine.order._updateRewards();
+            }
+        }
+        async _showDecreaseQuantityPopup() {
+            const result = await super._showDecreaseQuantityPopup();
+            if (result){
+                this.env.pos.get_order()._updateRewards();
             }
         }
     };

@@ -6,27 +6,26 @@
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Ants Peetsalu <ants@avalah.ee>, 2022
-# Oliver Ernest, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Leaanika Randmets, 2022
-# Jana Jaakson, 2023
 # Anna, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# JanaAvalah, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Anna, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -274,9 +273,6 @@ msgid "Ancestor Task"
 msgstr "Vanem ülesanne"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Apple App Store"
 msgstr "Apple'i rakenduste pood"
@@ -410,14 +406,6 @@ msgid "Download"
 msgstr "Laadige alla"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
-msgid ""
-"Download our web/mobile apps to track your time from anywhere, even offline."
-msgstr ""
-"Laadige alla meie veebi-ja mobiilirakendused, et jälgida oma aega kõikjal, "
-"isegi ilma võrguühenduseta."
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
 msgstr "Kestus"
@@ -472,26 +460,11 @@ msgid "Generate timesheets upon time off validation"
 msgstr "Looge tööaja tabelid pärast puhkuste kinnitamist"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid ""
-"Get our web/mobile apps to track your time from anywhere, even offline."
-msgstr ""
-"Hankige meie veebi-/mobiilirakendused, et jälgida oma aega kõikjal, isegi "
-"võrguühenduseta."
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Google Chrome Store"
 msgstr "Google Chrome pood"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Google Play Store"
 msgstr "Google Play pood"
@@ -594,16 +567,6 @@ msgid "Job Title"
 msgstr "Ametinimetus"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid ""
-"Keep track of your working hours by project every day and bill your "
-"customers for that time."
-msgstr ""
-"Jälgige iga päev oma tööaega projektide kaupa ja esitage klientidele arveid "
-"selle aja eest."
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report____last_update
 msgid "Last Modified on"
 msgstr "Viimati muudetud"
@@ -633,7 +596,7 @@ msgstr "Eelmine aasta"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_project_view_form_simplified_inherit_timesheet
 msgid "Log time on tasks"
-msgstr "Logi ülesannetesse aega"
+msgstr "Logi ülesannete alla aega"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
@@ -731,17 +694,17 @@ msgid "Newest"
 msgstr "Uusim"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No activities found. Let's start a new one!"
+msgstr "Tegevusi ei leitud. Loome uue!"
+
+#. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "Andmed puuduvad!"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid "No timesheets found. Let's create one!"
-msgstr "Tööaja arvestuslehti ei leitud. Loome ühe!"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -833,7 +796,6 @@ msgstr "Valmis"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid "Record a new activity"
 msgstr "Salvestage uus tegevus"
 
@@ -937,7 +899,7 @@ msgid ""
 "                                    that still have timesheets to validate"
 msgstr ""
 "Saatke tööaja arvestuse kinnitajale perioodilisi meeldetuletuskirju<br/>\n"
-"                                    millel on tööajaarvestuse tabel kinnitamiseks"
+"                                    millel on  lisatud kinnitamiseks tööajaarvestuse tabel"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -945,8 +907,8 @@ msgid ""
 "Send a periodical email reminder to timesheets users<br/>\n"
 "                                    that still have timesheets to encode"
 msgstr ""
-"Saatke töötajale tööaja arvestuse perioodilisi meeldetuletuskirju<br/>\n"
-"                                    millel on vaja veel tööaja arvestuslehti täita"
+"Saatke töötajale meeldetuletuskirju,<br/>\n"
+"                                    kellel on tööaja arvestuslehed veel täitmata"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -1137,7 +1099,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr "Teie ajatabelite salvestamiseks kasutatav ajaühik"
+msgstr "Ajatabelite salvestamiseks kasutatav ajaühik"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1331,11 +1293,12 @@ msgstr "Kokku:"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
-msgstr ""
-"Jälgi oma aega igalt pool meie veebi/mobiiliäpiga, isegi offline olles"
+msgstr "Jälgi oma aega meie veebi/mobiiliäpiga, isegi offline olles"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
@@ -1370,17 +1333,6 @@ msgstr "Kasutaja: ainult enda tööaja arvestuslehed"
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
 msgid "Widget"
 msgstr "Vidin"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
-msgid ""
-"You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
-"                    customers if required."
-msgstr ""
-"Saate erinevates projektides registreerida ja jälgida oma tööaega\n"
-"                     päeval. Iga projektile kulutatud aeg muutub kuluks ja selle eest saab uuesti vajadusel kliendile arve esitada\n"
-"                     "
 
 #. module: hr_timesheet
 #. odoo-python

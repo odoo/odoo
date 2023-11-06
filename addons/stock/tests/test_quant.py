@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
@@ -510,7 +510,7 @@ class StockQuant(TransactionCase):
             })
         with self.assertRaises(AccessError):
             quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
@@ -519,7 +519,7 @@ class StockQuant(TransactionCase):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'inventory_quantity': 3.0})
         with self.assertRaises(AccessError):
             quant.with_user(self.stock_user).unlink()
 
@@ -796,3 +796,124 @@ class StockQuant(TransactionCase):
         # cache to ensure that the value will be the newest
         quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
+
+    def test_clean_quant_after_package_move(self):
+        """
+        A product is at WH/Stock in a package PK. We deliver PK. The user should
+        not find any quant at WH/Stock with PK anymore.
+        """
+        package = self.env['stock.quant.package'].create({})
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package)
+
+        move = self.env['stock.move'].create({
+            'name': 'OUT 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.move_line_ids.write({
+            'result_package_id': package.id,
+            'qty_done': 1,
+        })
+        move._action_done()
+
+        self.assertFalse(self.env['stock.quant'].search_count([
+            ('product_id', '=', self.product.id),
+            ('package_id', '=', package.id),
+            ('location_id', '=', self.stock_location.id),
+        ]))
+
+    def test_serial_constraint_with_package_and_return(self):
+        """
+        Receive product with serial S
+        Return it in a package
+        Confirm a new receipt with S
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        receipt01 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        receipt01.action_confirm()
+        receipt01.move_line_ids.write({
+            'lot_name': 'Michel',
+            'qty_done': 1.0
+        })
+        receipt01.button_validate()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
+
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.ids[0], active_model='stock.picking'))
+        wizard = wizard_form.save()
+        wizard.product_return_moves.quantity = 1.0
+        stock_return_picking_action = wizard.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_ids.move_line_ids.qty_done = 1.0
+        return_pick.action_put_in_pack()
+        return_pick._action_done()
+
+        self.assertEqual(return_pick.move_line_ids.lot_id, quant.lot_id)
+        self.assertTrue(return_pick.move_line_ids.result_package_id, quant.lot_id)
+
+        receipt02 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        receipt02.action_confirm()
+        receipt02.move_line_ids.write({
+            'lot_name': 'Michel',
+            'qty_done': 1.0
+        })
+        receipt02.button_validate()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.lot_id.name, 'Michel')
+
+    def test_update_quant_with_forbidden_field(self):
+        """
+        Test that updating a quant with a forbidden field raise an error.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn1 = self.env['stock.lot'].create({
+            'name': 'SN1',
+            'product_id': product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product, self.stock_subloc2, 1.0, lot_id=sn1)
+        self.assertEqual(len(product.stock_quant_ids), 1)
+        self.env['stock.quant']._update_available_quantity(product, self.stock_subloc3, 1.0, lot_id=sn1)
+        self.assertEqual(len(product.stock_quant_ids), 2)
+        quant_2 = product.stock_quant_ids[1]
+        self.assertEqual(quant_2.with_context(inventory_mode=True).sn_duplicated, True)
+        with self.assertRaises(UserError):
+            quant_2.with_context(inventory_mode=True).write({'location_id': self.stock_subloc2})

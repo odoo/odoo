@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Marek Pontus, 2022
+# Martin Talts <martin.t@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
-# Martin Talts <martin.t@avalah.ee>, 2022
 # Wanradt Koell <wanradt@gmail.com>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -19,18 +19,19 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
-# Leaanika Randmets, 2023
-# Jana Jaakson, 2023
 # Anna, 2023
+# JanaAvalah, 2023
+# Marten, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Anna, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -220,7 +221,7 @@ msgstr "%s kirjutab..."
 #: code:addons/mail/models/mail_channel_member.py:0
 #, python-format
 msgid "%s started a live conference"
-msgstr "%s alustas otsekonverentsi"
+msgstr "%s alustas koosoleku"
 
 #. module: mail
 #. odoo-javascript
@@ -853,7 +854,7 @@ msgid ""
 "document and</span>"
 msgstr ""
 "<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
-"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Jälgijad dokumendil "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Dokumendi jälgijad "
 "ja </span>"
 
 #. module: mail
@@ -874,11 +875,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
 msgstr "<strong>Algne märkus:</strong>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Soovitatud tegevused</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -908,7 +904,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "A button (blood type)"
-msgstr ""
+msgstr "A button (blood type)"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_member_partner_or_guest_exists
@@ -1304,7 +1300,7 @@ msgstr "Lisa kasutajaid"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr "Lisage twilio andmed ICE serveri jaoks"
+msgstr "Lisa Twilio andmed ICE serveri jaoks"
 
 #. module: mail
 #. odoo-python
@@ -1410,6 +1406,13 @@ msgid ""
 msgstr ""
 "Ilmnes SSL-i erand. Kontrollige serveri pordi SSL/TLS konfiguratsiooni.\n"
 "%s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -2115,12 +2118,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr ""
+msgstr "Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr ""
+msgstr "Catchall e-post"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2133,7 +2136,7 @@ msgstr "Koopia"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Aheldamise tüüp"
 
 #. module: mail
 #. odoo-javascript
@@ -2429,6 +2432,7 @@ msgstr "Ettevõtted"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2455,7 +2459,7 @@ msgstr "Seadistus"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr "Seadistage oma ICE serverite loend webRTC jaoks"
+msgstr "Seadista ICE serverite loend webRTC jaoks"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2465,7 +2469,7 @@ msgstr "Konfigureeri oma tegevustüübid"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr "Konfigureeri omaenda e-posti serverid"
+msgstr "Konfigureeri kohandatud meiliserverid"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -3068,6 +3072,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3563,7 +3568,7 @@ msgstr "Tellitud jälgimise lubamine"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr ""
+msgstr "Luba Push-to-talk"
 
 #. module: mail
 #. odoo-javascript
@@ -3762,7 +3767,7 @@ msgstr "Tagasiside"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Ferris"
-msgstr ""
+msgstr "Ferris"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -3968,7 +3973,7 @@ msgstr "Prantsuse keel"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "French stick"
-msgstr ""
+msgstr "French stick"
 
 #. module: mail
 #. odoo-javascript
@@ -3991,14 +3996,14 @@ msgstr "Kellelt?"
 #: code:addons/mail/static/src/models/call_participant_card_popover_content_view.js:0
 #, python-format
 msgid "From %(name)s: %(candidateType)s (%(protocol)s)"
-msgstr ""
+msgstr " %(name)s: %(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_participant_card_popover_content_view.js:0
 #, python-format
 msgid "From %s: no connection"
-msgstr ""
+msgstr "%s: ühendus puudub"
 
 #. module: mail
 #. odoo-javascript
@@ -4068,13 +4073,6 @@ msgid "Gmail Credentials"
 msgstr "Gmaili volitused"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Mine seadistuste paneelile"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Grupp"
@@ -4141,7 +4139,7 @@ msgstr ""
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name is too long."
-msgstr ""
+msgstr "Külalise nimi on liiga pikk."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_guest_action
@@ -4387,7 +4385,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ILY"
-msgstr ""
+msgstr "ILY"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -4578,7 +4576,7 @@ msgstr "Pilt 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__image_mimetype
 msgid "Image MIME type"
-msgstr ""
+msgstr "Pildi MIME tüüp"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -4956,7 +4954,7 @@ msgstr "Jaapani tuulesokid"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “acceptable” button"
-msgstr ""
+msgstr "Japanese “acceptable” button"
 
 #. module: mail
 #. odoo-javascript
@@ -4964,7 +4962,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “application” button"
-msgstr ""
+msgstr "Japanese “application” button"
 
 #. module: mail
 #. odoo-javascript
@@ -4972,7 +4970,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “bargain” button"
-msgstr ""
+msgstr "Japanese “bargain” button"
 
 #. module: mail
 #. odoo-javascript
@@ -4980,7 +4978,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “congratulations” button"
-msgstr ""
+msgstr "Japanese “congratulations” button"
 
 #. module: mail
 #. odoo-javascript
@@ -4988,7 +4986,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “discount” button"
-msgstr ""
+msgstr "Japanese “discount” button"
 
 #. module: mail
 #. odoo-javascript
@@ -4996,7 +4994,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “free of charge” button"
-msgstr ""
+msgstr "Japanese “free of charge” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5004,7 +5002,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “here” button"
-msgstr ""
+msgstr "Japanese “here” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5012,7 +5010,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “monthly amount” button"
-msgstr ""
+msgstr "Japanese “monthly amount” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5020,7 +5018,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “no vacancy” button"
-msgstr ""
+msgstr "Japanese “no vacancy” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5028,7 +5026,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “not free of charge” button"
-msgstr ""
+msgstr "Japanese “not free of charge” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5036,7 +5034,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “open for business” button"
-msgstr ""
+msgstr "Japanese “open for business” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5044,7 +5042,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “passing grade” button"
-msgstr ""
+msgstr "Japanese “passing grade” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5052,7 +5050,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “prohibited” button"
-msgstr ""
+msgstr "Japanese “prohibited” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5060,7 +5058,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “reserved” button"
-msgstr ""
+msgstr "Japanese “reserved” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5068,7 +5066,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “secret” button"
-msgstr ""
+msgstr "Japanese “secret” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5076,7 +5074,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “service charge” button"
-msgstr ""
+msgstr "Japanese “service charge” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5084,7 +5082,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese “vacancy” button"
-msgstr ""
+msgstr "Japanese “vacancy” button"
 
 #. module: mail
 #. odoo-javascript
@@ -5437,7 +5435,7 @@ msgstr "Lae rohkem"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr "Lae mall"
+msgstr "Lae fail"
 
 #. module: mail
 #. odoo-javascript
@@ -5499,6 +5497,7 @@ msgstr "Lisa sisemise märkusena"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "Lisa märkus"
@@ -5664,14 +5663,12 @@ msgstr "Meili mall, mis kasutab seda meiliserverit"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr ""
 
@@ -5771,6 +5768,13 @@ msgid "Mark as done"
 msgstr "Märgi lõpetatuks"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "Kalendrisse lisamine"
@@ -5784,7 +5788,7 @@ msgstr "Liikmete arv"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_member_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Members"
-msgstr "Osalejaid"
+msgstr "Osalejad"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__group_ids
@@ -5892,7 +5896,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__description
 #: model:ir.model.fields,help:mail.field_mail_message__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "Sõnumi kirjeldus: kas teema või teksti algus"
 
 #. module: mail
 #. odoo-javascript
@@ -6000,7 +6004,7 @@ msgstr "Sõnumid võivad olla <b>tähistatud</b> tuletamaks meelde vaadata üle.
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Messages marked as read will appear in the history."
-msgstr ""
+msgstr "Siia ilmuvad loetud sõnumid."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -6154,7 +6158,7 @@ msgstr "Proua Claus"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Munch"
-msgstr ""
+msgstr "Munch"
 
 #. module: mail
 #. odoo-javascript
@@ -6192,14 +6196,14 @@ msgstr "UUS"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "NEW button"
-msgstr ""
+msgstr "UUS nupp"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "NG"
-msgstr ""
+msgstr "NG"
 
 #. module: mail
 #. odoo-javascript
@@ -6207,7 +6211,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "NG button"
-msgstr ""
+msgstr "O nupp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__name
@@ -6291,7 +6295,7 @@ msgstr "Uued sõnumid"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "New messages appear here."
-msgstr "Siin ilmuvad uued sõnumid."
+msgstr "Siia ilmuvad uued sõnumid."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6528,14 +6532,12 @@ msgstr "Teavituse tüüp"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr ""
 
@@ -6598,8 +6600,8 @@ msgstr "Veateadete arv"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Tegutsemist nõudvate sõnumite arv"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -6618,7 +6620,7 @@ msgstr "Kohaletoimetamise veateatega sõnumite arv"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "O button (blood type)"
-msgstr ""
+msgstr "O button (blood type)"
 
 #. module: mail
 #. odoo-javascript
@@ -6637,35 +6639,35 @@ msgstr "OK"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "OK button"
-msgstr ""
+msgstr "OK nupp"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "OK hand"
-msgstr ""
+msgstr "OK hand"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ON"
-msgstr ""
+msgstr "ON"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ON!"
-msgstr ""
+msgstr "ON!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ON! arrow"
-msgstr ""
+msgstr "ON! arrow"
 
 #. module: mail
 #. odoo-javascript
@@ -6882,6 +6884,13 @@ msgstr "Ava konverents: %s"
 #, python-format
 msgid "Open in Discuss"
 msgstr "Ava vestluses"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -7426,7 +7435,6 @@ msgstr "Kirjastaja garantiileping"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Väljaandja: uuenda teavitust"
 
@@ -7604,6 +7612,11 @@ msgstr "Saaja nimi"
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Saajad"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr "Soovitatud tegevused"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -7887,7 +7900,7 @@ msgid "Review All Templates"
 msgstr "Vaata kõik mallid üle"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
 msgstr ""
 
@@ -7953,6 +7966,13 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
@@ -8013,7 +8033,7 @@ msgstr "Salvesta uue mallina"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Graafik"
+msgstr "Planeeri"
 
 #. module: mail
 #. odoo-javascript
@@ -8974,6 +8994,11 @@ msgid "Test & Confirm"
 msgstr "Testi ja kinnita"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
@@ -9003,11 +9028,25 @@ msgstr "Brauser keelas täisekraanirežiimi"
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Maksu ID-kood. Täitke see, kui kontaktile kohaldatakse riiklikke makse. "
-"Kasutatakse mõnedes juriidilistes avaldustes."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9481,7 +9520,7 @@ msgstr "Reisimine ja kohad"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
-msgstr "Tellimise meetod"
+msgstr "Käivitaja"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
@@ -9933,6 +9972,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10060,7 +10107,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Vulcan salute"
-msgstr ""
+msgstr "Vulcan salute"
 
 #. module: mail
 #. odoo-javascript
@@ -10086,7 +10133,7 @@ msgstr "Hoiatus"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Way"
-msgstr ""
+msgstr "Way"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -10265,15 +10312,6 @@ msgstr "Saate avada ainult olemasolevate kanalite profiili."
 #, python-format
 msgid "You can only open the profile of existing users."
 msgstr "Saate avada ainult olemasolevate kasutajate profiili."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -10623,7 +10661,7 @@ msgstr "aesculapius"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after completion date"
-msgstr ""
+msgstr "pärast lõpetamise kuupäeva"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
@@ -35825,130 +35863,130 @@ msgstr "zombi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
-msgstr ""
+msgstr "{{ object.partner_id.lang }}"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“acceptable”"
-msgstr ""
+msgstr "“acceptable”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“application”"
-msgstr ""
+msgstr "“application”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“bargain”"
-msgstr ""
+msgstr "“bargain”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“congratulations”"
-msgstr ""
+msgstr "“congratulations”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“discount”"
-msgstr ""
+msgstr "“discount”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“free of charge”"
-msgstr ""
+msgstr "“free of charge”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“here”"
-msgstr ""
+msgstr "“here”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“monthly amount”"
-msgstr ""
+msgstr "“monthly amount”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“no vacancy”"
-msgstr ""
+msgstr "“no vacancy”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“not free of charge”"
-msgstr ""
+msgstr "“not free of charge”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“open for business”"
-msgstr ""
+msgstr "“open for business”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“passing grade”"
-msgstr ""
+msgstr "“passing grade”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“prohibited”"
-msgstr ""
+msgstr "“prohibited”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“reserved”"
-msgstr ""
+msgstr "“reserved”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“secret”"
-msgstr ""
+msgstr "“secret”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“service charge”"
-msgstr ""
+msgstr "“service charge”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "“vacancy”"
-msgstr ""
+msgstr "“vacancy”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ココ"
-msgstr ""
+msgstr "ココ"

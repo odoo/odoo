@@ -30,7 +30,7 @@
                                         </div>
                                     </div>
                                     <div id="workorder_settings_dependencies" class="row mt-2" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
-                                        <field name="group_mrp_workorder_dependencies" class="col-lg-1 mr0"/>
+                                        <field name="group_mrp_workorder_dependencies" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                         <div class="col ps-0">
                                             <label for="group_mrp_workorder_dependencies"/>
                                             <div class="text-muted">
@@ -62,7 +62,7 @@
                                         Add quality checks to your work orders
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
-                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                         <div class="col ps-0">
                                             <label for="module_quality_control_worksheet"/>
                                             <div class="text-muted">

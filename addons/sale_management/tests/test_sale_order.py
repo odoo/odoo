@@ -317,3 +317,22 @@ class TestSaleOrder(SaleManagementCommon):
             option.product_id = self.product_1
         order = order_form.save()
         self.assertTrue(bool(order.sale_order_option_ids.uom_id))
+
+    def test_option_price_unit_is_not_recomputed(self):
+        """
+        Verifies that user defined price unit for optional products remains the same after
+        update of quantities.
+        """
+
+        sale_order_with_option = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'sale_order_option_ids': [Command.create({
+                'product_id': self.optional_product.id,
+                'price_unit': 10,
+            })],
+        })
+        sale_order_with_option.sale_order_option_ids.add_option_to_order()
+
+        # after changing the quantity of the product, the price unit should not be recomputed
+        sale_order_with_option.order_line.product_uom_qty = 10
+        self.assertEqual(sale_order_with_option.sale_order_option_ids.price_unit, 10)

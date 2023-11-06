@@ -7,7 +7,7 @@ import {
     createTextNode,
     getTag,
 } from "@web/core/utils/xml";
-import { toStringExpression } from "./utils";
+import { toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
 
 /**
  * @typedef Compiler
@@ -18,24 +18,6 @@ import { toStringExpression } from "./utils";
 
 import { xml } from "@odoo/owl";
 
-const BUTTON_CLICK_PARAMS = [
-    "name",
-    "type",
-    "args",
-    "context",
-    "close",
-    "confirm",
-    "special",
-    "effect",
-    "help",
-    "modifiers",
-    // WOWL SAD: is adding the support for debounce attribute here justified or should we
-    // just override compileButton in kanban compiler to add the debounce?
-    "debounce",
-    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
-    // This should be refactor someday
-    "noSaveDialog",
-];
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "id"];
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
 
@@ -217,8 +199,8 @@ export class ViewCompiler {
         this.id = 1;
         /** @type {Compiler[]} */
         this.compilers = [
-            { selector: "a[type],a[data-type]", fn: this.compileButton },
-            { selector: "button", fn: this.compileButton, doNotCopyAttributes: true },
+            { selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])", fn: this.compileButton },
+            { selector: "button:not([data-bs-toggle])", fn: this.compileButton, doNotCopyAttributes: true },
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
@@ -384,6 +366,7 @@ export class ViewCompiler {
         field.setAttribute("name", `'${fieldName}'`);
         field.setAttribute("record", `props.record`);
         field.setAttribute("fieldInfo", `props.archInfo.fieldNodes['${fieldId}']`);
+        field.setAttribute("readonly", `props.archInfo.activeActions?.edit === false and !props.record.isNew`);
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);

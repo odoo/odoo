@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import wTourUtils from "website.tour_utils";
 
-tour.register('shop_editor', {
+wTourUtils.registerWebsitePreviewTour("shop_editor", {
     test: true,
-    url: '/shop?enable_editor=1',
+    url: "/shop",
+    edition: true,
 }, [{
     content: "Click on pricelist dropdown",
     trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",

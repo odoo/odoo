@@ -74,14 +74,20 @@ class BaseModel(models.AbstractModel):
             recipient_ids, email_to, email_cc = [], False, False
             if 'partner_id' in record and record.partner_id:
                 recipient_ids.append(record.partner_id.id)
-            elif 'email_normalized' in record and record.email_normalized:
-                email_to = record.email_normalized
-            elif 'email_from' in record and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in record and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in record and record.email:
-                email_to = record.email
+            else:
+                found_email = False
+                if 'email_from' in record and record.email_from:
+                    found_email = record.email_from
+                elif 'partner_email' in record and record.partner_email:
+                    found_email = record.partner_email
+                elif 'email' in record and record.email:
+                    found_email = record.email
+                elif 'email_normalized' in record and record.email_normalized:
+                    found_email = record.email_normalized
+                if found_email:
+                    email_to = ','.join(tools.email_normalize_all(found_email))
+                if not email_to:  # keep value to ease debug / trace update
+                    email_to = found_email
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
@@ -167,7 +173,10 @@ class BaseModel(models.AbstractModel):
         if len(record_email) >= 78:
             return record_email
 
-        company_name = self.env.company.name
+        if 'company_id' in self and len(self.company_id) == 1:
+            company_name = self.sudo().company_id.name
+        else:
+            company_name = self.env.company.name
 
         # try company_name + record_name, or record_name alone (or company_name alone)
         name = f"{company_name} {record_name}" if record_name else company_name

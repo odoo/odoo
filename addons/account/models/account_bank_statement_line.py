@@ -5,6 +5,7 @@ from odoo.tools import html2plaintext
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 from xmlrpc.client import MAXINT
+from itertools import product
 
 
 class AccountBankStatementLine(models.Model):
@@ -27,16 +28,15 @@ class AccountBankStatementLine(models.Model):
         # to enter the next transaction, they do not have to enter the date and the statement every time until the
         # statement is completed. It is only possible if we know the journal that is used, so it can only be done
         # in a view in which the journal is already set and so is single journal view.
-        if'journal_id' in defaults:
+        if 'journal_id' in defaults and 'date' in fields_list:
             last_line = self.search([
                 ('journal_id', '=', defaults.get('journal_id')),
                 ('state', '=', 'posted'),
             ], limit=1)
             statement = last_line.statement_id
-            if statement and not statement.is_complete:
-                defaults.setdefault('statement_id', statement.id)
+            if statement:
                 defaults.setdefault('date', statement.date)
-            elif last_line and not statement:
+            elif last_line:
                 defaults.setdefault('date', last_line.date)
 
         return defaults
@@ -95,6 +95,7 @@ class AccountBankStatementLine(models.Model):
         help="The optional other currency if it is a multi-currency entry.",
     )
     amount_currency = fields.Monetary(
+        compute='_compute_amount_currency', store=True, readonly=False,
         string="Amount in Currency",
         currency_field='foreign_currency_id',
         help="The amount expressed in an optional other currency if it is a multi-currency entry.",
@@ -145,6 +146,20 @@ class AccountBankStatementLine(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('foreign_currency_id', 'date', 'amount', 'company_id')
+    def _compute_amount_currency(self):
+        for st_line in self:
+            if not st_line.foreign_currency_id:
+                st_line.amount_currency = False
+            elif st_line.date and not st_line.amount_currency:
+                # only convert if it hasn't been set already
+                st_line.amount_currency = st_line.currency_id._convert(
+                    from_amount=st_line.amount,
+                    to_currency=st_line.foreign_currency_id,
+                    company=st_line.company_id,
+                    date=st_line.date,
+                )
+
     @api.depends('journal_id.currency_id')
     def _compute_currency_id(self):
         for st_line in self:
@@ -172,7 +187,7 @@ class AccountBankStatementLine(models.Model):
             # Find the oldest index for each journal.
             self._cr.execute(
                 """
-                    SELECT first_line_index, balance_start
+                    SELECT first_line_index, COALESCE(balance_start, 0.0)
                     FROM account_bank_statement
                     WHERE
                         first_line_index < %s
@@ -197,10 +212,10 @@ class AccountBankStatementLine(models.Model):
                         st_line.id,
                         st_line.amount,
                         st.first_line_index = st_line.internal_index AS is_anchor,
-                        st.balance_start,
+                        COALESCE(st.balance_start, 0.0),
                         move.state
                     FROM account_bank_statement_line st_line
-                    JOIN account_move move ON move.statement_line_id = st_line.id
+                    JOIN account_move move ON move.id = st_line.move_id
                     LEFT JOIN account_bank_statement st ON st.id = st_line.statement_id
                     WHERE
                         st_line.internal_index <= %s
@@ -276,15 +291,6 @@ class AccountBankStatementLine(models.Model):
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
 
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        """
-        Reset the statement line when the journal is changed. In some rare cases that journal is not in the context
-        the journal_id field might be accessible to the user. In this cse we need to reset the statement_id field when
-        the journal_id is changed.
-        :return:
-        """
-        self.statement_id = self._get_default_statement(self.journal_id.id, self.date)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -343,6 +349,10 @@ class AccountBankStatementLine(models.Model):
 
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
+
+            #Set the amount to 0 if it's not specified.
+            if 'amount' not in vals:
+                vals['amount'] = 0
 
         st_lines = super().create(vals_list)
 
@@ -417,7 +427,13 @@ class AccountBankStatementLine(models.Model):
     # -------------------------------------------------------------------------
 
     def _find_or_create_bank_account(self):
-        bank_account = self.env['res.partner.bank'].search([
+        self.ensure_one()
+        # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
+        # Since it's not dependent of the company, we need to search on others company too to avoid the creation
+        # of an extra res.partner.bank raising an error coming from this constraint.
+        # However, at the end, we need to filter out the results to not trigger the check_company when trying to
+        # assign a res.partner.bank owned by another company.
+        bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
@@ -425,8 +441,9 @@ class AccountBankStatementLine(models.Model):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,
+                'journal_id': None,
             })
-        return bank_account
+        return bank_account.filtered(lambda x: x.company_id in (False, self.company_id))
 
     def _get_amounts_with_currencies(self):
         """
@@ -477,18 +494,6 @@ class AccountBankStatementLine(models.Model):
                 ('company_id', '=', self.env.company.id)
             ], limit=1)
 
-    @api.model
-    def _get_default_statement(self, journal_id=None, date=None):
-        statement = self.search(
-            domain=[
-                ('journal_id', '=', journal_id or self._get_default_journal().id),
-                ('date', '<=', date or fields.Date.today()),
-            ],
-            limit=1
-        ).statement_id
-        if not statement.is_complete:
-            return statement
-
     def _get_st_line_strings_for_matching(self, allowed_fields=None):
         """ Collect the strings that could be used on the statement line to perform some matching.
 
@@ -497,25 +502,17 @@ class AccountBankStatementLine(models.Model):
         """
         self.ensure_one()
 
-        def _get_text_value(field_name):
-            if self._fields[field_name].type == 'html':
-                return self[field_name] and html2plaintext(self[field_name])
-            else:
-                return self[field_name]
-
         st_line_text_values = []
-        if allowed_fields is None or 'payment_ref' in allowed_fields:
-            value = _get_text_value('payment_ref')
+        if not allowed_fields or 'payment_ref' in allowed_fields:
+            if self.payment_ref:
+                st_line_text_values.append(self.payment_ref)
+        if not allowed_fields or 'narration' in allowed_fields:
+            value = html2plaintext(self.narration or "")
             if value:
                 st_line_text_values.append(value)
-        if allowed_fields is None or 'narration' in allowed_fields:
-            value = _get_text_value('narration')
-            if value:
-                st_line_text_values.append(value)
-        if allowed_fields is None or 'ref' in allowed_fields:
-            value = _get_text_value('ref')
-            if value:
-                st_line_text_values.append(value)
+        if not allowed_fields or 'ref' in allowed_fields:
+            if self.ref:
+                st_line_text_values.append(self.ref)
         return st_line_text_values
 
     def _get_accounting_amounts_and_currencies(self):
@@ -541,9 +538,9 @@ class AccountBankStatementLine(models.Model):
         return (
             transaction_amount,
             transaction_currency,
-            liquidity_line.amount_currency,
+            sum(liquidity_line.mapped('amount_currency')),
             liquidity_line.currency_id,
-            liquidity_line.balance,
+            sum(liquidity_line.mapped('balance')),
             liquidity_line.company_currency_id,
         )
 
@@ -657,12 +654,18 @@ class AccountBankStatementLine(models.Model):
 
         # Retrieve the partner from the partner name.
         if self.partner_name:
-            domain = [
-                ('parent_id', '=', False),
-                ('name', 'ilike', self.partner_name),
-            ]
-            for extra_domain in ([('company_id', '=', self.company_id.id)], []):
-                partner = self.env['res.partner'].search(extra_domain + domain, limit=1)
+            domains = product(
+                [
+                    ('name', '=ilike', self.partner_name),
+                    ('name', 'ilike', self.partner_name),
+                ],
+                [
+                    ('company_id', '=', self.company_id.id),
+                    ('company_id', '=', False),
+                ],
+            )
+            for domain in domains:
+                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=1)
                 if partner:
                     return partner
 
@@ -696,6 +699,9 @@ class AccountBankStatementLine(models.Model):
                 suspense_lines += line
             else:
                 other_lines += line
+        if not liquidity_lines:
+            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_cash')
+            other_lines -= liquidity_lines
         return liquidity_lines, suspense_lines, other_lines
 
     # SYNCHRONIZATION account.bank.statement.line <-> account.move
@@ -743,8 +749,12 @@ class AccountBankStatementLine(models.Model):
                         'amount': liquidity_lines.balance,
                     })
 
-                if len(suspense_lines) == 1:
-
+                if len(suspense_lines) > 1:
+                    raise UserError(_(
+                        "%s reached an invalid state regarding its related statement line.\n"
+                        "To be consistent, the journal entry must always have exactly one suspense line.", st_line.move_id.display_name
+                    ))
+                elif len(suspense_lines) == 1:
                     if journal_currency and suspense_lines.currency_id == journal_currency:
 
                         # The suspense line is expressed in the journal's currency meaning the foreign currency

@@ -119,12 +119,3 @@ class MercuryTransaction(models.Model):
         response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
-    # One time (the ones we use) Vantiv tokens are required to be
-    # deleted after 6 months
-    @api.autovacuum
-    def _gc_old_tokens(self):
-        expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
-            order.ref_no = ""
-            order.record_no = ""

@@ -2,7 +2,7 @@
 <odoo>
     <t t-name="hr_skills.SkillsListRenderer" owl="1" t-inherit-mode="primary" t-inherit="web.ListRenderer">
         <xpath expr="//table" position="attributes">
-            <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} o_skill_table" separator=" "/>
+            <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} {{ !showTable ? 'd-none' : ''}} o_skill_table" separator=" "/>
         </xpath>
         <xpath expr="//thead" position="attributes">
             <attribute name="style">visibility: collapse;</attribute>

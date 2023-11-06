@@ -292,7 +292,8 @@ class StockWarehouseOrderpoint(models.Model):
         rules_groups = self.env['stock.rule']._read_group([
             ('route_id.product_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
-            ('action', 'in', ['pull_push', 'pull'])
+            ('action', 'in', ['pull_push', 'pull']),
+            ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'], ['location_dest_id', 'route_id'], lazy=False)
         for g in rules_groups:
             if not g.get('route_id'):
@@ -335,22 +336,19 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
-        all_product_ids = self._get_orderpoint_products().ids
+        all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self.env['stock.location'].search([('replenish_location', '=', True)])
         ploc_per_day = defaultdict(set)
         # For each replenish location get products with negative virtual_available aka forecast
-        for products in map(self.env['product.product'].browse, split_every(5000, all_product_ids)):
-            for loc in all_replenish_location_ids:
-                quantities = products.with_context(location=loc.id).mapped('virtual_available')
-                for product, quantity in zip(products, quantities):
-                    if float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) >= 0:
-                        continue
-                    # group product by lead_days and location in order to read virtual_available
-                    # in batch
-                    rules = product._get_rules_from_location(loc)
-                    lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
-                    ploc_per_day[(lead_days, loc)].add(product.id)
-            products.invalidate_recordset()
+        for loc in all_replenish_location_ids:
+            for product in all_product_ids.with_context(location=loc.id):
+                if float_compare(product.virtual_available, 0, precision_rounding=product.uom_id.rounding) >= 0:
+                    continue
+                # group product by lead_days and location in order to read virtual_available
+                # in batch
+                rules = product._get_rules_from_location(loc)
+                lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+                ploc_per_day[(lead_days, loc)].add(product.id)
 
         # recompute virtual_available with lead days
         today = fields.datetime.now().replace(hour=23, minute=59, second=59)
@@ -360,7 +358,7 @@ class StockWarehouseOrderpoint(models.Model):
                 location=loc.id,
                 to_date=today + relativedelta.relativedelta(days=days)
             ).read(['virtual_available'])
-            for qty in qties:
+            for (product, qty) in zip(products, qties):
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) < 0:
                     to_refill[(qty['id'], loc.id)] = qty['virtual_available']
             products.invalidate_recordset()
@@ -407,11 +405,11 @@ class StockWarehouseOrderpoint(models.Model):
                 self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
-                warehouse_id = self.env['stock.location'].browse(location_id).warehouse_id
+                location = self.env['stock.location'].browse(location_id)
                 orderpoint_values.update({
                     'name': _('Replenishment Report'),
-                    'warehouse_id': warehouse_id.id,
-                    'company_id': warehouse_id.company_id.id,
+                    'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)], limit=1).id,
+                    'company_id': location.company_id.id,
                 })
                 orderpoint_values_list.append(orderpoint_values)
 
@@ -473,6 +471,7 @@ class StockWarehouseOrderpoint(models.Model):
         be used in move/po creation.
         """
         date_planned = date or fields.Date.today()
+        date_planned = self.product_id._get_date_with_security_lead_days(date_planned, self.location_id, route_ids=self.route_id)
         return {
             'route_ids': self.route_id,
             'date_planned': date_planned,
@@ -547,7 +546,7 @@ class StockWarehouseOrderpoint(models.Model):
                         ('res_model_id', '=', self.env.ref('product.model_product_template').id),
                         ('note', '=', error_msg)])
                     if not existing_activity:
-                        orderpoint.product_id.product_tmpl_id.activity_schedule(
+                        orderpoint.product_id.product_tmpl_id.sudo().activity_schedule(
                             'mail.mail_activity_data_warning',
                             note=error_msg,
                             user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
@@ -570,4 +569,4 @@ class StockWarehouseOrderpoint(models.Model):
         return datetime.combine(self.lead_days_date, time.min)
 
     def _get_orderpoint_products(self):
-        return self.env['product.product'].search([('type', '=', 'product')])
+        return self.env['product.product'].search([('type', '=', 'product'), ('stock_move_ids', '!=', False)])

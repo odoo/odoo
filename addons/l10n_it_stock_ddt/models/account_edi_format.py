@@ -10,7 +10,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_invoice_is_direct(self, invoice):
         """ An invoice is only direct if the Transport Documents are all done the same day as the invoice. """
         for ddt in invoice.l10n_it_ddt_ids:
-            if not ddt.date_done or ddt.date_done != invoice.invoice_date:
+            if not ddt.date_done or ddt.date_done.date() != invoice.invoice_date:
                 return False
         return True
 

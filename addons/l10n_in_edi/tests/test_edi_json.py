@@ -67,6 +67,14 @@ class TestEdiJson(AccountTestInvoicingCommon):
             "supplier_taxes_id": [(6, 0, cls.tax_purchase_a.ids)],
             "l10n_in_hsn_code": "02222",
         })
+        rounding = cls.env["account.cash.rounding"].create({
+            "name": "half-up",
+            "rounding": 1.0,
+            "strategy": "add_invoice_line",
+            "profit_account_id": cls.company_data['default_account_expense'].id,
+            "loss_account_id": cls.company_data['default_account_expense'].id,
+            "rounding_method": "HALF-UP",
+        })
         cls.invoice = cls.init_invoice("out_invoice", post=False, products=cls.product_a + product_with_cess)
         cls.invoice.write({
             "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]})
@@ -115,6 +123,12 @@ class TestEdiJson(AccountTestInvoicingCommon):
                 (1, cls.invoice_negative_more_than_max_line.invoice_line_ids[2].id, {"price_unit": -1100}),
             ]})
         cls.invoice_negative_more_than_max_line.action_post()
+        cls.invoice_cash_rounding = cls.init_invoice("out_invoice", post=False, products=cls.product_a + product_with_cess)
+        cls.invoice_cash_rounding.write({
+            "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice_cash_rounding.invoice_line_ids.ids],
+            "invoice_cash_rounding_id": rounding.id,
+        })
+        cls.invoice_cash_rounding.action_post()
 
     def test_edi_json(self):
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice)
@@ -161,7 +175,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
             }
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
-
+        expected_copy_rounding = expected.copy()
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_full_discount)
         expected.update({
@@ -265,3 +279,12 @@ class TestEdiJson(AccountTestInvoicingCommon):
         })
         json_value = self.env['account.edi.format']._l10n_in_edi_generate_invoice_json(self.invoice_negative_more_than_max_line)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative value more than max line sent json value is not matched")
+
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_cash_rounding)
+        expected_copy_rounding.update({
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
+            "ValDtls": {
+                "AssVal": 1800.0, "CgstVal": 76.5, "SgstVal": 76.5, "IgstVal": 0.0, "CesVal": 46.59,
+                "StCesVal": 0.0, "RndOffAmt": 0.41, "TotInvVal": 2000.00
+            }})
+        self.assertDictEqual(json_value, expected_copy_rounding, "Indian EDI with cash rounding sent json value is not matched")

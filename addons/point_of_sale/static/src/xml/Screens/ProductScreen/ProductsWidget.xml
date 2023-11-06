@@ -19,6 +19,9 @@
                         There are no products in this category.
                     </p>
                 </div>
+                <div t-if="searchWord" class="search-more-button">
+                    <div class="button" t-on-click="_onPressEnterKey">Search more</div>
+                </div>
                 <div class="portal search-database-button no-results-message" t-att-class="{ oe_hidden:  !shouldShowButton }"></div>
             </div>
         </div>

@@ -3,8 +3,8 @@
 
 import odoo.tests
 
-from odoo import api
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
+from odoo import api, Command
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 
@@ -133,7 +133,7 @@ class TestUi(HttpCaseWithUserDemo):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
+class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).
     '''
@@ -208,6 +208,9 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         self.demo_user.company_id = self.company_c
         self.demo_partner = self.demo_user.partner_id
 
+        self.portal_user = self.user_portal
+        self.portal_partner = self.portal_user.partner_id
+
     def test_02_demo_address_and_company(self):
         ''' This test ensure that the company_id of the address (partner) is
             correctly set and also, is not wrongly changed.
@@ -229,12 +232,12 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Logged in user new shipping should not get the company of the sudo() neither the one from it's partner..")
             self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
 
-            # 2. Logged in user, edit billing
+            # 2. Logged in user/internal user, should not edit name or email address of billing
             self.default_address_values['partner_id'] = self.demo_partner.id
-            # Name cannot be changed if there are issued invoices
-            self.default_address_values['name'] = self.demo_partner.name
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
+            self.assertNotEqual(self.demo_partner.name, self.default_address_values['name'], "Employee cannot change their name during the checkout process.")
+            self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
 
     def test_03_public_user_address_and_company(self):
         ''' Same as test_02 but with public user '''
@@ -274,6 +277,31 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             self.WebsiteSaleController.pricelist('')
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
 
+    def test_04_pl_reset_on_login(self):
+        """Check that after login, the SO pricelist is correctly recomputed."""
+        test_user = self.env['res.users'].create({
+            'name': 'Toto',
+            'login': 'long_enough_password',
+            'password': 'long_enough_password',
+        })
+        eur_pl = self.env['product.pricelist'].create({
+            'name': 'EUR_test',
+            'website_id': self.website.id,
+            'code': 'EUR_test',
+        })
+        test_user.partner_id.property_product_pricelist = eur_pl
+
+        public_user_env = self.env(user=self.website.user_id)
+        so = self._create_so(public_user_env.user.partner_id.id)
+
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id, website_sale_current_pl=so.pricelist_id.id):
+            order = self.website.sale_get_order()
+            pl = order.pricelist_id
+            self.assertNotEqual(pl, eur_pl)
+            order_b = self.website.with_user(test_user).sale_get_order()
+            self.assertEqual(order, order_b)
+            self.assertEqual(order_b.pricelist_id, eur_pl)
+
     # TEST WEBSITE & MULTI COMPANY
 
     def test_05_create_so_with_website_and_multi_company(self):
@@ -296,3 +324,105 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         # Different company on the SO and the env user company
         with self.assertRaises(ValueError, msg="Should not be able to create SO with company different than the website company"):
             self._create_so(self.demo_partner.id, self.company_c.id)
+
+    def test_06_portal_user_address_and_company(self):
+        ''' Same as test_03 but with portal user '''
+        self._setUp_multicompany_env()
+        so = self._create_so(self.portal_partner.id)
+
+        env = api.Environment(self.env.cr, self.portal_user.id, {})
+        # change also website env for `sale_get_order` to not change order partner_id
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            # 1. Portal user, new shipping, same with the log in user
+            self.WebsiteSaleController.address(**self.default_address_values)
+            new_shipping = self._get_last_address(self.portal_partner)
+            self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Portal user new shipping should not get the company of the sudo() neither the one from it's partner..")
+            self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
+
+            # 2. Portal user, edit billing
+            self.default_address_values['partner_id'] = self.portal_partner.id
+            self.WebsiteSaleController.address(**self.default_address_values)
+            # Name cannot be changed if there are issued invoices
+            self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
+
+    def test_07_change_fiscal_position(self):
+        """
+            Check that the sale order is updated when you change fiscal position.
+            Change fiscal position by modifying address during checkout process.
+        """
+        partner = self.env['res.partner'].create({'name': 'test'})
+        be_address_POST, nl_address_POST = [
+            {
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.be').id, 'submitted': 1,
+                'partner_id': partner.id,
+                'callback': '/shop/checkout',
+            },
+            {
+                'name': 'Test name', 'email': 'test@email.com', 'street': 'test',
+                'city': 'test', 'zip': '3000', 'country_id': self.env.ref('base.nl').id, 'submitted': 1,
+                'partner_id': partner.id,
+                'callback': '/shop/checkout',
+            },
+        ]
+
+        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
+            {'name': 'Tax 10% incl', 'amount': 10, 'price_include': True},
+            {'name': 'Tax 20% excl', 'amount': 20, 'price_include': False},
+            {'name': 'Tax 15% incl', 'amount': 15, 'price_include': True},
+        ])
+        self.env['account.fiscal.position'].create([
+            {
+                'sequence': 1,
+                'name': 'BE',
+                'auto_apply': True,
+                'country_id': self.env.ref('base.be').id,
+                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_20_excl.id})],
+            },
+            {
+                'sequence': 2,
+                'name': 'NL',
+                'auto_apply': True,
+                'country_id': self.env.ref('base.nl').id,
+                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_15_incl.id})],
+            },
+        ])
+
+        product = self.env['product.product'].create({
+            'name': 'Product test',
+            'list_price': 100,
+            'website_published': True,
+            'sale_ok': True,
+            'taxes_id': [tax_10_incl.id]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'website_id': self.website.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'name': 'Product test',
+            })]
+        })
+
+        self.assertEqual(
+            [so.amount_untaxed, so.amount_tax, so.amount_total],
+            [90.91, 9.09, 100.0]
+        )
+
+        env = api.Environment(self.env.cr, self.website.user_id.id, {})
+        with MockRequest(self.env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            self.WebsiteSaleController.address(**be_address_POST)
+            self.assertEqual(
+                [so.amount_untaxed, so.amount_tax, so.amount_total],
+                [90.91, 18.18, 109.09] # (100 : (1 + 10%)) * (1 + 20%) = 109.09
+            )
+
+            self.WebsiteSaleController.address(**nl_address_POST)
+            self.assertEqual(
+                [so.amount_untaxed, so.amount_tax, so.amount_total],
+                [90.91, 13.64, 104.55] # (100 : (1 + 10%)) * (1 + 15%) = 104.55
+            )

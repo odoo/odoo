@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import _, fields, models, api
+from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_is_zero
 
 
 class MrpConsumptionWarning(models.TransientModel):
@@ -31,12 +33,50 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_confirm(self):
         ctx = dict(self.env.context)
         ctx.pop('default_mrp_production_ids', None)
-        action_from_do_finish = False
-        if self.env.context.get('from_workorder'):
-            if self.env.context.get('active_model') == 'mrp.workorder':
-                action_from_do_finish = self.env['mrp.workorder'].browse(self.env.context.get('active_id')).do_finish()
-        action_from_mark_done = self.mrp_production_ids.with_context(ctx, skip_consumption=True).button_mark_done()
-        return action_from_do_finish or action_from_mark_done
+        return self.mrp_production_ids.with_context(ctx, skip_consumption=True).button_mark_done()
+
+    def action_set_qty(self):
+        missing_move_vals = []
+        problem_tracked_products = self.env['product.product']
+        for production in self.mrp_production_ids:
+            for line in self.mrp_consumption_warning_line_ids:
+                if line.mrp_production_id != production:
+                    continue
+                for move in production.move_raw_ids:
+                    if line.product_id != move.product_id:
+                        continue
+                    qty_expected = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
+                    qty_compare_result = float_compare(qty_expected, move.quantity_done, precision_rounding=move.product_uom.rounding)
+                    if qty_compare_result != 0:
+                        if (move.has_tracking in ('lot', 'serial')
+                            and not production.use_auto_consume_components_lots
+                            and qty_compare_result > 0):
+                            problem_tracked_products |= line.product_id
+                            break
+                        move.quantity_done = qty_expected
+                    # in case multiple lines with same product => set others to 0 since we have no way to know how to distribute the qty done
+                    line.product_expected_qty_uom = 0
+                # move was deleted before confirming MO or force deleted somehow
+                if not float_is_zero(line.product_expected_qty_uom, precision_rounding=line.product_uom_id.rounding):
+                    if line.product_id.tracking in ('lot', 'serial') and not line.mrp_production_id.use_auto_consume_components_lots:
+                        problem_tracked_products |= line.product_id
+                        continue
+                    missing_move_vals.append({
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom_id.id,
+                        'product_uom_qty': line.product_expected_qty_uom,
+                        'quantity_done': line.product_expected_qty_uom,
+                        'raw_material_production_id': line.mrp_production_id.id,
+                        'additional': True,
+                    })
+        if problem_tracked_products:
+            raise UserError(
+                _("Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n- ") +
+                "\n- ".join(problem_tracked_products.mapped('name'))
+            )
+        if missing_move_vals:
+            self.env['stock.move'].create(missing_move_vals)
+        return self.action_confirm()
 
     def action_cancel(self):
         if self.env.context.get('from_workorder') and len(self.mrp_production_ids) == 1:

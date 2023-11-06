@@ -2,20 +2,16 @@
 
 import {
     afterNextRender,
-    dragenterFiles,
-    dropFiles,
+    insertText,
     nextAnimationFrame,
-    pasteFiles,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import {
-    file,
-    makeTestPromise,
-} from 'web.test_utils';
+import { contains, createFile, dragenterFiles, dropFiles, pasteFiles } from "@web/../tests/utils";
+import { file, makeTestPromise } from 'web.test_utils';
 
-const { createFile, inputFiles } = file;
+const { inputFiles } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -937,72 +933,49 @@ QUnit.test('composer: add an attachment', async function (assert) {
     );
 });
 
-QUnit.test('composer: drop attachments', async function (assert) {
-    assert.expect(4);
-
+QUnit.test("composer: drop attachments", async () => {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const channelId = pyEnv["mail.channel"].create({});
     const { openDiscuss } = await start({
         discuss: {
-            context: { active_id: mailChannelId1, },
+            context: { active_id: channelId, },
         },
     });
     await openDiscuss();
+    await contains(".o_ComposerTextInput");
+    await contains(".o_Composer_dropZone", { count: 0 });
+    await contains(".o_AttachmentCard", { count: 0 });
     const files = [
         await createFile({
-            content: 'hello, world',
-            contentType: 'text/plain',
-            name: 'text.txt',
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
         }),
         await createFile({
-            content: 'hello, worlduh',
-            contentType: 'text/plain',
-            name: 'text2.txt',
+            content: "hello, worlduh",
+            contentType: "text/plain",
+            name: "text2.txt",
         }),
     ];
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
-    assert.ok(
-        document.querySelector('.o_Composer_dropZone'),
-        "should have a drop zone"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
-        0,
-        "should have no attachment before files are dropped"
-    );
-
-    await afterNextRender(() =>
-        dropFiles(document.querySelector('.o_Composer_dropZone'), files)
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
-        2,
-        "should have 2 attachments in the composer after files dropped"
-    );
-
-    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
-    await afterNextRender(async () =>
-        dropFiles(
-            document.querySelector('.o_Composer_dropZone'),
-            [
-                await createFile({
-                    content: 'hello, world',
-                    contentType: 'text/plain',
-                    name: 'text3.txt',
-                })
-            ]
-        )
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
-        3,
-        "should have 3 attachments in the box after files dropped"
-    );
+    await dragenterFiles(".o_ComposerTextInput", files);
+    await contains(".o_Composer_dropZone");
+    await contains(".o_AttachmentCard", { count: 0 });
+    await dropFiles(".o_Composer_dropZone", files);
+    await contains(".o_Composer_dropZone", { count: 0 });
+    await contains(".o_AttachmentCard", { count: 2 });
+    const extraFiles = [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
+    ];
+    await dragenterFiles(".o_ComposerTextInput", extraFiles);
+    await dropFiles(".o_Composer_dropZone", extraFiles);
+    await contains(".o_AttachmentCard", { count: 3 });
 });
 
 QUnit.test('composer: paste attachments', async function (assert) {
-    assert.expect(2);
-
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { openDiscuss } = await start({
@@ -1023,15 +996,8 @@ QUnit.test('composer: paste attachments', async function (assert) {
         0,
         "should not have any attachment in the composer before paste"
     );
-
-    await afterNextRender(() =>
-        pasteFiles(document.querySelector('.o_ComposerTextInput'), files)
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
-        1,
-        "should have 1 attachment in the composer after paste"
-    );
+    await pasteFiles(".o_ComposerTextInput", files);
+    await contains(".o_Composer .o_AttachmentCard");
 });
 
 QUnit.test('composer text input cleared on message post', async function (assert) {
@@ -1594,6 +1560,41 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
         "Send",
         "Send button of mail.channel composer should have 'Send' as label",
     );
+});
+
+QUnit.test("No error when typing timeout occurs after closing the channel", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        im_status: "online",
+        name: "Demo",
+    });
+    const channelId = pyEnv["mail.channel"].create({
+        name: "Gryffindor",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+    });
+    const { advanceTime, click, messaging, openDiscuss } = await start({
+        hasTimeControl: true,
+        discuss: {
+            context: {
+                active_id: channelId,
+            },
+        },
+    });
+    await openDiscuss();
+    await afterNextRender(() => insertText(".o_ComposerTextInput_textarea", "Hello"));
+    await click(".o_DiscussSidebarCategoryItem_commandLeave");
+    const thread = messaging.models["Thread"].findFromIdentifyingData({
+        id: channelId,
+        model: "mail.channel",
+    });
+    const { duration } = messaging.models["Timer"].findFromIdentifyingData({
+        threadAsCurrentPartnerInactiveTypingTimerOwner: thread,
+    });
+    await advanceTime(duration);
+    assert.containsNone(document.body, ".o_DiscussSidebarCategoryItem");
 });
 
 });

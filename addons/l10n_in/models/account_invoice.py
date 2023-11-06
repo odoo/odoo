@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -26,6 +30,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
+    l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
@@ -34,8 +39,17 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
-        for record in self:
-            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        for record in indian_invoice:
+            gst_treatment = record.partner_id.l10n_in_gst_treatment
+            if not gst_treatment:
+                gst_treatment = 'unregistered'
+                if record.partner_id.country_id.code == 'IN' and record.partner_id.vat:
+                    gst_treatment = 'regular'
+                elif record.partner_id.country_id and record.partner_id.country_id.code != 'IN':
+                    gst_treatment = 'overseas'
+            record.l10n_in_gst_treatment = gst_treatment
+        (self - indian_invoice).l10n_in_gst_treatment = False
 
     @api.depends('partner_id', 'company_id')
     def _compute_l10n_in_state_id(self):
@@ -88,3 +102,27 @@ class AccountMove(models.Model):
         # TO OVERRIDE
         self.ensure_one()
         return False
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_l10n_in_except_once_post(self):
+        # Prevent deleting entries once it's posted for Indian Company only
+        if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
+            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
+
+    def unlink(self):
+        # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount
+        logger_msg = False
+        if any(m.country_code == 'IN' and m.posted_before for m in self):
+            if self._context.get('force_delete'):
+                moves_details = ", ".join("{entry_number} ({move_id}) amount {amount_total} {currency} and partner {partner_name}".format(
+                    entry_number=m.name,
+                    move_id=m.id,
+                    amount_total=m.amount_total,
+                    currency=m.currency_id.name,
+                    partner_name=m.partner_id.display_name)
+                    for m in self)
+                logger_msg = 'Force deleted Journal Entries %s by %s (%s)' % (moves_details, self.env.user.name, self.env.user.id)
+        res = super().unlink()
+        if logger_msg:
+            _logger.info(logger_msg)
+        return res

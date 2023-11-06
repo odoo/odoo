@@ -98,9 +98,8 @@ class WebsiteBlog(http.Controller):
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        if not blog:
-            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
-                offset += 1
+        if not blog and use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
+            offset += 1
 
         options = {
             'displayDescription': True,
@@ -119,7 +118,8 @@ class WebsiteBlog(http.Controller):
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         first_post = BlogPost
-        if posts and not blog and posts[0].website_published:
+        # TODO adapt next line in master.
+        if posts and not blog and posts[0].website_published and not search:
             first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
 
@@ -206,7 +206,8 @@ class WebsiteBlog(http.Controller):
         blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="create_date asc, id asc"))
 
         if not blog and len(blogs) == 1:
-            return request.redirect('/blog/%s' % slug(blogs[0]), code=302)
+            url = QueryURL('/blog/%s' % slug(blogs[0]), search=search, **opt)()
+            return request.redirect(url, code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
@@ -318,5 +319,5 @@ class WebsiteBlog(http.Controller):
                 if not request.session.get('posts_viewed'):
                     request.session['posts_viewed'] = []
                 request.session['posts_viewed'].append(blog_post.id)
-                request.session.modified = True
+                request.session.touch()
         return response

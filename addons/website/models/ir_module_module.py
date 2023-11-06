@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
+from odoo.tools import split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -189,6 +190,7 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
         cur_lang = self.env.lang or 'en_US'
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         old_rec.flush_recordset()
         for (src_field, dst_field) in translated_fields:
             __, src_fname = src_field.split(',')
@@ -196,7 +198,11 @@ class IrModuleModule(models.Model):
             if dst_mname != new_rec._name:
                 continue
             old_field = old_rec._fields[src_fname]
-            old_translations = old_field._get_stored_translations(old_rec)
+            old_translations = {
+                lang: value
+                for lang, value in old_field._get_stored_translations(old_rec).items()
+                if lang in valid_langs
+            }
             if not old_translations:
                 continue
             if not callable(old_field.translate):
@@ -501,13 +507,15 @@ class IrModuleModule(models.Model):
             if not generic_arch_db:
                 continue
             langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
-            specific_langs = (langs & specific_arch_db.keys()) - {'en_US'}
-            generic_arch_db_en = generic_arch_db.pop('en_US')
-            specific_arch_db_en = specific_arch_db.pop('en_US')
-            generic_arch_db = {k: generic_arch_db[k] for k in langs_update}
-            specific_arch_db = {k: specific_arch_db.get(k, specific_arch_db_en) for k in specific_langs}
-            generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db)
-            specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db)
+            if not langs_update:
+                continue
+            # get dictionaries limited to the requested languages
+            generic_arch_db_en = generic_arch_db.get('en_US')
+            specific_arch_db_en = specific_arch_db.get('en_US')
+            generic_arch_db_update = {k: generic_arch_db[k] for k in langs_update}
+            specific_arch_db_update = {k: specific_arch_db.get(k, specific_arch_db_en) for k in langs_update}
+            generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db_update)
+            specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db_update)
             # update specific_translation_dictionary
             for term_en, specific_term_langs in specific_translation_dictionary.items():
                 if term_en not in generic_translation_dictionary:
@@ -518,7 +526,6 @@ class IrModuleModule(models.Model):
             for lang in langs_update:
                 specific_arch_db[lang] = field.translate(
                     lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
-            specific_arch_db['en_US'] = specific_arch_db_en
             cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
@@ -526,7 +533,8 @@ class IrModuleModule(models.Model):
             return res
 
         o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in langs if lang != 'en_US']
-        o_menu_name = 'jsonb_build_object(' + ', '.join(o_menu_name) + ')'
+        o_menu_name = ['jsonb_build_object(' + ', '.join(items) + ')' for items in split_every(50, o_menu_name)]
+        o_menu_name = ' || '.join(o_menu_name)
         self.env.cr.execute(f"""
                         UPDATE website_menu menu
                            SET name = {'menu.name || ' + o_menu_name if overwrite else o_menu_name + ' || menu.name'}

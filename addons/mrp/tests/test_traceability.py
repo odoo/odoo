@@ -376,6 +376,8 @@ class TestTraceability(TestMrpCommon):
         the user can produce several productA and can then produce some productB again
         """
         stock_location = self.env.ref('stock.stock_location_stock')
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
 
         productA, productB, productC = self.env['product.product'].create([{
             'name': 'Product A',
@@ -413,6 +415,7 @@ class TestTraceability(TestMrpCommon):
         mo_form.product_qty = 15
         mo = mo_form.save()
         mo.action_confirm()
+
         action = mo.button_mark_done()
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
         wizard.process()
@@ -613,3 +616,25 @@ class TestTraceability(TestMrpCommon):
             {'product_id': self.bom_4.product_id.id, 'lot_id': False, 'qty_done': 1},
             {'product_id': component.id, 'lot_id': serial_number.id, 'qty_done': 1},
         ])
+
+    def test_generate_serial_button(self):
+        """Test if lot in form "00000dd" is manually created, the generate serial
+        button can skip it and create the next one.
+        """
+        mo, _bom, p_final, _p1, _p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='lot')
+
+        # generate lot lot_0 on MO
+        mo.action_generate_serial()
+        lot_0 = mo.lot_producing_id.name
+        # manually create lot_1 (lot_0 + 1)
+        lot_1 = self.env['stock.lot'].create({
+            'name': str(int(lot_0) + 1).zfill(7),
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        }).name
+        # generate lot lot_2 on a new MO
+        mo = mo.copy()
+        mo.action_confirm()
+        mo.action_generate_serial()
+        lot_2 = mo.lot_producing_id.name
+        self.assertEqual(lot_2, str(int(lot_1) + 1).zfill(7))

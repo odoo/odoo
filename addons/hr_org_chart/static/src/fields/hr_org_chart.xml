@@ -35,7 +35,7 @@
             t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
     </div>
 
-    <div class="d-flex flex-grow-1 align-items-start justify-content-between position-relative px-3">
+    <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
         <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex flex-column" t-att-data-employee-id="employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)">
             <b class="o_media_heading m-0 fs-6" t-esc="employee.name"/>
             <small class="text-muted fw-bold" t-esc="employee.job_title"/>

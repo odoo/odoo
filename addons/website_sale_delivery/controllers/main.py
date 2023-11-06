@@ -32,7 +32,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
         if order and carrier_id != order.carrier_id.id:
-            if any(tx.state not in ("canceled", "error", "draft") for tx in order.transaction_ids):
+            if any(tx.state not in ("cancel", "error", "draft") for tx in order.transaction_ids):
                 raise UserError(_('It seems that there is already a transaction for your order, you can not change the delivery method anymore'))
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
@@ -73,18 +73,24 @@ class WebsiteSaleDelivery(WebsiteSale):
         return super().cart(**post)
 
     @http.route()
-    def process_express_checkout(self, shipping_address, shipping_option, **post):
+    def process_express_checkout(
+            self, billing_address, shipping_address=None, shipping_option=None, **kwargs
+        ):
         """ Override of `website_sale` to records the shipping information on the order when using
         express checkout flow.
 
         Depending on whether the partner is registered and logged in, either creates a new partner
         or uses an existing one that matches all received data.
 
-        :param dict shipping_address: shipping information sent by the express payment form.
-        :param dict shipping_option: carrier information sent by the express payment form.
-        :param dict post: other information used in the parent route.
+        :param dict billing_address: Billing information sent by the express payment form.
+        :param dict shipping_address: Shipping information sent by the express payment form.
+        :param dict shipping_option: Carrier information sent by the express payment form.
+        :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
+        if not (shipping_address and shipping_option):
+            return super().process_express_checkout(billing_address, **kwargs)
+
         order_sudo = request.website.sale_get_order()
 
         # Update the partner with all the information
@@ -124,7 +130,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         # Process the delivery carrier
         order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
 
-        return super().process_express_checkout(**post)
+        return super().process_express_checkout(billing_address, **kwargs)
 
     @http.route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
@@ -251,6 +257,7 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     def _get_express_shop_payment_values(self, order, **kwargs):
         values = super(WebsiteSaleDelivery, self)._get_express_shop_payment_values(order, **kwargs)
+        values['shipping_info_required'] = not order.only_services
         values['shipping_address_update_route'] = self._express_checkout_shipping_route
         return values
 

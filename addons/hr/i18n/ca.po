@@ -9,31 +9,32 @@
 # Susanna Pujol, 2022
 # Jonatan Gk, 2022
 # Arnau Ros, 2022
-# Pete M, 2022
 # oscaryuu, 2022
 # Denys Sarapulov, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Martin Trigaux, 2022
-# jabelchi, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Pere Martínez, 2022
 # CristianCruzParra, 2022
 # Harcogourmet, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Farouk Jabiri, 2022
+# jabiri7, 2022
 # Ivan Espinola, 2023
+# Josep Anton Belchi, 2023
+# martioodo hola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Albert Parera, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Albert Parera, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -336,11 +337,6 @@ msgid "<span class=\"o_stat_text\">Employee(s)</span>"
 msgstr "<span class=\"o_stat_text\">Empleat(s)</span>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "<span class=\"ps-1\">new Employees</span>"
-msgstr "<span class=\"ps-1\">nous empleats</span>"
-
-#. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -377,6 +373,11 @@ msgstr "<span class=\"text-muted small\">Temps per respondre</span>"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
 msgstr "<span>Km</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span>new Employees</span>"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -554,7 +555,6 @@ msgid "Advanced presence of employees"
 msgstr "Presència avançada dels empleats"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 msgid "Alias Contact Security"
 msgstr "Pseudònim del contacte de seguretat"
@@ -578,6 +578,11 @@ msgstr "Permet als empleats actualitzar les seves pròpies dades"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data."
 msgstr "Permet als empleats actualitzar les seves pròpies dades."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Application Settings"
+msgstr "Paràmetres de l'aplicació"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -1042,6 +1047,11 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr "Creat el"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
+msgid "Currency"
+msgstr "Divisa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -1713,11 +1723,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_department__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_employee__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_job__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 
@@ -2240,7 +2247,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: hr
@@ -2270,7 +2277,7 @@ msgid ""
 "                    leaves, recruitments, etc."
 msgstr ""
 "L'estructura del departament d'Odoo s'utilitza per gestionar tots els documents\n"
-"                    relacionat amb els empleats per departaments: despeses, fulls de temps,\n"
+"                    relacionat amb els empleats per departaments: despeses, fulls d'hores,\n"
 "                    fulles, reclutaments, etc."
 
 #. module: hr
@@ -2281,7 +2288,7 @@ msgid ""
 "                time off, recruitments, etc."
 msgstr ""
 "L'estructura del departament d'Odoo s'utilitza per gestionar tots els documents\n"
-"                relacionat amb els empleats per departaments: despeses, fulls de temps,\n"
+"                relacionat amb els empleats per departaments: despeses, fulls d'hores,\n"
 "                Temps d'espera, reclutaments, etc."
 
 #. module: hr
@@ -2493,7 +2500,6 @@ msgstr ""
 "Juga qualsevol esport amb els seus col·legues, <br>la factura està coberta."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -2757,13 +2763,6 @@ msgid "SIN No"
 msgstr "Núm. SIN"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
-#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_sms_error
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Error de lliurament SMS"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
 msgstr "Núm. Seg. Social"
@@ -2777,7 +2776,7 @@ msgstr "Desa"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr "Programari"
+msgstr "Planificació"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -3090,6 +3089,13 @@ msgid "The plan %s has been started"
 msgstr "S'ha iniciat el pla %s"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The user of %s's coach is not set."
+msgstr "L'usuari de %s l'entrenador no està configurat."
+
+#. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
 msgstr "L’usuari podrà aprovar el document creat pels empleats."
@@ -3225,13 +3231,6 @@ msgid "User"
 msgstr "Usuari"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
-#, python-format
-msgid "User of coach of employee %s is not set."
-msgstr "L'usuari de l'entrenador del treballador %s no està definit."
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
@@ -3278,20 +3277,6 @@ msgstr "Número de visat"
 #, python-format
 msgid "Warning"
 msgstr "Avís"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
-msgid "Website Messages"
-msgstr "Missatges del lloc web"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicacions del lloc web"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

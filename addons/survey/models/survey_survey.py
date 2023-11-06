@@ -58,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
-        "Description", translate=True, sanitize=False,  # TDE FIXME: find a way to authorize videos
+        "Description", translate=True, sanitize=True, sanitize_overridable=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     description_done = fields.Html(
         "End Message", translate=True,
@@ -247,12 +247,11 @@ class Survey(models.Model):
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
             survey.question_count = len(survey.question_ids)
 
-    @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
+    @api.depends('users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
             if not survey.is_attempts_limited or \
-               (survey.access_mode == 'public' and not survey.users_login_required) or \
-               any(question.is_conditional for question in survey.question_and_page_ids):
+               (survey.access_mode == 'public' and not survey.users_login_required):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')
@@ -374,13 +373,19 @@ class Survey(models.Model):
         if default and 'question_ids' in default:
             return clone
 
-        questions_map = {src.id: dst.id for src, dst in zip(self.question_ids, clone.question_ids)}
+        src_questions = self.question_ids
+        dst_questions = clone.question_ids.sorted()
+
+        questions_map = {src.id: dst.id for src, dst in zip(src_questions, dst_questions)}
         answers_map = {
-            source_answer.id: copy_answer.id
-            for source_answer, copy_answer
-            in zip(self.question_ids.suggested_answer_ids, clone.question_ids.suggested_answer_ids)
+            src_answer.id: dst_answer.id
+            for src, dst
+            in zip(src_questions, dst_questions)
+            for src_answer, dst_answer
+            in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
         }
-        for src, dst in zip(self.question_ids, clone.question_ids):
+
+        for src, dst in zip(src_questions, dst_questions):
             if src.is_conditional:
                 dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
                 dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
@@ -581,10 +586,29 @@ class Survey(models.Model):
             if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
-                result = self.question_and_page_ids.filtered(
-                    lambda question: not question.is_page or not is_html_empty(question.description))
+                result = self._get_pages_and_questions_to_show()
 
         return result
+
+    def _get_pages_and_questions_to_show(self):
+        """
+        :return: survey.question recordset excluding invalid conditional questions and pages without description
+        """
+
+        self.ensure_one()
+        invalid_questions = self.env['survey.question']
+        questions_and_valid_pages = self.question_and_page_ids.filtered(
+            lambda question: not question.is_page or not is_html_empty(question.description))
+        for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
+            trigger = question.triggering_question_id
+            if (trigger in invalid_questions
+                    or trigger.is_page
+                    or trigger.question_type not in ['simple_choice', 'multiple_choice']
+                    or not trigger.suggested_answer_ids
+                    or trigger.sequence > question.sequence
+                    or (trigger.sequence == question.sequence and trigger.id > question.id)):
+                invalid_questions |= question
+        return questions_and_valid_pages - invalid_questions
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ Generalized logic to retrieve the next question or page to show on the survey.
@@ -953,7 +977,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'self',
+            'target': 'new',
             'url': '/survey/test/%s' % self.access_token,
         }
 

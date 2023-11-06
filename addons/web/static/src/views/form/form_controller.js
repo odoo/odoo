@@ -18,7 +18,7 @@ import { useSetupView } from "@web/views/view_hook";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef, onRendered, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -177,8 +177,6 @@ export class FormController extends Component {
         });
 
         const state = this.props.state || {};
-        const { fieldsToTranslate } = state;
-        this.fieldsToTranslate = useState(fieldsToTranslate || {});
         const activeNotebookPages = { ...state.activeNotebookPages };
         this.onNotebookPageChange = (notebookId, page) => {
             if (page) {
@@ -195,7 +193,6 @@ export class FormController extends Component {
                 return {
                     activeNotebookPages: !this.model.root.isNew && activeNotebookPages,
                     resId: this.model.root.resId,
-                    fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
             },
         });
@@ -300,9 +297,8 @@ export class FormController extends Component {
                     description: this.env._t("Archive"),
                     callback: () => {
                         const dialogProps = {
-                            body: this.env._t(
-                                "Are you sure that you want to archive all this record?"
-                            ),
+                            body: this.env._t("Are you sure that you want to archive this record?"),
+                            confirmLabel: this.env._t("Archive"),
                             confirm: () => this.model.root.archive(),
                             cancel: () => {},
                         };
@@ -346,8 +342,8 @@ export class FormController extends Component {
         await this.model.root.duplicate();
     }
 
-    async deleteRecord() {
-        const dialogProps = {
+    get deleteConfirmationDialogProps() {
+        return {
             body: this.env._t("Are you sure you want to delete this record?"),
             confirm: async () => {
                 await this.model.root.delete();
@@ -357,7 +353,10 @@ export class FormController extends Component {
             },
             cancel: () => {},
         };
-        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    async deleteRecord() {
+        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     disableButtons() {
@@ -373,17 +372,20 @@ export class FormController extends Component {
     }
 
     async beforeExecuteActionButton(clickParams) {
+        const record = this.model.root;
         if (clickParams.special !== "cancel") {
-            return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog })
-                .then((saved) => {
-                    if (saved && this.props.onSave) {
-                        this.props.onSave(this.model.root);
-                    }
-                    return saved;
-                });
+            let saved = false;
+            if (clickParams.special === "save" && this.props.saveRecord) {
+                saved = await this.props.saveRecord(record, clickParams);
+            } else {
+                saved = await record.save({ stayInEdition: true });
+            }
+            if (saved !== false && this.props.onSave) {
+                this.props.onSave(record, clickParams);
+            }
+            return saved;
         } else if (this.props.onDiscard) {
-            this.props.onDiscard(this.model.root);
+            this.props.onDiscard(record);
         }
     }
 
@@ -414,15 +416,6 @@ export class FormController extends Component {
         const record = this.model.root;
         let saved = false;
 
-        // Before we save, we gather dirty translate fields data. It needs to be done before the
-        // save as nothing will be dirty after. It is why there is a compute part and a show part.
-        if (record.dirtyTranslatableFields.length) {
-            const { resId } = record;
-            this.fieldsToTranslate[resId] = new Set([
-                ...toRaw(this.fieldsToTranslate[resId] || []),
-                ...record.dirtyTranslatableFields,
-            ]);
-        }
         if (this.props.saveRecord) {
             saved = await this.props.saveRecord(record, params);
         } else {
@@ -433,13 +426,6 @@ export class FormController extends Component {
             this.props.onSave(record, params);
         }
 
-        // After we saved, we show the previously computed data in the alert (if there is any).
-        // It needs to be done after the save because if we were in record creation, the resId
-        // changed from false to a number. So it first needs to update the computed data to the new id.
-        if (this.fieldsToTranslate.false) {
-            this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
-            delete this.fieldsToTranslate.false;
-        }
         return saved;
     }
 
@@ -455,20 +441,6 @@ export class FormController extends Component {
         if (this.model.root.isVirtual || this.env.inDialog) {
             this.env.config.historyBack();
         }
-    }
-
-    get translateAlert() {
-        const { resId } = this.model.root;
-        if (!this.fieldsToTranslate[resId]) {
-            return null;
-        }
-
-        return {
-            fields: this.fieldsToTranslate[resId],
-            close: () => {
-                delete this.fieldsToTranslate[resId];
-            },
-        };
     }
 
     get className() {

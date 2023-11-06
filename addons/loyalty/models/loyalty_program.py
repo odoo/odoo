@@ -81,6 +81,14 @@ class LoyaltyProgram(models.Model):
     is_nominative = fields.Boolean(compute='_compute_is_nominative')
     is_payment_program = fields.Boolean(compute='_compute_is_payment_program')
 
+    payment_program_discount_product_id = fields.Many2one(
+        'product.product',
+        string='Discount Product',
+        compute='_compute_payment_program_discount_product_id',
+        readonly=True,
+        help="Product used in the sales order to apply the discount."
+    )
+
     # Technical field used for a label
     available_on = fields.Boolean("Available On", store=False,
         help="""
@@ -154,6 +162,14 @@ class LoyaltyProgram(models.Model):
     def _compute_is_payment_program(self):
         for program in self:
             program.is_payment_program = program.program_type in ('gift_card', 'ewallet')
+
+    @api.depends('reward_ids.discount_line_product_id')
+    def _compute_payment_program_discount_product_id(self):
+        for program in self:
+            if program.is_payment_program:
+                program.payment_program_discount_product_id = program.reward_ids[0].discount_line_product_id
+            else:
+                program.payment_program_discount_product_id = False
 
     @api.model
     def _program_items_name(self):
@@ -253,7 +269,7 @@ class LoyaltyProgram(models.Model):
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_amount': '1',
                     'reward_point_mode': 'money',
-                    'product_ids': self.env.ref('loyalty.ewallet_product_50'),
+                    'product_ids': self.env.ref('loyalty.ewallet_product_50', raise_if_not_found=False),
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'discount',
@@ -317,7 +333,10 @@ class LoyaltyProgram(models.Model):
                 })],
                 'communication_plan_ids': [(5, 0, 0), (0, 0, {
                     'trigger': 'create',
-                    'mail_template_id': (self.env.ref('loyalty.mail_template_gift_card', raise_if_not_found=False) or self.env['mail.template']).id,
+                    'mail_template_id': (
+                        self.env.ref('loyalty.mail_template_loyalty_card', raise_if_not_found=False)
+                        or self.env['mail.template']
+                    ).id,
                 })],
             },
         }
@@ -372,13 +391,14 @@ class LoyaltyProgram(models.Model):
             raise UserError(_('You can not delete a program in an active state'))
 
     def toggle_active(self):
-        super().toggle_active()
+        res = super().toggle_active()
         # Propagate active state to children
-        for program in self:
+        for program in self.with_context(active_test=False):
             program.rule_ids.active = program.active
             program.reward_ids.active = program.active
             program.communication_plan_ids.active = program.active
-            program.reward_ids.discount_line_product_id.active = program.active
+            program.reward_ids.with_context(active_test=True).discount_line_product_id.active = program.active
+        return res
 
     def write(self, vals):
         # There is an issue when we change the program type, since we clear the rewards and create new ones.
@@ -386,7 +406,19 @@ class LoyaltyProgram(models.Model):
         # However we can check that the result of reward_ids would actually be empty or not, and if not, skip the constraint.
         if 'reward_ids' in vals and self._fields['reward_ids'].convert_to_cache(vals['reward_ids'], self):
             self = self.with_context(loyalty_skip_reward_check=True)
-        return super().write(vals)
+            # We need add the program type to the context to avoid getting the default value
+            # ('discount') for reward type when calling the `default_get` method of
+            #`loyalty.reward`.
+            if 'program_type' in vals:
+                self = self.with_context(program_type=vals['program_type'])
+                return super().write(vals)
+            else:
+                for program in self:
+                    program = program.with_context(program_type=program.program_type)
+                    super(LoyaltyProgram, program).write(vals)
+                return True
+        else:
+            return super().write(vals)
 
     @api.model
     def get_program_templates(self):
@@ -397,51 +429,59 @@ class LoyaltyProgram(models.Model):
         if ctx_menu_type == 'gift_ewallet':
             return {
                 'gift_card': {
-                    'title': _('Gift Card'),
-                    'description': _('Sell Gift Cards, that can be used to purchase products'),
+                    'title': _("Gift Card"),
+                    'description': _("Sell Gift Cards, that can be used to purchase products."),
                     'icon': 'gift_card',
                 },
                 'ewallet': {
-                    'title': _('eWallet'),
-                    'description': _('Fill in your eWallet, and use it to pay future orders'),
+                    'title': _("eWallet"),
+                    'description': _("Fill in your eWallet, and use it to pay future orders."),
                     'icon': 'ewallet',
                 },
             }
         return {
-            'promo_code': {
-                'title': _('Promo Code'),
-                'description': _('Get a code to receive 10% discount on specific products'),
-                'icon': 'promo_code',
-            },
-            'loyalty': {
-                'title': _('Loyalty Cards'),
-                'description': _('Win points with each purchases, and use points to get gifts'),
-                'icon': 'loyalty_cards',
-            },
-            'fidelity': {
-                'title': _('Fidelity Cards'),
-                'description': _('Buy 10 products, and get 10$ discount on the 11th one'),
-                'icon': 'fidelity_cards',
-            },
             'promotion': {
-                'title': _('Promotional Program'),
-                'description': _('Automatic promotion: 10% discount on orders higher than $50'),
+                'title': _("Promotion Program"),
+                'description': _(
+                    "Define promotions to apply automatically on your customers' orders."
+                ),
                 'icon': 'promotional_program',
             },
-            'coupons': {
-                'title': _('Coupons'),
-                'description': _('Send unique coupons that give access to rewards'),
-                'icon': 'coupons',
+            'promo_code': {
+                'title': _("Discount Code"),
+                'description': _(
+                    "Share a discount code with your customers to create a purchase incentive."
+                ),
+                'icon': 'promo_code',
             },
             'buy_x_get_y': {
-                'title': _('2+1 Free'),
-                'description': _('Buy 2 products and get a third one for free'),
+                'title': _("Buy X Get Y"),
+                'description': _(
+                    "Offer Y to your customers if they are buying X; for example, 2+1 free."
+                ),
                 'icon': '2_plus_1',
             },
             'next_order_coupons': {
-                'title': _('Next Order Coupons'),
-                'description': _('Send unique, single-use coupon code for the next purchase'),
+                'title': _("Next Order Coupons"),
+                'description': _(
+                    "Reward your customers for a purchase with a coupon to use on their next order."
+                ),
                 'icon': 'coupons',
+            },
+            'loyalty': {
+                'title': _("Loyalty Cards"),
+                'description': _("Win points with each purchase, and use points to get gifts."),
+                'icon': 'loyalty_cards',
+            },
+            'coupons': {
+                'title': _("Coupons"),
+                'description': _("Generate and share unique coupons with your customers."),
+                'icon': 'coupons',
+            },
+            'fidelity': {
+                'title': _("Fidelity Cards"),
+                'description': _("Buy 10 products, and get 10$ discount on the 11th one."),
+                'icon': 'fidelity_cards',
             },
         }
 
@@ -458,10 +498,12 @@ class LoyaltyProgram(models.Model):
         program = self.create(template_values[template_id])
         action = {}
         if self.env.context.get('menu_type') == 'gift_ewallet':
-            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_discount_loyalty_action')
-        else:
             action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_gift_ewallet_action')
-        action['views'] = [[False, 'form']]
+            action['views'] = [[False, 'form']]
+        else:
+            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_discount_loyalty_action')
+            view_id = self.env.ref('loyalty.loyalty_program_view_form').id
+            action['views'] = [[view_id, 'form']]
         action['view_mode'] = 'form'
         action['res_id'] = program.id
         return action

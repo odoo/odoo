@@ -45,7 +45,12 @@ export class BoardArchParser extends XMLParser {
                         isFolded,
                     };
                     if (node.hasAttribute("domain")) {
-                        action.domain = new Domain(node.getAttribute("domain")).toList();
+                        let domain = node.getAttribute("domain");
+                        // Since bfadb8e491fe2acda63a79f9577eaaec8a1c8d9c some databases might have
+                        // double-encoded domains in the db, so we need to unescape them before use.
+                        // TODO: remove unescape in saas-16.3
+                        domain = _.unescape(domain);
+                        action.domain = new Domain(domain).toList();
                         // so it can be serialized when reexporting board xml
                         action.domain.toString = () => node.getAttribute("domain");
                     }

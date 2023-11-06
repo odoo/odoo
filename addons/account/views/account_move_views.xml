@@ -311,7 +311,6 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="account_id"/>
-                    <field name="account_root_id"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
@@ -369,6 +368,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="made_sequence_hole" invisible="1"/>
                     <field name="date"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
@@ -405,7 +405,7 @@
                     <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
-                    <field name="date" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')" string="Accounting Date"/>
+                    <field name="date" optional="hide" string="Accounting Date"/>
                     <field name="invoice_date_due" widget="remaining_days" optional="show" attrs="{'invisible': [['payment_state', 'in', ('paid', 'in_payment', 'reversed')]]}"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
@@ -413,6 +413,7 @@
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Salesperson" widget="many2one_avatar_user"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
@@ -809,7 +810,8 @@
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
-                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))],
+                                            'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <div class="o_td_label" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
@@ -880,6 +882,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"
                                                optional="show"
+                                               widget="many2one_barcode"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
@@ -1024,7 +1027,7 @@
                                                                        ('payment_state' ,'=', 'invoicing_legacy')]}">
 
                                             <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
-                                                   attrs="{'readonly': ['|', ('state', '!=', 'draft'), '&amp;', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('quick_edit_mode', '=', False)]}"/>
+                                                   attrs="{'readonly': ['|', ('state', '!=', 'draft'), '&amp;', ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt')), ('quick_edit_mode', '=', False)]}"/>
 
                                             <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                             <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
@@ -1566,7 +1569,7 @@
         </record>
 
         <record model="ir.actions.server" id="action_move_switch_invoice_to_credit_note">
-            <field name="name">Switch into refund/credit note</field>
+            <field name="name">Switch into invoice/credit note</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="binding_model_id" ref="account.model_account_move" />

@@ -6,13 +6,13 @@
         <div>
             <!-- Error transactions -->
             <div t-if="tx_error.length > 0">
-                <h1>Payments failed</h1>
+                <h1>Failed operations</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_error" t-as="tx">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
                                 An error occurred during the processing of this payment.<br/>
@@ -22,23 +22,35 @@
                     </t>
                 </ul>
             </div>
+            <!-- Pending/Authorized/Confirmed transactions -->
             <div t-if="tx_done.length > 0 || tx_authorized.length > 0 || tx_pending.length > 0">
-                <h1>Payments received</h1>
+                <h1>Operations in progress</h1>
                 <div class="list-group">
                     <!-- Done transactions -->
                     <t t-foreach="tx_done" t-as="tx">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
                                 <t t-if="!tx['is_post_processed']">
-                                    Your order is being processed, please wait ... <i class="fa fa-cog fa-spin"/>
+                                    <t t-if="tx['operation'] != 'validation'">
+                                        Your payment is being processed, please wait... <i class="fa fa-cog fa-spin"/>
+                                    </t>
+                                    <t t-else="">
+                                        Saving your payment method, please wait... <i class="fa fa-cog fa-spin"/>
+                                    </t>
                                 </t>
                                 <t t-else="">
-                                    Your order has been processed.<br/>
-                                    Click here to be redirected to the confirmation page.
+                                    <t t-if="tx['operation'] != 'validation'">
+                                        Your payment has been processed.<br/>
+                                        Click here to be redirected to the confirmation page.
+                                    </t>
+                                    <t t-else="">
+                                        Your payment method has been saved.<br/>
+                                        Click here to be redirected to the confirmation page.
+                                    </t>
                                 </t>
                             </small>
                         </a>
@@ -48,7 +60,7 @@
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
@@ -59,7 +71,7 @@
                                 <t t-else="">
                                     Your payment is in pending state.<br/>
                                     You will be notified when the payment is fully confirmed.<br/>
-                                    You can click here to be redirected to the confirmation page.
+                                    Click here to be redirected to the confirmation page.
                                 </t>
                             </small>
                         </a>
@@ -69,7 +81,7 @@
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
@@ -88,13 +100,13 @@
             </div>
             <!-- Draft transactions -->
             <div t-if="tx_draft.length > 0">
-                <h1>Waiting for payment</h1>
+                <h1>Waiting for operations to process</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_draft" t-as="tx">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
@@ -112,16 +124,16 @@
             </div>
             <!-- Cancel transactions -->
             <div t-if="tx_cancel.length > 0">
-                <h1>Cancelled payments</h1>
+                <h1>Canceled operations</h1>
                 <ul class="list-group">
                     <t t-foreach="tx_cancel" t-as="tx">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
+                                <span class="badge text-bg-light float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
                             </h4>
                             <small class="list-group-item-text">
-                                This transaction has been cancelled.<br/>
+                                This payment has been canceled.<br/>
                                 No payment has been processed.
                             </small>
                         </a>

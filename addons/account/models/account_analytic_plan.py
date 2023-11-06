@@ -32,13 +32,13 @@ class AccountAnalyticApplicability(models.Model):
             return -1
         product = self.env['product.product'].browse(kwargs.get('product', None))
         account = self.env['account.account'].browse(kwargs.get('account', None))
-        if account and self.account_prefix:
-            if account.code.startswith(self.account_prefix):
+        if self.account_prefix:
+            if account and account.code.startswith(self.account_prefix):
                 score += 1
             else:
                 return -1
-        if product and self.product_categ_id:
-            if product.categ_id == self.product_categ_id:
+        if self.product_categ_id:
+            if product and product.categ_id == self.product_categ_id:
                 score += 1
             else:
                 return -1

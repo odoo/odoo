@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { debounce } from "@web/core/utils/timing";
+import { useDebounced } from "@web/core/utils/timing";
 import { CharField } from "@web/views/fields/char/char_field";
 import { TextField } from '@web/views/fields/text/text_field';
 import { archParseBoolean } from "@web/views/utils";
@@ -21,10 +21,16 @@ const onchangeOnKeydownMixin = {
         if (this.props.onchangeOnKeydown) {
             const input = this.input || this.textareaRef;
 
-            const triggerOnChange = debounce(this.triggerOnChange, this.props.keydownDebounceDelay);
+            const triggerOnChange = useDebounced(
+                this.triggerOnChange,
+                this.props.keydownDebounceDelay
+            );
             useEffect(() => {
                 if (input.el) {
-                    input.el.addEventListener('keydown', triggerOnChange.bind(this));
+                    input.el.addEventListener("keydown", triggerOnChange);
+                    return () => {
+                        input.el.removeEventListener("keydown", triggerOnChange);
+                    };
                 }
             });
         }

@@ -56,7 +56,7 @@
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
                 <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
-                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
+                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                     <div class="responsive-price">
                         <t t-esc="tax.name" />
                         <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
@@ -108,7 +108,7 @@
                 </div>
             </t>
             <t t-if="isTaxIncluded">
-                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
+                <t id="tax-details" t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                     <div>
                         <t t-esc="tax.name" />
                         <span t-esc="env.pos.format_currency_no_symbol(tax.amount)" class="pos-receipt-right-align"/>
@@ -190,7 +190,7 @@
                             <t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax_before_discount)"/>
                         </t>
                         <t t-else="">
-                            <t t-esc="env.pos.format_currency_no_symbol(line.price)"/>
+                            <t t-esc="env.pos.format_currency_no_symbol(line.unitDisplayPriceBeforeDiscount)"/>
                         </t>
                     </div>
                 </t>
@@ -219,7 +219,12 @@
                     <ul>
                         <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
                             <li>
-                                SN <t t-esc="lot.lot_name"/>
+                                <t t-if="lot.order_line.product.tracking == 'lot'">
+                                    Lot Number <t t-esc="lot.lot_name"/>
+                                </t>
+                                <t t-else="">
+                                    SN <t t-esc="lot.lot_name"/>
+                                </t>
                             </li>
                         </t>
                     </ul>

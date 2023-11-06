@@ -34,7 +34,7 @@ class ProjectClient(http.Controller):
         if not email_subject:
             email_subject = _('Task for %s', partner.name)
 
-        record = request.env['project.task'].create({
+        record = request.env['project.task'].with_company(partner.company_id).create({
             'name': email_subject,
             'partner_id': partner_id,
             'description': email_body,

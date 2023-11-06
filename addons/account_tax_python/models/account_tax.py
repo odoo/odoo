@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, _
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 
 class AccountTaxPython(models.Model):
@@ -35,7 +36,10 @@ class AccountTaxPython(models.Model):
         if self.amount_type == 'code':
             company = self.env.company
             localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
+            try:
+                safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
+            except Exception as e:
+                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (self.python_compute, self.name, e)) from e
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
 
@@ -47,7 +51,10 @@ class AccountTaxPython(models.Model):
         for tax in self.filtered(lambda r: r.amount_type == 'code'):
             localdict = self._context.get('tax_computation_context', {})
             localdict.update({'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company})
-            safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
+            try:
+                safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
+            except Exception as e:
+                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (tax.python_applicable, tax.name, e)) from e
             if localdict.get('result', False):
                 taxes += tax
         return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)

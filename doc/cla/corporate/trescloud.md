@@ -15,3 +15,6 @@ List of contributors:
 Andrés Calle andres.calle@trescloud.com https://github.com/pepetreshere
 Juan Álvarez juan.alvarez@trescloud.com https://github.com/JuanDanielAlvarez
 Steven Luna steven.luna@trescloud.com https://github.com/stevTresCloud
+Raúl Ruilova raul.ruilova@trescloud.com https://github.com/rrvc12
+Angel Parra arpr18@gmail.com https://github.com/aparragithub
+Ken Luzuriaga ken.luzuriaga@trescloud.com https://github.com/kenluzuriaga0

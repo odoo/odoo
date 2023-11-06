@@ -196,7 +196,8 @@
                             <t t-if="state.getThemeName(1)">
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2"/>
+                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(1))"/>
                                 </div>
                             </t>
@@ -205,7 +206,8 @@
                             <t t-if="state.getThemeName(0)">
                                 <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1"/>
+                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(0))"/>
                                 </div>
                             </t>
@@ -214,7 +216,8 @@
                             <t t-if="state.getThemeName(2)">
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3"/>
+                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(2))"/>
                                 </div>
                             </t>

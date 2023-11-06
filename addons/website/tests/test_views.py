@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from hashlib import sha256
 import unittest
+from unittest.mock import patch
 from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
@@ -1025,6 +1027,45 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
                          "loading module translation should not remove specific translations that are not available on base view")
 
+        # Make sure updating a short list of languages does not destroy existing translations.
+        self.env['res.lang']._activate_lang('nl_NL')
+
+        self.env['ir.module.module']._load_module_terms(['website'], ['nl_NL'], overwrite=True)
+
+        specific_view.invalidate_model(['arch_db', 'arch'])
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
+                         "loading module translation for a specific language should not remove existing translations for other languages")
+
+        self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
+                         "loading module translation for a specific language should not remove existing translations for other languages")
+
+    def test_view_to_translate_tag(self):
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        self.assertFalse(self.base_view.website_id)
+        website = self.env['website'].browse(1)
+        website.default_lang_id = fr_BE
+        self.base_view.with_context(website_id=1).write({'active': True})
+        specific_view = self.base_view._get_specific_views() - self.base_view
+
+        # generic view without website_id but with website for request
+        with patch('odoo.addons.website.models.ir_http.get_request_website', lambda: website):
+            self.base_view.invalidate_recordset()
+            self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
+            self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
+            self.base_view.invalidate_recordset()
+
+        # generic view without website_id
+        self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
+        self.assertIn('to_translate', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+        self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
+        self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
+
+        # specific view with website_id
+        self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
+        self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
+
     def test_soc_complete_flow(self):
         """
         Check the creation of views from specific-website environments.
@@ -1117,6 +1158,25 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(len(base_view_2.inherit_children_ids), 2, "D and D' should be under B")
         self.assertTrue(self.inherit_view in base_view_2.inherit_children_ids, "D should be under B")
         self.assertTrue(specific_child_view in base_view_2.inherit_children_ids, "D' should be under B")
+
+    def test_no_cow_on_translate(self):
+        french = self.env['res.lang']._activate_lang('fr_FR')
+        self.env['ir.module.module']._load_module_terms(['website'], [french.code])
+        # Make sure res.lang.get_installed is recomputed
+        self.env.registry.clear_caches()
+
+        View = self.env['ir.ui.view'].with_context(lang=french.code, website_id=1)
+        old_specific_views = View.search([('website_id', '!=', None)])
+        view = self.base_view.with_context(lang=french.code, website_id=1)
+
+        root = html.fromstring(self.base_view.arch, parser=html.HTMLParser(encoding="utf-8"))
+        to_translate = root.text_content()
+        sha = sha256(to_translate.encode()).hexdigest()
+        view.update_field_translations_sha('arch_db', {french.code: {sha: 'contenu de base'}})
+
+        new_specific_views = View.search([('website_id', '!=', None)])
+        self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
+        self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
 
 
 @tagged('-at_install', 'post_install')

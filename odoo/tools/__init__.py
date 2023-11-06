@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+SUPPORTED_DEBUGGER = {'pdb', 'ipdb', 'wdb', 'pudb'}
 from . import _monkeypatches
 from . import appdirs
 from . import cloc
@@ -10,7 +10,6 @@ from . import win32
 from .barcode import *
 from .config import config
 from .date_utils import *
-from .debugger import *
 from .float_utils import *
 from .func import *
 from .image import *

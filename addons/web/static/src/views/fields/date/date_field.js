@@ -16,6 +16,7 @@ export class DateField extends Component {
          * Not changed in case of invalid field value.
          */
         this.lastSetValue = null;
+        this.revId = 0;
     }
     get isDateTime() {
         return this.props.record.fields[this.props.name].type === "datetime";
@@ -32,6 +33,7 @@ export class DateField extends Component {
 
     onDateTimeChanged(date) {
         if (!areDateEquals(this.date || "", date)) {
+            this.revId++;
             this.props.update(date);
         }
     }

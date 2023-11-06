@@ -35,15 +35,15 @@
                 <field name="portal_user_names"/>
                 <field name="partner_id"/>
                 <field name="sequence"/>
-                <field name="is_closed"/>
+                <field name="is_closed" force_save="0"/>
                 <field name="partner_is_company"/>
                 <field name="displayed_image_id"/>
                 <field name="active"/>
                 <field name="allow_subtasks"/>
                 <field name="child_text"/>
-                <field name="legend_blocked" invisible="1"/>
-                <field name="legend_normal" invisible="1"/>
-                <field name="legend_done" invisible="1"/>
+                <field name="legend_blocked" invisible="1" force_save="0"/>
+                <field name="legend_normal" invisible="1" force_save="0"/>
+                <field name="legend_done" invisible="1" force_save="0"/>
                 <field name="allow_milestones" />
                 <field name="has_late_and_unreached_milestone"/>
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "200"}'/>
@@ -301,6 +301,7 @@
         <field name="context">{
             'default_project_id': active_id,
             'delete': 0,
+            'active_id_chatter': active_id,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

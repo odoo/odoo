@@ -184,7 +184,7 @@ class StockWarehouse(models.Model):
                 'default_location_dest_id': production_location_id.id,
             },
             'subcontracting_resupply_type_id': {
-                'default_location_src_id': production_location_id.id,
+                'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': subcontract_location_id.id,
                 'barcode': self.code.replace(" ", "").upper() + "-RESUPPLY",
                 'active': self.subcontracting_to_resupply and self.active

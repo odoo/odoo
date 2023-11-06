@@ -22,6 +22,12 @@ const L10nFrPosGlobalState = (PosGlobalState) => class L10nFrPosGlobalState exte
     }
     disallowLineQuantityChange() {
         let result = super.disallowLineQuantityChange(...arguments);
+        let selectedOrderLine = this.selectedOrder.get_selected_orderline();
+        //Note: is_reward_line is a field in the pos_loyalty module
+        if (selectedOrderLine.is_reward_line) {
+            //Always allow quantity change for reward lines
+            return false || result;
+        }
         return this.is_french_country() || result;
     }
 }
@@ -68,15 +74,15 @@ Registries.Model.extend(Order, L10nFrOrder);
 
 const L10nFrOrderline = (Orderline) => class L10nFrOrderline extends Orderline {
     can_be_merged_with(orderline) {
-        let order = this.pos.get_order();
-        let orderlines = order.orderlines;
-        let lastOrderline = order.orderlines.at(orderlines.length - 1);
-
-        if(this.pos.is_french_country() && (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0)) {
-            return false;
-        } else {
+        if (this.pos.is_french_country()) {
+            const order = this.pos.get_order();
+            const lastOrderline = order.orderlines.at(order.orderlines.length - 1);
+            if ((lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0)) {
+                return false;
+            }
             return super.can_be_merged_with(...arguments);
         }
+        return super.can_be_merged_with(...arguments);
     }
 }
 Registries.Model.extend(Orderline, L10nFrOrderline);

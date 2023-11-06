@@ -345,9 +345,9 @@ class TestCRMLead(TestCrmCommon):
 
             # reset partner phone to a local number and prepare formatted / sanitized values
             partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
-            partner_phone_formatted = phone_format(partner_phone, 'US', '1')
+            partner_phone_formatted = phone_format(partner_phone, 'US', '1', force_format='INTERNATIONAL')
             partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
-            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1')
+            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1', force_format='INTERNATIONAL')
             partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
             partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
             self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
@@ -404,7 +404,7 @@ class TestCRMLead(TestCrmCommon):
             lead_form.email_from = new_email
             self.assertTrue(lead_form.partner_email_update)
             new_phone = '+1 202 555 7799'
-            new_phone_formatted = phone_format(new_phone, 'US', '1')
+            new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="INTERNATIONAL")
             lead_form.phone = new_phone
             self.assertEqual(lead_form.phone, new_phone_formatted)
             self.assertTrue(lead_form.partner_email_update)
@@ -417,7 +417,7 @@ class TestCRMLead(TestCrmCommon):
 
             # LEAD/PARTNER SYNC: mobile does not update partner
             new_mobile = '+1 202 555 6543'
-            new_mobile_formatted = phone_format(new_mobile, 'US', '1')
+            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="INTERNATIONAL")
             lead_form.mobile = new_mobile
             lead_form.save()
             self.assertEqual(lead.mobile, new_mobile_formatted)

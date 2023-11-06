@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Éder Brito <britoederr@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,6 +29,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_published
@@ -75,7 +79,7 @@ msgstr "Atividade"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr "Tipo de Usuário de Atividade"
+msgstr "Tipo de usuário da atividade"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
@@ -134,7 +138,7 @@ msgstr "Condição baseada em tempo"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "Antes da Atualização de Domínio"
+msgstr "Domínio antes da atualização"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -162,8 +166,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Ações de servidor filho que serão executadas. Note-se que o último retorno "
-"retornou o valor da ação que será usado como valor de retorno global."
+"Ações secundárias de servidor que serão executadas. Observe que o último "
+"valor de ação retornado será usado como valor de retorno global."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
@@ -173,6 +177,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"Escolha o método para enviar SMS:\n"
+"SMS: SMS em massa\n"
+"Publicar como mensagem: registrar no documento\n"
+"Publicar como nota: SMS em massa com arquivos"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -182,6 +190,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Escolha o método para enviar e-mail:\n"
+"E-mail: enviar e-mails diretamente\n"
+"Publicar como mensagem: publicar no documento e notificar seguidores\n"
+"Publicar como nota: publicar uma nota no documento"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -205,6 +217,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Atraso após a data de disparo.\n"
+"        É possível colocar um número negativo se precisar de um atraso antes da\n"
+"        data de disparo, como o envio de um lembrete 15 minutos antes de uma reunião."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -233,6 +248,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Desativar esta ação automatizada permitirá que você continue seu fluxo de trabalho,\n"
+"                mas quaisquer dados criados depois disso podem ser corrompidos,\n"
+"                já que você está efetivamente desativando uma personalização que pode estar definindo\n"
+"                campos importantes e/ou obrigatórios."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -268,6 +287,8 @@ msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
 msgstr ""
+"Os tipos de ação 'e-mail', 'seguidores' ou 'atividades' não podem ser usados"
+" ao excluir registros."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -285,6 +306,8 @@ msgstr "Campos que acionam o onchange."
 msgid ""
 "Form Modification based actions can only be used with code action type."
 msgstr ""
+"As ações baseadas em modificação de formulário só podem ser usadas com ação "
+"do tipo 'código'."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -399,6 +422,7 @@ msgstr "Nota"
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
+"Observe que essa ação pode ser acionada até %d minutos após seu agendamento."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -461,12 +485,12 @@ msgstr "Modelo de SMS"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Enviar como"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "Enviar como (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -500,7 +524,7 @@ msgstr "Configure uma nova automação automatizada"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "Inscrever recipientes"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -533,6 +557,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
 msgstr ""
+"A ação será disparada apenas se um desses campos forem atualizados. Caso "
+"esteja vazio, todos os campos serão monitorados."
 
 #. module: base_automation
 #. openerp-web
@@ -542,6 +568,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"O erro ocorreu durante a execução da ação automatizada\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
@@ -577,6 +605,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Tipo de ação de servidor. Os seguintes valores estão disponíveis:\n"
+"- 'Executar Código Python': um bloco de código Python será executado\n"
+"- 'Criar um Novo Registro': cria um novo registro com novos valores\n"
+"- 'Atualizar um Registro': atualiza os valores de um registro\n"
+"- 'Executar diversas ações': defini uma ação que acionará diversas outras ações de servidor\n"
+"- 'Enviar E-mail': postar uma mensagem, uma nota ou enviar um e-mail (Discussão)\n"
+"- 'Adicionar Seguidores': adiciona seguidores a um registro (Discussão)\n"
+"- 'Criar Próxima Atividade': cria uma atividade (Discussão)\n"
+"- 'Enviar um SMS': envia SMS e os registra nos documentos (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -592,8 +629,8 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Use 'Usuário específico' para atribuir sempre o mesmo usuário na próxima "
-"atividade. Use 'Usuário genérico do registro' para especificar o nome do "
+"Use 'usuário específico' para atribuir sempre o mesmo usuário na próxima "
+"atividade. Use 'usuário genérico do registro' para especificar o nome de "
 "campo do usuário a ser escolhido no registro."
 
 #. module: base_automation
@@ -667,6 +704,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Quando a condição deve ser disparada.\n"
+"                Se presente, será verificado pelo agendador. Se vazio, será verificado na criação e na atualização."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -708,3 +747,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Não é possível enviar um e-mail, adicionar seguidores ou criar uma atividade"
+" para um registro excluído."

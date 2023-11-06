@@ -25,6 +25,13 @@ export class TimeOffCalendarController extends CalendarController {
         return this.model.employeeId;
     }
 
+    get filterPanelProps() {
+        return {
+            ...super.filterPanelProps,
+            employee_id: this.employeeId,
+        };
+    }
+
     newTimeOffRequest() {
         const context = {};
         if (this.employeeId) {
@@ -57,6 +64,7 @@ export class TimeOffCalendarController extends CalendarController {
         };
         if (this.employeeId) {
             context['default_employee_id'] = this.employeeId;
+            context['default_employee_ids'] = [this.employeeId];
             context['form_view_ref'] = 'hr_holidays.hr_leave_allocation_view_form_manager_dashboard';
         }
 

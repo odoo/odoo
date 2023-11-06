@@ -872,7 +872,7 @@ QUnit.module("Fields", (hooks) => {
                     name: "USD",
                     symbol: "$",
                     position: "before",
-                    digits: [0, 1],
+                    digits: [0, 4],
                 },
             },
         });

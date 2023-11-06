@@ -5,6 +5,12 @@ import { orderByToString } from "@spreadsheet/helpers/helpers";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
+import {
+    formatDateTime,
+    deserializeDateTime,
+    formatDate,
+    deserializeDate,
+} from "@web/core/l10n/dates";
 
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
 
@@ -35,13 +41,22 @@ export default class ListDataSource extends OdooViewsDataSource {
      */
     constructor(services, params) {
         super(services, params);
-        this.limit = params.limit;
+        this.maxPosition = params.limit;
+        this.maxPositionFetched = 0;
         this.data = [];
+    }
+
+    /**
+     * Increase the max position of the list
+     * @param {number} position
+     */
+    increaseMaxPosition(position) {
+        this.maxPosition = Math.max(this.maxPosition, position);
     }
 
     async _load() {
         await super._load();
-        if (this.limit === 0) {
+        if (this.maxPosition === 0) {
             this.data = [];
             return;
         }
@@ -52,10 +67,11 @@ export default class ListDataSource extends OdooViewsDataSource {
             this._getFieldsToFetch(),
             {
                 order: orderByToString(orderBy),
-                limit: this.limit,
+                limit: this.maxPosition,
                 context,
             }
         );
+        this.maxPositionFetched = this.maxPosition;
     }
 
     /**
@@ -99,8 +115,8 @@ export default class ListDataSource extends OdooViewsDataSource {
      */
     getListCellValue(position, fieldName) {
         this._assertDataIsLoaded();
-        if (position >= this.limit) {
-            this.limit = position + 1;
+        if (position >= this.maxPositionFetched) {
+            this.increaseMaxPosition(position + 1);
             // A reload is needed because the asked position is not already loaded.
             this._triggerFetching();
             throw new LoadingDataError();
@@ -142,8 +158,15 @@ export default class ListDataSource extends OdooViewsDataSource {
             case "boolean":
                 return record[fieldName] ? "TRUE" : "FALSE";
             case "date":
+                return record[fieldName] ? toNumber(this._formatDate(record[fieldName])) : "";
             case "datetime":
-                return record[fieldName] ? toNumber(record[fieldName]) : "";
+                return record[fieldName] ? toNumber(this._formatDateTime(record[fieldName])) : "";
+            case "properties": {
+                const properties = record[fieldName] || [];
+                return properties.map((property) => property.string).join(", ");
+            }
+            case "json":
+                throw new Error(sprintf(_t('Fields of type "%s" are not supported'), "json"));
             default:
                 return record[fieldName] || "";
         }
@@ -152,6 +175,22 @@ export default class ListDataSource extends OdooViewsDataSource {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _formatDateTime(dateValue) {
+        const date = deserializeDateTime(dateValue);
+        return formatDateTime(date, {
+            format: "yyyy-MM-dd HH:mm:ss",
+            numberingSystem: "latn",
+        });
+    }
+
+    _formatDate(dateValue) {
+        const date = deserializeDate(dateValue);
+        return formatDate(date, {
+            format: "yyyy-MM-dd",
+            numberingSystem: "latn",
+        });
+    }
 
     /**
      * Ask the parent data source to force a reload of this data source in the

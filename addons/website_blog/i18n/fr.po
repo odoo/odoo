@@ -3,7 +3,6 @@
 # 	* website_blog
 # 
 # Translators:
-# Frédéric LIETART <stuff@tifred.fr>, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
@@ -15,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2022-11-03 16:41+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -626,8 +625,9 @@ msgstr "Titre de l'article de blog"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
-msgstr "Publications du blog"
+msgstr "Articles de blog"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__subtitle
@@ -874,7 +874,7 @@ msgstr "Dexter"
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -926,7 +926,7 @@ msgstr "Modifiez l'en-tête de page \"Filtrer les résultats\"."
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Edit your title, the subtitle is optional."
-msgstr "Éditez votre titre, le sous-titre est optionnel"
+msgstr "Modifiez votre titre, le sous-titre est optionnel"
 
 #. module: website_blog
 #. openerp-web
@@ -1307,7 +1307,7 @@ msgstr "Le dernier"
 #. module: website_blog
 #: model:website.snippet.filter,name:website_blog.dynamic_filter_latest_blog_posts
 msgid "Latest Blog Posts"
-msgstr "Dernières publications du blog"
+msgstr "Derniers articles du blog"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -1492,7 +1492,7 @@ msgstr ""
 #. module: website_blog
 #: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
 msgid "Most Viewed Blog Posts"
-msgstr "Publications du blog les plus consultées"
+msgstr "Articles du blog les plus consultés"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
@@ -1518,7 +1518,7 @@ msgstr "Article suivant"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "No Cover"
-msgstr "Pas de couverture"
+msgstr "Aucune couverture"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1599,8 +1599,8 @@ msgstr "Nombre d'erreurs"
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter
@@ -1706,12 +1706,12 @@ msgstr "Photo prise par Teddy Kelley, @teddykelley"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
 msgid "Posts"
-msgstr "Publications"
+msgstr "Articles"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Posts List"
-msgstr "Liste des publications"
+msgstr "Liste des articles"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
@@ -1831,15 +1831,14 @@ msgstr "Sélectionnez un blog"
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select the blog you want to add the post to."
-msgstr "Sélectionnez le blog auquel vous souhaitez ajouter la publication."
+msgstr "Sélectionnez le blog auquel vous souhaitez ajouter l'article."
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select this menu item to create a new blog post."
-msgstr ""
-"Sélectionnez cet élément de menu pour créer un nouvel article de blog."
+msgstr "Sélectionnez cette rubrique pour créer un nouvel article de blog."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -1904,7 +1903,7 @@ msgstr "Partager sur Twitter"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "Share this post"
-msgstr "Partager cette publication"
+msgstr "Partager cet article"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -2485,7 +2484,7 @@ msgstr "Article sans titre"
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
-"Utilisez cette icône pour prévisualiser vos publications sur <b>un appareil "
+"Utilisez cette icône pour prévisualiser votre article sur <b>un appareil "
 "mobile</b>."
 
 #. module: website_blog

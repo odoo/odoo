@@ -158,6 +158,7 @@ class TestLeadConvert(TestCrmCommon):
             'name': 'Base Lead Dup1',
             'type': 'lead',
             'phone': '456-6126',  # shorter version of base_lead
+            'mobile': '             ', # empty string shouldn't crash Odoo
             'partner_name': 'Partner Name 1',
         })
         dup1_2 = self.env['crm.lead'].create({

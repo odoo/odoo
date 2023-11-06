@@ -9,6 +9,8 @@
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Chloe Wang, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +18,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1711,8 +1713,8 @@ msgstr "错误数"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgid "Number of messages requiring action"
+msgstr "需要采取行动的消息数量"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2473,9 +2475,9 @@ msgstr "如果这条规则只能用于一个产品模板模版，则指定一个
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr "指定固定金额来添加或减去(如果负)，用作折扣来计算金额。"
+msgstr "指定要添加或减去（如果为负数）到计算出的折扣金额的固定金额。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2664,6 +2666,13 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr "供应商要求的最小采购数量。如果不设定单位，将会使用默认采购单位。"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "舍入方法必须严格为正数。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3188,10 +3197,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"不能删除值 %s ，因为该值已经用于以下产品:\n"
-"%s"
+"您无法删除值 %s，因为它用于以下产品：\n"
+"%s\n"
+"如果这个值过去曾与某个产品关联，您将无法删除它。"
 
 #. module: product
 #. odoo-python
@@ -3215,6 +3226,13 @@ msgstr ""
 "(%s)\n"
 "，它们被用于其他价格表。\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "您无法删除值 %s，因为它曾在某些产品中使用过。"
 
 #. module: product
 #. odoo-python

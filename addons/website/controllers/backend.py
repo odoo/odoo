@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug
+
 from odoo import http
 from odoo.http import request
 
@@ -36,3 +38,20 @@ class WebsiteBackend(http.Controller):
     @http.route('/website/iframefallback', type="http", auth='user', website=True)
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
+
+    @http.route('/website/check_new_content_access_rights', type="json", auth='user')
+    def check_create_access_rights(self, models):
+        """
+        TODO: In master, remove this route and method and find a better way
+        to do this. This route is only here to ensure that the "New Content"
+        modal displays the correct elements for each user, and there might be
+        a way to do it with the framework rather than having a dedicated
+        controller route. (maybe by using a template or a JS util)
+        """
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+
+        return {
+            model: request.env[model].check_access_rights('create', raise_exception=False)
+            for model in models
+        }

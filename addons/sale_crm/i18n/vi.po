@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,12 +23,12 @@ msgstr ""
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr "<span class=\"o_stat_text\">Đơn đặt hàng</span>"
+msgstr "<span class=\"o_stat_text\">Đơn hàng</span>"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr "Liên kết tiềm năng"
+msgstr "Lead liên kết"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -87,17 +88,17 @@ msgstr "ID"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr "Chỉ định hóa đơn trong Đơn bán hàng"
+msgstr "Đã xuất hóa đơn trong mục tiêu đơn bán hàng"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Chỉnh sửa lần cuối vào"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
@@ -107,17 +108,17 @@ msgstr "Cập nhật lần cuối vào"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Tiềm năng/Cơ hội"
+msgstr "Lead/Cơ hội"
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
-msgstr "Liên kết tới một khách hàng đã tồn tại"
+msgstr "Liên kết tới một khách hàng hiện tại"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Đăng nhập vào cuộc trò chuyện mà từ đó cơ hội bắt nguồn"
+msgstr "Đăng nhập vào cuộc trò chuyện bắt nguồn cho cơ hội của đơn hàng"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -129,7 +130,7 @@ msgstr "Báo giá của tôi"
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "New Quotation"
-msgstr "Báo giá Mới"
+msgstr "Báo giá mới"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
@@ -139,7 +140,7 @@ msgstr "Số lượng báo giá"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
 msgid "Number of Sale Orders"
-msgstr "Số đơn hàng"
+msgstr "Số lượng đơn bán hàng"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -175,7 +176,7 @@ msgstr "Đơn bán hàng"
 #: code:addons/sale_crm/models/crm_team.py:0
 #, python-format
 msgid "Sales Analysis"
-msgstr "Phân tích kinh doanh"
+msgstr "Phân tích bán hàng"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -191,7 +192,7 @@ msgstr "Đội ngũ bán hàng"
 #: code:addons/sale_crm/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Bán: Tổng chưa thuế"
+msgstr "Doanh số: Tổng trước thuế"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
@@ -201,7 +202,7 @@ msgstr "Tổng đơn hàng"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
-msgstr "Tổng số đơn đặt hàng đã xác nhận chưa được xử lý"
+msgstr "Tổng tiền chưa gồm thuế của Đơn hàng đã xác nhận"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -212,4 +213,4 @@ msgstr "Người dùng"
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 #, python-format
 msgid "You can only apply this action from a lead."
-msgstr "Bạn chỉ có thể áp dụng hành động này từ một tiềm năng."
+msgstr "Bạn chỉ có thể áp dụng hành động này từ lead."

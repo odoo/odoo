@@ -50,7 +50,7 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Expenses Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\",\"product_id\"],\"graph_measure\":\"total_amount\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\",\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\",\"positional\":true})",
+                    "content": "[Expenses Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\",\"product_id\"],\"graph_measure\":\"total_amount_company\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\",\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\",\"positional\":true})",
                     "border": 1
                 },
                 "A19": {
@@ -105,7 +105,7 @@
                 },
                 "A32": {
                     "style": 1,
-                    "content": "[Top Reinvoiced Orders](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"sale_order_id\",\"!=\",false]],\"context\":{\"group_by\":[\"sale_order_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"sale_order_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
+                    "content": "[Top Reinvoiced Orders](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"sale_order_id\",\"!=\",false]],\"context\":{\"group_by\":[\"sale_order_id\"],\"pivot_measures\":[\"__count\",\"total_amount_company\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"sale_order_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
                     "border": 1
                 },
                 "A33": {
@@ -250,48 +250,38 @@
                 },
                 "C21": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,1,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,1,\"total_amount_company\")"
                 },
                 "C22": {
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,2,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,2,\"total_amount_company\")"
                 },
                 "C23": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,3,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,3,\"total_amount_company\")"
                 },
                 "C24": {
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,4,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,4,\"total_amount_company\")"
                 },
                 "C25": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,5,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,5,\"total_amount_company\")"
                 },
                 "C26": {
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,6,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,6,\"total_amount_company\")"
                 },
                 "C27": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,7,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,7,\"total_amount_company\")"
                 },
                 "C28": {
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,8,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,8,\"total_amount_company\")"
                 },
                 "C29": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,9,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,9,\"total_amount_company\")"
                 },
                 "C30": {
-                    "format": 2,
-                    "content": "=ODOO.LIST(1,10,\"total_amount\")"
+                    "content": "=ODOO.LIST(1,10,\"total_amount_company\")"
                 },
                 "C33": {
                     "style": 8,
@@ -300,52 +290,42 @@
                 },
                 "C34": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",1)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",1)"
                 },
                 "C35": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",2)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",2)"
                 },
                 "C36": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",3)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",3)"
                 },
                 "C37": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",4)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",4)"
                 },
                 "C38": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",5)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",5)"
                 },
                 "C39": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",6)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",6)"
                 },
                 "C40": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",7)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",7)"
                 },
                 "C41": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",8)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",8)"
                 },
                 "C42": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",9)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",9)"
                 },
                 "C43": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(9,\"total_amount\",\"#sale_order_id\",10)"
+                    "content": "=ODOO.PIVOT(9,\"total_amount_company\",\"#sale_order_id\",10)"
                 },
                 "E19": {
                     "style": 1,
-                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
+                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount_company\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
                     "border": 1
                 },
                 "E20": {
@@ -395,7 +375,7 @@
                 },
                 "E32": {
                     "style": 1,
-                    "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
+                    "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount_company\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
                     "border": 1
                 },
                 "E33": {
@@ -530,48 +510,38 @@
                 },
                 "G21": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",1)"
                 },
                 "G22": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",2)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",2)"
                 },
                 "G23": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",3)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",3)"
                 },
                 "G24": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",4)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",4)"
                 },
                 "G25": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",5)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",5)"
                 },
                 "G26": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",6)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",6)"
                 },
                 "G27": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",7)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",7)"
                 },
                 "G28": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",8)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",8)"
                 },
                 "G29": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",9)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",9)"
                 },
                 "G30": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",10)"
+                    "content": "=ODOO.PIVOT(1,\"total_amount_company\",\"#product_id\",10)"
                 },
                 "G33": {
                     "style": 8,
@@ -580,48 +550,38 @@
                 },
                 "G34": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",1)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",1)"
                 },
                 "G35": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",2)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",2)"
                 },
                 "G36": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",3)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",3)"
                 },
                 "G37": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",4)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",4)"
                 },
                 "G38": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",5)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",5)"
                 },
                 "G39": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",6)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",6)"
                 },
                 "G40": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",7)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",7)"
                 },
                 "G41": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",8)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",8)"
                 },
                 "G42": {
                     "style": 7,
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",9)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",9)"
                 },
                 "G43": {
-                    "format": 2,
-                    "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",10)"
+                    "content": "=ODOO.PIVOT(4,\"total_amount_company\",\"#employee_id\",10)"
                 },
                 "A8": {
                     "border": 2
@@ -705,7 +665,7 @@
                                 "date:month",
                                 "product_id"
                             ],
-                            "measure": "total_amount",
+                            "measure": "total_amount_company",
                             "order": null,
                             "resModel": "hr.expense"
                         },
@@ -851,13 +811,13 @@
                     "content": "=ODOO.PIVOT(5,\"__count\")"
                 },
                 "B2": {
-                    "content": "=ODOO.PIVOT(6,\"total_amount\")"
+                    "content": "=ODOO.PIVOT(6,\"total_amount_company\")"
                 },
                 "B3": {
-                    "content": "=ODOO.PIVOT(7,\"total_amount\")"
+                    "content": "=ODOO.PIVOT(7,\"total_amount_company\")"
                 },
                 "B4": {
-                    "content": "=ODOO.PIVOT(8,\"total_amount\")"
+                    "content": "=ODOO.PIVOT(8,\"total_amount_company\")"
                 },
                 "C1": {
                     "style": 7,
@@ -915,8 +875,7 @@
         }
     },
     "formats": {
-        "1": "0",
-        "2": "#,##0[$€]"
+        "1": "0"
     },
     "borders": {
         "1": {
@@ -952,7 +911,6 @@
                 "company_id",
                 "attachment_number",
                 "total_amount_company",
-                "total_amount",
                 "state"
             ],
             "domain": [],
@@ -960,7 +918,7 @@
             "context": {},
             "orderBy": [
                 {
-                    "name": "total_amount",
+                    "name": "total_amount_company",
                     "asc": false
                 }
             ],
@@ -986,7 +944,7 @@
                     "field": "__count"
                 },
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -999,7 +957,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1019,7 +977,7 @@
                     "field": "__count"
                 },
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -1032,7 +990,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1054,7 +1012,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1071,7 +1029,7 @@
             "id": "6",
             "measures": [
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -1082,7 +1040,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1099,7 +1057,7 @@
             "id": "7",
             "measures": [
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -1110,7 +1068,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1127,7 +1085,7 @@
             "id": "8",
             "measures": [
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -1138,7 +1096,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         },
@@ -1166,7 +1124,7 @@
                     "field": "__count"
                 },
                 {
-                    "field": "total_amount"
+                    "field": "total_amount_company"
                 }
             ],
             "model": "hr.expense",
@@ -1179,7 +1137,7 @@
                     [],
                     []
                 ],
-                "measure": "total_amount",
+                "measure": "total_amount_company",
                 "order": "desc"
             }
         }

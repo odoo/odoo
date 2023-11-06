@@ -3,16 +3,19 @@
 # 	* project
 # 
 # Translators:
+# Rafeeq Salam, 2023
+# Hasna, 2023
+# Nikhil Krishnan, 2023
 # Niyas Raphy, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Niyas Raphy, 2023\n"
-"Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
+"Language-Team: Malayalam (https://app.transifex.com/odoo/teams/41243/ml/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -43,7 +46,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# സഹകാരികൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -127,7 +130,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (കോപ്പി)"
 
 #. module: project
 #. odoo-python
@@ -320,29 +323,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
+"                Hello,<br><br>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <strong>Tell us how you feel about our service</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -350,17 +353,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -371,10 +374,10 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -387,14 +390,14 @@ msgstr ""
 #: model:mail.template,body_html:project.project_done_email_template
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
 "    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
 
@@ -402,14 +405,14 @@ msgstr ""
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Thank you for your enquiry.<br>\n"
 "    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -418,7 +421,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -494,6 +497,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -525,6 +530,11 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr ""
@@ -532,12 +542,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>റിപ്പോർട്ടിംഗ്</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>വ്യൂ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -671,7 +681,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__active
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__active
 msgid "Active"
-msgstr ""
+msgstr "ആക്റ്റീവ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_ids
@@ -700,13 +710,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ആക്ടിവിറ്റി ടൈപ്പ് ഐക്കൺ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "ആക്ടിവിറ്റി ടൈപ്പ് "
 
 #. module: project
 #. odoo-javascript
@@ -724,7 +734,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add a note"
-msgstr ""
+msgstr "ഒരു കുറിപ്പ് ചേർക്കുക"
 
 #. module: project
 #. odoo-javascript
@@ -756,7 +766,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "അഡ്മിനിസ്ട്രേറ്റർ"
 
 #. module: project
 #. odoo-javascript
@@ -800,7 +810,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "എല്ലാം"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
@@ -832,7 +842,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "അനലിറ്റിക് അക്കൗണ്ട്"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -883,7 +893,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__april
 msgid "April"
-msgstr ""
+msgstr "ഏപ്രിൽ"
 
 #. module: project
 #. odoo-javascript
@@ -891,7 +901,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_controller.js:0
 #, python-format
 msgid "Archive"
-msgstr ""
+msgstr "ആർക്കൈവ്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -911,7 +921,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "ആർക്കൈവ് ചെയ്തു"
 
 #. module: project
 #. odoo-python
@@ -1038,7 +1048,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_attachment_count
 #: model:ir.model.fields,field_description:project.field_project_update__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "അറ്റാച്ച്മെന്റ് എണ്ണം"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
@@ -1049,12 +1059,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__august
 msgid "August"
-msgstr ""
+msgstr "ഓഗസ്റ്റ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
 msgid "Author"
-msgstr ""
+msgstr "രചയിതാവ്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1080,7 +1090,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Avatar"
-msgstr ""
+msgstr "അവതാർ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
@@ -1162,7 +1172,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Blocked"
-msgstr ""
+msgstr "തടഞ്ഞു"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
@@ -1257,7 +1267,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
 msgid "City"
-msgstr ""
+msgstr "സിറ്റി"
 
 #. module: project
 #. odoo-javascript
@@ -1336,13 +1346,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags__color
 #: model:ir.model.fields,field_description:project.field_project_update__color
 msgid "Color"
-msgstr ""
+msgstr "കളർ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__color
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
-msgstr ""
+msgstr "കളർ ഇൻഡക്സ് "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__commercial_partner_id
@@ -1362,7 +1372,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "കമ്പനികൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1374,12 +1384,12 @@ msgstr "കമ്പനി"
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "കോൺഫിഗറേഷൻ സെറ്റിങ്‌സ്"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
-msgstr ""
+msgstr "കോൺഫിഗറേഷൻ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1390,14 +1400,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid "Confirm"
-msgstr ""
+msgstr "സ്ഥിരീകരിക്കുക"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "സ്ഥിരീകരണം"
 
 #. module: project
 #. odoo-javascript
@@ -1411,14 +1421,14 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Consulting"
-msgstr ""
+msgstr "കൺസൾട്ടിംഗ്"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
-msgstr ""
+msgstr "കോൺടാക്ട് "
 
 #. module: project
 #. odoo-javascript
@@ -1432,7 +1442,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "കോപ്പിറൈറ്റിംഗ്"
 
 #. module: project
 #. odoo-javascript
@@ -1457,7 +1467,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
 msgid "Create Date"
-msgstr ""
+msgstr "സൃഷ്ടിച്ച തീയതി"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1518,7 +1528,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 #: model:ir.model.fields,field_description:project.field_project_update__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ഉണ്ടാക്കിയത്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__create_date
@@ -1533,18 +1543,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 #: model:ir.model.fields,field_description:project.field_project_update__create_date
 msgid "Created on"
-msgstr ""
+msgstr "സൃഷ്ടിച്ചത്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
-msgstr ""
+msgstr "സൃഷ്ടിച്ച തീയതി"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "കറൻസി"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -1599,7 +1609,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "കസ്റ്റമർ"
 
 #. module: project
 #. odoo-python
@@ -1662,7 +1672,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "ഡെയ്‌ലി "
 
 #. module: project
 #. odoo-javascript
@@ -1675,7 +1685,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "തീയതി"
 
 #. module: project
 #. odoo-javascript
@@ -1740,7 +1750,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr ""
+msgstr "ദിവസം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1759,25 +1769,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Deadline"
-msgstr ""
+msgstr "ഡെഡ്ലൈൻ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "ഡെഡ്ലൈൻ: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "പ്രിയപ്പെട്ട"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__december
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__december
 msgid "December"
-msgstr ""
+msgstr "ഡിസംബർ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
@@ -1794,7 +1804,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "ഡീഫോൾട് വാല്യൂ "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1840,7 +1850,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "സ്റ്റേജ് ഇല്ലാതാക്കുക"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1855,7 +1865,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
-msgstr ""
+msgstr "ഡെലിവേർഡ്"
 
 #. module: project
 #. odoo-python
@@ -1889,7 +1899,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
-msgstr ""
+msgstr "ഡിസൈൻ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1907,7 +1917,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "ഡൈജസ്റ്റ്"
 
 #. module: project
 #. odoo-javascript
@@ -1950,7 +1960,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ഡിസ്പ്ലേ നെയിം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
@@ -1969,18 +1979,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Dissatisfied"
-msgstr ""
+msgstr "അസംതൃപ്തി"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "ആക്‌സസ് ഇല്ല, ഉപയോക്താവിന്റെ ഡൈജസ്റ്റ് ഇമെയിലിനായി ഈ ഡാറ്റ ഒഴിവാക്കുക"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2000,7 +2010,7 @@ msgstr "ചെയ്തു"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr ""
+msgstr "ഡ്രാഫ്റ്റ്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -2013,7 +2023,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
-msgstr ""
+msgstr "എഡിറ്റ്"
 
 #. module: project
 #. odoo-javascript
@@ -2040,7 +2050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__partner_email
 #: model:ir.model.fields,field_description:project.field_project_task__partner_email
 msgid "Email"
-msgstr ""
+msgstr "ഇമെയിൽ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -2051,7 +2061,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "ഇമെയിൽ ടെംപ്ലേറ്റ്"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2086,7 +2096,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "End Date"
-msgstr ""
+msgstr "അവസാന തീയതി"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
@@ -2150,7 +2160,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__february
 msgid "February"
-msgstr ""
+msgstr "ഫെബ്രുവരി"
 
 #. module: project
 #. odoo-python
@@ -2172,7 +2182,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__first
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__first
 msgid "First"
-msgstr ""
+msgstr "ആദ്യം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
@@ -2215,7 +2225,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_follower_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ഫോള്ളോവെഴ്‌സ് "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_partner_ids
@@ -2223,7 +2233,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "അനുയായികൾ (പങ്കാളികൾ)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -2236,7 +2246,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "എന്നെന്നേക്കുമായി"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__fri
@@ -2248,10 +2258,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__fri
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__fri
 msgid "Friday"
-msgstr ""
+msgstr "വെള്ളിയാഴ്ച"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr ""
@@ -2308,7 +2319,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr ""
+msgstr "ഗ്രൂപ്പ് ബൈ"
 
 #. module: project
 #. odoo-javascript
@@ -2344,7 +2355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "സന്ദേശമുണ്ട്"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -2362,23 +2373,16 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "History"
-msgstr ""
+msgstr "ഹിസ്റ്ററി"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
-msgstr ""
+msgstr "മണിക്കൂറുകൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
 msgstr ""
 
 #. module: project
@@ -2396,7 +2400,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 msgid "ID"
-msgstr ""
+msgstr "ഐഡി"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
@@ -2410,7 +2414,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ഐക്കൺ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_icon
@@ -2458,7 +2462,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
+"your tasks. Tasks in a folded stage are considered as closed (not applicable"
+" to personal stages)."
 msgstr ""
 
 #. module: project
@@ -2498,8 +2503,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2543,7 +2548,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "ഇൻബോക്സ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
@@ -2553,14 +2558,14 @@ msgstr ""
 #. module: project
 #: model:project.tags,name:project.project_tags_04
 msgid "Internal"
-msgstr ""
+msgstr "ഇന്റെര്ണല്"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal Note"
-msgstr ""
+msgstr "ഇന്റെര്ണല് നോട്ട് "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -2633,7 +2638,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Invoiced"
-msgstr ""
+msgstr "ഇൻവോയ്സ് ചെയ്തു"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_analytic_account_id_changed
@@ -2661,7 +2666,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_update__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "അനുയായിയാണ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
@@ -2723,19 +2728,19 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__january
 msgid "January"
-msgstr ""
+msgstr "ജനുവരി"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__july
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__july
 msgid "July"
-msgstr ""
+msgstr "ജൂലൈ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__june
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__june
 msgid "June"
-msgstr ""
+msgstr "ജൂൺ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -2808,12 +2813,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update____last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Last Month"
-msgstr ""
+msgstr "കഴിഞ്ഞ മാസം"
 
 #. module: project
 #. odoo-python
@@ -2858,7 +2863,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_uid
 #: model:ir.model.fields,field_description:project.field_project_update__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__write_date
@@ -2873,12 +2878,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_date
 #: model:ir.model.fields,field_description:project.field_project_update__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "ലേറ്റായ ആക്ടിവിറ്റീസ്‌"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2887,14 +2893,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Milestones"
-msgstr ""
+msgstr "വൈകിയുള്ള നാഴികക്കല്ലുകൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Tasks"
-msgstr ""
+msgstr "വൈകിയ ജോലികൾ"
 
 #. module: project
 #. odoo-python
@@ -2903,13 +2909,20 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
-msgstr ""
+msgstr "പിന്നീട്"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Leave a comment"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
 msgstr ""
 
 #. module: project
@@ -2925,6 +2938,13 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
 msgstr ""
 
 #. module: project
@@ -2951,7 +2971,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Link"
-msgstr ""
+msgstr "ലിങ്ക്"
 
 #. module: project
 #. odoo-javascript
@@ -2978,7 +2998,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Low Priority"
-msgstr ""
+msgstr "കുറഞ്ഞ മുൻഗണന"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_main_attachment_id
@@ -2986,7 +3006,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_main_attachment_id
 #: model:ir.model.fields,field_description:project.field_project_update__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "പ്രധാന അറ്റാച്ച്മെന്റ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
@@ -3014,7 +3034,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__march
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__march
 msgid "March"
-msgstr ""
+msgstr "മാർച്ച്"
 
 #. module: project
 #. odoo-javascript
@@ -3034,7 +3054,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__may
 msgid "May"
-msgstr ""
+msgstr "മെയ്"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3046,12 +3066,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "മെംബേർസ് "
 
 #. module: project
 #: model:ir.model,name:project.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "മെനു"
+
+#. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "സന്ദേശം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
@@ -3067,11 +3092,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "സന്ദേശങ്ങൾ"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3085,7 +3110,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "മൈൽസ്റ്റോൺ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
@@ -3131,13 +3156,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__mon
 msgid "Monday"
-msgstr ""
+msgstr "തിങ്കളാഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
 msgid "Months"
-msgstr ""
+msgstr "മാസങ്ങൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__my_activity_date_deadline
@@ -3175,7 +3200,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "എന്റെ ചുമതലകൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
@@ -3234,8 +3259,8 @@ msgid "Neutral face"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3243,7 +3268,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "പുതിയ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_01
@@ -3293,7 +3318,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "അടുത്തത്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_activity
@@ -3304,7 +3329,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Next Activity"
-msgstr ""
+msgstr "അടുത്ത പ്രവർത്തനം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
@@ -3318,7 +3343,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "അടുത്ത പ്രവർത്തന സമയപരിധി"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_summary
@@ -3388,7 +3413,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "No data yet!"
-msgstr ""
+msgstr "ഇതുവരെ ഡാറ്റയൊന്നുമില്ല!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3452,13 +3477,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
 msgid "Note"
-msgstr ""
+msgstr "നോട്ട്"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__november
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__november
 msgid "November"
-msgstr ""
+msgstr "നവംബർ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction_counter
@@ -3472,7 +3497,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__after
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "ആവർത്തനങ്ങളുടെ എണ്ണം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
@@ -3495,15 +3520,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "പിശകുകളുടെ എണ്ണം"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
+"നടപടി ആവശ്യമായ സന്ദേശങ്ങളുടെ എണ്ണം\n"
+" "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -3511,13 +3538,13 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_update__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ഡെലിവറി പിശകുള്ള സന്ദേശങ്ങളുടെ എണ്ണം"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__october
 msgid "October"
-msgstr ""
+msgstr "ഒക്ടോബർ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
@@ -3577,7 +3604,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open"
-msgstr ""
+msgstr "ഓപ്പൺ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -3635,7 +3662,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "ഓണർ"
 
 #. module: project
 #. odoo-javascript
@@ -3696,7 +3723,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "സന്തോഷകരമായ റേറ്റിംഗുകളുടെ ശതമാനം"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -3730,7 +3757,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
 #: model:ir.model.fields,field_description:project.field_project_task__partner_phone
 msgid "Phone"
-msgstr ""
+msgstr "ഫോൺ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3747,7 +3774,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Planning"
-msgstr ""
+msgstr "ആസൂത്രണം"
 
 #. module: project
 #. odoo-python
@@ -3817,7 +3844,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 #, python-format
 msgid "Priority"
-msgstr ""
+msgstr "മുൻഗണന"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
@@ -3838,7 +3865,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Private"
-msgstr ""
+msgstr "പ്രൈവറ്റ്"
 
 #. module: project
 #. odoo-javascript
@@ -3853,7 +3880,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_tree
 msgid "Progress"
-msgstr ""
+msgstr "പ്രോഗ്രസ്സ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress_percentage
@@ -3861,8 +3888,8 @@ msgid "Progress Percentage"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -3891,7 +3918,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 #, python-format
 msgid "Project"
-msgstr ""
+msgstr "പ്രൊജക്റ്റ് "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
@@ -3902,6 +3929,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
 msgstr ""
 
 #. module: project
@@ -3943,7 +3975,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
 #: model:ir.model,name:project.model_project_share_wizard
 msgid "Project Sharing"
-msgstr ""
+msgstr "പ്രൊജക്റ്റ് ഷെയറിങ് "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3953,7 +3985,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "പ്രോജക്റ്റ് സ്റ്റേജ്"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
@@ -3986,7 +4018,7 @@ msgstr ""
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "പ്രോജക്റ്റ് അപ്ഡേറ്റ്"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -3997,11 +4029,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
 msgstr ""
 
 #. module: project
@@ -4069,7 +4096,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "പ്രോജെക്ടസ് "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
@@ -4089,7 +4116,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
 msgid "Properties"
-msgstr ""
+msgstr "പ്രോപ്പർട്ടികൾ"
 
 #. module: project
 #. odoo-javascript
@@ -4097,7 +4124,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "പ്രസിദ്ധീകരിച്ചു"
 
 #. module: project
 #. odoo-javascript
@@ -4123,7 +4150,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Rating"
-msgstr ""
+msgstr "റേറ്റിംഗ്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -4205,7 +4232,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "റേറ്റിംഗ്‌സ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
@@ -4244,7 +4271,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
-msgstr ""
+msgstr "റെഡി"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
@@ -4264,7 +4291,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
 msgid "Recipients"
-msgstr ""
+msgstr "സ്വീകർത്താക്കൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -4276,7 +4303,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Recording"
-msgstr ""
+msgstr "റെക്കോർഡിങ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
@@ -4410,7 +4437,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr ""
+msgstr "റിപ്പോർട്ടിങ്"
 
 #. module: project
 #. odoo-javascript
@@ -4418,7 +4445,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "റിസേർച്"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_research_development
@@ -4452,7 +4479,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "ഉത്തരവാദിത്തമുള്ള യൂസർ"
 
 #. module: project
 #. odoo-javascript
@@ -4500,7 +4527,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sat
 msgid "Saturday"
-msgstr ""
+msgstr "ശനിയാഴ്ച"
 
 #. module: project
 #. odoo-javascript
@@ -4514,7 +4541,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
-msgstr ""
+msgstr "സ്ക്രിപ്റ്റ് "
 
 #. module: project
 #. odoo-python
@@ -4606,7 +4633,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "സെക്യൂരിറ്റി ടോക്കൺ"
 
 #. module: project
 #. odoo-javascript
@@ -4614,19 +4641,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "അയക്കുക"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
-msgstr ""
+msgstr "ഇമെയിൽ അയയ്ക്കുക"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__september
 msgid "September"
-msgstr ""
+msgstr "സെപ്റ്റംബർ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4634,7 +4661,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "സീക്വൻസ് "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -4682,14 +4709,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr ""
+msgstr "സെറ്റിങ്ങ്സ് "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
-msgstr ""
+msgstr "ഷെയർ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4720,6 +4747,7 @@ msgid "Show Project on Dashboard"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -4748,7 +4776,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "സ്പെസിഫിക്കേഷനുകൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4778,8 +4806,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -4796,7 +4824,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Stage"
-msgstr ""
+msgstr "സ്റ്റേജ്"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4838,7 +4866,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Start Date"
-msgstr ""
+msgstr "ആരംഭിക്കുന്ന തീയതി"
 
 #. module: project
 #. odoo-python
@@ -4851,7 +4879,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #, python-format
 msgid "Status"
-msgstr ""
+msgstr "സ്റ്റാറ്റസ്"
 
 #. module: project
 #. odoo-python
@@ -4917,7 +4945,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Summary"
-msgstr ""
+msgstr "സംഗ്രഹം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -4929,7 +4957,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sun
 msgid "Sunday"
-msgstr ""
+msgstr "ഞായറാഴ്ച"
 
 #. module: project
 #. odoo-javascript
@@ -4947,7 +4975,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr ""
+msgstr "ടാഗുകൾ"
 
 #. module: project
 #. odoo-javascript
@@ -4968,7 +4996,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Task"
-msgstr ""
+msgstr "ടാസ്‌ക്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -5103,7 +5131,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
-msgstr ""
+msgstr "ടാസ്‌ക്:"
 
 #. module: project
 #. odoo-python
@@ -5138,7 +5166,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 #, python-format
 msgid "Tasks"
-msgstr ""
+msgstr "ടാസ്‌ക്"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -5150,7 +5178,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "ടാസ്ക് വിശകലനം"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -5344,7 +5372,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__third
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__third
 msgid "Third"
-msgstr ""
+msgstr "മൂന്നാമത്"
 
 #. module: project
 #. odoo-python
@@ -5353,7 +5381,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
-msgstr ""
+msgstr "ഈ മാസം"
 
 #. module: project
 #. odoo-python
@@ -5362,7 +5390,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "ഈ ആഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
@@ -5403,13 +5431,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__thu
 msgid "Thursday"
-msgstr ""
+msgstr "വ്യാഴാഴ്ച"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "സമയ മാനേജ്മെന്റ്"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
@@ -5430,7 +5458,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__name
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "തലക്കെട്ട്"
 
 #. module: project
 #. odoo-javascript
@@ -5472,13 +5500,14 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "ഇന്ന്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr ""
+msgstr "ഇന്നത്തെ ആക്ടിവിറ്റീസ്‌"
 
 #. module: project
 #. odoo-javascript
@@ -5486,7 +5515,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "ആകെ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5541,12 +5570,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__tue
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__tue
 msgid "Tuesday"
-msgstr ""
+msgstr "ചൊവ്വാഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
-msgstr ""
+msgstr "മാസത്തിൽ രണ്ടുതവണ"
 
 #. module: project
 #. odoo-python
@@ -5617,7 +5646,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids
 msgid "Update"
-msgstr ""
+msgstr "അപ്ഡേറ്റ്"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_update_create
@@ -5719,7 +5748,7 @@ msgstr ""
 #: model:res.groups,name:project.group_project_user
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
-msgstr ""
+msgstr "യൂസർ"
 
 #. module: project
 #. odoo-python
@@ -5731,7 +5760,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "View"
-msgstr ""
+msgstr "വ്യൂ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5747,7 +5776,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
 msgid "Visibility"
-msgstr ""
+msgstr "വിസിബിലിറ്റി"
 
 #. module: project
 #. odoo-javascript
@@ -5771,7 +5800,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_update__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "വെബ്സൈറ്റ് സന്ദേശങ്ങൾ"
 
 #. module: project
 #. odoo-javascript
@@ -5786,7 +5815,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "വെബ്സൈറ്റ് കമ്മ്യൂണിക്കേഷൻ ചരിത്രം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
@@ -5798,7 +5827,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__wed
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__wed
 msgid "Wednesday"
-msgstr ""
+msgstr "ബുധനാഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
@@ -5809,7 +5838,7 @@ msgstr "വീക്‌ലി"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr ""
+msgstr "ആഴ്ചകൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5838,7 +5867,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "പ്രവർത്തന സമയം"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5863,18 +5892,18 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "എഴുത്തു"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "വർഷം തോറും"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
-msgstr ""
+msgstr "വർഷങ്ങൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -5882,6 +5911,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
+"സ്റ്റേജിന്റെ അർത്ഥവും ഉദ്ദേശ്യവും മനസ്സിലാക്കാൻ സഹപ്രവർത്തകരെ "
+"സഹായിക്കുന്നതിന് നിങ്ങൾക്ക് ഒരു വിവരണം ചേർക്കാനും കഴിയും."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__tag_ids
@@ -5921,6 +5952,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"ടാസ്ക്കുകൾ അടങ്ങിയ സ്റ്റേജുകൾ നിങ്ങൾക്ക് ഇല്ലാതാക്കാൻ കഴിയില്ല. നിങ്ങൾക്ക് "
+"അവ ആർക്കൈവ് ചെയ്യാം അല്ലെങ്കിൽ ആദ്യം അവരുടെ എല്ലാ ടാസ്ക്കുകളും ഇല്ലാതാക്കാം."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5928,6 +5961,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"ടാസ്ക്കുകൾ അടങ്ങിയ സ്റ്റേജുകൾ നിങ്ങൾക്ക് ഇല്ലാതാക്കാൻ കഴിയില്ല. നിങ്ങൾക്ക് "
+"അവ ആർക്കൈവ് ചെയ്യാം അല്ലെങ്കിൽ ആദ്യം അവരുടെ എല്ലാ ടാസ്ക്കുകളും ഇല്ലാതാക്കാം."
 
 #. module: project
 #. odoo-python
@@ -6055,19 +6090,19 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "ഉദാ. പ്രതിമാസ അവലോകനം"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "ഉദാ. ഓഫീസ് പാർട്ടി"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "ഉദാ. ഉൽപ്പന്ന ലോഞ്ച്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -6078,12 +6113,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "ഉദാ. ഓഫീസ്-പാർട്ടി"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "ഉദാ: ഉൽപ്പന്ന ലോഞ്ച്"
 
 #. module: project
 #. odoo-javascript
@@ -6116,7 +6151,7 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "പ്രൊജക്റ്റ്."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline

@@ -379,6 +379,8 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function () {
                 _.each(records, function (record) {
+                    // discard any changes to prevent creating a new record with auto-save
+                    self.discardChanges(record.id);
                     var parent = record.parentID && self.localData[record.parentID];
                     if (parent && parent.type === 'list') {
                         parent.data = _.without(parent.data, record.id);
@@ -1125,6 +1127,9 @@ var BasicModel = AbstractModel.extend({
             var record = self.localData[recordID];
             if (options.savePoint) {
                 self._visitChildren(record, function (rec) {
+                    for (let fieldName in (rec._changes || {})) {
+                        rec._editionViewType[fieldName] = options.viewType;
+                    }
                     var newValue = rec._changes || rec.data;
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
@@ -1169,6 +1174,12 @@ var BasicModel = AbstractModel.extend({
 
                 // in the case of a write, only perform the RPC if there are changes to save
                 if (method === 'create' || changedFields.length) {
+                    // Prevents multiple create/write when a save and urgentSave on occur at the same time.
+                    // We only want to do a create/write.
+                    if (record.saveInProgress) {
+                        return;
+                    }
+                    record.saveInProgress = true;
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
                     self._rpc({
                             model: record.model,
@@ -1188,22 +1199,41 @@ var BasicModel = AbstractModel.extend({
 
                             // Erase changes as they have been applied
                             record._changes = {};
+                            var data = Object.assign({}, record.data, record._changes);
+                            for (var fieldName in record.fields) {
+                                var type = record.fields[fieldName].type;
+                                if (type === 'many2many' || type === 'one2many') {
+                                    if (data[fieldName]) {
+                                        self.localData[data[fieldName]]._changes = [];
+                                    }
+                                }
+                            }
 
                             // Optionally clear the DataManager's cache
                             self._invalidateCache(record);
 
                             self.unfreezeOrder(record.id);
 
+                            record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
                                     resolve(changedFields);
                                 });
                             } else {
                                 _.extend(record.data, _changes);
+                                record._changes = {};
+                                for (const fieldName in record.fields) {
+                                    if (['many2many', 'one2many'].includes(record.fields[fieldName].type) && record.data[fieldName]) {
+                                        self.localData[record.data[fieldName]]._changes = [];
+                                    }
+                                }
                                 resolve(changedFields);
                             }
-                        }).guardedCatch(reject);
+                        }).guardedCatch((...args) => {
+                            record.saveInProgress = false;
+                            reject(...args)
+                        });
                 } else {
                     resolve(changedFields);
                 }
@@ -3395,10 +3425,12 @@ var BasicModel = AbstractModel.extend({
                     // least one id was updated
                     var didChange = false;
                     var changes, command, relRecord;
+                    const addedById = Object.fromEntries(relRecordAdded.map(r => [r.res_id, r]));
+                    const updatedById = Object.fromEntries(relRecordUpdated.map(r => [r.res_id, r]));
                     for (var i = 0; i < list.res_ids.length; i++) {
                         if (_.contains(keptIds, list.res_ids[i])) {
                             // this is an id that already existed
-                            relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
+                            relRecord = updatedById[list.res_ids[i]];
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
@@ -3409,7 +3441,7 @@ var BasicModel = AbstractModel.extend({
                             commands[fieldName].push(command);
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
-                            relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            relRecord = addedById[list.res_ids[i]];
                             if (!relRecord) {
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
@@ -3992,6 +4024,11 @@ var BasicModel = AbstractModel.extend({
                     }
                     return ids;
                 }
+                if (field.type === "properties" && _.isArray(fieldValue)) {
+                    // remove deleted properties to be able
+                    // to filter based on empty properties field
+                    return fieldValue.filter(definition => !definition.definition_deleted);
+                }
                 return fieldValue;
             }
         });
@@ -4046,7 +4083,7 @@ var BasicModel = AbstractModel.extend({
      */
     _isFieldProtected: function (record, fieldName, viewType) {
         viewType = viewType || record.viewType;
-        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType][fieldName];
+        var fieldInfo = viewType && record.fieldsInfo && record.fieldsInfo[viewType] && record.fieldsInfo[viewType][fieldName];
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
@@ -4762,9 +4799,16 @@ var BasicModel = AbstractModel.extend({
             }));
         }
         return def.then(function (records) {
+            const context = list.getContext();
+            const changeMap = Object.fromEntries(
+              (list._changes || [])
+                .filter((c) => c.operation === "ADD")
+                .map((c) => [c.resID, c])
+            );
+            const recordsById = Object.fromEntries(records.map(r => [r.id, r]));
             _.each(resIDs, function (id) {
                 var dataPoint;
-                var data = _.findWhere(records, {id: id});
+                var data = recordsById[id];
                 if (id in list._cache) {
                     dataPoint = self.localData[list._cache[id]];
                     if (data) {
@@ -4773,7 +4817,7 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else {
                     dataPoint = self._makeDataPoint({
-                        context: list.getContext(),
+                        context,
                         data: data,
                         fieldsInfo: list.fieldsInfo,
                         fields: list.fields,
@@ -4787,11 +4831,9 @@ var BasicModel = AbstractModel.extend({
                     list._cache[id] = dataPoint.id;
                 }
                 // set the dataPoint id in potential 'ADD' operation adding the current record
-                _.each(list._changes, function (change) {
-                    if (change.operation === 'ADD' && !change.id && change.resID === id) {
-                        change.id = dataPoint.id;
-                    }
-                });
+                if (changeMap[id] && !changeMap[id].id) {
+                    changeMap[id].id = dataPoint.id;
+                }
             });
             return list;
         });

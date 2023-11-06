@@ -25,9 +25,22 @@ class PurchaseOrder(models.Model):
     def _amount_all(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
-            order.amount_tax = sum(order_lines.mapped('price_tax'))
+
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = self.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+                totals = tax_results['totals']
+                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+                amount_tax = sum(order_lines.mapped('price_tax'))
+
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -283,13 +296,14 @@ class PurchaseOrder(models.Model):
         # are taken with the company of the order
         # if not defined, with_company doesn't change anything.
         self = self.with_company(self.company_id)
+        default_currency = self._context.get("default_currency_id")
         if not self.partner_id:
             self.fiscal_position_id = False
-            self.currency_id = self.env.company.currency_id.id
+            self.currency_id = default_currency or self.env.company.currency_id.id
         else:
             self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+            self.currency_id = default_currency or self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id', 'company_id')
@@ -343,8 +357,11 @@ class PurchaseOrder(models.Model):
             return groups
 
         self.ensure_one()
-        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
-        if customer_portal_group:
+        try:
+            customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        except StopIteration:
+            pass
+        else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self.env.context.get('is_reminder'):
                 access_opt['title'] = _('View')
@@ -514,7 +531,8 @@ class PurchaseOrder(models.Model):
         for line in self.order_line:
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-            if line.product_id and partner not in line.product_id.seller_ids.partner_id and len(line.product_id.seller_ids) <= 10:
+            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('partner_id')
+            if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 # Convert the price in the right currency.
                 currency = partner.property_purchase_currency_id or self.env.company.currency_id
                 price = self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False)
@@ -538,7 +556,7 @@ class PurchaseOrder(models.Model):
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
                 # supplier info should be added regardless of the user access rights
-                line.product_id.sudo().write(vals)
+                line.product_id.product_tmpl_id.sudo().write(vals)
 
     def action_create_invoice(self):
         """Create the invoice associated to the PO.
@@ -1047,7 +1065,7 @@ class PurchaseOrderLine(models.Model):
         else:
             return self.invoice_lines
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.type')
     def _compute_qty_received_method(self):
         for line in self:
             if line.product_id and line.product_id.type in ['consu', 'service']:
@@ -1151,7 +1169,8 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        # TODO: Remove when onchanges are replaced with computes
+        if not self.product_id or (self.env.context.get('origin_po_id') and self.product_qty):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1195,16 +1214,16 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.depends('product_qty', 'product_uom')
+    @api.depends('product_qty', 'product_uom', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
-            if not line.product_id or line.invoice_lines:
+            if not line.product_id or line.invoice_lines or not line.company_id:
                 continue
             params = {'order_id': line.order_id}
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id,
                 quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order.date(),
+                date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
                 uom_id=line.product_uom,
                 params=params)
 
@@ -1226,18 +1245,18 @@ class PurchaseOrderLine(models.Model):
                     line.taxes_id,
                     line.company_id,
                 )
-                price_unit = line.product_id.currency_id._convert(
+                price_unit = line.product_id.cost_currency_id._convert(
                     price_unit,
                     line.currency_id,
                     line.company_id,
-                    line.date_order,
+                    line.date_order or fields.Date.context_today(line),
                     False
                 )
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 continue
 
             price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
-            price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order, False)
+            price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
             price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
             line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
 
@@ -1257,9 +1276,12 @@ class PurchaseOrderLine(models.Model):
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
-            # suggest biggest suitable packaging
+            # suggest biggest suitable packaging matching the PO's company
             if line.product_id and line.product_qty and line.product_uom:
-                line.product_packaging_id = line.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(line.product_qty, line.product_uom) or line.product_packaging_id
+                suggested_packaging = line.product_id.packaging_ids\
+                        .filtered(lambda p: p.purchase and (p.product_id.company_id <= p.company_id <= line.company_id))\
+                        ._find_suitable_product_packaging(line.product_qty, line.product_uom)
+                line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
@@ -1307,6 +1329,18 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.product_uom_qty = line.product_qty
 
+    def _get_gross_price_unit(self):
+        self.ensure_one()
+        price_unit = self.price_unit
+        if self.taxes_id:
+            qty = self.product_qty or 1
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+            price_unit = self.taxes_id.with_context(round=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty)['total_void']
+            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
+        if self.product_uom.id != self.product_id.uom_id.id:
+            price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
+        return price_unit
+
     def action_purchase_history(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
@@ -1345,7 +1379,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         aml_currency = move and move.currency_id or self.currency_id
         date = move and move.date or fields.Date.today()
-        return {
+        res = {
             'display_type': self.display_type or 'product',
             'name': '%s: %s' % (self.order_id.name, self.name),
             'product_id': self.product_id.id,
@@ -1353,9 +1387,11 @@ class PurchaseOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],
-            'analytic_distribution': self.analytic_distribution,
             'purchase_line_id': self.id,
         }
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
+        return res
 
     @api.model
     def _prepare_add_missing_fields(self, values):
@@ -1373,13 +1409,14 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
         partner = supplier.partner_id
-        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
+        today = fields.Date.today()
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=uom_po_qty,
-            date=po.date_order and po.date_order.date(),
+            date=po.date_order and max(po.date_order.date(), today) or today,
             uom_id=product_id.uom_po_id)
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
@@ -1423,6 +1460,10 @@ class PurchaseOrderLine(models.Model):
 
     def _track_qty_received(self, new_qty):
         self.ensure_one()
+        # don't track anything when coming from the accrued expense entry wizard, as it is only computing fields at a past date to get relevant amounts
+        # and doesn't actually change anything to the current record
+        if  self.env.context.get('accrual_entry_date'):
+            return
         if new_qty != self.qty_received and self.order_id.state == 'purchase':
             self.order_id.message_post_with_view(
                 'purchase.track_po_line_qty_received_template',

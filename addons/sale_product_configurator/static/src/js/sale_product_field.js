@@ -18,6 +18,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
         this.rpc = useService("rpc");
         this.ui = useService("ui");
+        this.orm = useService("orm");
     },
 
     async _onProductTemplateUpdate() {
@@ -32,12 +33,12 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                await this.props.record.update({
-                    product_id: [result.product_id, result.product_name],
-                });
                 if (result.has_optional_products) {
                     this._openProductConfigurator('options');
                 } else {
+                    await this.props.record.update({
+                        product_id: [result.product_id, result.product_name],
+                    });
                     this._onProductUpdate();
                 }
             }
@@ -97,14 +98,34 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         $modal.find(productSelector).val(productId);
         const variantValues = getSelectedVariantValues($modal);
         const noVariantAttributeValues = getNoVariantAttributeValues($modal);
-        const customAttributeValues = this.props.record.data.product_custom_attribute_value_ids.records.map(
-            record => {
+        /**
+         *  `product_custom_attribute_value_ids` records are not loaded in the view bc sub templates
+         *  are not loaded in list views. Therefore, we fetch them from the server if the record is
+         *  saved. Else we use the value stored on the line.
+         */
+        const customAttributeValueRecords = this.props.record.data.product_custom_attribute_value_ids.records;
+        let customAttributeValues = [];
+        if (customAttributeValueRecords.length > 0) {
+            if (customAttributeValueRecords[0].isNew) {
+                customAttributeValues = customAttributeValueRecords.map(
+                    record => record.data
+                );
+            } else {
+                customAttributeValues = await this.orm.read(
+                    'product.attribute.custom.value',
+                    this.props.record.data.product_custom_attribute_value_ids.currentIds,
+                    ["custom_product_template_attribute_value_id", "custom_value"]
+                );
+            }
+        }
+        const formattedCustomAttributeValues = customAttributeValues.map(
+            data => {
                 // NOTE: this dumb formatting is necessary to avoid
                 // modifying the shared code between frontend & backend for now.
                 return {
-                    custom_value: record.data.custom_value,
+                    custom_value: data.custom_value,
                     custom_product_template_attribute_value_id: {
-                        res_id: record.data.custom_product_template_attribute_value_id[0],
+                        res_id: data.custom_product_template_attribute_value_id[0],
                     },
                 };
             }
@@ -114,7 +135,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             product_template_id: productTemplateId,
             quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
             variant_values: variantValues,
-            product_custom_attribute_values: customAttributeValues,
+            product_custom_attribute_values: formattedCustomAttributeValues,
             no_variant_attribute_values: noVariantAttributeValues,
         };
         const optionalProductsModal = new OptionalProductsModal(null, {

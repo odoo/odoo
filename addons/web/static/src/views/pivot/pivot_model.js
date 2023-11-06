@@ -681,9 +681,8 @@ export class PivotModel extends Model {
      */
     async load(searchParams) {
         this.searchParams = searchParams;
-
-        const activeMeasures =
-            processMeasure(searchParams.context.pivot_measures) || this.metaData.activeMeasures;
+        const processedMeasures = processMeasure(searchParams.context.pivot_measures);
+        const activeMeasures = processedMeasures || this.metaData.activeMeasures;
         const metaData = this._buildMetaData({ activeMeasures });
         if (!this.reload) {
             metaData.rowGroupBys =
@@ -705,11 +704,14 @@ export class PivotModel extends Model {
             metaData.expandedColGroupBys = [];
         }
 
-        metaData.measures = computeReportMeasures(
-            metaData.fields,
-            metaData.fieldAttrs,
-            metaData.activeMeasures
-        );
+        const allActivesMeasures = new Set(this.metaData.activeMeasures);
+        if (processedMeasures) {
+            processedMeasures.forEach((e) => allActivesMeasures.add(e));
+        }
+
+        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
+            ...allActivesMeasures,
+        ]);
         const config = { metaData, data: this.data };
         return this._loadData(config);
     }
@@ -753,6 +755,7 @@ export class PivotModel extends Model {
             metaData.activeMeasures.push(fieldName);
             const config = { metaData, data: this.data };
             await this._loadData(config);
+            this.useSampleModel = false;
         }
         this.nextActiveMeasures = null;
         this.notify();
@@ -1220,7 +1223,10 @@ export class PivotModel extends Model {
                     rowIndex === 0
                         ? undefined
                         : fields[colGroupBys[rowIndex - 1].split(":")[0]].string,
-                title: group.labels[group.labels.length - 1] || _t("Total"),
+                title:
+                    group.labels.length
+                        ? group.labels[group.labels.length - 1]
+                        : _t("Total"),
                 width: leafCount * measureCount * (2 * originCount - 1),
             };
             row.push(cell);
@@ -1271,7 +1277,10 @@ export class PivotModel extends Model {
         let rows = [];
         const group = tree.root;
         const rowGroupId = [group.values, []];
-        const title = group.labels[group.labels.length - 1] || this.env._t("Total");
+        const title =
+            group.labels.length
+                ? group.labels[group.labels.length - 1]
+                : this.env._t("Total");
         const indent = group.labels.length;
         const isLeaf = !tree.directSubTrees.size;
         const rowGroupBys = this.metaData.fullRowGroupBys;

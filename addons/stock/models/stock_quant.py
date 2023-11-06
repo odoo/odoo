@@ -258,7 +258,10 @@ class StockQuant(models.Model):
                 lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
                 package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
                 owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-                quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+                quant = self.env['stock.quant']
+                if not self.env.context.get('import_file'):
+                    # Merge quants later, to make sure one line = one record during batch import
+                    quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
                     quant = quant.filtered(lambda q: q.lot_id)
                 if quant:
@@ -322,17 +325,30 @@ class StockQuant(models.Model):
             'template': '/stock/static/xlsx/stock_quant.xlsx'
         }]
 
+    @api.model
+    def _get_forbidden_fields_write(self):
+        """ Returns a list of fields user can't edit when he want to edit a quant in `inventory_mode`."""
+        return ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
-        allowed_fields = self._get_inventory_fields_write()
-        if self._is_inventory_mode() and any(field for field in allowed_fields if field in vals.keys()):
+        forbidden_fields = self._get_forbidden_fields_write()
+        if self._is_inventory_mode() and any(field for field in forbidden_fields if field in vals.keys()):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            if any(field for field in vals.keys() if field not in allowed_fields):
-                raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
+            raise UserError(_("Quant's editing is restricted, you can't do this operation."))
         return super(StockQuant, self).write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_wrong_permission(self):
+        if not self.env.is_superuser():
+            if not self.user_has_groups('stock.group_stock_manager'):
+                raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
+            self = self.with_context(inventory_mode=True)
+            self.inventory_quantity = 0
+            self._apply_inventory()
 
     def action_view_stock_moves(self):
         self.ensure_one()
@@ -514,10 +530,26 @@ class StockQuant(models.Model):
 
     @api.constrains('quantity')
     def check_quantity(self):
-        for quant in self:
-            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
-                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
+        sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
+        if not sn_quants:
+            return
+        domain = expression.OR([
+            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
+            for q in sn_quants
+        ])
+        groups = self.read_group(
+            domain,
+            ['quantity'],
+            ['product_id', 'location_id', 'lot_id'],
+            orderby='id',
+            lazy=False,
+        )
+        for group in groups:
+            product = self.env['product.product'].browse(group['product_id'][0])
+            lot = self.env['stock.lot'].browse(group['lot_id'][0])
+            uom = product.uom_id
+            if float_compare(abs(group['quantity']), 1, precision_rounding=uom.rounding) > 0:
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (product.display_name, lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
@@ -546,10 +578,7 @@ class StockQuant(models.Model):
             return 'location_id ASC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-
+    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -564,6 +593,12 @@ class StockQuant(models.Model):
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        return domain
+
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+        removal_strategy = self._get_removal_strategy(product_id, location_id)
+        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
 
         return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
 
@@ -622,7 +657,7 @@ class StockQuant(models.Model):
                 self.product_id, self.location_id, lot_id=self.lot_id,
                 package_id=self.package_id, owner_id=self.owner_id, strict=True)
             if quant:
-                self.quantity = quant.quantity
+                self.quantity = quant.filtered(lambda q: q.lot_id == self.lot_id).quantity
 
             # Special case: directly set the quantity to one for serial numbers,
             # it'll trigger `inventory_quantity` compute.
@@ -833,6 +868,7 @@ class StockQuant(models.Model):
         argument, we’ll create a new quant in order for these transactions to not rollback. This
         method will find and deduplicate these quants.
         """
+        params = []
         query = """WITH
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
@@ -842,6 +878,15 @@ class StockQuant(models.Model):
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
                             FROM stock_quant
+        """
+        if self._ids:
+            query += """
+                            WHERE
+                                location_id in %s
+                                AND product_id in %s
+            """
+            params = [tuple(self.location_id.ids), tuple(self.product_id.ids)]
+        query += """
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
                         ),
@@ -858,7 +903,7 @@ class StockQuant(models.Model):
         """
         try:
             with self.env.cr.savepoint():
-                self.env.cr.execute(query)
+                self.env.cr.execute(query, params)
                 self.env.invalidate_all()
         except Error as e:
             _logger.info('an error occurred while merging quants: %s', e.pgerror)
@@ -1126,6 +1171,7 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        unpacked_quants = self.env['stock.quant']
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
@@ -1133,11 +1179,12 @@ class QuantPackage(models.Model):
                 ('reserved_qty', '!=', 0),
             ])
             move_line_to_modify.write({'package_id': False})
+            unpacked_quants |= package.quant_ids
             package.mapped('quant_ids').sudo().write({'package_id': False})
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._quant_tasks()
+        unpacked_quants._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")

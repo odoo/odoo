@@ -3,7 +3,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
 
     const { parse } = require('web.field_utils');
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const { useErrorHandlers, useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
@@ -27,6 +27,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
+            this.validateOrder = useAsyncLockedMethod(this.validateOrder);
         }
 
         showMaxValueError() {
@@ -189,21 +190,27 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             }
         }
         async _finalizeValidation() {
-            if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer) {
+            if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer && this.env.proxy && this.env.proxy.printer) {
                 this.env.proxy.printer.open_cashbox();
             }
 
             this.currentOrder.initialize_validation_date();
+            for (let line of this.paymentLines) {
+                if (!line.amount === 0) {
+                     this.currentOrder.remove_paymentline(line);
+                }
+            }
             this.currentOrder.finalized = true;
 
             let syncOrderResult, hasError;
 
             try {
+                this.env.services.ui.block()
                 // 1. Save order to server.
                 syncOrderResult = await this.env.pos.push_single_order(this.currentOrder);
 
                 // 2. Invoice.
-                if (this.currentOrder.is_to_invoice()) {
+                if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                     if (syncOrderResult.length) {
                         await this.env.legacyActionManager.do_action('account.account_invoices', {
                             additional_context: {
@@ -250,6 +257,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } finally {
+                this.env.services.ui.unblock()
                 // Always show the next screen regardless of error since pos has to
                 // continue working even offline.
                 this.showScreen(this.nextScreen);
@@ -274,6 +282,24 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
             }
         }
+        /**
+         * This method is meant to be overriden by localization that do not want to print the invoice pdf
+         * every time they create an account move. For example, it can be overriden like this:
+         * ```
+         * shouldDownloadInvoice() {
+         *     const currentCountry = ...
+         *     if (currentCountry.code === 'FR') {
+         *         return false;
+         *     } else {
+         *         return super.shouldDownloadInvoice(); // or this._super(...arguments) depending on the odoo version.
+         *     }
+         * }
+         * ```
+         * @returns {boolean} true if the invoice pdf should be downloaded
+         */
+        shouldDownloadInvoice() {
+            return true;
+        }
         get nextScreen() {
             return !this.error? 'ReceiptScreen' : 'ProductScreen';
         }
@@ -283,6 +309,18 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     title: this.env._t('Empty Order'),
                     body: this.env._t(
                         'There must be at least one product in your order before it can be validated and invoiced.'
+                    ),
+                });
+                return false;
+            }
+
+            if (this.currentOrder.electronic_payment_in_progress()) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Pending Electronic Payments'),
+                    body: this.env._t(
+                        'There is at least one pending electronic payment.\n' +
+                        'Please finish the payment with the terminal or ' +
+                        'cancel it then remove the payment line.'
                     ),
                 });
                 return false;

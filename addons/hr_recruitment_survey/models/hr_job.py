@@ -12,7 +12,8 @@ class Job(models.Model):
 
     def action_test_survey(self):
         self.ensure_one()
-        return self.survey_id.action_test_survey()
+        action = self.survey_id.action_test_survey()
+        return action
 
     def action_new_survey(self):
         self.ensure_one()

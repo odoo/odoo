@@ -13,10 +13,14 @@ class AccountMoveLine(models.Model):
         if so_line:
             bom = self.env['mrp.bom']._bom_find(products=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[so_line.product_id]
             if bom:
-                is_line_reversing = bool(self.move_id.reversed_entry_id)
+                is_line_reversing = self.move_id.move_type == 'out_refund'
                 qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-                posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
+                account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
+                posted_invoice_lines = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
                 qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
+                reversal_cogs = posted_invoice_lines.move_id.reversal_move_id.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
+                qty_invoiced -= sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in reversal_cogs])
+
                 moves = so_line.move_ids
                 average_price_unit = 0
                 components_qty = so_line._get_bom_component_qty(bom)

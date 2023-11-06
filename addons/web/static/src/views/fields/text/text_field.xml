@@ -16,14 +16,13 @@
                     t-on-input="onInput"
                     t-ref="textarea"
                 />
+                <t t-if="props.isTranslatable">
+                    <TranslationButton
+                        fieldName="props.name"
+                        record="props.record"
+                    />
+                </t>
             </div>
-            <t t-if="props.isTranslatable">
-                <TranslationButton
-                    fieldName="props.name"
-                    record="props.record"
-                    updateField="props.update"
-                />
-            </t>
         </t>
     </t>
 

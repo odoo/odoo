@@ -289,6 +289,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
+            visitor_uid: this.messaging.publicLivechatGlobal.getVisitorUserId(),
             chatbot_script_id: this.messaging.publicLivechatGlobal.publicLivechat.data.chatbot_script_id,
             folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
             id: this.messaging.publicLivechatGlobal.publicLivechat.id,

@@ -504,6 +504,7 @@
                 <field name="duration_display" string="Duration"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <field name="active_employee" invisible="1"/>
+                <field name="employee_company_id" invisible="1"/>
                 <field name="category_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
@@ -653,7 +654,7 @@
         <field name="search_view_id" ref="hr_leave_view_search_my"/>
         <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_leave_view_kanban')})]"/>
-        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Keep track of your PTOs.

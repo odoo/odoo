@@ -46,19 +46,17 @@ class AccountMove(models.Model):
         views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]
         return dict(action, domain=domain, context=context, views=views)
 
+    def _post(self, soft=True):
+        posted = super()._post(soft)
+        posted.sudo().landed_costs_ids.reconcile_landed_cost()
+        return posted
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     is_landed_costs_line = fields.Boolean()
-
-    @api.depends('is_landed_costs_line')
-    def _compute_account_id(self):
-        landed_costs_lines = self.filtered(lambda l: l.is_landed_costs_line and l.move_id.company_id.anglo_saxon_accounting)
-        for line in landed_costs_lines:
-            line.account_id = line.product_id.product_tmpl_id._get_product_accounts()['stock_input']
-        super(AccountMoveLine, self - landed_costs_lines)._compute_account_id()
 
     @api.onchange('product_id')
     def _onchange_product_id_landed_costs(self):
@@ -75,3 +73,6 @@ class AccountMoveLine(models.Model):
     def _get_stock_valuation_layers(self, move):
         layers = super()._get_stock_valuation_layers(move)
         return layers.filtered(lambda svl: not svl.stock_landed_cost_id)
+
+    def _can_use_stock_accounts(self):
+        return super()._can_use_stock_accounts() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)

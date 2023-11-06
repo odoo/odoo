@@ -147,7 +147,7 @@ QUnit.module('leave_stats_widget', (hooks) => {
         // Set date => shouldn't load data yet (no employee nor department defined)
         await editInput(
             target,
-            "div[name='date_from'] input",
+            "div[name='date_from'] .o_datepicker_input",
             "2016-10-12 09:00:00"
         );
 

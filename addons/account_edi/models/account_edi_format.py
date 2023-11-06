@@ -6,13 +6,19 @@ from odoo.tools.pdf import OdooPdfFileReader
 from odoo.osv import expression
 from odoo.tools import html_escape
 from odoo.exceptions import RedirectWarning
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
 
 from lxml import etree
+from struct import error as StructError
 import base64
 import io
 import logging
 import pathlib
 import re
+
 
 _logger = logging.getLogger(__name__)
 
@@ -36,15 +42,32 @@ class AccountEdiFormat(models.Model):
     def create(self, vals_list):
         edi_formats = super().create(vals_list)
 
+        if not edi_formats:
+            return edi_formats
+
         # activate by default on journal
-        journals = self.env['account.journal'].search([])
-        journals._compute_edi_format_ids()
+        if not self.pool.loaded:
+            # The registry is not totally loaded. We cannot yet recompute the field on jourals as
+            # The helper methods aren't yet overwritten by all installed `l10n_` modules.
+            # Delay it in the register hook
+            self.pool._delay_compute_edi_format_ids = True
+        else:
+            journals = self.env['account.journal'].search([])
+            journals._compute_edi_format_ids()
 
         # activate cron
         if any(edi_format._needs_web_services() for edi_format in edi_formats):
             self.env.ref('account_edi.ir_cron_edi_network').active = True
 
         return edi_formats
+
+    def _register_hook(self):
+        if hasattr(self.pool, "_delay_compute_edi_format_ids"):
+            del self.pool._delay_compute_edi_format_ids
+            journals = self.env['account.journal'].search([])
+            journals._compute_edi_format_ids()
+
+        return super()._register_hook()
 
     ####################################################
     # Export method to override based on EDI Format
@@ -234,14 +257,14 @@ class AccountEdiFormat(models.Model):
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
-            _logger.exception("Error when reading the pdf: %s" % e)
+            _logger.warning("Error when reading the pdf: %s", e, exc_info=True)
             return to_process
 
         # Process embedded files.
         try:
             for xml_name, content in pdf_reader.getAttachments():
                 to_process.extend(self._decode_xml(xml_name, content))
-        except NotImplementedError as e:
+        except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
@@ -286,12 +309,12 @@ class AccountEdiFormat(models.Model):
         content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         to_process = []
 
-        # XML attachments received by mail have a 'text/plain' mimetype.
-        # Therefore, if content start with '<?xml', it is considered as XML.
-        is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
+        # XML attachments received by mail have a 'text/plain' mimetype (cfr. context key: 'attachments_mime_plainxml')
+        # Therefore, if content start with '<?xml', or if the filename ends with '.xml', it is considered as XML.
+        is_text_plain_xml = 'text/plain' in attachment.mimetype and (content.startswith(b'<?xml') or attachment.name.endswith('.xml'))
         if 'pdf' in attachment.mimetype:
             to_process.extend(self._decode_pdf(attachment.name, content))
-        elif 'xml' in attachment.mimetype or is_text_plain_xml:
+        elif attachment.mimetype.endswith('/xml') or is_text_plain_xml:
             to_process.extend(self._decode_xml(attachment.name, content))
         else:
             to_process.extend(self._decode_binary(attachment.name, content))
@@ -324,7 +347,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     def _update_invoice_from_attachment(self, attachment, invoice):
@@ -351,7 +374,7 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
-                    return res
+                    return res._link_invoice_origin_to_purchase_orders(timeout=4)
         return self.env['account.move']
 
     ####################################################

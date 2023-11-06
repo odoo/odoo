@@ -611,4 +611,61 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(target, "a.fa-star", 2);
         }
     );
+
+    QUnit.test("PriorityField - auto save record when field toggled", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="priority" />
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC(_route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+
+        const stars = target.querySelectorAll(
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o"
+        );
+        await click(stars[stars.length - 1]);
+        assert.verifySteps(["write"]);
+    });
+
+    QUnit.test("PriorityField - prevent auto save with autosave option", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="priority" options="{'autosave': False}"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC(_route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+
+        const stars = target.querySelectorAll(
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o"
+        );
+        await click(stars[stars.length - 1]);
+        assert.verifySteps([]);
+    });
+
 });

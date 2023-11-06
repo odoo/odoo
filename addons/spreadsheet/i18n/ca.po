@@ -16,8 +16,9 @@
 # jabelchi, 2022
 # Martin Trigaux, 2022
 # Cristian Cruz, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# martioodo hola, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,8 +26,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:44+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: martioodo hola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -521,6 +522,7 @@ msgstr "Mal format de zona"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_bar_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bar"
 msgstr "Barra"
@@ -761,6 +763,13 @@ msgstr "Netegeu les files"
 #, python-format
 msgid "Clear rows %s - %s"
 msgstr "Neteja les files %s - %s"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Clip"
+msgstr "Clip"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1521,6 +1530,13 @@ msgstr "Camp %s no s'admet pel seu tipus (%s)"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_data_source.js:0
+#, python-format
+msgid "Fields of type \"%s\" are not supported"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "File"
@@ -1801,6 +1817,13 @@ msgstr "Valor futur d'una inversió anual."
 #, python-format
 msgid "Future value of principal from series of rates."
 msgstr "Valor futur del principal a partir de sèries de taxes."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Gauge"
+msgstr "Calibre"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2185,13 +2208,6 @@ msgstr "Fórmula de punt d'inflexió inferior no vàlida"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Invalid merge zone"
-msgstr "Zona de fusió no vàlida"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid ""
 "Invalid number of arguments for the %s function. Expected %s maximum, but "
 "got %s instead."
@@ -2526,6 +2542,7 @@ msgstr "Posició de la llegenda"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_line_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line"
 msgstr "Línia "
@@ -3062,6 +3079,13 @@ msgstr "Octubre"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Overflow"
+msgstr "Desbordament"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Paint Format"
@@ -3164,6 +3188,7 @@ msgstr "Pagament periòdic per una inversió anual."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_pie_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Pie"
 msgstr "Pastís"
@@ -3201,7 +3226,7 @@ msgstr "Valor actual d'una inversió anual."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Preview"
-msgstr "Previsualitza"
+msgstr "Vista prèvia"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3209,7 +3234,7 @@ msgstr "Previsualitza"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Preview text"
-msgstr "Previsualitza el text"
+msgstr "Vista prèvia del text"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3516,7 +3541,14 @@ msgstr "Número de fila d'una cel·la especificada."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Save"
-msgstr "Desa"
+msgstr "Desar"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Scorecard"
+msgstr "Targeta de puntuació"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4980,7 +5012,7 @@ msgstr "El text, una part del qual es substituirà."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The time_string (%s) cannot be parsed to date/time."
-msgstr "La cadena de temps (%s) no es pot analitzar a data/hora."
+msgstr "La time_string (%s) no es pot analitzar a data/hora."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5391,6 +5423,20 @@ msgstr "Mostra totes les files"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Unhide columns"
+msgstr "Mostra les columnes"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Unhide rows"
+msgstr "Mostra les files"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Unknown function: \"%s\""
 msgstr "Funció desconeguda: \"%s\""
 
@@ -5665,6 +5711,13 @@ msgstr "Si el valor proporcionat és parell."
 #, python-format
 msgid "Whether the referenced cell is empty"
 msgstr "Si la cel·la a la qual es fa referència està buida"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Wrap"
+msgstr "Ajusta"
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -1,11 +1,3 @@
-// Generated with http://phrogz.net/css/distinct-colors.html
-// Do not modify the first 12 colors of this list or it will break the colors in the Time Off Calendar
-$o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814968, #eb7e7f, #2c8397, #475577, #d6145f,
-    #30c381, #9365b8, #ff1e00, #bf9600, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85, #007ab3, #6900cc, #ff0048, #c2cc00,
-    #00ffc8, #008cff, #bf0036, #b24400, #d0ff00, #00ffea, #0062b3, #ea00ff, #ff0026, #8bcc00, #00bfaf, #006aff, #af00bf,
-    #bf001d, #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #bf7c00, #04ff00, #00d0ff,
-    #0036bf, #ff008c, #00bf49, #0092b3, #0004ff, #b20062, #649173 !default;
-
 .o_calendar_renderer {
     flex: 1 1 auto;
     min-width: 0;
@@ -511,8 +503,8 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
 }
 
 // ===============  Generate color classes ===============
-@for $i from 1 through length($o-filter_colors) {
-    $color: nth($o-filter_colors, $i);
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
 
     .o_calendar_renderer .fc-view {
         .o_calendar_color_#{$i - 1} {

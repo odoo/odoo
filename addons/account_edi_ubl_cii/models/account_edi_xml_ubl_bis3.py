@@ -50,6 +50,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
+        if not partner.vat:
+            return []
+
         for vals in vals_list:
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
@@ -58,6 +61,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # causing a validation error
             if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
                 vals['company_id'] = "AU" + partner.vat
+
+            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+                vals['company_id'] = partner.l10n_lu_peppol_identifier
 
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
@@ -83,6 +89,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'company_id': endpoint,
                     'company_id_attrs': {'schemeID': scheme},
                 })
+            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+                vals['company_id'] = partner.l10n_lu_peppol_identifier
+            if partner.country_id.code == 'DK':
+                # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
+                # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
+                vals['company_id_attrs'] = {'schemeID': '0184'}
 
         return vals_list
 
@@ -127,6 +139,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'endpoint_id': partner.l10n_sg_unique_entity_number,
                 'endpoint_id_attrs': {'schemeID': '0195'},
             })
+        if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+            vals['endpoint_id'] = partner.l10n_lu_peppol_identifier
 
         return vals
 
@@ -226,9 +240,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_line_allowance_vals_list(self, line):
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         # EXTENDS account.edi.xml.ubl_21
-        vals_list = super()._get_invoice_line_allowance_vals_list(line)
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list=tax_values_list)
 
         for vals in vals_list:
             vals['currency_dp'] = 2
@@ -254,6 +268,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'currency_dp': 2,
+            'ubl_version_id': None,
         })
         vals['vals']['legal_monetary_total_vals']['currency_dp'] = 2
 
@@ -340,9 +355,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
-        for line in invoice.line_ids:
-            if len(line.tax_ids) > 1:
+        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
+                # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         return constraints
@@ -369,7 +385,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'peppol_en16931_ubl_buyer_ref_po_ref':
                 "A buyer reference or purchase order reference must be provided." if self._check_required_fields(
                     vals['vals'], 'buyer_reference'
-                ) and self._check_required_fields(invoice, 'invoice_origin') else None,
+                ) and self._check_required_fields(vals['vals'], 'order_reference') else None,
         }
 
         if vals['supplier'].country_id.code == 'NL':

@@ -46,9 +46,15 @@ class IrBinary(models.AbstractModel):
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
 
-        if record._name == 'ir.attachment':
-            record = record.validate_access(access_token)
+        record = self._find_record_check_access(record, access_token)
+        return record
 
+    def _find_record_check_access(self, record, access_token):
+        if record._name == 'ir.attachment':
+            return record.validate_access(access_token)
+
+        record.check_access_rights('read')
+        record.check_access_rule('read')
         return record
 
     def _record_to_stream(self, record, field_name):
@@ -66,6 +72,7 @@ class IrBinary(models.AbstractModel):
         if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
             return Stream.from_attachment(record)
 
+        record.check_field_access_rights('read', [field_name])
         field_def = record._fields[field_name]
 
         # fields.Binary(attachment=False) or compute/related
@@ -139,6 +146,7 @@ class IrBinary(models.AbstractModel):
             if not stream.download_name:
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
+            stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
             if (not get_extension(stream.download_name)
                 and stream.mimetype != 'application/octet-stream'):
                 stream.download_name += guess_extension(stream.mimetype) or ''
@@ -206,19 +214,19 @@ class IrBinary(models.AbstractModel):
             if not placeholder:
                 placeholder = record._get_placeholder_filename(field_name)
             stream = self._get_placeholder_stream(placeholder)
+            if (width, height) == (0, 0):
+                width, height = image_guess_size_from_field_name(field_name)
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
-
-        if (width, height) == (0, 0):
-            width, height = image_guess_size_from_field_name(field_name)
-        stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
+        if isinstance(stream.etag, str):
+            stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
 
         if isinstance(stream.last_modified, (int, float)):
             stream.last_modified = datetime.utcfromtimestamp(stream.last_modified)
         modified = werkzeug.http.is_resource_modified(
             request.httprequest.environ,
-            etag=stream.etag,
+            etag=stream.etag if isinstance(stream.etag, str) else None,
             last_modified=stream.last_modified
         )
 

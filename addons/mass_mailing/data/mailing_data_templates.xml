@@ -7,7 +7,7 @@
     -->
     <template id="mass_mailing_mail_layout">
         &lt;!DOCTYPE html&gt;
-        <html xmlns="http://www.w3.org/1999/xhtml">
+        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
                 <meta name="format-detection" content="telephone=no"/>
@@ -15,6 +15,19 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
 
                 <t t-call="mass_mailing.mass_mailing_mail_style"/>
+
+                <!--
+                    Prevent Outlook from distorting images with DPI scaling (see
+                    https://www.htmlemailcheck.com/knowledge-base/dpi-scaling-in-outlook-2007-2013/):
+                -->
+                <!--[if mso]>
+                    <xml>
+                        <o:OfficeDocumentSettings>
+                            <o:AllowPNG/>
+                            <o:PixelsPerInch>96</o:PixelsPerInch>
+                        </o:OfficeDocumentSettings>
+                    </xml>
+                <![endif]-->
             </head>
             <body>
                 <t t-out="body"/>
@@ -73,10 +86,15 @@
                 }
             }
             @media screen and (max-width: 1135px) {
+                .o_stacking_wrapper {
+                    width: 100% !important;
+                    height: unset !important;
+                }
                 td {
                     max-width: inherit !important;
                 }
-                td > img:only-child {
+                img:only-child:not(.img-fluid) {
+                    object-fit: cover;
                     min-width: 100% !important;
                 }
                 .o_desktop_h100 {

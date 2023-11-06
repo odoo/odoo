@@ -14,4 +14,5 @@ SectionOneToManyField.defaultProps = {
     editable: "bottom",
 };
 
+SectionOneToManyField.additionalClasses = ['o_field_one2many'];
 registry.category("fields").add("section_one2many", SectionOneToManyField);

@@ -45,7 +45,7 @@ class Forum(models.Model):
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', translate=html_translate, sanitize=False)
+    faq = fields.Html('Guidelines', translate=html_translate, sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
     teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
@@ -243,6 +243,8 @@ class Forum(models.Model):
         return post_tags
 
     def _compute_website_url(self):
+        if not self.id:
+            return False
         return '/forum/%s' % (slug(self))
 
     def get_tags_first_char(self):
@@ -252,7 +254,10 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return self.env['website'].get_client_action(self._compute_website_url())
+        website_url = self._compute_website_url()
+        if not website_url:
+            return False
+        return self.env['website'].get_client_action(website_url)
 
     @api.model
     def _update_website_count(self):
@@ -482,6 +487,7 @@ class Post(models.Model):
             post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
+            post.karma_flag = post.forum_id.karma_flag
 
             post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
             post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
@@ -493,7 +499,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
+            post.can_view = post.can_close or post_sudo.active and (post_sudo.create_uid.karma > 0 or post_sudo.create_uid == user)
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
@@ -792,22 +798,19 @@ class Post(models.Model):
         return False
 
     def vote(self, upvote=True):
+        self.ensure_one()
         Vote = self.env['forum.post.vote']
-        vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
-        new_vote = '1' if upvote else '-1'
-        voted_forum_ids = set()
-        if vote_ids:
-            for vote in vote_ids:
-                if upvote:
-                    new_vote = '0' if vote.vote == '-1' else '1'
-                else:
-                    new_vote = '0' if vote.vote == '1' else '-1'
-                vote.vote = new_vote
-                voted_forum_ids.add(vote.post_id.id)
-        for post_id in set(self._ids) - voted_forum_ids:
-            for post_id in self._ids:
-                Vote.create({'post_id': post_id, 'vote': new_vote})
-        return {'vote_count': self.vote_count, 'user_vote': new_vote}
+        existing_vote = Vote.search([('post_id', '=', self.id), ('user_id', '=', self._uid)])
+        new_vote_value = '1' if upvote else '-1'
+        if existing_vote:
+            if upvote:
+                new_vote_value = '0' if existing_vote.vote == '-1' else '1'
+            else:
+                new_vote_value = '0' if existing_vote.vote == '1' else '-1'
+            existing_vote.vote = new_vote_value
+        else:
+            Vote.create({'post_id': self.id, 'vote': new_vote_value})
+        return {'vote_count': self.vote_count, 'user_vote': new_vote_value}
 
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
@@ -966,7 +969,8 @@ class Post(models.Model):
         return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        for post in self:
+        self.website_url = False
+        for post in self.filtered(lambda post: post.id):
             forum_slug = slug(post.forum_id)
             post_slug = slug(post)
             anchor = post.parent_id and '#answer_%d' % post.id or ''
@@ -974,6 +978,8 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
+        if not self.website_url:
+            return False
         return self.env['website'].get_client_action(self.website_url)
 
     @api.model
@@ -1158,10 +1164,10 @@ class Tags(models.Model):
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
-    @api.depends("post_ids.tag_ids", "post_ids.state")
+    @api.depends("post_ids", "post_ids.tag_ids", "post_ids.state", "post_ids.active")
     def _get_posts_count(self):
         for tag in self:
-            tag.posts_count = len(tag.post_ids)
+            tag.posts_count = len(tag.post_ids)  # state filter is in field domain
 
     @api.model_create_multi
     def create(self, vals_list):

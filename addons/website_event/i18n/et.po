@@ -14,17 +14,17 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Patrick-Jordan Kiudorv, 2022
 # Leaanika Randmets, 2022
-# Jana Jaakson, 2022
+# JanaAvalah, 2023
 # Anna, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-07 08:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Anna, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -61,7 +61,7 @@ msgstr ""
 "                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
@@ -313,12 +313,14 @@ msgid "Add to Calendar"
 msgstr "Lisage kalendrisse"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Kõik riigid"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "All Events"
@@ -363,6 +365,7 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Business Workshops"
@@ -391,6 +394,7 @@ msgid "Close"
 msgstr "Sulge"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
@@ -411,6 +415,7 @@ msgid "Company"
 msgstr "Ettevõte"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Conference For Architects"
@@ -444,7 +449,7 @@ msgstr "Loomise kuupäev"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Date"
-msgstr "Date"
+msgstr "Kuupäev"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -483,16 +488,11 @@ msgid "Display community tab on website"
 msgstr "Kuva kogukonna vahekaart veebilehel"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Don't forget to click <b>save</b> when you're done."
 msgstr "Ärge unustage vajutada <b>salvesta</b> kui on valmis. "
-
-#. module: website_event
-#: model:ir.ui.menu,name:website_event.menu_edit_menu
-msgid "Edit Event Menu"
-msgstr "Muuda sündmuste menüüd"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -599,10 +599,12 @@ msgid "Event unpublished"
 msgstr "Sündmus on avalikustamata"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website.py:0
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
 msgstr "Sündmused"
@@ -622,7 +624,7 @@ msgstr "Aegunud"
 #: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Extra Register Button"
-msgstr ""
+msgstr "Lisaregistreerimise nupp"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -630,6 +632,8 @@ msgid ""
 "Find out what people see and say about this event, and join the "
 "conversation."
 msgstr ""
+"Uurige, mida inimesed selle sündmuse kohta näevad ja räägivad, ning liituge "
+"vestlusega."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -640,7 +644,7 @@ msgstr "Voldi piletite üksikasjad"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Follow Us"
-msgstr "Jälgi meid"
+msgstr "Jälgige meid"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
@@ -650,7 +654,7 @@ msgstr "Kõikidel sündmustel kuvatakse järgmine sisu."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get the direction"
-msgstr ""
+msgstr "Hankige juhiseid"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -658,6 +662,7 @@ msgid "Google"
 msgstr "Google"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Great Reno Ballon Race"
@@ -669,6 +674,7 @@ msgid "Grid"
 msgstr "Võrgustik"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Hockey Tournament"
@@ -680,6 +686,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
 #, python-format
@@ -689,12 +696,12 @@ msgstr "Esitlemine"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu
 msgid "Introduction Menu"
-msgstr ""
+msgstr "Sissejuhatav menüü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu_ids
 msgid "Introduction Menus"
-msgstr ""
+msgstr "Sissejuhatavad menüü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_done
@@ -748,12 +755,14 @@ msgid "List"
 msgstr "Loend"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Live Music Festival"
 msgstr "Elava muusika festival"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__location
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -772,13 +781,15 @@ msgid "Location Menus"
 msgstr "Asukoha menüüd"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
 "Looking great! Let's now <b>publish</b> this page so that it becomes "
 "<b>visible</b> on your website!"
 msgstr ""
+"Näeb hea välja! Nüüd <b>avaldame</b> selle lehe, et see oleks teie "
+"veebisaidil <b>nähtav</b>!"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -811,6 +822,7 @@ msgid "New Event"
 msgstr "Uus üritus"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website.py:0
 #, python-format
 msgid "Next Events"
@@ -819,7 +831,7 @@ msgstr "Järgmised üritused"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "No Website Menu Items yet!"
-msgstr ""
+msgstr "Veebisaidi menüüelemente pole veel!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -829,7 +841,7 @@ msgstr "Sündmusi ei leitud."
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
 msgid "No registration linked to this visitor"
-msgstr ""
+msgstr "Selle külastajaga pole seotud registreerimist"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -842,10 +854,11 @@ msgid "Not Published"
 msgstr "Avaldamata"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "OpenWood Collection Online Reveal"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -858,6 +871,7 @@ msgid "Our Trainings"
 msgstr "Meie treeningud"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Past Events"
@@ -875,7 +889,7 @@ msgid "Photos"
 msgstr "Pildid"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/website_event.js:0
 #, python-format
 msgid "Please select at least one ticket."
@@ -903,7 +917,8 @@ msgid "Ref:"
 msgstr "Viide:"
 
 #. module: website_event
-#. openerp-web
+#. odoo-python
+#. odoo-javascript
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -921,12 +936,12 @@ msgstr "Registreerimisnupp"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 msgid "Register Menu"
-msgstr ""
+msgstr "Registreerimismenüü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu_ids
 msgid "Register Menus"
-msgstr ""
+msgstr "Registreerimismenüüd"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -934,6 +949,7 @@ msgid "Registered Events"
 msgstr "Registreeritud sündmused"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
@@ -1083,13 +1099,14 @@ msgid "The full URL to access the document through the website."
 msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "This month"
 msgstr "See kuu"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This shortcut will bring you right back to the event form."
@@ -1099,6 +1116,13 @@ msgstr "See otsetee viib teid tagasi sündmuse vormi juurde. "
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "This technical menu displays all event sub-menu items."
 msgstr "Antud tehniline menüü näitab kõiki sündmuse alammenüü üksusi. "
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1116,6 +1140,7 @@ msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr "Antud sündmuse piletid on <b>välja müüdud</b>"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Today"
@@ -1132,6 +1157,7 @@ msgid "Top Bar Filter"
 msgstr "Ülemise rea filter"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1145,7 +1171,7 @@ msgid "Use the top button '<b>+ New</b>' to create an event."
 msgstr "Kasutage ülemist nuppu '<b>+ Uus</b>' sündmuse loomiseks. "
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use this <b>shortcut</b> to easily access your event web page."
@@ -1264,16 +1290,18 @@ msgstr "Kas sündmus on alanud"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_today
 msgid "Whether event is going to start today if still not ongoing"
-msgstr ""
+msgstr "Whether event is going to start today if still not ongoing"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registering."
 msgstr ""
+"Redigeerimisnupuga saate <b>kohandada</b> veebilehte, mida külastajad "
+"registreerumisel näevad."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template

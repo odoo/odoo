@@ -608,4 +608,27 @@ QUnit.test('Activity view: apply progressbar filter', async function (assert) {
         "other records should be hidden");
 });
 
+QUnit.test("Activity view: luxon in renderingContext", async function (assert) {
+    Object.assign(serverData.views, {
+        "mail.test.activity,false,activity": `
+                <activity string="MailTestActivity">
+                    <templates>
+                        <div t-name="activity-box">
+                            <t t-if="luxon">
+                                <span class="luxon">luxon</span>
+                            </t>
+                        </div>
+                    </templates>
+                </activity>`,
+    });
+    const { openView } = await start({
+        serverData,
+    });
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    assert.containsN(document.body, ".luxon", 2);
+});
+
 });

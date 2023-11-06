@@ -154,6 +154,18 @@ QUnit.module(
             );
         });
 
+        QUnit.test("parseDate with different numbering system", async (assert) => {
+            patchWithCleanup(localization, {
+                dateFormat: "dd MMM, yyyy",
+                dateTimeFormat: "dd MMM, yyyy hh:mm:ss",
+                timeFormat: "hh:mm:ss",
+            });
+
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab", defaultLocale: "ar" });
+
+            assert.equal(parseDate("٠١ فبراير, ٢٠٢٣").toISO(), "2023-02-01T00:00:00.000+01:00");
+        });
+
         QUnit.test("parseDateTime", async (assert) => {
             patch(localization, "default loc", defaultLocalization);
 
@@ -308,6 +320,24 @@ QUnit.module(
             assert.equal(
                 parseDateTime("31/01/1985 08").toFormat(dateTimeFormat),
                 "31.01/1985 08:00/00"
+            );
+            unpatch(localization, "patch loc");
+        });
+
+        QUnit.test("parseDateTime with escaped characters (eg. Basque locale)", async (assert) => {
+            const dateFormat = strftimeToLuxonFormat("%a, %Y.eko %bren %da");
+            const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
+            patch(localization, "patch loc", {
+                dateFormat,
+                timeFormat,
+                dateTimeFormat: `${dateFormat} ${timeFormat}`,
+            });
+
+            const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+            assert.equal(dateTimeFormat, "ccc, yyyy.'e''k''o' MMM'r''e''n' dd'a' HH:mm:ss");
+            assert.equal(
+                parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat),
+                "Thu, 1985.eko Janren 31a 08:30:00"
             );
             unpatch(localization, "patch loc");
         });
@@ -635,7 +665,7 @@ QUnit.module(
              * Type of testSet value: [newExpected: string, legacyExpected: string]
              */
             const testSet = new Map([
-                ["10101010101010", ["1010-10-10T00:00:00.000Z"]],
+                ["10101010101010", [undefined, "1010-10-10T00:00:00.000Z"]],
                 ["1191111", ["1191-04-21T00:00:00.000Z"]], // day 111 of year 1191
                 ["11911111", ["1191-11-11T00:00:00.000Z"]],
                 ["3101", ["2020-01-31T00:00:00.000Z"]],
@@ -652,8 +682,8 @@ QUnit.module(
                 ["310197", ["1997-01-31T00:00:00.000Z"]],
                 ["310117", ["2017-01-31T00:00:00.000Z"]],
                 ["31011985", ["1985-01-31T00:00:00.000Z"]],
-                ["3101198508", ["1985-01-31T00:00:00.000Z"]],
-                ["310119850833", ["1985-01-31T00:00:00.000Z"]],
+                ["3101198508", [undefined, "1985-01-31T00:00:00.000Z"]],
+                ["310119850833", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["1137", [undefined]],
                 ["1197", [undefined]],
@@ -667,7 +697,7 @@ QUnit.module(
 
                 ["970131", [undefined]],
                 ["31.01", ["2020-01-31T00:00:00.000Z"]],
-                ["31/01/1985 08", ["1985-01-31T00:00:00.000Z"]],
+                ["31/01/1985 08", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["01121934", ["1934-12-01T00:00:00.000Z"]],
                 ["011234", ["2034-12-01T00:00:00.000Z"]],
@@ -1088,5 +1118,43 @@ QUnit.module(
                         .toISOString(),
             });
         });
+
+        QUnit.test(
+            "parseDateTime: arab locale, latin numbering system as input",
+            async (assert) => {
+                const dateFormat = "dd MMM, yyyy";
+                const timeFormat = "hh:mm:ss";
+
+                patchWithCleanup(localization, {
+                    dateFormat,
+                    timeFormat,
+                    dateTimeFormat: `${dateFormat} ${timeFormat}`,
+                });
+                patchWithCleanup(Settings, {
+                    defaultLocale: "ar-001",
+                    defaultNumberingSystem: "arab",
+                });
+
+                // Check it works with arab
+                assert.strictEqual(
+                    parseDateTime("١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+
+                // Check it also works with latin numbers
+                assert.strictEqual(
+                    parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+                assert.strictEqual(
+                    parseDateTime("22/01/2023").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+                assert.strictEqual(
+                    parseDateTime("2023-01-22").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+            }
+        );
     }
 );

@@ -26,6 +26,7 @@ from lxml import etree, html
 from psycopg2.extras import Json
 
 import odoo
+from odoo.exceptions import UserError
 from odoo.modules.module import get_resource_path
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
@@ -37,7 +38,7 @@ PYTHON_TRANSLATION_COMMENT = 'odoo-python'
 # translation used for javascript code in web client
 JAVASCRIPT_TRANSLATION_COMMENT = 'odoo-javascript'
 # used to notify web client that these translations should be loaded in the UI
-# depreciated comment since Odoo 16.0
+# deprecated comment since Odoo 16.0
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
 SKIPPED_ELEMENTS = ('script', 'style', 'title')
@@ -147,7 +148,7 @@ TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
-    'sup', 'time', 'u', 'var', 'wbr', 'text',
+    'sup', 'time', 'u', 'var', 'wbr', 'text', 'select', 'option',
 }
 
 # Which attributes must be translated. This is a dict, where the value indicates
@@ -293,7 +294,11 @@ def serialize_xml(node):
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
-    return html.fragment_fromstring(text, parser=_HTML_PARSER)
+    try:
+        parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
+    except TypeError as e:
+        raise UserError(_("Error while parsing view:\n\n%s") % e) from e
+    return parse
 
 def serialize_html(node):
     return etree.tostring(node, method='html', encoding='unicode')
@@ -472,7 +477,7 @@ class GettextAlias(object):
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
-                    module = path_info[0] if path_info else None
+                    module = path_info[0] if path_info else 'base'
                 return code_translations.get_python_translations(module, lang).get(source, source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
@@ -510,7 +515,7 @@ class _lt:
         frame = inspect.currentframe().f_back
         path = inspect.getfile(frame)
         path_info = odoo.modules.get_resource_from_path(path)
-        self._module = path_info[0] if path_info else None
+        self._module = path_info[0] if path_info else 'base'
 
     def __str__(self):
         # Call _._get_translation() like _() does, so that we have the same number
@@ -1256,7 +1261,7 @@ class TranslationImporter:
             reader = TranslationFileReader(fileobj, fileformat=fileformat)
             self._load(reader, lang, xmlids)
         except IOError:
-            iso_lang = get_iso_codes(self.lang)
+            iso_lang = get_iso_codes(lang)
             filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
             _logger.exception("couldn't read translation file %s", filename)
 
@@ -1392,6 +1397,7 @@ class TranslationImporter:
         self.model_translations.clear()
 
         env.invalidate_all()
+        env.registry.clear_caches()
         if self.verbose:
             _logger.info("translations are loaded successfully")
 
@@ -1412,7 +1418,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, overwrite=False
 
 def get_locales(lang=None):
     if lang is None:
-        lang = locale.getdefaultlocale()[0]
+        lang = locale.getlocale()[0]
 
     if os.name == 'nt':
         lang = _LOCALE2WIN32.get(lang, lang)
@@ -1516,7 +1522,7 @@ class CodeTranslations:
         def filter_func(row):
             # In the pot files with new translations, a code translation should have either
             # PYTHON_TRANSLATION_COMMENT or JAVASCRIPT_TRANSLATION_COMMENT for comments.
-            # If a comment has neither the above comments, the pot file uses the depreciated
+            # If a comment has neither the above comments, the pot file uses the deprecated
             # comments. And all code translations are stored as python translations.
             return row.get('value') and (
                     PYTHON_TRANSLATION_COMMENT in row['comments']
@@ -1562,23 +1568,49 @@ def _get_translation_upgrade_queries(cr, field):
     if field.translate is True:
         query = f"""
             WITH t AS (
-                SELECT res_id, jsonb_object_agg(lang, value) AS value
-                  FROM _ir_translation
-                 WHERE type = 'model' AND name = %s AND state = 'translated'
-              GROUP BY res_id
+                SELECT it.res_id as res_id, jsonb_object_agg(it.lang, it.value) AS value, bool_or(imd.noupdate) AS noupdate
+                  FROM _ir_translation it
+             LEFT JOIN ir_model_data imd
+                    ON imd.model = %s AND imd.res_id = it.res_id
+                 WHERE it.type = 'model' AND it.name = %s AND it.state = 'translated'
+              GROUP BY it.res_id
             )
             UPDATE {Model._table} m
-               SET "{field.name}" =  t.value || m."{field.name}"
+               SET "{field.name}" = CASE WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
+                                         ELSE m."{field.name}" || t.value
+                                     END
               FROM t
              WHERE t.res_id = m.id
         """
-        migrate_queries.append(cr.mogrify(query, [translation_name]).decode())
+        migrate_queries.append(cr.mogrify(query, [Model._name, translation_name]).decode())
 
         query = "DELETE FROM _ir_translation WHERE type = 'model' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
+        cr.execute("SELECT code FROM res_lang WHERE active = 't'")
+        languages = {l[0] for l in cr.fetchall()}
+        query = f"""
+            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
+              FROM t
+              JOIN "{Model._table}" m ON t.res_id = m.id
+        """
+        if translation_name == 'ir.ui.view,arch_db':
+            cr.execute("SELECT id from ir_module_module WHERE name = 'website' AND state='installed'")
+            if cr.fetchone():
+                query = f"""
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, l.code
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                      JOIN website w ON m.website_id = w.id
+                      JOIN res_lang l ON w.default_lang_id = l.id
+                    UNION
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, 'en_US'
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                     WHERE m.website_id IS NULL
+                """
         cr.execute(f"""
             WITH t0 AS (
                 -- aggregate translations by source term --
@@ -1589,27 +1621,25 @@ def _get_translation_upgrade_queries(cr, field):
             ),
             t AS (
                 -- aggregate translations by lang --
-                SELECT res_id, jsonb_object_agg(lang, value) AS value
+                SELECT t0.res_id AS res_id, jsonb_object_agg(t0.lang, t0.value) AS value, bool_or(imd.noupdate) AS noupdate
                   FROM t0
-              GROUP BY res_id
-            )
-            SELECT t.res_id, m."{field.name}", t.value
-              FROM t
-              JOIN "{Model._table}" m ON t.res_id = m.id
-        """, [translation_name])
-        for id_, old_values, translations in cr.fetchall():
-            if not old_values:
+             LEFT JOIN ir_model_data imd
+                    ON imd.model = %s AND imd.res_id = t0.res_id
+              GROUP BY t0.res_id
+            )""" + query, [translation_name, Model._name])
+        for id_, new_translations, translations, noupdate, *extra in cr.fetchall():
+            if not new_translations:
                 continue
-            # 'old_values' contain terms possibly updated from PO files during
-            #  the upgrade of modules; prefer those terms over the ones from
-            #  the out-of-date 'translations' dict
-            src_value = old_values.pop('en_US')
+            # new_translations contains translations updated from the latest po files
+            src_value = new_translations.pop('en_US')
             src_terms = field.get_trans_terms(src_value)
-            for lang, dst_value in old_values.items():
+            for lang, dst_value in new_translations.items():
                 terms_mapping = translations.setdefault(lang, {})
                 dst_terms = field.get_trans_terms(dst_value)
                 for src_term, dst_term in zip(src_terms, dst_terms):
-                    if src_term != dst_term:
+                    if src_term == dst_term or noupdate:
+                        terms_mapping.setdefault(src_term, dst_term)
+                    else:
                         terms_mapping[src_term] = dst_term
             new_values = {
                 lang: field.translate(terms_mapping.get, src_value)
@@ -1617,6 +1647,14 @@ def _get_translation_upgrade_queries(cr, field):
             }
             if "en_US" not in new_values:
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
+            if extra and extra[0] not in new_values:
+                new_values[extra[0]] = field.translate(lambda v: None, src_value)
+            elif not extra:
+                missing_languages = languages - set(translations)
+                if missing_languages:
+                    src_value = field.translate(lambda v: None, src_value)
+                    for lang in sorted(missing_languages):
+                        new_values[lang] = src_value
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 

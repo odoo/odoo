@@ -35,7 +35,7 @@
                                         Process transfers in batch per worker
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
-                                        <field name="group_stock_picking_wave" class="col-lg-1 ml16 mr0"/>
+                                        <field name="group_stock_picking_wave" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                         <div class="col ps-0">
                                             <label for="group_stock_picking_wave"/>
                                             <div class="text-muted">Process operations in wave transfers</div>
@@ -64,7 +64,7 @@
                                         Add quality checks to your transfer operations
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
-                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                         <div class="col ps-0">
                                             <label for="module_quality_control_worksheet"/>
                                             <div class="text-muted">
@@ -347,7 +347,7 @@
                                         Get a full traceability from vendors to customers
                                     </div>
                                     <div class="row mt-2" attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
-                                        <field name="group_stock_lot_print_gs1" class="col-lg-1 ml16 mr0"/>
+                                        <field name="group_stock_lot_print_gs1" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                         <div class="col ps-0">
                                             <label for="group_stock_lot_print_gs1"/>
                                             <div class="text-muted">Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and serial numbers.</div>
@@ -403,7 +403,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_stock_multi_locations"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/warehouses/difference_warehouse_location.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/warehouses/warehouses_locations.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Track product location in your warehouse
                                     </div>
@@ -423,7 +423,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_stock_adv_location"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/routes/concepts/use-routes.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/routes/concepts/use_routes.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Use your own routes
                                     </div>

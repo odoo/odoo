@@ -174,7 +174,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             activity.note,
         )
 
-    def test_onchange_packaging_00(self):
+    def test_compute_packaging_00(self):
         """Create a PO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
@@ -219,7 +219,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.product_qty, 12)
 
         # Do the same test but without form, to check the `product_packaging_id` and `product_packaging_qty` are set
-        # without manual call to onchanges
+        # without manual call to compute
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -237,6 +237,43 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.order_line.product_packaging_qty = 1.0
         self.assertEqual(po.order_line.product_qty, 12)
 
+    def test_compute_packaging_01(self):
+        """Create a PO and use packaging in a multicompany environment.
+        Ensure any suggested packaging matches the PO's.
+        """
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        generic_single_pack = self.env['product.packaging'].create({
+            'name': "single pack",
+            'product_id': self.product_a.id,
+            'qty': 1.0,
+            'company_id': False,
+        })
+        company2_pack_of_10 = self.env['product.packaging'].create({
+            'name': "pack of 10 by Company 2",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+            'company_id': company2.id,
+        })
+
+        po1 = self.env['purchase.order'].with_company(company1).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po1.order_line.product_packaging_id, generic_single_pack)
+        self.assertEqual(po1.order_line.product_packaging_qty, 10.0)
+
+        # verify that with the right company, we can get the other packaging
+        po2 = self.env['purchase.order'].with_company(company2).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
+        self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
@@ -291,9 +328,12 @@ class TestPurchase(AccountTestInvoicingCommon):
         pol.product_qty += 1
         self.assertEqual(pol.name, "New custom description")
 
-    def test_unit_price_precision_multicurrency(self):
+    def test_purchase_multicurrency(self):
         """
         Purchase order lines should keep unit price precision of products
+        Also the products having prices in different currencies should be
+        correctly handled when creating a purchase order i-e product having a price of 100 usd
+        and when purchasing in EUR company the correct conversion should be applied
         """
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
@@ -333,3 +373,131 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product
         purchase_order_coco = po_form.save()
         self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
+
+        #check if the correct currency is set on the purchase order by comparing the expected price and actual price
+
+        company_a = self.company_data['company']
+        company_b = self.company_data_2['company']
+
+        company_b.currency_id = currency
+
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'rate': 2,
+            'currency_id': currency.id,
+            'company_id': company_b.id,
+        })
+
+        product_b = self.env['product.product'].with_company(company_a).create({
+            'name': 'product_2',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 0.0,
+        })
+
+        self.assertEqual(product_b.cost_currency_id, company_a.currency_id, 'The cost currency should be the one set on'
+                                                                            ' the company')
+
+        product_b = product_b.with_company(company_b)
+
+        self.assertEqual(product_b.cost_currency_id, currency, 'The cost currency should be the one set on the company,'
+                                                               ' as the product is now opened in another company')
+
+        product_b.supplier_taxes_id = False
+        product_b.update({'standard_price': 10.0})
+
+        #create a purchase order with the product from company B
+        order_b = self.env['purchase.order'].with_company(company_b).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product_b.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+            })],
+        })
+
+        self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
+
+    def test_purchase_not_creating_useless_product_vendor(self):
+        """ This test ensures that the product vendor is not created when the
+        product is not set on the purchase order line.
+        """
+
+        #create a contact of type contact
+        contact = self.env['res.partner'].create({
+            'name': 'Contact',
+            'type': 'contact',
+        })
+
+        #create a contact of type Delivery Address lnked to the contact
+        delivery_address = self.env['res.partner'].create({
+            'name': 'Delivery Address',
+            'type': 'delivery',
+            'parent_id': contact.id,
+        })
+
+        #create a product that use the delivery address as vendor
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'seller_ids': [(0, 0, {
+                'partner_id': delivery_address.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })]
+        })
+
+        #create a purchase order with the delivery address as partner
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = delivery_address
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_id.seller_ids.mapped('partner_id'), delivery_address)
+
+    def test_supplier_list_in_product_with_multicompany(self):
+        """
+        Check that a different supplier list can be added to a product for each company.
+        """
+        company_a = self.company_data['company']
+        company_b = self.company_data_2['company']
+        product = self.env['product.product'].create({
+            'name': 'product_test',
+        })
+        # create a purchase order in the company A
+        self.env['purchase.order'].with_company(company_a).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': 1,
+            })],
+        }).button_confirm()
+
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+        # switch to the company B
+        self.env['purchase.order'].with_company(company_b).create({
+            'partner_id': self.partner_b.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': 2,
+            })],
+        }).button_confirm()
+        product = product.with_company(company_b)
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_b)
+        self.assertEqual(product.seller_ids[0].company_id, company_b)
+
+        # Switch to the company A and check that the vendor list is still the same
+        product = product.with_company(company_a)
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+        product._invalidate_cache()
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)

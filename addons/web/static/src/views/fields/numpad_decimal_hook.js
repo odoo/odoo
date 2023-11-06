@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { localization } from "@web/core/l10n/localization";
+import { isIOS } from "@web/core/browser/feature_detection";
 
 import { useRef, useEffect } from "@odoo/owl";
 
@@ -14,10 +15,15 @@ import { useRef, useEffect } from "@odoo/owl";
  *
  * NOTE: Special consideration for the input type = "number". In this
  * case, whatever the user types, we let the browser's default behavior.
+ *
+ * NOTE: On IOS devices, the inputmode attribute prevents the user from
+ * entering a negative number (the minus sign is not on the virtual keyboard),
+ * so we need to remove it.
  */
 export function useNumpadDecimal() {
     const decimalPoint = localization.decimalPoint;
     const ref = useRef("numpadDecimal");
+    const isIOSDevice = isIOS();
     const handler = (ev) => {
         if (
             !([".", ","].includes(ev.key) && ev.code === "NumpadDecimal") ||
@@ -39,7 +45,12 @@ export function useNumpadDecimal() {
         const el = ref.el;
         if (el) {
             inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
-            inputs.forEach((input) => input.addEventListener("keydown", handler));
+            inputs.forEach((input) => {
+                input.addEventListener("keydown", handler);
+                if (isIOSDevice) {
+                    input.removeAttribute("inputmode");
+                }
+            });
         }
         return () => {
             inputs.forEach((input) => input.removeEventListener("keydown", handler));

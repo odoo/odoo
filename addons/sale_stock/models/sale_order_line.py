@@ -147,7 +147,7 @@ class SaleOrderLine(models.Model):
             if not line.is_expense and line.product_id.type in ['consu', 'product']:
                 line.qty_delivered_method = 'stock_move'
 
-    @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.quantity_done', 'move_ids.product_uom')
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
@@ -158,11 +158,11 @@ class SaleOrderLine(models.Model):
                 for move in outgoing_moves:
                     if move.state != 'done':
                         continue
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    qty += move.product_uom._compute_quantity(move.quantity_done, line.product_uom, rounding_method='HALF-UP')
                 for move in incoming_moves:
                     if move.state != 'done':
                         continue
-                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                    qty -= move.product_uom._compute_quantity(move.quantity_done, line.product_uom, rounding_method='HALF-UP')
                 line.qty_delivered = qty
 
     @api.model_create_multi
@@ -175,6 +175,11 @@ class SaleOrderLine(models.Model):
         lines = self.env['sale.order.line']
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
+
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(
+                lambda m: m.state not in ['cancel', 'done']
+            ).product_packaging_id = values['product_packaging_id']
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
@@ -332,7 +337,10 @@ class SaleOrderLine(models.Model):
                 line.order_id.partner_shipping_id.property_stock_customer,
                 line.product_id.display_name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
-            self.env['procurement.group'].run(procurements)
+            procurement_group = self.env['procurement.group']
+            if self.env.context.get('import_file'):
+                procurement_group = procurement_group.with_context(import_file=False)
+            procurement_group.run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
         orders = self.mapped('order_id')

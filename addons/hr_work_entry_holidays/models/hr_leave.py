@@ -171,7 +171,7 @@ Contracts:
         stop = max(self.mapped('date_to') + [fields.Datetime.from_string(vals.get('date_to', False)) or datetime.min])
         employee_ids = self.employee_id.ids
         if 'employee_id' in vals and vals['employee_id']:
-            employee_ids += vals['employee_id']
+            employee_ids += [vals['employee_id']]
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check, employee_ids=employee_ids):
             return super().write(vals)
 
@@ -238,7 +238,7 @@ Contracts:
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
             # Use sudo otherwise base users can't compute number of days
-            contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open'])
+            contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
             contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
             calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
             # We force the company in the domain as we are more than likely in a compute_sudo
@@ -253,7 +253,7 @@ Contracts:
     def _get_calendar(self):
         self.ensure_one()
         if self.date_from and self.date_to:
-            contracts = self.employee_id.sudo()._get_contracts(self.date_from, self.date_to, states=['open'])
+            contracts = self.employee_id.sudo()._get_contracts(self.date_from, self.date_to, states=['open', 'close'])
             contracts |= self.employee_id.sudo()._get_incoming_contracts(self.date_from, self.date_to)
             contract_calendar = contracts[:1].resource_calendar_id if contracts else None
             return contract_calendar or self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id

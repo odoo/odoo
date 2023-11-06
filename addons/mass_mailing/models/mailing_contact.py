@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -178,11 +178,12 @@ class MassMailingContact(models.Model):
         return contact.name_get()[0]
 
     def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email_normalized,
-            'email_cc': False}
-            for r in self
+        return {
+            r.id: {
+                'partner_ids': [],
+                'email_to': ','.join(tools.email_normalize_all(r.email)) or r.email,
+                'email_cc': False,
+            } for r in self
         }
 
     def action_add_to_mailing_list(self):

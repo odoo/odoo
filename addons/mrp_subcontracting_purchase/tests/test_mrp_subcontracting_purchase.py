@@ -93,15 +93,14 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po.order_line.product_qty = product_qty
         sub_mos = receipt._get_subcontract_production()
         self.assertEqual(sum(receipt.move_ids.mapped('product_qty')), product_qty, "Qty of subcontracted product to receive should update (not validated yet)")
-        self.assertEqual(len(sub_mos), 2, "A new subcontracting MO should have been created")
+        self.assertEqual(len(sub_mos), 1, "The subcontracted mo should have been updated")
 
         # check that a neg qty can't proprogate once receipt is done
         for move in receipt.move_ids:
             move.move_line_ids.qty_done = move.product_qty
         receipt.button_validate()
         self.assertEqual(receipt.state, 'done')
-        self.assertEqual(sub_mos[0].state, 'done')
-        self.assertEqual(sub_mos[1].state, 'done')
+        self.assertEqual(sub_mos.state, 'done')
         with self.assertRaises(UserError):
             po.order_line.product_qty = lower_qty
 
@@ -185,3 +184,101 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(self.finished2.qty_available, 7.0)
         self.assertEqual(po.order_line.qty_received, 10.0)
+
+    def test_orderpoint_warehouse_not_required(self):
+        """
+        The user creates a subcontracted bom for the product,
+        then we create a po for the subcontracted bom we are gonna get
+        orderpoints for the components without warehouse.Notice this is
+        when our subcontracting location is also a replenish location.
+        The test ensure that we can get those orderpoints without warehouse.
+        """
+        # Create a second warehouse to check which one will be used
+        self.env['stock.warehouse'].create({'name': 'Second WH', 'code': 'WH02'})
+
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'detailed_type': 'product',
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'detailed_type': 'product',
+        })
+        subcontractor = self.env['res.partner'].create({
+            'name': 'Subcontractor',
+            'property_stock_subcontractor': self.env.company.subcontracting_location_id.id,
+        })
+        self.env.company.subcontracting_location_id.replenish_location = True
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': product.uom_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [(subcontractor.id)],
+            'bom_line_ids': [(0, 0, {
+                    'product_id': component.id,
+                    'product_qty': 1,
+                    'product_uom_id': component.uom_id.id,
+            })],
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': subcontractor.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 1,
+                'product_uom': product.uom_id.id,
+                'name': product.name,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', component.id)])
+        self.assertTrue(orderpoint)
+        self.assertEqual(orderpoint.warehouse_id, self.warehouse)
+
+    def test_return_and_decrease_pol_qty(self):
+        """
+        Buy and receive 10 subcontracted products. Return one. Then adapt the
+        demand on the PO to 9.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity_done = 10
+        receipt.button_validate()
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
+        wizard = return_form.save()
+        wizard.product_return_moves.quantity = 1.0
+        return_picking_id, _pick_type_id = wizard._create_returns()
+
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_ids.quantity_done = 1.0
+        return_picking.button_validate()
+
+        pol = po.order_line
+        pol.product_qty = 9.0
+
+        stock_location_id = self.warehouse.lot_stock_id
+        subco_location_id = self.env.company.subcontracting_location_id
+        self.assertEqual(pol.qty_received, 9.0)
+        self.assertEqual(pol.product_qty, 9.0)
+        self.assertEqual(len(po.picking_ids), 2)
+        self.assertRecordValues(po.picking_ids.move_ids, [
+            {'location_dest_id': stock_location_id.id, 'quantity_done': 10.0, 'state': 'done'},
+            {'location_dest_id': subco_location_id.id, 'quantity_done': 1.0, 'state': 'done'},
+        ])

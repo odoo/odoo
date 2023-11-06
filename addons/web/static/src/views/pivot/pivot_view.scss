@@ -22,6 +22,19 @@
     .o_pivot_cell_value.o_cell_hover {
         background-color: $table-hover-bg;
     }
+
+    .o_pivot_cell_value {
+        /*rtl:ignore*/
+        text-align: right !important;
+        /*rtl:ignore*/
+        direction: ltr;
+    }
+}
+
+.o_pivot_view {
+    .o_cp_bottom_left {
+        display: block;
+    }
 }
 
 // ------- Sample mode -------

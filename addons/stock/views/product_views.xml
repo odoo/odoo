@@ -145,9 +145,9 @@
                         </group>
                     </group>
                 </page>
-                <page name="inventory" position="attributes">
-                    <attribute name="groups">stock.group_stock_user,product.group_stock_packaging</attribute>
-                </page>
+                <xpath expr="//page[@name='inventory']" position="attributes">
+                    <attribute name="groups" add="stock.group_stock_user" separator=","/>
+                </xpath>
             </field>
         </record>
 
@@ -202,8 +202,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <filter name="activities_overdue" position="after">
-                    <field name="location_id" options="{'no_create': True}" context="{'location': self}"/>
-                    <field name="warehouse_id" context="{'warehouse': self}"/>
+                    <field name="location_id" options="{'no_create': True}" context="{'location': self}" filter_domain="[]"/>
+                    <field name="warehouse_id" context="{'warehouse': self}" filter_domain="[]"/>
                 </filter>
             </field>
         </record>

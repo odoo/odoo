@@ -216,7 +216,7 @@ class BlogPost(models.Model):
         for blog_post in self:
             blog_post.published_date = blog_post.post_date
             if not blog_post.published_date:
-                blog_post._write(dict(post_date=blog_post.create_date)) # dont trigger inverse function
+                blog_post.post_date = blog_post.create_date
 
     def _check_for_publication(self, vals):
         if vals.get('is_published'):

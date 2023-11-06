@@ -49,7 +49,7 @@
                     </group>
                 </group>
                 <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
-                    <field name="child_ids" nolabel="1">
+                    <field name="child_ids" nolabel="1" colspan="2">
                         <tree>
                             <field name="create_uid" string="Answered by"/>
                             <field name="vote_count"/>
@@ -110,7 +110,7 @@
     <field name="model">forum.post</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" create="false" type="object" action="go_to_website">
+        <tree create="false" type="object" action="go_to_website">
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="website_url"/>

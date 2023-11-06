@@ -150,6 +150,16 @@ class Alias(models.Model):
                 res.append((record['id'], _("Inactive Alias")))
         return res
 
+    def _clean_and_check_mail_catchall_allowed_domains(self, value):
+        """ The purpose of this system parameter is to avoid the creation
+        of records from incoming emails with a domain != alias_domain
+        but that have a pattern matching an internal mail.alias . """
+        value = [domain.strip().lower() for domain in value.split(',') if domain.strip()]
+        if not value:
+            raise ValidationError(_("Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+                                    "It should be a comma separated list of domains e.g. example.com,example.org."))
+        return ",".join(value)
+
     def _clean_and_check_unique(self, names):
         """When an alias name appears to already be an email, we keep the local
         part only. A sanitizing / cleaning is also performed on the name. If

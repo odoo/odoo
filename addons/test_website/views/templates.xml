@@ -18,4 +18,17 @@
             </t>
         </field>
     </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.test.website</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='plausbile_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="website_test_setting">
+                    <button type="object" name="action_website_test_setting" string="Website test setting" class="btn-link" icon="fa-arrow-right"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>

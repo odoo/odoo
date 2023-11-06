@@ -21,7 +21,7 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
             params = kwargs.get('params', {})
             language = params.get('lang', 'en_US')
             if endpoint.endswith('/api/website/1/configurator/industries'):
-                if language == 'fr_FR':
+                if language in ('fr_FR', 'pa_GB'):
                     return {"industries": [
                         {"id": 1, "label": "abbey in fr"},
                         {"id": 2, "label": "aboriginal and torres strait islander organisation in fr"},
@@ -54,15 +54,26 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
     def test_01_configurator_translation(self):
+        parseltongue = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
         self.env["base.language.install"].create({
             'overwrite': True,
-            'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
+            'lang_ids': [(6, 0, [parseltongue.id])],
         }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
-        feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
-        self.env.ref('base.user_admin').write({'lang': self.env.ref('base.lang_fr').code})
+        feature.with_context(lang=parseltongue.code).write({'name': 'Parseltongue_privacy'})
+        self.env.ref('base.user_admin').write({'lang': parseltongue.code})
         website_fr = self.env['website'].create({
             'name': "New website",
+        })
+        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
+            parseltongue.code: {
+                'Save': 'Save_Parseltongue'
+            }
         })
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)

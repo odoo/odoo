@@ -11,7 +11,7 @@ export class SlidesViewer extends CharField {
     setup() {
         super.setup();
         this.notification = useService("notification");
-        this.page = 1 || this.props.page;
+        this.page = 1;
         this.state = useState({
             isValid: true,
         });
@@ -19,6 +19,10 @@ export class SlidesViewer extends CharField {
 
     get fileName() {
         return this.state.fileName || this.props.value || "";
+    }
+
+    _get_slide_page() {
+        return this.props.record.data[this.props.name+'_page'] ? this.props.record.data[this.props.name+'_page'] : this.page;
     }
 
     get url() {
@@ -33,7 +37,7 @@ export class SlidesViewer extends CharField {
                     google[2] +
                     google[3] +
                     "/preview?slide=" +
-                    this.page;
+                    this._get_slide_page();
             }
         }
         return src || this.props.value;

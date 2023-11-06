@@ -18,7 +18,7 @@
                         <div class="col-6" name="address_not_same_as_shipping">
                             <t t-set="address">
                                 <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                                <div t-if="o.partner_id.vat">
+                                <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
                                     <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
@@ -27,24 +27,24 @@
                     </t>
                     <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
                         <div class="offset-col-6 col-6" name="address_same_as_shipping">
-                        <t t-set="address">
-                            <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                            <div t-if="o.partner_id.vat">
-                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                            </div>
-                        </t>
+                            <t t-set="address">
+                                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
+                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                                </div>
+                            </t>
                         </div>
                     </t>
                     <t t-else="">
                         <div class="offset-col-6 col-6" name="no_shipping">
-                        <t t-set="address">
-                            <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                            <div t-if="o.partner_id.vat">
-                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                            </div>
-                        </t>
+                            <t t-set="address">
+                                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
+                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                                </div>
+                            </t>
                         </div>
                     </t>
                 </div>
@@ -186,8 +186,8 @@
                                                 </tr>
                                             </t>
                                             <t t-if="len(payments_vals) > 0">
-                                                <tr class="border-black">
-                                                    <td><strong>Amount Due</strong></td>
+                                                <tr class="border-black fw-bold">
+                                                    <td>Amount Due</td>
                                                     <td class="text-end">
                                                         <span t-field="o.amount_residual"/>
                                                     </td>
@@ -199,7 +199,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
@@ -243,11 +242,12 @@
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
-                        <t t-set="qr_code_url" t-value="o._generate_qr_code()"/>
+                        <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
                         <p t-if="qr_code_url">
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
                             <img class="border border-dark rounded" t-att-src="qr_code_url"/>
                         </p>
+                    </div>
                     </div>
                 </div>
             </t>
@@ -277,19 +277,19 @@
                 <t t-call="account.tax_groups_totals"/>
             </t>
 
-            <t t-set="has_rounding" t-value="'formatted_amount_total_rounded' in tax_totals"/>
+            <t t-if="'formatted_rounding_amount' in tax_totals and tax_totals['rounding_amount'] != 0">
+                <td>Rounding</td>
+                <td class="text-end">
+                    <span t-esc="tax_totals['formatted_rounding_amount']"/>
+                </td>
+            </t>
+            
             <!--Total amount with all taxes-->
             <tr class="border-black o_total">
-                <t t-if="has_rounding"><td>Total</td></t>
-                <t t-else=""><td><strong>Total</strong></td></t>
-                <td class="text-end">
-                    <span t-esc="tax_totals['formatted_amount_total']"/>
-                </td>
-            </tr>
-            <tr t-if="has_rounding">
-                <td><strong>Total Rounded</strong></td>
-                <td class="text-end">
-                    <span t-esc="tax_totals['formatted_amount_total_rounded']"/>
+                <td><strong>Total</strong></td>
+                <td  class="text-end">
+                    <span t-esc="tax_totals['formatted_amount_total_rounded']" t-if="'formatted_amount_total_rounded' in tax_totals"/>
+                    <span t-esc="tax_totals['formatted_amount_total']" t-else=""/>
                 </td>
             </tr>
         </template>

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -57,7 +58,7 @@ msgstr "# de participantes"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr "% Feliz"
+msgstr "% de satisfacción"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
@@ -782,9 +783,9 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
-"Para sitios web creados con Odoo CMS, diríjase al Sitio web &gt; "
-"configuración &gt; ajustes y seleccione el Chat en vivo del Sitio web que "
-"desea agregar a su sitio web"
+"Para sitios web creados con el CMS de Odoo, vaya a Sitio web &gt; "
+"configuración &gt; ajustes y seleccione Chat en vivo del Sitio web que desea"
+" agregar a su sitio web."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
@@ -864,6 +865,7 @@ msgstr "Hora de la fecha de inicio de sesión "
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
 #, python-format
 msgid "How may I help you?"
 msgstr "¿Cómo puedo ayudarle?"
@@ -1260,7 +1262,7 @@ msgstr "Número de mensajes en la conversación"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "De acuerdo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1380,7 +1382,7 @@ msgstr "Por favor, contácteme por:"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
 msgid "Please do! If there is anything we can help with, let us know"
-msgstr "Díganos si hay algo en lo que podamos ayudarlo."
+msgstr "Díganos si hay algo en lo que podamos ayudarle."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1388,19 +1390,19 @@ msgstr "Díganos si hay algo en lo que podamos ayudarlo."
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Please wait"
-msgstr "Por favor, espere"
+msgstr "Espere"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Please wait..."
-msgstr "Por favor, espere..."
+msgstr "Espere..."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Powered by"
-msgstr "Con tecnología de"
+msgstr "Con la tecnología de"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_selection
@@ -1554,22 +1556,22 @@ msgstr "Diga algo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Script"
-msgstr "Script"
+msgstr "Guion"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
 msgid "Script (external)"
-msgstr "Script (externo)"
+msgstr "Guion (externo)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
 msgid "Script Step"
-msgstr "Paso de script"
+msgstr "Paso del guion"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__script_step_ids
 msgid "Script Steps"
-msgstr "Pasos de script"
+msgstr "Pasos del guion"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
@@ -1724,7 +1726,7 @@ msgid ""
 msgstr ""
 "Esta regla solo se aplicará a estos países. Por ejemplo, si seleccionó "
 "\"Bélgica\" y \"Estados Unidos\" y estableció la acción como \"Ocultar\", el"
-" botón de chat se ocultará en el URL específico de los visitantes que se "
+" botón de chat se ocultará en la URL específica de los visitantes que se "
 "ubican en estos 2 países. Esta función requiere que instale GeoIP en su "
 "servidor."
 
@@ -1834,7 +1836,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
-msgstr "URL Regex"
+msgstr "Regex de URL"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
@@ -1858,8 +1860,8 @@ msgid ""
 "template."
 msgstr ""
 "Utilice respuestas predefinidas para definir plantillas de mensajes en la "
-"aplicación de Chat en vivo. Para cargar una respuesta predefinida, empiece "
-"su oración con \":\" y seleccione la plantilla."
+"aplicación Chat en vivo. Para cargar una respuesta predefinida, empiece su "
+"oración con \":\" y seleccione la plantilla."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -1909,7 +1911,7 @@ msgstr "El visitante ha dejado la conversación."
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr "El visitante está feliz"
+msgstr "El visitante está satisfecho"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -1951,7 +1953,7 @@ msgstr "Widget"
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
-"¿Le importaría dejar su dirección de correo electrónico para que podamos "
+"¿Podría proporcionarnos su dirección de correo electrónico para que podamos "
 "contactarle?"
 
 #. module: im_livechat
@@ -2036,7 +2038,7 @@ msgstr "mail@example.com"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"o copie este URL y envíelo por correo electrónico a sus clientes y "
+"o copie esta URL y envíela por correo electrónico a sus clientes o "
 "proveedores:"
 
 #. module: im_livechat

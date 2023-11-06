@@ -82,6 +82,18 @@ QUnit.module("Search", (hooks) => {
                             ],
                             searchable: true,
                         },
+                        image: {
+                            name: "image",
+                            string: "Binary field",
+                            type: "binary",
+                            searchable: true,
+                        },
+                        json_field: {
+                            name: "json_field",
+                            string: "Jason",
+                            type: "json",
+                            searchable: true,
+                        },
                     },
                     records: {},
                 },
@@ -334,6 +346,102 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
     });
 
+    QUnit.test("binary field is available", async function (assert) {
+        assert.expect(11);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewFields: {
+                image: {
+                    name: "image",
+                    string: "Binary Field",
+                    type: "binary",
+                    default: true,
+                    searchable: true,
+                },
+            },
+        });
+
+        await toggleFilterMenu(target);
+
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        assert.containsNone(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should be closed;
+        assert.containsNone(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await toggleAddCustomFilter(target);
+        // the 'Add Custom Filter' menu should be open;
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ["Binary Field is set"]);
+        assert.deepEqual(getDomain(controlPanel), [["image", "!=", false]]);
+
+        assert.containsOnce(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should still be opened;
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
+    });
+
+    QUnit.test("json field is available", async function (assert) {
+        assert.expect(10);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewFields: {
+                json_field: {
+                    name: "json_field",
+                    string: "Json",
+                    type: "json",
+                    default: "{'1': 50}",
+                    searchable: true,
+                },
+            },
+        });
+
+        await toggleFilterMenu(target);
+
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        assert.containsNone(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should be closed;
+        assert.containsNone(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await toggleAddCustomFilter(target);
+        // the 'Add Custom Filter' menu should be open;
+        assert.containsOnce(target, ".o_add_custom_filter_menu .dropdown-menu");
+
+        await editConditionField(target, 0, "json_field");
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ['Json contains ""']);
+        assert.deepEqual(getDomain(controlPanel), [["json_field", "ilike", ""]]);
+
+        await removeFacet(target);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionField(target, 0, "json_field");
+        await editConditionOperator(target, 0, "!=");
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ['Json is not equal to ""']);
+        assert.deepEqual(getDomain(controlPanel), [["json_field", "!=", ""]]);
+    });
+
     QUnit.test("selection field: default and updated value", async function (assert) {
         assert.expect(11);
 
@@ -355,7 +463,7 @@ QUnit.module("Search", (hooks) => {
         await editConditionField(target, 0, "color");
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ['Color is "black"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "Black"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "black"]]);
 
         assert.containsN(target, ".o_menu_item", 1);
@@ -376,7 +484,7 @@ QUnit.module("Search", (hooks) => {
         );
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ['Color is "white"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "White"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "white"]]);
 
         assert.containsN(target, ".o_menu_item", 2);
@@ -500,7 +608,9 @@ QUnit.module("Search", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_generator_menu_value input")].map((v) => v.value),
+            [...target.querySelectorAll(".o_generator_menu_value input[type=text]")].map(
+                (v) => v.value
+            ),
             ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
@@ -544,7 +654,9 @@ QUnit.module("Search", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_generator_menu_value input")].map((v) => v.value),
+            [...target.querySelectorAll(".o_generator_menu_value input[type=text]")].map(
+                (v) => v.value
+            ),
             ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 

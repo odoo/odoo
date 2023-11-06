@@ -12,7 +12,6 @@ var core = require('web.core');
 const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
 const wUtils = require('website.utils');
 
 var qweb = core.qweb;
@@ -115,6 +114,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      *        startEvents is received again)
      * @param {jQuery|DOMElement} [options.$endTarget=$startTarget]
      *        the element(s) on which the endEvents are listened
+     * @param {boolean} [options.enableInModal]
+     *        when it is true, it means that the 'scroll' event must be
+     *        triggered when scrolling a modal.
      */
     init: function (parent, updateCallback, startEvents, $startTarget, options) {
         mixins.ParentedMixin.init.call(this);
@@ -126,7 +128,8 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        const mainScrollingElement = $().getScrollingElement()[0];
+        const modalEl = options.enableInModal ? parent.target.closest('.modal') : null;
+        const mainScrollingElement = modalEl ? modalEl : $().getScrollingElement()[0];
         const mainScrollingTarget = mainScrollingElement === document.documentElement ? window : mainScrollingElement;
         this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? mainScrollingTarget : window);
         if (options.getStateCallback) {
@@ -400,6 +403,7 @@ var Animation = publicWidget.Widget.extend({
                 endEvents: desc.endEvents || undefined,
                 $endTarget: _findTarget(desc.endTarget),
                 maxFPS: self.maxFPS,
+                enableInModal: desc.enableInModal || undefined,
             });
 
             // Return the DOM element matching the selector in the form
@@ -448,6 +452,15 @@ registry.slider = publicWidget.Widget.extend({
         // Initialize carousel and pause if in edit mode.
         this.$target.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', _.debounce(() => this._computeHeights(), 250));
+        if (this.editableMode) {
+            // Prevent carousel slide to be an history step.
+            this.$target.on('slide.bs.carousel', () => {
+                this.options.wysiwyg.odooEditor.observerUnactive();
+            });
+            this.$target.on('slid.bs.carousel', () => {
+                this.options.wysiwyg.odooEditor.observerActive();
+            });
+        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -462,6 +475,7 @@ registry.slider = publicWidget.Widget.extend({
             $(el).css('min-height', '');
         });
         $(window).off('.slider');
+        this.$target.off('.carousel');
     },
 
     //--------------------------------------------------------------------------
@@ -510,6 +524,7 @@ registry.Parallax = Animation.extend({
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
+        enableInModal: true,
     }],
 
     /**
@@ -518,6 +533,13 @@ registry.Parallax = Animation.extend({
     start: function () {
         this._rebuild();
         $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        this.modalEl = this.$target[0].closest('.modal');
+        if (this.modalEl) {
+            $(this.modalEl).on('shown.bs.modal.animation_parallax', () => {
+                this._rebuild();
+                this.modalEl.dispatchEvent(new Event('scroll'));
+            });
+        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -526,6 +548,9 @@ registry.Parallax = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(window).off('.animation_parallax');
+        if (this.modalEl) {
+            $(this.modalEl).off('.animation_parallax');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -670,7 +695,10 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             iframeEl = this._generateIframe();
         }
 
-        if (!iframeEl) {
+        // We don't want to cause an error that would prevent entering edit mode
+        // if there is an iframe that doesn't have a src (this was possible for
+        // a while with the media dialog).
+        if (!iframeEl || !iframeEl.getAttribute('src')) {
             // Something went wrong: no iframe is present in the DOM and the
             // widget was unable to create one on the fly.
             return Promise.all(proms);
@@ -972,9 +1000,24 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var hash = this.$target[0].hash;
-        if (!utils.isValidAnchor(hash)) {
+        if (hash === '#top' || hash === '#bottom') {
+            // If the anchor targets #top or #bottom, directly call the
+            // "scrollTo" function. The reason is that the header or the footer
+            // could have been removed from the DOM. By receiving a string as
+            // parameter, the "scrollTo" function handles the scroll to the top
+            // or to the bottom of the document even if the header or the
+            // footer is removed from the DOM.
+            dom.scrollTo(hash, {
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
+            });
             return;
         }
+        if (!hash.length) {
+            return;
+        }
+        // Escape special characters to make the jQuery selector to work.
+        hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
         if (!$anchor.length || !scrollValue) {
@@ -1088,6 +1131,13 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this.__pixelEl.style.width = `1px`;
         this.__pixelEl.style.height = `1px`;
         this.__pixelEl.style.marginTop = `-1px`;
+        // On safari, add a background attachment fixed to fix the glitches that
+        // appear when scrolling the page with a footer slide out.
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.__pixelEl.style.backgroundColor = "transparent";
+            this.__pixelEl.style.backgroundAttachment = "fixed";
+            this.__pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
+        }
         this.el.appendChild(this.__pixelEl);
 
         return this._super(...arguments);
@@ -1099,6 +1149,42 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
         this.__pixelEl.remove();
+    },
+});
+
+registry.TopMenuCollapse = publicWidget.Widget.extend({
+    selector: "header #top_menu_collapse",
+
+    /**
+     * @override
+     */
+    async start() {
+        this.throttledResize = _.throttle(() => this._onResize(), 25);
+        window.addEventListener("resize", this.throttledResize);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        window.removeEventListener("resize", this.throttledResize);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onResize() {
+        if (this.el.classList.contains("show")) {
+            const togglerEl = this.el.closest("nav").querySelector(".navbar-toggler");
+            if (getComputedStyle(togglerEl).display === "none") {
+                this.$el.collapse("hide");
+            }
+        }
     },
 });
 
@@ -1163,6 +1249,20 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
             return;
         }
 
+        // The bottom fixed elements are always hidden when a modal is open
+        // thanks to the CSS that is based on the 'modal-open' class added to
+        // the body. However, when the modal does not have a backdrop (e.g.
+        // cookies bar), this 'modal-open' class is not added. That's why we
+        // handle it here. Note that the popup widget code triggers a 'scroll'
+        // event when the modal is hidden to make the bottom fixed elements
+        // reappear.
+        if (this.el.querySelector('.s_popup_no_backdrop.show')) {
+            for (const el of $bottomFixedElements) {
+                el.classList.add('o_bottom_fixed_element_hidden');
+            }
+            return;
+        }
+
         this._restoreBottomFixedElements($bottomFixedElements);
         if ((this.$scrollingElement[0].offsetHeight + this.$scrollingElement[0].scrollTop) >= (this.$scrollingElement[0].scrollHeight - 2)) {
             const buttonEls = [...this.$('a:visible, .btn:visible')];
@@ -1201,9 +1301,25 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     start() {
         this.lastScroll = 0;
         this.$scrollingElement = $().getScrollingElement();
+        this.$animatedElements = this.$('.o_animate');
+
+        // Fix for "transform: none" not overriding keyframe transforms on
+        // some iPhone using Safari. Note that all animated elements are checked
+        // (not only one) as the bug is not systematic and may depend on some
+        // other conditions (for example: an animated image in a block which is
+        // hidden on mobile would not have the issue).
+        const couldOverflowBecauseOfSafariBug = [...this.$animatedElements].some(el => {
+            return window.getComputedStyle(el).transform !== 'none';
+        });
+        this.forceOverflowXYHidden = false;
+        if (couldOverflowBecauseOfSafariBug) {
+            this._toggleOverflowXYHidden(true);
+            // Now prevent any call to _toggleOverflowXYHidden to have an effect
+            this.forceOverflowXYHidden = true;
+        }
+
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        this.$animatedElements = this.$target.find('.o_animate');
         _.each(this.$animatedElements, el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
@@ -1294,6 +1410,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Boolean} add
      */
     _toggleOverflowXYHidden(add) {
+        if (this.forceOverflowXYHidden) {
+            return;
+        }
         if (add) {
             this.$scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
         } else if (!this.$scrollingElement.find('.o_animating').length) {
@@ -1335,11 +1454,15 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // We need to offset for the change in position from some animation.
             // So we get the top value by not taking CSS transforms into calculations.
             // Cookies bar might be opened and considered as a modal but it is
-            // not really one (eg 'discrete' layout), and should not be used as
-            // scrollTop value.
-            const scrollTop = document.body.classList.contains('modal-open') ?
-                this.$target.find('.modal:visible').scrollTop() :
-                this.$scrollingElement.scrollTop();
+            // not really one when there is no backdrop (eg 'discrete' layout),
+            // and should not be used as scrollTop value.
+            const closestModal = $el.closest(".modal:visible")[0];
+            let scrollTop = this.$scrollingElement[0].scrollTop;
+            if (closestModal) {
+                scrollTop = closestModal.classList.contains("s_popup_no_backdrop") ?
+                    closestModal.querySelector(".modal-content").scrollTop :
+                    closestModal.scrollTop;
+            }
             const elTop = this._getElementOffsetTop(el) - scrollTop;
             let visible;
             const footerEl = el.closest('.o_footer_slideout');

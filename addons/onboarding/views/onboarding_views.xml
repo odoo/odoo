@@ -23,7 +23,9 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_toggle_visibility" type="object" string="Toggle visibility"/>
+                    <field name="current_progress_id" invisible="1"/>
+                    <button name="action_toggle_visibility" type="object" string="Toggle visibility"
+                            attrs="{'invisible': [('current_progress_id', '=', False)]}"/>
                 </header>
                 <sheet>
                     <group col="2">

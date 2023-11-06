@@ -133,7 +133,7 @@
                             alt="Follower"/>
                         <small
                             t-if="follower_index == 5"
-                            t-esc="'+' + (follower_size - 5)"
+                            t-esc="'+' + (record.message_partner_ids.raw_value.length - 5)"
                             class="text-info fw-bold ms-1"/>
                       </t>
                     </div>
@@ -173,6 +173,9 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
+                <group>
+                  <field name="name" widget="char"/>
+                </group>
                 <sheet>
                     <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>

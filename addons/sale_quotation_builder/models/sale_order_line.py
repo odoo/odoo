@@ -12,7 +12,9 @@ class SaleOrderLine(models.Model):
         string="Website Description",
         compute='_compute_website_description',
         store=True, readonly=False, precompute=True,
-        sanitize=False, translate=html_translate, sanitize_form=False)
+        sanitize_overridable=True,
+        translate=html_translate,
+        sanitize_attributes=False)
 
     @api.depends('product_id')
     def _compute_website_description(self):

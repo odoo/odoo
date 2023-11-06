@@ -25,7 +25,7 @@ export function mapWowlValueToLegacy(value, type) {
         case "one2many":
         case "many2many":
             if (value.operation === "REPLACE_WITH") {
-                return { operation: "REPLACE_WITH", ids: value.resIds };
+                return { operation: "REPLACE_WITH", ids: value.resIds || value.ids };
             }
             return value;
         default:

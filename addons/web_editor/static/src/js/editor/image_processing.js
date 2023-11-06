@@ -431,13 +431,25 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         return;
     }
 
+    // Only consider the "relative" part of the URL. Needed because some
+    // relative URLs were wrongly converted to absolute URLs at some point and
+    // user domains could have been changed meanwhile.
+    let relativeSrc;
+    try {
+        const srcUrl = new URL(src);
+        relativeSrc = srcUrl.pathname;
+    } catch {
+        relativeSrc = src;
+    }
     const {original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: src.split(/[?#]/)[0]},
+        params: {src: relativeSrc.split(/[?#]/)[0]},
     });
-    // Check that url is local.
-    const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin;
-    if (isLocal && original.image_src) {
+    // If src was an absolute "external" URL, we consider unlikely that its
+    // relative part matches something from the DB and even if it does, nothing
+    // bad happens, besides using this random image as the original when using
+    // the options, instead of having no option.
+    if (original && original.image_src) {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;

@@ -378,3 +378,72 @@ class TestRepair(AccountTestInvoicingCommon):
             ('company_id', '=', repair.company_id.id),
         ], limit=1)
         self.assertEqual(repair.operations[0].location_dest_id, location_dest_id)
+
+    def test_repair_order_send_to_self(self):
+        # when sender(logged in user) is also present in recipients of the mail composer,
+        # user should receive mail.
+        product_to_repair = self.product_product_5
+        partner = self.res_partner_address_1
+        repair_order = self.env['repair.order'].with_user(self.env.user).create({
+            'product_id': product_to_repair.id,
+            'product_uom': product_to_repair.uom_id.id,
+            'address_id': partner.id,
+            'guarantee_limit': '2019-01-01',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'partner_id': self.env.user.partner_id.id
+        })
+        email_ctx = repair_order.action_send_mail().get('context', {})
+        # We need to prevent auto mail deletion, and so we copy the template and send the mail with
+        # added configuration in copied template. It will allow us to check whether mail is being
+        # sent to to author or not (in case author is present in 'Recipients' of composer).
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
+        # send the mail with same user as customer
+        repair_order.with_context(**email_ctx).with_user(self.env.user).message_post_with_template(mail_template.id)
+        mail_message = repair_order.message_ids[0]
+        self.assertEqual(mail_message.author_id, repair_order.partner_id, 'Repair: author should be same as customer')
+        self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Repair: author should be in composer recipients thanks to "partner_to" field set on template')
+        self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Repair: author should receive mail due to presence in composer recipients')
+
+    def test_repair_from_return(self):
+        """
+        create a repair order from a return delivery and ensure that the stock.move
+        resulting from the repair is not associated with the return picking.
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_14, 1)
+        picking_form = Form(self.env['stock.picking'])
+        #create a delivery order
+        picking_form.picking_type_id = self.stock_warehouse.out_type_id
+        picking_form.partner_id = self.res_partner_1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 1.0
+        picking = picking_form.save()
+        picking.action_confirm()
+        picking.action_assign()
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(picking.state, 'done')
+        # Create a return
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form.product_id = product
+        repair = repair_form.save()
+        repair.action_repair_confirm()
+        repair.action_repair_start()
+        repair.action_repair_end()
+        self.assertEqual(repair.state, 'done')
+        self.assertFalse(repair.move_id.picking_id)

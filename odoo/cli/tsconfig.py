@@ -1,19 +1,18 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import glob
 import json
 import os
 import re
 import sys
+from pathlib import Path
 
 from . import Command
 from odoo.modules.module import MANIFEST_NAMES
 
 
 class TSConfig(Command):
-    """Generates tsconfig files for javascript code"""
-
-    def __init__(self):
-        self.command_name = "tsconfig"
+    """ Generates tsconfig files for javascript code """
 
     def get_module_list(self, path):
         return [
@@ -35,8 +34,8 @@ class TSConfig(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog="%s %s" % (sys.argv[0].split(os.path.sep)[-1], self.command_name),
-            description=self.__doc__
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            description=self.__doc__.strip()
         )
         parser.add_argument('--addons-path', type=str, nargs=1, dest="paths")
         args = parser.parse_args(args=cmdargs)

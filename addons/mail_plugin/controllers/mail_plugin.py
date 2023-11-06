@@ -288,15 +288,20 @@ class MailPluginController(http.Controller):
         search = self._get_iap_search_term(email)
 
         partner_iap = request.env["res.partner.iap"].sudo().search([("iap_search_domain", "=", search)], limit=1)
-
         if partner_iap:
-            return partner_iap.partner_id
+            return partner_iap.partner_id.sudo(False)
 
         return request.env["res.partner"].search([("is_company", "=", True), ("email_normalized", "=ilike", "%" + search)], limit=1)
 
     def _get_company_data(self, company):
         if not company:
             return {'id': -1}
+
+        try:
+            company.check_access_rights('read')
+            company.check_access_rule('read')
+        except AccessError:
+            return {'id': company.id, 'name': _('No Access')}
 
         fields_list = ['id', 'name', 'phone', 'mobile', 'email', 'website']
 

@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
@@ -114,12 +115,16 @@ class Project(models.Model):
             raise ValueError(_('Invalid operator: %s') % operator)
 
         query = """
-            SELECT P.id
-              FROM project_project P
-         LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE p.allocated_hours != 0 AND p.allow_timesheets
-          GROUP BY P.id
-            HAVING P.allocated_hours - SUM(T.effective_hours) < 0
+            SELECT Project.id
+              FROM project_project AS Project
+              JOIN project_task AS Task
+                ON Project.id = Task.project_id
+             WHERE Project.allocated_hours > 0
+               AND Project.allow_timesheets = TRUE
+               AND Task.parent_id IS NULL
+               AND Task.is_closed IS FALSE
+          GROUP BY Project.id
+            HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
@@ -154,10 +159,10 @@ class Project(models.Model):
             # Timesheets may be stored in a different unit of measure, so first
             # we convert all of them to the reference unit
             # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = sum([
-                unit_amount * uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
-                for product_uom_id, unit_amount in timesheet_time_dict[project.id]
-            ], 0.0)
+            total_time = 0.0
+            for product_uom_id, unit_amount in timesheet_time_dict[project.id]:
+                factor = uoms_dict.get(product_uom_id, project.timesheet_encode_uom_id).factor_inv
+                total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
             # Now convert to the proper unit of measure set in the settings
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
@@ -232,6 +237,11 @@ class Project(models.Model):
         uom_to = self.env.company.timesheet_encode_uom_id
         return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
 
+    def action_project_timesheets(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
+        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        return action
+
 
 class Task(models.Model):
     _name = "project.task"
@@ -269,12 +279,12 @@ class Task(models.Model):
     def _compute_effective_hours(self):
         if not any(self._ids):
             for task in self:
-                task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+                task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
         timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
         timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
         for task in self:
-            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
+            task.effective_hours = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
@@ -282,7 +292,7 @@ class Task(models.Model):
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.planned_hours, 0)
-                if task_total_hours > task.planned_hours:
+                if float_compare(task_total_hours, task.planned_hours, precision_digits=2) >= 0:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
@@ -327,7 +337,7 @@ class Task(models.Model):
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
-        tasks = self.with_context(active_test=False)._get_all_subtasks()
+        task_ids = self.with_context(active_test=False)._get_subtask_ids_per_task_id().get(self.id, [])
         action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
         graph_view_id = self.env.ref("hr_timesheet.view_hr_timesheet_line_graph_by_employee").id
         new_views = []
@@ -338,7 +348,7 @@ class Task(models.Model):
         action.update({
             'display_name': _('Timesheets'),
             'context': {'default_project_id': self.project_id.id, 'grid_range': 'week'},
-            'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
+            'domain': [('project_id', '!=', False), ('task_id', 'in', task_ids)],
             'views': new_views,
         })
         return action

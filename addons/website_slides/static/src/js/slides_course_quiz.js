@@ -196,11 +196,13 @@
             }).then(function (quiz_data) {
                 self.slide.sessionAnswers = quiz_data.session_answers;
                 self.quiz = {
+                    description_safe: Markup(quiz_data.slide_description),
                     questions: quiz_data.slide_questions || [],
                     questionsCount: quiz_data.slide_questions.length,
                     quizAttemptsCount: quiz_data.quiz_attempts_count || 0,
                     quizKarmaGain: quiz_data.quiz_karma_gain || 0,
                     quizKarmaWon: quiz_data.quiz_karma_won || 0,
+                    slideResources: quiz_data.slide_resource_ids || [],
                 };
             });
         },
@@ -298,7 +300,16 @@
                 QWeb.render('slide.slide.quiz.validation', {'widget': this})
             );
         },
-
+        /*
+        * Toggle additional resource info box
+        * 
+        * @private
+        * @param {Boolean} show - Whether show or hide the information
+        */
+        _toggleAdditionalResourceInfo: function(show) {
+            const resourceInfo = document.getElementsByClassName('o_wslides_js_lesson_quiz_resource_info')[0];
+            resourceInfo && (show ? resourceInfo.classList.remove('d-none') : resourceInfo.classList.add('d-none'));
+        },
         /**
          * Renders the button to join a course.
          * If the user is logged in, the course is public, and the user has previously tried to
@@ -382,6 +393,7 @@
             this._hideEditOptions();
             this._renderAnswersHighlightingAndComments();
             this._renderValidationInfo();
+            this._toggleAdditionalResourceInfo(!completed);
         },
 
         /**
@@ -779,7 +791,7 @@
                     .text(_t('Mark To Do'))
                     .removeAttr('title')
                     .removeAttr('aria-disabled')
-                    .attr('href', `/slides/slide/${slide.id}/set_uncompleted`);
+                    .attr('href', `/slides/slide/${encodeURIComponent(slide.id)}/set_uncompleted`);
             }
         },
 

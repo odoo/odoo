@@ -49,3 +49,51 @@ class TestProjectMilestone(TestProjectCommon):
 
         self.task_1.project_id = self.project_goats
         self.assertFalse(self.task_1.milestone_id, 'No milestone should be linked to the task since its project has changed')
+
+    def test_duplicate_project_duplicates_milestones_on_tasks(self):
+        """
+        Test when we duplicate the project with tasks linked to its' milestones,
+        that the tasks in the new project are also linked to the duplicated milestones of the new project
+        We can't really robustly test that the mapping of task -> milestone is the same in the old and new project,
+        the workaround way of testing the mapping is basing ourselves on unique names and check that those are equals in the test.
+        """
+        # original unique_names, used to map between the original -> copy
+        unique_name_1 = "unique_name_1"
+        unique_name_2 = "unique_name_2"
+        unique_names = [unique_name_1, unique_name_2]
+        project = self.env['project.project'].create({
+            'name': 'Test project',
+            'allow_milestones': True,
+        })
+        milestones = self.env['project.milestone'].create([{
+            'name': unique_name_1,
+            'project_id': project.id,
+        }, {
+            'name': unique_name_2,
+            'project_id': project.id,
+        }])
+        tasks = self.env['project.task'].create([{
+            'name': unique_name_1,
+            'project_id': project.id,
+            'milestone_id': milestones[0].id,
+        }, {
+            'name': unique_name_2,
+            'project_id': project.id,
+            'milestone_id': milestones[1].id,
+        }])
+        self.assertEqual(tasks[0].milestone_id, milestones[0])
+        self.assertEqual(tasks[1].milestone_id, milestones[1])
+        project_copy = project.copy()
+        self.assertNotEqual(project_copy.milestone_ids, False)
+        self.assertEqual(project.milestone_ids.mapped('name'), project_copy.milestone_ids.mapped('name'))
+        self.assertNotEqual(project_copy.task_ids, False)
+        for milestone in project_copy.task_ids.milestone_id:
+            self.assertTrue(milestone in project_copy.milestone_ids)
+        for unique_name in unique_names:
+            orig_task = project.task_ids.filtered(lambda t: t.name == unique_name)
+            copied_task = project_copy.task_ids.filtered(lambda t: t.name == unique_name)
+            self.assertEqual(orig_task.name, copied_task.name, "The copied_task should be a copy of the original task")
+            self.assertNotEqual(copied_task.milestone_id, False,
+                                "We should copy the milestone and it shouldn't be reset to false from _compute_milestone_id")
+            self.assertEqual(orig_task.milestone_id.name, copied_task.milestone_id.name,
+                             "the copied milestone should be a copy if the original ")

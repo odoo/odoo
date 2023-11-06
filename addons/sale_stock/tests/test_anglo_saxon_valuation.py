@@ -672,8 +672,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 12},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 12,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
         ])
 
     def test_avco_fully_owned_and_delivered_invoice_post_delivery(self):
@@ -700,8 +698,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 24},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 24,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
         ])
 
     # -------------------------------------------------------------------------
@@ -1463,6 +1459,98 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
 
+    def test_fifo_return_and_create_invoice(self):
+        """
+        When creating an invoice for a returned product, the value of the anglo-saxo lines
+        should be based on the returned product's value
+        """
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+
+        # Receive one @10, one @20 and one @60
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 20, 60]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        # Sell 3 units
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        # Deliver 1@10, then 1@20 and then 1@60
+        pickings = []
+        picking = so.picking_ids
+        while picking:
+            pickings.append(picking)
+            picking.move_ids.quantity_done = 1
+            action = picking.button_validate()
+            if isinstance(action, dict):
+                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+                wizard.process()
+            picking = picking.backorder_ids
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # Receive one @100
+        in_moves = self.env['stock.move'].create({
+            'name': 'IN move @100',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': 100,
+        })
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        # Return the second picking (i.e. 1@20)
+        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_picking_id, dummy = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_ids.quantity_done = 1
+        return_picking.button_validate()
+
+        # Create a new invoice for the returned product
+        ctx = {'active_model': 'sale.order', 'active_ids': so.ids}
+        create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create({'advance_payment_method': 'delivered'})
+        create_invoice_wizard.create_invoices()
+        reverse_invoice = so.invoice_ids[-1]
+        with Form(reverse_invoice) as reverse_invoice_form:
+            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 1
+        reverse_invoice.action_post()
+
+        amls = reverse_invoice.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(stock_out_aml.credit, 0)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 0)
+        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
+
     def test_fifo_several_invoices_reset_repost(self):
         self.product.categ_id.property_cost_method = 'fifo'
         self.product.invoice_policy = 'delivery'
@@ -1537,3 +1625,105 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         (invoice01 | invoice03).action_post()
         cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
         self.assertEqual(sum(cogs.mapped('credit')), total_value)
+
+    def test_fifo_reverse_and_create_new_invoice(self):
+        """
+        FIFO automated
+        Receive 1@10, 1@50
+        Deliver 1
+        Post the invoice, add a credit note with option 'new draft inv'
+        Post the second invoice
+        COGS should be based on the delivered product
+
+        Note: This test will also ensure that a user who only has access to
+        account app can post such an invoice
+        """
+        self.product.categ_id.property_cost_method = 'fifo'
+
+        accountman = self.env['res.users'].create({
+            'name': 'Super Accountman',
+            'login': 'super_accountman',
+            'password': 'super_accountman',
+            'groups_id': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
+        })
+
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 50]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.quantity_done = 1.0
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+
+        # Clear the cache to ensure access rights
+        self.env.invalidate_all()
+        invoice01.with_user(accountman.id).action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'modify',
+            'journal_id': invoice01.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        invoice02 = self.env['account.move'].browse(reversal['res_id'])
+        invoice02.action_post()
+
+        amls = invoice02.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 10)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 10)
+        self.assertEqual(cogs_aml.credit, 0)
+
+    def test_fifo_edit_svl_without_reinvoice(self):
+        """Edit SVL move line after delivering. Check no reinvoicing occurs."""
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+        self.product.expense_policy = 'cost'
+
+        self._fifo_in_one_eight_one_ten()
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_and_confirm_two_units()
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.product_uom_qty, 2.0)
+
+        # Deliver one.
+        sale_order.picking_ids.move_ids.quantity_done = 2
+        sale_order.picking_ids.button_validate()
+        svl_am = sale_order.order_line.move_ids.stock_valuation_layer_ids.account_move_id
+        svl_am.button_draft()
+        svl_line = svl_am.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+
+        svl_line.write({'analytic_distribution': {sale_order.analytic_account_id.id: 100}})
+        svl_am.action_post()
+
+        # Check no reinvoice line addded to the sale order
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.product_uom_qty, 2.0)

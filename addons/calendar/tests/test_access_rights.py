@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.exceptions import AccessError
@@ -133,3 +133,26 @@ class TestAccessRights(TransactionCase):
                          "Owner should be able to read the event")
         with self.assertRaises(AccessError):
             self.read_event(self.portal, event, 'location')
+
+    def test_meeting_edit_access_notification_handle_in_odoo(self):
+        # set notifications to "handle in Odoo" in Preferences for john, raoul, and george
+        (self.john | self.raoul | self.george).write({'notification_type': 'inbox'})
+
+        # raoul creates a meeting for john, excluding themselves
+        meeting = self.env['calendar.event'].with_user(self.raoul).create({
+            'name': 'Test Meeting',
+            'start': datetime.now(),
+            'stop': datetime.now() + timedelta(hours=2),
+            'user_id': self.john.id,
+            'partner_ids': [(4, self.raoul.partner_id.id)],
+        })
+
+        # george tries to modify the start date of the meeting to a future date
+        # this verifies that users with "handle in Odoo" notification setting can
+        # successfully edit meetings created by other users. If this write fails,
+        # it indicates that there might be an issue with access rights for meeting attendees.
+        meeting = meeting.with_user(self.george)
+        meeting.write({
+            'start': datetime.now() + timedelta(days=2),
+            'stop': datetime.now() + timedelta(days=2, hours=2),
+        })

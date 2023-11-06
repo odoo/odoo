@@ -78,6 +78,8 @@ class StockPicking(models.Model):
         pickings = super().create(vals_list)
         for picking, vals in zip(pickings, vals_list):
             if vals.get('batch_id'):
+                if not picking.batch_id.picking_type_id:
+                    picking.batch_id.picking_type_id = picking.picking_type_id[0]
                 picking.batch_id._sanity_check()
         return pickings
 
@@ -120,14 +122,16 @@ class StockPicking(models.Model):
             picking._find_auto_batch()
         return res
 
-    def _action_done(self):
-        res = super()._action_done()
+    def button_validate(self):
+        res = super().button_validate()
         to_assign_ids = set()
         if self and self.env.context.get('pickings_to_detach'):
             self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
+            if picking.state != 'done':
+                continue
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
             if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
@@ -245,6 +249,9 @@ class StockPicking(models.Model):
         for pick in pickings:
             log_message = _('Assigned to %s Responsible', (pick.batch_id._get_html_link()))
             pick.message_post(body=log_message)
+
+    def _package_move_lines(self):
+        return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines()
 
     def action_view_batch(self):
         self.ensure_one()

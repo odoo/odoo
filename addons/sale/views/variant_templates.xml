@@ -82,10 +82,11 @@
                                         t-att-data-is_custom="ptav.is_custom"
                                         t-att-data-is_single_and_custom="single_and_custom"
                                         t-att-autocomplete="off"/>
-                                    <div class="radio_input_value o_variant_pills_input_value">
+                                    <label class="radio_input_value o_variant_pills_input_value"
+                                           t-att-for="ptav.id">
                                         <span t-field="ptav.name"/>
                                         <t t-call="sale.badge_extra_price"/>
-                                    </div>
+                                    </label>
                                 </li>
                             </t>
                         </ul>

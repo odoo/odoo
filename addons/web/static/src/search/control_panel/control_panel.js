@@ -10,8 +10,17 @@ import { FilterMenu } from "../filter_menu/filter_menu";
 import { GroupByMenu } from "../group_by_menu/group_by_menu";
 import { SearchBar } from "../search_bar/search_bar";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dialog } from "@web/core/dialog/dialog";
 
-import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    onMounted,
+    useExternalListener,
+    useRef,
+    useEffect,
+    useSubEnv,
+} from "@odoo/owl";
 
 const MAPPING = {
     filter: FilterMenu,
@@ -22,9 +31,19 @@ const MAPPING = {
 
 const STICKY_CLASS = "o_mobile_sticky";
 
+export class ControlPanelSearchDialog extends Component {
+    setup() {
+        useSubEnv(this.props.env);
+    }
+}
+ControlPanelSearchDialog.template = "web.ControlPanelSearchDialog";
+ControlPanelSearchDialog.props = ["close", "slots?", "display", "env", "searchMenus"];
+ControlPanelSearchDialog.components = { Dialog, SearchBar };
+
 export class ControlPanel extends Component {
     setup() {
         this.actionService = useService("action");
+        this.dialog = useService("dialog");
         this.pagerProps = this.env.config.pagerProps
             ? useState(this.env.config.pagerProps)
             : undefined;
@@ -34,7 +53,6 @@ export class ControlPanel extends Component {
 
         this.state = useState({
             showSearchBar: false,
-            showMobileSearch: false,
             showViewSwitcher: false,
         });
 
@@ -78,7 +96,6 @@ export class ControlPanel extends Component {
     resetSearchState() {
         Object.assign(this.state, {
             showSearchBar: false,
-            showMobileSearch: false,
             showViewSwitcher: false,
         });
     }
@@ -118,6 +135,18 @@ export class ControlPanel extends Component {
             searchMenus.push({ Component: MAPPING[key], key });
         }
         return searchMenus;
+    }
+
+    openSearchDialog() {
+        this.dialog.add(ControlPanelSearchDialog, {
+            slots: this.props.slots,
+            display: this.display,
+            searchMenus: this.searchMenus,
+            env: {
+                searchModel: this.env.searchModel,
+                config: this.env.config,
+            },
+        });
     }
 
     /**

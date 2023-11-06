@@ -10,7 +10,7 @@ import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
@@ -47,6 +47,7 @@ class ChannelUsersRelation(models.Model):
     ]
 
     def _recompute_completion(self):
+        slides_marked_uncompleted = self.env.context.get("slides_marked_uncompleted")
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -64,13 +65,16 @@ class ChannelUsersRelation(models.Model):
         uncompleted_records = self.env['slide.channel.partner']
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
+            if record.completed and not slides_marked_uncompleted:
+                record.completion = 100.0
+            else:
+                record.completion = round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
 
             if not record.channel_id.active:
                 continue
             elif not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
-            elif record.completed and record.completed_slides_count < record.channel_id.total_slides:
+            elif slides_marked_uncompleted and record.completed and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
 
         if completed_records:
@@ -765,6 +769,10 @@ class Channel(models.Model):
 
     def _send_share_email(self, emails):
         """ Share channel through emails."""
+        courses_without_templates = self.filtered(lambda channel: not channel.share_channel_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Channel Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.share_channel_template_id.with_context(

@@ -90,3 +90,16 @@ class TestControllers(tests.HttpCase):
         }
         self.assertEqual(submap(res.headers, headers.keys()), headers)
         self.assertEqual(res.content, attachment.raw)
+
+    def test_04_website_partner_avatar(self):
+        partner = self.env['res.partner'].create({'name': "Jack O'Neill"})
+
+        with self.subTest(published=False):
+            partner.website_published = False
+            res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
+            self.assertEqual(res.status_code, 404, "Public user should't access avatar of unpublished partners")
+
+        with self.subTest(published=True):
+            partner.website_published = True
+            res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
+            self.assertEqual(res.status_code, 200, "Public user should access avatar of published partners")

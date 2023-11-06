@@ -845,6 +845,36 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("Reference field with default value in list view", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree string="Test" editable="top">
+                    <field name="reference"/>
+                    <field name="display_name"/>
+                </tree>`,
+            mockRPC: (route, { method, args }) => {
+                if (method === "onchange") {
+                    return {
+                        value: {reference: "partner,2"},
+                    };
+                } else if (method === "create") {
+                    assert.strictEqual(args.length, 1);
+                    assert.strictEqual(args[0].reference, "partner,2");
+                }
+            },
+        });
+
+        await click(target, '.o_list_button_add');
+        await click(target, '.o_list_char[name="display_name"] input');
+        await editInput(target, '.o_list_char[name="display_name"] input', "Blabla");
+        await click(target, '.o_list_button_save');
+    });
+
     QUnit.test(
         "ReferenceField with model_field option (tree list in form view)",
         async function (assert) {
@@ -931,6 +961,52 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_list_table [name='reference']").textContent,
                 "xpad"
             );
+        }
+    );
+
+    QUnit.test(
+        "Change model field of a ReferenceField then select an invalid value (tree list in form view)",
+        async function (assert) {
+            serverData.models.turtle.records[0].partner_ids = [1];
+            serverData.models.partner.records[0].reference = "product,41";
+            serverData.models.partner.records[0].model_id = 20;
+
+            await makeView({
+                type: "form",
+                resModel: "turtle",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="name" />
+                                <field name="model_id"/>
+                                <field name="reference" required="true" options="{'model_field': 'model_id'}" class="reference_field" />
+                            </tree>
+                        </field>
+                   </form>`,
+            });
+            assert.strictEqual(target.querySelector(".reference_field").textContent, "xpad");
+            assert.strictEqual(target.querySelector(".o_list_many2one").textContent, "Product");
+
+            await click(target, ".o_list_table td.o_list_many2one");
+            await click(target, ".o_list_table .o_list_many2one input");
+            //Select the "Partner" option, different from original "Product"
+            const dropdownItems = [...target.querySelectorAll(".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item")];
+            await click(dropdownItems.filter(item => item.text === "Partner")[0]);
+            assert.strictEqual(target.querySelector(".reference_field input").value, "");
+            assert.strictEqual(target.querySelector(".o_list_many2one input").value, "Partner");
+            //Void the associated, required, "reference" field and make sure the form marks the field as required
+            await click(target, ".o_list_table .reference_field input");
+            const textInput = target.querySelector(".o_list_table .reference_field input");
+            textInput.setSelectionRange(0, textInput.value.length);
+            await triggerEvent(target, ".o_list_table .reference_field input", "keydown", {
+                key: "Backspace",
+            });
+            await click(target, ".o_form_view_container");
+
+            assert.containsOnce(target, ".o_list_table .reference_field.o_field_invalid");
         }
     );
 

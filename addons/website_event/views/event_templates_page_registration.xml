@@ -144,7 +144,7 @@
     <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
         id="registration_form"
         class="mb-5"
-        t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+        t-attf-data-action="/event/#{slug(event)}/registration/new" action="javascript:void(0)"
         itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="o_wevent_theme_bg_base shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">

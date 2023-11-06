@@ -55,10 +55,10 @@
                         <field name="line_ids">
                             <tree string="Payment Terms" editable="top" no_open="True">
                                 <field name="value" string="Due Type"/>
-                                <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" digits="[2, 2]"/>
+                                <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" />
                                 <field name="months"/>
                                 <field name="days"/>
-                                <field name="end_month" widget="boolean_toggle"/>
+                                <field name="end_month" widget="boolean_toggle" options="{'autosave': False}"/>
                                 <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
                                 <field name="discount_percentage"/>
                                 <field name="discount_days"/>

@@ -17,10 +17,12 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Jonatan Gk, 2022
 # Ivan Espinola, 2022
-# Farouk Jabiri, 2022
+# jabiri7, 2022
 # Josep Anton Belchi, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# martioodo hola, 2023
+# Albert Parera, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,8 +30,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Albert Parera, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -113,10 +115,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
-"- Instantàniament: totes les variants possibles es creen tan aviat com l' atribut i els seus valors s' afegeixin a un producte.\n"
-"        - Dinàmicament: cada variant es crea només quan s' afegeixen els seus atributs i valors corresponents a un ordre de vendes.\n"
-"        - Mai: els vinats mai no es creen per a l' atribut.\n"
-"        Nota: el mode de creació de variants no es pot canviar una vegada que l' atribut s' usi almenys un producte."
+"- Instantàniament: totes les variants possibles es creen tan aviat com l'atribut i els seus valors s'afegeixin a un producte.\n"
+"        - Dinàmicament: cada variant es crea només quan s'afegeixen els seus atributs i valors corresponents a una comanda.\n"
+"        - Mai: les variants mai es creen per a l'atribut.\n"
+"        Nota: el mode de creació de variants no es pot canviar una vegada que l'atribut s'utilitzi en almenys un producte."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -1762,7 +1764,7 @@ msgstr "Nombre d'errors"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: product
@@ -2544,10 +2546,10 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Especifiqui l'import fix a afegir o a treure (si és negatiu) a l'import "
+"Especifiqueu l'import fix per afegir o treure (si és negatiu) a l'import "
 "calculat amb el descompte."
 
 #. module: product
@@ -2728,9 +2730,9 @@ msgid ""
 "of *Create Variants*."
 msgstr ""
 "El nombre de variants a generar és massa alt. No hauríeu de generar variants"
-" per a cada combinació o generar-los sota demanda de l'ordre de vendes. Per "
-"a fer-ho, obriu la vista de forma d' atributs i canvieu el mode de *Crea els"
-" Viriats *."
+" per a cada combinació o generar-les sota demanda a la comanda de venda. Per"
+" a fer-ho, obriu la vista de formulari d'atributs i canvieu el mode de "
+"*Crear variants *."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -2756,6 +2758,13 @@ msgstr ""
 "La quantitat a comprar d' aquest proveïdor a beneficiar del preu, expressada"
 " en la unitat de producte del proveïdor de mesura si no en qualsevol, en la "
 "unitat per omissió de mesura del producte en cas contrari."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3300,10 +3309,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"No podeu eliminar el valor %s perquè s'utilitza en els següents productes:\n"
-"%s"
+"No podeu suprimir el valor %s perquè s'utilitza en els productes següents:\n"
+"%s\n"
+" Si el valor s'ha associat a un producte en el passat, no el podreu suprimir."
 
 #. module: product
 #. odoo-python
@@ -3329,6 +3340,14 @@ msgstr ""
 "(%s)\n"
 ", s'utilitzen a una altra llista de preus(s):\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"No podeu suprimir el valor %s perquè s'ha utilitzat en alguns productes."
 
 #. module: product
 #. odoo-python

@@ -121,7 +121,7 @@ class Product(models.Model):
         'location', 'warehouse',
     )
     def _compute_quantities(self):
-        products = self.filtered(lambda p: p.type != 'service')
+        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
             product.update(res[product.id])
@@ -245,6 +245,7 @@ class Product(models.Model):
             return self.description_pickingout or self.name
         if picking_code == 'internal':
             return self.description_picking or description
+        return description
 
     def _get_domain_locations(self):
         '''
@@ -252,6 +253,7 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, compute_child
         '''
+        Location = self.env['stock.location']
         Warehouse = self.env['stock.warehouse']
 
         def _search_ids(model, values):
@@ -280,7 +282,14 @@ class Product(models.Model):
             w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
-                location_ids = w_ids & l_ids
+                parents = Location.browse(w_ids).mapped("parent_path")
+                location_ids = {
+                    loc.id
+                    for loc in Location.browse(l_ids)
+                    if any(loc.parent_path.startswith(parent) for parent in parents)
+                }
+                if not location_ids:
+                    return [[expression.FALSE_LEAF]] * 3
             else:
                 location_ids = w_ids
         else:
@@ -346,7 +355,7 @@ class Product(models.Model):
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
             raise UserError(_('Invalid domain operator %s', operator))
         if not isinstance(value, (float, int)):
-            raise UserError(_('Invalid domain right operand %s', value))
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
@@ -359,6 +368,11 @@ class Product(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
+        if operator not in ('<', '>', '=', '!=', '<=', '>='):
+            raise UserError(_('Invalid domain operator %s', operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -570,9 +584,12 @@ class Product(models.Model):
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
             seen_rules = self.env['stock.rule']
+        warehouse = location.warehouse_id
+        if not warehouse and seen_rules:
+            warehouse = seen_rules[-1].propagate_warehouse_id
         rule = self.env['procurement.group']._get_rule(self, location, {
             'route_ids': route_ids,
-            'warehouse_id': location.warehouse_id
+            'warehouse_id': warehouse,
         })
         if rule in seen_rules:
             raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
@@ -582,6 +599,13 @@ class Product(models.Model):
             return seen_rules | rule
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+
+    def _get_date_with_security_lead_days(self, date, location, route_ids=False):
+        rules = self._get_rules_from_location(location, route_ids=route_ids)
+        for action, days in location.company_id._get_security_by_rule_action().items():
+            if action in rules.mapped('action'):
+                date -= relativedelta(days=days)
+        return date
 
     def _get_only_qty_available(self):
         """ Get only quantities available, it is equivalent to read qty_available
@@ -815,7 +839,7 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def _compute_tracking(self):
         self.filtered(
-            lambda t: not t.tracking or t.type == 'consu' and t.tracking != 'none'
+            lambda t: not t.tracking or t.type in ('consu', 'service')  and t.tracking != 'none'
         ).tracking = 'none'
 
     @api.onchange('type')
@@ -840,10 +864,17 @@ class ProductTemplate(models.Model):
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
             if products_changing_company:
+                move = self.env['stock.move'].sudo().search([
+                    ('product_id', 'in', products_changing_company.product_variant_ids.ids),
+                    ('company_id', 'not in', [vals['company_id'], False]),
+                ], order=None, limit=1)
+                if move:
+                    raise UserError(_("This product's company cannot be changed as long as there are stock moves of it belonging to another company."))
+
                 # Forbid changing a product's company when quant(s) exist in another company.
                 quant = self.env['stock.quant'].sudo().search([
                     ('product_id', 'in', products_changing_company.product_variant_ids.ids),
-                    ('company_id', '!=', vals['company_id']),
+                    ('company_id', 'not in', [vals['company_id'], False]),
                     ('quantity', '!=', 0),
                 ], order=None, limit=1)
                 if quant:
@@ -852,7 +883,7 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
@@ -968,7 +999,7 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        if self.env.ref('stock.stock_replenishment_product_template_action', raise_if_not_found=True):
+        if self.env.ref('stock.stock_replenishment_product_template_action', raise_if_not_found=False):
             action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_template_action')
         else:
             action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')

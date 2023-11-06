@@ -100,7 +100,9 @@ let defaultApp;
 export const _loadXML = (assets.loadXML = function loadXML(xml, app = defaultApp) {
     const doc = new DOMParser().parseFromString(xml, "text/xml");
     if (doc.querySelector("parsererror")) {
-        throw doc.querySelector("parsererror div").textContent.split(":")[0];
+        // The generated error XML is non-standard so we log the full content to
+        // ensure that the relevant info is actually logged.
+        throw new Error(doc.querySelector("parsererror").textContent.trim());
     }
 
     for (const element of doc.querySelectorAll("templates > [t-name][owl]")) {

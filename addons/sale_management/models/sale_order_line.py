@@ -21,3 +21,9 @@ class SaleOrderLine(models.Model):
                         lang = line.order_id.partner_id.lang
                         line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_sale_order_line_multiline_description_variants()
                         break
+
+    def _compute_price_unit(self):
+        # Avoid recomputing the price with pricelist rules, use the initial price
+        # used in the optional product line.
+        optional_product_lines = self.filtered('sale_order_option_ids')
+        super(SaleOrderLine, self - optional_product_lines)._compute_price_unit()

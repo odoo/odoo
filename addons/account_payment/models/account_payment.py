@@ -204,13 +204,18 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return {
             'provider_id': self.payment_token_id.provider_id.id,
-            'reference': self.ref,
+            'reference': self.env['payment.transaction']._compute_reference(
+                self.payment_token_id.provider_id.code, prefix=self.ref
+            ),
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'token_id': self.payment_token_id.id,
             'operation': 'offline',
             'payment_id': self.id,
+            **({'invoice_ids': [Command.set(self._context.get('active_ids', []))]}
+                if self._context.get('active_model') == 'account.move'
+                else {}),
             **extra_create_values,
         }
 

@@ -169,6 +169,7 @@ from .tools import (config, consteq, date_utils, file_path, parse_version,
 from .tools.geoipresolver import GeoIPResolver
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
+from .tools.misc import pickle
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -216,10 +217,6 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        # profiling
-        'profile_session': None,
-        'profile_collectors': None,
-        'profile_params': None,
     }
 
 # The request mimetypes that transport JSON in their body.
@@ -264,9 +261,10 @@ if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
     # let's add the websocket key only when appropriate.
     ROUTING_KEYS.add('websocket')
 
-# The duration of a user session before it is considered expired,
-# three months.
-SESSION_LIFETIME = 60 * 60 * 24 * 90
+# The default duration of a user session cookie. Inactive sessions are reaped
+# server-side as well with a threshold that can be set via an optional
+# config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
+SESSION_LIFETIME = 60 * 60 * 24 * 7
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -285,7 +283,7 @@ class SessionExpiredException(Exception):
 
 def content_disposition(filename):
     return "attachment; filename*=UTF-8''{}".format(
-        url_quote(filename, safe='')
+        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
     )
 
 def db_list(force=False, host=None):
@@ -401,6 +399,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         last_modified=mtime,
         etag=add_etags,
         max_age=cache_timeout,
+        response_class=Response,
         conditional=conditional
     )
 
@@ -860,8 +859,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.should_rotate = False
         self.save(session)
 
-    def vacuum(self):
-        threshold = time.time() - SESSION_LIFETIME
+    def vacuum(self, max_lifetime=SESSION_LIFETIME):
+        threshold = time.time() - max_lifetime
         for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
             path = os.path.join(root.session_store.path, fname)
             with contextlib.suppress(OSError):
@@ -871,12 +870,13 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
 class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', 'data', 'is_dirty', 'is_explicit', 'is_new',
+    __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_explicit', 'is_new',
                  'should_rotate', 'sid')
 
     def __init__(self, data, sid, new=False):
         self.can_save = True
-        self.data = data
+        self.__data = {}
+        self.update(data)
         self.is_dirty = False
         self.is_explicit = False
         self.is_new = new
@@ -890,22 +890,23 @@ class Session(collections.abc.MutableMapping):
         if item == 'geoip':
             warnings.warn('request.session.geoip have been moved to request.geoip', DeprecationWarning)
             return request.geoip if request else {}
-        return self.data[item]
+        return self.__data[item]
 
     def __setitem__(self, item, value):
-        if item not in self.data or self.data[item] != value:
+        value = pickle.loads(pickle.dumps(value))
+        if item not in self.__data or self.__data[item] != value:
             self.is_dirty = True
-        self.data[item] = value
+        self.__data[item] = value
 
     def __delitem__(self, item):
-        del self.data[item]
+        del self.__data[item]
         self.is_dirty = True
 
     def __len__(self):
-        return len(self.data)
+        return len(self.__data)
 
     def __iter__(self):
-        return iter(self.data)
+        return iter(self.__data)
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -917,7 +918,7 @@ class Session(collections.abc.MutableMapping):
             self[key] = val
 
     def clear(self):
-        self.data.clear()
+        self.__data.clear()
         self.is_dirty = True
 
     #
@@ -979,6 +980,7 @@ class Session(collections.abc.MutableMapping):
 
         self.should_rotate = True
         self.update({
+            'db': env.registry.db_name,
             'login': login,
             'uid': uid,
             'context': user_context,
@@ -1116,6 +1118,10 @@ class FutureResponse:
 
     def __init__(self):
         self.headers = werkzeug.datastructures.Headers()
+
+    @property
+    def _charset(self):
+        return self.charset
 
     @functools.wraps(werkzeug.Response.set_cookie)
     def set_cookie(self, key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False, samesite=None, cookie_type='required'):
@@ -1259,6 +1265,22 @@ class Request:
             self.session.is_dirty = was_dirty
         return self.session._geoip
 
+    @lazy_property
+    def best_lang(self):
+        lang = self.httprequest.accept_languages.best
+        if not lang:
+            return None
+
+        try:
+            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
+            if territory:
+                lang = f'{code}_{territory}'
+            else:
+                lang = babel.core.LOCALE_ALIASES[code]
+            return lang
+        except (ValueError, KeyError):
+            return None
+
     # =====================================================
     # Helpers
     # =====================================================
@@ -1321,19 +1343,7 @@ class Request:
         :returns: Preferred language if specified or 'en_US'
         :rtype: str
         """
-        lang = self.httprequest.accept_languages.best
-        if not lang:
-            return DEFAULT_LANG
-
-        try:
-            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
-            if territory:
-                lang = f'{code}_{territory}'
-            else:
-                lang = babel.core.LOCALE_ALIASES[code]
-            return lang
-        except (ValueError, KeyError):
-            return DEFAULT_LANG
+        return self.best_lang or DEFAULT_LANG
 
     def _geoip_resolve(self):
         if not (root.geoip_resolver and self.httprequest.remote_addr):
@@ -1580,8 +1590,6 @@ class Request:
             except Exception as exc:
                 if isinstance(exc, HTTPException) and exc.code is None:
                     raise  # bubble up to odoo.http.Application.__call__
-                if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
-                    raise  # bubble up to werkzeug.debug.DebuggedApplication
                 exc.error_response = self.registry['ir.http']._handle_error(exc)
                 raise
 
@@ -1606,7 +1614,8 @@ class Request:
         ir_http._authenticate(rule.endpoint)
         ir_http._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
-        ir_http._post_dispatch(response)
+        # the registry can have been reniewed by dispatch
+        self.registry['ir.http']._post_dispatch(response)
         return response
 
 
@@ -1679,7 +1688,7 @@ class Dispatcher(ABC):
         root.set_csp(response)
 
     @abstractmethod
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Transform the exception into a valid HTTP response. Called upon
         any exception while serving a request.
@@ -1722,7 +1731,7 @@ class HttpDispatcher(Dispatcher):
         else:
             return endpoint(**self.request.params)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request
         to a `type='http'` route. Also handle exceptions that occurred
@@ -1731,14 +1740,14 @@ class HttpDispatcher(Dispatcher):
         json.
 
         :param Exception exc: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: :class:`werkzeug.wrapper.Response`
+        :returns: a WSGI application
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
+            was_connected = session.uid is not None
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
-            if not session.is_explicit:
+            if not session.is_explicit and was_connected:
                 root.session_store.rotate(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
             return response
@@ -1756,6 +1765,7 @@ class JsonRPCDispatcher(Dispatcher):
     def __init__(self, request):
         super().__init__(request)
         self.jsonrequest = {}
+        self.request_id = None
 
     @classmethod
     def is_compatible_with(cls, request):
@@ -1793,8 +1803,13 @@ class JsonRPCDispatcher(Dispatcher):
         """
         try:
             self.jsonrequest = self.request.get_json_data()
+            self.request_id = self.jsonrequest.get('id')
         except ValueError as exc:
-            raise BadRequest("Invalid JSON data") from exc
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON data", status=400))
+        except AttributeError as exc:
+            # must use abort+Response to bypass handle_error
+            werkzeug.exceptions.abort(Response("Invalid JSON-RPC data", status=400))
 
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
@@ -1807,16 +1822,15 @@ class JsonRPCDispatcher(Dispatcher):
             result = endpoint(**self.request.params)
         return self._response(result)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request to
         a `type='json'` route. Also handle exceptions that occurred when
         no route matched the request path, that no fallback page could
         be delivered and that the request ``Content-Type`` was json.
 
-        :param exc Exception: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: Response
+        :param exc: the exception that occurred.
+        :returns: a WSGI application
         """
         error = {
             'code': 200,  # this code is the JSON-RPC level code, it is
@@ -1836,8 +1850,7 @@ class JsonRPCDispatcher(Dispatcher):
         return self._response(error=error)
 
     def _response(self, result=None, error=None):
-        request_id = self.jsonrequest.get('id')
-        response = {'jsonrpc': '2.0', 'id': request_id}
+        response = {'jsonrpc': '2.0', 'id': self.request_id}
         if error is not None:
             response['error'] = error
         if result is not None:
@@ -1959,6 +1972,10 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        if hasattr(current_thread, 'dbname'):
+            del current_thread.dbname
+        if hasattr(current_thread, 'uid'):
+            del current_thread.uid
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
@@ -2007,12 +2024,7 @@ class Application:
             else:
                 _logger.error("Exception during request handling.", exc_info=True)
 
-            # Server is running with --dev=werkzeug, bubble the error up
-            # to werkzeug so he can fire up a debugger.
-            if 'werkzeug' in config['dev_mode'] and request.dispatcher.routing_type != 'json':
-                raise
-
-            # Ensure there is always a Response attached to the exception.
+            # Ensure there is always a WSGI handler attached to the exception.
             if not hasattr(exc, 'error_response'):
                 exc.error_response = request.dispatcher.handle_error(exc)
 

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -43,7 +43,7 @@ msgstr ""
 "                Adressen toevoegen aan de toegestane lijst\n"
 "            </p><p>\n"
 "                Om je te beschermen tegen spam en antwoordlussen, blokkeert Odoo automatisch e-mails\n"
-"                die elke <b>%i</b> minuten naar je gateway komen voorbij een drempel van <b>%i</b> e-mails\n"
+"                die elke <b>%i</b> e-mails naar je gateway komen voorbij een drempel van <b>%i</b> e-minuten\n"
 "                . Als er adressen zijn waarvan je heel vaak updates moet\n"
 "                ontvangen, kan je ze echter hieronder toevoegen en Odoo zal ze doorlaten.\n"
 "            </p>\n"
@@ -865,11 +865,6 @@ msgid "<strong>Original note:</strong>"
 msgstr "<strong>Originele notitie:</strong>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Aanbevolen activiteiten</strong>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -1408,6 +1403,13 @@ msgid ""
 msgstr ""
 "Er is een SSL-uitzondering opgetreden. Controleer de SSL/TLS-configuratie op de serverpoort.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Een toegangstoken moet opgegeven zijn voor elke bijlage."
 
 #. module: mail
 #. odoo-python
@@ -2114,12 +2116,12 @@ msgstr "Carbon Copy ontvanger (placeholders kunnen hier worden gebruikt)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
 msgid "Catchall"
-msgstr "Catchall"
+msgstr "Catch-all"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr "Catchall e-mail"
+msgstr "Catch-all e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2401,7 +2403,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr "Door komma's gescheiden adressen van de ontvangende"
+msgstr "Door komma's gescheiden adressen van de ontvangers"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
@@ -2432,6 +2434,7 @@ msgstr "Bedrijven"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2774,7 +2777,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Aangepast bounced bericht"
+msgstr "Aangepast bouncebericht"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3082,6 +3085,7 @@ msgstr "Verbinding verbroken met de RTC-oproep door de server"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3147,7 +3151,7 @@ msgid ""
 "this template"
 msgstr ""
 "Geef een optie op gerelateerde documenten om een ​​samenstelling wizard te "
-"openen met dit sjabloon"
+"openen met deze sjabloon"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_message
@@ -3346,12 +3350,12 @@ msgstr "Intensiteit van randvervaging"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr "Relaties wijzigen"
+msgstr "Relaties bewerken"
 
 #. module: mail
 #. odoo-javascript
@@ -3443,7 +3447,7 @@ msgstr "Lay-out voor e-mailmeldingen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Email Preview"
-msgstr "E-mail preview"
+msgstr "E-mail voorbeeld"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -3459,7 +3463,7 @@ msgstr "E-mailsjabloon"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
 msgid "Email Template Preview"
-msgstr "E-mailsjabloon preview"
+msgstr "E-mailsjabloon voorbeeld"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -3870,7 +3874,7 @@ msgstr "Velden"
 msgid ""
 "File from where the template originates. Used to reset broken template."
 msgstr ""
-"Bestand waar het sjabloon vandaan komt. Wordt gebruikt om een gebroken "
+"Bestand waar de sjabloon vandaan komt. Wordt gebruikt om een gebroken "
 "sjabloon te resetten."
 
 #. module: mail
@@ -4104,13 +4108,6 @@ msgstr "Outlook API-inloggegevens ophalen"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
 msgstr "Gmail-inloggegevens"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Ga naar het configuratiepaneel"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
@@ -4690,7 +4687,7 @@ msgstr "Server voor inkomende mail"
 #: model:ir.actions.act_window,name:mail.action_email_server_tree
 #: model:ir.ui.menu,name:mail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Servers voor inkomende e-mail"
+msgstr "Inkomende e-mailservers"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -4914,7 +4911,7 @@ msgstr "Is microfoon gedempt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__is_pinned
 msgid "Is pinned on the interface"
-msgstr "Is gespeld op de interface"
+msgstr "Is vastgezet op de interface"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_camera_on
@@ -5469,7 +5466,7 @@ msgstr "Weegschaal"
 #: model:ir.ui.menu,name:mail.mail_link_preview_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_link_preview_view_tree
 msgid "Link Previews"
-msgstr "Link previews"
+msgstr "Link voorbeelden"
 
 #. module: mail
 #. odoo-javascript
@@ -5571,6 +5568,7 @@ msgstr "Log als interne notitie"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "Log notitie"
@@ -5738,14 +5736,12 @@ msgstr "E-mailsjabloon met deze e-mailserver"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr "Mail: E-mail wachtrij manager"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr "Mail: Fetchmail-service"
 
@@ -5786,7 +5782,7 @@ msgstr "Hoofdbijlage"
 #: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #, python-format
 msgid "Manage Messages"
-msgstr "Beheer berichten"
+msgstr "Berichten beheren"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -5843,6 +5839,13 @@ msgstr "Markeren als nog te doen"
 #, python-format
 msgid "Mark as done"
 msgstr "Markeren als gereed"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr "Media-apparaten onbereikbaar"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -6618,14 +6621,12 @@ msgstr "Soort notificatie"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr "Melding: verwijder notificaties ouder dan 6 maanden"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr "Melding: Stuur geplande berichtmeldingen"
 
@@ -6688,7 +6689,7 @@ msgstr "Aantal foutmeldingen"
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Aantal berichten die actie vereisen"
 
 #. module: mail
@@ -6844,7 +6845,7 @@ msgstr "Oude waarde valuta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_text
 msgid "Old Value Text"
-msgstr "Oude waarde text"
+msgstr "Oude waarde tekst"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6980,6 +6981,13 @@ msgid "Open in Discuss"
 msgstr "Openen in Chat"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "Open profiel"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
@@ -7082,12 +7090,12 @@ msgstr "Uitgaand"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr "Servers voor uitgaande e-mail"
+msgstr "Uitgaande e-mailservers"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
 msgid "Outgoing Mail Server"
-msgstr "Uitgaande mailserver"
+msgstr "Uitgaande e-mailserver"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -7099,7 +7107,7 @@ msgstr "Uitgaande e-mails"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_server_id
 msgid "Outgoing mail server"
-msgstr "Uitgaande mailserver"
+msgstr "Uitgaande e-mailserver"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7471,12 +7479,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
 msgid "Preview"
-msgstr "Preview"
+msgstr "Voorbeeld"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
-msgstr "Preview van"
+msgstr "Voorbeeld van"
 
 #. module: mail
 #. odoo-javascript
@@ -7541,7 +7549,6 @@ msgstr "Publisher Warranty Contract"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Publisher: Melding bijwerken"
 
@@ -7722,6 +7729,11 @@ msgid "Recipients"
 msgstr "Ontvangers"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr "Geadviseerde activiteiten"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
 msgstr "Aanbevolen activiteitensoort"
@@ -7827,7 +7839,7 @@ msgstr "Gerelateerde relatie"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
 msgid "Relation field"
-msgstr "Gerelateerd veld"
+msgstr "Relatieveld"
 
 #. module: mail
 #. odoo-javascript
@@ -7855,7 +7867,7 @@ msgstr "Verwijderen uit Todo-lijst"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
-"Verwijder de contextuele actie om dit sjabloon te gebruiken op documenten"
+"Verwijder de contextuele actie om deze sjabloon te gebruiken op documenten"
 
 #. module: mail
 #. odoo-javascript
@@ -7890,7 +7902,7 @@ msgstr "Beantwoorden"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To"
-msgstr "Antwoorden op"
+msgstr "Antwoorden aan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -7908,19 +7920,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
-msgstr "Antwoorden op"
+msgstr "Antwoorden aan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr "Antwoordadres"
+msgstr "Antwoord aan-adres"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Replying to"
-msgstr "Antwoorden op"
+msgstr "Antwoorden aan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
@@ -8006,14 +8018,14 @@ msgid "Review All Templates"
 msgstr "Alle sjablonen bekijken"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
-msgstr "rich text inhoud"
+msgstr "Tekst met opmaak"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__body_html
 msgid "Rich-text/HTML message"
-msgstr "Rich text/HTML bericht"
+msgstr "Tekst met opmaak/HTML bericht"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__rtc_inviting_session_id
@@ -8070,6 +8082,13 @@ msgstr "SOS-knop"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr "SSL is misschien niet goed ingesteld"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
@@ -8653,7 +8672,7 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van "
+"Navigatiekolom-actie om deze sjabloon beschikbaar te maken op de regels van "
 "het gerelateerde documentmodel"
 
 #. module: mail
@@ -9043,12 +9062,12 @@ msgstr "Sjabloon Bestandsnaam"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
 msgid "Template Preview"
-msgstr "Sjabloon preview"
+msgstr "Sjabloon voorbeeld"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
 msgid "Template Preview Language"
-msgstr "Sjabloon preview taal"
+msgstr "Sjabloon voorbeeldtaal"
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -9108,6 +9127,11 @@ msgid "Test & Confirm"
 msgstr "Testen & Bevestigen"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
+msgstr "Inhoud tekst"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
@@ -9137,11 +9161,29 @@ msgstr "De modus Volledig scherm is geweigerd door de browser"
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Het btw nummer. Vul het in als het contact btw moet betalen. Wordt gebruikt "
-"in sommige rapportages."
+"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"belastingplichtig is."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"De bijlage %s bestaat niet of je hebt geen rechten om deze te bekijken."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "De bijlage %s bestaat niet."
 
 #. module: mail
 #. odoo-javascript
@@ -9365,7 +9407,7 @@ msgstr "Dit veld is hoofdlettergevoelig."
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr ""
-"Dit veld is gebruikt voor de interne beschrijving van het gebruik van het "
+"Dit veld is gebruikt voor de interne beschrijving van het gebruik van de "
 "sjabloon."
 
 #. module: mail
@@ -9598,7 +9640,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Tracking"
-msgstr "Traceren"
+msgstr "Volgen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -9706,7 +9748,7 @@ msgstr ""
 "- 'E-mail verzenden': post een bericht, een notitie of stuur een e-mail (Chat)\n"
 "- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
 "- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
-"- 'SMS-tekstbericht verzenden': stuur sms, log in op documenten (SMS)"
+"- 'SMS-bericht verzenden': stuur sms, log in op documenten (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -10096,6 +10138,16 @@ msgstr ""
 " profiteren van een kant-en-klare e-mailserver (@ mijnbedrijf.odoo.com)."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
+"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10171,7 +10223,7 @@ msgstr "Kanalen bekijken of eraan deelnemen"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Viewer"
-msgstr "Toeschouwer"
+msgstr "Viewer"
 
 #. module: mail
 #. odoo-javascript
@@ -10439,17 +10491,6 @@ msgstr "Je kunt alleen het profiel van bestaande gebruikers openen."
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Je kunt vanaf hier geen nieuwe gebruiker aanmaken.\n"
-" Ga naar de instellingen om een nieuwe gebruiker aan te maken."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10511,8 +10552,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Je kunt bestanden toevoegen aan dit sjabloon. Deze worden vervolgens "
-"toegevoegd aan alle e-mails op basis van dit sjabloon"
+"Je kunt bestanden toevoegen aan deze sjabloon. Deze worden vervolgens "
+"toegevoegd aan alle e-mails op basis van deze sjabloon"
 
 #. module: mail
 #. odoo-javascript
@@ -13770,7 +13811,7 @@ msgstr "gniffelend kattengezicht"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "catchall"
-msgstr "vangst"
+msgstr "catch-all"
 
 #. module: mail
 #. odoo-javascript
@@ -20407,7 +20448,7 @@ msgstr "is gewijzigd vanuit:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activity:"
-msgstr "heb je zojuist de volgende activiteit toegewezen:"
+msgstr "heeft je zojuist de volgende activiteit toegewezen:"
 
 #. module: mail
 #. odoo-javascript

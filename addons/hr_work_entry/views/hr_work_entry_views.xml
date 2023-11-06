@@ -40,33 +40,29 @@
         <field name="arch" type="xml">
             <form string="Work Entry" >
                 <header>
-                    <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,validated,conflict"/>
+                    <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
                 </header>
                 <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
                     Note: Validated work entries cannot be modified.
                 </div>
                 <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Work Entry Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
-                        </h1>
-                    </div>
                     <group>
                         <group>
+                            <field name="name" string="Description" placeholder="Work Entry Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
                             <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="work_entry_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group>
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
-                            <label for="duration" string="Period"/>
+                            <label for="duration"/>
                             <div class="o_row mw-50 mw-sm-25">
                                 <field name="duration"
                                     nolabel="1"
                                     widget="float_time"
                                     class="o_hr_narrow_field"
                                     attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                                <span class="ml8">Hours</span>
+                                <span>Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
                         </group>

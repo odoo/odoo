@@ -144,8 +144,12 @@ class AccountMove(models.Model):
             if rec.company_id.currency_id == rec.currency_id:
                 rec.l10n_ar_currency_rate = 1.0
             elif not rec.l10n_ar_currency_rate:
-                rec.l10n_ar_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
+                rec.l10n_ar_currency_rate = self.env['res.currency']._get_conversion_rate(
+                    from_currency=rec.currency_id,
+                    to_currency=rec.company_id.currency_id,
+                    company=rec.company_id,
+                    date=rec.invoice_date,
+                )
 
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
@@ -319,6 +323,7 @@ class AccountMove(models.Model):
         return super()._get_name_invoice_report()
 
     def _l10n_ar_get_invoice_totals_for_report(self):
+        """If the invoice document type indicates that vat should not be detailed in the printed report (result of _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise it would be showing amount_untaxed in the amount_total"""
         self.ensure_one()
         include_vat = self._l10n_ar_include_vat()
         base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
@@ -341,11 +346,18 @@ class AccountMove(models.Model):
                 if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
             ]
 
-        return self.env['account.tax']._prepare_tax_totals(
+        tax_totals = self.env['account.tax']._prepare_tax_totals(
             base_line_vals_list,
             self.currency_id,
             tax_lines=tax_line_vals_list,
         )
+
+        if include_vat:
+            temp = self.tax_totals
+            tax_totals['amount_total'] = temp['amount_total']
+            tax_totals['formatted_amount_total'] = temp['formatted_amount_total']
+
+        return tax_totals
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()

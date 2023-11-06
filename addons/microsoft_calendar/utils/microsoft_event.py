@@ -3,6 +3,7 @@
 from odoo.api import model
 from typing import Iterator, Mapping
 from collections import abc
+from odoo.tools import ReadonlyDict
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 
 
@@ -17,14 +18,15 @@ class MicrosoftEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) -> Iterator['MicrosoftEvent']:
         return iter(MicrosoftEvent([vals]) for vals in self._events.values())
@@ -99,12 +101,27 @@ class MicrosoftEvent(abc.Set):
 
         unmapped_events = self.filter(lambda e: e.id not in mapped_events)
 
+        # Query events OR recurrences, get organizer_id and universal_id values by splitting microsoft_id.
         model_env = force_model if force_model is not None else self._get_model(env)
-        odoo_events = model_env.with_context(active_test=False).search([
-            '|',
-            ('ms_universal_event_id', "in", unmapped_events.uids),
-            ('ms_organizer_event_id', "in", unmapped_events.ids)
-        ]).with_env(env)
+        organiser_ids = tuple(str(v) for v in unmapped_events.ids if v) or ('NULL',)
+        universal_ids = tuple(str(v) for v in unmapped_events.uids if v) or ('NULL',)
+        model_env.flush_model(['microsoft_id'])
+        env.cr.execute(
+            """
+                SELECT id, organizer_id, universal_id
+                FROM (
+                        SELECT id,
+                                split_part(microsoft_id, ':', 1) AS organizer_id,
+                                split_part(microsoft_id, ':', 2) AS universal_id
+                            FROM %s
+                            WHERE microsoft_id IS NOT NULL) AS splitter
+                WHERE organizer_id IN %%s
+                OR universal_id IN %%s
+            """ % model_env._table, (organiser_ids, universal_ids))
+
+        res = env.cr.fetchall()
+        odoo_events_ids = [val[0] for val in res]
+        odoo_events = model_env.browse(odoo_events_ids)
 
         # 1. try to match unmapped events with Odoo events using their iCalUId
         unmapped_events_with_uids = unmapped_events.filter(lambda e: e.iCalUId)

@@ -118,7 +118,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True)
+    description = fields.Html('Description', translate=True, sanitize_attributes=False)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -171,7 +171,10 @@ class Slide(models.Model):
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Article'.", translate=True, sanitize_attributes=False, sanitize_form=False)
+    html_content = fields.Html(
+        "HTML Content", translate=True,
+        sanitize_attributes=False, sanitize_form=False, sanitize_overridable=True,
+        help="Custom HTML content for slides of category 'Article'.")
     # content - images
     image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False) # Used to filter file input to images only
     image_google_url = fields.Char('Image Link', related='url', readonly=False,
@@ -216,7 +219,7 @@ class Slide(models.Model):
     embed_ids = fields.One2many('slide.embed', 'slide_id', string="External Slide Embeds")
     embed_count = fields.Integer('# of Embeds', compute='_compute_embed_counts')
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
-    public_views = fields.Integer('# of Public Views', copy=False)
+    public_views = fields.Integer('# of Public Views', copy=False, default=0, readonly=True)
     total_views = fields.Integer("# Total Views", default="0", compute='_compute_total', store=True)
     # comments
     comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
@@ -638,11 +641,12 @@ class Slide(models.Model):
                     # only update keys that are not set in the incoming vals
                     slide.update({key: value for key, value in slide_metadata.items() if key not in vals.keys()})
 
-            if not 'completion_time' not in vals:
+            if 'completion_time' not in vals:
                 slide._on_change_document_binary_content()
 
             if slide.is_published and not slide.is_category:
                 slide._post_publication()
+                slide.channel_id.channel_partner_ids._recompute_completion()
         return slides
 
     def write(self, values):
@@ -670,8 +674,8 @@ class Slide(models.Model):
                 })
 
         if 'is_published' in values or 'active' in values:
-            # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._recompute_completion()
+            # recompute the completion for all partners of the channel
+            self.channel_id.channel_partner_ids._recompute_completion()
 
         return res
 
@@ -686,7 +690,9 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
+        channel_partner_ids = self.channel_id.channel_partner_ids
         super(Slide, self).unlink()
+        channel_partner_ids._recompute_completion()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
@@ -794,7 +800,10 @@ class Slide(models.Model):
         return self._sign_token(partner_id)
 
     def _send_share_email(self, email, fullscreen):
-        # TDE FIXME: template to check
+        courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.channel_id.share_slide_template_id.with_context(
@@ -921,7 +930,7 @@ class Slide(models.Model):
         # Remove the Karma point gained
         completed_slides._action_set_quiz_done(completed=False)
 
-        self.env['slide.slide.partner'].sudo().search([
+        self.env['slide.slide.partner'].with_context(slides_marked_uncompleted=True).sudo().search([
             ('slide_id', 'in', completed_slides.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
         ]).completed = False
@@ -936,8 +945,8 @@ class Slide(models.Model):
         """
         if any(not slide.channel_id.is_member or not slide.website_published for slide in self):
             raise UserError(
-                _('You cannot mark a slide quiz as completed if you are not among its members.') if completed
-                else _('You cannot mark a slide quiz as not completed if you are not among its members.')
+                _('You cannot mark a slide quiz as completed if you are not among its members or it is unpublished.') if completed
+                else _('You cannot mark a slide quiz as not completed if you are not among its members or it is unpublished.')
             )
 
         points = 0

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
@@ -24,6 +25,7 @@ class Job(models.Model):
         'Process Details',
         translate=True,
         help="Complementary information that will appear on the job submission page",
+        sanitize_attributes=False,
         default="""
             <span class="text-muted small">Time to Answer</span>
             <h6>2 open days</h6>
@@ -34,10 +36,17 @@ class Job(models.Model):
             <h6>4 Days after Interview</h6>
         """)
 
+    @api.onchange('website_published')
+    def _onchange_website_published(self):
+        if self.website_published:
+            self.is_published = True
+        else:
+            self.is_published = False
+
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
-            job.website_url = "/jobs/detail/%s" % job.id
+            job.website_url = f'/jobs/detail/{slug(job)}'
 
     def set_open(self):
         self.write({'website_published': False})

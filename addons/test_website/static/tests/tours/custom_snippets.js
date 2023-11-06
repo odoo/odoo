@@ -29,8 +29,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
 }, [
     {
         content: "drop a snippet",
-        trigger: "#oe_snippets.o_loaded .oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        extra_trigger: "iframe body.editor_enable",
+        trigger: ".oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
         moveTrigger: ".oe_drop_zone",
         run: "drag_and_drop iframe #wrap",
     },

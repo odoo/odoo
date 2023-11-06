@@ -296,3 +296,179 @@ class TestSurveyInternals(common.TestSurveyCommon):
         self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
         self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
                             q_is_vegetarian.suggested_answer_ids[1].id)
+
+    @users('survey_manager')
+    def test_copy_conditional_question_with_sequence_changed(self):
+        """ Create a survey with two questions, change the sequence of the questions,
+        set the second question as conditional on the first one, and check that the conditional
+        question is still conditional on the first one after copying the survey."""
+
+        def get_question_by_title(survey, title):
+            return survey.question_ids.filtered(lambda q: q.title == title)[0]
+
+        # Create the survey questions
+        q_1 = self._add_question(
+            self.page_0, 'Q1', 'multiple_choice', survey_id=self.survey.id,
+            sequence=200, labels=[{'value': 'Yes'}, {'value': 'No'}])
+        q_2 = self._add_question(
+            self.page_0, 'Q2', 'multiple_choice', survey_id=self.survey.id,
+            sequence=300, labels=[{'value': 'Yes'}, {'value': 'No'}])
+
+        # Change the sequence of the second question to be before the first one
+        q_2.write({'sequence': 100})
+
+        # Set a conditional question on the first question
+        q_1.write({
+            'is_conditional': True,
+            'triggering_question_id': q_2.id,
+            'triggering_answer_id': q_2.suggested_answer_ids[0].id,
+        })
+
+        (q_1 | q_2).invalidate_recordset()
+
+        # Clone the survey
+        cloned_survey = self.survey.copy()
+
+        # Check that the sequence of the questions are the same as the original survey
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q1').sequence, q_1.sequence)
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q2').sequence, q_2.sequence)
+
+        # Check that the conditional question is correctly copied to the right question
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q1').triggering_question_id.title, q_1.triggering_question_id.title)
+        self.assertFalse(get_question_by_title(cloned_survey, 'Q2').triggering_question_id)
+
+    def test_get_pages_and_questions_to_show(self):
+        """
+        Tests the method `_get_pages_and_questions_to_show` - it takes a recordset of
+        question.question from a survey.survey and returns a recordset without
+        invalid conditional questions and pages without description
+
+        Structure of the test survey:
+
+        sequence    | type                          | trigger       | validity
+        ----------------------------------------------------------------------
+        1           | page, no description          | /             | X
+        2           | text_box                      | trigger is 6  | X
+        3           | numerical_box                 | trigger is 2  | X
+        4           | simple_choice                 | /             | V
+        5           | page, description             | /             | V
+        6           | multiple_choice               | /             | V
+        7           | multiple_choice, no answers   | /             | V
+        8           | text_box                      | trigger is 6  | V
+        9           | matrix                        | trigger is 5  | X
+        10          | simple_choice                 | trigger is 7  | X
+        11          | simple_choice, no answers     | trigger is 8  | X
+        12          | text_box                      | trigger is 11 | X
+        """
+
+        my_survey = self.env['survey.survey'].create({
+            'title': 'my_survey',
+            'questions_layout': 'page_per_question',
+            'questions_selection': 'all',
+            'access_mode': 'public',
+        })
+        [
+            page_without_description,
+            text_box_1,
+            numerical_box,
+            _simple_choice_1,
+            page_with_description,
+            multiple_choice_1,
+            multiple_choice_2,
+            text_box_2,
+            matrix,
+            simple_choice_2,
+            simple_choice_3,
+            text_box_3,
+        ] = self.env['survey.question'].create([{
+            'title': 'no desc',
+            'survey_id': my_survey.id,
+            'sequence': 1,
+            'question_type': False,
+            'is_page': True,
+            'description': False,
+        }, {
+            'title': 'text_box with invalid trigger',
+            'survey_id': my_survey.id,
+            'sequence': 2,
+            'is_page': False,
+            'question_type': 'simple_choice',
+        }, {
+            'title': 'numerical box with trigger that is invalid',
+            'survey_id': my_survey.id,
+            'sequence': 3,
+            'is_page': False,
+            'question_type': 'numerical_box',
+        }, {
+            'title': 'valid simple_choice',
+            'survey_id': my_survey.id,
+            'sequence': 4,
+            'is_page': False,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [(0, 0, {'value': 'a'})],
+        }, {
+            'title': 'with desc',
+            'survey_id': my_survey.id,
+            'sequence': 5,
+            'is_page': True,
+            'question_type': False,
+            'description': 'This page has a description',
+        }, {
+            'title': 'multiple choice not conditional',
+            'survey_id': my_survey.id,
+            'sequence': 6,
+            'is_page': False,
+            'question_type': 'multiple_choice',
+            'suggested_answer_ids': [(0, 0, {'value': 'a'})]
+        }, {
+            'title': 'multiple_choice with no answers',
+            'survey_id': my_survey.id,
+            'sequence': 7,
+            'is_page': False,
+            'question_type': 'multiple_choice',
+        }, {
+            'title': 'text_box with valid trigger',
+            'survey_id': my_survey.id,
+            'sequence': 8,
+            'is_page': False,
+            'question_type': 'text_box',
+        }, {
+            'title': 'matrix with invalid trigger (page)',
+            'survey_id': my_survey.id,
+            'sequence': 9,
+            'is_page': False,
+            'question_type': 'matrix',
+        }, {
+            'title': 'simple choice w/ invalid trigger (no suggested_answer_ids)',
+            'survey_id': my_survey.id,
+            'sequence': 10,
+            'is_page': False,
+            'question_type': 'simple_choice',
+        }, {
+            'title': 'text_box w/ invalid trigger (not a mcq)',
+            'survey_id': my_survey.id,
+            'sequence': 11,
+            'is_page': False,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': False,
+        }, {
+            'title': 'text_box w/ invalid trigger (suggested_answer_ids is False)',
+            'survey_id': my_survey.id,
+            'sequence': 12,
+            'is_page': False,
+            'question_type': 'text_box',
+        }])
+        text_box_1.write({'is_conditional': True, 'triggering_question_id': multiple_choice_1.id})
+        numerical_box.write({'is_conditional': True, 'triggering_question_id': text_box_1.id})
+        text_box_2.write({'is_conditional': True, 'triggering_question_id': multiple_choice_1.id})
+        matrix.write({'is_conditional': True, 'triggering_question_id': page_with_description.id})
+        simple_choice_2.write({'is_conditional': True, 'triggering_question_id': multiple_choice_2.id})
+        simple_choice_3.write({'is_conditional': True, 'triggering_question_id': text_box_2.id})
+        text_box_3.write({'is_conditional': True, 'triggering_question_id': simple_choice_3.id})
+
+        invalid_records = page_without_description + text_box_1 + numerical_box \
+            + matrix + simple_choice_2 + simple_choice_3 + text_box_3
+        question_and_page_ids = my_survey.question_and_page_ids
+        returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
+
+        self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)

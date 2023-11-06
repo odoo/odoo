@@ -10,5 +10,6 @@ patch(NewContentModal.prototype, 'website_event_new_content', {
         const newEventElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_event');
         newEventElement.createNewContent = () => this.onAddContent('website_event.event_event_action_add', true);
         newEventElement.status = MODULE_STATUS.INSTALLED;
+        newEventElement.model = 'event.event';
     },
 });

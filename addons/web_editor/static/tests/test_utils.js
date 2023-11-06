@@ -8,6 +8,7 @@ var OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
+const { TABLE_ATTRIBUTES, TABLE_STYLES } = require('@web_editor/js/backend/convert_inline');
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -27,7 +28,19 @@ const COLOR_PICKER_TEMPLATE = `
             <button data-color="white-50"/>
             <button data-color="white-75"/>
         </div>
-        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"/>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
     </colorpicker>
 `;
 const SNIPPETS_TEMPLATE = `
@@ -726,22 +739,8 @@ var textInput = function (target, char) {
 // Convert Inline
 //--------------------------------------------------------------------------
 
-const tableAttributes = {
-    cellspacing: 0,
-    cellpadding: 0,
-    border: 0,
-    width: '100%',
-    align: 'center',
-    role: 'presentation',
-};
-const tableAttributesString = Object.keys(tableAttributes).map(key => `${key}="${tableAttributes[key]}"`).join(' ');
-const tableStyles = {
-    'border-collapse': 'collapse',
-    'text-align': 'inherit',
-    'font-size': 'unset',
-    'line-height': 'unset',
-};
-const tableStylesString = Object.keys(tableStyles).map(key => `${key}: ${tableStyles[key]};`).join(' ');
+const tableAttributesString = Object.keys(TABLE_ATTRIBUTES).map(key => `${key}="${TABLE_ATTRIBUTES[key]}"`).join(' ');
+const tableStylesString = Object.keys(TABLE_STYLES).map(key => `${key}: ${TABLE_STYLES[key]};`).join(' ');
 /**
  * Take a matrix representing a grid and return an HTML string of the Bootstrap
  * grid. The matrix is an array of rows, with each row being an array of cells.
@@ -774,13 +773,23 @@ function getGridHtml(matrix) {
         `</div>`
     );
 }
+function getTdHtml(colspan, text, containerWidth) {
+    return (
+        `<td colspan="${colspan}"${
+            containerWidth ? ' ' + `style="max-width: ${Math.round(containerWidth*colspan/12*100)/100}px;"`
+                           : ''}>` +
+            text +
+        `</td>`
+    );
+}
 /**
  * Take a matrix representing a table and return an HTML string of the table.
  * The matrix is an array of rows, with each row being an array of cells. Each
  * cell is represented by a tuple of numbers [colspan, width (in percent)]. A
  * cell can have a string as third value to represent its text content. The
  * default text content of each cell is its coordinates `(row index, column
- * index)`.
+ * index)`. If the cell has a number as third value, it will be used as the
+ * max-width of the cell (in pixels).
  * Eg: [                        // <table> (note: extra attrs and styles apply)
  *      [                       //   <tr>
  *          [1, 8],             //     <td colspan="1" width="8%">(0, 0)</td>
@@ -792,18 +801,17 @@ function getGridHtml(matrix) {
  *      ],                      //   </tr>
  * ]                            // </table>
  *
- * @param {Array<Array<Array<[Number, Number, string?]>>>} matrix
+ * @param {Array<Array<Array<[Number, Number, string?, number?]>>>} matrix
+ * @param {Number} [containerWidth]
  * @returns {string}
  */
-function getTableHtml(matrix) {
+function getTableHtml(matrix, containerWidth) {
     return (
         `<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">` +
         matrix.map((row, iRow) => (
             `<tr>` +
             row.map((col, iCol) => (
-                `<td colspan="${col[0]}">` +
-                (col.length === 3 ? col[2] : `(${iRow}, ${iCol})`) +
-                `</td>`
+                getTdHtml(col[0], typeof col[2] === 'string' ? col[2] : `(${iRow}, ${iCol})`, containerWidth)
             )).join('') +
             `</tr>`
         )).join('') +
@@ -841,16 +849,17 @@ function getRegularGridHtml(nRows, nCols) {
  * @param {Number|Number[]} nCols
  * @param {Number|Number[]} colspan
  * @param {Number|Number[]} width
+ * @param {Number} containerWidth
  * @returns {string}
  */
-function getRegularTableHtml(nRows, nCols, colspan, width) {
+function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
     const matrix = new Array(nRows).fill().map((_, iRow) => (
         new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill().map(() => ([
             Array.isArray(colspan) ? colspan[iRow] : colspan,
             Array.isArray(width) ? width[iRow] : width,
         ])))
     );
-    return getTableHtml(matrix);
+    return getTableHtml(matrix, containerWidth);
 }
 /**
  * Take an HTML string and returns that string stripped from any HTML comments.
@@ -882,6 +891,7 @@ return {
     getTableHtml: getTableHtml,
     getRegularGridHtml: getRegularGridHtml,
     getRegularTableHtml: getRegularTableHtml,
+    getTdHtml: getTdHtml,
     removeComments: removeComments,
 };
 

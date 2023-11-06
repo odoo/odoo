@@ -40,6 +40,9 @@ registerModel({
             if ('authorizedGroupFullName' in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
+            if ('canPostOnReadonly' in data) {
+                data2.canPostOnReadonly = data.canPostOnReadonly;
+            }
             if ('channel' in data) {
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
@@ -464,6 +467,7 @@ registerModel({
             const {
                 activities: activitiesData,
                 attachments: attachmentsData,
+                canPostOnReadonly,
                 followers: followersData,
                 hasWriteAccess,
                 mainAttachment,
@@ -480,7 +484,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = { hasWriteAccess, mainAttachment, hasReadAccess };
+            const values = { canPostOnReadonly, hasWriteAccess, mainAttachment, hasReadAccess };
             if (activitiesData) {
                 Object.assign(values, {
                     activities: activitiesData.map(activityData =>
@@ -833,6 +837,9 @@ registerModel({
             });
             // Manage typing member relation.
             const memberOfCurrentUser = this.channel.memberOfCurrentUser;
+            if (!memberOfCurrentUser) {
+                return;
+            }
             const newOrderedTypingMembers = [
                 ...this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser),
                 memberOfCurrentUser,
@@ -941,7 +948,7 @@ registerModel({
             this.update({
                 isCurrentPartnerTyping: false,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(memberOfCurrentUser),
+                typingMembers: memberOfCurrentUser ? unlink(memberOfCurrentUser) : undefined,
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -1137,6 +1144,9 @@ registerModel({
             inverse: 'thread',
             readonly: true,
             required: true,
+        }),
+        canPostOnReadonly: attr({
+            default: false,
         }),
         channel: one('Channel', {
             inverse: 'thread',

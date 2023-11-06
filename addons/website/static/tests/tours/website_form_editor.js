@@ -28,6 +28,24 @@ odoo.define('website.tour.form_editor', function (require) {
         });
     }
 
+    // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
+    // all "`" character by `&lsquo;`.
+    const getQuotesEncodedName = function (name) {
+            return name.replaceAll(/"/g, character => `&quot;`)
+                       .replaceAll(/'/g, character => `&apos;`)
+                       .replaceAll(/`/g, character => `&lsquo;`)
+                       .replaceAll("\\", character => `&bsol;`);
+    };
+
+    const triggerFieldByLabel = (label) => {
+        return `.s_website_form_field.s_website_form_custom:has(label:contains("${label}"))`;
+    };
+    const selectFieldByLabel = (label) => {
+        return [{
+            content: `Select field "${label}"`,
+            trigger: "iframe " + triggerFieldByLabel(label),
+        }];
+    };
     const selectButtonByText = function (text) {
         return [{
             content: "Open the select",
@@ -47,7 +65,9 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: `we-select we-button[${data}]`,
         }];
     };
-    const addField = function (data, name, type, label, required, display = {visibility: VISIBLE, condition: ''}) {
+    const addField = function (name, type, label, required, isCustom,
+                               display = {visibility: VISIBLE, condition: ""}) {
+        const data = isCustom ? `data-custom-field="${name}"` : `data-existing-field="${name}"`;
         const ret = [{
             content: "Select form",
             extra_trigger: 'iframe .s_website_form_field',
@@ -80,7 +100,7 @@ odoo.define('website.tour.form_editor', function (require) {
             });
         }
         if (label) {
-            testText += `:has(label:contains("${label}"))`;
+            testText += `:has(label:contains(${label}))`;
             ret.push({
                 content: "Change the label text",
                 trigger: 'we-input[data-set-label-text] input',
@@ -89,7 +109,11 @@ odoo.define('website.tour.form_editor', function (require) {
         }
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
-            testText += `:has(${inputType}[name="${name}"]${required ? '[required]' : ''})`;
+            const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
+            testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
+            // Because 'testText' will be used as selector to verify the content
+            // of the label, the `\` character needs to be escaped.
+            testText = testText.replaceAll("\\", "\\\\");
         }
         ret.push({
             content: "Check the resulting field",
@@ -99,10 +123,10 @@ odoo.define('website.tour.form_editor', function (require) {
         return ret;
     };
     const addCustomField = function (name, type, label, required, display) {
-        return addField(`data-custom-field="${name}"`, name, type, label, required, display);
+        return addField(name, type, label, required, true, display);
     };
     const addExistingField = function (name, type, label, required, display) {
-        return addField(`data-existing-field="${name}"`, name, type, label, required, display);
+        return addField(name, type, label, required, false, display);
     };
 
     wTourUtils.registerWebsitePreviewTour("website_form_editor_tour", {
@@ -160,6 +184,45 @@ odoo.define('website.tour.form_editor', function (require) {
         }, {
             content: 'Change the label position of the phone field',
             trigger: 'we-button[data-select-label-position="right"]',
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 1'"),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectFieldByLabel("Conditional Visibility Check 1"),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Check that 'Conditional Visibility Check 2' is not in the list of the visibility selector of Conditional Visibility Check 1",
+            trigger: "we-select[data-name='hidden_condition_opt']:not(:has(we-button[data-set-visibility-dependency='Conditional Visibility Check 2']))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 3'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 3",
+        },
+        {
+            content: "Check that the conditional visibility of the renamed field is removed",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select:contains('Visibility'):has(we-toggler:contains('Always Visible'))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 5",
+        },
+        {
+            content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select[data-name='hidden_condition_opt']:not(:has(we-button:contains('Conditional Visibility Check 5')))",
+            run: () => null,
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
 
@@ -346,6 +409,21 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'we-input[data-attribute-name="value"] input',
             run: 'text John Smith',
         },
+
+        // Add two fields: the 1st one's visibility is tied to the 2nd one
+        // being set, and the 2nd one is autopopulated. As a result, both
+        // should be visible by default.
+        ...addCustomField("char", "text", "field A", false, {visibility: CONDITIONALVISIBILITY}),
+        ...addCustomField("char", "text", "field B", false),
+        ...selectFieldByLabel("field A"),
+        ...selectButtonByData('data-set-visibility-dependency="field B"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+        ...selectFieldByLabel("field B"),
+        {
+            content: "Insert default value",
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: "text prefilled",
+        },
         {
             content: "Save the page",
             trigger: "button[data-action=save]",
@@ -359,34 +437,101 @@ odoo.define('website.tour.form_editor', function (require) {
             content: 'Verify that phone field is still auto-fillable',
             trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
         },
-        // Check that if we edit again and save again the default value is not deleted.
+        // Check that the resulting form behavior is correct.
         {
-            content: 'Enter in edit mode again',
-            trigger: '.o_edit_website_container > a',
-            run: 'click',
+            content: "Check that field B prefill text is set",
+            trigger: `iframe ${triggerFieldByLabel("field B")}:has(input[value="prefilled"])`,
+            run: () => null, // it's a check
+        }, {
+            content: "Check that field A is visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
         },
+        // A) Check that if we edit again and save again the default value is
+        // not deleted.
+        // B) Add a 3rd field. Field A's visibility is tied to field B being set,
+        // field B is autopopulated and its visibility is tied to field C being
+        // set, and field C is empty.
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Edit the form',
             trigger: 'iframe .s_website_form_field:eq(0) input',
-            extra_trigger: 'button[data-action="save"]',
             run: 'click',
         },
-        ...addCustomField('many2one', 'select', 'Select Field', true),
+        ...addCustomField("char", "text", "field C", false),
+        ...selectFieldByLabel("field B"),
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="field C"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
             run: 'click',
         },
+
+        // Check that the resulting form behavior is correct.
         {
             content: 'Verify that the value has not been deleted',
             extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
+        }, {
+            content: "Check that fields A and B are not visible and that field B's prefill text is still set",
+            trigger: "iframe .s_website_form" +
+                `:has(${triggerFieldByLabel("field A")}:not(:visible))` +
+                `:has(${triggerFieldByLabel("field B")}` +
+                `:has(input[value="prefilled"]):not(:visible))`,
+            run: () => null, // it's a check
+        }, {
+            content: "Type something in field C",
+            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            run: "text Sesame",
+        }, {
+            content: "Check that fields A and B are visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+                `:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
         },
-        wTourUtils.clickOnEdit(),
+
+        // Have field A's visibility tied to field B containing something,
+        // while field B's visibility is also tied to another field.
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...selectFieldByLabel("field A"),
+        {
+            content: "Verify that the form editor appeared",
+            trigger: ".o_we_customize_panel .snippet-option-WebsiteFormEditor",
+            run: () => null,
+        },
+        ...selectButtonByData('data-select-data-attribute="contains"'),
+        {
+            content: "Tie the visibility of field A to field B containing 'peek-a-boo'",
+            trigger: "we-input[data-name=hidden_condition_additional_text] input",
+            run: "text peek-a-boo",
+        },
+        ...wTourUtils.clickOnSave(),
+
+        // Check that the resulting form works and does not raise an error.
+         {
+            content: "Write anything in C",
+            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            run: "text Mellon",
+        }, {
+            content: "Check that field B is visible, but field A is not",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+                `:has(${triggerFieldByLabel("field A")}:not(:visible))`,
+            run: () => null, // it's a check
+        }, {
+            content: "Insert 'peek-a-boo' in field B",
+            trigger: `iframe ${triggerFieldByLabel("field B")} input`,
+            run: "text peek-a-boo",
+        }, {
+            content: "Check that field A is visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
+        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Click on the submit button',
             trigger: 'iframe .s_website_form_send',
-            extra_trigger: '.o_website_preview.editor_enable',
             run: 'click',
         },
         {
@@ -394,6 +539,12 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        // The next four calls to "addCustomField" are there to ensure such
+        // characters do not make the form editor crash.
+        ...addCustomField("char", "text", "''", false),
+        ...addCustomField("char", "text", '""', false),
+        ...addCustomField("char", "text", "``", false),
+        ...addCustomField("char", "text", "\\", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
@@ -453,15 +604,13 @@ odoo.define('website.tour.form_editor', function (require) {
     wTourUtils.registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         test: true,
         url: '/',
+        edition: true,
     }, [
         // Create a form with two checkboxes: the second one required but
         // invisible when the first one is checked. Basically this should allow
         // to have: both checkboxes are visible by default but the form can
         // only be sent if one of the checkbox is checked.
         {
-            content: "Enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        }, {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop iframe #wrap',

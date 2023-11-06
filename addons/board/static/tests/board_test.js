@@ -6,6 +6,8 @@ import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import ListView from "web.ListView";
+import legacyViewRegistry from "web.view_registry";
 
 const serviceRegistry = registry.category("services");
 
@@ -87,7 +89,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("basic functionality, with one sub action", async function (assert) {
-        assert.expect(21);
+        assert.expect(23);
         serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
         await makeView({
             serverData,
@@ -129,6 +131,9 @@ QUnit.module("Board", (hooks) => {
                 if (route === "/web/view/edit_custom") {
                     assert.step("edit custom");
                     return Promise.resolve(true);
+                }
+                if (args.method === "get_views" && args.model == "partner") {
+                    assert.deepEqual(args.kwargs.views.find((v) => v[1] === 'list'), [4, "list"]);
                 }
             },
         });
@@ -755,5 +760,41 @@ QUnit.module("Board", (hooks) => {
             target.querySelector(".o-dashboard-action .o_graph_renderer canvas").offsetHeight,
             300
         );
+    });
+
+    QUnit.test("Carry over the filter to legacy views", async function (assert) {
+        const TestView = ListView.extend({
+            viewType: "test_view",
+        });
+        legacyViewRegistry.add("test_view", TestView);
+        serverData.views["partner,false,test_view"] = `<tree string="Partner"></tree>`;
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action string="ABC" name="Partners Action 1" domain="[['foo', '!=', 'False']]"></action>
+                        </column>
+                    </board>
+                </form>`,
+            mockRPC(route, args) {
+                if (route === "/web/action/load") {
+                    return {
+                        id: 1,
+                        name: "Partners Action 1",
+                        res_model: "partner",
+                        type: "ir.actions.act_window",
+                        views: [[false, "test_view"]],
+                    };
+                }
+                if (route === "/web/dataset/search_read") {
+                    assert.deepEqual(args.domain, [["foo", "!=", "False"]]);
+                }
+            },
+        });
     });
 });

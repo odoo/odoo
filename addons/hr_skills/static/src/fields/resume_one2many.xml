@@ -2,7 +2,7 @@
 <odoo>
     <t t-name="hr_skills.ResumeListRenderer" owl="1" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer">
         <xpath expr="//table" position="attributes">
-            <attribute name="t-attf-class" add="table-borderless" remove="table-striped" separator=" "/>
+            <attribute name="t-attf-class" add="table-borderless {{ !showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
         </xpath>
         <xpath expr="//thead/tr" position="replace">
             <tr>

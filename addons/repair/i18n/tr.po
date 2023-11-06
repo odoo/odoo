@@ -3,7 +3,6 @@
 # 	* repair
 # 
 # Translators:
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
@@ -20,16 +19,19 @@
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# İlknur Gözütok, 2023
+# Melih Melik Sonmez, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Melih Melik Sonmez, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -77,6 +79,7 @@ msgstr ""
 "* Kullanıcı onarım siparişini iptal ettiğinde 'İptal edildi' durumu kullanılır."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
@@ -87,43 +90,24 @@ msgstr ": Onarım İçin Yetersiz Miktar"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
 "        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            .<br/>\n"
+"            .<br>\n"
 "        </t>\n"
 "        You can reply to this email if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Merhaba <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
-"        Onarım siparişiniz <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
-"        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            Tutarı <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            .<br/>\n"
-"        </t>\n"
-"        Herhangi bir sorunuz varsa bu e-postayı yanıtlayabilirsiniz.\n"
-"        <br/><br/>\n"
-"        Teşekkürler,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -242,7 +226,7 @@ msgstr "Onarım Sonrası"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "İzin Verilen Toplama Türü"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -328,6 +312,7 @@ msgstr ""
 "yapılabilir. Dönüşümler oranlara göre yapılacaktır."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -349,16 +334,17 @@ msgid "Create Mass Invoice (repair)"
 msgstr "Toplu Fatura Oluştur (Onarım)"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Onarım Oluştur"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "İadelerden Onarım Siparişleri Oluşturma"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -561,6 +547,7 @@ msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"İşaretlenirse, bir iadeden doğrudan onarım siparişleri oluşturabilirsiniz."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -621,6 +608,7 @@ msgid "Invoice and shipping address:"
 msgstr "Fatura ve teslimat adresi:"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
@@ -748,18 +736,21 @@ msgid "No Invoice"
 msgstr "Fatura Yok"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "\"%s\" Ürünü için tanımlı hesap yok."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "Fiyat listesi bulunamadı."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
@@ -771,6 +762,7 @@ msgid "No repair order found. Let's create one!"
 msgstr "Onarım siparişi bulunamadı. Hadi bir tane oluşturun!"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
@@ -780,6 +772,14 @@ msgstr "Geçerli bir fiyat listesi satırı bulunamadı."
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
 msgid "Normal"
 msgstr "Normal"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ""
+"Note that the warehouses of the return and repair locations don't match!"
+msgstr "İade ve onarım yerlerinin depolarının eşleşmediğini unutmayın!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -793,8 +793,8 @@ msgstr "Hata adedi"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj adedi"
+msgid "Number of messages requiring action"
+msgstr "İşlem gerektiren mesaj sayısı"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -804,9 +804,10 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Bu toplama işlemine bağlı onarım sayısı"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
@@ -1011,6 +1012,7 @@ msgid "Repair Order Reference"
 msgstr "Onarım Siparişi Referansı"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
@@ -1039,7 +1041,6 @@ msgid "Repair Reference"
 msgstr "Onarım Referansı"
 
 #. module: repair
-#: model:product.product,name:repair.product_service_order_repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
 msgstr "Onarım Servisleri"
@@ -1051,24 +1052,28 @@ msgid "Repair Tags"
 msgstr "Onarım Etiketleri"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr "Taslak sıfırlanması için tamir iptal olmalı."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Onarıma başlamadan önce onay gereklidir."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "Ürün hareketi için tamir iptal olmalı."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
@@ -1080,6 +1085,7 @@ msgid "Repair order count"
 msgstr "Onarım siparişi sayısı"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
@@ -1088,7 +1094,7 @@ msgstr "%snin onarım siparişleri"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair: Quotation"
-msgstr ""
+msgstr "Onarım: Fiyat Teklifi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1132,12 +1138,12 @@ msgstr "İade"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Tamir edilecek ürünün geldiği İade Siparişi."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "İade Türü"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1190,8 +1196,11 @@ msgstr "Teklifi Gönder"
 #: model:mail.template,description:repair.mail_template_repair_quotation
 msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
 msgstr ""
+"Bir onarım siparişinde \"Fiyat Teklifi Gönder\" e tıklandığında manuel "
+"olarak gönderilir"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
@@ -1286,6 +1295,7 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "Onarım Sipariş adı benzersiz olmalı!"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1346,6 +1356,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"Bu onarım bir İade Siparişine bağlıysa ve sipariş 'Bitti' ise geçerlidir. "
+"Aksi takdirde yanlış."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1377,12 +1389,6 @@ msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Units"
-msgstr "Adet"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Vergi Hariç Tutar"
@@ -1408,7 +1414,8 @@ msgid "Warn Insufficient Repair Quantity"
 msgstr "Yetersiz Onarım Miktarını Uyar"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0
+#. odoo-python
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -1430,6 +1437,7 @@ msgid "Website communication history"
 msgstr "Websitesi iletişim geçmişi"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1440,6 +1448,7 @@ msgstr ""
 "etmelisin."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1449,12 +1458,28 @@ msgstr ""
 "Bir kez nakledilen bir faturaya bağlı bir onarım siparişini silemezsiniz."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "Negatif miktar giremezsiniz."
 
 #. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot cancel a completed repair order."
+msgstr "Tamamlanmış bir onarım siparişini iptal edemezsiniz."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
+msgstr ""
+
+#. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1465,6 +1490,7 @@ msgstr ""
 " Lütfen bir ürün seçmeden önce bir tane ayarlayın."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
@@ -1485,5 +1511,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.partner_id.name }} Onarım Siparişleri (Referans {{ object.name or "
-"'n/a' }})"
+"{{ object.partner_id.name }} Onarım Siparişleri (Ref {{ object.name or 'n/a'"
+" }})"

@@ -79,28 +79,31 @@
     .o_survey_kanban_card_ungrouped {
         .ribbon {
             // Desktop: finishes on next kanban card line
-            height: 77px;
-            width: 130px;
+            height: 100px;
+            width: 125px;
 
             // Mobile: is in a corner, takes more place
             @include media-breakpoint-down(md) {
                 height: 100px;
-                width: 100px;
+                width: 125px;
             }
 
             &-top-right {
-                margin-top: -$o-kanban-inside-vgutter;
-                right: 0;
+                top: 25px;
+
+                &:after {
+                    display: none;
+                }
 
                 & span {
-                    left: -8px;
-                    top: 24px;
+                    left: 26px;
+                    top: 4px;
                 }
             }
 
             & span {
-                font-size: 1rem;
-                width: 150px;
+                font-size: 0.9rem;
+                width: 130px;
                 height: 32px;
             }
         }
@@ -117,7 +120,7 @@
 
                 & span {
                     left: -8px;
-                    top: 16px;
+                    top: 24px;
                 }
             }
 

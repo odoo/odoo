@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Chloe Wang, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,8 +26,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
@@ -42,15 +43,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> 要求您激活two-factor双重身份验证以保护您的帐户。<br/><br/>\n"
-"       双因素身份验证 (\"2FA\") 是一种双重身份验证系统。\n"
-"        第一个是使用您的密码完成的，第二个是使用您从专用移动应用程序获得的代码完成的。\n"
-"        流行的包括Authy，Google Authenticator或Microsoft Authenticator。\n"
+"        您好！ <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> 要求您激活双因素身份验证以保护您的账户。<br><br>\n"
+"        双因素验证（\"2FA\"）是一种双重验证系统。\n"
+"        第一种是核对个人密码；第二种是利用手机应用程序，获取专用代码。\n"
+"        常用的专用验证程式包括：Authy、Google Authenticator 以及 Microsoft Authenticator。\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                激活我的two-factor双因素身份验证\n"
+"                激活我的双重身份验证\n"
 "            </a>\n"
 "        </p>\n"
 "    </p>\n"
@@ -58,6 +59,7 @@ msgstr ""
 "        "
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
@@ -69,6 +71,7 @@ msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr "邀请在您的Odoo帐户上激活two-factor双因素身份验证"
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid ""

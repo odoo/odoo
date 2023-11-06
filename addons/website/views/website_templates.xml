@@ -3,7 +3,7 @@
 
 <template id="submenu" name="Submenu">
     <t t-set="show_dropdown" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
-    <li t-if="submenu.is_visible and not (submenu.child_id or submenu.is_mega_menu)" t-attf-class="#{item_class or ''}">
+    <li t-if="submenu.is_visible and not (submenu.child_id or submenu.is_mega_menu)" t-attf-class="#{item_class or ''}" role="presentation">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
             role="menuitem"
@@ -60,8 +60,15 @@
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
+        <!-- The `and '1' or '0'` in `data-can-optimize-seo` property is there
+        only for stable compliance as if omitted, `False` will not display the
+        property in the DOM (it's how `t-att` works), meaning we won't be able
+        to differentiate old database without `-u` and database with the fix.
+        TODO: Remove this part of the condition in master.
+        -->
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get() and '1' or '0',
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': editable_in_backend,
         })"/>
@@ -76,7 +83,20 @@
     </xpath>
 
     <xpath expr="//head" position="attributes">
-        <attribute name="t-cache">('assets' in request.session.debug, main_object) if main_object and main_object._name == 'website.page' and not (editable or translatable) else None</attribute>
+        <!--
+        Cache the <head> of the website.layout:
+        - For each individual website.page record (their css/js might be the
+          same but their title will not for example). Arguably we could do this
+          for any record (not only website.page) but this t-cache was originally
+          added to replace the website.page own cache system. For other records,
+          it could probably depend on each individual access right.
+        - Only for non-designers (especially visitors) (hence the "editable or
+          translatable" check).
+        - Only if not in any debug mode (we want any correct value of debug mode
+          to correctly appear in the `odoo` object + assets may depend on this
+          (e.g. debug=assets or debug=tests)).
+        -->
+        <attribute name="t-cache">main_object if main_object and main_object._name == 'website.page' and not request.session.debug and not editable and not translatable else None</attribute>
     </xpath>
     <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
@@ -99,7 +119,7 @@
         <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <meta t-if="(main_object and 'website_indexed' in main_object
-        and not main_object.website_indexed) or (website.domain and website.domain not in request.httprequest.url_root)" name="robots" content="noindex"/>
+        and not main_object.website_indexed) or (website.domain and not website._is_indexable_url(request.httprequest.url_root))" name="robots" content="noindex"/>
         <t t-set="seo_object" t-value="seo_object or main_object"/>
         <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
             and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
@@ -150,7 +170,10 @@
     </xpath>
 
     <xpath expr="//header/t[@t-cache]" position="attributes">
-        <attribute name="t-cache">xmlid,website</attribute>
+        <!-- website.is_public_user() is needed for menus having a page with
+        restricted visibility (only shown to logged in user): public users and
+        logged in users can't share the menu cache. -->
+        <attribute name="t-cache">xmlid,website,website.is_public_user()</attribute>
     </xpath>
 
     <xpath expr="//header" position="before">
@@ -210,7 +233,7 @@
                 <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn fa fa-th d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown"/>
                 <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
                     <a role="menuitem" class="dropdown-item" t-esc="menu['name']"
-                       t-as="menu" t-foreach="env['ir.ui.menu'].load_menus_root()['children']"
+                       t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
                        t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
                 <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
@@ -278,7 +301,7 @@
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul id="top_menu" t-attf-class="nav navbar-nav o_menu_loading #{_nav_class}">
+    <ul id="top_menu" t-attf-class="nav navbar-nav o_menu_loading #{_nav_class}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>
@@ -451,16 +474,16 @@
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                                    <i class="fa fa-facebook m-1"/>
+                                    <i class="fa fa-facebook m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-twitter m-1"/>
+                                    <i class="fa fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin m-1"/>
+                                    <i class="fa fa-linkedin m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-instagram m-1"/>
+                                    <i class="fa fa-instagram m-1 o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -573,16 +596,16 @@
                     <div class="s_social_media no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h6 class="s_social_media_title d-none" contenteditable="true">Follow us</h6>
                         <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                            <i class="fa fa-facebook m-1"/>
+                            <i class="fa fa-facebook m-1 o_editable_media"/>
                         </a>
                         <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                            <i class="fa fa-twitter m-1"/>
+                            <i class="fa fa-twitter m-1 o_editable_media"/>
                         </a>
                         <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                            <i class="fa fa-linkedin m-1"/>
+                            <i class="fa fa-linkedin m-1 o_editable_media"/>
                         </a>
                         <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                            <i class="fa fa-instagram m-1"/>
+                            <i class="fa fa-instagram m-1 o_editable_media"/>
                         </a>
                     </div>
                 </div>
@@ -699,16 +722,16 @@
                     <div class="s_social_media mt-3 o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                         <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                            <i class="fa fa-facebook rounded-circle shadow-sm"/>
+                            <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
                         </a>
                         <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                            <i class="fa fa-twitter rounded-circle shadow-sm"/>
+                            <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
                         </a>
                         <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                            <i class="fa fa-linkedin rounded-circle shadow-sm"/>
+                            <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
                         </a>
                         <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                            <i class="fa fa-instagram rounded-circle shadow-sm"/>
+                            <i class="fa fa-instagram rounded-circle shadow-sm o_editable_media"/>
                         </a>
                     </div>
                     <!-- Separator -->
@@ -894,22 +917,22 @@
                             <div class="s_social_media no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <small class="s_social_media_title text-muted d-none" contenteditable="true"><b>Follow us</b></small>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                                    <i class="fa fa-facebook m-1"/>
+                                    <i class="fa fa-facebook m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-twitter m-1"/>
+                                    <i class="fa fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin m-1"/>
+                                    <i class="fa fa-linkedin m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-github m-1"/>
+                                    <i class="fa fa-github m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank">
-                                    <i class="fa fa-youtube m-1"/>
+                                    <i class="fa fa-youtube m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-instagram m-1"/>
+                                    <i class="fa fa-instagram m-1 o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -987,13 +1010,13 @@
                     <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h6 class="s_social_media_title d-none" contenteditable="true">Follow us</h6>
                         <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                            <i class="fa fa-facebook m-1"/>
+                            <i class="fa fa-facebook m-1 o_editable_media"/>
                         </a>
                         <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                            <i class="fa fa-twitter m-1"/>
+                            <i class="fa fa-twitter m-1 o_editable_media"/>
                         </a>
                         <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                            <i class="fa fa-instagram m-1"/>
+                            <i class="fa fa-instagram m-1 o_editable_media"/>
                         </a>
                     </div>
                 </div>
@@ -1181,22 +1204,22 @@
             <div class="s_social_media text-center o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                    <i class="fa fa-facebook rounded-circle shadow-sm"/>
+                    <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
                 </a>
                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                    <i class="fa fa-twitter rounded-circle shadow-sm"/>
+                    <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
                 </a>
                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                    <i class="fa fa-linkedin rounded-circle shadow-sm"/>
+                    <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
                 </a>
                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                    <i class="fa fa-github rounded-circle shadow-sm"/>
+                    <i class="fa fa-github rounded-circle shadow-sm o_editable_media"/>
                 </a>
                 <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank">
-                    <i class="fa fa-youtube rounded-circle shadow-sm"/>
+                    <i class="fa fa-youtube rounded-circle shadow-sm o_editable_media"/>
                 </a>
                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                    <i class="fa fa-instagram rounded-circle shadow-sm"/>
+                    <i class="fa fa-instagram rounded-circle shadow-sm o_editable_media"/>
                 </a>
             </div>
         </div>
@@ -1260,7 +1283,7 @@
 <template id="template_header_magazine_oe_structure_header_magazine_1" inherit_id="website.template_header_magazine" name="Template Header Magazine (oe_structure_header_magazine_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_magazine_1']" position="replace">
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1">
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+            <section class="s_text_block o_cc o_cc1" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row align-items-center text-center text-md-start">
                         <div class="col-lg-8 pt16">
@@ -1270,25 +1293,25 @@
                             <div class="s_social_media no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <small class="s_social_media_title d-none" contenteditable="true"><b>Follow us</b></small>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                                    <i class="fa fa-facebook m-1"/>
+                                    <i class="fa fa-facebook m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-twitter m-1"/>
+                                    <i class="fa fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin m-1"/>
+                                    <i class="fa fa-linkedin m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-github m-1"/>
+                                    <i class="fa fa-github m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/youtube" class="s_social_media_youtube" target="_blank">
-                                    <i class="fa fa-youtube m-1"/>
+                                    <i class="fa fa-youtube m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-instagram m-1"/>
+                                    <i class="fa fa-instagram m-1 o_editable_media"/>
                                 </a>
                                 <a href="mailto:info@yourcompany.example.com" class="ms-3" target="_blank">
-                                    <i class="fa fa-1x fa-envelope"/>
+                                    <i class="fa fa-1x fa-envelope o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -1488,16 +1511,16 @@
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                                    <i class="fa fa-facebook rounded-circle shadow-sm"/>
+                                    <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-twitter rounded-circle shadow-sm"/>
+                                    <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin rounded-circle shadow-sm"/>
+                                    <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                                 <a href="/" class="text-800">
-                                    <i class="fa fa-home rounded-circle shadow-sm"/>
+                                    <i class="fa fa-home rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -1533,16 +1556,16 @@
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-2x fa-github m-1"/>
+                                    <i class="fa fa-2x fa-github m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-2x fa-twitter m-1"/>
+                                    <i class="fa fa-2x fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-2x fa-instagram m-1"/>
+                                    <i class="fa fa-2x fa-instagram m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-2x fa-linkedin m-1"/>
+                                    <i class="fa fa-2x fa-linkedin m-1 o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -1561,13 +1584,13 @@
                     <div class="s_social_media text-center mb-4 o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                         <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                         <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                            <i class="fa fa-facebook rounded-circle rounded shadow-sm"/>
+                            <i class="fa fa-facebook rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
                         <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                            <i class="fa fa-twitter rounded-circle rounded shadow-sm"/>
+                            <i class="fa fa-twitter rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
                         <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                            <i class="fa fa-linkedin rounded-circle rounded shadow-sm"/>
+                            <i class="fa fa-linkedin rounded-circle rounded shadow-sm o_editable_media"/>
                         </a>
                     </div>
                     <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
@@ -1674,13 +1697,13 @@
                             <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-2x fa-github m-1"/>
+                                    <i class="fa fa-2x fa-github m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-2x fa-twitter m-1"/>
+                                    <i class="fa fa-2x fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-2x fa-instagram m-1"/>
+                                    <i class="fa fa-2x fa-instagram m-1 o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -1716,13 +1739,13 @@
                             <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <p class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</p>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-twitter m-1"/>
+                                    <i class="fa fa-twitter m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/linkedin" class="s_social_media_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin m-1"/>
+                                    <i class="fa fa-linkedin m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-instagram m-1"/>
+                                    <i class="fa fa-instagram m-1 o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -1846,13 +1869,13 @@
                             <div class="s_social_media text-end o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow Us</h5>
                                 <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
-                                    <i class="fa fa-1x fa-facebook rounded-circle shadow-sm"/>
+                                    <i class="fa fa-1x fa-facebook rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
-                                    <i class="fa fa-1x fa-twitter rounded-circle shadow-sm"/>
+                                    <i class="fa fa-1x fa-twitter rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                                 <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank">
-                                    <i class="fa fa-1x fa-instagram rounded-circle shadow-sm"/>
+                                    <i class="fa fa-1x fa-instagram rounded-circle shadow-sm o_editable_media"/>
                                 </a>
                             </div>
                         </div>
@@ -2384,7 +2407,7 @@
 <template id="robots">
 <t t-translation="off">
 User-agent: *
-<t t-if="website.domain and website.domain not in url_root">
+<t t-if="website.domain and not website._is_indexable_url(url_root)">
 Disallow: /
 </t>
 <t t-else="">

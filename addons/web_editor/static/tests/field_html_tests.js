@@ -240,7 +240,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('colorpicker', async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -253,6 +253,7 @@ QUnit.module('web_editor', {}, function () {
             });
 
             await testUtils.form.clickEdit(form);
+            await new Promise(resolve => setTimeout(resolve, 50));
             var $field = form.$('.oe_form_field[name="body"]');
 
             // select the text
@@ -274,7 +275,6 @@ QUnit.module('web_editor', {}, function () {
                 return openingProm;
             }
 
-            await new Promise((resolve)=>setTimeout(resolve, 50));
             await openColorpicker('#toolbar .note-back-color-preview');
             assert.ok($('.note-back-color-preview .dropdown-menu').hasClass('show'),
                 "should display the color picker");
@@ -308,8 +308,18 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('#toolbar .note-back-color-preview [style="background-color: var(--we-cp-o-color-3);"]'));
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
+
+            // Make sure the reset button works too
+            await openColorpicker('#toolbar .note-back-color-preview');
+            await testUtils.dom.click($('#toolbar .note-back-color-preview .o_colorpicker_reset'));
+
+            // TODO right now the behavior is to force "inherit" as background
+            // but it should remove the useless font element when possible.
+            assert.strictEqual($field.find('.note-editable').html(),
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font>oto toto</p><p>tata</p>',
+                "should have properly reset the background color");
 
             form.destroy();
         });

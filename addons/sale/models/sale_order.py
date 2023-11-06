@@ -269,8 +269,7 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
     partner_credit_warning = fields.Text(
-        compute='_compute_partner_credit_warning',
-        groups='account.group_account_invoice,account.group_account_readonly')
+        compute='_compute_partner_credit_warning')
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -327,7 +326,9 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
             if order.terms_type == 'html' and self.env.company.invoice_terms_html:
                 baseurl = html_keep_url(order._get_note_url() + '/terms')
+                context = {'lang': order.partner_id.lang or self.env.user.lang}
                 order.note = _('Terms & Conditions: %s', baseurl)
+                del context
             elif not is_html_empty(self.env.company.invoice_terms):
                 order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
 
@@ -401,9 +402,15 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
-            if not order.user_id:
-                order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or \
-                    (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
+            if order.partner_id and not (order._origin.id and order.user_id):
+                # Recompute the salesman on partner change
+                #   * if partner is set (is required anyway, so it will be set sooner or later)
+                #   * if the order is not saved or has no salesman already
+                order.user_id = (
+                    order.partner_id.user_id
+                    or order.partner_id.commercial_partner_id.user_id
+                    or (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
+                )
 
     @api.depends('partner_id', 'user_id')
     def _compute_team_id(self):
@@ -425,9 +432,22 @@ class SaleOrder(models.Model):
         """Compute the total amounts of the SO."""
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
-            order.amount_tax = sum(order_lines.mapped('price_tax'))
+
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = self.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+                totals = tax_results['totals']
+                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+                amount_tax = sum(order_lines.mapped('price_tax'))
+
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -564,7 +584,7 @@ class SaleOrder(models.Model):
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
             if show_warning:
-                updated_credit = order.partner_id.commercial_partner_id.credit + (order.amount_total * order.currency_rate)
+                updated_credit = order.partner_id.commercial_partner_id.credit + (order.amount_total / order.currency_rate)
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
@@ -787,6 +807,7 @@ class SaleOrder(models.Model):
         self.order_line._validate_analytic_distribution()
 
         for order in self:
+            order.validate_taxes_on_sales_order()
             if order.partner_id in order.message_partner_ids:
                 continue
             order.message_subscribe([order.partner_id.id])
@@ -852,7 +873,7 @@ class SaleOrder(models.Model):
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom':
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'wire_transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
         self.write({'state': 'done'})
@@ -923,15 +944,18 @@ class SaleOrder(models.Model):
     def action_update_taxes(self):
         self.ensure_one()
 
-        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
-        lines_to_recompute._compute_tax_id()
-        self.show_update_fpos = False
+        self._recompute_taxes()
 
         if self.partner_id:
             self.message_post(body=_(
                 "Product taxes have been recomputed according to fiscal position %s.",
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
             ))
+
+    def _recompute_taxes(self):
+        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute._compute_tax_id()
+        self.show_update_fpos = False
 
     def action_update_prices(self):
         self.ensure_one()
@@ -984,6 +1008,7 @@ class SaleOrder(models.Model):
             'transaction_ids': [Command.set(self.transaction_ids.ids)],
             'company_id': self.company_id.id,
             'invoice_line_ids': [],
+            'user_id': self.user_id.id,
         }
 
     def action_view_invoice(self):
@@ -1010,7 +1035,6 @@ class SaleOrder(models.Model):
                 'default_partner_shipping_id': self.partner_shipping_id.id,
                 'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
                 'default_invoice_origin': self.name,
-                'default_user_id': self.user_id.id,
             })
         action['context'] = context
         return action
@@ -1022,8 +1046,7 @@ class SaleOrder(models.Model):
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
-            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
-            "(top-right of your screen) and follow instructions.\n"
+            "- You should deliver your products before invoicing them.\n"
             "- You should modify the invoicing policy of your product: Open the product, go to the "
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
@@ -1252,14 +1275,21 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        subtitles = [render_context['record'].name]
-        if self.validity_date:
-            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-                          ))
-        else:
-            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        lang_code = render_context.get('lang')
+        subtitles = [
+            render_context['record'].name,
+        ]
+
+        if self.amount_total:
+            # Do not show the price in subtitles if zero (e.g. e-commerce orders are created empty)
+            subtitles.append(
+                format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+            )
+
+        if self.validity_date and self.state in ['draft', 'sent']:
+            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
+            subtitles.append(_("Expires on %(date)s", date=formatted_date))
+
         render_context['subtitles'] = subtitles
         return render_context
 
@@ -1329,7 +1359,7 @@ class SaleOrder(models.Model):
             'description': self.name,
             'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == self).mapped('amount_total')),
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_invoice_id.id,
             'amount_max': self.amount_total,
         }
 
@@ -1410,11 +1440,11 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].search([
+        plan = self.env['account.analytic.plan'].sudo().search([
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)
         ], limit=1)
         if not plan:
-            plan = self.env['account.analytic.plan'].create({
+            plan = self.env['account.analytic.plan'].sudo().create({
                 'name': 'Default',
                 'company_id': self.company_id.id,
             })

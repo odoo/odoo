@@ -65,10 +65,6 @@ class AccountMove(models.Model):
         without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
         manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
         (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
-        # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed in super
-        self.filtered(
-            lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_document_type_id
-            and not x.l10n_latam_manual_document_number and x.state == 'draft' and not x.posted_before).name = '/'
         # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
         group_by_document_type = defaultdict(self.env['account.move'].browse)
         for move in (self - without_doc_type - manual_documents):
@@ -110,6 +106,14 @@ class AccountMove(models.Model):
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
                 rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
+
+    @api.onchange('l10n_latam_document_type_id')
+    def _onchange_l10n_latam_document_type_id(self):
+        # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed
+        if (self.journal_id.l10n_latam_use_documents and self.l10n_latam_document_type_id
+              and not self.l10n_latam_manual_document_number and self.state == 'draft' and not self.posted_before):
+            self.name = '/'
+            self._compute_name()
 
     @api.depends('journal_id', 'l10n_latam_document_type_id')
     def _compute_highest_name(self):

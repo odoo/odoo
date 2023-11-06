@@ -915,6 +915,28 @@ td {
     text-align: center;
 }
 
+.pos .search-more-button {
+    display: flex;
+    justify-content: center;
+
+    .button {
+        flex-basis: 1;
+        line-height: 32px;
+        padding: 3px 13px;
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+        margin-left: 6px;
+        margin-right: 6px;
+        cursor: pointer;
+        transition: all 150ms linear;
+        background: $primary;
+        color: white;
+        border: solid 1px $primary;
+    }
+    
+}
+
 .pos .product-list-scroller{
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -1156,7 +1178,7 @@ td {
 .pos .product .product-img img {
     width: 100%;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 @media screen and (max-width: 768px) {
@@ -1170,6 +1192,10 @@ td {
     padding: 2px 5px;
     font-weight: bold;
     padding: 0 map-get($spacers, 2) map-get($spacers, 2);
+}
+
+.pos .product .product-name.no-image {
+    -webkit-line-clamp: 9;
 }
 
 .pos .product .product-info-button {
@@ -1424,7 +1450,7 @@ td {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: inherit;
+    width: 100%;
     border: none;
     max-height: 100%;
 }
@@ -1432,6 +1458,7 @@ td {
     display: grid;
     grid-template-rows: auto 1fr;
     border: 10px solid $gray-300;
+    width: 30rem;
 }
 .payment-screen p.title-category {
     margin: 0;
@@ -1502,6 +1529,7 @@ td {
     flex-grow: 1;
     flex-basis: 100%;
     min-height: 60px;
+    overflow: auto;
 }
 .paymentline:active {
     background: black;
@@ -1510,17 +1538,12 @@ td {
 }
 .paymentline .payment-name {
     flex-grow: 1;
-    margin-left: 10px;
-    margin-right: 10px;
     /* make the name of the payment line to be truncated with ellipsis */
     white-space: nowrap;
-    overflow:hidden;
     text-overflow:ellipsis;
     padding: map-get($spacers, 3);
 }
 .paymentline .payment-amount {
-    margin-left: 10px;
-    margin-right: 10px;
     padding: map-get($spacers, 3);
 }
 .paymentline .delete-button {
@@ -1787,6 +1810,7 @@ td {
     }
     body * {
         visibility: hidden;
+        height: 0 !important;
     }
     .pos, .pos * {
         position: static !important;
@@ -1800,6 +1824,7 @@ td {
         visibility: visible;
         background: white !important;
         color: black !important;
+        height: auto !important;
     }
     .pos .pos-receipt {
         margin: 0 !important;
@@ -2159,6 +2184,8 @@ td {
 .pos .order .orderlines {
     flex-grow: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .pos .order .order-empty {
@@ -2638,6 +2665,11 @@ td {
     cursor: pointer;
     border: 1px solid $gray-200;
     color: $primary;
+}
+.pos .popup .button.dynamic-size {
+    width: auto; 
+    white-space: nowrap; 
+    padding: 0 15px;
 }
 
 .pos .popup-textarea textarea {

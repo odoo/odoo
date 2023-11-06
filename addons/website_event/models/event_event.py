@@ -11,6 +11,7 @@ from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
 
@@ -189,6 +190,16 @@ class Event(models.Model):
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
+
+    # -------------------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # -------------------------------------------------------------------------
+
+    @api.constrains('website_id')
+    def _check_website_id(self):
+        for event in self:
+            if event.website_id and event.website_id.company_id != event.company_id:
+                raise ValidationError(_("The website must be from the same company as the event."))
 
     # ------------------------------------------------------------
     # CRUD

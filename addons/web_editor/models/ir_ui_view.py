@@ -90,16 +90,8 @@ class IrUiView(models.Model):
 
     @api.model
     def _pretty_arch(self, arch):
-        # remove_blank_string does not seem to work on HTMLParser, and
-        # pretty-printing with lxml more or less requires stripping
-        # whitespace: http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
-        # so serialize to XML, parse as XML (remove whitespace) then serialize
-        # as XML (pretty print)
-        arch_no_whitespace = etree.fromstring(
-            etree.tostring(arch, encoding='utf-8'),
-            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
-        return etree.tostring(
-            arch_no_whitespace, encoding='unicode', pretty_print=True)
+        # TODO: Remove this method in 16.3.
+        return etree.tostring(arch, encoding='unicode')
 
     @api.model
     def _are_archs_equal(self, arch1, arch2):

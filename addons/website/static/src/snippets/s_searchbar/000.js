@@ -11,7 +11,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
     events: {
         'input .search-query': '_onInput',
         'focusout': '_onFocusOut',
-        'keydown .search-query': '_onKeydown',
+        'keydown .search-query, .dropdown-item': '_onKeydown',
         'search .search-query': '_onSearch',
     },
     autocompleteMinWidth: 300,
@@ -64,15 +64,16 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             for (const keyValue of urlParams.split('&')) {
                 const [key, value] = keyValue.split('=');
                 if (value && key !== 'search') {
-                    this.options[key] = value;
+                    // Decode URI parameters: revert + to space then decodeURIComponent.
+                    this.options[decodeURIComponent(key.replace(/\+/g, '%20'))] = decodeURIComponent(value.replace(/\+/g, '%20'));
                 }
             }
         }
         const pathParts = urlPath.split('/');
         for (const index in pathParts) {
-            const value = pathParts[index];
+            const value = decodeURIComponent(pathParts[index]);
             if (index > 0 && /-[0-9]+$/.test(value)) { // is sluggish
-                this.options[pathParts[index - 1]] = value;
+                this.options[decodeURIComponent(pathParts[index - 1])] = value;
             }
         }
 
@@ -242,8 +243,13 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
                 if (this.$menu) {
-                    let $element = ev.which === $.ui.keyCode.UP ? this.$menu.children().last() : this.$menu.children().first();
-                    $element.focus();
+                    const focusableEls = [this.$input[0], ...this.$menu[0].children];
+                    const focusedEl = document.activeElement;
+                    const currentIndex = focusableEls.indexOf(focusedEl) || 0;
+                    const delta = ev.which === $.ui.keyCode.UP ? focusableEls.length - 1 : 1;
+                    const nextIndex = (currentIndex + delta) % focusableEls.length;
+                    const nextFocusedEl = focusableEls[nextIndex];
+                    nextFocusedEl.focus();
                 }
                 break;
             case $.ui.keyCode.ENTER:

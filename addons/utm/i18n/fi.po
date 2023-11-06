@@ -15,6 +15,7 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Martin Trigaux, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,8 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,7 +35,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s luotu %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
@@ -44,14 +45,14 @@ msgstr "Aktiivinen"
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
 msgid "Allows us to filter relevant Campaigns"
-msgstr ""
+msgstr "Mahdollistaa merkityksellisten kampanjoiden suodattamisen"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Approval-based Flow"
-msgstr ""
+msgstr "Hyväksyntään perustuva kulku"
 
 #. module: utm
 #. openerp-web
@@ -69,18 +70,20 @@ msgstr "Arkistoitu"
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Assign tags to your campaigns to organize, filter and track them."
 msgstr ""
+"Määritä kampanjoillesi tunnisteita niiden järjestämiseksi, suodattamiseksi "
+"ja seuraamiseksi."
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Audience-driven Flow"
-msgstr ""
+msgstr "Yleisölähtöinen kulku"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
 msgid "Automatically Generated Campaign"
-msgstr ""
+msgstr "Automaattisesti luotu kampanja"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
@@ -90,7 +93,7 @@ msgstr "Kampanja"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "Kampanjan tunniste"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -102,7 +105,7 @@ msgstr "Kampanjan nimi"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_stage
 msgid "Campaign Stage"
-msgstr ""
+msgstr "Kampanjavaihe"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
@@ -123,11 +126,13 @@ msgid ""
 "Campaigns are used to centralize your marketing efforts and track their "
 "results."
 msgstr ""
+"Kampanjoita käytetään markkinointitoimien keskittämiseen ja niiden tulosten "
+"seurantaan."
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
-msgstr ""
+msgstr "Joulutarjous"
 
 #. module: utm
 #. openerp-web
@@ -135,6 +140,7 @@ msgstr ""
 #, python-format
 msgid "Collect ideas, design creative content and publish it once reviewed."
 msgstr ""
+"Kerää ideoita, suunnittele luovaa sisältöä ja julkaise se tarkistettuna."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
@@ -147,27 +153,27 @@ msgstr "Väri-indeksi"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Haamukirjoitus"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr ""
+msgstr "Luo media"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Create a Tag"
-msgstr ""
+msgstr "Luo tunniste"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
-msgstr ""
+msgstr "Luo kampanja"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
 msgid "Create a stage for your campaigns"
-msgstr ""
+msgstr "Luo vaihe kampanjoillesi"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__create_uid
@@ -192,7 +198,7 @@ msgstr "Luotu"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Creative Flow"
-msgstr ""
+msgstr "Luova kulku"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -211,7 +217,7 @@ msgstr "Käyttöönota"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Deployed"
-msgstr ""
+msgstr "Käytössä"
 
 #. module: utm
 #. openerp-web
@@ -265,14 +271,14 @@ msgstr "Sähköpostikampanja - Palvelut"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Event-driven Flow"
-msgstr ""
+msgstr "Tapahtumapohjainen kulku"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Gather Data"
-msgstr ""
+msgstr "Kerää tietoja"
 
 #. module: utm
 #. openerp-web
@@ -282,6 +288,8 @@ msgid ""
 "Gather data, build a recipient list and write content based on your "
 "Marketing target."
 msgstr ""
+"Kerää tietoja, rakenna vastaanottajaluettelo ja kirjoita sisältöä "
+"markkinointikohteesi perusteella."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -354,7 +362,7 @@ msgstr "Klikkiseuranta"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "List-Building"
-msgstr ""
+msgstr "Luettelon rakentaminen"
 
 #. module: utm
 #: model:utm.tag,name:utm.utm_tag_1
@@ -370,14 +378,14 @@ msgstr "Media"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr ""
+msgstr "Median Nimi"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "Mediums"
-msgstr ""
+msgstr "Mediat"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -394,21 +402,21 @@ msgstr "Uusi"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid "No Sources yet!"
-msgstr ""
+msgstr "Ei lähteitä vielä!"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Pre-Launch"
-msgstr ""
+msgstr "Käynnistystä edeltävä"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Prepare Campaigns and get them approved before making them go live."
-msgstr ""
+msgstr "Valmistele kampanjat ja hyväksy ne ennen niiden käyttöönottoa."
 
 #. module: utm
 #. openerp-web
@@ -418,6 +426,8 @@ msgid ""
 "Prepare your Campaign, test it with part of your audience and deploy it "
 "fully afterwards."
 msgstr ""
+"Valmistele kampanja, testaa sitä osalla yleisöstäsi ja ota se sen jälkeen "
+"kokonaan käyttöön."
 
 #. module: utm
 #. openerp-web
@@ -460,7 +470,7 @@ msgstr "Aikatauluta"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr ""
+msgstr "Hae UTM-media"
 
 #. module: utm
 #. openerp-web
@@ -489,14 +499,14 @@ msgstr "Järjestys"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch"
-msgstr ""
+msgstr "Soft-Launch"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch Flow"
-msgstr ""
+msgstr "Soft-Launch kulku"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
@@ -535,6 +545,8 @@ msgid ""
 "Stages allow you to organize your workflow  (e.g. : plan, design, in "
 "progress,  done, …)."
 msgstr ""
+"Vaiheiden avulla voit järjestää työnkulun (esim. suunnitelma, suunnittelu, "
+"keskeneräinen, valmis, ...)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -542,6 +554,8 @@ msgid ""
 "Tag color. No color means no display in kanban to distinguish internal tags "
 "from public categorization tags."
 msgstr ""
+"Tunnisteen väri. Ei väriä tarkoittaa, että kanbanissa ei näytetä sisäisiä "
+"tunnisteita, jotta ne voitaisiin erottaa julkisista luokittelutunnisteista."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
@@ -560,13 +574,16 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
+"UTM-mediaa \"%s\" ei voi poistaa, koska sitä käytetään joissakin "
+"tärkeimmissä toiminnallisissa virroissa, kuten rekrytoinnissa ja "
+"massapostituksessa."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "Nimen on oltava yksilöllinen"
 
 #. module: utm
 #. openerp-web
@@ -609,7 +626,7 @@ msgstr ""
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "To be Approved"
-msgstr ""
+msgstr "Hyväksyttävä"
 
 #. module: utm
 #. openerp-web
@@ -619,6 +636,8 @@ msgid ""
 "Track incoming events (e.g. : Christmas, Black Friday, ...) and publish "
 "timely content."
 msgstr ""
+"Seuraa tulevia tapahtumia (esim. joulu, musta perjantai, ...) ja julkaise "
+"oikea-aikaista sisältöä."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -630,12 +649,12 @@ msgstr "UTM-kampanja"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "UTM Campaigns"
-msgstr ""
+msgstr "UTM-kampanjat"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr ""
+msgstr "UTM-media"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
@@ -643,21 +662,23 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
 msgstr ""
+"UTM-mediat seuraavat keinoa, jota käytettiin liikenteen houkuttelemiseen "
+"(esim. \"Verkkosivusto\", \"Twitter\", ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "UTM Mixin"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
 msgid "UTM Source"
-msgstr ""
+msgstr "UTM-lähde"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "UTM lähde Mixin"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
@@ -665,31 +686,33 @@ msgid ""
 "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
 "...)."
 msgstr ""
+"UTM-lähteet seuraavat, mistä liikenne tulee (esim. \"Toukokuun uutiskirje\","
+" \"\", ...)."
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
 msgid "UTM Stages"
-msgstr ""
+msgstr "UTM-vaiheet"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_tag
 msgid "UTM Tag"
-msgstr ""
+msgstr "UTM-tunniste"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTM:t"
 
 #. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Campaigns"
-msgstr ""
+msgstr "Käytä tätä kampanjoihini"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "e.g. Black Friday"
-msgstr ""
+msgstr "esim. musta perjantai"

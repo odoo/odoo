@@ -2,25 +2,20 @@
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { ormService } from "@web/core/orm_service";
-import { registry } from "@web/core/registry";
 import { FilterMenu } from "@web/search/filter_menu/filter_menu";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { viewService } from "@web/views/view_service";
 import { mount } from "../helpers/utils";
 import {
     getMenuItemTexts,
     makeWithSearch,
+    setupControlPanelServiceRegistry,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
 } from "./helpers";
 
 import { Component, onWillUpdateProps, onWillStart, useState, xml } from "@odoo/owl";
-
-const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -55,9 +50,7 @@ QUnit.module("Search", (hooks) => {
         `,
             },
         };
-        serviceRegistry.add("hotkey", hotkeyService);
-        serviceRegistry.add("orm", ormService);
-        serviceRegistry.add("view", viewService);
+        setupControlPanelServiceRegistry();
         target = getFixture();
     });
 
@@ -111,7 +104,7 @@ QUnit.module("Search", (hooks) => {
                     });
                     assert.deepEqual(domain, [[0, "=", 1]]);
                     assert.deepEqual(groupBy, ["birthday"]);
-                    assert.deepEqual(orderBy, ["bar"]);
+                    assert.deepEqual(orderBy, [{ name: "bar", asc: true }]);
                 }
             }
             TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
@@ -123,7 +116,7 @@ QUnit.module("Search", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
-                orderBy: ["bar"],
+                orderBy: [{ name: "bar", asc: true }],
             });
         }
     );

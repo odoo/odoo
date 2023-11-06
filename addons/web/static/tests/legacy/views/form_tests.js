@@ -1298,18 +1298,13 @@ QUnit.module('LegacyViews', {
 
         assert.containsN(form, 'button.oe_stat_button', 2);
         assert.containsOnce(form, 'button.oe_stat_button.o_invisible_modifier');
+        assert.containsOnce(form, 'button.oe_stat_button:disabled');
 
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function () {
-            count++;
-        });
-        await testUtils.dom.click('.oe_stat_button');
-        assert.strictEqual(count, 0, "should have triggered an execute_action");
         form.destroy();
     });
 
     QUnit.test('rendering stat buttons without action', async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         var form = await createView({
             View: FormView,
@@ -1337,12 +1332,6 @@ QUnit.module('LegacyViews', {
         assert.containsOnce(form, 'button.oe_stat_button.o_invisible_modifier');
         assert.containsN(form, 'button.oe_stat_button:disabled', 2);
 
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function () {
-            count++;
-        });
-        await testUtils.dom.click('.oe_stat_button');
-        assert.strictEqual(count, 0, "should have not triggered an execute_action");
         form.destroy();
     });
 
@@ -7786,7 +7775,7 @@ QUnit.module('LegacyViews', {
     });
 
     QUnit.test('multiple clicks on save should reload only once', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var def = testUtils.makeTestPromise();
 
@@ -7818,7 +7807,7 @@ QUnit.module('LegacyViews', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
-        await testUtils.form.clickSave(form);
+        assert.ok(form.$buttons.find('.o_form_button_save').get(0).disabled);
 
         def.resolve();
         await testUtils.nextTick();
@@ -10879,6 +10868,41 @@ QUnit.module('LegacyViews', {
         await testUtils.nextTick();
 
         assert.verifySteps(['read', 'onchange']);
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: click on save and save on closing tab/browser', async function (assert) {
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name" required="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            async mockRPC(route, { method, model }) {
+                if (method === "write" && model === "partner") {
+                    assert.step("write");
+                    await def;
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+
+        await testUtils.form.clickSave(form);
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+        def.resolve();
+        assert.verifySteps(['write']);
 
         form.destroy();
     });

@@ -8,7 +8,8 @@
                     <span class="o_MessageInReplyToView_wrapOuter d-flex align-items-center text-muted opacity-75 opacity-100-hover cursor-pointer"  t-attf-class="{{ messageInReplyToView.messageView.isInChatWindowAndIsAlignedRight ? 'pe-3': 'ps-3' }}" t-on-click="messageInReplyToView.onClickReply">
                         <img class="o_MessageInReplyToView_avatar me-2 rounded-circle" t-att-src="messageInReplyToView.messageView.message.parentMessage.avatarUrl" t-att-title="messageInReplyToView.messageView.message.parentMessage.authorName" alt="Avatar"/>
                         <span class="o_MessageInReplyToView_wrapInner overflow-hidden">
-                            <b class="o_MessageInReplyToView_author">@<t t-out="messageInReplyToView.messageView.message.parentMessage.authorName"/></b>:
+                            <b class="o_MessageInReplyToView_author">@<t t-out="messageInReplyToView.messageView.message.parentMessage.authorName"/></b>
+                            <br t-if="messageInReplyToView.messageView.isInChatWindow and !messageInReplyToView.messageView.isInChatWindowAndIsAlignedRight"/>
                             <span class="o_MessageInReplyToView_body ms-1 text-break">
                                 <t t-if="messageInReplyToView.hasBodyBackLink">
                                     <t t-out="messageInReplyToView.messageView.message.parentMessage.prettyBodyAsMarkup"/>

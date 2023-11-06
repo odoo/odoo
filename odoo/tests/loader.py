@@ -2,26 +2,25 @@ import importlib
 import importlib.util
 import inspect
 import itertools
-import logging
+import sys
 import threading
 import unittest
+from pathlib import Path
 
 from .. import tools
-from .common import TagsSelector, OdooSuite
-from .runner import OdooTestResult
+from .tag_selector import TagsSelector
+from .suite import OdooSuite
+from .result import OdooTestResult
 
 
-_logger = logging.getLogger(__name__)
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
-
-    upgrade_spec = importlib.util.find_spec(f'odoo.upgrade.{module}')
-    if upgrade_spec:
-        results += _get_tests_modules(upgrade_spec)
+    results += list(_get_upgrade_test_modules(module))
 
     return results
+
 
 def _get_tests_modules(mod):
     spec = importlib.util.find_spec('.tests', mod.name)
@@ -34,6 +33,29 @@ def _get_tests_modules(mod):
         for name, mod_obj in inspect.getmembers(tests_mod, inspect.ismodule)
         if name.startswith('test_')
     ]
+
+
+def _get_upgrade_test_modules(module):
+    upgrade_modules = (
+        f"odoo.upgrade.{module}",
+        f"odoo.addons.{module}.migrations",
+        f"odoo.addons.{module}.upgrades",
+    )
+    for module_name in upgrade_modules:
+        if not importlib.util.find_spec(module_name):
+            continue
+
+        upg = importlib.import_module(module_name)
+        for path in map(Path, upg.__path__):
+            for test in path.glob("tests/test_*.py"):
+                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+                if not spec:
+                    continue
+                pymod = importlib.util.module_from_spec(spec)
+                sys.modules[spec.name] = pymod
+                spec.loader.exec_module(pymod)
+                yield pymod
+
 
 def make_suite(module_names, position='at_install'):
     """ Creates a test suite for all the tests in the specified modules,
@@ -53,6 +75,7 @@ def make_suite(module_names, position='at_install'):
     )
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
+
 def run_suite(suite, module_name=None):
     # avoid dependency hell
     from ..modules import module
@@ -65,6 +88,7 @@ def run_suite(suite, module_name=None):
     threading.current_thread().testing = False
     module.current_test = None
     return results
+
 
 def unwrap_suite(test):
     """
@@ -83,10 +107,10 @@ def unwrap_suite(test):
         return
 
     subtests = list(test)
-    # custom test suite (no test cases)
-    if not len(subtests):
-        yield test
-        return
+    ## custom test suite (no test cases)
+    #if not len(subtests):
+    #    yield test
+    #    return
 
     for item in itertools.chain.from_iterable(unwrap_suite(t) for t in subtests):
         yield item

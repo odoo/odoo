@@ -99,8 +99,8 @@
                     <group>
                         <group>
                             <field name="can_edit" invisible="1"/>
-                            <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
-                            <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                            <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="work_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
@@ -146,7 +146,7 @@
                                 </div>
 
                                 <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
-                                <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
                                 <field name="private_lang" string="Language" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
                                 <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
@@ -175,7 +175,7 @@
                             </group>
                             <group string="Emergency">
                                 <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                <field name="emergency_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="emergency_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
                             <group string="Work Permit" name="has_work_permit">
                                 <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>

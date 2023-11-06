@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import functools
 import logging
 from lxml import etree
 import os
@@ -9,8 +10,6 @@ import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
-
-from functools import partial
 
 import odoo
 from odoo import api, models
@@ -38,7 +37,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = list(FALSE_DOMAIN)
     return dom
 
 
@@ -104,9 +103,12 @@ class Http(models.AbstractModel):
 
                     if url != url_to:
                         logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
-                        _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
-                        endpoint.routing['redirect_to'] = _slug_matching
-                        yield url, endpoint  # yield original redirected to new url
+                        # duplicate the endpoint to only register the redirect_to for this specific url
+                        redirect_endpoint = functools.partial(endpoint)
+                        functools.update_wrapper(redirect_endpoint, endpoint)
+                        _slug_matching = functools.partial(cls._slug_matching, endpoint=endpoint)
+                        redirect_endpoint.routing = dict(endpoint.routing, redirect_to=_slug_matching)
+                        yield url, redirect_endpoint  # yield original redirected to new url
                 elif rewrite.redirect_type == '404':
                     logger.debug('Return 404 for %s for website %s' % (url, website_id))
                     continue
@@ -266,13 +268,22 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
-        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        published_domain = page_domain
+        def _search_page(comparator='='):
+            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
+            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
         # specific page first
-        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
-        # redirect withtout trailing /
+        # case insensitive search
+        if not page:
+            page = _search_page('=ilike')
+            if page:
+                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
+                return request.redirect(page.url)
+
+        # redirect without trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
@@ -385,6 +396,7 @@ class Http(models.AbstractModel):
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
+            'lang_url_code': request.lang._get_cached('url_code'),
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({

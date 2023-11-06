@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
+from odoo.fields import Command
+from odoo.tests import tagged, TransactionCase
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase, TransactionCase
-from odoo.tools import DotDict
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -277,6 +277,64 @@ class TestWebsitePriceList(TransactionCase):
         self.assertEqual(sol.price_reduce, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
 
+    def test_get_right_discount(self):
+        """ Test that `_get_sales_prices` from `product_template`
+        returns a dict with just `price_reduce` (no discount) as key
+        when the product is tax included.
+        """
+        tax = self.env['account.tax'].create({
+            'name': "Tax 10",
+            'amount': 10,
+        })
+
+        product = self.env['product.template'].create({
+            'name': 'Event Product',
+            'list_price': 10.0,
+            'taxes_id': tax,
+        })
+
+        prices = product._get_sales_prices(self.list_christmas)
+        self.assertFalse('base_price' in prices[product.id])
+
+    def test_pricelist_item_based_on_cost_for_templates(self):
+        """ Test that `_get_sales_prices` from `product_template` computes the correct price when
+        the pricelist item is based on the cost of the product.
+        """
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Pricelist base on cost',
+            'item_ids': [Command.create({
+                'base': 'standard_price',
+                'compute_price': 'percentage',
+                'percent_price': 10,
+            })]
+        })
+
+        pa = self.env['product.attribute'].create({'name': 'Attribute'})
+        pav1 = self.env['product.attribute.value'].create({'name': 'Value1', 'attribute_id': pa.id})
+        pav2 = self.env['product.attribute.value'].create({'name': 'Value2', 'attribute_id': pa.id})
+
+        product_template = self.env['product.template'].create({
+            'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
+        })
+        self.assertEqual(product_template.standard_price, 5)
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        msg = "Template has no variants, the price should be computed based on the template's cost."
+        self.assertEqual(price, 4.5, msg)
+
+        product_template.attribute_line_ids = [Command.create({
+            'attribute_id': pa.id, 'value_ids': [Command.set([pav1.id, pav2.id])]
+        })]
+        msg = "Product template with variants should have no cost."
+        self.assertEqual(product_template.standard_price, 0, msg)
+        self.assertEqual(product_template.product_variant_ids[0].standard_price, 0)
+
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        msg = "Template has variants, the price should be computed based on the 1st variant's cost."
+        self.assertEqual(price, 0, msg)
+
+        product_template.product_variant_ids[0].standard_price = 20
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        self.assertEqual(price, 18, msg)
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
@@ -583,3 +641,25 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
+
+@tagged('post_install', '-at_install')
+class TestWebsiteSaleSession(HttpCaseWithUserPortal):
+
+    def test_update_pricelist_user_session(self):
+        """
+            The objective is to verify that the pricelist
+            changes correctly according to the user.
+        """
+        website = self.env.ref('website.default_website')
+        test_user = self.env['res.users'].create({
+            'name': 'Toto',
+            'login': 'toto',
+            'password': 'long_enough_password',
+        })
+        user_pricelist = self.env['product.pricelist'].create({
+            'name': 'User Pricelist',
+            'website_id': website.id,
+            'code': 'User_pricelist',
+        })
+        test_user.partner_id.property_product_pricelist = user_pricelist
+        self.start_tour("/shop", 'website_sale_shop_pricelist_tour', login="")

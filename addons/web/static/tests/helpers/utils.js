@@ -746,22 +746,28 @@ export function drag(from, to, position) {
         clientX: toRect.x + toRect.width / 2,
         clientY: toRect.y + toRect.height / 2,
     };
-    switch (position) {
-        case "top": {
-            toPos.clientY = toRect.y - 1;
-            break;
-        }
-        case "bottom": {
-            toPos.clientY = toRect.y + toRect.height + 1;
-            break;
-        }
-        case "left": {
-            toPos.clientX = toRect.x - 1;
-            break;
-        }
-        case "right": {
-            toPos.clientX = toRect.x + toRect.width + 1;
-            break;
+    if (position && typeof position === "object") {
+        // x and y coordinates start from the element's initial coordinates
+        toPos.clientX += position.x || 0;
+        toPos.clientY += position.y || 0;
+    } else {
+        switch (position) {
+            case "top": {
+                toPos.clientY = toRect.y - 1;
+                break;
+            }
+            case "bottom": {
+                toPos.clientY = toRect.y + toRect.height + 1;
+                break;
+            }
+            case "left": {
+                toPos.clientX = toRect.x - 1;
+                break;
+            }
+            case "right": {
+                toPos.clientX = toRect.x + toRect.width + 1;
+                break;
+            }
         }
     }
 

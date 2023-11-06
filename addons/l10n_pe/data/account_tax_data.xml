@@ -223,6 +223,124 @@
             }),
         ]"/>
     </record>
+    <record id="sale_tax_igv_18g_ng" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">18% Gravadas y No Gravadas</field>
+        <field name="description">IGV</field>
+        <field name="l10n_pe_edi_tax_code">1000</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">18.0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_igv_g_ng"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40117'),
+            }),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart6411'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40117'),
+            }),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart6411'),
+            }),
+        ]"/>
+    </record>
+    <record id="sale_tax_igv_18_ng" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">18% No Gravadas</field>
+        <field name="description">IGV NG</field>
+        <field name="l10n_pe_edi_tax_code">1000</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">18.0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_igv_ng"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40116'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40116'),
+            }),
+        ]"/>
+    </record>
+    <record id="purchase_tax_exp_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0% EXP</field>
+        <field name="description">EXP</field>
+        <field name="l10n_pe_edi_tax_code">9995</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_exp"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40115'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40115'),
+            }),
+        ]"/>
+    </record>
     <record id="purchase_tax_exo" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">0% Exonerated</field>

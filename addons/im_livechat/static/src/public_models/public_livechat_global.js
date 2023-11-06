@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { session } from "@web/session";
+
 import { qweb } from 'web.core';
 import { Markup } from 'web.utils';
 import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
@@ -45,8 +47,13 @@ registerModel({
         },
         async _willStart() {
             const strCookie = getCookie('im_livechat_session');
-            const isSessionCookieAvailable = Boolean(strCookie);
-            const cookie = JSON.parse(strCookie || '{}');
+            let isSessionCookieAvailable = Boolean(strCookie);
+            let cookie = JSON.parse(strCookie || '{}');
+            if (isSessionCookieAvailable && cookie.visitor_uid !== session.user_id) {
+                this.leaveSession();
+                isSessionCookieAvailable = false;
+                cookie = {};
+            }
             if (cookie.id) {
                 const history = await this.messaging.rpc({
                     route: '/mail/chat_history',
@@ -130,6 +137,29 @@ registerModel({
                 // we landed on a website page and a chatbot script is currently running
                 // -> restore the user's session (see 'Chatbot/restoreSession')
                 this.chatbot.restoreSession();
+            }
+        },
+
+        getVisitorUserId() {
+            const cookie = JSON.parse(getCookie("im_livechat_session") || "{}");
+            if ("visitor_uid" in cookie) {
+                return cookie.visitor_uid;
+            }
+            return session.user_id;
+        },
+
+        /**
+         * Called when the visitor leaves the livechat chatter the first time (first click on X button)
+         * this will deactivate the mail_channel, notify operator that visitor has left the channel.
+         */
+        leaveSession() {
+            const cookie = getCookie('im_livechat_session');
+            if (cookie) {
+                const channel = JSON.parse(cookie);
+                if (channel.uuid) {
+                    this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
+                }
+                deleteCookie('im_livechat_session');
             }
         },
     },

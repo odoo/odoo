@@ -45,8 +45,8 @@
                 </div>
             </div>
 
-            <table class="table table-sm o_main_table mt-4">
-                <thead>
+            <table class="table table-sm o_main_table table-borderless mt-4">
+                <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
                         <th name="th_taxes"><strong>Taxes</strong></th>
@@ -68,7 +68,7 @@
                                     <span t-field="line.name"/>
                                 </td>
                                 <td name="td_taxes">
-                                    <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                                    <span t-esc="', '.join(map(lambda x: x.description or x.name, line.taxes_id))"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="line.date_planned"/>
@@ -115,7 +115,7 @@
 
             <div id="total" class="row justify-content-end">
                 <div class="col-4">
-                    <table class="table table-sm">
+                    <table class="table table-sm table-borderless">
                         <t t-set="tax_totals" t-value="o.tax_totals"/>
                         <t t-call="account.document_tax_totals"/>
                     </table>

@@ -25,24 +25,11 @@ export const busService = {
 
     async start(env, { multi_tab: multiTab }) {
         const bus = new EventBus();
+        let worker;
         let isActive = false;
-        let workerURL = `${legacySession.prefix}/bus/websocket_worker_bundle?v=${WORKER_VERSION}`;
-        if (legacySession.prefix !== window.origin) {
-            // Bus service is loaded from a different origin than the bundle
-            // URL. The Worker expects an URL from this origin, give it a base64
-            // URL that will then load the bundle via "importScripts" which
-            // allows cross origin.
-            const source = `importScripts("${workerURL}");`;
-            workerURL = 'data:application/javascript;base64,' + window.btoa(source);
-        }
-        const workerClass = 'SharedWorker' in window && !isIosApp() ? browser.SharedWorker : browser.Worker;
-        const worker = new workerClass(workerURL, {
-            name: 'SharedWorker' in window && !isIosApp() ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
-        });
-        worker.addEventListener("error", (e) => {
-            connectionInitializedDeferred.resolve();
-            console.warn("Error while loading 'bus_service' SharedWorker");
-        });
+        let isInitialized = false;
+        let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
+        const startTs = new Date().getTime();
         const connectionInitializedDeferred = new Deferred();
 
         /**
@@ -54,8 +41,11 @@ export const busService = {
         * executed.
         */
         function send(action, data) {
+            if (!worker) {
+                return;
+            }
             const message = { action, data };
-            if ('SharedWorker' in window && !isIosApp()) {
+            if (isUsingSharedWorker) {
                 worker.port.postMessage(message);
             } else {
                 worker.postMessage(message);
@@ -76,6 +66,7 @@ export const busService = {
                 multiTab.setSharedValue('last_notification_id', data[data.length - 1].id);
                 data = data.map(notification => notification.message);
             } else if (type === 'initialized') {
+                isInitialized = true;
                 connectionInitializedDeferred.resolve();
                 return;
             }
@@ -105,16 +96,50 @@ export const busService = {
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
                 uid,
+                startTs,
             });
         }
 
-        if ('SharedWorker' in window && !isIosApp()) {
-            worker.port.start();
-            worker.port.addEventListener('message', handleMessage);
-        } else {
-            worker.addEventListener('message', handleMessage);
+        /**
+         * Start the "bus_service" worker.
+         */
+        function startWorker() {
+            let workerURL = `${legacySession.prefix}/bus/websocket_worker_bundle?v=${WORKER_VERSION}`;
+            if (legacySession.prefix !== window.origin) {
+                // Bus service is loaded from a different origin than the bundle
+                // URL. The Worker expects an URL from this origin, give it a base64
+                // URL that will then load the bundle via "importScripts" which
+                // allows cross origin.
+                const source = `importScripts("${workerURL}");`;
+                workerURL = 'data:application/javascript;base64,' + window.btoa(source);
+            }
+            const workerClass = isUsingSharedWorker ? browser.SharedWorker : browser.Worker;
+            worker = new workerClass(workerURL, {
+                name: isUsingSharedWorker
+                    ? 'odoo:websocket_shared_worker'
+                    : 'odoo:websocket_worker',
+            });
+            worker.addEventListener("error", (e) => {
+                if (!isInitialized && workerClass === browser.SharedWorker) {
+                    console.warn(
+                        'Error while loading "bus_service" SharedWorker, fallback on Worker.'
+                    );
+                    isUsingSharedWorker = false;
+                    startWorker();
+                } else if (!isInitialized) {
+                    isInitialized = true;
+                    connectionInitializedDeferred.resolve();
+                    console.warn('Bus service failed to initialized.');
+                }
+            });
+            if (isUsingSharedWorker) {
+                worker.port.start();
+                worker.port.addEventListener('message', handleMessage);
+            } else {
+                worker.addEventListener('message', handleMessage);
+            }
+            initializeWorkerConnection();
         }
-        initializeWorkerConnection();
         browser.addEventListener('pagehide', ({ persisted }) => {
             if (!persisted) {
                 // Page is gonna be unloaded, disconnect this client
@@ -128,11 +153,14 @@ export const busService = {
             }
         });
         browser.addEventListener('offline', () => send('stop'));
-        await connectionInitializedDeferred;
 
         return {
             addEventListener: bus.addEventListener.bind(bus),
-            addChannel: channel => {
+            addChannel: async channel => {
+                if (!worker) {
+                    startWorker();
+                    await connectionInitializedDeferred;
+                }
                 send('add_channel', channel);
                 send('start');
                 isActive = true;
@@ -142,7 +170,11 @@ export const busService = {
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
             send: (eventName, data) => send('send', { event_name: eventName, data }),
-            start: () => {
+            start: async () => {
+                if (!worker) {
+                    startWorker();
+                    await connectionInitializedDeferred;
+                }
                 send('start');
                 isActive = true;
             },

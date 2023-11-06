@@ -149,7 +149,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state != 'draft':
                 continue
-            move.manual_consumption = not move.raw_material_production_id.use_auto_consume_components_lots and (move.bom_line_id.manual_consumption or move.has_tracking != 'none')
+            move.manual_consumption = move._is_manual_consumption()
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -231,12 +231,6 @@ class StockMove(models.Model):
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
 
-    @api.onchange('quantity_done')
-    def _onchange_quantity_done(self):
-        if self.raw_material_production_id and not self.manual_consumption and \
-           self.should_consume_qty != self.quantity_done:
-            self.manual_consumption = True
-
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
@@ -299,11 +293,25 @@ class StockMove(models.Model):
     def write(self, vals):
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
-        if 'product_uom_qty' in vals and 'move_line_ids' in vals:
-            # first update lines then product_uom_qty as the later will unreserve
-            # so possibly unlink lines
-            move_line_vals = vals.pop('move_line_ids')
-            super().write({'move_line_ids': move_line_vals})
+        if 'product_uom_qty' in vals:
+            if 'move_line_ids' in vals:
+                # first update lines then product_uom_qty as the later will unreserve
+                # so possibly unlink lines
+                move_line_vals = vals.pop('move_line_ids')
+                super().write({'move_line_ids': move_line_vals})
+            procurement_requests = []
+            for move in self:
+                if move.raw_material_production_id.state != 'confirmed' \
+                        or not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) \
+                        or move.procure_method != 'make_to_order':
+                    continue
+                values = move._prepare_procurement_values()
+                origin = move._prepare_procurement_origin()
+                procurement_requests.append(self.env['procurement.group'].Procurement(
+                    move.product_id, vals['product_uom_qty'], move.product_uom,
+                    move.location_id, move.rule_id and move.rule_id.name or "/",
+                    origin, move.company_id, values))
+            self.env['procurement.group'].run(procurement_requests)
         return super().write(vals)
 
     def _action_assign(self, force_qty=False):
@@ -349,14 +357,14 @@ class StockMove(models.Model):
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
 
-        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
-        move_to_unlink.quantity_done = 0
-        move_to_unlink._action_cancel()
-        move_to_unlink.unlink()
         if phantom_moves_vals_list:
             phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
             phantom_moves._adjust_procure_method()
             moves_ids_to_return |= phantom_moves.action_explode().ids
+        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
+        move_to_unlink.quantity_done = 0
+        move_to_unlink._action_cancel()
+        move_to_unlink.unlink()
         return self.env['stock.move'].browse(moves_ids_to_return)
 
     def action_show_details(self):
@@ -421,7 +429,7 @@ class StockMove(models.Model):
             'state': 'confirmed',
             'reservation_date': self.reservation_date,
             'date_deadline': self.date_deadline,
-            'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
+            'manual_consumption': self._is_manual_consumption(),
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
             'procure_method': self.procure_method,
@@ -467,7 +475,11 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share', 'bom_line_id']
+        res = super()._prepare_merge_moves_distinct_fields()
+        res += ['created_production_id', 'cost_share']
+        if self.bom_line_id and ("phantom" in self.bom_line_id.bom_id.mapped('type')):
+            res.append('bom_line_id')
+        return res
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
@@ -539,9 +551,9 @@ class StockMove(models.Model):
     def _update_candidate_moves_list(self, candidate_moves_list):
         super()._update_candidate_moves_list(candidate_moves_list)
         for production in self.mapped('raw_material_production_id'):
-            candidate_moves_list.append(production.move_raw_ids)
+            candidate_moves_list.append(production.move_raw_ids.filtered(lambda m: m.product_id in self.product_id))
         for production in self.mapped('production_id'):
-            candidate_moves_list.append(production.move_finished_ids)
+            candidate_moves_list.append(production.move_finished_ids.filtered(lambda m: m.product_id in self.product_id))
 
     def _multi_line_quantity_done_set(self, quantity_done):
         if self.raw_material_production_id:
@@ -555,12 +567,6 @@ class StockMove(models.Model):
         res['bom_line_id'] = self.bom_line_id.id
         return res
 
-    def _get_mto_procurement_date(self):
-        date = super()._get_mto_procurement_date()
-        if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
-            date -= relativedelta(days=self.company_id.manufacturing_lead)
-        return date
-
     def action_open_reference(self):
         res = super().action_open_reference()
         source = self.production_id or self.raw_material_production_id
@@ -572,3 +578,12 @@ class StockMove(models.Model):
                 'res_id': source.id,
             }
         return res
+
+    def _is_manual_consumption(self):
+        self.ensure_one()
+        return self._determine_is_manual_consumption(self.product_id, self.raw_material_production_id, self.bom_line_id)
+
+    @api.model
+    def _determine_is_manual_consumption(self, product, production, bom_line):
+        return (product.product_tmpl_id.tracking != 'none' and not production.use_auto_consume_components_lots) or \
+               (product.product_tmpl_id.tracking == 'none' and bom_line and bom_line.manual_consumption)

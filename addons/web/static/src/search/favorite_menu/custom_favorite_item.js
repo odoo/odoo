@@ -3,16 +3,16 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export class CustomFavoriteItem extends Component {
     setup() {
         this.notificationService = useService("notification");
-        this.descriptionRef = useAutofocus();
+        this.descriptionRef = useRef("description");
         this.state = useState({
             description: this.env.config.getDisplayName(),
             isDefault: false,
@@ -24,7 +24,7 @@ export class CustomFavoriteItem extends Component {
      * @param {Event} ev
      */
     saveFavorite(ev) {
-        if (!this.state.description.length) {
+        if (!this.state.description) {
             this.notificationService.add(
                 this.env._t("A name for your favorite filter is required."),
                 { type: "danger" }

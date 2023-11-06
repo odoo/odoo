@@ -40,12 +40,11 @@ export class InventoryReportListController extends ListController {
         if (this.props.resModel === "stock.quant" && (!this.props.context.inventory_mode || this.props.context.inventory_report_mode)) {
             // hack so we don't show some of the default actions when it's inappropriate to
             const {print, action, other} = actionMenus;
-            return Object.assign(
-                {},
-                print.filter(a => a.name !== this.env._t('Count Sheet')),
-                action.filter(a => a.name !== this.env._t('Set')),
-                { other: other },
-            );
+            return {
+                print: print.filter(a => a.name !== this.env._t('Count Sheet')),
+                action: action.filter(a => a.name !== this.env._t('Set')),
+                other: other,
+            };
         }
         return actionMenus;
     }

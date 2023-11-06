@@ -83,21 +83,9 @@ class CRMRevealRule(models.Model):
         except Exception:
             raise ValidationError(_('Enter Valid Regex.'))
 
-    @api.model
-    def _assert_geoip(self):
-        if not odoo._geoip_resolver:
-            message = _('Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/.')
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.simple_notification', {
-                'title': _('Missing Library'),
-                'message': message,
-                'sticky': True,
-                'warning': True,
-            })
-
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
-        self._assert_geoip()
         return super().create(vals_list)
 
     def write(self, vals):
@@ -106,7 +94,6 @@ class CRMRevealRule(models.Model):
         }
         if set(vals.keys()) & fields_set:
             self.clear_caches() # Clear the cache in order to recompute _get_active_rules
-        self._assert_geoip()
         return super(CRMRevealRule, self).write(vals)
 
     def unlink(self):

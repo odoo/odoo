@@ -230,6 +230,20 @@ class TestStockLot(TestStockCommon):
     def test_03_onchange_expiration_date(self):
         """ Updates the `expiration_date` of the lot production and checks other date
         fields are updated as well. """
+        def check_expiration_dates(product, lot, start_date, delta):
+            self.assertAlmostEqual(
+                start_date + timedelta(days=product.expiration_time),
+                lot.expiration_date, delta=delta)
+            self.assertAlmostEqual(
+                lot.expiration_date - timedelta(days=product.use_time),
+                lot.use_date, delta=delta)
+            self.assertAlmostEqual(
+                lot.expiration_date - timedelta(days=product.removal_time),
+                lot.removal_date, delta=delta)
+            self.assertAlmostEqual(
+                lot.expiration_date - timedelta(days=product.alert_time),
+                lot.alert_date, delta=delta)
+
         # Keeps track of the current datetime and set a delta for the compares.
         today_date = datetime.today()
         time_gap = timedelta(seconds=10)
@@ -240,37 +254,36 @@ class TestStockLot(TestStockCommon):
         lot_form.company_id = self.env.company
         apple_lot = lot_form.save()
         # ...then checks date fields have the expected values.
-        self.assertAlmostEqual(
-            today_date + timedelta(days=self.apple_product.expiration_time),
-            apple_lot.expiration_date, delta=time_gap)
-        self.assertAlmostEqual(
-            apple_lot.expiration_date - timedelta(days=self.apple_product.use_time),
-            apple_lot.use_date, delta=time_gap)
-        self.assertAlmostEqual(
-            apple_lot.expiration_date - timedelta(days=self.apple_product.removal_time),
-            apple_lot.removal_date, delta=time_gap)
-        self.assertAlmostEqual(
-            apple_lot.expiration_date - timedelta(days=self.apple_product.alert_time),
-            apple_lot.alert_date, delta=time_gap)
+        check_expiration_dates(self.apple_product, apple_lot, today_date, time_gap)
 
         difference = timedelta(days=20)
-        new_date = apple_lot.expiration_date + difference
-        old_use_date = apple_lot.use_date
-        old_removal_date = apple_lot.removal_date
-        old_alert_date = apple_lot.alert_date
+        new_expiration_date = apple_lot.expiration_date + difference
+        new_start_date = new_expiration_date - timedelta(days=self.apple_product.expiration_time)
+        random_date = new_expiration_date + difference
 
-        # Modifies the lot `expiration_date`...
+        # Modifies the lot `expiration_date` several times, without saving...
         lot_form = Form(apple_lot)
-        lot_form.expiration_date = new_date
+        lot_form.expiration_date = new_expiration_date
+        lot_form.expiration_date = random_date
+        lot_form.expiration_date = new_expiration_date
         apple_lot = lot_form.save()
 
-        # ...then checks all other date fields were correclty updated.
-        self.assertAlmostEqual(
-            apple_lot.use_date, old_use_date + difference, delta=time_gap)
-        self.assertAlmostEqual(
-            apple_lot.removal_date, old_removal_date + difference, delta=time_gap)
-        self.assertAlmostEqual(
-            apple_lot.alert_date, old_alert_date + difference, delta=time_gap)
+        # ...then checks all other date fields were correctly updated.
+        check_expiration_dates(self.apple_product, apple_lot, new_start_date, time_gap)
+
+        # Remove all dates, save, update expiration date twice, then save again
+        lot_form = Form(apple_lot)
+        lot_form.expiration_date = False
+        lot_form.use_date = False
+        lot_form.removal_date = False
+        lot_form.alert_date = False
+        lot_form.save()
+        lot_form.expiration_date = random_date
+        lot_form.expiration_date = new_expiration_date
+        apple_lot = lot_form.save()
+
+        # ...then check all other date fields were correctly updated.
+        check_expiration_dates(self.apple_product, apple_lot, new_start_date, time_gap)
 
     def test_04_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt and all expiration

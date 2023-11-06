@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-27 14:38+0000\n"
-"PO-Revision-Date: 2021-10-27 14:38+0000\n"
+"POT-Creation-Date: 2023-04-11 07:03+0000\n"
+"PO-Revision-Date: 2023-04-11 07:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,29 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/res_company.py:0
 #, python-format
 msgid "(Receipt ref.: %s)"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: code:addons/l10n_fr_pos_cert/models/pos.py:0
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
 #, python-format
-msgid "According to French law, you cannot delet a point of sale order."
+msgid "/ Units"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
+#: code:addons/l10n_fr_pos_cert/models/pos.py:0
+#, python-format
+msgid "According to French law, you cannot delete a point of sale order."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid ""
@@ -35,6 +46,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid ""
@@ -43,6 +55,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid ""
@@ -56,11 +69,28 @@ msgid "Account Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
+#: code:addons/l10n_fr_pos_cert/models/res_company.py:0
+#, python-format
+msgid ""
+"Accounting is not unalterable for the company %s. This mechanism is designed"
+" for companies where accounting is unalterable."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid ""
-"An error occured when computing the inalterability. Impossible to get the "
+"An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted point of sale order."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
+#, python-format
+msgid "An unknown error prevents us from getting closing information."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -69,19 +99,10 @@ msgid "Annual"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Annual Closing"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: model:ir.model,name:l10n_fr_pos_cert.model_account_bank_statement
-msgid "Bank Statement"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: model:ir.model,name:l10n_fr_pos_cert.model_account_bank_statement_line
-msgid "Bank Statement Line"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -110,6 +131,7 @@ msgid "Contrôle des données du point de vente"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/res_company.py:0
 #, python-format
 msgid "Corrupted data on point of sale order with id %s."
@@ -141,6 +163,7 @@ msgid "Daily"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Daily Closing"
@@ -157,24 +180,20 @@ msgid "Date to which the values are computed"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. openerp-web
+#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 #, python-format
 msgid "Deleting of orders is not allowed."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement_line__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_fiscal_position__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_config__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order_line__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_session__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_report_l10n_fr_pos_cert_report_pos_hash_integrity__display_name
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_res_company__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Données corrompues sur la commande du point de vente:"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -188,7 +207,7 @@ msgid "First Hash"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. openerp-web
+#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 #, python-format
 msgid "Fiscal Data Module error"
@@ -212,21 +231,18 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_annually_ir_actions_server
 #: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_annually
-#: model:ir.cron,name:l10n_fr_pos_cert.account_sale_closing_annually
 msgid "Generate Annual Sales Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_daily_ir_actions_server
 #: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_daily
-#: model:ir.cron,name:l10n_fr_pos_cert.account_sale_closing_daily
 msgid "Generate Daily Sales Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_monthly_ir_actions_server
 #: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_monthly
-#: model:ir.cron,name:l10n_fr_pos_cert.account_sale_closing_monthly
 msgid "Generate Monthly Sales Closing"
 msgstr ""
 
@@ -246,16 +262,7 @@ msgid "Hash integrity result PDF"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement_line__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_fiscal_position__id
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_config__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order_line__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_session__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_report_l10n_fr_pos_cert_report_pos_hash_integrity__id
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_res_company__id
 msgid "ID"
 msgstr ""
 
@@ -297,16 +304,7 @@ msgid "Last Hash"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_bank_statement_line____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_fiscal_position____last_update
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_config____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order_line____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_session____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_report_l10n_fr_pos_cert_report_pos_hash_integrity____last_update
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_res_company____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -336,7 +334,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. openerp-web
+#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 #, python-format
 msgid "Missing Country"
@@ -348,6 +346,7 @@ msgid "Monthly"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
 msgid "Monthly Closing"
@@ -359,6 +358,21 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
+#, python-format
+msgid "Network Error"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
+#, python-format
+msgid "Old unit price:"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.action_check_pos_hash_integrity
 #: model:ir.ui.menu,name:l10n_fr_pos_cert.menu_check_move_integrity_reporting
 msgid "POS Inalterability Check"
@@ -367,6 +381,13 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__total_interval
 msgid "Period Total"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
+#, python-format
+msgid "Please check your internet connection and try again."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -400,6 +421,7 @@ msgid "Sale Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #, python-format
@@ -453,7 +475,7 @@ msgid "The closings are created by Odoo"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. openerp-web
+#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 #, python-format
 msgid "The company %s doesn't have a country set."
@@ -465,21 +487,13 @@ msgid "The company's currency"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/res_company.py:0
 #, python-format
 msgid ""
 "There isn't any order flagged for data inalterability yet for the company "
 "%s. This mechanism only runs for point of sale orders generated after the "
 "installation of the module France - Certification CGI 286 I-3 bis. - POS"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: code:addons/l10n_fr_pos_cert/models/pos.py:0
-#, python-format
-msgid ""
-"This session has been opened another day. To comply with the French law, you"
-" should close sessions on a daily basis. Please close session %s and open a "
-"new one."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -502,6 +516,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#. odoo-javascript
+#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
+#, python-format
+msgid "Unknown Error"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -510,25 +532,17 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#: code:addons/l10n_fr_pos_cert/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot modify anything on a bank statement (name: %s) that was created "
-"by point of sale operations."
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: code:addons/l10n_fr_pos_cert/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot modify anything on a bank statement line (name: %s) that was "
-"created by point of sale operations."
-msgstr ""
-
-#. module: l10n_fr_pos_cert
+#. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 #, python-format
 msgid ""
 "You cannot overwrite the values ensuring the inalterability of the point of "
 "sale."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#. odoo-python
+#: code:addons/l10n_fr_pos_cert/models/pos.py:0
+#, python-format
+msgid "You have to set a country in your company setting."
 msgstr ""

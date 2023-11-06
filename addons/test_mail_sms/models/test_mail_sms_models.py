@@ -20,6 +20,9 @@ class MailTestSMS(models.Model):
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _sms_get_partner_fields(self):
         return ['customer_id']
 
@@ -52,6 +55,9 @@ class MailTestSMSBL(models.Model):
     def _compute_phone_nbr(self):
         for phone_record in self.filtered(lambda rec: not rec.phone_nbr and rec.customer_id):
             phone_record.phone_nbr = phone_record.customer_id.phone
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _sms_get_partner_fields(self):
         return ['customer_id']
@@ -90,6 +96,9 @@ class MailTestSMSOptout(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     opt_out = fields.Boolean()
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()
         return self.search([
@@ -117,6 +126,9 @@ class MailTestSMSPartner(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     opt_out = fields.Boolean()
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()
         return self.search([
@@ -142,6 +154,9 @@ class MailTestSMSPartner2Many(models.Model):
     name = fields.Char()
     customer_ids = fields.Many2many('res.partner', string='Customers')
     opt_out = fields.Boolean()
+
+    def _mail_get_partner_fields(self):
+        return ['customer_ids']
 
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()

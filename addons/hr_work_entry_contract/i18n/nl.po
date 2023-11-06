@@ -3,18 +3,18 @@
 # 	* hr_work_entry_contract
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,28 +34,30 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Bepaalt de bron voor de werkinvoergeneratie\n"
+"        Bepaalt de bron voor de werkboekinggeneratie\n"
 "\n"
-"        Werkschema: Werkinvoeren worden gegenereerd voor onderstaande werkuren.\n"
-"        Aanwezigheden: Werkinvoeren worden gegenereerd op basis van de werknemer's aanwezigheden (Aanwezigheden app vereist)\n"
-"        Planning: Werkinvoeren worden gegenereerd op basis van de werknemer's planning (Planning app vereist)\n"
+"        Werkschema: Werkboekingen worden gegenereerd voor onderstaande werkuren.\n"
+"        Aanwezigheden: Werkboekingen worden gegenereerd op basis van de werknemer's aanwezigheden (Aanwezigheden app vereist)\n"
+"        Planning: Werkboekingen worden gegenereerd op basis van de werknemer's planning (Planning app vereist)\n"
 "    "
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
 msgstr "%s heeft geen contract van %s t/m %s."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
 msgstr ""
-"%sheeft meerdere contracten van %s t/m %s. Een werkinvoer mag niet meerdere "
-"contracten overlappen."
+"%sheeft meerdere contracten van %s t/m %s. Een werkboeking mag niet meerdere"
+" contracten overlappen."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -64,7 +66,7 @@ msgid ""
 "allowed to regenerate validated work entries"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Het is je "
-"niet toegestaan om gevalideerde werkinvoeren opnieuw te genereren"
+"niet toegestaan om gevalideerde werkboekingen opnieuw te genereren"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -74,16 +76,21 @@ msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Tip\"/>"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
-"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
 msgstr ""
-"<span class=\"text-muted\">Opgelet: Het opnieuw genereren van deze werkinvoeren zal ertoe leiden dat alle handmatige\n"
-"                        configuraties (werkinvoertype, thuiswerklocatie, ...) verloren gaan.</span>"
+"<span class=\"text-muted\">Waarschuwing: Het herstel van werkboekingen zal "
+"alle handmatige wijzigingen van de geselecteerde periode verwijderen.</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
 msgstr "Laat het type werkboeking koppelen aan verlofsoorten."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -137,7 +144,7 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
@@ -156,9 +163,8 @@ msgstr "Van"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
-#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
-msgstr "Genereer ontbrekende werkinvoeren"
+msgstr "Genereer ontbrekende werkboekingen"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -183,7 +189,7 @@ msgstr "HR werkboeking"
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "HR werk boekingssoort"
+msgstr "HR werkboekingssoort"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
@@ -196,6 +202,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -206,7 +213,7 @@ msgid ""
 msgstr ""
 "Om de werkboekingen opnieuw te genereren, moet je de wizard voorzien van een"
 " employee_id, een date_from en een date_to. Daarnaast mag het tijdsinterval "
-"gedefinieerd door date_from en date_to geen gevalideerde werkinvoeren "
+"gedefinieerd door date_from en date_to geen gevalideerde werkboekingen "
 "bevatten."
 
 #. module: hr_work_entry_contract
@@ -240,14 +247,14 @@ msgid "Latest date"
 msgstr "Uiterste datum"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Wettelijk verlof 2022"
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Lange termijn verlof"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Betaald verlof"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -256,7 +263,7 @@ msgid "Regenerate Employee Work Entries"
 msgstr "Hergenereren werknemers werkboekingen"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -275,6 +282,7 @@ msgid "Sick Time Off"
 msgstr "Ziekteverlof"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -284,6 +292,7 @@ msgstr ""
 "niet toegestaan."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -293,7 +302,7 @@ msgid ""
 msgstr ""
 "De vanaf-datum moet> = '%(earliest_available_date)s' zijn en de t/m-datum "
 "moet <= '%(latest_available_date)s' zijn, wat overeenkomt met het "
-"gegenereerde tijdsinterval voor werkinvoer."
+"gegenereerde tijdsinterval voor werkboeking."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit

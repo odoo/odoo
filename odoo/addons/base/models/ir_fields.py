@@ -200,6 +200,10 @@ class IrFieldsConverter(models.AbstractModel):
             msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
 
+    def _str_to_properties(self, model, field, value):
+        msg = _("Unable to import field type '%s'  ", field.type)
+        raise self._format_import_error(ValueError, msg)
+
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
@@ -466,7 +470,8 @@ class IrFieldsConverter(models.AbstractModel):
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
                 if name_create_enabled_fields.get(field.name):
                     try:
-                        id, _name = RelatedModel.name_create(name=value)
+                        with self.env.cr.savepoint():
+                            id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
                         error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:

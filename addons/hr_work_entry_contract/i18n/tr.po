@@ -7,17 +7,18 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Halil, 2022
 # Martin Trigaux, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Levent Karakaş <levent@mektup.at>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,14 +37,23 @@ msgid ""
 "        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        Puantaj Kayıtları oluşturma kaynağını tanımlar\n"
+"\n"
+"        Çalışma Programı: Puantaj Kayıtları aşağıdaki çalışma saatlerinden oluşturulacaktır.\n"
+"        Katılımlar: Puantaj Kayıtları, çalışanın katılımlarından oluşturulacaktır. (Katılım uygulaması gerektirir)\n"
+"        Planlama: Puantaj Kayıtları çalışanın planlamasından oluşturulacaktır. (Planlama uygulaması gerektirir)\n"
+"    "
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
 msgstr "%s sözleşmesi yok %s için %s."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid ""
@@ -59,23 +69,30 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
 "allowed to regenerate validated work entries"
 msgstr ""
+"<i j=\"0/\">Doğrulanmış puantaj kayıtlarını yeniden oluşturmanıza izin "
+"verilmez</i>"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
-"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
 msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
 msgstr "Puantaj türünün izin türleriyle ilişkilendirilmesine izin verin."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -129,7 +146,7 @@ msgid "Employees"
 msgstr "Personel"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
@@ -148,9 +165,8 @@ msgstr "Başlangıç"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
-#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
-msgstr ""
+msgstr "Eksik Puantaj Kayıtlarını Oluşturma"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -188,6 +204,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -203,7 +220,7 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
 msgid "Last Generation Date"
-msgstr ""
+msgstr "Son Jenerasyon Tarihi"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
@@ -231,14 +248,14 @@ msgid "Latest date"
 msgstr "Son tarih"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Yasal İzinler 2022"
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Uzun Süreli İzin"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Ücretli İzin"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -247,7 +264,7 @@ msgid "Regenerate Employee Work Entries"
 msgstr "Çalışan İş Girişlerini Yeniden Oluşturun"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -266,13 +283,17 @@ msgid "Sick Time Off"
 msgstr "Hastalık İzni"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
 "Sorry, generating work entries from cancelled contracts is not allowed."
 msgstr ""
+"Üzgünüz, iptal edilen sözleşmelerden puantaj kayıtları oluşturulmasına izin "
+"verilmemektedir."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -328,7 +349,7 @@ msgstr "Puantaj Yenileme"
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
-msgstr ""
+msgstr "Puantaj Kaydı Kaynağı"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar

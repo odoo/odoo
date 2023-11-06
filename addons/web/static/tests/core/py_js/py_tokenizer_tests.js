@@ -12,16 +12,51 @@ QUnit.module("py", {}, () => {
     });
 
     QUnit.test("can tokenize numbers", (assert) => {
+        /* Without exponent */
         assert.deepEqual(tokenize("1"), [{ type: 0 /* Number */, value: 1 }]);
         assert.deepEqual(tokenize("13"), [{ type: 0 /* Number */, value: 13 }]);
-        assert.deepEqual(tokenize("12.0"), [{ type: 0 /* Number */, value: 12 }]);
-        assert.deepEqual(tokenize("1.2"), [{ type: 0 /* Number */, value: 1.2 }]);
-        assert.deepEqual(tokenize("1.2"), [{ type: 0 /* Number */, value: 1.2 }]);
-        assert.deepEqual(tokenize(".42"), [{ type: 0 /* Number */, value: 0.42 }]);
         assert.deepEqual(tokenize("-1"), [
             { type: 2 /* Symbol */, value: "-" },
             { type: 0 /* Number */, value: 1 },
         ]);
+
+        /* With exponent */
+        assert.deepEqual(tokenize("1e2"), [{ type: 0 /* Number */, value: 100 }]);
+        assert.deepEqual(tokenize("13E+02"), [{ type: 0 /* Number */, value: 1300 }]);
+        assert.deepEqual(tokenize("15E-2"), [{ type: 0 /* Number */, value: 0.15 }]);
+        assert.deepEqual(tokenize("-30e+002"), [
+            { type: 2 /* Symbol */, value: "-" },
+            { type: 0 /* Number */, value: 3000 },
+        ]);
+    });
+
+    QUnit.test("can tokenize floats", (assert) => {
+        /* Without exponent */
+        assert.deepEqual(tokenize("12.0"), [{ type: 0 /* Number */, value: 12 }]);
+        assert.deepEqual(tokenize("1.2"), [{ type: 0 /* Number */, value: 1.2 }]);
+        assert.deepEqual(tokenize(".42"), [{ type: 0 /* Number */, value: 0.42 }]);
+        assert.deepEqual(tokenize("12."), [{type: 0 /* Number */, value: 12}]);
+        assert.deepEqual(tokenize("-1.23"), [
+            { type: 2 /* Symbol */, value: "-" },
+            { type: 0 /* Number */, value: 1.23 },
+        ]);
+
+        /* With exponent */
+        assert.deepEqual(tokenize("1234e-3"), [{type: 0 /* Number */, value: 1.234}]);
+        assert.deepEqual(tokenize("1.23E-03"), [{type: 0 /* Number */, value: 0.00123}]);
+        assert.deepEqual(tokenize('.23e-3'), [{type: 0 /* Number */, value: 0.00023}]);
+        assert.deepEqual(tokenize('23.e-03'), [{type: 0 /* Number */, value: 0.023}]);
+
+        assert.deepEqual(tokenize("12.1E2"), [{type: 0 /* Number */, value: 1210}]);
+        assert.deepEqual(tokenize("1.23e+03"), [{type: 0 /* Number */, value: 1230}]);
+        assert.deepEqual(tokenize('.23e2'), [{type: 0 /* Number */, value: 23}]);
+        assert.deepEqual(tokenize('15.E+02'), [{type: 0 /* Number */, value: 1500}]);
+
+        assert.deepEqual(tokenize("-23E02"), [
+            {type: 2 /* Symbol */, value: "-"},
+            {type: 0 /* Number */, value: 2300}
+        ]);
+
     });
 
     QUnit.test("can tokenize strings", (assert) => {

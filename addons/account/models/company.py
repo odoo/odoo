@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
 
 MONTH_SELECTION = [
@@ -128,6 +129,7 @@ class ResCompany(models.Model):
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
     invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
+                                     sanitize_attributes=False,
                                      compute='_compute_invoice_terms_html', store=True, readonly=False)
 
     account_setup_bill_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bill step", default='not_done')
@@ -178,6 +180,15 @@ class ResCompany(models.Model):
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False)
 
+    # Multivat
+    fiscal_position_ids = fields.One2many(comodel_name="account.fiscal.position", inverse_name="company_id")
+    multi_vat_foreign_country_ids = fields.Many2many(
+        string="Foreign VAT countries",
+        help="Countries for which the company has a VAT number",
+        comodel_name='res.country',
+        compute='_compute_multi_vat_foreign_country',
+    )
+
     # Fiduciary mode
     quick_edit_mode = fields.Selection(
         selection=[
@@ -203,10 +214,24 @@ class ResCompany(models.Model):
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
 
+    @api.depends('fiscal_position_ids.foreign_vat')
+    def _compute_multi_vat_foreign_country(self):
+        company_to_foreign_vat_country = {
+            val['company_id'][0]: val['country_ids']
+            for val in self.env['account.fiscal.position'].read_group(
+                domain=[('company_id', 'in', self.ids), ('foreign_vat', '!=', False)],
+                fields=['country_ids:array_agg(country_id)'],
+                groupby='company_id',
+            )
+        }
+        for company in self:
+            company.multi_vat_foreign_country_ids = self.env['res.country'].browse(company_to_foreign_vat_country.get(company.id))
+
     @api.depends('country_id')
     def compute_account_tax_fiscal_country(self):
         for record in self:
-            record.account_fiscal_country_id = record.country_id
+            if not record.account_fiscal_country_id:
+                record.account_fiscal_country_id = record.country_id
 
     @api.depends('account_fiscal_country_id')
     def _compute_account_enabled_tax_country_ids(self):
@@ -316,7 +341,7 @@ class ResCompany(models.Model):
                 error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
-                    'name': 'Unposted Entries',
+                    'name': _('Unposted Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
@@ -339,6 +364,8 @@ class ResCompany(models.Model):
 
     def _get_user_fiscal_lock_date(self):
         """Get the fiscal lock date for this company depending on the user"""
+        if not self:
+            return date.min
         self.ensure_one()
         lock_date = max(self.period_lock_date or date.min, self.fiscalyear_lock_date or date.min)
         if self.user_has_groups('account.group_account_manager'):
@@ -382,7 +409,6 @@ class ResCompany(models.Model):
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.company
-        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -405,9 +431,6 @@ class ResCompany(models.Model):
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
             return 'account.action_account_form'
-
-        # Otherwise, we create the opening move
-        company.create_op_move_if_non_existant()
 
         # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
@@ -588,6 +611,9 @@ class ResCompany(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
+        if not self.env.user.has_group('account.group_account_user'):
+            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+
         def build_move_info(move):
             return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
 
@@ -615,8 +641,11 @@ class ResCompany(models.Model):
                 results_by_journal['results'].append(rslt)
                 continue
 
-            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+            # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
+            # This is required in order to generate consistent hashs.
+            # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
+            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
                                             ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
             if not moves:
                 rslt.update({
@@ -628,8 +657,13 @@ class ResCompany(models.Model):
             previous_hash = u''
             start_move_info = []
             hash_corrupted = False
+            current_hash_version = 1
             for move in moves:
-                if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
+                computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                    current_hash_version += 1
+                    computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                if move.inalterable_hash != computed_hash:
                     rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
                     results_by_journal['results'].append(rslt)
                     hash_corrupted = True

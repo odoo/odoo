@@ -5,7 +5,7 @@
 
 {
     'name': 'Japan - Accounting',
-    'version': '2.2',
+    'version': '2.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
@@ -28,7 +28,10 @@ circumstances, you might not need to use those at all.
     """,
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co/',
-    'depends': ['account'],
+    'depends': [
+        'account',
+        'l10n_multilang',
+    ],
     'data': [
         'data/l10n_jp_chart_data.xml',
         'data/account.account.template.csv',
@@ -37,11 +40,12 @@ circumstances, you might not need to use those at all.
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
         'data/account.fiscal.position.template.csv',
-        'data/account.fiscal.position.tax.template.csv',
+        'data/account_fiscal_position_tax_template_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
     ],
+    'post_init_hook': 'load_translations',
     'license': 'LGPL-3',
 }

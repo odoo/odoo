@@ -16,13 +16,17 @@ Wysiwyg.include({
     init() {
         this._super(...arguments);
         this.blogTagsPerBlogPost = {};
+        // TODO Remove in master.
+        for (const el of this.options.document.querySelectorAll(".o_wblog_social_links")) {
+            el.classList.add("o_not_editable");
+        }
     },
     /**
      * @override
      */
     async startEdition() {
         await this._super(...arguments);
-        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+        this.options.document.defaultView.$('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },
 
     //--------------------------------------------------------------------------

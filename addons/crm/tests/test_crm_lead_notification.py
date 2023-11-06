@@ -1,10 +1,51 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestCrmCommon
+from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.tests import tagged, users
+from odoo.tools import mute_logger
 
 
+@tagged('mail_thread', 'mail_gateway')
 class NewLeadNotification(TestCrmCommon):
+
+    @users('user_sales_manager')
+    def test_lead_message_get_suggested_recipient(self):
+        """ Test '_message_get_suggested_recipients' and its override in lead. """
+        lead_format, lead_multi, lead_from, lead_partner = self.env['crm.lead'].create([
+            {
+                'email_from': '"New Customer" <new.customer.format@test.example.com>',
+                'name': 'Test Suggestion (email_from with format)',
+                'partner_name': 'Format Name',
+                'user_id': self.user_sales_leads.id,
+            }, {
+                'email_from': 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com',
+                'name': 'Test Suggestion (email_from multi)',
+                'partner_name': 'Multi Name',
+                'user_id': self.user_sales_leads.id,
+            }, {
+                'email_from': 'new.customer.simple@test.example.com',
+                'name': 'Test Suggestion (email_from)',
+                'partner_name': 'Std Name',
+                'user_id': self.user_sales_leads.id,
+            }, {
+                'name': 'Test Suggestion (partner_id)',
+                'partner_id': self.contact_1.id,
+                'user_id': self.user_sales_leads.id,
+            }
+        ])
+        for lead, expected_suggested in zip(
+            lead_format + lead_multi + lead_from + lead_partner,
+            [(False, '"New Customer" <new.customer.format@test.example.com>', None, 'Customer Email'),
+             (False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email'),
+             (False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email'),
+             (self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer'),
+            ]
+        ):
+            with self.subTest(lead=lead, email_from=lead.email_from):
+                res = lead._message_get_suggested_recipients()[lead.id]
+                self.assertEqual(len(res), 1)
+                self.assertEqual(res[0], expected_suggested)
 
     def test_new_lead_notification(self):
         """ Test newly create leads like from the website. People and channels
@@ -39,6 +80,7 @@ class NewLeadNotification(TestCrmCommon):
         lead_user = lead.with_user(self.user_sales_manager)
         self.assertTrue(lead_user.message_needaction)
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_new_lead_from_email_multicompany(self):
         company0 = self.env.company
         company1 = self.env['res.company'].create({'name': 'new_company'})

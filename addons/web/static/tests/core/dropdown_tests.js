@@ -18,12 +18,13 @@ import {
     mouseEnter,
     nextTick,
     patchWithCleanup,
+    triggerEvent,
     triggerHotkey,
 } from "../helpers/utils";
 import { makeParent } from "./tooltip/tooltip_service_tests";
 import { templates } from "@web/core/assets";
 
-import { App, Component, xml } from "@odoo/owl";
+import { App, Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -970,6 +971,68 @@ QUnit.module("Components", ({ beforeEach }) => {
                 }
             }
         }
+    });
+
+    QUnit.test("multi-level dropdown: submenu keeps position when patched", async (assert) => {
+        assert.expect(9);
+        patchWithCleanup(Dropdown.prototype, {
+            setup() {
+                this._super(...arguments);
+                const isSubmenu = Boolean(this.parentDropdown);
+                if (isSubmenu) {
+                    onMounted(() => {
+                        assert.step(`submenu mounted`);
+                    });
+                    const menuRef = useRef("menuRef");
+                    let previousMenuRect;
+                    onPatched(() => {
+                        assert.step(`submenu patched`);
+                        if (this.state.open) {
+                            const subMenuRect = menuRef.el.getBoundingClientRect();
+                            if (previousMenuRect) {
+                                assert.strictEqual(subMenuRect.top, previousMenuRect.top);
+                                assert.strictEqual(subMenuRect.left, previousMenuRect.left);
+                            }
+                            previousMenuRect = subMenuRect;
+                        }
+                    });
+                }
+            },
+        });
+        let parentState;
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ foo: false });
+                parentState = this.state;
+            }
+        }
+        Parent.template = /* xml */ xml`
+            <Dropdown class="'outer'">
+                <t t-set-slot="toggler">Outer</t>
+                <Dropdown class="'inner'">
+                    <t t-set-slot="toggler">Inner</t>
+                    <DropdownItem t-if="state.foo">Inner</DropdownItem>
+                </Dropdown>
+            </Dropdown>
+        `;
+        Parent.components = { Dropdown, DropdownItem };
+
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.verifySteps([]);
+
+        // Open the menu
+        await click(target, ".outer .dropdown-toggle");
+        assert.verifySteps(["submenu mounted"]);
+
+        // Open the submenu
+        await triggerEvent(target, ".inner .dropdown-toggle", "mouseenter");
+        assert.verifySteps(["submenu patched"]);
+
+        // Change submenu content
+        parentState.foo = true;
+        await nextTick();
+        assert.verifySteps(["submenu patched"]);
     });
 
     QUnit.test("showCaret props adds caret class", async (assert) => {

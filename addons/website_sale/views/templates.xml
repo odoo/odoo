@@ -175,7 +175,7 @@
                     <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
                     <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
                     <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-                    <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
+                    <span t-attf-class="o_ribbon o_not_editable #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-field="product.website_ribbon_id.html"/>
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -191,7 +191,7 @@
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="o_wsale_product_btn"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                        <t t-if="'base_price' in template_price_vals">
+                        <t t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce'])">
                             <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
                                 <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
@@ -406,6 +406,13 @@
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_2"/>
             </div>
         </t>
+    </template>
+
+    <!-- Add the fiscal position in the t-cache key after all overrides -->
+    <template id="products_fiscal_position" inherit_id="website_sale.products" priority="99">
+        <xpath expr="//div[starts-with(@t-cache, 'pricelist,products')]" position="attributes">
+            <attribute name="t-cache" add="fiscal_position_id" separator=","/>
+        </xpath>
     </template>
 
     <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
@@ -757,7 +764,7 @@
                 <div class="accordion-header d-flex mb-1">
                     <t t-call="website_sale.categorie_link"/>
                     <button t-attf-id="o_wsale_cat_accordion_title_{{c.id}}"
-                            t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}}"
+                            t-attf-class="accordion-button p-0 ms-3 {{not isOpen and 'collapsed'}} w-auto flex-grow-1"
                             t-attf-data-bs-target="#o_wsale_cat_accordion_{{c.id}}"
                             t-att-aria-expanded="isOpen and 'true' or 'false'"
                             t-attf-aria-controls="o_wsale_cat_accordion_{{c.id}}"
@@ -944,7 +951,7 @@
                             </t>
                             <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price"/>
@@ -973,7 +980,7 @@
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
-                                            <a role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                                            <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
                                                 <i class="fa fa-shopping-cart me-2"/>
                                                 <span style="font-weight: bold">ADD TO CART</span>
                                             </a>
@@ -1155,18 +1162,22 @@
                 <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
-                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
-                    t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
+                    style="text-decoration: line-through; white-space: nowrap;"
+                    t-esc="combination_info['list_price']"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     itemprop="listPrice"
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
-                    <span t-field="product.compare_list_price"
+                <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
+                    <bdi dir="inherit">
+                    <span t-esc="combination_info['compare_list_price']"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                            "widget": "monetary",
-                           "display_currency": product.currency_id,
+                           "display_currency": website.currency_id,
                        }'/>
+                    </bdi>
                 </del>
             </h3>
             <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
@@ -1176,13 +1187,15 @@
                        "display_currency": product.currency_id,
                 }'/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
+                <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
+                    <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                             "widget": "monetary",
-                            "display_currency": product.currency_id,
+                            "display_currency": website.currency_id,
                         }'/>
+                    </bdi>
                 </del>
             </h3>
         </div>
@@ -1313,7 +1326,7 @@
                                                         <span class="s_website_form_label_content">Upload a document</span>
                                                     </label>
                                                     <div class="col-sm">
-                                                        <input id="sale3" type="file" class="form-control-file s_website_form_input" name="a_document" />
+                                                        <input id="sale3" type="file" class="form-control s_website_form_input" name="a_document" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1387,7 +1400,7 @@
                     <th></th>
                     <th class="text-center td-qty">
                         <t t-if="show_qty">
-                            Quantity
+                            <span>Quantity</span>
                         </t>
                     </th>
                     <th class="text-center td-price">Price</th>
@@ -1633,7 +1646,7 @@
     <template id='coupon_form' name='Coupon form'>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
             method="post" name="coupon_code">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
                 <a href="#" role="button" class="btn btn-secondary a-submit">Apply</a>
@@ -1687,7 +1700,7 @@
                                         <div class="row mt8">
                                             <div class="col-md-12 col-lg-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
-                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                                     <a role="button" href="#" class='a-submit btn btn-secondary mb-2 btn-block'>
                                                         <i class="fa fa-plus-square"/>
                                                         <span>Add an address</span>
@@ -1728,7 +1741,7 @@
 
     <template id="address_kanban" name="Kanban address">
             <form action="/shop/checkout" method="POST" class="d-none">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
                 <t t-if='edit_billing'>
                     <input type="hidden" name="callback" value="/shop/checkout?use_billing" />
@@ -1826,7 +1839,7 @@
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>
                                                 <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
-                                                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
+                                                    <label class="col-form-label fw-normal label-optional" for="vat">VAT</label>
                                                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>
@@ -1898,7 +1911,7 @@
                                         </t>
                                     </div>
 
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
@@ -1998,8 +2011,8 @@
                                 </a>
                             </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
-                                <form target="_self" action="/shop/payment/validate" method="post">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <form name="o_wsale_confirm_order" target="_self" action="/shop/payment/validate" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <t t-call="website_sale.payment_footer">
                                         <t t-set="submit_button_label">Confirm Order</t>
                                     </t>
@@ -2172,7 +2185,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="payment_tx_id.provider_id.sudo().name" />
+                                                <t t-esc="payment_tx_id.provider_id.display_as or payment_tx_id.provider_id.name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>

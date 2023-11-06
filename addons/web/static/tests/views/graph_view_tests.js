@@ -21,6 +21,7 @@ import {
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
+    validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -28,8 +29,11 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { getBorderWhite, DEFAULT_BG, getColors, hexToRGBA } from "@web/views/graph/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
+import { GraphRenderer } from "@web/views/graph/graph_renderer";
+import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
+import { Domain } from "@web/core/domain";
 
 const serviceRegistry = registry.category("services");
 
@@ -2191,7 +2195,7 @@ QUnit.module("Views", (hooks) => {
                 { bar: true, revenue: 2 },
                 { bar: false, revenue: -3 },
             ];
-            await makeView({
+            const graph = await makeView({
                 serverData,
                 type: "graph",
                 resModel: "foo",
@@ -2202,12 +2206,15 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             });
-            assert.containsOnce(target, ".o_view_nocontent");
-            assert.strictEqual(
-                target.querySelector(".o_view_nocontent").innerText.replace(/[\s\n]/g, " "),
-                `Invalid data  Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results`
-            );
-            assert.containsNone(target, ".o_graph_canvas_container");
+            assert.containsNone(target, ".o_view_nocontent");
+            assert.containsOnce(target, ".o_graph_canvas_container");
+            checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label", "stack"], {
+                backgroundColor: ["#1f77b4"],
+                borderColor: getBorderWhite(),
+                data: [2],
+                label: "",
+                stack: undefined,
+            });
         }
     );
 
@@ -2477,24 +2484,34 @@ QUnit.module("Views", (hooks) => {
                 graph_mode: "bar",
                 graph_measure: "__count",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "bar",
                 graph_measure: "foo",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id", "color_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: ["product_id", "color_id"],
             },
         ];
@@ -3603,7 +3620,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_view_nocontent");
+    });
+
+    QUnit.test("empty graph view without sample data after filter", async function (assert) {
+        await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph>
+                    <field name="date"/>
+                </graph>
+            `,
+            domain: Domain.FALSE.toList(),
+            noContentHelp: '<p class="abc">click to add a foo</p>',
+        });
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
+        assert.containsOnce(target, ".o_view_nocontent");
     });
 
     QUnit.test("reload chart with switchView button keep internal state", async function (assert) {
@@ -4082,5 +4116,50 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
+    });
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.foo.records = [];
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph sample="1">
+                        <field name="date"/>
+                    </graph>
+                `,
+            });
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await selectMode(target, "line");
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Revenue");
+            assert.containsNone(target, ".o_graph_view .o_view_sample_data");
+            assert.notOk(getChart(graph).data.datasets.length);
+        }
+    );
+
+    QUnit.test("single chart rendering on search", async function (assert) {
+        patchWithCleanup(GraphRenderer.prototype, {
+            setup() {
+                this._super(...arguments);
+                onRendered(() => {
+                    assert.step("rendering")
+                });
+            }
+        })
+        await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+        });
+        assert.verifySteps(["rendering"]);
+        await validateSearch(target);
+        assert.verifySteps(["rendering"]);
     });
 });

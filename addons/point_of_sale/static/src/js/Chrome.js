@@ -212,6 +212,11 @@ odoo.define('point_of_sale.Chrome', function(require) {
             }
             const barcode_parser = new BarcodeParser({ nomenclature_id: this.env.pos.company.nomenclature_id });
             this.env.barcode_reader.set_barcode_parser(barcode_parser);
+            const fallbackNomenclature = this.env.pos.company.fallback_nomenclature_id;
+            if (fallbackNomenclature) {
+                const fallbackBarcodeParser = new BarcodeParser({ nomenclature_id: fallbackNomenclature });
+                this.env.barcode_reader.setFallbackBarcodeParser(fallbackBarcodeParser);
+            }
             return barcode_parser.is_loaded();
         }
 
@@ -460,7 +465,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             );
         }
         showCashMoveButton() {
-            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control && this.env.pos.config.has_cash_move_permission;
         }
 
         // UNEXPECTED ERROR HANDLING //

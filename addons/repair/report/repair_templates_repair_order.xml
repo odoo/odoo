@@ -81,7 +81,7 @@
                                             <span t-field="line.price_unit"/>
                                         </td>
                                         <td class="text-center">
-                                            <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
+                                            <span t-esc="','.join(map( lambda x: x.description or x.name, line.tax_id))"/>
                                         </td>
                                         <td class="text-end o_price_total">
                                             <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
@@ -104,7 +104,7 @@
                                             <span t-field="fees.price_unit"/>
                                         </td>
                                         <td class="text-center">
-                                            <span t-esc="','.join(map( lambda x: x.name, fees.tax_id))"/>
+                                            <span t-esc="','.join(map( lambda x: x.description or x.name, fees.tax_id))"/>
                                         </td>
                                         <td class="text-end o_price_total">
                                             <span t-field="fees.price_subtotal"

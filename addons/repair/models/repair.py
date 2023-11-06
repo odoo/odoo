@@ -7,7 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, is_html_empty
+from odoo.tools import float_compare, is_html_empty, clean_context
 
 
 class StockMove(models.Model):
@@ -251,6 +251,8 @@ class Repair(models.Model):
         for order in self:
             if order.invoice_id and order.invoice_id.posted_before:
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
+            if order.state == 'done':
+                raise UserError(_('You cannot delete a completed repair order.'))
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
 
@@ -321,6 +323,8 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
+        if any(repair.state == 'done' for repair in self):
+            raise UserError(_("You cannot cancel a completed repair order."))
         invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
@@ -559,6 +563,9 @@ class Repair(models.Model):
         self._check_company()
         self.operations._check_company()
         self.fees_lines._check_company()
+        # Clean the context to get rid of residual default_* keys that could cause issues
+        # during the creation of stock.move.
+        self = self.with_context(clean_context(self._context))
         res = {}
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         Move = self.env['stock.move']

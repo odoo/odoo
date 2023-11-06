@@ -2888,6 +2888,23 @@ class TestViews(ViewCase):
             </form>
         """, valid=True)
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_empty_groups_attrib(self):
+        """Ensure we allow empty groups attribute"""
+        view = self.View.create({
+            'name': 'foo',
+            'model': 'res.partner',
+            'arch': """
+                <form>
+                    <field name="name" groups="" />
+                </form>
+            """,
+        })
+        arch = self.env['res.partner'].get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        nodes = tree.xpath("//field[@name='name' and not (@groups)]")
+        self.assertEqual(1, len(nodes))
+
     def test_attrs_groups_with_groups_in_model(self):
         """Tests the attrs is well processed to modifiers for a field node combining:
         - a `groups` attribute on the field node in the view architecture
@@ -3204,6 +3221,9 @@ class TestViews(ViewCase):
             '<graph string="Graph"><label for="model"/><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>',
             'A <graph> can only contains <field> nodes, found a <label>'
         )
+
+    def test_graph_attributes(self):
+        self.assertValid('<graph string="Graph" cumulated="1" ><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>')
 
     def test_view_ref(self):
         view = self.assertValid(

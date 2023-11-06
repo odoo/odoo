@@ -437,7 +437,7 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         self.assertFalse(Visitor.search_count([('partner_id', '=', self.partner_demo.id)]),
                          "The demo visitor should've been merged (and deleted) with the admin one.")
         # Track check
-        self.assertEqual(visitor_admin.website_track_ids.mapped('url'), ['/admin', '/demo'])
+        self.assertEqual(visitor_admin.website_track_ids.sorted('url').mapped('url'), ['/admin', '/demo'])
 
     def test_merge_partner_with_visitor_single(self):
         """ The partner merge feature of Odoo is auto discovering relations to

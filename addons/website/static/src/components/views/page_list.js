@@ -37,20 +37,22 @@ export class PageListController extends PageControllerMixin(listView.Controller)
             actionMenuItems.other = actionMenuItems.other
                 .filter(item => !['archive', 'unarchive'].includes(item.key));
         }
-        actionMenuItems.other.splice(-1, 0, {
-            description: this.env._t("Publish"),
-            callback: async () => {
-                this.dialogService.add(ConfirmationDialog, {
-                    title: this.env._t("Publish Website Content"),
-                    body: sprintf(this.env._t("%s record(s) selected, are you sure you want to publish them all?"), this.model.root.selection.length),
-                    confirm: () => this.togglePublished(true),
-                });
-            }
-        },
-        {
-            description: this.env._t("Unpublish"),
-            callback: async () => this.togglePublished(false),
-        });
+        if (this.props.fields.hasOwnProperty('is_published')) {
+            actionMenuItems.other.splice(-1, 0, {
+                description: this.env._t("Publish"),
+                callback: async () => {
+                    this.dialogService.add(ConfirmationDialog, {
+                        title: this.env._t("Publish Website Content"),
+                        body: sprintf(this.env._t("%s record(s) selected, are you sure you want to publish them all?"), this.model.root.selection.length),
+                        confirm: () => this.togglePublished(true),
+                    });
+                }
+            },
+            {
+                description: this.env._t("Unpublish"),
+                callback: async () => this.togglePublished(false),
+            });
+        }
         return actionMenuItems;
     }
 

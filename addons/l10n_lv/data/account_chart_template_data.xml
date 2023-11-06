@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Chart of Accounts Template -->
+    <record id="chart_template_latvia" model="account.chart.template">
+        <field name="name">Latvia - Accounting</field>
+        <field name="code_digits">4</field>
+        <field name="currency_id" ref="base.EUR" />
+        <!-- Anglo-Saxon Accounting is used for reporting cost of goods sold
+            when products are sold/delivered.-->
+        <field name="use_anglo_saxon" eval="True" />
+        <field name="spoken_languages" eval="'lv_LV'" />
+        <field name="bank_account_code_prefix">2620</field>
+        <field name="cash_account_code_prefix">2610</field>
+        <field name="transfer_account_code_prefix">2699</field>
+        <field name="country_id" ref="base.lv" />
+    </record>
+</odoo>

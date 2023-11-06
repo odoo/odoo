@@ -123,12 +123,11 @@ class Applicant(models.Model):
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
-    _primary_email = 'email_from'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
+    email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True)
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
@@ -148,7 +147,7 @@ class Applicant(models.Model):
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
-    priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
+    priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
@@ -352,12 +351,13 @@ class Applicant(models.Model):
         for applicant in self:
             applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
-    @api.depends('partner_id', 'partner_id.email', 'partner_id.mobile', 'partner_id.phone')
+    @api.depends('partner_id')
     def _compute_partner_phone_email(self):
         for applicant in self:
-            applicant.partner_phone = applicant.partner_id.phone
-            applicant.partner_mobile = applicant.partner_id.mobile
-            applicant.email_from = applicant.partner_id.email
+            if applicant.partner_id:
+                applicant.partner_phone = applicant.partner_id.phone
+                applicant.partner_mobile = applicant.partner_id.mobile
+                applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
         for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
@@ -441,12 +441,12 @@ class Applicant(models.Model):
             alias_id = False
 
         nocontent_values = {
-            'help_title': _('No application yet'),
-            'para_1': _('Let people apply by email to save time.') ,
-            'para_2': _('Attachments, like resumes, get indexed automatically.'),
+            'help_title': _("No application found. Let's create one !"),
+            'para_1': _('People can also apply by email to save time.'),
+            'para_2': _("You can search into attachment's content, like resumes, with the searchbar."),
         }
         nocontent_body = """
-            <p class="o_view_nocontent_empty_folder">%(help_title)s</p>
+            <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
             <p>%(para_1)s<br/>%(para_2)s</p>"""
 
         if alias_id and alias_id.alias_domain and alias_id.alias_name:
@@ -477,6 +477,19 @@ class Applicant(models.Model):
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
+
+        if not self.partner_id:
+            if not self.partner_name:
+                raise UserError(_('You must define a Contact Name for this applicant.'))
+            self.partner_id = self.env['res.partner'].create({
+                'is_company': False,
+                'type': 'private',
+                'name': self.partner_name,
+                'email': self.email_from,
+                'phone': self.partner_phone,
+                'mobile': self.partner_mobile
+            })
+
         partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
@@ -528,7 +541,8 @@ class Applicant(models.Model):
             'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
             'domain': [('id', 'in', ids)],
             'context': {
-                'active_test': False
+                'active_test': False,
+                'search_default_stage': 1,
             },
         }
 
@@ -577,10 +591,10 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id.sudo(), reason=_('Contact'))
             elif applicant.email_from:
-                email_from = applicant.email_from
-                if applicant.partner_name:
+                email_from = tools.email_normalize(applicant.email_from)
+                if email_from and applicant.partner_name:
                     email_from = tools.formataddr((applicant.partner_name, email_from))
-                applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
+                    applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
     def name_get(self):
@@ -605,11 +619,11 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
-        val = msg.get('from').split('<')[0]
+        partner_name, email_from = self.env['res.partner']._parse_partner_name(msg.get('from'))
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
+            'partner_name': partner_name or email_from,
+            'email_from': email_from,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
@@ -625,18 +639,25 @@ class Applicant(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            email_normalized = tools.email_normalize(self.email_from)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
-                if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.write({
+                if new_partner[0].create_date.date() == fields.Date.today():
+                    new_partner[0].write({
                         'type': 'private',
+                        'name': self.partner_name or self.email_from,
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
                     })
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_from', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
+                ]).write({'partner_id': new_partner[0].id})
         return super(Applicant, self)._message_post_after_hook(message, msg_vals)
 
     def create_employee_from_applicant(self):
@@ -668,7 +689,7 @@ class Applicant(models.Model):
             'default_address_home_id': address_id,
             'default_department_id': self.department_id.id,
             'default_address_id': self.company_id.partner_id.id,
-            'default_work_email': self.department_id.company_id.email,
+            'default_work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
             'default_work_phone': self.department_id.company_id.phone,
             'form_view_initial_mode': 'edit',
             'default_applicant_id': self.ids,

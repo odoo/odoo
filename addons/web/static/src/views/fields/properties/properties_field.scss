@@ -12,6 +12,7 @@
     .o_dropdown_button,
     .o_datepicker_button {
         @include print-variable(o-input-border-color, $o-form-lightsecondary);
+        color: $o-main-text-color !important;
     }
     .o_dropdown_button,
     .o_datepicker_button {
@@ -82,7 +83,7 @@
 
 .o_property_field_popover {
     // put the popover behind datetime component
-    z-index: 1000 !important;
+    z-index: $zindex-popover !important;
     font-size: inherit;
     box-shadow: 0 3rem 5rem rgba($black, .18) !important;
     box-sizing: border-box;

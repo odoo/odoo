@@ -13,7 +13,7 @@ msgstr ""
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -76,8 +76,8 @@ msgstr "Термін дії токена доступу"
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
-msgid "An error occur during the authentication process: %s."
-msgstr "Під час процесу автентифікації сталася помилка: %s."
+msgid "An error occur during the authentication process."
+msgstr "Виникла помилка під час аутентифікації."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
@@ -184,6 +184,18 @@ msgstr "Лише адміністратор може приєднати пошт
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "Налаштуйте ваші облікові дані Gmail."
+
+#. module: google_gmail
+#: code:addons/google_gmail/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Gmail username (your email "
+"address). This should be the same account as the one used for the Gmail "
+"OAuthentication Token."
+msgstr ""
+"Будь ласка, заповніть поле «Ім’я користувача» своїм ім’ям користувача Gmail "
+"(вашою електронною адресою). Це має бути той самий обліковий запис, який "
+"використовується для Токена OAuthentication Gmail."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0

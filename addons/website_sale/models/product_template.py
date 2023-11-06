@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
+from psycopg2.extras import execute_values
 
+_logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit = [
@@ -35,7 +38,7 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer('Size Y', default=1)
     website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence(), copy=False)
+                                      default=lambda self: self._default_website_sequence(), copy=False, index=True)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
@@ -101,6 +104,8 @@ class ProductTemplate(models.Model):
 
     def _get_website_accessory_product(self):
         domain = self.env['website'].sale_product_domain()
+        if not self.env.user._is_internal():
+            domain = expression.AND([domain, [('is_published', '=', True)]])
         return self.accessory_product_ids.filtered_domain(domain)
 
     def _get_website_alternative_product(self):
@@ -183,18 +188,13 @@ class ProductTemplate(models.Model):
 
             product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
-
-            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
-                price_reduce, product_taxes, taxes, self.env.company)
-
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            price_reduce = taxes.compute_all(price_reduce, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
 
             template_price_vals = {
                 'price_reduce': price_reduce
             }
             base_price = None
-            price_list_contains_template = price_reduce != base_sales_prices[template.id]
+            price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
             if template.compare_list_price:
                 # The base_price becomes the compare list price and the price_reduce becomes the price
@@ -202,15 +202,27 @@ class ProductTemplate(models.Model):
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
                     template_price_vals.update(price_reduce=price_reduce)
+                if template.currency_id != pricelist.currency_id:
+                    base_price = template.currency_id._convert(
+                        base_price,
+                        pricelist.currency_id,
+                        self.env.company,
+                        fields.Datetime.now(),
+                        round=False
+                    )
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
             if base_price and base_price != price_reduce:
-                base_price = self.env['account.tax']._fix_tax_included_price_company(
-                    base_price, product_taxes, taxes, self.env.company)
-                base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
-                    tax_display]
+                if not template.compare_list_price:
+                    # Compare_list_price are never tax included
+                    base_price = self.env['account.tax']._fix_tax_included_price_company(
+                        base_price, product_taxes, taxes, self.env.company)
+                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
+                        tax_display]
                 template_price_vals['base_price'] = base_price
+            template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
+            template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
 
             res[template.id] = template_price_vals
 
@@ -271,6 +283,12 @@ class ProductTemplate(models.Model):
                     fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
+
+            compare_list_price = self.compare_list_price
+            if pricelist and pricelist.currency_id != product.currency_id:
+                compare_list_price = self.currency_id._convert(self.compare_list_price, pricelist.currency_id, self.env.company,
+                                                  fields.Datetime.now(), round=False)
+
             combination_info.update(
                 base_unit_name=product.base_unit_name,
                 base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
@@ -279,6 +297,7 @@ class ProductTemplate(models.Model):
                 price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
                 prevent_zero_price_sale=prevent_zero_price_sale,
+                compare_list_price=compare_list_price
             )
 
         return combination_info
@@ -321,6 +340,25 @@ class ProductTemplate(models.Model):
         res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
         website = self.website_id or kwargs.get('website')
         return website and website.company_id or res
+
+    def _init_column(self, column_name):
+        # to avoid generating a single default website_sequence when installing the module,
+        # we need to set the default row by row for this column
+        if column_name == "website_sequence":
+            _logger.debug("Table '%s': setting default value of new column %s to unique values for each row", self._table, column_name)
+            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            prod_tmpl_ids = self.env.cr.dictfetchall()
+            max_seq = self._default_website_sequence()
+            query = """
+                UPDATE {table}
+                SET website_sequence = p.web_seq
+                FROM (VALUES %s) AS p(p_id, web_seq)
+                WHERE id = p.p_id
+            """.format(table=self._table)
+            values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
+            execute_values(self.env.cr._obj, query, values_args)
+        else:
+            super(ProductTemplate, self)._init_column(column_name)
 
     def _default_website_sequence(self):
         ''' We want new product to be the last (highest seq).
@@ -441,10 +479,11 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name', 'product_variant_ids.default_code']
+        search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
+            'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
@@ -507,6 +546,10 @@ class ProductTemplate(models.Model):
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
+            )
+        if combination_info['compare_list_price']:
+            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['compare_list_price'], monetary_options
             )
 
         return price, list_price if combination_info['has_discounted_price'] else None

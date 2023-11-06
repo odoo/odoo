@@ -63,12 +63,20 @@ registerModel({
             ev.preventDefault();
             this.update({ isDraggingInside: false });
             if (this._isDragSourceExternalFile(ev.dataTransfer)) {
+                const files = ev.dataTransfer.files;
                 if (this.chatterOwner) {
-                    await this.chatterOwner.fileUploader.uploadFiles(ev.dataTransfer.files);
+                    const chatter = this.chatterOwner;
+                    if (chatter.isTemporary) {
+                        const saved = await chatter.doSaveRecord();
+                        if (!saved) {
+                            return;
+                        }
+                    }
+                    await chatter.fileUploader.uploadFiles(files);
                     return;
                 }
                 if (this.composerViewOwner) {
-                    await this.composerViewOwner.fileUploader.uploadFiles(ev.dataTransfer.files);
+                    await this.composerViewOwner.fileUploader.uploadFiles(files);
                     return;
                 }
             }

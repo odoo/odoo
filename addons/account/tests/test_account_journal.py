@@ -98,7 +98,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             return res
 
         with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            self.env['account.payment.method'].create({
+            self.env['account.payment.method'].sudo().create({
                 'name': 'Multi method',
                 'code': 'multi',
                 'payment_type': 'inbound'
@@ -157,3 +157,11 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journal_2.code = 'ぁ'
         journal_2.alias_name = False
         self.assertEqual(journal_2.alias_name, 'sale-' + company_2_id)
+
+    def test_account_journal_duplicates(self):
+        new_journals = self.env["account.journal"].with_context(import_file=True).create([
+            {"name": "OD_BLABLA"},
+            {"name": "OD_BLABLU"},
+        ])
+
+        self.assertEqual(sorted(new_journals.mapped("code")), ["GEN1", "OD_BL"], "The journals should be set correctly")

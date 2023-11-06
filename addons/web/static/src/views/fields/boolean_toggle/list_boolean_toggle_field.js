@@ -6,7 +6,7 @@ import { BooleanToggleField } from "./boolean_toggle_field";
 export class ListBooleanToggleField extends BooleanToggleField {
     onClick() {
         if (!this.props.readonly) {
-            this.props.update(!this.props.value);
+            this.props.update(!this.props.value, { save: this.props.autosave });
         }
     }
 }

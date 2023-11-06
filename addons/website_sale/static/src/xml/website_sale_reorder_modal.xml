@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody id="o_wsale_reorder_body" class="sale_tbody">
-                    <t t-foreach="content.products" t-as="product" t-key="product">
+                    <t t-foreach="content.products" t-as="product" t-key="product_index">
                         <tr class="js_product">
                             <td t-if="product.has_image" class="td-img">
                                 <img class="product_detail_img" t-att-alt="product.name" t-attf-src="/web/image/product.product/{{product.product_id}}/image_128"/>

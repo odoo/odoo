@@ -15,6 +15,18 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
         cls.product_a.type = 'service'
         cls.product_b.type = 'service'
+        #analytic distribution
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.analytic_account_a = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_a',
+            'plan_id': cls.default_plan.id,
+            'company_id': False,
+        })
+        cls.analytic_account_b = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_b',
+            'plan_id': cls.default_plan.id,
+            'company_id': False,
+        })
         cls.product_b.property_account_expense_id = cls.alt_exp_account
         cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
@@ -26,6 +38,10 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'product_uom': cls.product_a.uom_id.id,
                     'price_unit': cls.product_a.list_price,
                     'taxes_id': False,
+                    'analytic_distribution': {
+                        cls.analytic_account_a.id : 80.0,
+                        cls.analytic_account_b.id : 20.0,
+                    },
                 }),
                 Command.create({
                     'name': cls.product_b.name,
@@ -34,6 +50,9 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'product_uom': cls.product_b.uom_id.id,
                     'price_unit': cls.product_b.list_price,
                     'taxes_id': False,
+                    'analytic_distribution': {
+                        cls.analytic_account_b.id : 100.0,
+                    },
                 }),
             ],
         })
@@ -87,4 +106,18 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_expense.id, 'debit': 5000 / 2, 'credit': 0, 'amount_currency': 5000},
             {'account_id': self.alt_exp_account.id, 'debit': 1000 / 2, 'credit': 0, 'amount_currency': 1000},
             {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 6000 / 2, 'amount_currency': 0.0},
+        ])
+
+    def test_analytic_account_accrued_order(self):
+        self.purchase_order.order_line.qty_received = 10
+
+        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+            # reverse move lines
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 10000.0, 'analytic_distribution': {str(self.analytic_account_a.id): 80.0, str(self.analytic_account_b.id): 20.0}},
+            {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 2000.0, 'analytic_distribution': {str(self.analytic_account_b.id): 100.0}},
+            {'account_id': self.account_revenue.id, 'debit': 12000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33}},
+            # move lines
+            {'account_id': self.account_expense.id, 'debit': 10000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_a.id): 80.0, str(self.analytic_account_b.id): 20.0}},
+            {'account_id': self.alt_exp_account.id, 'debit': 2000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_b.id): 100.0}},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 12000.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33}},
         ])

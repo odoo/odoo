@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -31,6 +33,15 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             groups='base.group_user,hr_expense.group_hr_expense_manager',
             company_ids=[(6, 0, cls.env.companies.ids)],
         )
+        cls.accountant_user = mail_new_test_user(
+            cls.env,
+            name='Accountant',
+            login='accountant_1',
+            email='accountant_1@example.com',
+            notification_type='email',
+            groups='account.group_account_user',
+            company_ids=[(6, 0, cls.env.companies.ids)],
+        )
 
         cls.expense_employee = cls.env['hr.employee'].create({
             'name': 'expense_employee',
@@ -59,6 +70,17 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.analytic_account_2 = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_2',
             'plan_id': cls.analytic_plan.id,
+        })
+
+        cls.product_c = cls.env['product.product'].create({
+            'name': 'product_c with no cost',
+            'uom_id': cls.env.ref('uom.product_uom_dozen').id,
+            'lst_price': 200.0,
+            'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
+            'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
+            'taxes_id': [Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
+            'supplier_taxes_id': [Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+            'can_be_expensed': True,
         })
 
         # Ensure products can be expensed.

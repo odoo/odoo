@@ -44,8 +44,8 @@ _logger_conn = _logger.getChild("connection")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
 
 sql_counter = 0
 
@@ -94,6 +94,7 @@ class Savepoint:
         self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
         self.closed = True
 
+
 class _FlushingSavepoint(Savepoint):
     def __init__(self, cr):
         cr.flush()
@@ -104,9 +105,15 @@ class _FlushingSavepoint(Savepoint):
         super().rollback()
 
     def _close(self, rollback):
-        if not rollback:
-            self._cr.flush()
-        super()._close(rollback)
+        try:
+            if not rollback:
+                self._cr.flush()
+        except Exception:
+            rollback = True
+            raise
+        finally:
+            super()._close(rollback)
+
 
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
@@ -248,6 +255,7 @@ class Cursor(BaseCursor):
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
         self.sql_log_count = 0
+        self._sql_table_tracking = False
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
@@ -307,8 +315,6 @@ class Cursor(BaseCursor):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        _logger.debug("query: %s", self._format(query, params))
-
         start = real_time()
         try:
             params = params or None
@@ -317,7 +323,10 @@ class Cursor(BaseCursor):
             if log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
-        delay = real_time() - start
+        finally:
+            delay = real_time() - start
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
 
         # simple query count is always computed
         self.sql_log_count += 1
@@ -332,21 +341,24 @@ class Cursor(BaseCursor):
         for hook in getattr(current_thread, 'query_hooks', ()):
             hook(self, query, params, start, delay)
 
-        # advanced stats only if logging.DEBUG is enabled
-        if _logger.isEnabledFor(logging.DEBUG):
+        # advanced stats
+        if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
             delay *= 1E6
 
-            query_lower = self._obj.query.decode().lower()
-            res_from = re_from.match(query_lower)
-            if res_from:
-                self.sql_from_log.setdefault(res_from.group(1), [0, 0])
-                self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query_lower)
+            decoded_query = self._obj.query.decode()
+            res_into = re_into.search(decoded_query)
+            # prioritize `insert` over `select` so `select` subqueries are not
+            # considered when inside a `insert`
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
                 self.sql_into_log[res_into.group(1)][1] += delay
+            else:
+                res_from = re_from.search(decoded_query)
+                if res_from:
+                    self.sql_from_log.setdefault(res_from.group(1), [0, 0])
+                    self.sql_from_log[res_from.group(1)][0] += 1
+                    self.sql_from_log[res_from.group(1)][1] += delay
         return res
 
     def split_for_in_conditions(self, ids, size=None):
@@ -389,6 +401,15 @@ class Cursor(BaseCursor):
             yield
         finally:
             _logger.setLevel(level)
+
+    @contextmanager
+    def _enable_table_tracking(self):
+        try:
+            old = self._sql_table_tracking
+            self._sql_table_tracking = True
+            yield
+        finally:
+            self._sql_table_tracking = old
 
     def close(self):
         if not self.closed:
@@ -564,6 +585,15 @@ class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
         pass
 
+    if hasattr(psycopg2.extensions, 'ConnectionInfo'):
+        @property
+        def info(self):
+            class PsycoConnectionInfo(psycopg2.extensions.ConnectionInfo):
+                @property
+                def password(self):
+                    pass
+            return PsycoConnectionInfo(self)
+
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
@@ -606,7 +636,7 @@ class ConnectionPool(object):
                 _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx._original_dsn == connection_info:
+            if not used and self._dsn_equals(cnx.dsn, connection_info):
                 try:
                     cnx.reset()
                 except psycopg2.OperationalError:
@@ -641,7 +671,6 @@ class ConnectionPool(object):
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
-        result._original_dsn = connection_info
         self._connections.append((result, True))
         self._debug('Create new connection backend PID %d', result.get_backend_pid())
         return result
@@ -667,28 +696,48 @@ class ConnectionPool(object):
         count = 0
         last = None
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if dsn is None or cnx._original_dsn == dsn:
+            if dsn is None or self._dsn_equals(cnx.dsn, dsn):
                 cnx.close()
                 last = self._connections.pop(i)[0]
                 count += 1
         _logger.info('%r: Closed %d connections %s', self, count,
                     (dsn and last and 'to %r' % last.dsn) or '')
 
+    def _dsn_equals(self, dsn1, dsn2):
+        alias_keys = {'dbname': 'database'}
+        ignore_keys = ['password']
+        dsn1, dsn2 = ({
+            alias_keys.get(key, key): str(value)
+            for key, value in (psycopg2.extensions.parse_dsn(dsn) if isinstance(dsn, str) else dsn).items()
+            if key not in ignore_keys
+        } for dsn in (dsn1, dsn2))
+        return dsn1 == dsn2
+
 
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
     def __init__(self, pool, dbname, dsn):
-        self.dbname = dbname
-        self.dsn = dsn
+        self.__dbname = dbname
+        self.__dsn = dsn
         self.__pool = pool
+
+    @property
+    def dsn(self):
+        dsn = dict(self.__dsn)
+        dsn.pop('password', None)
+        return dsn
+
+    @property
+    def dbname(self):
+        return self.__dbname
 
     def cursor(self, **kwargs):
         if 'serialized' in kwargs:
             warnings.warn("Since 16.0, 'serialized' parameter is deprecated", DeprecationWarning, 2)
         cursor_type = kwargs.pop('serialized', True) and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dsn)
-        return Cursor(self.__pool, self.dbname, self.dsn)
+        return Cursor(self.__pool, self.__dbname, self.__dsn)
 
     def serialized_cursor(self, **kwargs):
         warnings.warn("Since 16.0, 'serialized_cursor' is deprecated, use `cursor` instead", DeprecationWarning, 2)
@@ -709,7 +758,11 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
-    app_name = "odoo-%d" % os.getpid()
+    if 'ODOO_PGAPPNAME' in os.environ:
+        # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
+        app_name = os.environ['ODOO_PGAPPNAME'].replace('{pid}', str(os.getpid()))[0:63]
+    else:
+        app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)

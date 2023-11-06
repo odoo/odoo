@@ -4,8 +4,16 @@ odoo.define('barcodes_gs1_nomenclature/static/src/js/barcode_parser.js', functio
 const BarcodeParser = require('barcodes.BarcodeParser');
 const FNC1_CHAR = String.fromCharCode(29);
 const {_lt} = require('web.core');
+class GS1BarcodeError extends Error {};
 
 BarcodeParser.include({
+    init: function(attributes) {
+        this._super(...arguments);
+        // Use the nomenclature's separaor regex, else use an impossible one.
+        const nomenclatureSeparator = this.nomenclature && this.nomenclature.gs1_separator_fnc1;
+        this.gs1SeparatorRegex = new RegExp(nomenclatureSeparator || '.^', 'g');
+    },
+
     /**
      * Convert YYMMDD GS1 date into a Date object
      *
@@ -46,7 +54,10 @@ BarcodeParser.include({
         const result = {
             rule: Object.assign({}, rule),
             ai: match[1],
-            string_value: match[2]
+            string_value: match[2],
+            code: match[2],
+            base_code: match[2],
+            type: rule.type
         };
         if (rule.gs1_content_type === 'measure'){
             let decimalPosition = 0; // Decimal position begin at the end, 0 means no decimal
@@ -88,6 +99,7 @@ BarcodeParser.include({
         const results = [];
         const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
         const separatorReg = FNC1_CHAR + "?";
+        barcode = this._convertGS1Separators(barcode);
 
         while (barcode.length > 0) {
             const barcodeLength = barcode.length;
@@ -102,12 +114,12 @@ BarcodeParser.include({
                             return results; // Barcode completly parsed, no need to keep looping.
                         }
                     } else {
-                        throw new Error(_lt("This barcode can't be parsed by any barcode rules."));
+                        throw new GS1BarcodeError(_lt("This barcode can't be parsed by any barcode rules."));
                     }
                 }
             }
             if (barcodeLength === barcode.length) {
-                throw new Error(_lt("This barcode can't be partially or fully parsed."));
+                throw new GS1BarcodeError(_lt("This barcode can't be partially or fully parsed."));
             }
         }
 
@@ -146,10 +158,24 @@ BarcodeParser.include({
         fieldNames.push('gs1_content_type', 'gs1_decimal_usage', 'associated_uom_id');
         return fieldNames;
     },
+
+    /**
+     * The FNC1 is the default GS1 separator character, but through the field `gs1_separator_fnc1`,
+     * the user has the possibility to define one or multiple characters to use as separator as
+     * a regex. This method replaces all of the matches in the given barcode by the FNC1.
+     *
+     * @param {string} barcode
+     * @returns {string}
+     */
+    _convertGS1Separators: function (barcode) {
+        barcode = barcode.replace(this.gs1SeparatorRegex, FNC1_CHAR);
+        return barcode;
+    },
 });
 
 return {
     BarcodeParser,
     FNC1_CHAR,
+    GS1BarcodeError
 };
 });

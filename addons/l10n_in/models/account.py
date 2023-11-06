@@ -51,10 +51,10 @@ class AccountTax(models.Model):
     l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
 
     @api.model
-    def _get_generation_dict_from_base_line(self, line_vals, tax_vals):
+    def _get_generation_dict_from_base_line(self, line_vals, tax_vals, force_caba_exigibility=False):
         # EXTENDS account
         # Group taxes also by product.
-        res = super()._get_generation_dict_from_base_line(line_vals, tax_vals)
+        res = super()._get_generation_dict_from_base_line(line_vals, tax_vals, force_caba_exigibility=force_caba_exigibility)
         record = line_vals['record']
         if isinstance(record, models.Model)\
                 and record._name == 'account.move.line'\

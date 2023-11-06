@@ -67,7 +67,7 @@ class GoogleCalendarService():
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT):
         send_updates = self.google_service._context.get('send_updates', True)
-        url = "/calendar/v3/calendars/primary/events?sendUpdates=%s" % ("all" if send_updates else "none")
+        url = "/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=%s" % ("all" if send_updates else "none")
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
@@ -85,6 +85,12 @@ class GoogleCalendarService():
         url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
+        # Delete all events from recurrence in a single request to Google and triggering a single mail.
+        # The 'singleEvents' parameter is a trick that tells Google API to delete all recurrent events individually,
+        # making the deletion be handled entirely on their side, and then we archive the events in Odoo.
+        is_recurrence = self.google_service._context.get('is_recurrence', True)
+        if is_recurrence:
+            params['singleEvents'] = 'true'
         try:
             self.google_service._do_request(url, params, headers=headers, method='DELETE', timeout=timeout)
         except requests.HTTPError as e:
@@ -112,10 +118,11 @@ class GoogleCalendarService():
             's': 'calendar',
             'f': from_url
         }
+        base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(
             'calendar',
             self._get_calendar_scope(),
-            self.google_service.get_base_url() + '/google_account/authentication',
+            base_url + '/google_account/authentication',
             state=json.dumps(state),
             approval_prompt='force',
             access_type='offline'

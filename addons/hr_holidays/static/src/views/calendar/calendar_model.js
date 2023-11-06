@@ -13,6 +13,18 @@ export class TimeOffCalendarModel extends CalendarModel {
         }
     }
 
+    /**
+     * @override
+     */
+    normalizeRecord(rawRecord) {
+        let result = super.normalizeRecord(...arguments);
+        if (rawRecord.employee_id) {
+            const employee = rawRecord.employee_id[1];
+            result.title = [employee, result.title].join(' ');
+        }
+        return result;
+    }
+
     makeContextDefaults(record) {
         const { scale } = this.meta;
         const context = super.makeContextDefaults(record);

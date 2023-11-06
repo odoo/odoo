@@ -13,9 +13,7 @@
                             string="Expense Report"
                             icon="fa-file-text-o"
                             type="object"
-                            attrs="{'invisible': [('expense_sheet_id', '=', [])]}"
-                            groups="account.group_account_user,account.group_account_readonly">
-                        </button>
+                            attrs="{'invisible': [('expense_sheet_id', '=', [])]}"/>
                 </xpath>
             </field>
         </record>

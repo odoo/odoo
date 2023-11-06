@@ -42,6 +42,7 @@ export class MediaDialog extends Component {
 
         this.rpc = useService('rpc');
         this.orm = useService('orm');
+        this.notificationService = useService('notification');
 
         this.tabs = [];
         this.selectedMedia = useState({});
@@ -49,6 +50,7 @@ export class MediaDialog extends Component {
         this.initialIconClasses = [];
 
         this.addTabs();
+        this.errorMessages = {};
 
         this.state = useState({
             activeTab: this.initialActiveTab,
@@ -84,6 +86,7 @@ export class MediaDialog extends Component {
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
                 onAttachmentChange: this.props.onAttachmentChange,
+                errorMessages: (errorMessage) => this.errorMessages[tab.id] = errorMessage,
             },
         });
     }
@@ -143,8 +146,19 @@ export class MediaDialog extends Component {
     }
 
     async save() {
+        if (this.errorMessages[this.state.activeTab]) {
+            this.notificationService.add(this.errorMessages[this.state.activeTab], {
+                type: 'danger',
+            });
+            return;
+        }
         const selectedMedia = this.selectedMedia[this.state.activeTab];
-        if (selectedMedia.length) {
+        // TODO In master: clean the save method so it performs the specific
+        // adaptation before saving from the active media selector and find a
+        // way to simply close the dialog if the media element remains the same.
+        const saveSelectedMedia = selectedMedia.length
+            && (this.state.activeTab !== TABS.ICONS.id || selectedMedia[0].initialIconChanged || !this.props.media);
+        if (saveSelectedMedia) {
             const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
             elements.forEach(element => {
                 if (this.props.media) {
@@ -153,11 +167,13 @@ export class MediaDialog extends Component {
                     if (style) {
                         element.setAttribute('style', style);
                     }
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
-                    }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                    if (this.state.activeTab === TABS.IMAGES.id) {
+                        if (this.props.media.dataset.shape) {
+                            element.dataset.shape = this.props.media.dataset.shape;
+                        }
+                        if (this.props.media.dataset.shapeColors) {
+                            element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                        }
                     }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

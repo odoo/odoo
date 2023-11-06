@@ -5,17 +5,17 @@
             <field name="model">applicant.get.refuse.reason</field>
             <field name="arch" type="xml">
                 <form string="Refuse Reason">
+                    <group col="1">
+                        <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
+                        <field name="send_mail" attrs="{'invisible': [('refuse_reason_id', '=', False)]}"/>
+                        <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}" />
+                        <field name="applicant_ids" invisible="1"/>
+                    </group>
                     <div class="alert alert-danger" role="alert" attrs="{'invisible': [('applicant_without_email', '=', False)]}">
                         <field name="applicant_without_email" class="mr4"/>
                     </div>
-                    <group col="1">
-                        <field name="refuse_reason_id" class="w-50"/>
-                        <field name="send_mail" attrs="{'invisible': [('refuse_reason_id', '=', False)]}"/>
-                        <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}" class="w-50"/>
-                        <field name="applicant_ids" invisible="1"/>
-                    </group>
                     <footer>
-                        <button name="action_refuse_reason_apply" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button name="action_refuse_reason_apply" string="Refuse" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>

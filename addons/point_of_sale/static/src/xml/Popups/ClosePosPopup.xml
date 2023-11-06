@@ -26,8 +26,8 @@
                                     <tr>
                                         <td t-esc="defaultCashDetails.name"/>
                                         <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
-                                        <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
-                                            <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
+                                        <td class="flex" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
+                                            <input class="pos-input" t-ref="closingCashInput"/>
                                             <div class="button icon" t-on-click="openDetailsPopup">
                                                 <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                                             </div>
@@ -65,7 +65,9 @@
                                     <td t-esc="pm.name"/>
                                     <td t-esc="env.pos.format_currency(pm.amount)"/>
                                     <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
-                                    <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
+                                    <td t-if="_showDiff" t-on-input="(event) => this.handleInputChange(pm.id, event)">
+                                        <input class="pos-input" t-ref="closingCashInput_{{pm.id}}"/>
+                                    </td>
                                     <td t-if="_showDiff" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                                 </tr>
                             </tbody>

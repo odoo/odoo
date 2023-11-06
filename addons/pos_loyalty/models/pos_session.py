@@ -21,7 +21,7 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': [('id', 'in', self.config_id._get_program_ids().ids)],
-                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_to',
+                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_to', 'total_order_count',
                     'limit_usage', 'max_usage', 'is_nominative', 'portal_visible', 'portal_point_name', 'trigger_product_ids'],
             },
         }
@@ -43,7 +43,7 @@ class PosSession(models.Model):
                 'fields': ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                     'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
                     'discount_max_amount', 'discount_line_product_id',
-                    'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id'],
+                    'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain'],
             }
         }
 
@@ -56,22 +56,15 @@ class PosSession(models.Model):
     def _get_pos_ui_loyalty_reward(self, params):
         return self.env['loyalty.reward'].search_read(**params['search_params'])
 
-    def _loader_params_product_product(self):
-        result = super(PosSession, self)._loader_params_product_product()
-        config = self.config_id
-        if config._get_program_ids():
-            programs = config._get_program_ids()
-            rewards = programs.reward_ids
-            products = (programs.rule_ids.valid_product_ids | rewards.discount_line_product_id) |\
-                (rewards.all_discount_product_ids | rewards.reward_product_ids)
-            result['search_params']['domain'] = OR([result['search_params']['domain'], [('id', 'in', products.ids)]])
-        return result
-
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)
+        self = self.with_context(**params['context'])
         rewards = self.config_id._get_program_ids().reward_ids
         products = rewards.discount_line_product_id | rewards.reward_product_ids
-        products = self.env['product.product'].search_read([('id', 'in', products.ids)], fields=params['search_params']['fields'])
+        products |= self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'ewallet').trigger_product_ids
+        # Only load products that are not already in the result
+        products = list(set(products.ids) - set(product['id'] for product in result))
+        products = self.env['product.product'].search_read([('id', 'in', products)], fields=params['search_params']['fields'])
         self._process_pos_ui_product_product(products)
         result.extend(products)
         return result
@@ -121,3 +114,13 @@ class PosSession(models.Model):
                     product_id_to_program_ids[product['id']].append(program['id'])
 
         loaded_data['product_id_to_program_ids'] = product_id_to_program_ids
+        product_product_fields = self.env['product.product'].fields_get(self._loader_params_product_product()['search_params']['fields'])
+        loaded_data['field_types'] = {
+            'product.product': {f:v['type'] for f, v in product_product_fields.items()}
+        }
+
+    def _loader_params_product_product(self):
+        params = super()._loader_params_product_product()
+        # this is usefull to evaluate reward domain in frontend
+        params['search_params']['fields'].append('all_product_tag_ids')
+        return params

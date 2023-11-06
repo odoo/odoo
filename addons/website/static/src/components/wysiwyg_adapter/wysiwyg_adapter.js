@@ -6,6 +6,7 @@ import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { setEditableWindow } from 'web_editor.utils';
 import { useBus } from "@web/core/utils/hooks";
+import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -68,7 +69,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
 
         useEffect(() => {
             const initWysiwyg = async () => {
-                this.$editable.on('click.odoo-website-editor', '*', this, this._preventDefault);
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
@@ -98,10 +98,6 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
 
             initWysiwyg();
-
-            return () => {
-                this.$editable.off('click.odoo-website-editor', '*');
-            };
         }, () => []);
 
         useEffect(() => {
@@ -348,8 +344,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _addEditorMessages() {
-        const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        const $wrap = this.$editable
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .filter(':o_editable');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
+                .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
@@ -367,17 +366,41 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 return !$(el).closest('.o_not_editable').length;
             });
 
-        // TODO review in master. This stable fix restores the possibility to
+        // TODO migrate in master. This stable fix restores the possibility to
         // edit the company team snippet images on subsequent editions. Indeed
-        // this badly relies on the contenteditable="true" attribute being on
-        // those images but it is rightfully lost after the first save.
-        // grep: COMPANY_TEAM_CONTENTEDITABLE
-        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        // this badly relied on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save. Later,
+        // the o_editable_media class system was implemented and the class was
+        // added in the snippet template but this did not solve existing
+        // snippets in user databases.
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable *')
+            .filter((i, el) => isMediaElement(el) || el.tagName === 'IMG');
+        // Same as above for social media icons.
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media a > i'));
+
+        // TODO find a similar system for texts.
+        // grep: SOCIAL_MEDIA_TITLE_CONTENTEDITABLE
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media .s_social_media_title'));
+
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
 
         return $editableSavableZones.add($extraEditableZones).toArray();
     }
     _getReadOnlyAreas() {
-        return [];
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        const doc = this.websiteService.pageDocument;
+        return [...doc.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
     }
     _getUnremovableElements () {
         // TODO adapt in master: this was added as a fix to target some elements
@@ -423,6 +446,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
+                    rootID: params[0],
                     save: () => {
                         const snippetsMenu = this.widget.snippetsMenu;
                         snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
@@ -466,6 +490,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return websiteRootInstance.trigger_up(type, {...eventData});
     }
     _preventDefault(e) {
+        // TODO: Remove this method in master.
         e.preventDefault();
     }
     /**
@@ -505,6 +530,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         await Promise.all(proms).then(() => {
             $allLinksIframe.remove();
         });
+
+        // TODO review naming in master (to not call an event handler like that)
+        this._onColorPreviewsUpdate();
+
         if (event.data.onSuccess) {
             return event.data.onSuccess();
         }
@@ -693,7 +722,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         } else if (event.data.reloadWebClient) {
             const currentPath = encodeURIComponent(window.location.pathname);
             const websiteId = this.websiteService.currentWebsite.id;
-            callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
+            callback = () => window.location = `/web#action=website.website_preview&website_id=${encodeURIComponent(websiteId)}&path=${currentPath}&enable_editor=1`;
         } else if (event.data.action) {
             callback = () => {
                 this.leaveEditMode({

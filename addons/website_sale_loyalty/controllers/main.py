@@ -13,17 +13,19 @@ class WebsiteSale(main.WebsiteSale):
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
         coupon_status = order._try_apply_code(promo)
-        if 'error' not in coupon_status:
-            if len(coupon_status) == 1:
-                coupon, rewards = next(iter(coupon_status.items()))
-                if len(rewards) == 1 and not rewards.multi_product:
-                    self._apply_reward(order, rewards, coupon)
         if coupon_status.get('not_found'):
             return super(WebsiteSale, self).pricelist(promo, **post)
         elif coupon_status.get('error'):
             request.session['error_promo_code'] = coupon_status['error']
-        if 'error' not in coupon_status:
-            request.session['successful_code'] = promo
+        elif 'error' not in coupon_status:
+            reward_successfully_applied = True
+            if len(coupon_status) == 1:
+                coupon, rewards = next(iter(coupon_status.items()))
+                if len(rewards) == 1 and not rewards.multi_product:
+                    reward_successfully_applied = self._apply_reward(order, rewards, coupon)
+
+            if reward_successfully_applied:
+                request.session['successful_code'] = promo
         return request.redirect(post.get('r', '/shop/cart'))
 
     @http.route()
@@ -41,7 +43,18 @@ class WebsiteSale(main.WebsiteSale):
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
-        return super(WebsiteSale, self).cart(**post)
+
+        res = super().cart(**post)
+
+        # TODO in master: remove and pass delete=True to the methods fetching the error/success
+        # messages in _get_website_sale_extra_values
+        # clean session messages after displaying them
+        if request.session.get('error_promo_code'):
+            request.session.pop('error_promo_code')
+        if request.session.get('successful_code'):
+            request.session.pop('successful_code')
+
+        return res
 
     @http.route(['/coupon/<string:code>'], type='http', auth='public', website=True, sitemap=False)
     def activate_coupon(self, code, r='/shop', **kw):
@@ -84,10 +97,20 @@ class WebsiteSale(main.WebsiteSale):
         return request.redirect(redirect)
 
     def _apply_reward(self, order, reward, coupon):
+        """Try to apply the given program reward
+
+        :returns: whether the reward was successfully applied
+        :rtype: bool
+        """
         try:
-            order._apply_program_reward(reward, coupon)
+            reward_status = order._apply_program_reward(reward, coupon)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
+            return False
+        if 'error' in reward_status:
+            request.session['error_promo_code'] = reward_status['error']
+            return False
+        return True
 
     @http.route()
     def cart_update_json(self, *args, set_qty=None, **kwargs):

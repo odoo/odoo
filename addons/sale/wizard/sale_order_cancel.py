@@ -3,7 +3,6 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 
 class SaleOrderCancel(models.TransientModel):
@@ -14,7 +13,7 @@ class SaleOrderCancel(models.TransientModel):
     @api.model
     def _default_email_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            return self.env.user.email_formatted
         raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model
@@ -62,23 +61,22 @@ class SaleOrderCancel(models.TransientModel):
     def _compute_subject(self):
         for wizard in self:
             if wizard.template_id:
-                wizard.subject = self.sudo()._render_template(
-                    wizard.template_id.subject,
-                    'sale.order',
-                    [wizard.order_id.id],
+                wizard.subject = wizard.template_id._render_field(
+                    'subject',
+                    wizard.order_id.ids,
                     post_process=True,
+                    compute_lang=True,
                 )[wizard.order_id.id]
 
     @api.depends('order_id')
     def _compute_body(self):
         for wizard in self:
             if wizard.template_id:
-                wizard.body = self.sudo()._render_template(
-                    wizard.template_id.body_html,
-                    'sale.order',
-                    [wizard.order_id.id],
+                wizard.body = wizard.template_id._render_field(
+                    'body_html',
+                    wizard.order_id.ids,
                     post_process=True,
-                    engine='qweb',
+                    compute_lang=True,
                 )[wizard.order_id.id]
 
     def action_send_mail_and_cancel(self):
@@ -94,4 +92,4 @@ class SaleOrderCancel(models.TransientModel):
         return self.action_cancel()
 
     def action_cancel(self):
-        return self.order_id.with_context({'disable_cancel_warning': True}).action_cancel()
+        return self.order_id.with_context(disable_cancel_warning=True).action_cancel()

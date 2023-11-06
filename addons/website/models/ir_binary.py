@@ -22,7 +22,10 @@ class IrBinary(models.AbstractModel):
         if not record:
             record = super()._find_record(xmlid, res_model, res_id, access_token)
 
-        if 'website_published' in record and record.sudo().website_published:
-            record = record.sudo()
-
         return record
+
+    def _find_record_check_access(self, record, access_token):
+        if 'website_published' in record._fields and record.sudo().website_published:
+            return record.sudo()
+
+        return super()._find_record_check_access(record, access_token)

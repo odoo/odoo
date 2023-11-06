@@ -133,7 +133,7 @@
                                 <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                 <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                                 <div class="o_row">
-                                    <field name="planned_hours" class="oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
+                                    <field name="planned_hours" class="o_field_float_time oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
                                     <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
                                         (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                                         <span class="fw-bold text-dark"> Sub-tasks</span>)
@@ -153,7 +153,8 @@
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
                             <field name="name" required="0"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
                             <field name="project_id" invisible="1"/>
@@ -172,7 +173,8 @@
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6">
-                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
@@ -198,7 +200,8 @@
                                  <group>
                                     <field name="date"/>
                                     <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
                                     <field name="name" required="0"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
@@ -313,7 +316,7 @@
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
                     <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
-                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title">
+                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>
                 </xpath>
@@ -333,7 +336,7 @@
                     <field name="encode_uom_in_days" invisible="1"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>

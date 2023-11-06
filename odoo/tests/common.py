@@ -29,6 +29,7 @@ import tempfile
 import threading
 import time
 import unittest
+from . import case
 import warnings
 from collections import defaultdict
 from concurrent.futures import Future, CancelledError, wait
@@ -40,13 +41,11 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
 import werkzeug.urls
-import werkzeug.urls
-from decorator import decorator
 from lxml import etree, html
 
 import odoo
@@ -63,12 +62,22 @@ from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
 try:
+    # the behaviour of decorator changed in 5.0.5 changing the structure of the traceback when
+    # an error is raised inside a method using a decorator.
+    # this is not a hudge problem for test execution but this makes error message
+    # more difficult to read and breaks test_with_decorators
+    # This also changes the error format making runbot error matching fail
+    # This also breaks the first frame meaning that the module detection will also fail on runbot
+    # In 5.1 decoratorx was introduced and it looks like it has the same behaviour of old decorator
+    from decorator import decoratorx as decorator
+except ImportError:
+    from decorator import decorator
+
+try:
     import websocket
 except ImportError:
     # chrome headless tests will be skipped
     websocket = None
-
-from .runner import stats_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -81,7 +90,6 @@ ADMIN_USER_ID = odoo.SUPERUSER_ID
 CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
-
 
 def get_db_name():
     db = odoo.tools.config['db_name']
@@ -188,141 +196,6 @@ class RecordCapturer:
             return self._model.search(self._domain) - self._before
         return self._after
 
-# ------------------------------------------------------------
-# Main classes
-# ------------------------------------------------------------
-if sys.version_info >= (3, 8):
-    BackportSuite = unittest.suite.TestSuite
-else:
-    class BackportSuite(unittest.suite.TestSuite):
-        # Partial backport of bpo-24412, merged in CPython 3.8
-
-        def _handleClassSetUp(self, test, result):
-            previousClass = getattr(result, '_previousTestClass', None)
-            currentClass = test.__class__
-            if currentClass == previousClass:
-                return
-            if result._moduleSetUpFailed:
-                return
-            if getattr(currentClass, "__unittest_skip__", False):
-                return
-
-            try:
-                currentClass._classSetupFailed = False
-            except TypeError:
-                # test may actually be a function
-                # so its class will be a builtin-type
-                pass
-
-            setUpClass = getattr(currentClass, 'setUpClass', None)
-            if setUpClass is not None:
-                unittest.suite._call_if_exists(result, '_setupStdout')
-                try:
-                    setUpClass()
-                except Exception as e:
-                    if isinstance(result, unittest.suite._DebugResult):
-                        raise
-                    currentClass._classSetupFailed = True
-                    className = unittest.util.strclass(currentClass)
-                    self._createClassOrModuleLevelException(result, e,
-                                                            'setUpClass',
-                                                            className)
-                finally:
-                    unittest.suite._call_if_exists(result, '_restoreStdout')
-                    if currentClass._classSetupFailed is True:
-                        if hasattr(currentClass, 'doClassCleanups'):
-                            currentClass.doClassCleanups()
-                            if len(currentClass.tearDown_exceptions) > 0:
-                                for exc in currentClass.tearDown_exceptions:
-                                    self._createClassOrModuleLevelException(
-                                            result, exc[1], 'setUpClass', className,
-                                            info=exc)
-
-        def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
-            errorName = f'{method_name} ({parent})'
-            self._addClassOrModuleLevelException(result, exc, errorName, info)
-
-        def _addClassOrModuleLevelException(self, result, exception, errorName, info=None):
-            error = unittest.suite._ErrorHolder(errorName)
-            addSkip = getattr(result, 'addSkip', None)
-            if addSkip is not None and isinstance(exception, unittest.case.SkipTest):
-                addSkip(error, str(exception))
-            else:
-                if not info:
-                    result.addError(error, sys.exc_info())
-                else:
-                    result.addError(error, info)
-
-        def _tearDownPreviousClass(self, test, result):
-            previousClass = getattr(result, '_previousTestClass', None)
-            currentClass = test.__class__
-            if currentClass == previousClass:
-                return
-            if getattr(previousClass, '_classSetupFailed', False):
-                return
-            if getattr(result, '_moduleSetUpFailed', False):
-                return
-            if getattr(previousClass, "__unittest_skip__", False):
-                return
-
-            tearDownClass = getattr(previousClass, 'tearDownClass', None)
-            if tearDownClass is not None:
-                unittest.suite._call_if_exists(result, '_setupStdout')
-                try:
-                    tearDownClass()
-                except Exception as e:
-                    if isinstance(result, unittest.suite._DebugResult):
-                        raise
-                    className = unittest.util.strclass(previousClass)
-                    self._createClassOrModuleLevelException(result, e,
-                                                            'tearDownClass',
-                                                            className)
-                finally:
-                    unittest.suite._call_if_exists(result, '_restoreStdout')
-                    if hasattr(previousClass, 'doClassCleanups'):
-                        previousClass.doClassCleanups()
-                        if len(previousClass.tearDown_exceptions) > 0:
-                            for exc in previousClass.tearDown_exceptions:
-                                className = unittest.util.strclass(previousClass)
-                                self._createClassOrModuleLevelException(result, exc[1],
-                                                                        'tearDownClass',
-                                                                        className,
-                                                                        info=exc)
-
-class OdooSuite(BackportSuite):
-    def _handleClassSetUp(self, test, result):
-        previous_test_class = getattr(result, '_previousTestClass', None)
-        if not (
-                previous_test_class != type(test)
-            and hasattr(result, 'stats')
-            and stats_logger.isEnabledFor(logging.INFO)
-        ):
-            super()._handleClassSetUp(test, result)
-            return
-
-        test_class = type(test)
-        test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
-        with result.collectStats(test_id):
-            super()._handleClassSetUp(test, result)
-
-    def _tearDownPreviousClass(self, test, result):
-        previous_test_class = getattr(result, '_previousTestClass', None)
-        if not (
-                previous_test_class
-            and previous_test_class != type(test)
-            and hasattr(result, 'stats')
-            and stats_logger.isEnabledFor(logging.INFO)
-        ):
-            super()._tearDownPreviousClass(test, result)
-            return
-
-        test_id = f'{previous_test_class.__module__}.{previous_test_class.__qualname__}.tearDownClass'
-        with result.collectStats(test_id):
-            super()._tearDownPreviousClass(test, result)
-
-    def has_http_case(self):
-        return self.countTestCases() and any(isinstance(test_case, HttpCase) for test_case in self)
-
 
 class MetaCase(type):
     """ Metaclass of test case classes to assign default 'test_tags':
@@ -359,36 +232,14 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
 
 
-class BaseCase(unittest.TestCase, metaclass=MetaCase):
+class BaseCase(case.TestCase, metaclass=MetaCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
 
-    _python_version = sys.version_info
-    if _python_version < (3, 8):
-        # Partial backport of bpo-24412, merged in CPython 3.8
-        _class_cleanups = []
-
-        @classmethod
-        def addClassCleanup(cls, function, *args, **kwargs):
-            """Same as addCleanup, except the cleanup items are called even if
-            setUpClass fails (unlike tearDownClass). Backport of bpo-24412."""
-            cls._class_cleanups.append((function, args, kwargs))
-
-        @classmethod
-        def doClassCleanups(cls):
-            """Execute all class cleanup functions. Normally called for you after tearDownClass.
-            Backport of bpo-24412."""
-            cls.tearDown_exceptions = []
-            while cls._class_cleanups:
-                function, args, kwargs = cls._class_cleanups.pop()
-                try:
-                    function(*args, **kwargs)
-                except Exception as exc:
-                    cls.tearDown_exceptions.append(sys.exc_info())
-
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
+    _python_version = sys.version_info
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
@@ -418,9 +269,6 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 super().run(result)
             if not failure:
                 break
-
-    def shortDescription(self):
-        return None
 
     def cursor(self):
         return self.registry.cursor()
@@ -628,6 +476,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
                     frame, filename, linenum, funcname, lines, index = inspect.stack()[2]
+                    filename = filename.replace('\\', '/')
                     if "/odoo/addons/" in filename:
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
                     if count > expected:
@@ -805,100 +654,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             profile_session=self.profile_session,
             **kwargs)
 
-    def _callSetUp(self):
-        # This override is aimed at providing better error logs inside tests.
-        # First, we want errors to be logged whenever they appear instead of
-        # after the test, as the latter makes debugging harder and can even be
-        # confusing in the case of subtests.
-        #
-        # When a subtest is used inside a test, (1) the recovered traceback is
-        # not complete, and (2) the error is delayed to the end of the test
-        # method. There is unfortunately no simple way to hook inside a subtest
-        # to fix this issue. The method TestCase.subTest uses the context
-        # manager _Outcome.testPartExecutor as follows:
-        #
-        #     with self._outcome.testPartExecutor(self._subtest, isTest=True):
-        #         yield
-        #
-        # This context manager is actually also used for the setup, test method,
-        # teardown, cleanups. If an error occurs during any one of those, it is
-        # simply appended in TestCase._outcome.errors, and the latter is
-        # consumed at the end calling _feedErrorsToResult.
-        #
-        # The TestCase._outcome is set just before calling _callSetUp. This
-        # method is actually executed inside a testPartExecutor. Replacing it
-        # here ensures that all errors will be caught.
-        # See https://github.com/odoo/odoo/pull/107572 for more info.
-        self._outcome.errors = _ErrorCatcher(self)
-        super()._callSetUp()
-
-
-class _ErrorCatcher(list):
-    """ This extends a list where errors are appended whenever they occur. The
-    purpose of this class is to feed the errors directly to the output, instead
-    of letting them accumulate until the test is over. It also improves the
-    traceback to make it easier to debug.
-    """
-    __slots__ = ['test']
-
-    def __init__(self, test):
-        super().__init__()
-        self.test = test
-
-    def append(self, error):
-        exc_info = error[1]
-        if exc_info is not None:
-            exception_type, exception, tb = exc_info
-            tb = self._complete_traceback(tb)
-            exc_info = (exception_type, exception, tb)
-        self.test._feedErrorsToResult(self.test._outcome.result, [(error[0], exc_info)])
-
-    def _complete_traceback(self, initial_tb):
-        Traceback = type(initial_tb)
-
-        # make the set of frames in the traceback
-        tb_frames = set()
-        tb = initial_tb
-        while tb:
-            tb_frames.add(tb.tb_frame)
-            tb = tb.tb_next
-        tb = initial_tb
-
-        # find the common frame by searching the last frame of the current_stack present in the traceback.
-        current_frame = inspect.currentframe()
-        common_frame = None
-        while current_frame:
-            if current_frame in tb_frames:
-                common_frame = current_frame  # we want to find the last frame in common
-            current_frame = current_frame.f_back
-
-        if not common_frame:  # not really useful but safer
-            _logger.warning('No common frame found with current stack, displaying full stack')
-            tb = initial_tb
-        else:
-            # remove the tb_frames untile the common_frame is reached (keep the current_frame tb since the line is more accurate)
-            while tb and tb.tb_frame != common_frame:
-                tb = tb.tb_next
-
-        # add all current frame elements under the common_frame to tb
-        current_frame = common_frame.f_back
-        while current_frame:
-            tb = Traceback(tb, current_frame, current_frame.f_lasti, current_frame.f_lineno)
-            current_frame = current_frame.f_back
-
-        # remove traceback root part (odoo_bin, main, loading, ...), as
-        # everything under the testCase is not useful. Using '_callTestMethod',
-        # '_callSetUp', '_callTearDown', '_callCleanup' instead of the test
-        # method since the error does not comme especially from the test method.
-        while tb:
-            code = tb.tb_frame.f_code
-            if code.co_filename.endswith('/unittest/case.py') and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
-                return tb.tb_next
-            tb = tb.tb_next
-
-        _logger.warning('No root frame found, displaying full stacks')
-        return initial_tb  # this shouldn't be reached
-
+    def patch_requests(self):
+        # requests.get -> requests.api.request -> Session().request
+        # TBD: enable by default & set side_effect=NotImplementedError to force an error
+        p = patch('requests.Session.request', Mock(spec_set=[]))
+        self.addCleanup(p.stop)
+        return p.start()
 
 savepoint_seq = itertools.count()
 
@@ -961,6 +722,17 @@ class TransactionCase(BaseCase):
         self.addCleanup(envs.clear)
 
         self.addCleanup(self.registry.clear_caches)
+
+        # This prevents precommit functions and data from piling up
+        # until cr.flush is called in 'assertRaises' clauses
+        # (these are not cleared in self.env.clear or envs.clear)
+        cr = self.env.cr
+
+        def _reset(cb, funcs, data):
+            cb._funcs = funcs
+            cb.data = data
+        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
+            self.addCleanup(_reset, callback, collections.deque(callback._funcs), dict(callback.data))
 
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
@@ -1090,7 +862,6 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
-        self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
         # maps frame ids to callbacks
@@ -1114,6 +885,12 @@ class ChromeBrowser:
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
+
+    @property
+    def had_failure(self):
+        with contextlib.suppress(concurrent.futures.TimeoutError, CancelledError):
+            return self._result.exception(timeout=0) is not None
+        return False
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1222,6 +999,7 @@ class ChromeBrowser:
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--remote-allow-origins': '*',
             # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
             # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
         }
@@ -1308,7 +1086,7 @@ class ChromeBrowser:
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url, enable_multithread=True)
+        self.ws = websocket.create_connection(self.ws_url, enable_multithread=True, suppress_origin=True)
         if self.ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         self.ws.settimeout(0.01)
@@ -1409,7 +1187,8 @@ class ChromeBrowser:
         )
 
         if log_type == 'error':
-            self.had_failure = True
+            if self.had_failure:
+                return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
@@ -1470,6 +1249,10 @@ which leads to stray network requests and inconsistencies."""))
         stack = ''.join(self._format_stack(exceptionDetails))
         if stack:
             message += '\n' + stack
+
+        if self.had_failure:
+            self._logger.getChild('browser').error("%s", message)
+            return
 
         self.take_screenshot()
         self._save_screencast()
@@ -1679,7 +1462,6 @@ which leads to stray network requests and inconsistencies."""))
         self._responses.clear()
         self._result.cancel()
         self._result = Future()
-        self.had_failure = False
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible
@@ -3092,76 +2874,12 @@ def tagged(*tags):
     """
     include = {t for t in tags if not t.startswith('-')}
     exclude = {t[1:] for t in tags if t.startswith('-')}
+
     def tags_decorator(obj):
         obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        at_install = 'at_install' in obj.test_tags
+        post_install = 'post_install' in obj.test_tags
+        if not (at_install ^ post_install):
+            _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
-
-
-class TagsSelector(object):
-    """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
-
-    def __init__(self, spec):
-        """ Parse the spec to determine tags to include and exclude. """
-        filter_specs = {t.strip() for t in spec.split(',') if t.strip()}
-        self.exclude = set()
-        self.include = set()
-
-        for filter_spec in filter_specs:
-            match = self.filter_spec_re.match(filter_spec)
-            if not match:
-                _logger.error('Invalid tag %s', filter_spec)
-                continue
-
-            sign, tag, module, klass, method = match.groups()
-            is_include = sign != '-'
-
-            if not tag and is_include:
-                # including /module:class.method implicitly requires 'standard'
-                tag = 'standard'
-            elif not tag or tag == '*':
-                # '*' indicates all tests (instead of 'standard' tests only)
-                tag = None
-            test_filter = (tag, module, klass, method)
-
-            if is_include:
-                self.include.add(test_filter)
-            else:
-                self.exclude.add(test_filter)
-
-        if self.exclude and not self.include:
-            self.include.add(('standard', None, None, None))
-
-    def check(self, test):
-        """ Return whether ``arg`` matches the specification: it must have at
-            least one tag in ``self.include`` and none in ``self.exclude`` for each tag category.
-        """
-        if not hasattr(test, 'test_tags'): # handle the case where the Test does not inherit from BaseCase and has no test_tags
-            _logger.debug("Skipping test '%s' because no test_tag found.", test)
-            return False
-
-        test_module = getattr(test, 'test_module', None)
-        test_class = getattr(test, 'test_class', None)
-        test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
-        test_method = getattr(test, '_testMethodName', None)
-
-        def _is_matching(test_filter):
-            (tag, module, klass, method) = test_filter
-            if tag and tag not in test_tags:
-                return False
-            elif module and module != test_module:
-                return False
-            elif klass and klass != test_class:
-                return False
-            elif method and test_method and method != test_method:
-                return False
-            return True
-
-        if any(_is_matching(test_filter) for test_filter in self.exclude):
-            return False
-
-        if any(_is_matching(test_filter) for test_filter in self.include):
-            return True
-
-        return False

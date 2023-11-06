@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
+        return self.amount_total - delivery_cost
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -59,6 +59,10 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
         for order in self:
             order.carrier_id = carrier.id
+            if order.state in ('sale', 'done'):
+                pending_deliveries = order.picking_ids.filtered(
+                    lambda p: p.state not in ('done', 'cancel') and not any(m.origin_returned_move_id for m in p.move_ids))
+                pending_deliveries.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount)
         return True
 
@@ -87,8 +91,7 @@ class SaleOrder(models.Model):
             }
         }
 
-    def _create_delivery_line(self, carrier, price_unit):
-        SaleOrderLine = self.env['sale.order.line']
+    def _prepare_delivery_line_vals(self, carrier, price_unit):
         context = {}
         if self.partner_id:
             # set delivery detail in the customer language
@@ -126,9 +129,12 @@ class SaleOrder(models.Model):
             values['name'] += '\n' + _('Free Shipping')
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        sol = SaleOrderLine.sudo().create(values)
         del context
-        return sol
+        return values
+
+    def _create_delivery_line(self, carrier, price_unit):
+        values = self._prepare_delivery_line_vals(carrier, price_unit)
+        return self.env['sale.order.line'].sudo().create(values)
 
     def _format_currency_amount(self, amount):
         pre = post = u''
@@ -144,14 +150,23 @@ class SaleOrder(models.Model):
         for order in self:
             if order.invoice_status in ['no', 'invoiced']:
                 continue
-            order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type and x.invoice_status != 'invoiced')
+            order_lines = order._get_lines_impacting_invoice_status()
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
+
+    def _get_lines_impacting_invoice_status(self):
+        return self.order_line.filtered(
+            lambda line:
+                not line.is_delivery
+                and not line.is_downpayment
+                and not line.display_type
+                and line.invoice_status != 'invoiced'
+        )
 
     def _get_estimated_weight(self):
         self.ensure_one()
         weight = 0.0
-        for order_line in self.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not l.is_delivery and not l.display_type):
+        for order_line in self.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not l.is_delivery and not l.display_type and l.product_uom_qty > 0):
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
 

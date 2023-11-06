@@ -709,7 +709,7 @@ class TestQWebBasic(TransactionCase):
             expr_namespace = IrQweb._compile_expr(expr)
 
             compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
-            globals_dict = IrQweb._prepare_globals()
+            globals_dict = IrQweb._IrQWeb__prepare_globals()
             values = {}
             unsafe_eval(compiled, globals_dict, values)
             test = values['test']
@@ -1279,6 +1279,48 @@ class TestQWebBasic(TransactionCase):
                 <div>123</div>
             """
         rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(rendered.strip(), result.strip())
+
+    def test_if_spaces(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test">
+                <div>
+                    0
+                    <t>1</t>
+                    <t t-if="True">2</t>
+                    <t>3</t>
+                    4
+                    <t>5</t>
+                    6
+                    <t t-if="True">7</t>
+                    8
+                    <t t-if="False">9</t>
+                    10
+                    <t t-if="False">11</t>
+                    <t t-else="">12</t>
+                    13
+                </div>
+            </t>'''
+        })
+        result = """
+                <div>
+                    0
+                    1
+                    2
+                    3
+                    4
+                    5
+                    6
+                    7
+                    8
+                    10
+                    12
+                    13
+                </div>
+            """
+        rendered = str(self.env['ir.qweb']._render(t.id))
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_error_message_1(self):

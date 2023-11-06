@@ -11,7 +11,7 @@
                 <span t-field="o.shipping_weight"/>
                 <span t-field="o.weight_uom_name"/>
             </div>
-            <div t-if="o.carrier_tracking_ref" class="col-auto">
+            <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
                 <strong>Tracking Number:</strong>
                 <p t-field="o.carrier_tracking_ref"/>
             </div>
@@ -20,6 +20,14 @@
 
         <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
             <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']/thead/tr" position="inside">
+            <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']/tbody/tr" position="inside">
+            <td t-if="has_hs_code">
+                <span t-field="move.product_id.hs_code"/>
+            </td>
         </xpath>
     </template>
 

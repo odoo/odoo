@@ -328,7 +328,7 @@
                                         <field name="company_id"
                                             groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
-                                        <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref' : 'sales_team.crm_team_view_kanban'}"/>
                                         <field name="day_open" />
                                         <field name="day_close"/>
                                         <field name="type" invisible="1"/>

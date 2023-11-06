@@ -56,9 +56,20 @@ class MicrosoftCalendarService():
             'Prefer': 'outlook.body-content-type="html", odata.maxpagesize=50'
         }
         if not params:
+            # Get context keys limiting query range for reducing requests and then increase performance.
+            start_date = self.microsoft_service._context.get('range_start_date')
+            end_date = self.microsoft_service._context.get('range_end_date')
+            if start_date and end_date:
+                start_date = start_date.strftime("%Y-%m-%dT00:00:00Z")
+                end_date = end_date.strftime("%Y-%m-%dT00:00:00Z")
+            else:
+                ICP = self.microsoft_service.env['ir.config_parameter'].sudo()
+                day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
+                start_date = fields.Datetime.subtract(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
+                end_date = fields.Datetime.add(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
             params = {
-                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
-                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
+                'startDateTime': start_date,
+                'endDateTime': end_date,
             }
 
         # get the first page of events

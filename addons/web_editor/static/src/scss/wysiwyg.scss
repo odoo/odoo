@@ -321,9 +321,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     // Specific elements
     #decoration {
         #removeFormat {
-            display: none;
-        }
-        .active ~ #removeFormat {
             display: flex;
         }
     }
@@ -397,7 +394,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 
 body:not(.editor_has_snippets) {
-    .oe-toolbar {
+    > .oe-toolbar {
         // Bootstrap sets .modal z-index at 1055. Ensure toolbar is visible in
         // modals. Only apply this to the toolbar if it's not in a snippets menu.
         z-index: 1056;
@@ -519,6 +516,23 @@ img.o_we_selected_image {
         top: initial !important;
         left: initial !important;
     }
+
+    .oe-toolbar.oe-floating {
+        box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        overflow-y: visible;
+
+        .dropdown-menu {
+            max-height: 200px;
+            overflow: auto;
+
+            &.colorpicker-menu {
+                bottom: auto;
+            }
+        }
+    }
 }
 
 // User modal in edit mode
@@ -560,14 +574,14 @@ img.o_we_selected_image {
     border: $o-we-border-width solid $o-we-fg-light;
     overflow: auto;
     height: 100%;
-    padding: 4px;
+    padding: 4px 40px 4px 4px;
     min-height: 10px;
     border-radius: 3px;
 }
 
 .oe-bordered-editor>.note-editable {
     border-width: 1px;
-    padding: 4px;
+    padding: 4px 40px 4px 4px;
     min-height: 180px;
 }
 
@@ -578,7 +592,8 @@ img.o_we_selected_image {
 .o_we_crop_widget {
     background-color: rgba(128, 128, 128, 0.5);
     @include o-position-absolute(0, 0, 0, 0);
-    z-index: 1024;
+    /* This value must be higher than dialog z-index in bootstrap */
+    z-index: 1056;
 
     .o_we_cropper_wrapper {
         position: absolute;
@@ -588,6 +603,7 @@ img.o_we_selected_image {
         margin-top: 0.5rem;
         display: flex;
         flex-wrap: wrap;
+        bottom: 1rem;
 
         input[type=radio] {
             display: none;

@@ -30,23 +30,80 @@ const LinkTools = Link.extend({
      */
     init: function (parent, options, editable, data, $button, link) {
         this._link = link;
-        this._observer = new MutationObserver(() =>{
-            this._setLinkContent = false;
-            this._observer.disconnect();
+        this._observer = new MutationObserver(records => {
+            let hrefChanged = false;
+            for (const record of records) {
+                if (record.type === 'attributes') {
+                    hrefChanged = true;
+                } else {
+                    this._setLinkContent = false;
+                }
+            }
+            if (hrefChanged) {
+                this._updateUrlInput(this._link.getAttribute('href') || '');
+            }
         });
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observerOptions = {
+            subtree: true,
+            childList: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['href'],
+        };
+        this._observer.observe(this._link, this._observerOptions);
         this._super(parent, options, editable, data, $button, this._link);
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
         this.colorpickers = {};
+        // TODO remove me in master: we still save the promises indicating when
+        // each colorpicker is fully instantiated but we now make sure to never
+        // use them while they are not, without this.
         this.colorpickersPromises = {};
+        this.COLORPICKER_CSS_PROPERTIES = ['color', 'background-color', 'border-color'];
+        this.PREFIXES = {
+            'color': 'text-',
+            'background-color': 'bg-',
+        };
     },
     /**
      * @override
      */
-    start: function () {
+    willStart: async function () {
+        const _super = this._super.bind(this);
+        await Promise.all(this.COLORPICKER_CSS_PROPERTIES.map(cssProperty => this._addColorPicker(cssProperty)));
+        return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    start: async function () {
         this._addHintClasses();
-        return this._super(...arguments);
+        const ret = await this._super(...arguments);
+        const link = this.$link[0];
+        const colorpickerLocations = {
+            'color': '.link-custom-color-text .dropdown-menu',
+            'background-color': '.link-custom-color-fill .dropdown-menu',
+            'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
+        };
+        for (const cssProperty of this.COLORPICKER_CSS_PROPERTIES) {
+            // Colorpickers were created into fragments before any UI or event
+            // handler of this main widget was built. This just moves those
+            // colorpickers at their rightful position, synchronously.
+            const locationEl = this.el.querySelector(colorpickerLocations[cssProperty]);
+            this.colorpickers[cssProperty].$el.appendTo(locationEl);
+        }
+        const customStyleProps = ['color', 'background-color', 'background-image', 'border-width', 'border-style', 'border-color'];
+        if (customStyleProps.some(s => link.style[s])) {
+            // Force custom style if style exists on the link.
+            const customOption = this.el.querySelector('[name="link_style_color"] we-button[data-value="custom"]');
+            this._setSelectOption($(customOption), true);
+            this._updateOptionsUI();
+        }
+        if (!link.href && this.data.url) {
+            // Link URL was deduced from label. Apply changes to DOM.
+            this.__onURLInput();
+        }
+        return ret;
     },
     destroy: function () {
         if (!this.el) {
@@ -69,7 +126,7 @@ const LinkTools = Link.extend({
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyStep();
         this._addHintClasses();
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this._link, this._observerOptions);
     },
 
     //--------------------------------------------------------------------------
@@ -213,7 +270,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _updateOptionsUI: async function () {
+    _updateOptionsUI: function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
@@ -222,9 +279,12 @@ const LinkTools = Link.extend({
             // Show custom colors only for Custom style.
             this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
 
-            await this._updateColorpicker('color');
-            await this._updateColorpicker('background-color');
-            await this._updateColorpicker('border-color');
+            // Note: the _updateColorpicker method is supposedly async but can
+            // be used synchronously given the fact that _addColorPicker was
+            // called during this widget initialization.
+            this._updateColorpicker('color');
+            this._updateColorpicker('background-color');
+            this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
             const numberAndUnit = getNumericAndUnit(borderWidth);
@@ -248,57 +308,14 @@ const LinkTools = Link.extend({
      * @param {string} cssProperty
      */
     _updateColorpicker: async function (cssProperty) {
-        const prefix = {
-            'color': 'text-',
-            'background-color': 'bg-',
-        }[cssProperty];
-
+        const prefix = this.PREFIXES[cssProperty];
         let colorpicker = this.colorpickers[cssProperty];
-        await this.colorpickersPromises[cssProperty];
-        if (!colorpicker) {
-            colorpicker = new ColorPaletteWidget(this, {
-                excluded: ['transparent_grayscale'],
-                $editable: $(this.options.wysiwyg.odooEditor.editable),
-                withGradients: cssProperty === 'background-color',
-            });
-            this.colorpickers[cssProperty] = colorpicker;
-            const target = this.el.querySelector({
-                'color': '.link-custom-color-text .dropdown-menu',
-                'background-color': '.link-custom-color-fill .dropdown-menu',
-                'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
-            }[cssProperty]);
-            this.colorpickersPromises[cssProperty] = colorpicker.appendTo($(target));
-            await this.colorpickersPromises[cssProperty];
-            colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
-                // Reset color styles in link content to make sure new color is not hidden.
-                // Only done when applied to avoid losing state during preview.
-                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
-                    const selection = window.getSelection();
-                    const range = document.createRange();
-                    range.selectNodeContents(this.linkEl);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
-                    this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
-                }
 
-                let color = ev.data.color;
-                const colorNames = colorpicker.getColorNames();
-                const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
-                const colorClass = `${prefix}${color}`;
-                if (colorClasses.includes(colorClass)) {
-                    color = colorClass;
-                } else if (colorNames.includes(color)) {
-                    // Store as color value.
-                    color = getCSSVariableValue(color);
-                }
-                this.customColors[cssProperty] = color;
-                this.applyLinkToDom(this._getData());
-                if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
-                    this.options.wysiwyg.odooEditor.historyStep();
-                    this._updateOptionsUI();
-                }
-            });
+        if (!colorpicker) {
+            // As a fix, we made it possible to use this method always
+            // synchronously. This is just kept as compatibility.
+            // TODO Remove in master.
+            colorpicker = await this._addColorPicker(cssProperty);
         }
 
         // Update selected color.
@@ -337,22 +354,67 @@ const LinkTools = Link.extend({
         }
     },
     /**
+     * @private
+     * @param {string} cssProperty
+     */
+    async _addColorPicker(cssProperty) {
+        const prefix = this.PREFIXES[cssProperty];
+        const colorpicker = new ColorPaletteWidget(this, {
+            excluded: ['transparent_grayscale'],
+            // TODO remove me in master: editable is just a duplicate of
+            // $editable, should be reviewed with OWL later anyway.
+            editable: this.options.wysiwyg.odooEditor.editable,
+            $editable: $(this.options.wysiwyg.odooEditor.editable),
+            withGradients: cssProperty === 'background-color',
+        });
+        this.colorpickers[cssProperty] = colorpicker;
+        this.colorpickersPromises[cssProperty] = colorpicker.appendTo(document.createDocumentFragment());
+        await this.colorpickersPromises[cssProperty];
+        colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
+            // Reset color styles in link content to make sure new color is not hidden.
+            // Only done when applied to avoid losing state during preview.
+            if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this.linkEl);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'color');
+                this.options.wysiwyg.odooEditor.execCommand('applyColor', '', 'backgroundColor');
+            }
+
+            let color = ev.data.color;
+            const colorNames = colorpicker.getColorNames();
+            const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
+            const colorClass = `${prefix}${color}`;
+            if (colorClasses.includes(colorClass)) {
+                color = colorClass;
+            } else if (colorNames.includes(color)) {
+                // Store as color value.
+                color = getCSSVariableValue(color);
+            }
+            this.customColors[cssProperty] = color;
+            this.applyLinkToDom(this._getData());
+            if (['custom_color_picked', 'color_picked'].includes(ev.name)) {
+                this.options.wysiwyg.odooEditor.historyStep();
+                this._updateOptionsUI();
+            }
+        });
+        return colorpicker;
+    },
+    /**
      * Add hint to the classes of the link and button.
      */
     _addHintClasses () {
-        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
-        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
     /**
      * Remove hint to the classes of the link and button.
      */
     _removeHintClasses () {
-        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
         $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
         this.$button.removeClass('active');
-        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
 
     //--------------------------------------------------------------------------
@@ -368,15 +430,6 @@ const LinkTools = Link.extend({
         const $target = $(ev.target);
         if ($target.closest('[name="link_border_style"]').length) {
             return;
-        }
-        if ($target.closest('[name="link_style_color"]')) {
-            // Reset custom styles when changing link style.
-            this.$link.css('color', '');
-            this.$link.css('background-color', '');
-            this.$link.css('background-image', '');
-            this.$link.css('border-width', '');
-            this.$link.css('border-style', '');
-            this.$link.css('border-color', '');
         }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);
@@ -433,8 +486,35 @@ const LinkTools = Link.extend({
     __onURLInput() {
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._syncContent();
         this._adaptPreview();
         this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+    },
+    /**
+     * If content is equal to previous URL, update it to match current URL.
+     *
+     * @private
+     */
+    _syncContent() {
+        const previousUrl = this._link.getAttribute('href');
+        if (!previousUrl) {
+            return;
+        }
+        const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
+        const content = this._link.innerText;
+        if (content === previousUrl || content === protocolLessPrevUrl) {
+            const newUrl = this.el.querySelector('input[name="url"]').value;
+            const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
+            const newContent = content.replace(protocolLessPrevUrl, protocolLessNewUrl);
+            this._observer.disconnect();
+            // Update link content with `force: true` otherwise it would fail if
+            // new content matches `originalText`. The `url` parameter is set to
+            // an empty string so that the link's content is set to the empty
+            // string if `newContent` has no length.
+            this._updateLinkContent(this.$link, { content: newContent, url: '' }, { force: true });
+            this._setLinkContent = false;
+            this._observer.observe(this._link, this._observerOptions);
+        }
     },
 });
 

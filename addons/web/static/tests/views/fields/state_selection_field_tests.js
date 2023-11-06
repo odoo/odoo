@@ -537,4 +537,62 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["write"]);
         assert.hasClass(target.querySelector(".o_field_state_selection span"), "o_status_green");
     });
+
+    QUnit.test(
+        "StateSelectionField - auto save record when field toggled",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="selection" widget="state_selection"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 1,
+                mockRPC(_route, { method }) {
+                    if (method === "write") {
+                        assert.step("write");
+                    }
+                },
+            });
+
+            await click(target, ".o_field_widget.o_field_state_selection .o_status");
+            await click(target, ".dropdown-menu .dropdown-item:last-child");
+            assert.verifySteps(["write"]);
+        }
+    );
+
+    QUnit.test(
+        "StateSelectionField -  prevent auto save with autosave option",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="selection" widget="state_selection" options="{'autosave': False}"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 1,
+                mockRPC(_route, { method }) {
+                    if (method === "write") {
+                        assert.step("write");
+                    }
+                },
+            });
+
+            await click(target, ".o_field_widget.o_field_state_selection .o_status");
+            await click(target, ".dropdown-menu .dropdown-item:last-child");
+            assert.verifySteps([]);
+        }
+    );
 });

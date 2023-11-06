@@ -57,9 +57,15 @@ export class ImageField extends Component {
         let style = "";
         if (this.props.width) {
             style += `max-width: ${this.props.width}px;`;
+            if (!this.props.height) {
+                style += `height: auto; max-height: 100%;`;
+            }
         }
         if (this.props.height) {
             style += `max-height: ${this.props.height}px;`;
+            if (!this.props.width) {
+                style += `width: auto; max-width: 100%;`;
+            }
         }
         return style;
     }

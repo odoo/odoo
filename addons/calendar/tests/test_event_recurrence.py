@@ -7,6 +7,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests.common import TransactionCase
+from freezegun import freeze_time
 
 
 class TestRecurrentEvents(TransactionCase):
@@ -307,6 +308,51 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         # after channel is created, all other events should have the same channel
         self.assertEqual(detached_events[0].videocall_channel_id.id, self.event.videocall_channel_id.id)
 
+    @freeze_time('2023-03-27')
+    def test_backward_pass_dst(self):
+        """
+            When we apply the rule to compute the period of the recurrence,
+            we take an earlier date (in `_get_start_of_period` method).
+            However, it is possible that this earlier date has a different DST.
+            This causes time difference problems.
+        """
+        # In Europe/Brussels: 26 March 2023 from winter to summer (from no DST to DST)
+        # We are in the case where we create a recurring event after the time change (there is the DST).
+        timezone = 'Europe/Brussels'
+        tz = pytz.timezone(timezone)
+        dt = tz.localize(datetime(2023, 3, 27, 9, 0, 00)).astimezone(pytz.utc).replace(tzinfo=None)
+        self.event.start = dt
+        self.event.stop = dt + relativedelta(hours=1)
+
+        # Check before apply the recurrence
+        self.assertEqual(self.event.start, datetime(2023, 3, 27, 7, 0, 00)) # Because 2023-03-27 in Europe/Brussels is UTC+2
+
+        self.event._apply_recurrence_values({
+            'rrule_type': 'monthly', # Because we will take the first day of the month (jump back)
+            'interval': 1,
+            'end_type': 'count',
+            'count': 2, # To have the base event and the unique recurrence event
+            'month_by': 'date',
+            'day': 27,
+            'event_tz': timezone,
+        })
+
+        # What we expect:
+        #   - start date of base event: datetime(2023, 3, 27, 7, 0, 00)
+        #   - start date of the unique recurrence event: datetime(2023, 4, 27, 7, 0, 00)
+
+        # With the FIX, we replace the following lines with
+        # `events = self.event.recurrence_id.calendar_event_ids`
+        recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
+        events = recurrence.calendar_event_ids
+        self.assertEqual(len(events), 2, "It should have 2 events in the recurrence")
+        self.assertIn(self.event, events)
+
+        self.assertEventDates(events, [
+            (datetime(2023, 3, 27, 7, 00), datetime(2023, 3, 27, 8, 00)),
+            (datetime(2023, 4, 27, 7, 00), datetime(2023, 4, 27, 8, 00)),
+        ])
+
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -404,6 +450,19 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 9, 1, 0), datetime(2019, 11, 12, 18, 0)),
         ])
 
+    def test_shift_stop_all(self):
+        # testing the case where we only want to update the stop time
+        event = self.events[0]
+        event.write({
+            'recurrence_update': 'all_events',
+            'stop': event.stop + relativedelta(hours=1),
+        })
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2019, 10, 22, 2, 0), datetime(2019, 10, 24, 19, 0)),
+            (datetime(2019, 10, 29, 2, 0), datetime(2019, 10, 31, 19, 0)),
+            (datetime(2019, 11, 5, 2, 0), datetime(2019, 11, 7, 19, 0)),
+        ])
+
     def test_change_week_day_rrule(self):
         recurrence = self.events.recurrence_id
         recurrence.rrule = 'FREQ=WEEKLY;COUNT=3;BYDAY=WE' # from TU to WE
@@ -441,7 +500,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 2, 1, 0), datetime(2019, 11, 4, 18, 0)),
             (datetime(2019, 11, 9, 1, 0), datetime(2019, 11, 11, 18, 0))
         ])
-        self.assertFalse(outlier.exists(), 'The outlier should have been deleted')
+        self.assertTrue(outlier.exists(), 'The outlier should have its date and time updated according to the change.')
 
     def test_update_recurrence_future(self):
         event = self.events[1]
@@ -463,11 +522,37 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
         events = event.recurrence_id.calendar_event_ids.sorted('start')
         self.assertEqual(events[0], self.events[1], "Events on Tuesdays should not have changed")
-        self.assertEqual(events[2], self.events[2], "Events on Tuesdays should not have changed")
+        self.assertEqual(events[2].start, self.events[2].start, "Events on Tuesdays should not have changed")
         self.assertNotEqual(events.recurrence_id, self.recurrence, "Events should no longer be linked to the original recurrence")
         self.assertEqual(events.recurrence_id.count, 4, "The new recurrence should have 4")
         self.assertTrue(event.recurrence_id.tue)
         self.assertTrue(event.recurrence_id.fri)
+
+    def test_update_name_future(self):
+        # update regular event (not the base event)
+        old_events = self.events[1:]
+        old_events[0].write({
+            'name': 'New name',
+            'recurrence_update': 'future_events',
+            'rrule_type': 'daily',
+            'count': 5,
+        })
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', self.events[0].recurrence_id.id)])
+        self.assertTrue(self.events[0].recurrence_id.exists())
+        self.assertEqual(new_recurrence.count, 5)
+        self.assertFalse(any(old_event.active for old_event in old_events - old_events[0]))
+        for event in new_recurrence.calendar_event_ids:
+            self.assertEqual(event.name, 'New name')
+
+        # update the base event
+        new_events = new_recurrence.calendar_event_ids.sorted('start')
+        new_events[0].write({
+            'name': 'Old name',
+            'recurrence_update': 'future_events'
+        })
+        self.assertTrue(new_recurrence.exists())
+        for event in new_recurrence.calendar_event_ids:
+            self.assertEqual(event.name, 'Old name')
 
     def test_update_recurrence_all(self):
         self.events[1].write({
@@ -558,6 +643,21 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 2, 8, 0), datetime(2019, 11, 5, 18, 0)),
             (datetime(2019, 11, 9, 8, 0), datetime(2019, 11, 12, 18, 0)),
         ])
+
+    def test_update_name_all(self):
+        old_recurrence = self.events[0].recurrence_id
+        old_events = old_recurrence.calendar_event_ids - self.events[0]
+        self.events[0].write({
+            'name': 'New name',
+            'recurrence_update': 'all_events',
+            'count': '5'
+        })
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', old_recurrence.id)])
+        self.assertFalse(old_recurrence.exists())
+        self.assertEqual(new_recurrence.count, 5)
+        self.assertFalse(any(old_event.active for old_event in old_events))
+        for event in new_recurrence.calendar_event_ids:
+            self.assertEqual(event.name, 'New name')
 
     def test_archive_recurrence_all(self):
         self.events[1].action_mass_archive('all_events')

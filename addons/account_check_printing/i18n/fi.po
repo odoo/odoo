@@ -12,15 +12,16 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,6 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid " : Check Number Sequence"
@@ -43,7 +45,7 @@ msgstr " : Shekkinumeron järjestys"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr ""
+msgstr "Säädä tehtyjen šekkien marginaalia, jotta ne mahtuvat tulostimeen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -59,13 +61,13 @@ msgstr "Peruuta"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "Šekin ulkoasu"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "Šekin vasen marginaali"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
@@ -80,7 +82,7 @@ msgstr "Shekkien tulostus"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "Šekin oikea marginaali"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -91,13 +93,14 @@ msgstr "Shekkijärjestys"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "Šekin ylämarginaali"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Šekkien numerot voivat koostua vain numeroista"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -121,6 +124,7 @@ msgid "Checks numbering sequence."
 msgstr "Shekkien numerointijärjestys"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
@@ -163,6 +167,7 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
@@ -175,6 +180,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -225,12 +231,18 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Käsikirja: Maksa tai saat maksun millä tahansa Odoon ulkopuolisella menetelmällä.\n"
+"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma maksutapansa. Pyydä maksutapahtuma kortilla/ kortille yhteistyökumppanin tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
+"Tarkista: Maksa laskut sekillä ja tulosta se Odoosta.\n"
+"Erätalletus: Kerää useita asiakasshekkejä kerralla generoimalla ja lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on välttämätön.\n"
+"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto pankkiin. Moduuli account_sepa on välttämätön.\n"
+"SEPA-suoraveloitus: Saat maksun SEPA-alueella yhteistyökumppanisi sinulle antaman valtuutuksen avulla. Moduuli account_sepa on välttämätön.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Monen sivun šekin kanta"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -239,11 +251,12 @@ msgid "Next Check Number"
 msgstr "Seuraava shekkinumero"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "Seuraavassa šekin numerossa pitäisi olla vain numeroita."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -268,6 +281,7 @@ msgid "Payments"
 msgstr "Maksut"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
@@ -301,6 +315,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
+"Suositeltava maksutapa tälle toimittajalle maksettaessa. Käytetään "
+"toimittajan laskujen suodattamiseen suositellun maksutavan mukaan "
+"massamaksujen rekisteröimiseksi. Käyttötapaukset: luo pankkitiedostoja "
+"eräsiirtoille, tarkista ajoja."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -321,9 +339,10 @@ msgstr "Tulosta shekit"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Tulosta päivämäärätarrat"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -339,7 +358,7 @@ msgstr "Kirjaa maksu"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "Oikea marginaali"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -348,6 +367,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"Valitse muoto, joka vastaa šekkipaperia, jolle tulostat šekit.\n"
+"Voit poistaa tulostusominaisuuden käytöstä valitsemalla Ei mitään."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -360,22 +381,34 @@ msgid "Sequence number of the next printed check."
 msgstr "Seuraavan tulostettavan shekin järjestysnumero"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
+msgid "Show Check Number"
+msgstr "Näytä šekin numero"
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Šekin ulkoasun määrittelyssä tapahtui virhe. Valitse toinen ulkoasu "
+"Laskutuksen tai Kirjanpidon sovelluksessa ja yritä uudelleen."
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Seuraavat numerot ovat jo käytössä:\n"
+"%s"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -403,6 +436,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"Tämä valinta mahdollistaa šekkien kantojen yksityiskohtien tulostamisen "
+"usealle sivulle, jos ne eivät mahdu yhdelle sivulle."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -411,6 +446,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Tämän vaihtoehdon avulla voit tulostaa päivämäärätarran shekille CPA:n mukaisesti.\n"
+"Poista tämä käytöstä, jos esipainetussa šekissä on päivämäärätarra."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -427,12 +464,15 @@ msgstr "Poistä lähetys-merkintä"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Mitätöi šekki"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Sinun on valittava šekin asettelu. Tätä varten siirry Laskutus-tai "
+"kirjanpitoasetuksiin, etsi \"Šekin ulkoasu\" ja aseta se."

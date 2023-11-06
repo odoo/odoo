@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
 # Martin Trigaux, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # sixsix six, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
+# Szabolcs Rádi, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: sixsix six, 2022\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Last-Translator: Szabolcs Rádi, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,11 +30,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Rendelését rögzítettük.</i> Kérjük fáradjon be üzletünkbe és hajtsa végre"
+" a termékek ellenértékének kifizetését."
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Átvétel üzletben)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -48,7 +51,7 @@ msgstr ""
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Állítsa be az Átvételi Pontokat"
 
 #. module: website_sale_picking
 #. openerp-web
@@ -58,48 +61,50 @@ msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"Ha úgy gondolja, hogy tévedésről van szó, forduljon a webhely "
+"adminisztrátorához."
 
 #. module: website_sale_picking
 #. openerp-web
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
-msgstr ""
+msgstr "Nem található elérhető fizetési mód."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
-msgstr ""
+msgstr "Üzletben"
 
 #. module: website_sale_picking
 #: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Átvétel üzletben"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.product,description:website_sale_picking.onsite_delivery_product
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
-msgstr ""
+msgstr "Fizessen az üzletben az átvétel alkalmával"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Fizetési szolgáltató"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_res_config_settings__picking_site_ids
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Átvételi pontok"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Átvétel üzletben"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -115,7 +120,7 @@ msgstr "Szállítási módok"
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr ""
+msgstr "Az átvételi helynek és a raktárnak ugyanahhoz a céghez kell tartoznia"
 
 #. module: website_sale_picking
 #: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
@@ -137,7 +142,7 @@ msgstr "Honlap"
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
+msgstr "Nem tud a helyszínen fzetni, ha az átvétel nem ott történik"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -152,9 +157,9 @@ msgstr "A fizetés törlésre került."
 #. module: website_sale_picking
 #: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr ""
+msgstr "A fizetése sikeres volt. Köszönjük!"
 
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Átvétel üzletben] My Shop 1"

@@ -119,7 +119,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'price_unit': 100.0,
+                'price_unit': 150.0,
                 'tax_ids': []
             })]
         })
@@ -138,8 +138,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         self.assertEqual(stub_pages, [[{
             'due_date': '01/01/2016',
             'number': invoice.name,
-            'amount_total': f'${NON_BREAKING_SPACE}100.00',
-            'amount_residual': f'${NON_BREAKING_SPACE}50.00',
+            'amount_total': f'${NON_BREAKING_SPACE}150.00',
+            'amount_residual': f'${NON_BREAKING_SPACE}75.00',
             'amount_paid': f'150.000{NON_BREAKING_SPACE}☺',
             'currency': invoice.currency_id,
         }]])
@@ -174,3 +174,25 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertEqual(set(payments.mapped('check_number')), {str(x) for x in range(11111, 11111 + nb_invoices_to_test)})
+
+    def test_print_great_pre_number_check(self):
+        """
+        Make sure we can use integer of more than 2147483647 in check sequence
+         limit of `integer` type in psql: https://www.postgresql.org/docs/current/datatype-numeric.html
+        """
+        vals = {
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'amount': 100.0,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_line_id': self.payment_method_line_check.id,
+        }
+        payment = self.env['account.payment'].create(vals)
+        payment.action_post()
+        self.assertTrue(payment.write({'check_number': '2147483647'}))
+        self.assertTrue(payment.write({'check_number': '2147483648'}))
+
+        payment_2 = self.env['account.payment'].create(vals)
+        payment_2.action_post()
+        action_window = payment_2.print_checks()
+        self.assertEqual(action_window['context']['default_next_check_number'], '2147483649', "Check number should have been incremented without error.")

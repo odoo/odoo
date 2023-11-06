@@ -1144,3 +1144,27 @@ class TestTax(TestTaxCommon):
             ],
             compute_all_res
         )
+
+    def test_parse_name_search(self):
+        list_ten_fixed_tax = self.env["account.tax"]
+        ten_fixed_tax = self.env["account.tax"].create(
+            {"name": "Ten Fixed tax", "amount_type": "fixed", "amount": 10}
+        )
+        list_ten_fixed_tax |= ten_fixed_tax
+        ten_fixed_tax_tix = self.env["account.tax"].create(
+            {"name": "Ten Fixed tax tix", "amount_type": "fixed", "amount": 10}
+        )
+        list_ten_fixed_tax |= ten_fixed_tax_tix
+
+        self.assertListEqual(
+            [x[0] for x in self.env["account.tax"].name_search("tix")],
+            list_ten_fixed_tax.ids,
+        )
+        self.assertListEqual(
+            [x[0] for x in self.env["account.tax"].name_search("\"tix\"")],
+            ten_fixed_tax_tix.ids,
+        )
+        self.assertListEqual(
+            [x[0] for x in self.env["account.tax"].name_search("Ten \"tix\"")],
+            ten_fixed_tax_tix.ids,
+        )

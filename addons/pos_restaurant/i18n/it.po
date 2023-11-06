@@ -5,16 +5,17 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -94,7 +95,7 @@ msgstr "Aggiungi pulsante"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "Aggiungi note interne nelle righe degli ordini per la cucina"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -121,7 +122,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Consenti divisione del conto"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -131,7 +132,7 @@ msgstr "Permetti note interne personalizzate sulle linee d'ordine."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Permetti di stampare lo scontrino prima del pagamento"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -232,7 +233,7 @@ msgstr "Divisione del conto"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "Azione bloccata"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -250,6 +251,20 @@ msgstr "Blu"
 #, python-format
 msgid "CANCELLED"
 msgstr "ANNULLATO"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash %s"
+msgstr "Contanti %s"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "Monete bar"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -343,6 +358,8 @@ msgstr "Bevande"
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
 msgstr ""
+"A causa di un errore di connessione, gli ordini non sono stati "
+"sincronizzati."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -368,7 +385,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Stampa scontrino in anticipo"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -426,7 +443,7 @@ msgstr "Piani e tavoli"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Mappa piani e tavoli"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -544,12 +561,12 @@ msgstr "Lasciare aperto"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr ""
+msgstr "Note cucina"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Printers"
-msgstr ""
+msgstr "Stampanti cucina"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -575,7 +592,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Ultimo stato di stampa dell'ordine"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -627,7 +644,7 @@ msgstr "Panino con mozzarella"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Multiprint Resume"
-msgstr ""
+msgstr "Ripresa multistampa"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -800,32 +817,32 @@ msgstr "Sessione punto vendita"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Note ordini Iface POS"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "POS stampa conto Iface"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "POS divisione conto Iface"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "POS stampante ordine"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "POS gestione tavoli"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "POS Configura mancia dopo il pagamento"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -936,7 +953,7 @@ msgstr "Ristampa ricevute"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "Ristorante e bar"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1127,7 +1144,7 @@ msgstr "Tel:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "Il %s è già utilizzato in un'altra config. POS."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1142,7 +1159,7 @@ msgstr "Il numero di clienti che sono stati serviti da quest'ordine."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Colore di sfondo del piano in un formato compatibile con html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1218,6 +1235,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Questo ordine non è ancora sincronizzato con il server. Riprovare dopo aver "
+"controllato che sia sincronizzato."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1299,7 +1318,7 @@ msgstr "Impossibile eliminare il tavolo"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "Impossibile recuperare gli ordini"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1376,7 +1395,7 @@ msgstr "Giallo"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "Non è possibile inserire un numero superiore a %s"
 
 #. module: pos_restaurant
 #. odoo-python

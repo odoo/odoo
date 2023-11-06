@@ -3,8 +3,8 @@
 
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
-from odoo.tests import users
+from odoo.tests import tagged, users
+from odoo.tools import mute_logger
 
 
 @tagged('mail_followers')
@@ -41,6 +41,17 @@ class BaseFollowersTest(TestMailCommon):
         followed_after = test_record.search([('message_is_follower', '=', True)])
         self.assertTrue(test_record.message_is_follower)
         self.assertEqual(followed_before | test_record, followed_after)
+
+    def test_field_message_partner_ids(self):
+        test_record = self.test_record.with_user(self.user_employee)
+        partner = self.user_employee.partner_id
+        followed_before = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertFalse(partner in test_record.message_partner_ids)
+        self.assertNotIn(test_record, followed_before)
+        test_record.message_subscribe(partner_ids=[partner.id])
+        followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertTrue(partner in test_record.message_partner_ids)
+        self.assertEqual(followed_before + test_record, followed_after)
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
@@ -145,6 +156,7 @@ class BaseFollowersTest(TestMailCommon):
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
 
     @users('employee')
+    @mute_logger('odoo.models.unlink')
     def test_followers_inverse_message_partner(self):
         test_record = self.test_record.with_env(self.env)
         partner0, partner1, partner2, partner3 = self.env['res.partner'].create(
@@ -183,6 +195,7 @@ class BaseFollowersTest(TestMailCommon):
         test_record.write({'message_partner_ids': [(4, partner0.id), (4, partner1.id)]})
         self.assertEqual(test_record.message_follower_ids.partner_id, partner1)
 
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_followers_inverse_message_partner_access_rights(self):
         """ Make sure we're not bypassing security checks by setting a partner
         instead of a follower """
@@ -301,6 +314,7 @@ class AdvancedFollowersTest(TestMailCommon):
         """ Creator of records are automatically added as followers """
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
 
+    @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_inactive(self):
         """ Test inactive are not added as followers in automated subscription """
         self.test_track.user_id = False
@@ -316,6 +330,14 @@ class AdvancedFollowersTest(TestMailCommon):
         self.test_track.write({'user_id': self.user_admin.id})
         self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
         self.assertEqual(self.test_track.message_follower_ids.partner_id, self.user_employee.partner_id)
+
+        new_record = self.env['mail.test.track'].with_user(self.user_admin).create({
+            'name': 'Test',
+        })
+        self.assertFalse(new_record.message_partner_ids,
+                         'Filters out inactive partners')
+        self.assertFalse(new_record.message_follower_ids.partner_id,
+                         'Does not subscribe inactive partner')
 
     def test_auto_subscribe_post(self):
         """ People posting a message are automatically added as followers """
@@ -340,6 +362,7 @@ class AdvancedFollowersTest(TestMailCommon):
         })
         self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | self.user_admin.partner_id))
 
+    @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_defaults(self):
         """ Test auto subscription based on an container record. This mimics
         the behavior of addons like project and task where subscribing to
@@ -573,6 +596,7 @@ class RecipientsNotificationTest(TestMailCommon):
                                   partner_to_users={self.common_partner.id: self.user_2})
 
     @users('employee')
+    @mute_logger('odoo.models.unlink')
     def test_notification_unlink(self):
         """ Check that we unlink the created user_notification after unlinked the
         related document. """

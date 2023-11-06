@@ -8,14 +8,15 @@
             t-ref="root"
         >
             <FormRenderer class="'o_form_view o_xxs_form_view p-0'" record="props.record" archInfo="props.archInfo" />
-            <div class="d-flex">
-                <button class="btn btn-primary o_kanban_add me-1 text_truncate" t-on-click="() => this.validate('add')">
+            <div class="d-flex flex-wrap justify-content-end gap-1">
+                <button class="btn btn-primary o_kanban_add me-1" t-on-click="() => this.validate('add')">
                     Add
                 </button>
-                <button class="btn btn-primary o_kanban_edit me-1 text_truncate" t-on-click="() => this.validate('edit')">
+                <button class="btn btn-primary o_kanban_edit me-1" t-on-click="() => this.validate('edit')">
                     Edit
                 </button>
-                <button class="btn btn-secondary o_kanban_cancel ms-auto text-600" t-on-click="() => this.cancel(true)">
+                <span class="flex-grow-1"></span>
+                <button class="btn btn-secondary o_kanban_cancel text-600" t-on-click="() => this.cancel(true)">
                     <i class="fa fa-trash" />
                 </button>
             </div>

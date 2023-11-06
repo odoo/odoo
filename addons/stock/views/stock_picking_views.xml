@@ -5,7 +5,7 @@
             <field name="model">stock.picking</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5">
+                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5" quick_add="False">
                     <field name="partner_id" filters="1"/>
                     <field name="origin"/>
                     <field name="picking_type_id"/>
@@ -280,9 +280,9 @@
                                     <field name="product_packaging_id" groups="product.group_stock_packaging"/>
                                     <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" 
-                                        attrs="{'invisible': ['|', ('forecast_availability', '&lt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                        attrs="{'invisible': ['|', '&amp;', ('reserved_availability', '=', 0), ('forecast_availability', '&lt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" 
-                                        attrs="{'invisible': ['|', ('forecast_availability', '&gt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                        attrs="{'invisible': ['|', '|', ('reserved_availability', '!=', 0), ('forecast_availability', '&gt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
                                     <field name="forecast_expected_date" invisible="1"/>
                                     <field name="forecast_availability" string="Reserved"
                                         attrs="{'column_invisible': ['|', '|', ('parent.state', 'in', ['draft', 'done']), ('parent.picking_type_code', '!=', 'outgoing'), ('parent.immediate_transfer', '=', True)]}" widget="forecast_widget"/>
@@ -300,7 +300,7 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
-                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
                                             width="0.1"
@@ -373,7 +373,7 @@
                         string="Package"
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
-                    <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
+                    <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>

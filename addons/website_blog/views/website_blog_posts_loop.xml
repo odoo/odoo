@@ -66,7 +66,7 @@ according to the enabled options.
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-calendar-o me-2 text-muted"/>
                     <t t-esc="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
-                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1">&#215;</a>
                 </span>
                 <hr class="mt-2"/>
             </div>
@@ -98,7 +98,7 @@ according to the enabled options.
             <!-- Loop through posts: exclude the first one if already displayed as top banner -->
             <t t-foreach="posts" t-as="blog_post">
                 <!-- Assign 'colWidth': 'col-12' is default for List-View and mobile -->
-                <div t-attf-class="pb-4 col-12 #{colWidth}" t-cache="blog_post,opt_blog_list_view,opt_blog_readable">
+                <div t-attf-class="pb-4 col-12 #{colWidth}" t-cache="blog_post,opt_blog_list_view,opt_blog_readable,active_tag_ids">
                     <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design else ''}" name="blog_post">
                         <!-- List-View Design -->
                         <t t-if="opt_blog_list_view">

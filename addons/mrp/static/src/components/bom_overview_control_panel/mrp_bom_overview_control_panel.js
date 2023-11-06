@@ -17,7 +17,7 @@ export class BomOverviewControlPanel extends Component {
     //---- Handlers ----
 
     updateQuantity(ev) {
-        const newVal = isNaN(ev.target.value) ? 1 : parseInt(ev.target.value);
+        const newVal = isNaN(ev.target.value) ? 1 : parseFloat(parseFloat(ev.target.value).toFixed(this.precision));
         this.props.changeBomQuantity(newVal);
     }
 
@@ -30,6 +30,10 @@ export class BomOverviewControlPanel extends Component {
 
     clickUnfold() {
         this.env.overviewBus.trigger("unfold-all");
+    }
+
+    get precision() {
+        return this.props.precision;
     }
 }
 
@@ -54,6 +58,7 @@ BomOverviewControlPanel.props = {
     changeVariant: Function,
     changeBomQuantity: Function,
     changeDisplay: Function,
+    precision: Number,
 };
 BomOverviewControlPanel.defaultProps = {
     variants: {},

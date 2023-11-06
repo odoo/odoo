@@ -6,14 +6,34 @@ import re
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
-from PyPDF2 import PdfFileWriter, PdfFileReader
-from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 from zlib import compress, decompress
-from PIL import Image
+from PIL import Image, PdfImagePlugin
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
+try:
+    # class were renamed in PyPDF2 > 2.0
+    # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
+    from PyPDF2 import PdfReader
+    import PyPDF2
+    # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
+    # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
+    class PdfFileReader(PdfReader):
+        def __init__(self, *args, **kwargs):
+            if "strict" not in kwargs and len(args) < 2:
+                kwargs["strict"] = True  # maintain the default
+            kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
+            super().__init__(*args, **kwargs)
+
+    PyPDF2.PdfFileReader = PdfFileReader
+    from PyPDF2 import PdfFileWriter, PdfFileReader
+    PdfFileWriter._addObject = PdfFileWriter._add_object
+except ImportError:
+    from PyPDF2 import PdfFileWriter, PdfFileReader
+
+from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 
 try:
     from fontTools.ttLib import TTFont
@@ -27,6 +47,9 @@ DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r'^\w+/[\w-]+$')
 REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
+
+# Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
+PdfImagePlugin.__name__
 
 # make sure values are unwrapped by calling the specialized __getitem__
 def _unwrapping_get(self, key, default=None):
@@ -82,6 +105,18 @@ def rotate_pdf(pdf):
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
+
+
+def to_pdf_stream(attachment) -> io.BytesIO:
+    """Get the byte stream of the attachment as a PDF."""
+    stream = io.BytesIO(attachment.raw)
+    if attachment.mimetype == 'application/pdf':
+        return stream
+    elif attachment.mimetype.startswith('image'):
+        output_stream = io.BytesIO()
+        Image.open(stream).convert("RGB").save(output_stream, format="pdf")
+        return output_stream
+    _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
 
 
 def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
@@ -395,7 +430,7 @@ class OdooPdfFileWriter(PdfFileWriter):
                 DictionaryObject({
                     NameObject('/CheckSum'): createStringObject(md5(attachment['content']).hexdigest()),
                     NameObject('/ModDate'): createStringObject(datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)),
-                    NameObject('/Size'): NameObject(str(len(attachment['content']))),
+                    NameObject('/Size'): NameObject(f"/{len(attachment['content'])}"),
                 }),
         })
         if attachment.get('subtype'):

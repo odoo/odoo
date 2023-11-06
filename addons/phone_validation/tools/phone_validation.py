@@ -15,7 +15,7 @@ try:
 
     def phone_parse(number, country_code):
         try:
-            phone_nbr = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
+            phone_nbr = phonenumbers.parse(number, region=country_code or None, keep_raw_input=True)
         except phonenumbers.phonenumberutil.NumberParseException as e:
             raise UserError(_('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e)))
 

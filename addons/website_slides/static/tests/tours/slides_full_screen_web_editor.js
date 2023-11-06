@@ -25,11 +25,8 @@ import wTourUtils from 'website.tour_utils';
     trigger: 'iframe .o_wslides_fs_main',
     run: function () {} // check we land on the fullscreen view
 },
-wTourUtils.clickOnEdit()
+...wTourUtils.clickOnEditAndWaitEditMode()
 , {
     trigger: 'iframe .o_wslides_lesson_main',
     run: function () {} // check we are redirected on the detailed view
-}, {
-    trigger: 'body.editor_has_snippets',
-    run: function () {} // check the editor is automatically opened on the detailed view
 }]);

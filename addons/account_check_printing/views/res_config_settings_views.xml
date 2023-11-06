@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="print_bills_payment" position="after">
-                <div class="content-group">
+                <div class="content-group" attrs="{'invisible': [('module_account_check_printing', '=', False)]}">
                     <div class="row mt16">
                         <label for="account_check_printing_layout" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_layout" required="True"/>
                     </div>
                     <div class="row">
                         <label for="account_check_printing_multi_stub" class="col-lg-4 o_light_label"/>
-                        <field name="account_check_printing_multi_stub"/>
+                        <field name="account_check_printing_multi_stub" class="w-50"/>
                     </div>
                     <div class="row">
                         <label for="account_check_printing_margin_top" class="col-lg-4 o_light_label"/>

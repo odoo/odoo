@@ -168,14 +168,16 @@ class TestEventSale(TestEventSaleCommon):
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('phone')),
-            set(['+32456111111', self.event_customer.phone])
+            set(['+32456111111', self.event_customer._phone_format(self.event_customer.phone)])
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer.mobile])
+            set(['+32456222222', self.event_customer._phone_format(self.event_customer.mobile)])
         )
-        for field in ['name', 'email', 'phone', 'mobile']:
+        for field in ['name', 'email']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
+        for field in ['phone', 'mobile']:
+            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(self.event_customer[field]))
 
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------
@@ -338,7 +340,14 @@ class TestEventSale(TestEventSaleCommon):
 
         currency_VEF = _prepare_currency(self, 'VEF')
         currency_USD = _prepare_currency(self, 'USD')
-        self.env.user.company_id.currency_id = currency_USD
+
+        company_test = self.env['res.company'].create({
+            'name': 'TestCompany',
+            'country_id': self.env.ref('base.be').id,
+            'currency_id': currency_USD.id,
+        })
+        self.env.user.company_ids += company_test
+        self.env.user.company_id = company_test
 
         pricelist_USD = self.env['product.pricelist'].create({
             'name': 'pricelist_USD',

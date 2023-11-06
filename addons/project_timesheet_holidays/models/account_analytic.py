@@ -10,7 +10,7 @@ class AccountAnalyticLine(models.Model):
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request', copy=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
-    task_id = fields.Many2one(domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True),"
+    task_id = fields.Many2one(domain="[('project_id.allow_timesheets', '=', True),"
         "('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]")
 
     @api.ondelete(at_uninstall=False)
@@ -27,7 +27,10 @@ class AccountAnalyticLine(models.Model):
                 raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return super().create(vals_list)
 
+    def _check_can_update_timesheet(self):
+        return self.env.su or not self.filtered('holiday_id')
+
     def write(self, vals):
-        if not self.env.su and self.filtered('holiday_id'):
+        if not self._check_can_update_timesheet():
             raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
         return super().write(vals)

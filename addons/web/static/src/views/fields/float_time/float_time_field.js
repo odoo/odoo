@@ -28,7 +28,11 @@ export class FloatTimeField extends Component {
 FloatTimeField.template = "web.FloatTimeField";
 FloatTimeField.props = {
     ...standardFieldProps,
+    inputType: { type: String, optional: true },
     placeholder: { type: String, optional: true },
+};
+FloatTimeField.defaultProps = {
+    inputType: "text",
 };
 
 FloatTimeField.displayName = _lt("Time");
@@ -37,6 +41,7 @@ FloatTimeField.supportedTypes = ["float"];
 FloatTimeField.isEmpty = () => false;
 FloatTimeField.extractProps = ({ attrs }) => {
     return {
+        inputType: attrs.options.type,
         placeholder: attrs.placeholder,
     };
 };

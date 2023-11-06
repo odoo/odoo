@@ -2,7 +2,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger, float_round
 from odoo import fields
 
@@ -2408,3 +2408,171 @@ class TestStockFlow(TestStockCommon):
         in_stock_picking.button_validate()
 
         self.assertEqual(out_move.move_line_ids.reserved_qty, 1.0, 'The out move should be reserved')
+
+    def test_assign_done_sml_and_validate_it(self):
+        """
+        From the detailed operations wizard, create a SML that has a
+        sub-location as destination location. After its creation, the
+        destination location should not changed. Same when marking the picking
+        as done
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        sub_loc = stock_location.child_ids[0]
+
+        self.productA.tracking = 'lot'
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+        receipt = receipt_form.save()
+
+        with Form(receipt.move_ids, view='stock.view_stock_move_nosuggest_operations') as move_form:
+            with move_form.move_line_nosuggest_ids.new() as sml:
+                sml.location_dest_id = sub_loc
+                sml.lot_name = '123'
+                sml.qty_done = 10
+
+        done_sml = receipt.move_ids.move_line_ids.filtered(lambda sml: sml.qty_done > 0)
+        self.assertEqual(done_sml.location_dest_id, sub_loc)
+
+        receipt.button_validate()
+
+        self.assertEqual(receipt.move_ids.move_line_ids.location_dest_id, sub_loc)
+
+    def test_multi_picking_validation(self):
+        """ This test ensures that the validation of 2 pickings is successfull even if they have different operation types """
+
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_reception_report').id)]})
+        picking_A, picking_B = self.PickingObj.create([{
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location
+        }, {
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        }])
+        self.MoveObj.create([{
+            'name': self.DozA.name,
+            'product_id': self.DozA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.DozA.uom_id.id,
+            'quantity_done': 10,
+            'picking_id': picking_A.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location
+        }, {
+            'name': self.DozA.name,
+            'product_id': self.DozA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.DozA.uom_id.id,
+            'quantity_done': 10,
+            'picking_id': picking_B.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location
+        }])
+        pickings = picking_A | picking_B
+        pickings.button_validate()
+        self.assertTrue(all(pickings.mapped(lambda p: p.state == 'done')), "Pickings should be set as done")
+
+    def test_pickings_on_duplicated_operation_types(self):
+        """ Ensure we can create pickings on duplicated operation types without collision in names
+            Steps:
+            - Create a picking on an operation type
+            - Duplicate the operation type
+            - Create another picking on the duplicated operation type
+        """
+        self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        duplicated_picking_type = self.env['stock.picking.type'].browse(self.picking_type_in).copy()
+        picking_2 = self.PickingObj.create({
+            'picking_type_id': duplicated_picking_type.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        # trigger SQL constraints
+        self.PickingObj.flush_model()
+        self.assertEqual(self.PickingObj.search_count([('name', '=', picking_2.name)]), 1)
+
+
+@tagged('-at_install', 'post_install')
+class TestStockFlowPostInstall(TestStockCommon):
+
+    def test_last_delivery_partner_field_on_lot(self):
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        partner = self.env['res.partner'].create({'name': 'Super Partner'})
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn = self.env['stock.lot'].create({
+            'name': 'super_sn',
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=sn)
+
+        delivery = self.env['stock.picking'].create({
+            'partner_id': partner.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+        delivery.move_ids.move_line_ids.qty_done = 1
+        delivery.button_validate()
+
+        self.assertEqual(sn.last_delivery_partner_id, partner)
+
+    def test_several_sm_with_same_product_and_backorders(self):
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        move01, move02 = self.env['stock.move'].create([{
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'description_picking': desc,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        } for desc in ['Lorem', 'Ipsum']])
+
+        picking.action_confirm()
+
+        move01.quantity_done = 12
+        move02.quantity_done = 8
+
+        res = picking.button_validate()
+        self.assertIsInstance(res, dict)
+        self.assertEqual(res.get('res_model'), 'stock.backorder.confirmation')
+
+        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.move_ids.product_uom_qty, 2)
+        self.assertEqual(backorder.move_ids.description_picking, 'Ipsum')

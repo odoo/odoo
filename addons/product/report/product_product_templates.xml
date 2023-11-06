@@ -109,7 +109,7 @@
                             </div>
                         </t>
                     </div>
-                    <div class="o_label_name" style="line-height: 100%;height: 2.1em;background-color: transparent;padding-top: 1px;">
+                    <div class="o_label_name" style="line-height: 100%;background-color: transparent;padding-top: 1px;">
                         <span t-if="product.is_product_variant" t-field="product.display_name"/>
                         <span t-else="" t-field="product.name"/>
                     </div>
@@ -152,7 +152,7 @@
                                 <t t-foreach="range(rows)" t-as="row">
                                     <tr>
                                         <t t-foreach="range(columns)" t-as="column">
-                                            <t t-if="not current_quantity and quantity">
+                                            <t t-if="not current_quantity and quantity and not (current_data and current_data[1])">
                                                 <t t-set="current_data" t-value="quantity.popitem()"/>
                                                 <t t-set="product" t-value="current_data[0]"/>
                                                 <t t-set="barcode_and_qty" t-value="current_data[1].pop()"/>

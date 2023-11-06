@@ -169,7 +169,7 @@ class ResourceCalendar(models.Model):
             company_id = res.get('company_id', self.env.company.id)
             company = self.env['res.company'].browse(company_id)
             company_attendance_ids = company.resource_calendar_id.attendance_ids
-            if company_attendance_ids:
+            if not company.resource_calendar_id.two_weeks_calendar and company_attendance_ids:
                 res['attendance_ids'] = [
                     (0, 0, {
                         'name': attendance.name,
@@ -1135,7 +1135,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.depends('calendar_id')
     def _compute_company_id(self):
         for leave in self:
-            leave.company_id = leave.calendar_id.company_id or self.env.company
+            leave.company_id = leave.calendar_id.company_id or leave.company_id or self.env.company
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

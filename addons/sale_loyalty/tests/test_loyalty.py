@@ -33,10 +33,17 @@ class TestLoyalty(TestSaleCouponCommon):
                 'trigger': 'auto',
                 'applies_on': 'both',
                 'rule_ids': [(0, 0, {
-                    'reward_point_mode': 'money',
-                    'reward_point_amount': 10,
+                    'reward_point_mode': 'unit',
+                    'reward_point_amount': 1,
+                    'product_ids': [self.product_a.id],
                 })],
-                'reward_ids': [(0, 0, {})],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 1.5,
+                    'discount_mode': 'per_point',
+                    'discount_applicability': 'order',
+                    'required_points': 3,
+                })],
             },
             {
                 'name': 'eWallet Program',
@@ -58,7 +65,7 @@ class TestLoyalty(TestSaleCouponCommon):
         claimable_rewards = order._get_claimable_rewards()
         # Should be empty since we do not have any coupon created yet
         self.assertFalse(claimable_rewards, "No program should be applicable")
-        _, ewallet_coupon = self.env['loyalty.card'].create([
+        loyalty_card, ewallet_coupon = self.env['loyalty.card'].create([
             {
                 'program_id': loyalty_program.id,
                 'partner_id': self.partner_a.id,
@@ -79,6 +86,13 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(len(claimable_rewards), 1, "The ewallet program should not be applicable since the card has no points.")
+        vals = order._get_reward_values_discount(loyalty_program.reward_ids[0], loyalty_card)
+        self.assertEqual(
+            vals[0]['points_cost'] % loyalty_program.reward_ids.required_points,
+            0,
+            "Can only use a whole number of required points",
+        )
+        self.assertEqual(vals[0]['points_cost'], 9, "Use maximum available points for the reward")
         ewallet_coupon.points = 50
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
@@ -221,6 +235,73 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(order.amount_untaxed, -15.0)
         self.assertEqual(order.amount_tax, 15.0)
         self.assertEqual(order.reward_amount, -215.0)
+
+    def test_discount_max_amount_on_specific_product(self):
+        product_a = self.product_A
+        product_b = self.product_B
+        product_a.write({'taxes_id': [Command.set(self.tax_20pc_excl.ids)]})
+        product_b.write({'list_price': -20, 'taxes_id': [Command.set(self.tax_20pc_excl.ids)]})
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        promotion = self.env['loyalty.program'].create({
+            'name': '10% Discount',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': 1, 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'discount': 10.0,
+                'discount_max_amount': 9,
+                'discount_applicability': 'specific',
+                'discount_product_ids': [product_a.id],
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': product_a.id})],
+        })
+        self.assertEqual(order.reward_amount, 0)
+
+        self._auto_rewards(order, promotion)
+        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        msg = "Max discount amount reached, the reward amount should be the max amount value."
+        self.assertEqual(reward_amount_tax_included, -9, msg)
+
+        order.order_line = [Command.clear(), Command.create({'product_id': product_b.id})]
+        self._auto_rewards(order, promotion)
+        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        msg = "This product is not eligible to the discount."
+        self.assertEqual(reward_amount_tax_included, 0, msg=msg)
+
+        order.order_line = [
+            Command.clear(),
+            Command.create({'product_id': product_a.id}),  # price_total = 120
+            Command.create({'product_id': product_b.id}),  # price_total = -20
+        ]
+        self._auto_rewards(order, promotion)
+        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        msg = "Reward amount above the max amount, the reward should be the max amount value."
+        self.assertEqual(reward_amount_tax_included, -9, msg)
+
+        order.order_line = [
+            Command.clear(),
+            Command.create({'product_id': product_a.id}),                     # price_total = 120
+            Command.create({'product_id': product_b.id, 'price_unit': -95}),  # price_total = -114
+        ]
+        self._auto_rewards(order, promotion)
+        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        msg = "Reward amount should never surpass the order's current total amount."
+        self.assertEqual(reward_amount_tax_included, -6, msg)
+
+        order.order_line = [
+            Command.clear(),
+            Command.create({'product_id': product_a.id, 'price_unit': 50}),  # price_total = 60
+            Command.create({'product_id': product_b.id, 'price_unit': -5}),  # price_total = -6
+        ]
+        self._auto_rewards(order, promotion)
+        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        msg = "Reward amount should be the percentage one if under the max amount discount."
+        self.assertEqual(reward_amount_tax_included, -6, msg)
 
     def test_multiple_discount_specific(self):
         """

@@ -54,6 +54,7 @@ var ActivityRecord = KanbanRecord.extend({
             record: this.record,
             user_context: this.getSession().user_context,
             widget: this,
+            luxon,
         };
     },
 });

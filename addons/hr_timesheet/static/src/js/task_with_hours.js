@@ -1,9 +1,9 @@
 /** @odoo-module alias=hr_timesheet.task_with_hours **/
 
 import field_registry from 'web.field_registry';
-import { FieldMany2One } from 'web.relational_fields';
+import TimesheetFieldMany2One from 'hr_timesheet.TimesheetFieldMany2one';
 
-const TaskWithHours = FieldMany2One.extend({
+const TaskWithHours = TimesheetFieldMany2One.extend({
     /**
      * @override
      */

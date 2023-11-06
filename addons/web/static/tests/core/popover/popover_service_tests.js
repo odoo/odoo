@@ -165,6 +165,28 @@ QUnit.test("close popover if target is removed", async (assert) => {
     assert.containsNone(fixture, ".o_popover #comp");
 });
 
+QUnit.test("close and do not crash if target parent does not exist", async (assert) => {
+    assert.expect(3);
+
+    // This target does not have any parent, it simulates the case where the element disappeared
+    // from the DOM before the setup of the component
+    const dissapearedTarget = document.createElement("div");
+
+    assert.containsOnce(fixture, ".o_popover_container");
+
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    function onClose() {
+        assert.step("close");
+    }
+
+    popovers.add(dissapearedTarget, Comp, {}, { onClose });
+    await nextTick();
+
+    assert.verifySteps(["close"]);
+});
+
 QUnit.test("keep popover if target sibling is removed", async (assert) => {
     assert.containsOnce(fixture, ".o_popover_container");
 

@@ -225,6 +225,103 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), nb_product_todo, f'You should have the {nb_product_todo} final product in stock')
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
+    def test_tracking_backorder_series_lot_2(self):
+        """
+        Create a MO with component tracked by lots. Produce a part of the demand
+        by using some specific lots (not the ones suggested by the onchange).
+        The components' reservation of the backorder should consider which lots
+        have been consumed in the initial MO
+        """
+        production, _, _, p1, p2 = self.generate_mo(tracking_base_2='lot')
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': f'lot_consumed_{i}',
+            'product_id': p2.id,
+            'company_id': self.env.company.id,
+        } for i in range(2)])
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 2, lot_id=lot2)
+
+        production.action_assign()
+
+        production_form = Form(production)
+        production_form.qty_producing = 3
+
+        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 4 * 3
+        details_operation_form.save()
+
+        # Consume 1 Product from lot1 and 2 from lot 2
+        p2_smls = production.move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
+        self.assertEqual(len(p2_smls), 2, 'One for each lot')
+        details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 1
+            ml.lot_id = lot1
+        with details_operation_form.move_line_ids.edit(1) as ml:
+            ml.qty_done = 2
+            ml.lot_id = lot2
+        details_operation_form.save()
+
+        production = production_form.save()
+        action = production.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        p2_bo_mls = production.procurement_group_id.mrp_production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
+        self.assertEqual(len(p2_bo_mls), 1)
+        self.assertEqual(p2_bo_mls.lot_id, lot1)
+        self.assertEqual(p2_bo_mls.reserved_qty, 2)
+
+    def test_uom_backorder(self):
+        """
+            test backorder component UoM different from the bom's UoM
+        """
+        product_finished = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'product',
+        })
+        product_component = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finished
+        mo_form.bom_id = self.env['mrp.bom'].create({
+            'product_id': product_finished.id,
+            'product_tmpl_id': product_finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_component.id,
+                'product_qty': 1,
+                'product_uom_id':self.env.ref('uom.product_uom_gram').id,
+            }),]
+        })
+        mo_form.product_qty = 1000
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.env['stock.quant']._update_available_quantity(product_component, self.stock_location, 1000)
+        mo.action_assign()
+
+        production_form = Form(mo)
+        production_form.qty_producing = 300
+        mo = production_form.save()
+
+        action = mo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+        # 300 Grams consumed and 700 reserved
+        self.assertAlmostEqual(self.env['stock.quant']._gather(product_component, self.stock_location).reserved_quantity, 0.7)
+
+
     def test_tracking_backorder_series_serial_1(self):
         """ Create a MO of 4 tracked products (serial) with pbm_sam.
         all component is tracked by serial

@@ -6,17 +6,12 @@ import os
 import re
 import tempfile
 
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
 from lxml import html
 
 import odoo
 import odoo.modules.registry
 from odoo import http
-from odoo.http import content_disposition, dispatch_rpc, request
+from odoo.http import content_disposition, dispatch_rpc, request, Response
 from odoo.service import db
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
@@ -93,14 +88,14 @@ class Database(http.Controller):
         return self._render_template(error=error)
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
-    def duplicate(self, master_pwd, name, new_name):
+    def duplicate(self, master_pwd, name, new_name, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
-            dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
+            dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name, neutralize_database])
             if request.db == name:
                 request.env.cr.close()  # duplicating a database leads to an unusable cursor
             return request.redirect('/web/database/manager')
@@ -138,7 +133,7 @@ class Database(http.Controller):
                 ('Content-Disposition', content_disposition(filename)),
             ]
             dump_stream = odoo.service.db.dump_db(name, None, backup_format)
-            response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
+            response = Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception as e:
             _logger.exception('Database.backup')
@@ -146,7 +141,7 @@ class Database(http.Controller):
             return self._render_template(error=error)
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
-    def restore(self, master_pwd, backup_file, name, copy=False):
+    def restore(self, master_pwd, backup_file, name, copy=False, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
@@ -155,7 +150,7 @@ class Database(http.Controller):
             db.check_super(master_pwd)
             with tempfile.NamedTemporaryFile(delete=False) as data_file:
                 backup_file.save(data_file)
-            db.restore_db(name, data_file.name, str2bool(copy))
+            db.restore_db(name, data_file.name, str2bool(copy), neutralize_database)
             return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))

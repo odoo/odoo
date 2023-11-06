@@ -41,8 +41,9 @@ class WebsiteLivechat(LivechatController):
 
         for rating in ratings:
             partner_id = rating.rated_partner_id.id
-            ratings_per_partner[partner_id][rating_texts[rating.rating]] += 1
-            total_ratings_per_partner[partner_id] += 1
+            if partner_id:
+                ratings_per_partner[partner_id][rating_texts[rating.rating]] += 1
+                total_ratings_per_partner[partner_id] += 1
 
         for partner_id, rating in ratings_per_partner.items():
             for k, v in ratings_per_partner[partner_id].items():

@@ -4,6 +4,10 @@
 <!-- Index -->
 <template id="index" name="Events" track="1">
     <t t-call="website.layout">
+        <t t-set="head">
+            <meta t-if="search_tags" name="robots" content="none"/>
+        </t>
+
         <div id="wrap" class="o_wevent_index">
             <!-- Options -->
             <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
@@ -187,7 +191,7 @@
                             </t>
                         </div>
                     </header>
-                    <div t-att-class="'%s %s' % (
+                    <div t-att-class="'%s %s position-relative' % (
                         opt_events_list_columns and 'col-12' or 'col',
                         opt_events_list_columns and event.event_registrations_open and not event.event_registrations_sold_out and 'h-100' or '')">
                         <!-- Body -->

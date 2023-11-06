@@ -29,13 +29,26 @@ class AccountEdiFormat(models.Model):
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _get_l10n_in_base_tags(self):
+        return (
+           self.env.ref('l10n_in.tax_tag_base_sgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_igst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cess').ids
+           + self.env.ref('l10n_in.tax_tag_zero_rated').ids
+           + self.env.ref("l10n_in.tax_tag_exempt").ids
+           + self.env.ref("l10n_in.tax_tag_nil_rated").ids
+           + self.env.ref("l10n_in.tax_tag_non_gst_supplies").ids
+        )
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'in_einvoice_1_03':
             return super()._get_move_applicability(move)
-
-        if move.is_sale_document() and move.country_code == 'IN' and move.l10n_in_gst_treatment in (
+        all_base_tags = self._get_l10n_in_base_tags()
+        is_under_gst = any(move_line_tag.id in all_base_tags for move_line_tag in move.line_ids.tax_tag_ids)
+        if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (
             "regular",
             "composition",
             "overseas",
@@ -70,12 +83,18 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
+        all_base_tags = self._get_l10n_in_base_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
                     raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
                                   "Please create a credit note instead."))
+            if line.display_type == 'product' and line.discount < 0:
+                error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+            if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
+                error_message.append(_(
+                    """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
@@ -254,10 +273,11 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
+        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
-            "Pin": int(self._l10n_in_edi_extract_digits(partner.zip)),
+            "Pin": zip_digits and int(zip_digits) or "",
             "Stcd": partner.state_id.l10n_in_tin or "",
         }
         if partner.street2:
@@ -275,7 +295,7 @@ class AccountEdiFormat(models.Model):
                 "GSTIN": partner.vat or "URP",
             })
         else:
-            partner_details.update({"Nm": partner.name})
+            partner_details.update({"Nm": partner.name or partner.commercial_partner_id.name})
         # For no country I would suppose it is India, so not sure this is super right
         if is_overseas and (not partner.country_id or partner.country_id.code != 'IN'):
             partner_details.update({
@@ -451,6 +471,8 @@ class AccountEdiFormat(models.Model):
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
         tax_details_per_record = tax_details.get("tax_details_per_record")
+        sign = invoice.is_inbound() and -1 or 1
+        rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -483,9 +505,9 @@ class AccountEdiFormat(models.Model):
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
-                    sum(line.balance for line in invoice.invoice_line_ids if line.display_type == 'rounding')),
+                    rounding_amount),
                 "TotInvVal": self._l10n_in_round_value(
-                    (tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+                    (tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount)),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:

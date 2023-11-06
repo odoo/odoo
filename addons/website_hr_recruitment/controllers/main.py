@@ -53,15 +53,13 @@ class WebsiteHrRecruitment(http.Controller):
 
         # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = [j for j in jobs if not j.address_id or j.address_id.country_id.id == country.id]
-            offices = set(j.address_id for j in jobs if not j.address_id or j.address_id.country_id.id == country.id)
-        else:
-            offices = set(j.address_id for j in jobs if j.address_id)
+            jobs = jobs.filtered(lambda j: not j.address_id or j.address_id.country_id.id == country.id)
+        offices = jobs.address_id.sorted(lambda a: (a.country_id.name or '', a.city or ''))
 
         # Deduce departments and countries offices of those jobs
-        departments = set(j.department_id for j in jobs if j.department_id)
-        countries = set(o.country_id for o in offices if o.country_id)
-        employment_types = set(j.contract_type_id for j in jobs if j.contract_type_id)
+        departments = jobs.department_id.sorted('name')
+        countries = offices.country_id.sorted('name')
+        employment_types = jobs.contract_type_id.sorted('name')
 
         if department:
             jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]

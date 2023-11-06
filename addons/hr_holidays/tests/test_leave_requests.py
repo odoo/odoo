@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import time
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -12,6 +12,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
 from odoo.tests import tagged
+
+from odoo.exceptions import UserError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -169,8 +171,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': fields.Datetime.from_string('2017-01-01 00:00:00'),
                 'date_to': fields.Datetime.from_string('2017-06-01 00:00:00'),
                 'number_of_days': 10,
-                'state': 'validate',
-        })
+        }).action_validate()
 
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
@@ -918,35 +919,42 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
             )
 
-            allocation_2021.active = False
+            with self.assertRaisesRegex(UserError,
+                r'You cannot archive an allocation which is in confirm or validate state.'):
 
-            # If the allocation is archived, the leaves taken are still counted on this allocation
-            # but the max leaves and remaining leaves are not counted anymore
-            # If there are no virtual_remaining_leaves, then there is no upcoming allocation (closest_allocation_to_expire) to expire
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=False,
-            )
+                # The logic of the test is relevant, so we do not remove it.
+                # However, the behaviour will change.
+                # Indeed, a confirmed or validated allocation cannot be archived
 
-            # The holidays count in 2022 is not affected by the archived allocation in 2021
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
-            )
+                allocation_2021.active = False
 
-            allocation_2021.active = True
+                # If the allocation is archived, the leaves taken are still counted on this allocation
+                # but the max leaves and remaining leaves are not counted anymore
+                # If there are no virtual_remaining_leaves, then there is no upcoming allocation (closest_allocation_to_expire) to expire
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=False,
+                )
 
-            # The holidays count in 2021 is back to what it was when the allocation was active
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
-            )
+                # The holidays count in 2022 is not affected by the archived allocation in 2021
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
+                )
 
-            # The holidays count in 2022 is still not affected by the allocation in 2021
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
-            )
+                allocation_2021.active = True
+
+                # The holidays count in 2021 is back to what it was when the allocation was active
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
+                )
+
+                # The holidays count in 2022 is still not affected by the allocation in 2021
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
+                )
 
     def test_cancel_leave(self):
         with freeze_time('2020-09-15'):
@@ -994,3 +1002,95 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'number_of_days': 1,
                 'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
             })
+
+    def test_prevent_misplacement_of_allocations_without_end_date(self):
+        """
+            The objective is to check that it is not possible to place leaves
+            for which the interval does not correspond to the interval of allocations.
+        """
+        holiday_type_A = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Type A',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'leave_validation_type': 'hr',
+        })
+
+        # Create allocations with no end date
+        allocations = self.env['hr.leave.allocation'].create([
+            {
+                'name': 'Type A march 1 day without date to',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': holiday_type_A.id,
+                'number_of_days': 1,
+                'state': 'confirm',
+                'date_from': '2023-01-03',
+            },
+            {
+                'name': 'Type A april 5 day without date to',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': holiday_type_A.id,
+                'number_of_days': 5,
+                'state': 'confirm',
+                'date_from': '2023-04-01',
+            },
+        ])
+
+        allocations.action_validate()
+
+        trigger_error_leave = {
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': holiday_type_A.id,
+            'date_from': '2023-03-14',
+            'date_to': '2023-03-16',
+            'number_of_days': 3,
+        }
+
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create(trigger_error_leave)
+
+    @freeze_time('2022-06-13 10:00:00')
+    def test_current_leave_status(self):
+        types = ('no_validation', 'manager', 'hr', 'both')
+        employee = self.employee_emp
+
+        def run_validation_flow(leave_validation_type):
+            LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
+            leave_type = LeaveType.with_context(tracking_disable=True).create({
+                'name': leave_validation_type.capitalize(),
+                'leave_validation_type': leave_validation_type,
+                'requires_allocation': 'no',
+            })
+            current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'holiday_type': 'employee',
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': datetime.today() - timedelta(days=1),
+                'date_to': datetime.today() + timedelta(days=1),
+            })
+
+            if leave_validation_type in ('manager', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hruser_id).action_approve()
+
+            if leave_validation_type in ('hr', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hrmanager_id).action_validate()
+
+            self.assertTrue(employee.is_absent)
+            self.assertEqual(employee.current_leave_id, current_leave.holiday_status_id)
+            self.assertFalse(employee.filtered_domain([('is_absent', '=', False)]))
+            self.assertEqual(employee.filtered_domain([('is_absent', '=', True)]), employee)
+
+            raise RuntimeError()
+
+        for leave_validation_type in types:
+            with self.assertRaises(RuntimeError), self.env.cr.savepoint():
+                run_validation_flow(leave_validation_type)

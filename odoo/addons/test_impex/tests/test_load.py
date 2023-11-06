@@ -574,11 +574,12 @@ class test_m2o(ImporterCase):
         # 1 x SAVEPOINT load
         # 3 x name_search
         # 1 x SAVEPOINT _load_records
-        # 3 x insert
+        # 1 x select on list of existing modules
+        # 1 x insert
         # 1 x RELEASE SAVEPOINT _load_records
         # 1 x RELEASE SAVEPOINT load
-        # => 10
-        with self.assertQueryCount(8):
+        # => 9
+        with self.assertQueryCount(9):
             result = self.import_(['value'], [
                 # import by name_get
                 [name1],
@@ -724,6 +725,20 @@ class test_m2o(ImporterCase):
         result = self.import_(['value'], [[101]], context=context)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
+
+    @mute_logger('odoo.sql_db')
+    def test_name_create_enabled_m2o_required_field(self):
+        self.model = self.env['export.many2one.required.subfield']
+        self.env['export.with.required.field'].create({'name': 'ipsum', 'value': 10})
+        context = {'name_create_enabled_fields': {'name': True}}
+        result = self.import_(['name'], [['lorem'], ['ipsum']], context=context)
+        messages = result['messages']
+        self.assertTrue(messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0]['message'],
+                         "No matching record found for name 'lorem' in field 'Name' and the following error was "
+                         "encountered when we attempted to create one: Cannot create new 'export.with.required.field' "
+                         "records from their name alone. Please create those records manually and try importing again.")
 
 class TestInvalidStrings(ImporterCase):
     model_name = 'export.m2o.str'

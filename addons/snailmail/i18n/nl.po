@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -100,7 +100,7 @@ msgstr "Beide kanten"
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "Buy credits"
-msgstr "Kredieten kopen"
+msgstr "Credits kopen"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -290,6 +290,13 @@ msgid "Information"
 msgstr "Informatie"
 
 #. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Invalid recipient name."
+msgstr "Ongeldige naam van de ontvanger."
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
@@ -375,7 +382,7 @@ msgstr "NO_PRICE_AVAILABLE"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Not enough credits for Snail Mail"
-msgstr "Niet genoeg kredieten voor snailmail"
+msgstr "Niet genoeg credits voor snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -407,7 +414,7 @@ msgid ""
 "                to automatically add a blank cover page to all letters."
 msgstr ""
 "Onze dienst kan je brief niet lezen vanwege het formaat.<br/>\n"
-"Wijzig het formaat van het sjabloon of werk je instellingen bij\n"
+"Wijzig het formaat van de sjabloon of werk je instellingen bij\n"
 "om automatisch een blanco voorblad toe te voegen aan alle brieven."
 
 #. module: snailmail
@@ -420,7 +427,7 @@ msgstr "Relatie"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Please use an A4 Paper format."
-msgstr "Gelieve een A4-papierformaat te gebruiken."
+msgstr "Je moet een A4-papierformaat te gebruiken."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -470,7 +477,7 @@ msgstr "Verzonden"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "Sent by"
-msgstr "Verstuurd door"
+msgstr "Verzonden door"
 
 #. module: snailmail
 #. odoo-python
@@ -663,7 +670,7 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
-"De brief kon niet worden verzonden wegens onvoldoende tegoed op je IAP-"
+"De brief kon niet worden verzonden wegens onvoldoende credits op je IAP-"
 "account."
 
 #. module: snailmail
@@ -717,7 +724,7 @@ msgid ""
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
 "Je hebt geen IAP-account geregistreerd voor deze service. <br>Ga naar <a "
-"href=%s target=\"new\"> iap.odoo.com</a> om je gratis krediet te claimen."
+"href=%s target=\"new\"> iap.odoo.com</a> om je gratis credits te claimen."
 
 #. module: snailmail
 #. odoo-python
@@ -727,8 +734,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
-"Je hebt niet genoeg kredieten om deze bewerking uit te voeren. <br>Ga naar "
-"je <a href=%s target=\"new\"> IAP-account</a>."
+"Je hebt niet genoeg credits om deze bewerking uit te voeren. <br>Ga naar je "
+"<a href=%s target=\"new\"> IAP-account</a>."
 
 #. module: snailmail
 #. odoo-javascript

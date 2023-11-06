@@ -158,22 +158,6 @@ class AccountEdiFormat(models.Model):
                 elif tax_values['l10n_es_type'] == 'ignore':
                     continue
 
-                if tax_subject_isp_info_list and not tax_subject_info_list:
-                    tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S2'}
-                elif not tax_subject_isp_info_list and tax_subject_info_list:
-                    tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S1'}
-                elif tax_subject_isp_info_list and tax_subject_info_list:
-                    tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S3'}
-
-                if tax_subject_info_list:
-                    tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
-                    tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
-                    tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_info_list
-                if tax_subject_isp_info_list:
-                    tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
-                    tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
-                    tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_isp_info_list
-
             else:
                 # Vendor bills
                 if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc'):
@@ -206,6 +190,22 @@ class AccountEdiFormat(models.Model):
                         tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']
                     tax_details_info['DetalleIVA'].append(tax_info)
 
+        if tax_subject_isp_info_list and not tax_subject_info_list:  # Only for sale_invoices
+            tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S2'}
+        elif not tax_subject_isp_info_list and tax_subject_info_list:
+            tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S1'}
+        elif tax_subject_isp_info_list and tax_subject_info_list:
+            tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S3'}
+
+        if tax_subject_info_list:
+            tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
+            tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
+            tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_info_list
+        if tax_subject_isp_info_list:
+            tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
+            tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
+            tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_isp_info_list
+
         if not invoice.company_id.currency_id.is_zero(base_amount_not_subject) and invoice.is_sale_document():
             tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = round(sign * base_amount_not_subject, 2)
         if not invoice.company_id.currency_id.is_zero(base_amount_not_subject_loc) and invoice.is_sale_document():
@@ -217,6 +217,8 @@ class AccountEdiFormat(models.Model):
             'tax_amount_deductible': tax_amount_deductible,
             'tax_amount_retention': tax_amount_retention,
             'base_amount_not_subject': base_amount_not_subject,
+            'S1_list': tax_subject_info_list, #TBAI has separate sections for S1 and S2
+            'S2_list': tax_subject_isp_info_list, #TBAI has separate sections for S1 and S2
         }
 
     def _l10n_es_edi_get_partner_info(self, partner):
@@ -275,7 +277,7 @@ class AccountEdiFormat(models.Model):
 
             # === Invoice ===
 
-            invoice_node['DescripcionOperacion'] = invoice.invoice_origin or 'manual'
+            invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             if invoice.is_sale_document():
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': invoice.company_id.vat[2:]}
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.name[:60]
@@ -284,11 +286,8 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-
-                if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
@@ -303,11 +302,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                country_code = com_partner.country_id.code
-                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
+                mod_303_10 = self.env.ref('l10n_es.mod_303_10')
+                mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+                tax_tags = invoice.line_ids.tax_tag_ids
+                intracom = mod_303_10 in tax_tags or mod_303_11 in tax_tags
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'

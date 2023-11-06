@@ -3,7 +3,7 @@
     <template id="report_delivery_document">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <t t-set="partner" t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
 
                 <t t-set="address">
@@ -25,16 +25,16 @@
                 <t t-set="information_block">
                     <div class="row">
                         <div class="col-7" name="div_incoming_address">
+                            <t t-set="show_partner" t-value="False" />
                             <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
                                 <span><strong>Vendor Address:</strong></span>
+                                <t t-set="show_partner" t-value="True" />
                             </div>
-                            <div name="warehouse_address" t-if="o.picking_type_id.code=='internal' and partner">
-                                <span><strong>Warehouse Address:</strong></span>
-                            </div>
-                            <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner">
+                            <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
                                 <span><strong>Customer Address:</strong></span>
+                                <t t-set="show_partner" t-value="True" />
                             </div>
-                            <div t-if="partner" name="partner_header">
+                            <div t-if="show_partner" name="partner_header">
                                 <div t-field="partner.commercial_partner_id"
                                      t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
                             </div>
@@ -273,7 +273,7 @@
 
     <template id="report_deliveryslip">
         <t t-foreach="docs" t-as="o">
-            <t t-call="stock.report_delivery_document" t-lang="o.partner_id.lang"/>
+            <t t-call="stock.report_delivery_document" t-lang="o._get_report_lang()"/>
         </t>
     </template>
 </odoo>

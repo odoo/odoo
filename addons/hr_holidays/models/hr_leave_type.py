@@ -156,7 +156,7 @@ class HolidaysType(models.Model):
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
         for holiday_type in self:
-            if holiday_type.requires_allocation:
+            if holiday_type.requires_allocation == 'yes':
                 allocation = self.env['hr.leave.allocation'].search([
                     ('holiday_status_id', '=', holiday_type.id),
                     ('employee_id', '=', employee_id),
@@ -223,20 +223,23 @@ class HolidaysType(models.Model):
         return [('id', 'in', valid_leave_types.ids)]
 
     def _get_employees_days_per_allocation(self, employee_ids, date=None):
-        leaves = self.env['hr.leave'].search([
+        if not date:
+            date = fields.Date.to_date(self.env.context.get('default_date_from')) or fields.Date.context_today(self)
+
+        leaves_domain = [
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
             ('holiday_status_id', 'in', self.ids)
-        ])
+        ]
+        if self.env.context.get("ignore_future"):
+            leaves_domain.append(('date_from', '<=', date))
+        leaves = self.env['hr.leave'].search(leaves_domain)
 
         allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['validate']),
             ('holiday_status_id', 'in', self.ids),
         ])
-
-        if not date:
-            date = fields.Date.to_date(self.env.context.get('default_date_from')) or fields.Date.context_today(self)
 
         # The allocation_employees dictionary groups the allocations based on the employee and the holiday type
         # The structure is the following:
@@ -328,7 +331,8 @@ class HolidaysType(models.Model):
                                     leave_unit = 'hours'
                                 if holiday_status_id.requires_allocation != 'no':
                                     for available_allocation in sorted_available_allocations:
-                                        if available_allocation.date_to and available_allocation.date_to < leave.date_from.date():
+                                        if (available_allocation.date_to and available_allocation.date_to < leave.date_from.date()) \
+                                            or (available_allocation.date_from > leave.date_to.date()):
                                             continue
                                         virtual_remaining_leaves = (available_allocation.number_of_days if leave_unit == 'days' else available_allocation.number_of_hours_display) - allocations_days_consumed[employee_id][holiday_status_id][available_allocation]['virtual_leaves_taken']
                                         max_leaves = min(virtual_remaining_leaves, leave_duration)
@@ -350,44 +354,46 @@ class HolidaysType(models.Model):
                         allocations_days_consumed[employee_id][holiday_status_id][False]['closest_allocation_to_expire'] = sorted_allocations_with_remaining_leaves[0] if sorted_allocations_with_remaining_leaves else False
 
         # Future available leaves
+        future_allocations_date_from = fields.datetime.combine(date, time.min)
+        future_allocations_date_to = fields.datetime.combine(date, time.max) + timedelta(days=5*365)
         for employee_id, allocation_intervals_by_status in allocation_employees.items():
+            employee = self.env['hr.employee'].browse(employee_id)
             for holiday_status_id, intervals in allocation_intervals_by_status.items():
                 if not intervals:
                     continue
                 future_allocation_intervals = intervals & Intervals([(
-                    fields.datetime.combine(date, time.min),
-                    fields.datetime.combine(date, time.max) + timedelta(days=5*365),
+                    future_allocations_date_from,
+                    future_allocations_date_to,
                     self.env['hr.leave'])])
                 search_date = date
                 closest_allocations = self.env['hr.leave.allocation']
                 for interval in intervals._items:
                     closest_allocations |= interval[2]
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
-                for future_allocation_interval in future_allocation_intervals._items:
-                    if future_allocation_interval[0].date() > search_date:
+                for interval_from, interval_to, interval_allocations in future_allocation_intervals._items:
+                    if interval_from.date() > search_date:
                         continue
-                    for allocation in future_allocation_interval[2]:
-                        if not allocation.active:
+                    interval_allocations = interval_allocations.filtered('active')
+                    if not interval_allocations:
+                        continue
+                    # If no end date to the allocation, consider the number of days remaining as infinite
+                    employee_quantity_available = (
+                        employee._get_work_days_data_batch(interval_from, interval_to, compute_leaves=False, domain=company_domain)[employee_id]
+                        if interval_to != future_allocations_date_to
+                        else {'days': float('inf'), 'hours': float('inf')}
+                    )
+                    for allocation in interval_allocations:
+                        if allocation.date_from > search_date:
                             continue
                         days_consumed = allocations_days_consumed[employee_id][holiday_status_id][allocation]
-                        if future_allocation_interval[1] != fields.datetime.combine(date, time.max) + timedelta(days=5*365):
-                            # Compute the remaining number of days/hours in the allocation only if it has an end date
-                            quantity_available = allocation.employee_id._get_work_days_data_batch(
-                                future_allocation_interval[0],
-                                future_allocation_interval[1],
-                                compute_leaves=False,
-                                domain=company_domain)[employee_id]
-                        else:
-                            # If no end date to the allocation, consider the number of days remaining as infinite
-                            quantity_available = {'days': float('inf'), 'hours': float('inf')}
                         if allocation.type_request_unit in ['day', 'half_day']:
-                            quantity_available = quantity_available['days']
+                            quantity_available = employee_quantity_available['days']
                             remaining_days_allocation = (allocation.number_of_days - days_consumed['virtual_leaves_taken'])
                         else:
-                            quantity_available = quantity_available['hours']
+                            quantity_available = employee_quantity_available['hours']
                             remaining_days_allocation = (allocation.number_of_hours_display - days_consumed['virtual_leaves_taken'])
                         if quantity_available <= remaining_days_allocation:
-                            search_date = future_allocation_interval[1].date() + timedelta(days=1)
+                            search_date = interval_to.date() + timedelta(days=1)
                         days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
                         days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit in ['day', 'half_day'] else allocation.number_of_hours_display
                         days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
@@ -447,7 +453,15 @@ class HolidaysType(models.Model):
     def _get_days_request(self):
         self.ensure_one()
         result = self._get_employees_days_per_allocation(self.closest_allocation_to_expire.employee_id.ids)
-        closest_allocation_remaining = result[self.closest_allocation_to_expire.employee_id.id][self][self.closest_allocation_to_expire]['virtual_remaining_leaves']
+        closest_allocation_remaining = 0
+        if self.closest_allocation_to_expire:
+            # Shows the sum of allocation expiring on the same day as the closest to expire
+            employee_allocations = result[self.closest_allocation_to_expire.employee_id.id][self].items()
+            closest_allocation_remaining = sum(
+                res['virtual_remaining_leaves']
+                for alloc, res in employee_allocations
+                if alloc and alloc.date_to == self.closest_allocation_to_expire.date_to
+            )
         return (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
                 'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),

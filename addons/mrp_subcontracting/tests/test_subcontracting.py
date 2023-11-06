@@ -687,6 +687,171 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         custom_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', custom_subcontracting_location.id), ('location_dest_id', '=', custom_subcontracting_location.id)])
         self.assertEqual(custom_location_rules_count, 0)
 
+    def test_subcontracting_date_warning(self):
+        with Form(self.env['stock.picking'].with_context(default_immediate_transfer=True)) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.quantity_done = 3
+            picking_receipt = picking_form.save()
+        self.assertEqual(picking_form.json_popover, False)
+
+        subcontract = picking_receipt._get_subcontract_production()
+        self.assertEqual(subcontract.date_planned_start, picking_receipt.scheduled_date)
+        self.assertEqual(subcontract.date_planned_finished, picking_receipt.scheduled_date)
+
+    def test_subcontracting_set_quantity_done(self):
+        """ Tests to set a quantity done directly on a subcontracted move without using the subcontracting wizard. Checks that it does the same
+            as it would do with the wizard. Since immediate/planned transfers have different flows, we need to test both.
+        """
+        self.bom.consumption = 'flexible'
+        quantities = [10, 15, 12, 14]
+
+        # For planned transfers, as some triggers are different if it's an immediate transfer.
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = quantities[0]
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        self.assertEqual(picking_receipt.immediate_transfer, False)
+        move = picking_receipt.move_ids_without_package
+
+        for qty in quantities[1:]:
+            move.quantity_done = qty
+            subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+            self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+
+        picking_receipt.button_validate()
+        self.assertEqual(move.product_uom_qty, quantities[-1])
+        self.assertEqual(move.quantity_done, quantities[-1])
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
+        self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
+
+        # Now the same with an immediate transfer
+        with Form(self.env['stock.picking'].with_context(default_immediate_transfer=True)) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.quantity_done = quantities[0]
+            picking_receipt = picking_form.save()
+        self.assertEqual(picking_receipt.immediate_transfer, True)
+        move = picking_receipt.move_ids_without_package
+
+        subcontracted = move._get_subcontract_production()
+        self.assertEqual(subcontracted.product_qty, quantities[0])
+
+        for qty in quantities[1:]:
+            move.quantity_done = qty
+            subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+            self.assertEqual(sum(subcontracted.mapped('product_qty')), qty)
+
+        picking_receipt.button_validate()
+        self.assertEqual(move.product_uom_qty, quantities[-1])
+        self.assertEqual(move.quantity_done, quantities[-1])
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
+        self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
+
+    def test_change_reception_serial(self):
+        self.finished.tracking = 'serial'
+        self.bom.consumption = 'flexible'
+
+        finished_lots = self.env['stock.lot'].create([{
+            'name': 'lot_%s' % number,
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
+        } for number in range(3)])
+
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 3
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        # Register serial number for each finished product
+        for lot in finished_lots:
+            action = picking_receipt.move_ids.action_show_details()
+            self.assertEqual(action['name'], 'Subcontract', "It should open the subcontract record components wizard instead.")
+            mo = self.env['mrp.production'].browse(action['res_id'])
+            with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+                mo_form.qty_producing = 1
+                mo_form.lot_producing_id = lot
+                mo_form.save()
+            mo.subcontracting_record_component()
+
+        subcontract_move = picking_receipt.move_ids_without_package.filtered(lambda m: m.is_subcontract)
+        self.assertEqual(len(subcontract_move._get_subcontract_production()), 3)
+        self.assertEqual(len(subcontract_move._get_subcontract_production().lot_producing_id), 3)
+        self.assertRecordValues(subcontract_move._get_subcontract_production().lot_producing_id.sorted('id'), [
+            {'id': finished_lots[0].id},
+            {'id': finished_lots[1].id},
+            {'id': finished_lots[2].id},
+        ])
+
+        new_lot = self.env['stock.lot'].create({
+            'name': 'lot_alter',
+            'product_id': self.finished.id,
+            'company_id': self.env.company.id,
+        })
+        action = picking_receipt.move_ids.action_show_details()
+        self.assertEqual(action['name'], 'Detailed Operations', "The subcontract record components wizard shouldn't be available now.")
+        with Form(subcontract_move.with_context(action['context']), view=action['view_id']) as move_form:
+            with move_form.move_line_nosuggest_ids.edit(2) as move_line:
+                move_line.lot_id = new_lot
+            move_form.save()
+
+        subcontracted_mo = subcontract_move._get_subcontract_production()
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id == new_lot)), 1)
+        self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id != new_lot)), 2)
+
+    def test_multiple_component_records_for_incomplete_move(self):
+        self.bom.consumption = 'flexible'
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 10
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        move = picking_receipt.move_ids_without_package
+
+        # Register the five first finished products
+        action = move.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 5
+            mo_form.save()
+        mo.subcontracting_record_component()
+        self.assertEqual(move.quantity_done, 5)
+
+        # Register two other finished products
+        action = move.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 2
+            mo_form.save()
+        mo.subcontracting_record_component()
+        self.assertEqual(move.quantity_done, 7)
+
+        # Validate picking without backorder
+        backorder_wizard_dict = picking_receipt.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+
+        self.assertRecordValues(move._get_subcontract_production(), [
+            {'product_qty': 5, 'state': 'done'},
+            {'product_qty': 2, 'state': 'done'},
+            {'product_qty': 3, 'state': 'cancel'},
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
@@ -1186,6 +1351,9 @@ class TestSubcontractingPortal(TransactionCase):
             ml.lot_id = serial1
         mo = mo_form.save()
         mo.subcontracting_record_component()
+        # Continue record of components with new MO (backorder was when recording first MO)
+        action = picking_receipt.with_user(self.portal_user).with_context({'is_subcontracting_portal': 1}).move_ids.action_show_details()
+        mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the second manufactured product with over-consumption, which leads to a warning
         mo_form.qty_producing = 1

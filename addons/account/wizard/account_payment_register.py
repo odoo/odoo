@@ -20,7 +20,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_communication')
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
-        help="Only one payment will be created by partner (bank), instead of one per billy.")
+        help="Only one payment will be created by partner (bank), instead of one per bill.")
     early_payment_discount_mode = fields.Boolean(compute='_compute_early_payment_discount_mode')
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -267,8 +267,7 @@ class AccountPaymentRegister(models.TransientModel):
             vals = batches[key]
             lines = vals['lines']
             merge = (
-                self.group_payment
-                and batch_key['partner_id'] in partner_unique_inbound
+                batch_key['partner_id'] in partner_unique_inbound
                 and batch_key['partner_id'] in partner_unique_outbound
             )
             if merge:
@@ -426,7 +425,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.partner_bank_id = None
 
-    @api.depends('payment_type', 'journal_id')
+    @api.depends('payment_type', 'journal_id', 'currency_id')
     def _compute_payment_method_line_fields(self):
         for wizard in self:
             if wizard.journal_id:
@@ -493,15 +492,19 @@ class AccountPaymentRegister(models.TransientModel):
             ), False
         elif self.source_currency_id == comp_curr and self.currency_id != comp_curr:
             # Company currency on source line but a foreign currency one on the opposite line.
-            return abs(sum(
-                comp_curr._convert(
+            residual_amount = 0.0
+            for aml in batch_result['lines']:
+                if not aml.move_id.payment_id and not aml.move_id.statement_line_id:
+                    conversion_date = self.payment_date
+                else:
+                    conversion_date = aml.date
+                residual_amount += comp_curr._convert(
                     aml.amount_residual,
                     self.currency_id,
                     self.company_id,
-                    aml.date,
+                    conversion_date,
                 )
-                for aml in batch_result['lines']
-            )), False
+            return abs(residual_amount), False
         else:
             # Foreign currency on payment different than the one set on the journal entries.
             return comp_curr._convert(
@@ -524,7 +527,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
     def _compute_early_payment_discount_mode(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
+            if wizard.can_edit_wizard and wizard.currency_id:
                 batch_result = wizard._get_batches()[0]
                 total_amount_residual_in_wizard_currency, mode = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
                 wizard.early_payment_discount_mode = \
@@ -745,7 +748,9 @@ class AccountPaymentRegister(models.TransientModel):
         :param edit_mode:   Is the wizard in edition mode.
         """
 
-        payments = self.env['account.payment'].create([x['create_vals'] for x in to_process])
+        payments = self.env['account.payment']\
+            .with_context(skip_invoice_sync=True)\
+            .create([x['create_vals'] for x in to_process])
 
         for payment, vals in zip(payments, to_process):
             vals['payment'] = payment

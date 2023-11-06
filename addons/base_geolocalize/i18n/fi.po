@@ -7,6 +7,7 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,21 +35,23 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"Tarvitaan API-avain Geokoodaukselle (paikat).\n"
+"Lisätietoja osoitteessa https://developers.google.com/maps/documentation/geocoding/get-api-key."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "API:"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute Localization"
-msgstr ""
+msgstr "Laske sijainti"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute based on address"
-msgstr ""
+msgstr "Laske osoitteen perusteella"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -79,22 +82,22 @@ msgstr "Näyttönimi"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "Paikannuspalvelimen virhe:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Paikannuskoodaaja"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Location"
-msgstr ""
+msgstr "Paikannuspaikka"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "Paikannuspalveluntarjoaja"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -120,7 +123,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "Avain:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -140,12 +143,12 @@ msgstr "Viimeksi päivitetty"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "Leveysaste :"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "Pituusaste:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -156,34 +159,34 @@ msgstr "Nimi"
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "Ei löytynyt kohdetta %(partner_names)s osoitteelle."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
-msgstr ""
+msgstr "Partnerin asetus"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "Palveluntarjoajaa %s ei ole toteutettu paikannuspalvelulle."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh"
-msgstr ""
+msgstr "Päivitä"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr ""
+msgstr "Päivitä sijainti"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
-msgstr ""
+msgstr "Tekninen nimi"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -197,11 +200,18 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Paikantaminen ei onnistu, virheilmoitus:\n"
+"%s\n"
+"\n"
+"Tämä Googlne palvelu on muuttunut maksulliseksi.\n"
+"Sinun tulee ensin ottaa laskutus käyttöön Google-tililläsi.\n"
+"Siirry sitten kehittäjäkonsoliin ja ota sovellusliittymistä käyttöön:\n"
+"Geokoodaus, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "Päivitetty:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -209,6 +219,8 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+"Lisätietoja osoitteessa "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key."
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:0

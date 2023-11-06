@@ -1,3 +1,11 @@
+body:not(.o_touch_device) .o_settings_container .o_field_selection {
+    &:not(:hover):not(:focus-within) {
+        & select:not(:hover) {
+            background: transparent $o-caret-down no-repeat right center;
+        }
+    }
+}
+
 .o_base_settings {
    height: 100%;
    overflow: auto;
@@ -31,8 +39,10 @@
       width: 100%;
    }
 
-   .o_field_widget {
-      width: 50%;
+   .o_field_widget:not(.o_field_boolean) {
+      @include media-breakpoint-up(md) {
+         width: 50%;
+      }
       flex: 0 0 auto;
 
       &.o_field_many2manytags > .o_field_widget {
@@ -162,7 +172,9 @@
 
                .o_settings_container {
                    max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
-                   @include o-base-settings-horizontal-padding(0);
+                   @include media-breakpoint-up(md) {
+                        @include o-base-settings-horizontal-padding(0);
+                   }
                    margin-bottom: 24px;
 
                    .o_form_label + .fa, .o_form_label + .o_doc_link {
@@ -202,6 +214,10 @@
            .highlighter {
                background: yellow;
            }
+
+            .o_datepicker .o_datepicker_button {
+                visibility: visible;
+            }
        }
 
        .d-block {

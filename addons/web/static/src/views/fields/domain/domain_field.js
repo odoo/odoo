@@ -13,6 +13,7 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class DomainField extends Component {
     setup() {
+        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.state = useState({
             recordCount: null,
@@ -37,14 +38,33 @@ export class DomainField extends Component {
 
         useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", async (ev) => {
             if (this.isDebugEdited) {
-                const prom = this.loadCount(this.props);
+                const props = this.props;
+                const prom = this.quickValidityCheck(props);
                 ev.detail.proms.push(prom);
-                await prom;
-                if (!this.state.isValid) {
-                    this.props.record.setInvalidField(this.props.name);
-                }
+                prom.then((isValid) => {
+                    if (isValid) {
+                        this.isDebugEdited = false; // will allow the count to be loaded if needed
+                    } else {
+                        this.state.isValid = false;
+                        this.state.recordCount = 0;
+                        this.props.record.setInvalidField(props.name);
+                    }
+                });
             }
         });
+    }
+
+    async quickValidityCheck(p) {
+        const model = this.getResModel(p);
+        if (!model) {
+            return false;
+        }
+        try {
+            const domain = this.getDomain(p.value).toList(this.getContext(p));
+            return this.rpc("/web/domain/validate", { model, domain });
+        } catch (_) {
+            return false;
+        }
     }
 
     getContext(p) {
@@ -59,17 +79,21 @@ export class DomainField extends Component {
     }
 
     onButtonClick() {
-        this.addDialog(SelectCreateDialog, {
-            title: this.env._t("Selected records"),
-            noCreate: true,
-            multiSelect: false,
-            resModel: this.getResModel(this.props),
-            domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
-            context: this.getContext(this.props) || {},
-        }, {
-            // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
-            onClose: () => this.loadCount(this.props)
-        });
+        this.addDialog(
+            SelectCreateDialog,
+            {
+                title: this.env._t("Selected records"),
+                noCreate: true,
+                multiSelect: false,
+                resModel: this.getResModel(this.props),
+                domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
+                context: this.getContext(this.props) || {},
+            },
+            {
+                // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
+                onClose: () => this.loadCount(this.props),
+            }
+        );
     }
     get isValidDomain() {
         try {

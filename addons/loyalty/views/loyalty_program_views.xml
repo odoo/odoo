@@ -82,6 +82,7 @@
                             </div>
                             <field name="trigger_product_ids" string="Gift Card Products" widget="many2many_tags" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}"/>
                             <field name="trigger_product_ids" string="eWallet Products" widget="many2many_tags" attrs="{'invisible': [('program_type', '!=', 'ewallet')]}"/>
+                            <field name="payment_program_discount_product_id" groups="base.group_no_one" attrs="{'invisible': [('program_type', 'not in', ('gift_card', 'ewallet'))]}"/>
                             <field name="mail_template_id" attrs="{'invisible': [('program_type', 'not in', ('gift_card', 'ewallet'))]}"/>
                             <field name="currency_id"/>
                             <field name="currency_symbol" invisible="1"/>

@@ -6,6 +6,7 @@
 # Chatcha Mee, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -78,7 +79,7 @@ msgstr "ฐาน"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "การนำเข้าฐาน"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
@@ -136,7 +137,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "จุลภาค"
 
 #. module: base_import
 #. openerp-web
@@ -300,6 +301,22 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr ""
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
@@ -362,7 +379,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "ขนาดไฟล์เกินค่าสูงสุดที่กำหนดไว้ (%s ไบต์)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -466,6 +483,7 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"ขนาดรูปภาพใหญ่เกินไป รูปภาพที่นำเข้าจะต้องมีขนาดเล็กกว่า 42 ล้านพิกเซล"
 
 #. module: base_import
 #. openerp-web
@@ -751,7 +769,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "อัฒภาค"
 
 #. module: base_import
 #. openerp-web
@@ -812,7 +830,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "สเปซ"
 
 #. module: base_import
 #. openerp-web
@@ -1040,7 +1058,7 @@ msgstr "ไม่มีชื่อ"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "อัปโหลดไฟล์"
 
 #. module: base_import
 #. openerp-web
@@ -1168,7 +1186,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
-msgstr ""
+msgstr "ออกจาก"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

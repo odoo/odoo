@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, ReadonlyDict
 import logging
 from typing import Iterator, Mapping
 from collections import abc
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -23,14 +24,15 @@ class GoogleEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) ->  Iterator['GoogleEvent']:
         return iter(GoogleEvent([vals]) for vals in self._events.values())
@@ -62,10 +64,9 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence:
-            # Find the rrule in the list
-            rrule = next(rr for rr in self.recurrence if 'RRULE:' in rr)
-            return rrule[6:] # skip "RRULE:" in the rrule string
+        if self.recurrence and any('RRULE' in item for item in self.recurrence):
+            rrule = next(item for item in self.recurrence if 'RRULE' in item)
+            return rrule[6:]  # skip "RRULE:" in the rrule string
 
     def odoo_id(self, env):
         self.odoo_ids(env)  # load ids
@@ -170,6 +171,33 @@ class GoogleEvent(abc.Set):
     def is_recurrence_follower(self):
         return bool(not self.originalStartTime or self.originalStartTime == self.start)
 
+    def full_recurring_event_id(self):
+        """
+            Give the complete identifier with elements
+            in `id` and `recurringEventId`.
+            :return: concatenation of the id created by the recurrence
+                    and the id created by the modification of a specific event
+            :rtype: string if recurrent event and correct ids, `None` otherwise
+        """
+        # Regex expressions to match elements (according to the google support [not documented]):
+        # - ID: [a-zA-Z0-9]+
+        # - RANGE: R[0-9]+T[0-9]+
+        # - TIMESTAMP: [0-9]+T[0-9]+Z
+        # With:
+        # - id: 'ID_TIMESTAMP'
+        # - recurringEventID: 'ID_RANGE'
+        # Find: 'ID_RANGE_TIMESTAMP'
+        if not self.is_recurrent():
+            return None
+        # Check if ids are the same
+        id_value = re.match(r'(\w+_)', self.id)
+        recurringEventId_value = re.match(r'(\w+_)', self.recurringEventId)
+        if not id_value or not recurringEventId_value or id_value.group(1) != recurringEventId_value.group(1):
+            return None
+        ID_RANGE = re.search(r'\w+_R\d+T\d+', self.recurringEventId).group()
+        TIMESTAMP = re.search(r'\d+T\d+Z', self.id).group()
+        return f"{ID_RANGE}_{TIMESTAMP}"
+
     def cancelled(self):
         return self.filter(lambda e: e.status == 'cancelled')
 
@@ -202,3 +230,9 @@ class GoogleEvent(abc.Set):
 
     def is_available(self):
         return self.transparency == 'transparent'
+
+    def get_odoo_event(self, env):
+        if self._get_model(env)._name == 'calendar.event':
+            return env['calendar.event'].browse(self.odoo_id(self.env))
+        else:
+            return env['calendar.recurrence'].browse(self.odoo_id(self.env)).base_event_id

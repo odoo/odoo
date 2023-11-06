@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeDeferred } from '@mail/utils/deferred';
-import { start, startServer } from '@mail/../tests/helpers/test_utils';
+import { nextAnimationFrame, start, startServer } from '@mail/../tests/helpers/test_utils';
 import { editInput, patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
@@ -293,6 +293,51 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 QUnit.test('remove a follower in a dirty form view', async function (assert) {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+    pyEnv['mail.channel'].create({ name: "General", display_name: "General" });
+    pyEnv['mail.followers'].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: 'res.partner',
+    });
+    const views = {
+        'res.partner,false,form':
+            `<form>
+                <field name="name"/>
+                <field name="channel_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                    <field name="message_follower_ids"/>
+                </div>
+            </form>`,
+    };
+    const { click, openView } = await start({ serverData: { views } });
+    await openView({
+        res_id: threadId,
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
+    click("input#channel_ids").catch(() => {});
+    await nextAnimationFrame();
+    click(".dropdown-item:contains(General)").catch(() => {});
+    await nextAnimationFrame();
+    assert.containsOnce($, ".o_tag:contains(General)");
+    assert.strictEqual(document.body.querySelector(".o_FollowerListMenu_buttonFollowersCount").innerText, "1");
+
+    await editInput(document.body, ".o_field_char[name=name] input", "some value");
+    await click('.o_FollowerListMenu_buttonFollowers');
+    await click('.o_FollowerListMenu_dropdown .o_Follower .o_Follower_removeButton');
+    assert.strictEqual(document.body.querySelector(".o_FollowerListMenu_buttonFollowersCount").innerText, "0");
+    assert.strictEqual(
+        document.body.querySelector(".o_field_char[name=name] input").value,
+        "some value"
+    );
+    assert.containsOnce($, ".o_tag:contains(General)");
+});
+
+QUnit.test('removing a follower should reload form view', async function (assert) {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
     pyEnv['mail.followers'].create({
         is_active: true,
         partner_id: partnerId,
@@ -311,25 +356,9 @@ QUnit.test('remove a follower in a dirty form view', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    assert.strictEqual(
-        document.body.querySelector(".o_FollowerListMenu_buttonFollowersCount").innerText,
-        "1"
-    );
     assert.verifySteps([`read ${threadId}`]);
-
-    await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click('.o_FollowerListMenu_buttonFollowers');
-    assert.containsOnce(document.body, ".o_FollowerListMenu_dropdown .o_Follower");
-
     await click('.o_FollowerListMenu_dropdown .o_Follower .o_Follower_removeButton');
-    assert.strictEqual(
-        document.body.querySelector(".o_FollowerListMenu_buttonFollowersCount").innerText,
-        "0"
-    );
-    assert.strictEqual(
-        document.body.querySelector(".o_field_char[name=name] input").value,
-        "some value"
-    );
     assert.verifySteps([`read ${threadId}`]);
 });
 

@@ -45,6 +45,11 @@
             th:not(.o_list_record_selector) {
                 border-left: $border-width solid var(--ListRenderer-thead-border-end-color);
             }
+
+            .o_list_number_th {
+                /*rtl:ignore*/
+                text-align: right;
+            }
         }
 
         // Override BS default
@@ -61,7 +66,10 @@
             }
 
             &.o_list_number {
+                /*rtl:ignore*/
                 text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
             }
             &.o_list_text {
                 word-break: break-word;
@@ -112,6 +120,13 @@
 
             > tr > td {
                 @include o-text-overflow(table-cell);
+            }
+
+            .o_list_number {
+                /*rtl:ignore*/
+                text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
             }
         }
 
@@ -364,18 +379,6 @@
         }
     }
 
-    // ------- Force progress bars to respect table's layout -------
-    .o_progressbar_cell {
-        .o_progressbar {
-            display: table-row;
-
-            .o_progressbar_value {
-                width: 45px;
-                min-width: 45px;
-            }
-        }
-    }
-
     .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
         border-bottom: 1px solid $o-input-border-required;
     }
@@ -452,6 +455,7 @@
 
     .o_data_row,
     .o_list_footer,
+    .o_group_header,
     thead .o_list_record_selector {
         @include o-sample-data-disabled;
     }

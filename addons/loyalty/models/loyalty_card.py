@@ -100,7 +100,7 @@ class LoyaltyCard(models.Model):
             'context': ctx,
         }
 
-    def _send_creation_communication(self):
+    def _send_creation_communication(self, force_send=False):
         """
         Sends the 'At Creation' communication plan if it exist for the given coupons.
         """
@@ -114,7 +114,7 @@ class LoyaltyCard(models.Model):
             if not create_comm_per_program[coupon.program_id] or not coupon._get_mail_partner():
                 continue
             for comm in create_comm_per_program[coupon.program_id]:
-                comm.mail_template_id.send_mail(res_id=coupon.id, email_layout_xmlid='mail.mail_notification_light')
+                comm.mail_template_id.send_mail(res_id=coupon.id, force_send=force_send, email_layout_xmlid='mail.mail_notification_light')
 
     def _send_points_reach_communication(self, points_changes):
         """

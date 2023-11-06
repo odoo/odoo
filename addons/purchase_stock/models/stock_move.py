@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
 
@@ -26,27 +26,38 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
 
+    def _should_ignore_pol_price(self):
+        self.ensure_one()
+        return self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id:
+        if self._should_ignore_pol_price():
             return super(StockMove, self)._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
         order = line.order_id
         received_qty = line.qty_received
         if self.state == 'done':
-            received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
-        if line.qty_invoiced > received_qty:
-            move_layer = line.move_ids.stock_valuation_layer_ids
-            invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
-            receipt_value = sum(move_layer.mapped('value')) + sum(invoiced_layer.mapped('value'))
+            received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom, rounding_method='HALF-UP')
+        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
+            # value on valuation layer is in company's currency, while value on invoice line is in order's currency
+            receipt_value = 0
+            if move_layer:
+                receipt_value += sum(move_layer.mapped(lambda l: l.currency_id._convert(
+                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+            if invoiced_layer:
+                receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
+                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.invoice_lines:
+            for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.tax_ids:
                     invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
-                        invoice_line.price_unit, currency=invoice_line.account_id.currency_id, quantity=invoice_line.quantity)['total_void']
+                        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
                     invoiced_value += invoice_line.price_unit * invoice_line.quantity
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
@@ -56,13 +67,7 @@ class StockMove(models.Model):
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
             price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
         else:
-            price_unit = line.price_unit
-            if line.taxes_id:
-                qty = line.product_qty or 1
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
-                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
-            if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+            price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
             # The date must be today, and not the date of the move since the move move is still
             # in assigned state. However, the move date is the scheduled date until move is
@@ -146,13 +151,6 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
-    def _prepare_procurement_values(self):
-        proc_values = super()._prepare_procurement_values()
-        if self.restrict_partner_id:
-            proc_values['supplierinfo_name'] = self.restrict_partner_id
-            self.restrict_partner_id = False
-        return proc_values
-
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
@@ -207,4 +205,10 @@ class StockMove(models.Model):
         )
 
     def _get_all_related_aml(self):
-        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids
+        # The back and for between account_move and account_move_line is necessary to catch the
+        # additional lines from a cogs correction
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids.filtered(
+            lambda aml: aml.product_id == self.purchase_line_id.product_id)
+
+    def _get_all_related_sm(self, product):
+        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)

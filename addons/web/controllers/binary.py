@@ -17,7 +17,7 @@ import odoo
 import odoo.modules.registry
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.modules import get_resource_path
 from odoo.tools import file_open, file_path, replace_exceptions
 from odoo.tools.mimetypes import guess_mimetype
@@ -80,7 +80,9 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        return stream.get_response(**send_file_kwargs)
+        res = stream.get_response(**send_file_kwargs)
+        res.headers['Content-Security-Policy'] = "default-src 'none'"
+        return res
 
     @http.route(['/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
@@ -90,10 +92,11 @@ class Binary(http.Controller):
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
+            domain = [('url', '!=', False)]
             if extra:
-                domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+                domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
             else:
-                domain = [
+                domain += [
                     ('url', '=like', f'/web/assets/%/{filename}'),
                     ('url', 'not like', f'/web/assets/%/%/{filename}')
                 ]
@@ -160,7 +163,9 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        return stream.get_response(**send_file_kwargs)
+        res = stream.get_response(**send_file_kwargs)
+        res.headers['Content-Security-Policy'] = "default-src 'none'"
+        return res
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
@@ -241,8 +246,14 @@ class Binary(http.Controller):
                         imgext = '.' + mimetype.split('/')[1]
                         if imgext == '.svg+xml':
                             imgext = '.svg'
-                        response = send_file(image_data, request.httprequest.environ,
-                                             download_name=imgname + imgext, mimetype=mimetype, last_modified=row[1])
+                        response = send_file(
+                            image_data,
+                            request.httprequest.environ,
+                            download_name=imgname + imgext,
+                            mimetype=mimetype,
+                            last_modified=row[1],
+                            response_class=Response,
+                        )
                     else:
                         response = http.Stream.from_path(placeholder('nologo.png')).get_response()
             except Exception:

@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -276,12 +277,12 @@ msgstr "อวตาร"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "คะแนนเฉลี่ย"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "คะแนนเฉลี่ย (%)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
@@ -340,6 +341,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"การตอบกลับสำเร็จรูปช่วยให้คุณสามารถแทรกการตอบกลับที่เขียนไว้ล่วงหน้า\n"
+"                ในข้อความของคุณโดยการพิมพ์ <i>:shortcut</i> ทางลัดจะ\n"
+"                ถูกแทนที่ด้วยข้อความของคุณโดยตรง ดังนั้นคุณจึงยังคงสามารถแก้ไขได้\n"
+"                ก่อนที่จะส่ง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -397,6 +402,9 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
+"การแชทเป็นแบบส่วนตัวและไม่ซ้ำกันระหว่าง 2 คน "
+"กลุ่มเป็นแบบส่วนตัวในกลุ่มผู้ได้รับเชิญ สามารถเข้าร่วมช่องได้อย่างอิสระ "
+"(ขึ้นอยู่กับการกำหนดค่า)"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -437,7 +445,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr ""
+msgstr "สคริปต์แชทบอท"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_answer
@@ -447,7 +455,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr ""
+msgstr "ขั้นตอนสคริปต์แชทบอท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__script_step_id
@@ -564,7 +572,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Create a new canned response"
-msgstr ""
+msgstr "สร้างการตอบกลับสำเร็จรูปใหม่"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_uid
@@ -821,6 +829,7 @@ msgstr ""
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
 #, python-format
 msgid "How may I help you?"
 msgstr ""
@@ -833,7 +842,7 @@ msgstr ""
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr ""
+msgstr "ดูเหมือนว่าไม่มีโอเปอเรเตอร์ของเราคนไหนว่างขณะนี้เลย 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
@@ -898,7 +907,7 @@ msgstr "รูปภาพ 512"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Invalid email address"
-msgstr ""
+msgstr "ที่อยู่อีเมลที่ไม่ถูกต้อง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -928,7 +937,7 @@ msgstr "เข้าร่วม"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Join Channel"
-msgstr ""
+msgstr "เข้าร่วมช่อง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
@@ -996,7 +1005,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel_member
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "ผู้ฟังของช่อง"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -1331,7 +1340,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Please wait"
-msgstr ""
+msgstr "กรุณารอสักครู่"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1361,7 +1370,7 @@ msgstr "การให้คะแนน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "ข้อความเฉลี่ยการให้คะแนน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
@@ -1387,7 +1396,7 @@ msgstr "การให้คะแนนความพึงพอใจ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "ข้อความการให้คะแนน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
@@ -1495,7 +1504,7 @@ msgstr "พูดอะไรซักอย่าง"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Script"
-msgstr ""
+msgstr "สคริปต์"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
@@ -1749,7 +1758,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Try again"
-msgstr ""
+msgstr "ลองอีกครั้ง"
 
 #. module: im_livechat
 #. odoo-python
@@ -1773,7 +1782,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
@@ -1799,7 +1808,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "การตั้งค่าผู้ใช้"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_script_answer_id
@@ -1872,7 +1881,7 @@ msgstr "วิดเจ็ต"
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
-msgstr ""
+msgstr "คุณช่วยให้ที่อยู่อีเมลของคุณไว้เพื่อให้เราติดต่อกลับได้ไหม?"
 
 #. module: im_livechat
 #. odoo-javascript

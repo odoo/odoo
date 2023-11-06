@@ -22,6 +22,8 @@ import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
 
+from ..tests import loader
+
 if os.name == 'posix':
     # Unix only for workers
     import fcntl
@@ -58,7 +60,6 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
-from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
 
@@ -138,6 +139,14 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.protocol_version = "HTTP/1.1"
         return environ
 
+    def send_header(self, keyword, value):
+        # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
+        # since it is incompatible with websocket.
+        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+            # Do not keep processing requests.
+            self.close_connection = True
+            return
+        super().send_header(keyword, value)
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -571,7 +580,7 @@ class ThreadedServer(CommonServer):
 
         if stop:
             if config['test_enable']:
-                logger = odoo.tests.runner._logger
+                logger = odoo.tests.result._logger
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
                         report = registry._assertion_report
@@ -1259,7 +1268,8 @@ def _reexec(updated_modules=None):
     os.execve(sys.executable, args, os.environ)
 
 def load_test_file_py(registry, test_file):
-    from odoo.tests.common import OdooSuite
+    # pylint: disable=import-outside-toplevel
+    from odoo.tests.suite import OdooSuite
     threading.current_thread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
@@ -1385,8 +1395,6 @@ def start(preload=None, stop=False):
             else:
                 module = 'watchdog'
             _logger.warning("'%s' module not installed. Code autoreload feature is disabled", module)
-    if 'werkzeug' in config['dev_mode']:
-        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 

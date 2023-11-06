@@ -13,6 +13,8 @@
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="suitable_journal_ids" invisible="1"/>
+                    <field name="available_payment_method_line_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -116,7 +118,7 @@
                     <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
                     <separator/>
                     <filter string="Sent" name="state_sent" domain="[('is_move_sent', '=', True)]"/>
-                    <filter string="Bank Matched" name="matched" domain="[('is_matched', '=', True)]"/>
+                    <filter string="No Bank Matching" name="unmatched" domain="[('is_matched', '=', False)]"/>
                     <filter string="Reconciled" name="reconciled" domain="[('is_reconciled', '=', True)]"/>
                     <separator/>
                     <filter string="Payment Date" name="date" date="date"/>
@@ -225,7 +227,11 @@
                             </button>
 
                             <!-- Journal Entry  button -->
-                            <button name="button_open_journal_entry" type="object" class="oe_stat_button" icon="fa-bars">
+                            <button name="button_open_journal_entry"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    groups="account.group_account_user,account.group_account_readonly">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Journal Entry</span>
                                 </div>

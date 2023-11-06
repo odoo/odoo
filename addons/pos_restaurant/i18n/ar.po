@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Farid Fox, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -95,7 +95,7 @@ msgstr "إضافة زر"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "إضافة ملاحظات داخلية في بنود الطلب للمطبخ "
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -122,17 +122,17 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "السماح بتقسيم الفاتورة "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom internal notes on Orderlines."
-msgstr "السماح بملاحظات العميل الداخلية في بنود الطلب. "
+msgstr "السماح بالملاحظات المخصصة الداخلية في بنود الطلب. "
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "السماح بطباعة الإيصال قبل الدفع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -233,7 +233,7 @@ msgstr "تقسيم الفاتورة"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "إجراء محجوب "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -251,6 +251,20 @@ msgstr "أزرق"
 #, python-format
 msgid "CANCELLED"
 msgstr "ملغي"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash %s"
+msgstr "النقد %s "
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "حانة الدفع النقدي "
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -343,7 +357,7 @@ msgstr "المشروبات "
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
-msgstr ""
+msgstr "الطلبات غير متزامنة بسبب خطأ في الاتصال. "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -369,7 +383,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "طباعة الإيصال المبكر "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -427,7 +441,7 @@ msgstr "الأرضيات والطاولات "
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "خريطة الطوابق والطاولات "
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -575,7 +589,7 @@ msgstr "آخر تحديث في"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "آخر حالة مطبوعة للطلب "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -800,32 +814,32 @@ msgstr "جلسة نقطة البيع"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "ملاحظات بند طلب Iface نقطة البيع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "طباعة فاتورة Iface نقطة البيع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "تقسيم فاتورة Iface نقطة البيع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "طابعة الطلبات في نقطة البيع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "إدارة الطاولات في نقطة البيع "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "إعداد البقشيش بعد الدفع في نقطة البيع "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -935,7 +949,7 @@ msgstr "طباعةالإيصالات "
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "مطعم وحانة "
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1126,7 +1140,7 @@ msgstr "هاتف:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "%s مستخدم بالفعل في تهيئة نقطة بيع أخرى. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1141,7 +1155,7 @@ msgstr "عدد العملاء المقدم لهم هذا الطلب."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "لون الخلفية للطابق في تنسيق متوافق مع html "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1292,7 +1306,7 @@ msgstr "تعذر حذف الطاولة "
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "تعذر إحضار الطلبات "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1369,7 +1383,7 @@ msgstr "أصفر"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "لا يمكنك وضع عدد يتجاوز %s "
 
 #. module: pos_restaurant
 #. odoo-python

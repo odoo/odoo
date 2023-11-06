@@ -21,7 +21,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -34,6 +34,10 @@ class ProjectCustomerPortal(CustomerPortal):
         # pager
         url = "/my/projects/%s" % project.id
         values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token))
+        # adding the access_token to the pager's url args,
+        # so we are not prompted for loging when switching pages
+        # if access_token is None, the arg is not present in the URL
+        values['pager']['url_args']['access_token'] = access_token
         pager = portal_pager(**values['pager'])
 
         values.update(
@@ -65,7 +69,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = self._prepare_project_domain()
 
         searchbar_sortings = self._prepare_searchbar_sortings()
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -120,7 +124,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             values = {'project_id': project_id}
             if task_id:
                 values['task_id'] = task_id
@@ -408,7 +412,8 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
 
                     if not grouped_tasks:
-                        grouped_tasks = [tasks_no_milestone]
+                        if tasks_no_milestone:
+                            grouped_tasks = [tasks_no_milestone]
                     else:
                         if grouped_tasks[len(grouped_tasks) - 1][0].milestone_id and tasks_no_milestone:
                             grouped_tasks.append(tasks_no_milestone)
@@ -418,7 +423,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 else:
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
-                grouped_tasks = [tasks]
+                grouped_tasks = [tasks] if tasks else []
 
             task_states = dict(Task_sudo._fields['kanban_state']._description_selection(request.env))
             if sortby == 'status':
@@ -455,7 +460,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to
