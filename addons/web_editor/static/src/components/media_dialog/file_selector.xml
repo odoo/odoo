@@ -37,7 +37,7 @@
 </t>
 
 <t t-name="web_editor.FileSelector">
-    <div class="o_we_file_selector_container">
+    <div>
         <FileSelectorControlPanel uploadText="uploadText"
             accept="fileMimetypes"
             urlPlaceholder="urlPlaceholder"
@@ -57,13 +57,22 @@
             validateUrl="validateUrl"
             multiSelect="props.multiSelect"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
-        <div name="load_more_attachments" class="position-fixed pt-3 text-center mx-auto o_we_load_more" t-ref="load-more-button">
-            <div t-if="canScroll" class="d-flex align-items-center mx-auto btn btn-primary rounded-circle oi oi-chevron-down o_scroll_attachments" t-on-click="handleScrollAttachments"/>
-            <button t-if="canLoadMore and !canScroll" class="btn btn-primary o_load_more" type="button" t-on-click="handleLoadMore">Load more...</button>
-            <div t-if="hasContent and !canLoadMore and !canScroll" class="mt-2 o_load_done_msg">
+        <div name="load_more_attachments"
+            class="pt-3 pb-1 text-center mx-auto o_we_load_more"
+            t-ref="load-more-button">
+            <button t-if="canLoadMore"
+                class="btn btn-primary o_load_more"
+                type="button"
+                t-on-click="handleLoadMore">
+                Load more...
+            </button>
+            <div t-elif="hasContent" class="mt-2 o_load_done_msg">
                 <span><i t-esc="allLoadedText"/></span>
             </div>
         </div>
+        <div t-if="this.state.canScrollAttachments"
+            class="position-sticky d-flex align-items-center mx-auto btn btn-primary rounded-circle oi oi-chevron-down o_scroll_attachments"
+            t-on-click="handleScrollAttachments"/>
     </div>
 </t>
 </templates>
