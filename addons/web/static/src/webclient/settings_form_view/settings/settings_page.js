@@ -15,6 +15,7 @@ export class SettingsPage extends Component {
         }
 
         this.settingsRef = useRef("settings");
+        this.settingsTabRef = useRef("settings_tab");
         this.scrollMap = Object.create(null);
         useEffect(
             (settingsEl, currentTab) => {
@@ -47,11 +48,22 @@ export class SettingsPage extends Component {
             this.getCurrentIndex() !== this.props.modules.length - 1
         );
     }
-    onRightSwipe() {
+    async onRightSwipe(prom) {
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() - 1].key;
+        await prom;
+        this.scrollToSelectedTab();
     }
-    onLeftSwipe() {
+    async onLeftSwipe(prom) {
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() + 1].key;
+        await prom;
+        this.scrollToSelectedTab();
+    }
+
+    scrollToSelectedTab() {
+        const key = this.state.selectedTab;
+        this.settingsTabRef.el
+            .querySelector(`[data-key='${key}']`)
+            .scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
 
     onSettingTabClick(key) {
