@@ -91,6 +91,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_hierarchy_node", 3);
         assert.containsN(target, ".o_hierarchy_node_button", 2);
         assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary");
+        assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary.d-grid");
+        assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary.rounded-0");
+        assert.containsOnce(target, ".o_hierarchy_node_button.btn-primary .o_hierarchy_icon");
         assert.strictEqual(target.querySelector(".o_hierarchy_node_button.btn-primary").textContent.trim(), "Unfold 1");
         // check nodes in each row
         const row = target.querySelector(".o_hierarchy_row");
