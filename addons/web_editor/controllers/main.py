@@ -774,7 +774,7 @@ class Web_Editor(http.Controller):
                 'prompt': prompt,
                 'conversation_history': conversation_history or [],
                 'version': release.version,
-            }, timeout=300)
+            }, timeout=30)
             if response['status'] == 'success':
                 return response['content']
             elif response['status'] == 'error_prompt_too_long':
