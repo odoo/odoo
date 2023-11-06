@@ -115,18 +115,18 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
         ].flat(),
 });
 
-registry
-    .category("web_tour.tours")
-    .add("ReceiptTrackingMethodTour", {
-        test: true,
-        url: "/pos/ui",
-        steps: () => [
+registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.enterLotNumber('123456789'),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumber("123456789"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod('Cash'),
+            PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.trackingMethodIsLot(),
         ].flat(),
-    });
+});

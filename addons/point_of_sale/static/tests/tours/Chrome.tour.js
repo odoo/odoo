@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // Invoice an order
             ProductScreen.addOrderline("Whiteboard Pen", "5", "6"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Nicole Ford"),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
