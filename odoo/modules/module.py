@@ -155,39 +155,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
         _logger.warning('module %s: module not found', module)
     return False
 
-def get_module_filetree(module, dir='.'):
-    warnings.warn(
-        "Since 16.0: use os.walk or a recursive glob or something",
-        DeprecationWarning,
-        stacklevel=2
-    )
-    path = get_module_path(module)
-    if not path:
-        return False
-
-    dir = os.path.normpath(dir)
-    if dir == '.':
-        dir = ''
-    if dir.startswith('..') or (dir and dir[0] == '/'):
-        raise Exception('Cannot access file outside the module')
-
-    files = odoo.tools.osutil.listdir(path, True)
-
-    tree = {}
-    for f in files:
-        if not f.startswith(dir):
-            continue
-
-        if dir:
-            f = f[len(dir)+int(not dir.endswith('/')):]
-        lst = f.split(os.sep)
-        current = tree
-        while len(lst) != 1:
-            current = current.setdefault(lst.pop(0), {})
-        current[lst.pop(0)] = None
-
-    return tree
-
 def get_resource_path(module, *args):
     """Return the full path of a resource of the given module.
 
