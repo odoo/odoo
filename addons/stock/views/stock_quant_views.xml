@@ -38,6 +38,7 @@
                     <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
                     <filter name="priority_products" string="Starred Products" domain="[('priority', '=', 1)]"/>
                     <separator/>
+                    <filter name="in_stock" string="In Stock" domain="[('quantity', '&gt;', 0.0)]"/>
                     <filter name="conflicts" string="Conflicts" domain="[('is_outdated', '=', True)]"/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
