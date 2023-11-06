@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { sprintf } from "web.utils";
+import { sprintf, float_is_zero } from "web.utils";
 import { parse } from "web.field_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -246,9 +246,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                     const product_unit = product.get_unit();
                     if (product_unit && !product.get_unit().is_pos_groupable) {
                         //loop for value of quantity
-                        for (let j = 0; j < new_line.quantity; j++) {
+                        let remaining_quantity  = new_line.quantity;
+                        while (!float_is_zero(remaining_quantity, 6)) {
                             let splitted_line = new Orderline({}, line_values);
-                            splitted_line.quantity = 1;
+                            splitted_line.set_quantity(Math.min(remaining_quantity, 1.0));
+                            remaining_quantity -= splitted_line.quantity;
                             this.env.pos.get_order().add_orderline(splitted_line);
                         }
                     }
