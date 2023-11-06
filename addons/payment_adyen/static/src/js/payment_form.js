@@ -47,8 +47,7 @@ paymentForm.include({
 
         // Extract and deserialize the inline form values.
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        const inlineFormValues = JSON.parse(radio.dataset['inlineFormValues']);
-        const formatted_amount = inlineFormValues['formatted_amount'];
+        const inlineFormValues = JSON.parse(radio.dataset['adyenInlineFormValues']);
         const formattedAmount = inlineFormValues['formatted_amount'];
 
         // Create the checkout object if not already done for another payment method.
