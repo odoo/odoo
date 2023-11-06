@@ -153,11 +153,10 @@ ScrollSpy.prototype._activate = function (target) {
  * Bootstrap disables dynamic dropdown positioning when it is in a navbar. Here
  * we make this patch to activate this dynamic navbar's dropdown positioning
  * which is useful to avoid that the elements of the website sub-menus overflow
- * the page. Note that when the menu is "hamburger" type, we leave dynamic
- * positioning disabled.
+ * the page.
  */
 Dropdown.prototype._detectNavbar = function () {
-    return this._element.closest(".navbar-collapse.show");
+    return false;
 };
 
 /* Bootstrap modal scrollbar compensation on non-body */
