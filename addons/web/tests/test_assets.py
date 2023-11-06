@@ -29,19 +29,19 @@ class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
 
         for bundle_name in bundles:
             with mute_logger('odoo.addons.base.models.assetsbundle'):
-                for assets_type in 'css', 'js':
+                for assets_type in ['css', 'js']:
+                    start_t = time.time()
+                    css = assets_type == 'css'
+                    js = assets_type == 'js'
                     try:
-                        start_t = time.time()
-                        css = assets_type == 'css'
-                        js = assets_type == 'js'
                         bundle = self.env['ir.qweb']._get_asset_bundle(bundle_name, css=css, js=js)
-                        if assets_type == 'css' and bundle.stylesheets:
+                        if css and bundle.stylesheets:
                             bundle.css()
-                        if assets_type == 'js' and bundle.javascripts:
+                        if js and bundle.javascripts:
                             bundle.js()
-                        yield (f'{bundle_name}.{assets_type}', time.time() - start_t)
-                    except ValueError:
-                        _logger.info('Error detected while generating bundle %r %s', bundle_name, assets_type)
+                        yield f'{bundle_name}.{assets_type}', time.time() - start_t
+                    except Exception:
+                        _logger.info('Error detected while generating bundle %s.%s', bundle_name, assets_type, exc_info=True)
 
 
 @odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
