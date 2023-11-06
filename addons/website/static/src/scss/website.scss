@@ -359,11 +359,8 @@ $-seen-urls: ();
 
 // Apply background color to the offcanvas menu
 .o_navbar_mobile {
-    $-menu-color: o-color('menu-custom') or o-color('menu');
-
-    @include o-bg-color($-menu-color);
-
     height: 100dvh;
+    background-color: o-color('menu-custom') or o-color('menu');
 }
 
 $-header-nav-link-height: $nav-link-height;
