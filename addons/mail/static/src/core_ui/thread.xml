@@ -118,7 +118,7 @@
         'mt-2': prevMsg and !prevMsg.isNotification,
     }">
         <i t-if="msg.notificationIcon" t-attf-class="{{ msg.notificationIcon }} me-1"/>
-        <span t-if="!msg.body.includes(escape(msg.author.name))" class="d-inline mx-1" t-esc="msg.author.name"/> <t t-out="msg.body"/>
+        <span t-if="msg.author and !msg.body.includes(escape(msg.author.name))" class="d-inline mx-1" t-esc="msg.author.name"/> <t t-out="msg.body"/>
     </div>
 </t>
 
