@@ -1335,12 +1335,12 @@ export class OdooEditor extends EventTarget {
                         }
                         this.idSet(nodeToRemove);
                     }
-                    if (mutation.nextId && this.idFind(mutation.nextId)) {
-                        const node = this.idFind(mutation.nextId);
-                        node && node.before(nodeToRemove);
-                    } else if (mutation.previousId && this.idFind(mutation.previousId)) {
-                        const node = this.idFind(mutation.previousId);
-                        node && node.after(nodeToRemove);
+                    const next = mutation.nextId && this.idFind(mutation.nextId);
+                    const previous = !(next && next.isConnected) && mutation.previousId && this.idFind(mutation.previousId);
+                    if (next && next.isConnected) {
+                        next && next.before(nodeToRemove);
+                    } else if (previous && previous.isConnected) {
+                        previous && previous.after(nodeToRemove);
                     } else {
                         const node = this.idFind(mutation.parentId);
                         node && node.append(nodeToRemove);
