@@ -41,10 +41,6 @@ export class LoadingIndicator extends Component {
             this.startShowTimer = browser.setTimeout(() => {
                 if (this.state.count) {
                     this.state.show = true;
-                    this.blockUITimer = browser.setTimeout(() => {
-                        this.shouldUnblock = true;
-                        this.uiService.block();
-                    }, 3000);
                 }
             }, 250);
         }
