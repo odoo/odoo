@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { parseFloat } from "@web/views/fields/parsers";
+import { floatIsZero } from "@web/core/utils/numbers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/app/utils/control_buttons_mixin";
@@ -255,11 +256,12 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     const product = this.pos.db.get_product_by_id(line.product_id[0]);
                     const product_unit = product.get_unit();
                     if (product_unit && !product.get_unit().is_pos_groupable) {
-                        //loop for value of quantity
-                        for (let j = 0; j < new_line.quantity; j++) {
+                        let remaining_quantity = new_line.quantity;
+                        while (!floatIsZero(remaining_quantity, 6)) {
                             const splitted_line = new Orderline({ env: this.env }, line_values);
-                            splitted_line.quantity = 1;
+                            splitted_line.set_quantity(Math.min(remaining_quantity, 1.0));
                             this.pos.get_order().add_orderline(splitted_line);
+                            remaining_quantity -= splitted_line.quantity;
                         }
                     } else {
                         this.pos.get_order().add_orderline(new_line);
