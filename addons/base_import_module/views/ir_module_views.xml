@@ -6,6 +6,9 @@
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.module_view_kanban"/>
             <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="js_class">module_kanban</attribute>
+                </xpath>
                 <xpath expr="//field[@name='application']" position="after">
                     <field name="module_type"/>
                 </xpath>
