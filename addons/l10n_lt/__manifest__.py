@@ -3,7 +3,7 @@
 # See LICENSE file for full copyright and licensing details.
 {
     'name': "Lithuania - Accounting",
-    'version': '1.0.0',
+    'version': '1.1',
     'description': """
         Chart of Accounts (COA) Template for Lithuania's Accounting.
 
