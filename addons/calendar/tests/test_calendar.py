@@ -7,6 +7,8 @@ from datetime import date, datetime, timedelta
 from odoo import fields, Command
 from odoo.tests import Form, HttpCase, tagged
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+
+import freezegun
 import pytz
 import re
 
@@ -296,8 +298,10 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         self.assertEqual(str(activity_id.date_deadline), '2018-10-16')
 
+    @freezegun.freeze_time('2023-10-06 10:00:00')
     def test_event_creation_mail(self):
         """
+        Freezegun used because we don't send mail for past events
         Check that mail are sent to the attendees on event creation
         Check that mail are sent to the added attendees on event edit
         Check that mail are NOT sent to the attendees when the event date is past
