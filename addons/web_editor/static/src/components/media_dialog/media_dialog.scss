@@ -1,11 +1,6 @@
 .modal:not(.o_legacy_dialog) .o_select_media_dialog {
     $min-row-height: 128;
-    $bottom-bar-height: 52px;
-
-    .o_we_file_selector_container {
-        // Letting some space for the bottom bar.
-        padding-bottom: $bottom-bar-height;
-    }
+    $scroll-button-height: 36px;
 
     .o_we_file_selector_control_panel {
         top: -$modal-inner-padding;
@@ -42,21 +37,19 @@
     }
 
     .o_we_load_more {
-        top: calc(var(--footer-top) - #{$bottom-bar-height} - #{$modal-inner-padding});
-        width: calc(var(--footer-width) - 2 * #{$modal-inner-padding});
-        height: $bottom-bar-height;
         scroll-margin: $modal-inner-padding;
 
-        &.o_can_scroll {
-            z-index: 2;
-            pointer-events: none;
-
-            > .o_scroll_attachments {
-                width: 36px;
-                height: 36px;
-                pointer-events: all;
-            }
+        &.o_hide_loading > * {
+            display: none;
         }
+    }
+
+    .o_scroll_attachments {
+        bottom: 0px;
+        width: $scroll-button-height;
+        height: $scroll-button-height;
+        margin-top: -$scroll-button-height;
+        z-index: 2;
     }
 
     .font-icons-icons > span {
