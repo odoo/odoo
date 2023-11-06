@@ -128,6 +128,7 @@ class AccountAnalyticLine(models.Model):
                         account_filter_node.addnext(E.filter(name=fname, context=f"{{'group_by': '{fname}'}}"))
         return arch, view
 
+    @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
         if self.env['account.analytic.plan'].check_access_rights('read', raise_exception=False):
