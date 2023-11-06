@@ -64,7 +64,7 @@ function autocompleteWithPages(input, options= {}) {
     });
 
     const container = document.createElement("div");
-    container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0");
+    container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0", "url-autocomplete-container");
     document.body.appendChild(container);
     owlApp.mount(container)
     return () => {

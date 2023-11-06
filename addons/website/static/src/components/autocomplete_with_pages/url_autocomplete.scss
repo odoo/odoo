@@ -4,3 +4,8 @@
         cursor: default;
     }
 }
+
+.url-autocomplete-container.ui-widget.ui-autocomplete {
+    // This follow the z-index applied at the overlay_container.scss
+    z-index: $zindex-tooltip + 1;
+}
