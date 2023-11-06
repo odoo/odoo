@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import tagged, TransactionCase
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
+
 
 @tagged('post_install', '-at_install')
 class TestPartner(TransactionCase):
@@ -16,7 +15,7 @@ class TestPartner(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         # use a single value for today throughout the tests to avoid weird scenarios around midnight
-        cls.today = date.today()
+        cls.today = fields.Date.today()
         baseUser = cls.env['res.users'].create({
             'email': 'e.e@example.com',
             'groups_id': [Command.link(cls.env.ref('base.group_user').id)],
@@ -57,7 +56,7 @@ class TestPartner(TransactionCase):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(
             self.partner.mail_partner_format()[self.partner]['out_of_office_date_end'],
-            (self.today + relativedelta(days=2)).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            fields.Date.to_string(self.today + relativedelta(days=2)),
             'Return date is the first return date of all users associated with a partner',
         )
         self.leaves[1].action_refuse()

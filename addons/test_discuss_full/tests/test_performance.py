@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import users, tagged, HttpCase, warmup
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('post_install', '-at_install')
@@ -53,8 +50,8 @@ class TestDiscussFullPerformance(HttpCase):
             'time_type': 'leave',
         })
         self.leaves = self.env['hr.leave'].create([{
-            'request_date_from': date.today() + relativedelta(days=-2),
-            'request_date_to': date.today() + relativedelta(days=2),
+            'request_date_from': fields.Datetime.today() + relativedelta(days=-2),
+            'request_date_to': fields.Datetime.today() + relativedelta(days=2),
             'employee_id': employee.id,
             'holiday_status_id': self.leave_type.id,
         } for employee in self.employees])
@@ -172,7 +169,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_general.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_general.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'general',
                     'rtcSessions': [('ADD', [])],
@@ -223,7 +220,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': True,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 1,
                     'name': 'public channel 1',
                     'rtcSessions': [('ADD', [])],
@@ -274,7 +271,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': True,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'public channel 2',
                     'rtcSessions': [('ADD', [])],
@@ -325,7 +322,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': True,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'group restricted channel 1',
                     'rtcSessions': [('ADD', [])],
@@ -376,7 +373,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': True,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'group restricted channel 2',
                     'rtcSessions': [('ADD', [])],
@@ -450,7 +447,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': True,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': '',
                     'rtcSessions': [('ADD', [])],
@@ -538,7 +535,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test14',
                     'rtcSessions': [('ADD', [])],
@@ -626,7 +623,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test15',
                     'rtcSessions': [('ADD', [])],
@@ -714,7 +711,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test2',
                     'rtcSessions': [('ADD', [])],
@@ -802,7 +799,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test3',
                     'rtcSessions': [('ADD', [])],
@@ -888,7 +885,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'test1 Ernest Employee',
                     "custom_notifications": False,
@@ -968,7 +965,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'is_editable': False,
                     'is_minimized': False,
                     'is_pinned': True,
-                    'last_interest_dt': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'last_interest_dt': fields.Datetime.to_string(self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt),
                     'message_needaction_counter': 0,
                     'name': 'anon 2 Ernest Employee',
                     "custom_notifications": False,

@@ -12,7 +12,6 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape, get_lang
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -656,7 +655,7 @@ class Channel(models.Model):
         # Use SQL because by calling write method, write_date is going to be updated, but we don't want pin/unpin
         # a message changes the write_date
         self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
-                            (fields.datetime.now() if pinned else None, message_to_update.id))
+                            (fields.Datetime.now() if pinned else None, message_to_update.id))
         message_to_update.invalidate_recordset(['pinned_at'])
 
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
@@ -783,11 +782,11 @@ class Channel(models.Model):
                     info['message_unread_counter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
                     info['custom_notifications'] = member.custom_notifications
-                    info['mute_until_dt'] = member.mute_until_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT) if member.mute_until_dt else False
+                    info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
-                    info['last_interest_dt'] = member.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                    info['last_interest_dt'] = fields.Datetime.to_string(member.last_interest_dt)
                     if member.rtc_inviting_session_id:
                         info['rtc_inviting_session'] = {'id': member.rtc_inviting_session_id.id}
             # add members info

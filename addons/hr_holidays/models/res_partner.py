@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 from odoo import api, models
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 
 class ResPartner(models.Model):
@@ -37,6 +37,6 @@ class ResPartner(models.Model):
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
                 partners_format.get(partner).update({
-                    'out_of_office_date_end': date.strftime(DEFAULT_SERVER_DATE_FORMAT) if state == 'validate' and date else False,
+                    'out_of_office_date_end': odoo.fields.Date.to_string(date) if state == 'validate' and date else False,
                 })
         return partners_format

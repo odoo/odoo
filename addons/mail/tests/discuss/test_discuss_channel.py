@@ -11,7 +11,6 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, users
 from odoo.tools import html_escape, mute_logger
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged("post_install", "-at_install")
@@ -176,7 +175,7 @@ class TestChannelInternals(MailCommon):
             # `last_interest_dt` should be updated again when `channel_get` is called
             # because `channel_pin` is called.
             channel_info = self.env['discuss.channel'].channel_get(partners_to=self.partner_admin.ids)._channel_info()[0]
-        self.assertEqual(channel_info['last_interest_dt'], retrieve_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        self.assertEqual(channel_info['last_interest_dt'], fields.Datetime.to_string(retrieve_time))
 
     @users('employee')
     def test_channel_info_seen(self):

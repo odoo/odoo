@@ -5,15 +5,14 @@ import datetime
 import logging
 
 import requests
-import werkzeug.urls
 
 from ast import literal_eval
 
-from odoo import api, release, SUPERUSER_ID
+from odoo import api, fields, release, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
-from odoo.tools import config, misc, ustr
+from odoo.tools import config, ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -29,16 +28,14 @@ class PublisherWarrantyContract(AbstractModel):
 
         dbuuid = IrParamSudo.get_param('database.uuid')
         db_create_date = IrParamSudo.get_param('database.create_date')
-        limit_date = datetime.datetime.now()
-        limit_date = limit_date - datetime.timedelta(15)
-        limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
+        limit_date = fields.Datetime.now() - datetime.timedelta(15)
         nbr_users = Users.search_count([('active', '=', True)])
-        nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str), ('active', '=', True)])
+        nbr_active_users = Users.search_count([("login_date", ">=", limit_date), ('active', '=', True)])
         nbr_share_users = 0
         nbr_active_share_users = 0
         if "share" in Users._fields:
             nbr_share_users = Users.search_count([("share", "=", True), ('active', '=', True)])
-            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date_str), ('active', '=', True)])
+            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date), ('active', '=', True)])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
