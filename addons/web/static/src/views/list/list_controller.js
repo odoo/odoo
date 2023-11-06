@@ -1,7 +1,10 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { unique } from "@web/core/utils/arrays";
@@ -16,7 +19,7 @@ import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { useSetupView } from "@web/views/view_hook";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
@@ -252,24 +255,22 @@ export class ListController extends Component {
     }
 
     async onClickCreate() {
-        this.disableButtons();
-        await this.createRecord();
-        this.enableButtons();
+        return executeButtonCallback(this.rootRef.el, () => this.createRecord());
     }
 
     async onClickDiscard() {
-        this.disableButtons();
-        await this.model.root.leaveEditMode({ discard: true });
-        this.enableButtons();
+        return executeButtonCallback(this.rootRef.el, () =>
+            this.model.root.leaveEditMode({ discard: true })
+        );
     }
 
     async onClickSave() {
-        this.disableButtons();
-        const saved = await this.model.root.editedRecord.save();
-        if (saved) {
-            await this.model.root.leaveEditMode();
-        }
-        this.enableButtons();
+        return executeButtonCallback(this.rootRef.el, async () => {
+            const saved = await this.model.root.editedRecord.save();
+            if (saved) {
+                await this.model.root.leaveEditMode();
+            }
+        });
     }
 
     onMouseDownDiscard(mouseDownEvent) {
@@ -523,8 +524,8 @@ export class ListController extends Component {
         return this.model.root.unarchive(true);
     }
 
-    async duplicateRecords(){
-        return this.model.root.duplicateRecords()
+    async duplicateRecords() {
+        return this.model.root.duplicateRecords();
     }
 
     get deleteConfirmationDialogProps() {
@@ -560,21 +561,6 @@ export class ListController extends Component {
     }
 
     async afterExecuteActionButton(clickParams) {}
-
-    disableButtons() {
-        const btns = [...this.rootRef.el.querySelectorAll("button:not([disabled])")];
-        for (const btn of btns) {
-            btn.setAttribute("disabled", "1");
-        }
-        this.disabledButtons = btns;
-    }
-
-    enableButtons() {
-        for (const btn of this.disabledButtons) {
-            btn.removeAttribute("disabled");
-        }
-        this.disabledButtons = null;
-    }
 
     onWillSaveMulti(editedRecord, changes, validSelectedRecords) {
         if (this.hasMousedownDiscard) {
