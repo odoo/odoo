@@ -16,7 +16,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     setup() {
         super.setup();
         this.orm = useService('orm');
-        this.action = useService("action");
+        this.actionService = useService("action");
 
         onWillStart(async () => {
             const res = await this.orm.searchCount('hr.skill', []);
