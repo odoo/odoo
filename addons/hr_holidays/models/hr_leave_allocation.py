@@ -332,7 +332,7 @@ class HolidaysAllocation(models.Model):
             elif not allocation.employee_id and not allocation._origin.employee_id:
                 allocation.employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id
 
-    @api.depends('holiday_type', 'employee_id')
+    @api.depends('holiday_type', 'employee_id', 'employee_id.department_id')
     def _compute_department_id(self):
         for allocation in self:
             if allocation.holiday_type == 'employee':

@@ -439,7 +439,7 @@ class HolidaysRequest(models.Model):
             if holiday.employee_id.user_id != self.env.user and self._origin.employee_id != holiday.employee_id:
                 holiday.holiday_status_id = False
 
-    @api.depends('employee_id', 'holiday_type')
+    @api.depends('employee_id', 'holiday_type', 'employee_id.department_id')
     def _compute_department_id(self):
         for holiday in self:
             if holiday.employee_id:
