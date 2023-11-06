@@ -587,6 +587,7 @@ export class X2ManyFieldDialog extends Component {
             if (await this.record.checkValidity({ displayNotification: true })) {
                 await this.props.save(this.record);
                 if (saveAndNew) {
+                    await this.record.switchMode("readonly");
                     this.record = await this.props.addNew();
                 }
             } else {
