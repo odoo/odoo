@@ -47,7 +47,9 @@ paymentForm.include({
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
         const inlineForm = this._getInlineForm(radio);
         const authorizeForm = inlineForm.querySelector('[name="o_authorize_form"]');
-        this.authorizeData[paymentOptionId] = JSON.parse(authorizeForm.dataset['inlineFormValues']);
+        this.authorizeData[paymentOptionId] = JSON.parse(
+            authorizeForm.dataset['authorizeInlineFormValues']
+        );
         let acceptJSUrl = 'https://js.authorize.net/v1/Accept.js';
         if (this.authorizeData[paymentOptionId].state !== 'enabled') {
             acceptJSUrl = 'https://jstest.authorize.net/v1/Accept.js';

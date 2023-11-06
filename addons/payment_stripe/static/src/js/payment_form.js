@@ -44,7 +44,9 @@ paymentForm.include({
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
         const inlineForm = this._getInlineForm(radio);
         const stripeInlineForm = inlineForm.querySelector('[name="o_stripe_element_container"]');
-        this.stripeInlineFormValues = JSON.parse(stripeInlineForm.dataset['inlineFormValues']);
+        this.stripeInlineFormValues = JSON.parse(
+            stripeInlineForm.dataset['stripeInlineFormValues']
+        );
 
         // Instantiate the elements.
         let elementsOptions =  {
