@@ -1119,6 +1119,17 @@ export class ListRenderer extends Component {
                 await recordAfterResequence();
                 await this.props.list.enterEditMode(record);
                 this.cellToFocus = { column, record };
+                if (
+                    record.fields[column.name].type === "boolean" &&
+                    (!column.widget || column.widget === "boolean")
+                ) {
+                    if (
+                        !this.isCellReadonly(column, record) &&
+                        !this.evalInvisible(column.invisible, record)
+                    ) {
+                        await record.update({ [column.name]: !record.data[column.name] });
+                    }
+                }
             }
         } else if (this.props.list.editedRecord && this.props.list.editedRecord !== record) {
             this.props.list.leaveEditMode();
