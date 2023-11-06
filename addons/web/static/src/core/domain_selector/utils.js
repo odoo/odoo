@@ -16,6 +16,12 @@ import {
 } from "@web/core/domain_tree";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    formatDate,
+    formatDateTime,
+} from "@web/core/l10n/dates";
 
 /**
  * @param {import("@web/core/domain_tree").Tree} tree
@@ -191,6 +197,12 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (label !== undefined) {
             val = label;
         }
+    }
+    if (fieldDef?.type === "datetime") {
+        return formatDateTime(deserializeDateTime(val));
+    }
+    if (fieldDef?.type === "date") {
+        return formatDate(deserializeDate(val));
     }
     if (disambiguate && typeof val === "string") {
         return JSON.stringify(val);
