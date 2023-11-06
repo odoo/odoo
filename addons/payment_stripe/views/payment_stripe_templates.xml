@@ -11,7 +11,9 @@
                         sale_order_id=sale_order_id,
                     )"
         />
-        <div name="o_stripe_element_container" t-att-data-inline-form-values="inline_form_values"/>
+        <div name="o_stripe_element_container"
+             t-att-data-stripe-inline-form-values="inline_form_values"
+        />
     </template>
 
     <template id="express_checkout_form">
