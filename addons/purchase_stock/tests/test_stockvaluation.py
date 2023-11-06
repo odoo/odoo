@@ -757,6 +757,78 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertAlmostEqual(picking_aml.amount_currency, -20, msg="credit value for stock should be equal to the standard price of the product.")
         self.assertAlmostEqual(diff_aml.amount_currency, -80, msg="credit value for price difference")
 
+    def test_valuation_rounding(self):
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        self.env.ref('product.decimal_price').digits = 5
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1500.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 3.30125,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        # Receive the goods
+        receipt = po.picking_ids
+        receipt.move_line_ids.qty_done = 1500
+        receipt.button_validate()
+
+        self._bill(po)
+        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(layers), 1)
+        self.assertEqual(layers.quantity, 1500)
+        self.assertEqual(layers.value, 4951.88)
+
+    def test_valuation_rounding_price_diff(self):
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        self.env.ref('product.decimal_price').digits = 5
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1500.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 3.30125,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        # Receive the goods
+        receipt = po.picking_ids
+        receipt.move_line_ids.qty_done = 1500
+        receipt.button_validate()
+
+        self._bill(po, price=3.31125)
+        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(layers), 2)
+        self.assertEqual(layers[0].quantity, 1500)
+        self.assertEqual(layers[1].quantity, 0)
+        self.assertEqual(layers[0].value, 4951.88)
+        self.assertEqual(round(layers[1].value, company.currency_id.decimal_places), 15)
+
     def test_valuation_multicurecny_with_tax(self):
         """ Check that a tax without account will increment the stock value.
         """

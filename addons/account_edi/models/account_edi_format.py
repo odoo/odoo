@@ -505,19 +505,24 @@ class AccountEdiFormat(models.Model):
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        for value, domain in (
-            (name, ('name', 'ilike', name)),
-            (default_code, ('default_code', '=', default_code)),
-            (barcode, ('barcode', '=', barcode)),
-        ):
-            if value is not None:
-                domains.append([domain])
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if barcode:
+            domains.append([('barcode', '=', barcode)])
 
-        domain = expression.AND([
-            expression.OR(domains),
-            [('company_id', 'in', [False, self.env.company.id])],
-        ])
-        return self.env['product.product'].search(domain, limit=1)
+        # Search for the product with the exact name, then ilike the name
+        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        for name_domain in name_domains:
+            product = self.env['product.product'].search(
+                expression.AND([
+                    expression.OR(domains + [name_domain]),
+                    [('company_id', 'in', [False, self.env.company.id])],
+                ]),
+                limit=1,
+            )
+            if product:
+                return product
+        return self.env['product.product']
 
     def _retrieve_tax(self, amount, type_tax_use):
         '''Search all taxes and find one that matches all of the parameters.
