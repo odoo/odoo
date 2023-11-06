@@ -149,3 +149,32 @@ QUnit.test("Trusted insert on html field with { html: true }", async (assert) =>
     assert.strictEqual(hello.body.toString(), "<p>hello</p>");
     assert.strictEqual(world.body, "<p>world</p>");
 });
+
+QUnit.test("Unshift preserves order", async (assert) => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register();
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = Record.many("Message");
+    }).register();
+    const store = await start();
+    const thread = store.Thread.insert({ name: "General" });
+    thread.messages.unshift({ id: 3 }, { id: 2 }, { id: 1 });
+    assert.deepEqual(
+        thread.messages.map((msg) => msg.id),
+        [3, 2, 1]
+    );
+    thread.messages.unshift({ id: 6 }, { id: 5 }, { id: 4 });
+    assert.deepEqual(
+        thread.messages.map((msg) => msg.id),
+        [6, 5, 4, 3, 2, 1]
+    );
+    thread.messages.unshift({ id: 7 });
+    assert.deepEqual(
+        thread.messages.map((msg) => msg.id),
+        [7, 6, 5, 4, 3, 2, 1]
+    );
+});
