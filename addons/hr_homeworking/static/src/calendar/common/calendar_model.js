@@ -35,11 +35,11 @@ patch(AttendeeCalendarModel.prototype, {
             const startDay = day.s;
             const dayISO = startDay.toISODate();
             const dayName = startDay.setLocale("en").weekdayLong.toLowerCase();
-            if (!(dayISO in events)) {
-                events[dayISO] = {};
-            }
             for (const employeeId in res) {
                 if (this.multiCalendar) {
+                    if (!(dayISO in events)) {
+                        events[dayISO] = {};
+                    }
                     if (res[employeeId].exceptions && dayISO in res[employeeId].exceptions) {
                         // check if exception for that date
                         const { location_type } = res[employeeId].exceptions[dayISO];
@@ -56,9 +56,9 @@ patch(AttendeeCalendarModel.prototype, {
                         }
                         const {location_type} = res[employeeId][locationKeyName];
                         if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][`${dayName}_location_id`]));
+                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
                         } else {
-                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][`${dayName}_location_id`])];
+                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
                         }
                     }
                 } else {
