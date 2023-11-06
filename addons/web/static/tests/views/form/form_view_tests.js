@@ -413,7 +413,7 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        assert.containsN(target, ".o-form-buttonbox > button", 3);
+        assert.containsN(target, ".o-form-buttonbox > button", 2);
         assert.containsOnce(target, ".o-dropdown.oe_stat_button .o_button_more");
 
         await click(target, ".o-dropdown.oe_stat_button .o_button_more");
@@ -8343,10 +8343,10 @@ QUnit.module("Views", (hooks) => {
             );
         };
 
-        await assertFormContainsNButtonsWithSizeClass(0, 3);
+        await assertFormContainsNButtonsWithSizeClass(0, 2);
         await assertFormContainsNButtonsWithSizeClass(1, 3);
-        await assertFormContainsNButtonsWithSizeClass(2, 3);
-        await assertFormContainsNButtonsWithSizeClass(3, 7);
+        await assertFormContainsNButtonsWithSizeClass(2, 4);
+        await assertFormContainsNButtonsWithSizeClass(3, 6);
         await assertFormContainsNButtonsWithSizeClass(4, 3);
         await assertFormContainsNButtonsWithSizeClass(5, 4);
         await assertFormContainsNButtonsWithSizeClass(6, 7);
