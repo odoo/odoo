@@ -28,6 +28,7 @@
             'project_todo/static/src/components/**/*',
             'project_todo/static/src/scss/todo.scss',
             'project_todo/static/src/views/**/*',
+            'project_todo/static/src/web/**/*',
         ],
     },
     'license': 'LGPL-3',
