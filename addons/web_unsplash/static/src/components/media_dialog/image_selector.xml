@@ -63,7 +63,7 @@
 
 <t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
     <xpath expr="//div[@name='load_more_attachments']" position="before">
-        <div t-if="state.unsplashError" class="d-flex mt-2 unsplash_error" t-ref="unsplash-error">
+        <div t-if="state.unsplashError" class="d-flex mt-2 unsplash_error">
             <UnsplashError
                 title="errorTitle"
                 subtitle="errorSubtitle"
