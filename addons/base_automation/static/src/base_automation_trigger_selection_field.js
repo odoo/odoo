@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useState } from "@odoo/owl";
-import { _lt, _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const OPT_GROUPS = [
     {
-        group: { sequence: 10, key: "values", name: _lt("Values Updated") },
+        group: { sequence: 10, key: "values", name: _t("Values Updated") },
         triggers: [
             "on_stage_set",
             "on_user_set",
@@ -22,15 +22,15 @@ const OPT_GROUPS = [
         ],
     },
     {
-        group: { sequence: 30, key: "timing", name: _lt("Timing Conditions") },
+        group: { sequence: 30, key: "timing", name: _t("Timing Conditions") },
         triggers: ["on_time", "on_time_created", "on_time_updated"],
     },
     {
-        group: { sequence: 40, key: "custom", name: _lt("Custom") },
+        group: { sequence: 40, key: "custom", name: _t("Custom") },
         triggers: ["on_create_or_write", "on_unlink", "on_change"],
     },
     {
-        group: { sequence: 50, key: "external", name: _lt("External") },
+        group: { sequence: 50, key: "external", name: _t("External") },
         triggers: ["on_webhook"],
     },
     {
@@ -38,7 +38,7 @@ const OPT_GROUPS = [
         triggers: ["on_message_sent", "on_message_received"],
     },
     {
-        group: { sequence: 60, key: "deprecated", name: _lt("Deprecated (do not use)") },
+        group: { sequence: 60, key: "deprecated", name: _t("Deprecated (do not use)") },
         triggers: ["on_create", "on_write"],
     },
 ];

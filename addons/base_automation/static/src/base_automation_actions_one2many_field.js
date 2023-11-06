@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component, useExternalListener, useEffect, useRef } from "@odoo/owl";
-import { _lt, _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
@@ -9,15 +9,15 @@ class ActionsOne2ManyField extends Component {
     static props = ["*"];
     static template = "base_automation.ActionsOne2ManyField";
     static actionStates = {
-        code: _lt("Execute Python Code"),
-        object_create: _lt("Create a new Record"),
-        object_write: _lt("Update the Record"),
-        multi: _lt("Execute several actions"),
-        mail_post: _lt("Send email"),
-        followers: _lt("Add followers"),
-        remove_followers: _lt("Remove followers"),
-        next_activity: _lt("Create next activity"),
-        sms: _lt("Send SMS Text Message"),
+        code: _t("Execute Python Code"),
+        object_create: _t("Create a new Record"),
+        object_write: _t("Update the Record"),
+        multi: _t("Execute several actions"),
+        mail_post: _t("Send email"),
+        followers: _t("Add followers"),
+        remove_followers: _t("Remove followers"),
+        next_activity: _t("Create next activity"),
+        sms: _t("Send SMS Text Message"),
     };
     setup() {
         this.root = useRef("root");
@@ -101,15 +101,15 @@ const actionsOne2ManyField = {
             name: "state",
             type: "selection",
             selection: [
-                ["code", _lt("Execute Python Code")],
-                ["object_create", _lt("Create a new Record")],
-                ["object_write", _lt("Update the Record")],
-                ["multi", _lt("Execute several actions")],
-                ["mail_post", _lt("Send email")],
-                ["followers", _lt("Add followers")],
-                ["remove_followers", _lt("Remove followers")],
-                ["next_activity", _lt("Create next activity")],
-                ["sms", _lt("Send SMS Text Message")],
+                ["code", _t("Execute Python Code")],
+                ["object_create", _t("Create a new Record")],
+                ["object_write", _t("Update the Record")],
+                ["multi", _t("Execute several actions")],
+                ["mail_post", _t("Send email")],
+                ["followers", _t("Add followers")],
+                ["remove_followers", _t("Remove followers")],
+                ["next_activity", _t("Create next activity")],
+                ["sms", _t("Send SMS Text Message")],
             ],
         },
         // Execute Python Code
@@ -126,9 +126,9 @@ const actionsOne2ManyField = {
             name: "mail_post_method",
             type: "selection",
             selection: [
-                ["email", _lt("Email")],
-                ["comment", _lt("Post as Message")],
-                ["note", _lt("Post as Note")],
+                ["email", _t("Email")],
+                ["comment", _t("Post as Message")],
+                ["note", _t("Post as Note")],
             ],
         },
         // Schedule Next Activity
@@ -140,17 +140,17 @@ const actionsOne2ManyField = {
             name: "activity_date_deadline_range_type",
             type: "selection",
             selection: [
-                ["days", _lt("Days")],
-                ["weeks", _lt("Weeks")],
-                ["months", _lt("Months")],
+                ["days", _t("Days")],
+                ["weeks", _t("Weeks")],
+                ["months", _t("Months")],
             ],
         },
         {
             name: "activity_user_type",
             type: "selection",
             selection: [
-                ["specific", _lt("Specific User")],
-                ["generic", _lt("Generic User")],
+                ["specific", _t("Specific User")],
+                ["generic", _t("Generic User")],
             ],
         },
         { name: "activity_user_id", type: "many2one" },
