@@ -181,8 +181,15 @@ class Sanitize {
                 !isEditorTab(node)
             ) {
                 getDeepRange(this.root, { select: true });
+<<<<<<< HEAD
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+||||||| parent of ec86adcbd5fe (temp)
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+=======
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+>>>>>>> ec86adcbd5fe (temp)
                 const nodeP = node.previousSibling;
                 moveNodes(...endPos(node.previousSibling), node);
                 if (restoreCursor) {
@@ -220,8 +227,15 @@ class Sanitize {
                 !isBlock(node.parentElement) &&
                 anchor !== node
             ) {
+<<<<<<< HEAD
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+||||||| parent of ec86adcbd5fe (temp)
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+=======
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+>>>>>>> ec86adcbd5fe (temp)
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("data-oe-zws-empty-inline");
                 if (restoreCursor) {
@@ -235,8 +249,15 @@ class Sanitize {
                 node.parentElement.tagName === 'LI'
             ) {
                 const parent = node.parentElement;
+<<<<<<< HEAD
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+||||||| parent of ec86adcbd5fe (temp)
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+=======
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+>>>>>>> ec86adcbd5fe (temp)
                 if (isEmptyBlock(node)) {
                     node.remove();
                 } else {
@@ -306,8 +327,14 @@ class Sanitize {
             // Unwrap the contents of SPAN and FONT elements without attributes.
             if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
                 getDeepRange(this.root, { select: true });
+<<<<<<< HEAD
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+||||||| parent of ec86adcbd5fe (temp)
+                const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
+=======
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+>>>>>>> ec86adcbd5fe (temp)
                 firstChild = unwrapContents(node)[0];
                 if (restoreCursor) {
                     restoreCursor();

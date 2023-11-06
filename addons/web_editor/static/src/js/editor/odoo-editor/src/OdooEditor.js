@@ -1368,12 +1368,28 @@ export class OdooEditor extends EventTarget {
                         }
                         this.idSet(nodeToRemove);
                     }
+<<<<<<< HEAD
                     if (mutation.nextId && this.idFind(mutation.nextId)?.isConnected) {
                         const node = this.idFind(mutation.nextId);
                         node && node.before(nodeToRemove);
                     } else if (mutation.previousId && this.idFind(mutation.previousId)?.isConnected) {
                         const node = this.idFind(mutation.previousId);
                         node && node.after(nodeToRemove);
+||||||| parent of ec86adcbd5fe (temp)
+                    if (mutation.nextId && this.idFind(mutation.nextId)) {
+                        const node = this.idFind(mutation.nextId);
+                        node && node.before(nodeToRemove);
+                    } else if (mutation.previousId && this.idFind(mutation.previousId)) {
+                        const node = this.idFind(mutation.previousId);
+                        node && node.after(nodeToRemove);
+=======
+                    const next = mutation.nextId && this.idFind(mutation.nextId);
+                    const previous = !(next && next.isConnected) && mutation.previousId && this.idFind(mutation.previousId);
+                    if (next && next.isConnected) {
+                        next && next.before(nodeToRemove);
+                    } else if (previous && previous.isConnected) {
+                        previous && previous.after(nodeToRemove);
+>>>>>>> ec86adcbd5fe (temp)
                     } else {
                         const node = this.idFind(mutation.parentId);
                         node && node.append(nodeToRemove);
