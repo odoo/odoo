@@ -5,6 +5,8 @@ from hashlib import md5
 
 from odoo import api, fields, models
 
+from odoo.addons.payment_alipay import const
+
 _logger = logging.getLogger(__name__)
 
 
@@ -60,3 +62,10 @@ class PaymentProvider(models.Model):
             return 'https://mapi.alipay.com/gateway.do'
         else:  # test environment
             return 'https://openapi.alipaydev.com/gateway.do'
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'alipay':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES

@@ -31,6 +31,12 @@ SUPPORTED_CURRENCIES = (
     'USD',
 )
 
+# The codes of the payment methods to activate when Paypal is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'paypal',
+]
+
 # Mapping of transaction states to PayPal payment statuses
 # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
 PAYMENT_STATUS_MAPPING = {

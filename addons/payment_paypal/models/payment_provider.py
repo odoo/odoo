@@ -4,7 +4,7 @@ import logging
 
 from odoo import _, fields, models
 
-from odoo.addons.payment_paypal.const import SUPPORTED_CURRENCIES
+from odoo.addons.payment_paypal import const
 
 
 _logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class PaymentProvider(models.Model):
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'paypal':
             supported_currencies = supported_currencies.filtered(
-                lambda c: c.name in SUPPORTED_CURRENCIES
+                lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
 
@@ -49,3 +49,10 @@ class PaymentProvider(models.Model):
             return 'https://www.paypal.com/cgi-bin/webscr'
         else:
             return 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.code != 'paypal':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHODS_CODES

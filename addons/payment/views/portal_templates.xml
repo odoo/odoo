@@ -331,11 +331,18 @@
             <t t-set="portal_client_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_client_category" position="inside">
-            <t t-set="partner" t-value="request.env.user.partner_id"/>
-            <t t-set="providers_allowing_tokenization"
-               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
-            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
-            <t t-if="providers_allowing_tokenization or existing_tokens" t-call="portal.portal_docs_entry">
+            <t t-set="partner_sudo" t-value="request.env.user.partner_id"/>
+            <t t-set="providers_sudo"
+               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner_sudo.id, 0., force_tokenization=True, is_validation=True)"/>
+            <t t-set="methods_allowing_tokenization"
+               t-value="request.env['payment.method'].sudo()._get_compatible_payment_methods(
+                            providers_sudo.ids,
+                            partner_sudo.id,
+                            force_tokenization=True,
+                        )"
+            />
+            <t t-set="existing_tokens" t-value="partner_sudo.payment_token_ids + partner_sudo.commercial_partner_id.payment_token_ids"/>
+            <t t-if="methods_allowing_tokenization or existing_tokens" t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/payment/static/img/payment-methods.svg'"/>
                 <t t-set="title">Payment methods</t>
                 <t t-set="text">Manage your payment methods</t>

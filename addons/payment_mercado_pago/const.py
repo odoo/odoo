@@ -27,6 +27,29 @@ SUPPORTED_CURRENCIES = [
     'VES',  # Sovereign Bolivar
 ]
 
+# The codes of the payment methods to activate when Mercado Pago is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'card',
+    # Brand payment methods.
+    'visa',
+    'mastercard',
+    'argencard',
+    'ceconsud',
+    'cordobesa',
+    'codensa',
+    'lider',
+    'magna',
+    'naranja',
+    'nativa',
+    'oca',
+    'presto',
+    'tarjeta_mercadopago',
+    'shopping',
+    'elo',
+    'hipercard',
+]
+
 # Mapping of payment method codes to Mercado Pago codes.
 PAYMENT_METHODS_MAPPING = {
     'card': 'debit_card,credit_card,prepaid_card',

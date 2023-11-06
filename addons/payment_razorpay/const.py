@@ -98,6 +98,19 @@ SUPPORTED_CURRENCIES = [
     'ZAR',
 ]
 
+# The codes of the payment methods to activate when Razorpay is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'card',
+    'netbanking',
+    'upi',
+    # Brand payment methods.
+    'visa',
+    'mastercard',
+    'amex',
+    'discover',
+]
+
 # Mapping of transaction states to Razorpay's payment statuses.
 # See https://razorpay.com/docs/payments/payments#payment-life-cycle.
 PAYMENT_STATUS_MAPPING = {

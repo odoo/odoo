@@ -57,6 +57,17 @@ LANGUAGE_CODES_MAPPING = {
     'vi_VN': 'S',
 }
 
+# The codes of the payment methods to activate when Asiapay is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'card',
+    # Brand payment methods.
+    'visa',
+    'mastercard',
+    'amex',
+    'discover',
+]
+
 # Mapping of payment method codes to AsiaPay codes.
 PAYMENT_METHODS_MAPPING = {
     'alipay_hk': 'ALIPAYHKONL',
