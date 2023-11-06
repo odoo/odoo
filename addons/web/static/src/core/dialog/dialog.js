@@ -57,6 +57,7 @@ export class Dialog extends Component {
         useChildSubEnv({ inDialog: true, dialogId: this.id, closeDialog: () => this.data.close() });
         this.position = useState({ left: 0, top: 0 });
         useDialogDraggable({
+            enable: () => !this.env.isSmall,
             ref: this.modalRef,
             elements: ".modal-content",
             handle: ".modal-header",
