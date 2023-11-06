@@ -4,7 +4,7 @@ import { Message } from "@mail/core/common/message";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import { getCurrency } from "@web/core/currency";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -68,13 +68,12 @@ patch(Message.prototype, "mail/core/web", {
             case "many2one":
             case "selection":
                 return format.char(trackingValue.value);
-            case "date":
-                if (trackingValue.value) {
-                    return luxon.DateTime.fromISO(trackingValue.value, { zone: "utc" })
-                        .setZone("system")
-                        .toLocaleString({ locale: this.userService.lang.replace("_", "-") });
-                }
-                return format.date(trackingValue.value);
+            case "date": {
+                const value = trackingValue.value
+                    ? deserializeDate(trackingValue.value)
+                    : trackingValue.value;
+                return formatters.get("date")(value);
+            }
             case "datetime": {
                 const value = trackingValue.value
                     ? deserializeDateTime(trackingValue.value)
