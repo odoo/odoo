@@ -53,7 +53,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('enable_ubl_cii_xml')
     def _compute_checkbox_ubl_cii_xml(self):
         for wizard in self:
-            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and wizard.company_id.invoice_is_ubl_cii
+            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and (wizard.checkbox_ubl_cii_xml or wizard.company_id.invoice_is_ubl_cii)
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
