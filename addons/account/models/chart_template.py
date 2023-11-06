@@ -201,7 +201,7 @@ class AccountChartTemplate(models.AbstractModel):
         if install_demo and self.ref('base.module_account').demo and not reload_template:
             try:
                 with self.env.cr.savepoint():
-                    self._load_data(self._get_demo_data(company))
+                    self.sudo()._load_data(self._get_demo_data(company))
                     self._post_load_demo_data(company)
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
