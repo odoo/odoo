@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("test_self_order_my_orders_tour", {
 
         PosSelf.action.clickPrimaryBtn("Order"),
         PosSelf.check.tablePopupIsShown(),
-        PosSelf.action.selectTable({ id: "1", name: "1" }),
+        PosSelf.action.selectTable("1"),
         PosSelf.action.clickPrimaryBtn("Confirm"),
         PosSelf.check.isNotification("Your order has been placed!"),
         PosSelf.action.clickPrimaryBtn("My Orders"),
