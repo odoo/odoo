@@ -116,7 +116,8 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickQuotationButton();
 ProductScreen.do.selectFirstOrder();
-ProductScreen.check.totalAmountIs(34.5);
-ProductScreen.check.checkOrderlinesNumber(3);
+ProductScreen.check.totalAmountIs(40.25);
+ProductScreen.do.clickOrderline("Product A", 0.5);
+ProductScreen.check.checkOrderlinesNumber(4);
 
 registry.category("web_tour.tours").add('PosSettleOrderNotGroupable', { test: true, url: '/pos/ui', steps: getSteps() });
