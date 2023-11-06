@@ -87,12 +87,8 @@ export class SettingsFormController extends formView.Controller {
     //This is needed to avoid writing the id on the url
     updateURL() {}
 
-    async saveButtonClicked() {
-        await this._save();
-    }
-
-    async _save() {
-        this.env.onClickViewButton({
+    async save() {
+        await this.env.onClickViewButton({
             clickParams: {
                 name: "execute",
                 type: "object",
@@ -120,7 +116,7 @@ export class SettingsFormController extends formView.Controller {
             this.dialogService.add(SettingsConfirmationDialog, {
                 body: _t("Would you like to save your changes?"),
                 confirm: async () => {
-                    await this._save();
+                    await this.save();
                     // It doesn't make sense to do the action of the button
                     // as the res.config.settings `execute` method will trigger a reload.
                     _continue = false;

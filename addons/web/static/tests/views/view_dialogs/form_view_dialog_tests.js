@@ -378,7 +378,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             target
                 .querySelector(".o_dialog .modal-footer .o_form_button_save")
                 .getAttribute("disabled"),
-            ""
+            "1"
         );
 
         def.resolve();

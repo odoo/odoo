@@ -50,5 +50,5 @@ patch(FormRenderer.prototype, {
 
 patch(FormRenderer.props, {
     // Template props : added by the FormCompiler
-    saveButtonClicked: { type: Function, optional: true },
+    saveRecord: { type: Function, optional: true },
 });

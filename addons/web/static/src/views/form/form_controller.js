@@ -2,7 +2,10 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
@@ -15,7 +18,7 @@ import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
@@ -488,20 +491,6 @@ export class FormController extends Component {
         this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
-    disableButtons() {
-        const btns = [...this.ui.activeElement.querySelectorAll("button:not([disabled])")];
-        for (const btn of btns) {
-            btn.setAttribute("disabled", "");
-        }
-        return btns;
-    }
-
-    enableButtons(btns) {
-        for (const btn of btns) {
-            btn.removeAttribute("disabled");
-        }
-    }
-
     async beforeExecuteActionButton(clickParams) {
         const record = this.model.root;
         if (clickParams.special !== "cancel") {
@@ -529,29 +518,28 @@ export class FormController extends Component {
         });
         // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
-            const btns = this.disableButtons();
-            await this.model.load({ resId: false });
-            this.enableButtons(btns);
+            await executeButtonCallback(this.ui.activeElement, () =>
+                this.model.load({ resId: false })
+            );
         }
     }
 
-    async saveButtonClicked(params = {}) {
-        const btns = this.disableButtons();
+    async save(params) {
         const record = this.model.root;
         let saved = false;
-        try {
-            if (this.props.saveRecord) {
-                saved = await this.props.saveRecord(record, params);
-            } else {
-                saved = await record.save(params);
-            }
-        } finally {
-            this.enableButtons(btns);
+        if (this.props.saveRecord) {
+            saved = await this.props.saveRecord(record, params);
+        } else {
+            saved = await record.save(params);
         }
         if (saved && this.props.onSave) {
             this.props.onSave(record, params);
         }
         return saved;
+    }
+
+    saveButtonClicked(params = {}) {
+        return executeButtonCallback(this.ui.activeElement, () => this.save(params));
     }
 
     async discard() {

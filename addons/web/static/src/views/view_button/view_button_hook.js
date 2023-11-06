@@ -6,20 +6,29 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 
 import { status, useComponent, useEnv, useSubEnv } from "@odoo/owl";
 
-function disableButtons(el) {
-    const btns = [...el.querySelectorAll("button:not([disabled])")];
-    for (const btn of btns) {
-        btn.setAttribute("disabled", "1");
+export async function executeButtonCallback(el, fct) {
+    let btns = [];
+    function disableButtons() {
+        btns = [...btns, ...el.querySelectorAll("button:not([disabled])")];
+        for (const btn of btns) {
+            btn.setAttribute("disabled", "1");
+        }
     }
-    return btns;
-}
 
-function enableButtons(el, manuallyDisabledButtons) {
-    if (el) {
-        for (const btn of manuallyDisabledButtons) {
+    function enableButtons() {
+        for (const btn of btns) {
             btn.removeAttribute("disabled");
         }
     }
+
+    disableButtons();
+    let res;
+    try {
+        res = await fct();
+    } finally {
+        enableButtons();
+    }
+    return res;
 }
 
 function undefinedAsTrue(val) {
@@ -38,8 +47,7 @@ export function useViewButtons(model, ref, options = {}) {
     const afterExecuteAction = options.afterExecuteAction || (() => {});
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute }) {
-            const manuallyDisabledButtons = disableButtons(getEl());
-
+            // const el = getEl();
             async function execute() {
                 let _continue = true;
                 if (beforeExecute) {
@@ -48,7 +56,6 @@ export function useViewButtons(model, ref, options = {}) {
 
                 _continue = _continue && undefinedAsTrue(await beforeExecuteAction(clickParams));
                 if (!_continue) {
-                    enableButtons(getEl(), manuallyDisabledButtons);
                     return;
                 }
                 const closeDialog = (clickParams.close || clickParams.special) && env.closeDialog;
@@ -89,30 +96,30 @@ export function useViewButtons(model, ref, options = {}) {
                 if (closeDialog) {
                     closeDialog();
                 }
-                enableButtons(getEl(), manuallyDisabledButtons);
                 if (error) {
                     return Promise.reject(error);
                 }
             }
 
             if (clickParams.confirm) {
-                await new Promise((resolve) => {
-                    const dialogProps = {
-                        ...(clickParams["confirm-title"] && {
-                            title: clickParams["confirm-title"],
-                        }),
-                        ...(clickParams["confirm-label"] && {
-                            confirmLabel: clickParams["confirm-label"],
-                        }),
-                        body: clickParams.confirm,
-                        confirm: execute,
-                        cancel: () => {},
-                    };
-                    dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
+                executeButtonCallback(getEl(), async () => {
+                    await new Promise((resolve) => {
+                        const dialogProps = {
+                            ...(clickParams["confirm-title"] && {
+                                title: clickParams["confirm-title"],
+                            }),
+                            ...(clickParams["confirm-label"] && {
+                                confirmLabel: clickParams["confirm-label"],
+                            }),
+                            body: clickParams.confirm,
+                            confirm: () => execute(),
+                            cancel: () => {},
+                        };
+                        dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
+                    });
                 });
-                enableButtons(getEl(), manuallyDisabledButtons);
             } else {
-                return execute();
+                return executeButtonCallback(getEl(), execute);
             }
         },
     });
