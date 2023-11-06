@@ -587,32 +587,6 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-# port of python 2.6's attrgetter with support for dotted notation
-raise_error = object()  # sentinel
-def resolve_attr(obj, attr, default=raise_error):
-    warnings.warn(
-        "Since 16.0, component of `attrgetter`.",
-        stacklevel=2
-    )
-    for name in attr.split("."):
-        obj = getattr(obj, name, default)
-        if obj is raise_error:
-            raise AttributeError(f"'{obj}' object has no attribute '{name}'")
-        if obj == default:
-            break
-    return obj
-
-def attrgetter(*items):
-    warnings.warn("Since 16.0, super old backport of Python 2.6's `operator.attrgetter`.", stacklevel=2)
-    if len(items) == 1:
-        attr = items[0]
-        def g(obj):
-            return resolve_attr(obj, attr)
-    else:
-        def g(obj):
-            return tuple(resolve_attr(obj, attr) for attr in items)
-    return g
-
 def discardattr(obj, key):
     """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
     try:

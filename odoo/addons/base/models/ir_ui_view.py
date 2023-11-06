@@ -66,13 +66,6 @@ def att_names(name):
     yield f"t-attf-{name}"
 
 
-@lazy
-def keep_query():
-    mod = odoo.addons.base.models.ir_qweb
-    warnings.warn(f"keep_query has been moved to {mod}", DeprecationWarning)
-    return mod.keep_query
-
-
 class ViewCustom(models.Model):
     _name = 'ir.ui.view.custom'
     _description = 'Custom View'
@@ -894,23 +887,6 @@ actual arch.
                     queue.appendleft(child_view)
 
         return combined_arch
-
-    def read_combined(self, fields=None):
-        """
-        Utility function to get a view combined with its inherited views.
-
-        * Gets the top of the view tree if a sub-view is requested
-        * Applies all inherited archs on the root view
-        * Returns the view with all requested fields
-          .. note:: ``arch`` is always added to the fields list even if not
-                    requested (similar to ``id``)
-        """
-        warnings.warn("use get_combined_arch() instead", DeprecationWarning, stacklevel=2)
-        if fields:
-            fields = list({'arch', 'model'}.union(fields))
-        [result] = self.read(fields)
-        result['arch'] = self.get_combined_arch()
-        return result
 
     def get_combined_arch(self):
         """ Return the arch of ``self`` (as a string) combined with its inherited views. """
