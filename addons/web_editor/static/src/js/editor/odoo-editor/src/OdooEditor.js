@@ -2396,6 +2396,9 @@ export class OdooEditor extends EventTarget {
      */
     _applyRawCommand(method, ...args) {
         const sel = this.document.getSelection();
+        if (sel.anchorNode && isProtected(sel.anchorNode)) {
+            return;
+        }
         if (
             !(SELECTIONLESS_COMMANDS.includes(method) && args.length) && (
                 !this.editable.contains(sel.anchorNode) ||
@@ -3501,6 +3504,9 @@ export class OdooEditor extends EventTarget {
     _onInput(ev) {
         // See if the Powerbox should be opened. If so, it will open at the end.
         const newSelection = this.document.getSelection();
+        if (newSelection.anchorNode && isProtected(newSelection.anchorNode)) {
+            return;
+        }
         const shouldOpenPowerbox = newSelection.isCollapsed && newSelection.rangeCount &&
             ev.data === '/' && this.powerbox && !this.powerbox.isOpen &&
             (!this.options.getPowerboxElement || !!this.options.getPowerboxElement());
@@ -3740,6 +3746,10 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onKeyDown(ev) {
+        const selection = this.document.getSelection();
+        if (selection.anchorNode && isProtected(selection.anchorNode)) {
+            return;
+        }
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
         this._currentKeyPress = ev.key;
@@ -4621,8 +4631,11 @@ export class OdooEditor extends EventTarget {
      * Handle safe pasting of html or plain text into the editor.
      */
     _onPaste(ev) {
-        ev.preventDefault();
         const sel = this.document.getSelection();
+        if (sel.anchorNode && isProtected(sel.anchorNode)) {
+            return;
+        }
+        ev.preventDefault();
         const files = getImageFiles(ev.clipboardData);
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
