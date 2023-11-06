@@ -661,6 +661,8 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
         "show.bs.modal #o_search_modal": "_onSearchModalShow",
         "shown.bs.modal #o_search_modal": "_onSearchModalShown",
+        "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
+        "hidden.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
     },
 
     //--------------------------------------------------------------------------
@@ -678,6 +680,14 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+    },
+    /**
+     * @private
+     */
+    _onMobileMenuToggled(ev) {
+        // TODO: Fix for Safari. Once the scroll is moved back from the
+        //       #wrapwrap to the body, this code should not be needed anymore.
+        document.querySelector("#wrapwrap").classList.toggle("overflow-hidden");
     },
     /**
      * @private
