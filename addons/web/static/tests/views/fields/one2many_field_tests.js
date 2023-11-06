@@ -9846,7 +9846,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="p">
                         <tree>
-                            <field name="display_name"/>
+                            <field name="display_name" widget="char" class="do_not_remove_widget_char"/>
                         </tree>
                         <form>
                             <field name="display_name"/>
