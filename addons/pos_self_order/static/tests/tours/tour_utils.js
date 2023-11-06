@@ -118,11 +118,11 @@ export const PosSelf = {
                 trigger: `.btn:contains('${buttonName}')`,
             };
         },
-        selectTable(table) {
+        selectTable(name) {
             return {
-                content: `Select ${table.name} with value ${table.id}`,
-                trigger: `.o_self-popup-table select:has(option[value='${table.id}'])`,
-                run: `text ${table}`,
+                content: `Select table ${name}`,
+                trigger: `.o_self-popup-table select:contains('${name}')`,
+                run: `text ${name}`,
             };
         },
         addProduct: (name, quantity = 1, description, attributes) => {

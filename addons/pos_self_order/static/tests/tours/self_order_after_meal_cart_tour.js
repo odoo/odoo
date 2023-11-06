@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         // Then we select a table
         PosSelf.action.clickPrimaryBtn("Order"),
         PosSelf.check.tablePopupIsShown(),
-        PosSelf.action.selectTable({ id: "1", name: "1" }),
+        PosSelf.action.selectTable("1"),
         PosSelf.action.clickPrimaryBtn("Confirm"),
         PosSelf.check.isNotification("Your order has been placed!"),
 
