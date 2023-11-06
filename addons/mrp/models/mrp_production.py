@@ -701,7 +701,10 @@ class MrpProduction(models.Model):
             date_finished = production.date_start + relativedelta(days=days_delay)
             if date_finished == production.date_start:
                 workorder_expected_duration = sum(self.workorder_ids.mapped('duration_expected'))
-                date_finished = date_finished + relativedelta(minutes=workorder_expected_duration or 60)
+                try:
+                    date_finished = date_finished + relativedelta(minutes=workorder_expected_duration or 60)
+                except OverflowError:
+                    raise UserError(_("The entered expected duration creates a date too far into the future."))
             production.date_finished = date_finished
 
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'date_start')
