@@ -305,9 +305,24 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
         run: () => null,
     },
+    // 11. Add a link leading to a 404 page
+    {
+        content: "Enter a non-existent URL",
+        trigger: "#o_link_dialog_url_input",
+        run: "text /this-address-does-not-exist",
+    },
+    {
+        content: "Check that the link's href was updated and click on it",
+        trigger: "iframe .s_text_image p a[href='/this-address-does-not-exist']",
+    },
+    {
+        content: "Check popover content is up-to-date",
+        trigger: "iframe .popover div a:contains('/this-address-does-not-exist')",
+        isCheck: true,
+    },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    // 11. Add mega menu with Cards template and edit URL on text-selected card.
+    // 12. Add mega menu with Cards template and edit URL on text-selected card.
     wTourUtils.clickOnElement("menu link", "iframe header .nav-item a"),
     wTourUtils.clickOnElement("'Edit menu' icon", "iframe .o_edit_menu_popover .fa-sitemap"),
     {
