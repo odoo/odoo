@@ -118,7 +118,7 @@
                                     <!-- Time -->
                                     <label for="is_time_limited" string="Survey Time Limit"
                                            invisible="survey_type == 'live_session'"/>
-                                    <div class="o_checkbox_optional_field"
+                                    <div class="o_checkbox_optional_field" name="is_time_limited"
                                          invisible="survey_type == 'live_session'">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div invisible="not is_time_limited">
@@ -130,7 +130,7 @@
                                     <field name="scoring_success_min" invisible="scoring_type == 'no_scoring'" />
                                     <label for="certification"
                                            invisible="survey_type == 'live_session' or scoring_type == 'no_scoring'"/>
-                                    <div class="o_checkbox_optional_field"
+                                    <div class="o_checkbox_optional_field" name="certification"
                                          invisible="survey_type == 'live_session'">
                                         <field name="certification" invisible="scoring_type == 'no_scoring'"/>
                                         <div invisible="not certification" class="w-100">
@@ -166,7 +166,7 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group string="Live Session"
+                                <group string="Live Session" name="live_session"
                                        invisible="survey_type in ('survey', 'assessment')">
                                     <field name="session_code" />
                                     <field name="session_link" widget="CopyClipboardChar" />
