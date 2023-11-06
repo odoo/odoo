@@ -9,9 +9,11 @@ PROXY_URL = 'https://stripe.api.odoo.com/api/stripe/'
 DEFAULT_PAYMENT_METHODS_CODES = [
     # Primary payment methods.
     'card',
-    'paypal',
     'bancontact',
+    'eps',
+    'giropay',
     'ideal',
+    'p24',
     # Brand payment methods.
     'visa',
     'mastercard',

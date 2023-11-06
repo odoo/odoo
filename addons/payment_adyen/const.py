@@ -23,6 +23,17 @@ CURRENCY_DECIMALS = {
     'ISK': 2,
 }
 
+# The codes of the payment methods to activate when Adyen is activated.
+DEFAULT_PAYMENT_METHODS_CODES = [
+    # Primary payment methods.
+    'card',
+    # Brand payment methods.
+    'visa',
+    'mastercard',
+    'amex',
+    'discover',
+]
+
 # Mapping of payment method codes to Adyen codes.
 PAYMENT_METHODS_MAPPING = {
     'ach_direct_debit': 'ach',
