@@ -245,3 +245,16 @@ PosLoyalty.check.orderTotalIs('90');
 registry
     .category("web_tour.tours")
     .add('PosLoyaltyTour7', { test: true, url: '/pos/web', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.totalAmountIs('50.00');
+
+registry
+    .category("web_tour.tours")
+    .add('PosLoyaltyTour8', { test: true, url: '/pos/web', steps: getSteps() });
