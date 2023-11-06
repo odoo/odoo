@@ -190,9 +190,10 @@ QUnit.module("Fields", (hooks) => {
             "the row is now selected, in edition"
         );
         assert.ok(
-            !cell.querySelector(".o-checkbox input:checked").disabled,
-            "input should now be enabled"
+            !cell.querySelector(".o-checkbox input:not(:checked)").disabled,
+            "input should now be enabled and unchecked"
         );
+        await click(cell, ".o-checkbox");
         await click(cell);
         assert.notOk(
             cell.querySelector(".o-checkbox input:checked").disabled,
@@ -220,9 +221,8 @@ QUnit.module("Fields", (hooks) => {
             "should now have only 3 checked input"
         );
 
-        // Re-Edit the line and fake-check the checkbox
+        // Fake-check the checkbox
         await click(cell);
-        await click(cell, ".o-checkbox");
         await click(cell, ".o-checkbox");
 
         // Save
