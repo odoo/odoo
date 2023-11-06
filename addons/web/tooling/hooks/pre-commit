@@ -1,6 +1,5 @@
 #!/bin/bash
-# run tooling only on branches that start with master to avoid linting noise in stable
-if [[ $(git branch --show-current) == master* || $(git branch --show-current) == 16.0* ]]; then
+if [[ $(git branch --show-current) == master* || $(git branch --show-current) == 16.0* || $(git branch --show-current) == 17.0* ]]; then
     tooling_dir=$(cd -- "$(dirname "$0")" &> /dev/null && cd .. && pwd)
     if ! cmp -s -- "$tooling_dir/_package.json" package.json; then
         echo "Your package.json is out of date, reloading the tooling using the reload script"
