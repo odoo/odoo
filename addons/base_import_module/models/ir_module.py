@@ -242,17 +242,10 @@ class IrModule(models.Model):
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
-<<<<<<< HEAD
                     files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
                     if with_demo:
                         files_to_import += terp.get('demo', [])
                     for filename in files_to_import:
-=======
-                    demo_data = []
-                    if self._context.get('import_with_demo_data', False):
-                        demo_data = terp.get('demo', [])
-                    for filename in terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', []) + demo_data:
->>>>>>> 5a3b643ff162 (WIP)
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
