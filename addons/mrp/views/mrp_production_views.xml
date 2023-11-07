@@ -399,7 +399,7 @@
                                     <field name="show_reserved" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
-                                    <field name="forecast_availability" string="Forecast" widget="forecast_widget"/>
+                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget"/>
                                     <field name="quantity" string="Quantity"
                                         decoration-success="product_uom_qty - quantity &gt; 0.0001"
                                         decoration-warning="quantity - product_uom_qty &gt; 0.0001"
