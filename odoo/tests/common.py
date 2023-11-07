@@ -1410,6 +1410,8 @@ which leads to stray network requests and inconsistencies."""))
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
                 return
+            if self.had_failure:
+                err = self._result.exception(timeout=0)
         except CancelledError:
             # regular-ish shutdown
             return
@@ -1423,7 +1425,7 @@ which leads to stray network requests and inconsistencies."""))
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
-        raise ChromeBrowserException("Unknown error") from err
+        raise ChromeBrowserException(f"Unknown error: {err}") from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
