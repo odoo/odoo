@@ -21,11 +21,28 @@
             <field name="model">mail.activity.plan</field>
             <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='template_ids']/tree/field[@name='responsible_type']" position="replace">
+                    <!-- We can hide selection options specific to employee because employee plan templates are never
+                         edited in the list view, so that there are not present for other model that are edited in the
+                         list view. -->
+                    <field name="responsible_type" widget="filterable_selection"
+                           options="{'whitelisted_values': ['on_demand', 'other']}"/>
+                </xpath>
                 <xpath expr="//group[@name='group_plan_fields']" position="inside">
                     <field name="department_id" invisible="res_model != 'hr.employee'"/>
                 </xpath>
-                <xpath expr="//field[@name='res_model']" position="attributes">
-                    <attribute name="invisible">res_model == 'hr.employee'</attribute>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_form_hr_employee" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.hr.employee</field>
+            <field name="mode">primary</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="priority">32</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form_fixed_model"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable"/>
                 </xpath>
             </field>
         </record>
@@ -53,6 +70,21 @@
                     Add a new plan
                 </p>
             </field>
+        </record>
+
+        <record id="mail_activity_plan_action_employee_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="act_window_id" ref="hr.mail_activity_plan_action"/>
+        </record>
+
+        <!-- Force the hr view which do the activity template edition in a popup. -->
+        <record id="mail_activity_plan_action_employee_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr.mail_activity_plan_view_form_hr_employee"/>
+            <field name="act_window_id" ref="hr.mail_activity_plan_action"/>
         </record>
 
         <!-- This id is referenced in chatter message as a link to launch the plan -->

@@ -182,4 +182,20 @@
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 
+    <record id="mail_plan_rule_group_sale_manager" model="ir.rule">
+        <field name="name">Manager can manage sale order plans</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan"/>
+        <field name="domain_force">[('res_model', '=', 'sale.order')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record id="mail_plan_template_rule_group_sale_manager" model="ir.rule">
+        <field name="name">Manager can manage sale order plan templates</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
+        <field name="domain_force">[('plan_id.res_model', '=', 'sale.order')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
 </odoo>

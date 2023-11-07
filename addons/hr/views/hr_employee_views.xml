@@ -57,7 +57,9 @@
                     <field name="last_activity_time" invisible="1"/>
                     <field name="last_activity" invisible="1"/>
                     <field name="work_contact_id" invisible="1"/>
-                    <header><!-- For extension --></header>
+                    <header>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" invisible="not active"/>
+                    </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                         </div>
@@ -241,6 +243,9 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <tree string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
+                    <header>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                    </header>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email"/>
