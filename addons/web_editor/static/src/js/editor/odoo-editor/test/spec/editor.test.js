@@ -6853,5 +6853,41 @@ X[]
                 });
             });
         });
+        describe('rating star elements', () => {
+            it('add star elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor,'/');
+                        await insertText(editor, '3star');
+                        await triggerEvent(editor.editable, 'keyup')
+                        await triggerEvent(editor.editable, 'keydown', {key: 'Enter'})
+                        await nextTick()
+                    },
+                    contentAfterEdit: `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor,'/');
+                        await insertText(editor, '5star');
+                        await triggerEvent(editor.editable, 'keyup')
+                        await triggerEvent(editor.editable, 'keydown', {key: 'Enter'})
+                        await nextTick()
+                    },
+                    contentAfterEdit: `<p>\u200B<span contenteditable="false" class="o_stars o_five_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`,
+                });
+            });
+            it('should delete star rating elements when delete is pressed twice', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>\u200B<span contenteditable="false" class="o_stars o_three_stars" id="checkId-1"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B</p><p>[]</p>`,
+                    stepFunction: async editor => {
+                        await deleteBackward(editor)
+                        await deleteBackward(editor)
+                    },
+                    contentAfter: '<p>\u200B[]</p>'
+                });
+            });
+        });
     });
 });
