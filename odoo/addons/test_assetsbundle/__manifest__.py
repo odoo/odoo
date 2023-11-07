@@ -65,6 +65,10 @@
         'test_assetsbundle.broken_xml': [
             'test_assetsbundle/static/invalid_src/xml/invalid_xml.xml',
         ],
+        'test_assetsbundle.multiple_broken_xml': [
+            'test_assetsbundle/static/invalid_src/xml/invalid_xml.xml',
+            'test_assetsbundle/static/invalid_src/xml/second_invalid_xml.xml',
+        ],
     },
     'license': 'LGPL-3',
 }

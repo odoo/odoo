@@ -16,7 +16,12 @@ export function registerTemplate(moduleName, templateString) {
     if (doc.querySelector("parsererror")) {
         // The generated error XML is non-standard so we log the full content to
         // ensure that the relevant info is actually logged.
-        throw new Error(doc.querySelector("parsererror").textContent.trim());
+        let strError = "";
+        const nodes = doc.querySelectorAll("parsererror");
+        for (const node of nodes) {
+            strError += node.textContent.trim() + "\n";
+        }
+        throw new Error(strError);
     }
 
     templates.documentElement.append(...doc.querySelectorAll("templates > [t-name]"));

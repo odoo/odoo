@@ -638,10 +638,21 @@ class TestXMLAssetsBundle(FileTouchable):
         """
         self.bundle = self._get_asset('test_assetsbundle.broken_xml')
 
-        # there shouldn't be any test_assetsvundle.invalid_xml template.
+        # there shouldn't be any test_assetsbundle.invalid_xml template.
         # there should be an parsing_error template with the parsing error message.
         self.assertEqual(self.bundle.xml(),
-                         '<t t-name="parsing_error"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t>',
+                         '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t>',
+                         "the parsing error should be shown")
+
+    def test_02_multiple_broken_xml(self):
+        """ Checks that a bundle with multiple broken xml returns a comprehensive error message.
+        """
+        self.bundle = self._get_asset('test_assetsbundle.multiple_broken_xml')
+
+        # there shouldn't be any test_assetsbundle.invalid_xml template or test_assetsbundle.second_invalid_xml template.
+        # there should be two parsing_error templates with the parsing error message for each file.
+        self.assertEqual(self.bundle.xml(),
+                         '<t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/invalid_xml.xml \n Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7 </parsererror></t><t t-name="parsing_error_test_assetsbundle_static_invalid_src_xml_second_invalid_xml.xml"><parsererror>Invalid XML template: /test_assetsbundle/static/invalid_src/xml/second_invalid_xml.xml \n XML declaration allowed only at the start of the document, line 2, column 6 </parsererror></t>',
                          "the parsing error should be shown")
 
 
