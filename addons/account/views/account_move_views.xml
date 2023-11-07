@@ -435,7 +435,7 @@
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
                     <separator/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
-                    <filter string="Due Date" name="date_maturity" date="date"/>
+                    <filter string="Due Date" name="payment_date" date="payment_date"/>
                     <filter string="Overdue" name="late" domain="[('date_maturity', '&lt;', time.strftime('%Y-%m-%d'))]" help="Overdue payments, due date passed"/>
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
