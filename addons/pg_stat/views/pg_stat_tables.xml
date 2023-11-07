@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="pg_stat_tables_tree">
+        <field name="name">pg.stat.tables.tree</field>
+        <field name="model">pg.stat.tables</field>
+        <field name="arch" type="xml">
+            <tree string="PG Tables Stat">
+                <field name="relname"/>
+                <field name="seq_scan" optional="show"/>
+                <field name="seq_tup_read" optional="show"/>
+                <field name="idx_scan" optional="show"/>
+                <field name="idx_tup_fetch" optional="show"/>
+                <field name="n_tup_ins" optional="show"/>
+                <field name="n_tup_upd" optional="show"/>
+                <field name="n_tup_del" optional="show"/>
+                <field name="n_tup_hot_upd" optional="show"/>
+                <field name="n_live_tup" optional="show"/>
+                <field name="n_dead_tup" optional="show"/>
+                <field name="n_mod_since_analyze" optional="show"/>
+                <field name="last_vacuum" optional="hide"/>
+                <field name="last_autovacuum" optional="hide"/>
+                <field name="last_analyze" optional="hide"/>
+                <field name="last_autoanalyze" optional="hide"/>
+                <field name="vacuum_count" optional="hide"/>
+                <field name="autovacuum_count" optional="hide"/>
+                <field name="analyze_count" optional="hide"/>
+                <field name="autoanalyze_count" optional="hide"/>
+                <field name="pg_table_size" optional="hide" widget="integer_size"/>
+                <field name="pg_indexes_size" optional="hide" widget="integer_size"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pg_stat_tables_search">
+        <field name="name">pg.stat.tables.search</field>
+        <field name="model">pg.stat.tables</field>
+        <field name="arch" type="xml">
+            <search string="PG Tables Stat">
+                <field name="relname"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pg_stat_tables_action">
+       <field name="name">PG Tables Stat</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">pg.stat.tables</field>
+       <field name="view_mode">tree</field>
+    </record>
+</odoo>

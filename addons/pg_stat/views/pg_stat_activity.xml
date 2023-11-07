@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="pg_stat_activity_tree">
+        <field name="name">pg.stat.activity.tree</field>
+        <field name="model">pg.stat.activity</field>
+        <field name="arch" type="xml">
+            <tree string="PG Stat Activity">
+                <field name="pid"/>
+                <field name="application_name"/>
+                <field name="backend_start"/>
+                <field name="xact_start"/>
+                <field name="query_start"/>
+                <field name="state_change"/>
+                <field name="wait_event_type"/>
+                <field name="wait_event"/>
+                <field name="state"/>
+                <field name="backend_type"/>
+                <button name="kill_process" type="object" string="Kill"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="pg_stat_activity_search">
+        <field name="name">pg.stat.activity.search</field>
+        <field name="model">pg.stat.activity</field>
+        <field name="arch" type="xml">
+            <search string="PG Stat Activity">
+                <field name="pid"/>
+                <field name="application_name"/>
+                <field name="backend_start"/>
+                <field name="xact_start"/>
+                <field name="query_start"/>
+                <field name="state_change"/>
+                <field name="wait_event_type"/>
+                <field name="wait_event"/>
+                <field name="state"/>
+                <field name="backend_type"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pg_stat_activity_action">
+       <field name="name">PG Stat Activity</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">pg.stat.activity</field>
+       <field name="view_mode">tree</field>
+    </record>
+</odoo>

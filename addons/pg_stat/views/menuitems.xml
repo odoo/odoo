@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem name="PostgreSQL Stats" id="debug_sql_menu" parent="base.menu_administration" groups="base.group_no_one">
+        <menuitem name="Stats" id="pg_stats_main_menu">
+            <menuitem name="Activity" id="pg_stat_activity_menu" action="pg_stat_activity_action"/>
+            <menuitem name="Database" id="pg_stat_database_menu" action="pg_stat_database_action"/>
+            <menuitem name="Indexes" id="pg_indexes_menu" action="pg_indexes_action"/>
+            <menuitem name="Stats" id="pg_stats_menu" action="pg_stats_action"/>
+            <menuitem name="Tables" id="pg_stat_tables_menu" action="pg_stat_tables_action"/>
+        </menuitem>
+        <menuitem name="Wizards" id="pg_wizard">
+            <menuitem name="Create Index" id="pg_create_index_menu" action="pg_create_index_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>
