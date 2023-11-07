@@ -69,7 +69,10 @@ class AccountMoveReversal(models.TransientModel):
         move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
 
         if any(move.state != "posted" for move in move_ids):
-            raise UserError(_('You can only reverse posted moves.'))
+            raise UserError(_(
+                'To reverse a journal entry, it has to be posted first.\n'
+                'That would be like asking for a credit note for something not invoiced; it’s fishy :)'
+            ))
         if 'company_id' in fields:
             res['company_id'] = move_ids.company_id.root_id.id or self.env.company.id
         if 'move_ids' in fields:

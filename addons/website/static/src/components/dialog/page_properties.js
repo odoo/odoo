@@ -72,8 +72,8 @@ export class DeletePageDialog extends Component {
     setup() {
         this.website = useService('website');
         this.title = _t("Delete Page");
-        this.deleteButton = _t("Ok");
-        this.cancelButton = _t("Cancel");
+        this.deleteButton = _t("Delete");
+        this.cancelButton = _t("No, keep it");
 
         this.state = useState({
             confirm: false,

@@ -867,7 +867,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_line.unlink()
 
         # But creating unbalanced misc entry shouldn't be allowed otherwise
-        with self.assertRaisesRegex(UserError, r"The move \(.*\) is not balanced\."):
+        with self.assertRaisesRegex(UserError, r"The move Draft Entry \(.*\) is feeling a bit unbalanced\,"):
             self.env["account.move"].create({
                 "move_type": "entry",
                 "line_ids": [

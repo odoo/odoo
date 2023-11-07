@@ -540,7 +540,10 @@ class HrExpense(models.Model):
             self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
-                raise UserError(_('You are not authorized to edit this expense report.'))
+                raise UserError(_(
+                    "You've stumbled upon an expense report that's off-limits for your editing powers.\n\n"
+                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+                ))
         res = super().write(vals)
 
         if 'employee_id' in vals:
@@ -603,7 +606,7 @@ class HrExpense(models.Model):
         if not expenses_with_amount:
             raise UserError(_("You cannot report the expenses without amount!"))
         if len(expenses_with_amount.mapped('employee_id')) != 1:
-            raise UserError(_("You cannot report expenses for different employees in the same report."))
+            raise UserError(_("Uh-oh! We can't mix and match expenses for different employees in the same report. We need to keep things neat and tidy, just like our expense records!"))
         if any(not expense.product_id for expense in expenses_with_amount):
             raise UserError(_("You can not create report without category."))
         if len(self.company_id) != 1:
