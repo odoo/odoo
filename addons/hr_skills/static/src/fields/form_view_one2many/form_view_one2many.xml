@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="hr_skills.X2ManyFieldDialog" t-inherit="web.X2ManyFieldDialog" t-inherit-mode="primary" owl="1">
+    <t t-name="hr_skills.X2ManyFieldDialog" t-inherit="web.X2ManyFieldDialog" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
             <button class="btn btn-primary o_form_button_save" t-on-click="() => this.save()"  data-hotkey="c">Select &amp; Close</button>
         </xpath>
