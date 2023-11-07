@@ -9,7 +9,9 @@
                     <div class="row mt8">
                         <div class="col-lg-12">
                             <h2>
-                                <span>WIP Report for <span t-field="docs.account_id.name">Acme Corp.</span></span>
+                                <span>WIP Report for
+                                    <t t-out="', '.join(docs.account_id.mapped('name'))">Acme Corp.</t>
+                                </span>
                             </h2>
                         </div>
                     </div>
