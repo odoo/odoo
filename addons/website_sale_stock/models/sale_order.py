@@ -41,12 +41,21 @@ class SaleOrder(models.Model):
                         order_line._set_shop_warning_stock(total_cart_qty, available_qty)
                     else:
                         self._set_shop_warning_stock(total_cart_qty, available_qty)
+                    returned_warning = order_line.shop_warning or self.shop_warning
                 else:  # 0 or negative allowed_qty
                     # if existing line: it will be deleted
                     # if no existing line: no line will be created
-                    self.shop_warning = _(
-                        "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
-                return allowed_line_qty, order_line.shop_warning or self.shop_warning
+                    if order_line:
+                        self.shop_warning = _(
+                            "Some products became unavailable and your cart has been updated. We're"
+                            " sorry for the inconvenience."
+                        )
+                        returned_warning = self.shop_warning
+                    else:
+                        returned_warning = _(
+                            "The item has not been added to your cart since it is not available."
+                        )
+                return allowed_line_qty, returned_warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
     def _get_cart_and_free_qty(self, product, line=None):
