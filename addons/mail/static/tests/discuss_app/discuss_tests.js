@@ -25,7 +25,7 @@ QUnit.test("sanity check", async (assert) => {
     });
     openDiscuss();
     await contains(".o-mail-DiscussSidebar");
-    await contains("h4", { text: "Congratulations, your inbox is empty" });
+    await contains("h4", { text: "Your inbox is empty" });
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -759,13 +759,13 @@ QUnit.test('messages marked as read move to "History" mailbox', async () => {
 
     await click("button", { text: "Inbox" });
     await contains("button.o-active", { text: "Inbox" });
-    await contains(".o-mail-Thread h4", { count: 0, text: "Congratulations, your inbox is empty" });
+    await contains(".o-mail-Thread h4", { count: 0, text: "Your inbox is empty" });
 
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
 
     await click("button", { text: "Mark all read" });
     await contains("button.o-active", { text: "Inbox" });
-    await contains(".o-mail-Thread h4", { text: "Congratulations, your inbox is empty" });
+    await contains(".o-mail-Thread h4", { text: "Your inbox is empty" });
 
     await click("button", { text: "History" });
     await contains("button.o-active", { text: "History" });
@@ -1327,7 +1327,7 @@ QUnit.test('auto-select "Inbox nav bar" when discuss had inbox as active thread'
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await contains(".o-mail-MessagingMenu-navbar button.fw-bolder", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
-    await contains("h4", { text: "Congratulations, your inbox is empty" });
+    await contains("h4", { text: "Your inbox is empty" });
 });
 
 QUnit.test(

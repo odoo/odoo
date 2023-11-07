@@ -60,6 +60,8 @@ export class Persona extends Record {
     user;
     /** @type {ImStatus} */
     im_status;
+    /** @type {'email' | 'inbox'} */
+    notification_preference;
     isAdmin = false;
     /** @type {string} */
     write_date;

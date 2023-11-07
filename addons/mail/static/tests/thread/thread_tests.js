@@ -907,7 +907,7 @@ QUnit.test(
         await contains(".o-mail-Composer-input");
         await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
         await click("button", { text: "Inbox" });
-        await contains("h4", { text: "Congratulations, your inbox is empty" });
+        await contains("h4", { text: "Your inbox is empty" });
         const messageId = pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "@Mitchel Admin",

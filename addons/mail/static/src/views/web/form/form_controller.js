@@ -1,10 +1,17 @@
 /* @odoo-module */
 
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 import { x2ManyCommands } from "@web/core/orm_service";
 
 patch(FormController.prototype, {
+    setup() {
+        super.setup(...arguments);
+        if (this.env.services["mail.store"]) {
+            this.mailStore = useService("mail.store");
+        }
+    },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
         const isSameThread =
@@ -32,5 +39,16 @@ patch(FormController.prototype, {
                 changes.partner_ids = [x2ManyCommands.set(partnerIds)];
             }
         }
+    },
+
+    async onRecordSaved(record, changes) {
+        if (
+            changes.notification_type &&
+            record.resModel === "res.users" &&
+            this.mailStore?.user.user.id === record.resId
+        ) {
+            this.mailStore.user.notification_preference = changes.notification_type;
+        }
+        return await super.onRecordSaved(...arguments);
     },
 });

@@ -59,11 +59,19 @@
             <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted fst-italic h-100" t-att-class="{'p-4': props.showEmptyMessage}">
                 <t t-if="props.thread.isLoaded">
                     <t t-if="props.thread.isEmpty and props.thread.type === 'mailbox'">
-                    <t t-if="props.thread.id === 'inbox'">
-                        <h4 class="mb-3 fw-bolder">
-                            Congratulations, your inbox is empty
-                        </h4>
-                        New messages appear here.
+                    <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
+                        <div t-if="store.user.notification_preference !== 'inbox'" class="align-items-center text-center">
+                            <h4 class="mb-3 fw-bolder">
+                                Your inbox is empty
+                            </h4>
+                            <t t-call="mail.Thread.inboxHint"/>
+                        </div>
+                        <div t-else="" class="align-items-center text-center">
+                            <h4 class="mb-3 fw-bolder">
+                                Congratulations, your inbox is empty
+                            </h4>
+                            New messages appear here.
+                        </div>
                     </t>
                     <t t-if="props.thread.id === 'starred'">
                         <h4 class="mb-3 fw-bolder">
@@ -86,6 +94,12 @@
             </div>
         </t>
     </div>
+</t>
+
+<t t-name="mail.Thread.inboxHint">
+    <t t-esc="preferenceButtonText.before"/>
+    <button class="btn btn-link m-0 p-0 align-baseline o-hover-text-underline" t-on-click="onClickPreferences" t-esc="preferenceButtonText.inside"/>
+    <t t-esc="preferenceButtonText.after"/>
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
