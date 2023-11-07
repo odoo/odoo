@@ -75,6 +75,7 @@ export const SELECTORS = {
     debugArea: ".o_domain_selector_debug_container textarea",
     resetButton: ".o_domain_selector_row > button",
 };
+import { localization } from "@web/core/l10n/localization";
 
 let serverData;
 let target;
@@ -1223,6 +1224,9 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("support properties (mode readonly)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateFormat: `dd|MM|yyyy`,
+        });
         serverData.models.partner.fields.properties = {
             string: "Properties",
             type: "properties",
@@ -1271,7 +1275,7 @@ QUnit.module("Components", (hooks) => {
             },
             {
                 domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
-                result: `PropertiesDate = 2023-10-05`,
+                result: `PropertiesDate = 05|10|2023`,
             },
             {
                 domain: `[("properties.xphone_prop_6", "in", "g")]`,
@@ -1509,6 +1513,9 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("date field (readonly)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateFormat: `dd|MM|yyyy`,
+        });
         const parent = await makeDomainSelector({
             readonly: true,
             domain: `[]`,
@@ -1516,20 +1523,20 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             { domain: `[("date", "=", False)]`, text: `Date = false` },
             { domain: `[("date", "!=", False)]`, text: `Date != false` },
-            { domain: `[("date", "=", "2023-07-03")]`, text: `Date = 2023-07-03` },
+            { domain: `[("date", "=", "2023-07-03")]`, text: `Date = 03|07|2023` },
             { domain: `[("date", "=", context_today())]`, text: `Date = context_today()` },
-            { domain: `[("date", "!=", "2023-07-03")]`, text: `Date != 2023-07-03` },
-            { domain: `[("date", "<", "2023-07-03")]`, text: `Date < 2023-07-03` },
-            { domain: `[("date", "<=", "2023-07-03")]`, text: `Date <= 2023-07-03` },
-            { domain: `[("date", ">", "2023-07-03")]`, text: `Date > 2023-07-03` },
-            { domain: `[("date", ">=", "2023-07-03")]`, text: `Date >= 2023-07-03` },
+            { domain: `[("date", "!=", "2023-07-03")]`, text: `Date != 03|07|2023` },
+            { domain: `[("date", "<", "2023-07-03")]`, text: `Date < 03|07|2023` },
+            { domain: `[("date", "<=", "2023-07-03")]`, text: `Date <= 03|07|2023` },
+            { domain: `[("date", ">", "2023-07-03")]`, text: `Date > 03|07|2023` },
+            { domain: `[("date", ">=", "2023-07-03")]`, text: `Date >= 03|07|2023` },
             {
                 domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", "2023-07-15")]`,
-                text: `Date is between 2023-07-03 and 2023-07-15`,
+                text: `Date is between 03|07|2023 and 15|07|2023`,
             },
             {
                 domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", context_today())]`,
-                text: `Date is between "2023-07-03" and context_today()`,
+                text: `Date is between 03|07|2023 and context_today()`,
             },
         ];
         for (const { domain, text } of toTest) {
@@ -1796,7 +1803,7 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("many2one field on record with falsy display_name", async (assert) => {
-        serverData.models.product.records[0].display_name = false
+        serverData.models.product.records[0].display_name = false;
 
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         await makeDomainSelector({
@@ -2200,5 +2207,35 @@ QUnit.module("Components", (hooks) => {
         assert.deepEqual(getValueOptions(target), ["1"]);
         assert.deepEqual(getOperatorOptions(target, -1), ["="]);
         assert.deepEqual(getValueOptions(target, -1), ["1"]);
+    });
+
+    QUnit.test("datetime domain in readonly mode (check localization)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateTimeFormat: "MM.dd.yyyy HH:mm:ss",
+        });
+        patchTimeZone(120);
+        await makeDomainSelector({
+            domain: `["&", ("datetime", ">=", "2023-11-03 11:41:23"), ("datetime", "<=", "2023-11-13 09:45:11")]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_tree_editor_condition").textContent,
+            `Date Timeis between11.03.2023 13:41:23 and 11.13.2023 11:45:11`
+        );
+    });
+
+    QUnit.test("date domain in readonly mode (check localization)", async (assert) => {
+        patchWithCleanup(localization, {
+            dateFormat: `dd|MM|yyyy`,
+        });
+        patchTimeZone(120);
+        await makeDomainSelector({
+            domain: `["&", ("date", ">=", "2023-11-03"), ("date", "<=", "2023-11-13")]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_tree_editor_condition").textContent,
+            `Dateis between03|11|2023 and 13|11|2023`
+        );
     });
 });
