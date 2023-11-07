@@ -147,7 +147,7 @@ function showWarning(message) {
     if (!cart_alert.length) {
         cart_alert = $(
             '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button> ' +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
                 '<span></span>' +
             '</div>').prependTo($page);
     }
