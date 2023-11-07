@@ -1,5 +1,5 @@
---- v4l2_old.py	2019-01-23 12:49:01.081564000 +0100
-+++ v4l2_new.py	2019-01-23 12:50:32.369730171 +0100
+--- v4l2.py     2023-11-07 20:27:44.919031118 +0000
++++ v4l2.py.old 2023-11-07 20:26:24.910749659 +0000
 @@ -194,7 +194,7 @@
      V4L2_BUF_TYPE_SLICED_VBI_OUTPUT,
      V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY,
@@ -7,9 +7,9 @@
 -) = range(1, 9) + [0x80]
 +) = list(range(1, 9)) + [0x80]
  
- 
  v4l2_ctrl_type = enum
-@@ -245,7 +245,7 @@
+ (
+@@ -244,7 +244,7 @@
      V4L2_PRIORITY_INTERACTIVE,
      V4L2_PRIORITY_RECORD,
      V4L2_PRIORITY_DEFAULT,
