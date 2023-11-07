@@ -143,10 +143,16 @@ Popover.props = {
     },
     target: {
         validate: (target) => {
-            // target may be inside an iframe, so get the Element constructor
-            // to test against from its owner document's default view
-            const Element = target?.ownerDocument?.defaultView.Element;
-            return Boolean(Element) && target instanceof Element;
+            // target may have been created by either the top window's document
+            // or the one of an iframe.
+            let prototype = Object.getPrototypeOf(target);
+            while (prototype) {
+                if (prototype.constructor?.name === "Element") {
+                    return true;
+                }
+                prototype = Object.getPrototypeOf(prototype);
+            }
+            return false;
         },
     },
     slots: {
