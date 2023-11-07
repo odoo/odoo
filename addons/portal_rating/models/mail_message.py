@@ -22,12 +22,12 @@ class MailMessage(models.Model):
             }
         return properties_names
 
-    def _portal_message_format(self, properties_names):
+    def _portal_message_format(self, properties_names, options=None):
         """ If requested, add rating information to returned formatted values.
 
         Note: rating information combine both statistics (see 'rating_get_stats'
         if available on model) and rating / publication information. """
-        vals_list = super()._portal_message_format(properties_names)
+        vals_list = super()._portal_message_format(properties_names, options=options)
         if not 'rating' in properties_names:
             return vals_list
 
