@@ -10,7 +10,7 @@
 This module allows to manage onboardings and their progress
 ================================================================================
     """,
-    'depends': ['base'],
+    'depends': ['web'],
     'installable': True,
     'data': [
         'views/onboarding_templates.xml',
