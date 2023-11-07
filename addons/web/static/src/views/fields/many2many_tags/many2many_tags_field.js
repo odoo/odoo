@@ -160,9 +160,12 @@ export class Many2ManyTagsField extends Component {
     }
 
     getDomain() {
+        const currentIds = this.props.record.data[this.props.name].currentIds.filter(
+            (id) => typeof id === "number"
+        );
         return Domain.and([
             getFieldDomain(this.props.record, this.props.name, this.props.domain),
-            Domain.not([["id", "in", this.props.record.data[this.props.name].currentIds]]),
+            Domain.not([["id", "in", currentIds]]),
         ]).toList(this.props.context);
     }
 }
