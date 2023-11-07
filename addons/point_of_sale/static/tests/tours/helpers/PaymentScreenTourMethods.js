@@ -98,7 +98,7 @@ export function clickTipButton() {
 }
 export function enterPaymentLineAmount(lineName, keys) {
     const numpadKeys = keys.split("").join(" ");
-    return [...this.pressNumpad(numpadKeys), ...this.fillPaymentLineAmountMobile(lineName, keys)];
+    return [...pressNumpad(numpadKeys), ...fillPaymentLineAmountMobile(lineName, keys)];
 }
 export function fillPaymentLineAmountMobile(lineName, keys) {
     return [
