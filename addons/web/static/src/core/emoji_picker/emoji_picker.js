@@ -277,7 +277,7 @@ export class EmojiPicker extends Component {
                     .querySelector(
                         `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
                     )
-                    .click();
+                    ?.click();
                 break;
             case "Escape":
                 this.props.close?.();
