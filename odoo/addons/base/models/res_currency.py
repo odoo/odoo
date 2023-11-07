@@ -313,11 +313,10 @@ class Currency(models.Model):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('tree', 'form'):
             currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company.root_id).currency_id.name
-            for field in [['company_rate', _('Unit per %s', currency_name)],
-                          ['inverse_company_rate', _('%s per Unit', currency_name)]]:
-                node = arch.xpath("//tree//field[@name='%s']" % field[0])
-                if node:
-                    node[0].set('string', field[1])
+            for name, label in [['company_rate', _('Unit per %s', currency_name)],
+                                ['inverse_company_rate', _('%s per Unit', currency_name)]]:
+                if node := arch.xpath("//tree//field[@name=$name]", name=name):
+                    node[0].set('string', label)
         return arch, view
 
 
@@ -461,14 +460,14 @@ class CurrencyRate(models.Model):
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ('tree'):
+        if view_type == 'tree':
             names = {
                 'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company.root_id).currency_id.name,
                 'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',
             }
-            for field in [['company_rate', _('%(rate_currency_name)s per %(company_currency_name)s', **names)],
-                          ['inverse_company_rate', _('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
-                node = arch.xpath("//tree//field[@name='%s']" % field[0])
-                if node:
-                    node[0].set('string', field[1])
+            for name, label in [['company_rate', _('%(rate_currency_name)s per %(company_currency_name)s', **names)],
+                                ['inverse_company_rate', _('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
+
+                if (node := arch.find(f"./field[@name='{name}']")) is not None:
+                    node.set('string', label)
         return arch, view
