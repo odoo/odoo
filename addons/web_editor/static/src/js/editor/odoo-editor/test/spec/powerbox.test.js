@@ -64,6 +64,18 @@ describe('Powerbox', () => {
                 contentAfter: '<h1>ab[]</h1>',
             });
         });
+        it('should close the powerbox if keyup event is called on other block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async (editor) => {
+                    await insertText(editor, '/');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    setSelection(editor.editable.firstChild, 1);
+                    await triggerEvent(editor.editable, 'keyup');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.false;
+                },
+            });
+        });
     });
     it('should insert a 3x3 table on type `/table` in mobile view', async () => {
         if(_isMobile()){
