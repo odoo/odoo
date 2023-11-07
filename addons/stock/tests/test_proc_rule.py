@@ -290,6 +290,38 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
+    def test_reordering_rule_3(self):
+        """Test how qty_multiple affects qty_to_order"""
+        stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.productA = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'product',
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.productA.id,
+            'location_id': stock_location.id,
+            'inventory_quantity': 14.5,
+        }).action_apply_inventory()
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductA RR',
+            'product_id': self.productA.id,
+            'product_min_qty': 15.0,
+            'product_max_qty': 30.0,
+            'qty_multiple': 10,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
+        orderpoint.write({
+            'qty_multiple': 1,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 15.0)  # 15.0 < 14.5 + 15 <= 30.0
+        orderpoint.write({
+            'qty_multiple': 0,
+        })
+        orderpoint._compute_qty_to_order()
+        self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
+
     def test_fixed_procurement_01(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
         check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
