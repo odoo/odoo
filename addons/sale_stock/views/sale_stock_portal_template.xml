@@ -27,7 +27,7 @@
                         <t t-set="delivery_report_url"
                            t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
                         <div name="delivery_order"
-                            class="d-flex flex-wrap align-items-center">
+                            class="d-flex flex-column flex-wrap align-items-start">
                             <div name="delivery_details">
                                 <a t-att-href="delivery_report_url">
                                     <span t-esc="picking.name"/>
