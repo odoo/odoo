@@ -4,6 +4,8 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { editInput, getFixture, mount, patchWithCleanup, triggerEvent, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
@@ -13,7 +15,12 @@ let target;
 // Helpers
 // -----------------------------------------------------------------------------
 
-async function createFileInput({ mockPost, props }) {
+async function createFileInput({ mockPost, mockAdd, props }) {
+    serviceRegistry.add("notification", {
+        start: () => ({
+            add: mockAdd || (() => {}),
+        }),
+    });
     serviceRegistry.add("http", {
         start: () => ({
             post: mockPost || (() => {}),
@@ -162,5 +169,36 @@ QUnit.module("Components", ({ beforeEach }) => {
         uploadedPromise.resolve();
         await nextTick();
         assert.notOk(input.disabled, "the upload button should be enabled for upload");
+    });
+
+    QUnit.test("uploading a file that is too heavy will send a notification", async (assert) => {
+        serviceRegistry.add("localization", makeFakeLocalizationService());
+        patchWithCleanup(session, { max_file_upload_size: 2 });
+        await createFileInput({
+            props: {
+                onUpload(files) {
+                    // This code should be unreachable in this case
+                    assert.step(files[0].name);
+                },
+            },
+            mockPost: (route, params) => {
+                return JSON.stringify([{ name: params.ufile[0].name }]);
+            },
+            mockAdd: (message) => {
+                assert.step("notification");
+                // Message is a bit weird because values (2 and 4 bytes) are simplified to 2 decimals in regards to megabytes
+                assert.strictEqual(
+                    message,
+                    "The selected file (4B) is over the maximum allowed file size (2B)."
+                );
+            },
+        });
+
+        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+        await editInput(target, ".o_file_input input", file);
+        assert.verifySteps(
+            ["notification"],
+            "Only the notification will be triggered and the file won't be uploaded."
+        );
     });
 });
