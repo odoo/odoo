@@ -620,7 +620,7 @@ export class OdooEditor extends EventTarget {
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
                         html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>';
+                        html += '</span>\u200B';
                         this.execCommand('insert', parseHTML(this.document, html));
                     },
                 },
@@ -633,7 +633,7 @@ export class OdooEditor extends EventTarget {
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
                         html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>';
+                        html += '</span>\u200B';
                         this.execCommand('insert', parseHTML(this.document, html));
                     },
                 },
