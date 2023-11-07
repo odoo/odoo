@@ -1628,7 +1628,7 @@ QUnit.module("Search", (hooks) => {
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
-        assert.deepEqual(getFacetTexts(target), [`Birthday is between 2023-04-01 and 2023-04-30`]);
+        assert.deepEqual(getFacetTexts(target), [`Birthday is between 04/01/2023 and 04/30/2023`]);
     });
 
     QUnit.test("edit a field", async function (assert) {
