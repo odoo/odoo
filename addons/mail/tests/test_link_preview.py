@@ -120,6 +120,7 @@ class TestLinkPreview(MailCommon):
             message = self.test_partner.message_post(
                 body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
             )
+            self._reset_bus()
             self.env['mail.link.preview']._create_from_message_and_notify(message)
             link_preview_count = self.env['mail.link.preview'].search_count([('source_url', '=', self.source_url)])
             self.assertEqual(link_preview_count, throttle + 1)
@@ -129,7 +130,7 @@ class TestLinkPreview(MailCommon):
                     'type': 'mail.record/insert',
                     'payload': {
                         'LinkPreview': [{
-                            'id': link_preview.id,
+                            'id': message.link_preview_ids.id,
                             'message': {'id': message.id},
                             'image_mimetype': False,
                             'og_description': self.og_description,
@@ -139,7 +140,7 @@ class TestLinkPreview(MailCommon):
                             'og_type': False,
                             'og_site_name': False,
                             'source_url': self.source_url,
-                        }] for link_preview in message.link_preview_ids
+                        }]
                     }
                 }]
             )
