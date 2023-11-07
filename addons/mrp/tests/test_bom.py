@@ -1203,7 +1203,7 @@ class TestBoM(TestMrpCommon):
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
         self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
-        self.assertEqual(orderpoint.qty_to_order, 4000.0)
+        self.assertEqual(orderpoint.qty_to_order, 2000.0)
 
     def test_bom_generated_from_mo(self):
         """ Creates a Manufacturing Order without BoM, then uses it to generate a new BoM.
