@@ -5,6 +5,7 @@ import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_edi
 import { Expression } from "@web/core/tree_editor/condition_tree";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { deserializeDate, deserializeDateTime, formatDate, formatDateTime } from "../l10n/dates";
 
 /**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
@@ -28,6 +29,14 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         const [, label] = (fieldDef.selection || []).find(([v]) => v === val) || [];
         if (label !== undefined) {
             val = label;
+        }
+    }
+    if (typeof val === "string") {
+        if (fieldDef?.type === "datetime") {
+            return formatDateTime(deserializeDateTime(val));
+        }
+        if (fieldDef?.type === "date") {
+            return formatDate(deserializeDate(val));
         }
     }
     if (disambiguate && typeof val === "string") {
