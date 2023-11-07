@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
+import { checkFileSize } from "@web/core/utils/files";
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 
@@ -54,6 +55,19 @@ export class FileInput extends Component {
     }
 
     async uploadFiles(params) {
+        if (params.ufile.length) {
+            const fileSize = params.ufile[0].size;
+            if (!checkFileSize(fileSize, this.env.services.notification)) {
+                // FIXME
+                // Note that the notification service is not added as a
+                // dependency of this component (through useService hook),
+                // in order to avoid introducing a breaking change in a stable version.
+                // If the notification service is not available, the
+                // checkFileSize function will not display any notification
+                // but will still return the correct value.
+                return null;
+            }
+        }
         const fileData = await this.http.post(this.props.route, params, "text");
         const parsedFileData = JSON.parse(fileData);
         if (parsedFileData.error) {
@@ -76,11 +90,16 @@ export class FileInput extends Component {
     async onFileInputChange() {
         this.state.isDisable = true;
         const parsedFileData = await this.uploadFiles(this.httpParams);
-        // When calling onUpload, also pass the files to allow to get data like their names
-        this.props.onUpload(parsedFileData, this.fileInputRef.el ? this.fileInputRef.el.files : []);
-        // Because the input would not trigger this method if the same file name is uploaded,
-        // we must clear the value after handling the upload
-        this.fileInputRef.el.value = null;
+        if (parsedFileData) {
+            // When calling onUpload, also pass the files to allow to get data like their names
+            this.props.onUpload(
+                parsedFileData,
+                this.fileInputRef.el ? this.fileInputRef.el.files : []
+            );
+            // Because the input would not trigger this method if the same file name is uploaded,
+            // we must clear the value after handling the upload
+            this.fileInputRef.el.value = null;
+        }
         this.state.isDisable = false;
     }
 

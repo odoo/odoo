@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { checkFileSize } from "@web/core/utils/files";
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { session } from "@web/session";
-import { formatFloat } from "./formatters";
 
 import { Component, useRef, useState } from "@odoo/owl";
-
-const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 
 export class FileUploader extends Component {
     setup() {
@@ -19,9 +15,6 @@ export class FileUploader extends Component {
         });
     }
 
-    get maxUploadSize() {
-        return session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE;
-    }
     /**
      * @param {Event} ev
      */
@@ -30,17 +23,8 @@ export class FileUploader extends Component {
             return;
         }
         for (const file of ev.target.files) {
-            if (file.size > this.maxUploadSize) {
-                this.notification.add(
-                    sprintf(
-                        this.env._t("The selected file exceed the maximum file size of %s."),
-                        formatFloat(this.maxUploadSize, { humanReadable: true })
-                    ),
-                    {
-                        title: this.env._t("File upload"),
-                        type: "danger",
-                    }
-                );
+            if (!checkFileSize(file.size, this.notification)) {
+                return null;
             }
             this.state.isUploading = true;
             const data = await getDataURLFromFile(file);
