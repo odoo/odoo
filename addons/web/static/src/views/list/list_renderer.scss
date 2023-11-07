@@ -78,7 +78,10 @@
 
                 display: table-cell;
                 @include text-truncate();
-                vertical-align: middle;
+
+                .o_field_priority .fa, .o_field_list_activity .fa {
+                    line-height: $o-line-size;
+                }
 
                 &.o_list_text {
                     white-space: pre-wrap;
