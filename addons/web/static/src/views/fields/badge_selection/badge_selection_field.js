@@ -66,7 +66,11 @@ export class BadgeSelectionField extends Component {
                 }
                 break;
             case "selection":
-                this.props.record.update({ [this.props.name]: value });
+                if (value === this.value) {
+                    this.props.record.update({ [this.props.name]: false });
+                } else {
+                    this.props.record.update({ [this.props.name]: value });
+                }
                 break;
         }
     }
