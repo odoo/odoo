@@ -59,6 +59,7 @@ class TestImLivechatMessage(HttpCase):
                 'is_company': self.users[1].partner_id.is_company,
                 'user_livechat_username': self.users[1].livechat_username,
                 'type': "partner",
+                'notification_preference': 'email',
                 'user': {
                     'id': self.users[1].id,
                     'isInternalUser': self.users[1]._is_internal(),
