@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="web_editor.HistoryDialog" owl="1">
+    <t t-name="web_editor.HistoryDialog">
         <Dialog size="size" title="title">
             <div class="dialog-container html-history-dialog">
                 <div class="revision-list d-flex flex-column align-content-stretch">
@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <t t-set-slot="footer" owl="1">
+            <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick">Restore history</button>
                 <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
             </t>
