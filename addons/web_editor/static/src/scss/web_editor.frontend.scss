@@ -85,6 +85,17 @@
         > img[data-shape] {
             object-fit: contain !important;
         }
+
+        // Allowing "cover" for some hover effects.
+        &:not(.o_grid_item_image_contain) > img[data-shape$="geo_square"] {
+            &:not(
+                [data-hover-effect="dolly_zoom"],
+                [data-hover-effect="outline"],
+                [data-hover-effect="image_mirror_blur"],
+            ) {
+                object-fit: cover !important;
+            }
+        }
     }
 }
 
