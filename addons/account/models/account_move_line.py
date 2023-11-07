@@ -6,8 +6,8 @@ from datetime import date
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import frozendict, formatLang, format_date, float_compare
-from odoo.tools.sql import create_index
+from odoo.tools import frozendict, format_date, float_compare, Query
+from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -1127,13 +1127,14 @@ class AccountMoveLine(models.Model):
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
 
     def _search_payment_date(self, operator, value):
-        assert operator == '='
+        if operator == '=':
+            operator = '<='
         return [
                 '|',
                 '|',
-                '&', ('discount_date', '>=', str(date.today())), ('discount_date', '<=', value),
-                '&', ('discount_date', '<', str(date.today())), ('date_maturity', '<=', value),
-                '&', ('discount_date', '=', False), ('date_maturity', '<=', value),
+                '&', ('discount_date', '>=', str(date.today())), ('discount_date', operator, value),
+                '&', ('discount_date', '<', str(date.today())), ('date_maturity', operator, value),
+                '&', ('discount_date', '=', False), ('date_maturity', operator, value),
             ]
 
     def action_register_payment(self):
@@ -1660,6 +1661,16 @@ class AccountMoveLine(models.Model):
             if self._context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(values)
         return data_list
+
+    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None) -> SQL:
+        if fname != 'payment_date':
+            return super()._field_to_sql(alias, fname, query)
+        return SQL("""
+            CASE
+                 WHEN discount_date >= %(today)s THEN discount_date
+                 ELSE date_maturity
+            END
+        """, today=fields.Date.context_today(self))
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         if field_name != 'account_root_id' or set_count:
