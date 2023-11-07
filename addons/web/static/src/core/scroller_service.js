@@ -35,12 +35,12 @@ export const scrollerService = {
                         ev.preventDefault(); // single hash in href are just a way to activate A-tags node
                         return;
                     }
-                    let matchingEl = null;
-                    try {
-                        matchingEl = document.querySelector(`.o_content #${href.value.substr(1)}`);
-                    } catch {
-                        // Invalid selector: not an anchor anyway
-                    }
+                    const selector = href.value.substr(1);
+                    const matchingEl =
+                        [...document.querySelectorAll(".o_content [id]")].find(
+                            (el) => el.id === selector
+                        ) || null;
+
                     const triggerEv = new CustomEvent("anchor-link-clicked", {
                         detail: {
                             element: matchingEl,
