@@ -237,6 +237,9 @@ export class DiscussCoreCommon {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.threads[createLocalId("discuss.channel", id)];
         if (!channel || !channel.type) {
+            if (this.store.self?.type !== "partner") {
+                return;
+            }
             const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
             channel = this.threadService.insert({
                 model: "discuss.channel",
