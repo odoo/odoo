@@ -5572,6 +5572,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsNone(target, ".o-kanban-button-new");
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(target, ".o_kanban_quick_add");
     });
 
     QUnit.test("clicking on a link triggers correct event", async (assert) => {
