@@ -30,6 +30,10 @@ $o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%) !default;
 
 $o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%) !default;
 
+// Computation of the total height of a single line,
+// useful to visually center elements eg. in a list view.
+$o-line-size: $o-line-height-base * $o-font-size-base !default;
+
 // Form
 
 // Safest for the next value would be map-get($container-max-widths, lg) as it
