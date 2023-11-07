@@ -127,7 +127,7 @@ class WebClient(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
-    @http.route('/web/tests/mobile', type='http', auth="none")
+    @http.route('/web/tests/mobile', type='http', auth="user")
     def test_mobile_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_mobile_suite')
 
