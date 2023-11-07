@@ -176,19 +176,35 @@ class StockLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def _search_product_qty(self, operator, value):
+        if operator not in OPERATORS:
+            raise UserError(_("Invalid domain operator %s", operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
             '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
         ]
-        lots_w_qty = {
-            id: qty for id, qty in map(lambda l: (l['lot_id'][0], l['quantity']), self.env['stock.quant'].read_group(domain=domain, fields=['quantity:sum'], groupby=['lot_id']))
-        }
-        all_lots = self.env['stock.lot'].search([])
+        lots_w_qty = self.env['stock.quant']._read_group(domain=domain, groupby=['lot_id'], aggregates=['quantity:sum'], having=[('quantity:sum', '!=', 0)])
         ids = []
-        for lot in all_lots:
-            if OPERATORS[operator](lots_w_qty.get(lot.id, 0), value):
-                ids.append(lot.id)
+        lot_ids_w_qty = []
+        for lot, quantity_sum in lots_w_qty:
+            lot_id = lot.id
+            lot_ids_w_qty.append(lot_id)
+            if OPERATORS[operator](quantity_sum, value):
+                ids.append(lot_id)
+        if value == 0.0 and operator == '=':
+            return [('id', 'not in', lot_ids_w_qty)]
+        if value == 0.0 and operator == '!=':
+            return [('id', 'in', lot_ids_w_qty)]
+        # check if we need include zero values in result
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=')
+        )
+        if include_zero:
+            return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
         return [('id', 'in', ids)]
 
     def action_lot_open_quants(self):
