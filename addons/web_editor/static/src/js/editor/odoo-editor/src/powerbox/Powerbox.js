@@ -333,7 +333,12 @@ export class Powerbox {
                 true,
             );
             this._context.lastText = diff.bMove.join('');
-            if (this._context.lastText.match(/\s/)) {
+            const selection = this.document.getSelection();
+            if (
+                this._context.lastText.match(/\s/) ||
+                !selection ||
+                this._context.initialTarget !== closestBlock(selection.anchorNode)
+            ) {
                 this.close();
             } else {
                 const term = this._context.lastText.toLowerCase()
