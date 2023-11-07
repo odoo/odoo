@@ -13,7 +13,7 @@ Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
 moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'depends': [
         'base',
         'account',

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Romania - Accounting',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/romania.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/romania.html',
     'author': 'Fekete Mihai (NextERP Romania SRL), Odoo S.A.',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ro'],

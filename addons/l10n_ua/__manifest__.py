@@ -4,7 +4,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['ua'],
     'author': 'ERP Ukraine (https://erp.co.ua)',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'version': '1.4',
     'description': """
 Ukraine - Chart of accounts.

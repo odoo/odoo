@@ -40,13 +40,13 @@
                         <div invisible="not has_money_transfer_warning" class="mb-1">
                             <span class="text-danger">High risk</span>: <field name="money_transfer_service" nolabel="1" class="oe_inline"/> is a money transfer service and not a bank.
                             Double check if the account can be trusted by calling the vendor.<br/>
-                            <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why.</a>
+                            <a target="_blank" href="https://www.odoo.com/documentation/17.0/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why.</a>
                         </div>
                         <field name="has_iban_warning" invisible="1"/>
                         <div invisible="not has_iban_warning">
                             <span class="text-warning">Medium risk</span>: Iban <field name="sanitized_acc_number" nolabel="1" class="oe_inline fw-bold"/>
                             is not from the same country as the partner (<field name="partner_country_name" nolabel="1" class="oe_inline"/>).<br/>
-                            <a target="_blank" href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why it's risky.</a>
+                            <a target="_blank" href="https://www.odoo.com/documentation/17.0/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why it's risky.</a>
                         </div>
                     </div>
                 </xpath>

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Brazilian - Accounting',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/brazil.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/brazil.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['br'],
     'category': 'Accounting/Localizations/Account Charts',

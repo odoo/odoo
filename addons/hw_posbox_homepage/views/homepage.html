@@ -205,7 +205,7 @@
                 {% else %}
                     Error code:
                     {% set error_code = certificate_details.split(' ') | first | replace("_", "-") | lower %}
-                    {% set doc_url = 'https://www.odoo.com/documentation/master/applications/productivity/iot/config/https_certificate_iot.html#' ~ error_code %}
+                    {% set doc_url = 'https://www.odoo.com/documentation/17.0/applications/productivity/iot/config/https_certificate_iot.html#' ~ error_code %}
                     <a target="_blank" class="btn btn-sm float-end" href="{{ doc_url }}">help</a>
                     <br/>
                     <code style="white-space: pre-wrap;">{{ certificate_details }}</code>

@@ -7,7 +7,7 @@
     'countries': ['de'],
     'author': 'openbig.org (http://www.openbig.org)',
     'version': '2.0',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/germany.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/germany.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.

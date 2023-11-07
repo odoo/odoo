@@ -3,7 +3,7 @@
 
 {
     'name': 'United States - Accounting',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['us'],
     'version': '1.1',

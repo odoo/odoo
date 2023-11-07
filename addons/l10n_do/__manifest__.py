@@ -73,7 +73,7 @@ en Odoo):
 11010101 Caja General
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo (http://iterativo.do)',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
         'base_iban',
