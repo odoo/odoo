@@ -25,7 +25,8 @@ class MailMessage(models.Model):
         """
         self.check_access_rule('read')
         return self._portal_message_format(
-            self._portal_get_default_format_properties_names(options=options)
+            self._portal_get_default_format_properties_names(options=options),
+            options=options,
         )
 
     def _portal_get_default_format_properties_names(self, options=None):
@@ -49,7 +50,7 @@ class MailMessage(models.Model):
             'subtype_id',
         }
 
-    def _portal_message_format(self, properties_names):
+    def _portal_message_format(self, properties_names, options=None):
         """ Format messages for portal frontend. This private implementation
         does not check for access that should be checked beforehand.
 
@@ -93,7 +94,10 @@ class MailMessage(models.Model):
             if message_to_attachments:
                 values['attachment_ids'] = message_to_attachments.get(message.id, {})
             if 'author_avatar_url' in properties_names:
-                values['author_avatar_url'] = f'/web/image/mail.message/{message.id}/author_avatar/50x50'
+                if options and 'token' in options:
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["token"]}'
+                else:
+                    values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50'
             if 'is_message_subtype_note' in properties_names:
                 values['is_message_subtype_note'] = (values.get('subtype_id') or [False, ''])[0] == note_id
             if 'published_date_str' in properties_names:
