@@ -2726,8 +2726,16 @@ export class Orderline extends PosModel {
             taxDetails: taxdetail,
         };
     }
+<<<<<<< HEAD
     display_discount_policy() {
         return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
+||||||| parent of cf64fff53874 (temp)
+    display_discount_policy() {
+        return this.order.pricelist.discount_policy;
+=======
+    display_discount_policy(){
+        return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
+>>>>>>> cf64fff53874 (temp)
     }
     compute_fixed_price (price) {
         return this.pos.computePriceAfterFp(price, this.get_taxes());
