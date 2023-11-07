@@ -4036,9 +4036,15 @@ options.registry.GridImage = options.Class.extend({
      * @override
      */
     _computeVisibility() {
+        // Special conditions for the hover effects.
+        const hasSquareShape = this.$target[0].dataset.shape === "web_editor/geometric/geo_square";
+        const effectAllowsOption = !["dolly_zoom", "outline", "image_mirror_blur"]
+            .includes(this.$target[0].dataset.hoverEffect);
+
         return this._super(...arguments)
             && !!this._getImageGridItem()
-            && !('shape' in this.$target[0].dataset);
+            && (!('shape' in this.$target[0].dataset)
+                || hasSquareShape && effectAllowsOption);
     },
     /**
      * @override
