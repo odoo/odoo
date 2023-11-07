@@ -22,7 +22,7 @@ Note:
 
     """,
     'author': 'Quartile Limited (https://www.quartile.co/)',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
     ],
