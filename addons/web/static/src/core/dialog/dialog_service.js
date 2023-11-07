@@ -54,14 +54,12 @@ export const dialogService = {
             deactivate();
             stack.push(subEnv);
 
-            if (env.isSmall) {
-                const scrollOrigin = { top: window.scrollY, left: window.scrollX };
-                subEnv.scrollToOrigin = () => {
-                    if (!stack.length) {
-                        window.scrollTo(scrollOrigin);
-                    }
-                };
-            }
+            const scrollOrigin = { top: window.scrollY, left: window.scrollX };
+            subEnv.scrollToOrigin = () => {
+                if (!stack.length) {
+                    window.scrollTo(scrollOrigin);
+                }
+            };
 
             const remove = overlay.add(
                 DialogWrapper,
