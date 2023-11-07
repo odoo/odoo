@@ -406,14 +406,8 @@ class IrModuleModule(models.Model):
             request.update_context(apply_new_theme=True)
         self._theme_upgrade_upstream()
 
-        active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
-        result = None
-        if active_todo:
-            result = active_todo.action_launch()
-        else:
-            result = website.button_go_website()
-        if result.get('tag') == 'website_preview' and result.get('context', {}).get('params'):
-            result['context']['params']['with_loader'] = True
+        result = website.button_go_website()
+        result['context']['params']['with_loader'] = True
         return result
 
     def button_remove_theme(self):
