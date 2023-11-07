@@ -4223,5 +4223,21 @@ X[]
                 },
             });
         });
+        it('should close the powerbox if keyup event is called on other block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async (editor) => {
+                    const firstBlock = editor.editable.firstChild;
+                    await insertText(editor, '/');
+                    window.chai.expect(editor.commandBar._active).to.be.true;
+                    await setTestSelection({
+                        anchorNode: firstBlock, anchorOffset: 1,
+                        focusNode: firstBlock, focusOffset: 1,
+                    }, editor.document);
+                    triggerEvent(editor.editable, 'keyup');
+                    window.chai.expect(editor.commandBar._active).to.be.false;
+                },
+            });
+        });
     });
 });
