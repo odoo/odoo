@@ -27,6 +27,7 @@ class AccountAnalyticPlan(models.Model):
     parent_id = fields.Many2one(
         'account.analytic.plan',
         string="Parent",
+        inverse='_inverse_parent_id',
         ondelete='cascade',
         domain="['!', ('id', 'child_of', id)]",
     )
@@ -112,31 +113,19 @@ class AccountAnalyticPlan(models.Model):
     def _get_all_plans(self):
         return map(self.browse, self.__get_all_plans())
 
-    def _column_name(self):
+    def _strict_column_name(self):
         self.ensure_one()
         project_plan, _other_plans = self._get_all_plans()
-        return 'account_id' if self.root_id == project_plan else f"x_plan{self.root_id.id}_id"
+        return 'account_id' if self == project_plan else f"x_plan{self.id}_id"
+
+    def _column_name(self):
+        return self.root_id._strict_column_name()
 
     def _inverse_name(self):
-        # Create a new field/column on analytic lines for this plan, and keep the name in sync.
-        for plan in self:
-            if not plan.parent_id:
-                prev = self.env['ir.model.fields'].search([
-                    ('name', '=', plan._column_name()),
-                    ('model', '=', 'account.analytic.line'),
-                ])
-                if prev:
-                    prev.field_description = plan.name
-                else:
-                    self.env['ir.model.fields'].with_context(update_custom_fields=True).create({
-                        'name': plan._column_name(),
-                        'field_description': plan.name,
-                        'state': 'manual',
-                        'model': 'account.analytic.line',
-                        'model_id': self.env['ir.model']._get_id('account.analytic.line'),
-                        'ttype': 'many2one',
-                        'relation': 'account.analytic.account',
-                    })
+        self._sync_plan_column()
+
+    def _inverse_parent_id(self):
+        self._sync_plan_column()
 
     @api.depends('parent_id', 'parent_path')
     def _compute_root_id(self):
@@ -234,11 +223,33 @@ class AccountAnalyticPlan(models.Model):
 
     def unlink(self):
         # Remove the dynamic field created with the plan (see `_inverse_name`)
-        self.env['ir.model.fields'].search([
-            ('name', 'in', [plan._column_name() for plan in self]),
-            ('model', '=', 'account.analytic.line'),
-        ]).unlink()
+        self._find_plan_column().unlink()
         return super().unlink()
+
+    def _find_plan_column(self):
+        return self.env['ir.model.fields'].search([
+            ('name', 'in', [plan._strict_column_name() for plan in self]),
+            ('model', '=', 'account.analytic.line'),
+        ])
+
+    def _sync_plan_column(self):
+        # Create/delete a new field/column on analytic lines for this plan, and keep the name in sync.
+        for plan in self:
+            prev = plan._find_plan_column()
+            if plan.parent_id and prev:
+                prev.unlink()
+            elif prev:
+                prev.field_description = plan.name
+            elif not plan.parent_id:
+                self.env['ir.model.fields'].with_context(update_custom_fields=True).create({
+                    'name': plan._strict_column_name(),
+                    'field_description': plan.name,
+                    'state': 'manual',
+                    'model': 'account.analytic.line',
+                    'model_id': self.env['ir.model']._get_id('account.analytic.line'),
+                    'ttype': 'many2one',
+                    'relation': 'account.analytic.account',
+                })
 
 
 class AccountAnalyticApplicability(models.Model):
