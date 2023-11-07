@@ -742,16 +742,17 @@
 
             #chatgpt {
                 grid-area: ai;
-
-                span {
-                    margin-left: 5px;
-                }
             }
             #animate {
                 grid-area: animate;
             }
             #highlight {
                 grid-area: hilight;
+            }
+            #chatgpt, #animate, #highlight {
+                .fa {
+                    margin-right: $o-we-item-spacing * 0.25;
+                }
             }
 
             .dropdown-menu.colorpicker-menu {
