@@ -111,12 +111,12 @@ class AccountAnalyticLine(models.Model):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
 
             # Find main account nodes
-            account_node = next(iter(arch.xpath('//field[@name="account_id"]')), None)
-            account_filter_node = next(iter(arch.xpath('//filter[@name="account_id"]')), None)
+            account_node = arch.find('.//field[@name="account_id"]')
+            account_filter_node = arch.find('.//filter[@name="account_id"]')
 
             # Force domain on main account node as the fields_get doesn't do the trick
             if account_node is not None and view_type == 'search':
-                account_node.attrib['domain'] = f"[('plan_id', 'child_of', {project_plan.id})]"
+                account_node.set('domain', repr([('plan_id', 'child_of', project_plan.id)]))
 
             # If there is a main node, append the ones for other plans
             if account_node is not None or account_filter_node is not None:
