@@ -597,6 +597,35 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(payment.tag_repeat, 3)
         self.assertEqual(payment.tag_string, 'BarBarBar')
 
+    def test_onchange_inherited_sanitize(self):
+        user_no_bypass_sanitize = self.env['res.users'].create({
+            'name': 'test no bypass user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        child = self.env['test_new_api.sanitize_child_model'].with_user(user_no_bypass_sanitize).create({
+            'comment': '<p>comment</p>',
+        })
+
+        view = self.env['ir.ui.view'].create({
+            'name': 'inherits sanitize form view',
+            'model': 'test_new_api.sanitize_child_model',
+            'arch': """
+                <form>
+                    <field name="comment"/>
+                    <field name="int_1"/>
+                    <field name="int_2"/>
+                </form>
+            """,
+        })
+
+        form = Form(child, view)
+        # trigger any onchange
+        form.int_1 = 1
+        self.assertEqual(form.int_1, 1)
+        self.assertEqual(form.int_2, 1)
+        self.assertEqual(form.comment, '<p>comment</p>')
+
     def test_display_name(self):
         self.env['ir.ui.view'].create({
             'name': 'test_new_api.multi.tag form view',

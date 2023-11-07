@@ -1992,10 +1992,10 @@ class Html(_String):
         }
 
         if self.sanitize_overridable:
-            if record.user_has_groups('base.group_sanitize_override'):
+            if record.env.su or record.user_has_groups('base.group_sanitize_override'):
                 return value
 
-            original_value = record[self.name]
+            original_value = record.sudo()[self.name]
             if original_value:
                 # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)

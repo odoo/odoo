@@ -361,6 +361,25 @@ class MixedModel(models.Model):
                 if not model.model.startswith('ir.')]
 
 
+class SanitizeParentModel(models.Model):
+    _name = 'test_new_api.sanitize_parent_model'
+    _description = 'test_new_api.sanitize_parent_model'
+
+    comment = fields.Html(sanitize_overridable=True)
+
+class SanitizeChildModel(models.Model):
+    _name = 'test_new_api.sanitize_child_model'
+    _description = 'test_new_api.sanitize_child_model'
+    _inherits = {'test_new_api.sanitize_parent_model': 'parent_id'}
+
+    parent_id = fields.Many2one('test_new_api.sanitize_parent_model', required=True, ondelete='cascade')
+    int_1 = fields.Integer()
+    int_2 = fields.Integer()
+
+    @api.onchange('int_1')
+    def onchange_number(self):
+        self.int_2 = self.int_1
+
 class BoolModel(models.Model):
     _name = 'domain.bool'
     _description = 'Boolean Domain'
