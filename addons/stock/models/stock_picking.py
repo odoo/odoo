@@ -890,7 +890,7 @@ class Picking(models.Model):
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
-        pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
+        pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product')
         keys = ['product_id', 'lot_id']
         keys_ids = ["{}.id".format(fname) for fname in keys]
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
