@@ -27,7 +27,7 @@ class AccountJournal(models.Model):
         return {
             'name': _("Peppol Ready invoices"),
             'type': 'ir.actions.act_window',
-            'view_mode': 'list',
+            'view_mode': 'list,form',
             'res_model': 'account.move',
             'context': {
                 'search_default_peppol_ready': 1,
