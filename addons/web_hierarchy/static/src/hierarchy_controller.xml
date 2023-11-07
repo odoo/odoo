@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates>
-    <t t-name="web_hierarchy.HierarchyButtons" owl="1">
+    <t t-name="web_hierarchy.HierarchyButtons">
         <div class="d-flex o_grid_buttons">
             <div class="me-2" t-if="props.archInfo.activeActions.create and (!props.archInfo.createInline or displayNoContent)">
                 <button class="btn btn-primary o_hierarchy_button_add"
@@ -11,7 +11,7 @@
             </div>
         </div>
     </t>
-    <t t-name="web_hierarchy.HierarchyView" owl="1">
+    <t t-name="web_hierarchy.HierarchyView">
         <div t-attf-class="o_hierarchy_view {{ isMobile ? 'o_action_delegate_scroll' : '' }} {{ props.className }}" t-ref="root">
             <Layout className="(model.useSampleModel ? 'o_view_sample_data' : '') + ' d-flex'" display="props.display">
                 <t t-set-slot="control-panel-additional-actions">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.StatusBarField.Dropdown" owl="1">
+    <t t-name="web.StatusBarField.Dropdown">
         <Dropdown toggler="'parent'">
             <t t-foreach="items" t-as="item" t-key="item.value">
                 <DropdownItem
@@ -15,7 +15,7 @@
         <t t-esc="label" />
     </t>
 
-    <t t-name="web.StatusBarField" owl="1">
+    <t t-name="web.StatusBarField">
         <div class="o_statusbar_status" t-ref="root" role="radiogroup">
             <button
                 t-ref="after"
