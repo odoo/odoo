@@ -103,7 +103,7 @@ class TestStockValuation(TransactionCase):
 
         # Create a manual replenishment
         replenishment_uom_qty = 200
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'product_uom_id': ap.id,
