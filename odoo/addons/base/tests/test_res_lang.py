@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 class test_res_lang(TransactionCase):
 
@@ -40,3 +41,21 @@ class test_res_lang(TransactionCase):
         assert intersperse("abc12", [3], '.') == ('abc12', 0)
         assert intersperse("abc12", [2], '.') == ('abc12', 0)
         assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
+
+    def test_inactive_users_lang_deactivation(self):
+        # activate the language en_GB
+        language = self.env['res.lang']._activate_lang('en_GB')
+
+        # assign it to an inactive (new) user
+        user = self.env['res.users'].create({
+            'name': 'Foo',
+            'login': 'foo@example.com',
+            'lang': 'en_GB',
+            'active': False,
+        })
+
+        # make sure it is only used by that user
+        self.assertEqual(self.env['res.users'].with_context(active_test=False).search([('lang', '=', 'en_GB')]), user)
+
+        with self.assertRaises(UserError):
+            language.active = False
