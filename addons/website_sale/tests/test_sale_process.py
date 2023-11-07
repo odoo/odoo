@@ -500,6 +500,12 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             self.assertEqual(new_billing_use_same, so.partner_invoice_id)
             self.assertEqual(new_billing_use_same, so.partner_shipping_id)
 
+            # 6. forbid address page opening with wrong partners:
+            with self.assertRaises(Forbidden):
+                self.WebsiteSaleController.address(partner_id=self.env.user.partner_id.id, mode='billing')
+            with self.assertRaises(Forbidden):
+                self.WebsiteSaleController.address(partner_id=self.env.user.partner_id.id, mode='shipping')
+
     def test_09_update_cart_address(self):
         self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
         user = self.env['res.users'].create({
@@ -579,10 +585,12 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         # change also website env for `sale_get_order` to not change order partner_id
         with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id):
 
-            # Invalid addresses unaccesible to current customer
+            # Invalid addresses unaccessible to current customer
             with self.assertRaises(Forbidden):
+                # cannot use contact type addresses
                 self.WebsiteSaleController.update_cart_address(partner_id=colleague.id)
             with self.assertRaises(Forbidden):
+                # unrelated partner
                 self.WebsiteSaleController.update_cart_address(partner_id=self.env.user.partner_id.id)
 
             # Good addresses
