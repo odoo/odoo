@@ -29,7 +29,7 @@ export function clickMenuButton() {
 }
 export function closeSession() {
     return [
-        ...this.clickMenuButton(),
+        ...clickMenuButton(),
         {
             content: "click on the close session menu button",
             trigger: ".close-button",

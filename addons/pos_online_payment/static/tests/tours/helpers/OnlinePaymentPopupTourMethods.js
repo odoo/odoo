@@ -70,7 +70,7 @@ export function amountIs(amount) {
  * @returns
  */
 export function waitForOnlinePayment(checksAmount = 10, delayBetweenChecks = 3000) {
-    const waitingStep = this.isNotShown()[0];
+    const waitingStep = isNotShown()[0];
     waitingStep.content = "wait for online payment";
     waitingStep.timeout = checksAmount * delayBetweenChecks + 3000;
     return [

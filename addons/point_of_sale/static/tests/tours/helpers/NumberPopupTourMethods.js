@@ -13,7 +13,7 @@ export function pressNumpad(keys) {
 }
 export function enterValue(keys) {
     const numpadKeys = keys.split("").join(" ");
-    return [...this.pressNumpad(numpadKeys), ...this.fillPopupValue(keys)];
+    return [...pressNumpad(numpadKeys), ...fillPopupValue(keys)];
 }
 export function fillPopupValue(keys) {
     return [
