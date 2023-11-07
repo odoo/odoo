@@ -54,6 +54,9 @@ export function areSimilarElements(node, node2) {
     if ([node, node2].some(n => hasPseudoElementContent(n, ':before') || hasPseudoElementContent(n, ':after'))) {
         return false; // The nodes have pseudo elements with content.
     }
+    if (isFontAwesome(node) || isFontAwesome(node2)) {
+        return false;
+    }
     if (nodeName === 'LI' && node.classList.contains('oe-nested')) {
         // If the nodes are adjacent nested list items, we need to compare the
         // types of their "adjacent" list children rather that the list items
