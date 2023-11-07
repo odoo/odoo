@@ -33,7 +33,7 @@ class MailActivityPlan(models.Model):
         help='Specify a model if the activity should be specific to a model'
               ' and not available when managing activities for other models.')
     steps_count = fields.Integer(compute='_compute_steps_count')
-    assignation_summary = fields.Html('Assignation summary', compute='_compute_assignation')
+    assignation_summary = fields.Html('Plan Summary', compute='_compute_assignation_summary')
     has_user_on_demand = fields.Boolean('Has on demand responsible', compute='_compute_has_user_on_demand')
 
     @api.depends('res_model')
@@ -51,13 +51,11 @@ class MailActivityPlan(models.Model):
             plan.steps_count = len(plan.template_ids)
 
     @api.depends('template_ids.summary')
-    def _compute_assignation(self):
+    def _compute_assignation_summary(self):
         self.assignation_summary = ''
         for plan in self.filtered('template_ids'):
-            resp_description = dict(self.env['mail.activity.plan.template']._fields['responsible_type']._description_selection(self.env))
             summaries = [
-                f"{template.activity_type_id.name} - {resp_description[template.responsible_type]}" +
-                (f": {template.summary}" if template.summary else '')
+                template.activity_type_id.name + (f": {template.summary}" if template.summary else '')
                 for template in plan.template_ids
             ]
             if summaries:
