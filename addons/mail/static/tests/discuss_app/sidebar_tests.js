@@ -177,7 +177,7 @@ QUnit.test("default thread rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
-        text: "Congratulations, your inbox is empty  New messages appear here.",
+        text: "Your inbox is empty Change your preferences to receive new notifications in your inbox.",
     });
 
     await click("button", { text: "Starred" });

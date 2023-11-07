@@ -84,7 +84,7 @@ export class PersonaService {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.type === "chat")
             .sort((a, b) => {
-                const [a_dt , b_dt] = [a.lastInterestDateTime, b.lastInterestDateTime]
+                const [a_dt, b_dt] = [a.lastInterestDateTime, b.lastInterestDateTime];
                 if (!a_dt && !b_dt) {
                     return 0;
                 }
@@ -97,6 +97,13 @@ export class PersonaService {
                 return b_dt.ts - a_dt.ts;
             })
             .map((thread) => thread.chatPartner?.id);
+    }
+
+    updateUserNotificationPreference({ id, notification_preference }) {
+        if (this.store.user.user.id !== id) {
+            return;
+        }
+        this.store.user.notification_preference = notification_preference;
     }
 }
 

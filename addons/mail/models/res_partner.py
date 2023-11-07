@@ -234,6 +234,7 @@ class Partner(models.Model):
             if 'user' in fields:
                 internal_users = partner.user_ids - partner.user_ids.filtered('share')
                 main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
+                data['notification_preference'] = main_user.notification_type
                 data['user'] = {
                     "id": main_user.id,
                     "isInternalUser": not main_user.share,

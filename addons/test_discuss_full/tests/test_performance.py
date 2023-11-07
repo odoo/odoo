@@ -150,6 +150,7 @@ class TestDiscussFullPerformance(HttpCase):
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': False,
                             'type': "partner",
+                            'notification_preference': 'inbox',
                             'user': {
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
@@ -202,6 +203,7 @@ class TestDiscussFullPerformance(HttpCase):
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': False,
                             'type': "partner",
+                            'notification_preference': 'inbox',
                             'user': {
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
@@ -254,6 +256,7 @@ class TestDiscussFullPerformance(HttpCase):
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': False,
                             'type': "partner",
+                            'notification_preference': 'inbox',
                             'user': {
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
@@ -306,6 +309,7 @@ class TestDiscussFullPerformance(HttpCase):
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': False,
                             'type': "partner",
+                            'notification_preference': 'inbox',
                             'user': {
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
@@ -358,6 +362,7 @@ class TestDiscussFullPerformance(HttpCase):
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': False,
                             'type': "partner",
+                            'notification_preference': 'inbox',
                             'user': {
                                 'id': self.users[0].id,
                                 'isInternalUser': True,
@@ -411,6 +416,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'Ernest Employee',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'inbox',
                                 'user': {
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
@@ -433,6 +439,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'test12',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'email',
                                 'user': {
                                     'id': self.users[12].id,
                                     'isInternalUser': True,
@@ -501,6 +508,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'Ernest Employee',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'inbox',
                                 'user': {
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
@@ -523,6 +531,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'test14',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'email',
                                 'user': {
                                     'id': self.users[14].id,
                                     'isInternalUser': True,
@@ -591,6 +600,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'Ernest Employee',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'inbox',
                                 'user': {
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
@@ -613,6 +623,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'test15',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'email',
                                 'user': {
                                     'id': self.users[15].id,
                                     'isInternalUser': True,
@@ -681,6 +692,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'Ernest Employee',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'inbox',
                                 'user': {
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
@@ -703,6 +715,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'test2',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'email',
                                 'user': {
                                     'id': self.users[2].id,
                                     'isInternalUser': True,
@@ -771,6 +784,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'Ernest Employee',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'inbox',
                                 'user': {
                                     'id': self.users[0].id,
                                     'isInternalUser': True,
@@ -793,6 +807,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 'name': 'test3',
                                 'out_of_office_date_end': False,
                                 'type': "partner",
+                                'notification_preference': 'email',
                                 'user': {
                                     'id': self.users[3].id,
                                     'isInternalUser': True,
@@ -1024,6 +1039,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'im_status': 'bot',
                 'is_company': False,
                 'name': 'OdooBot',
+                'notification_preference': False,
                 'out_of_office_date_end': False,
                 'type': "partner",
                 'user': False,
@@ -1039,6 +1055,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'name': 'Ernest Employee',
                 'out_of_office_date_end': False,
                 'type': "partner",
+                'notification_preference': 'inbox',
                 'user': {
                     'id': self.users[0].id,
                     'isInternalUser': True,

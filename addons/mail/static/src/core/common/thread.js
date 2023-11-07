@@ -11,6 +11,7 @@ import {
 
 import { Component, onMounted, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
@@ -51,7 +52,7 @@ export class Thread extends Component {
         showDates: true,
         showEmptyMessage: true,
         showJumpPresent: true,
-        messageActions: true
+        messageActions: true,
     };
     static template = "mail.Thread";
 
@@ -64,6 +65,7 @@ export class Thread extends Component {
             showJumpPresent: false,
         });
         this.threadService = useState(useService("mail.thread"));
+        this.orm = useService("orm");
         useAutoScroll("messages", () => {
             if (this.env.messageHighlight?.highlightedMessageId) {
                 return false;
@@ -181,6 +183,14 @@ export class Thread extends Component {
         return this.state.showJumpPresent ? PRESENT_THRESHOLD - 200 : PRESENT_THRESHOLD;
     }
 
+    get preferenceButtonText() {
+        const [, before, inside, after] =
+            _t(
+                "<button>Change your preferences</button> to receive new notifications in your inbox."
+            ).match(/(.*)<button>(.*)<\/button>(.*)/) ?? [];
+        return { before, inside, after };
+    }
+
     updateShowJumpPresent() {
         this.state.showJumpPresent =
             this.props.thread.loadNewer || !this.presentThresholdState.isVisible;
@@ -188,6 +198,12 @@ export class Thread extends Component {
 
     onClickLoadOlder() {
         this.threadService.fetchMoreMessages(this.props.thread);
+    }
+
+    async onClickPreferences() {
+        const actionDescription = await this.orm.call("res.users", "action_get");
+        actionDescription.res_id = this.store.user.user.id;
+        this.env.services.action.doAction(actionDescription);
     }
 
     async jumpToPresent(behavior) {
