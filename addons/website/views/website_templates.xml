@@ -352,7 +352,7 @@
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element">
                             <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
-                            <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
+                            <t t-set="_link_class" t-valuef="d-block p-1"/>
                         </t>
                         <!-- Social -->
                         <t t-call="website.placeholder_header_social_links">
@@ -564,7 +564,7 @@
                             <t t-call="website.placeholder_header_text_element">
                                 <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
                                 <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
-                                <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
+                                <t t-set="_link_class" t-valuef="d-block p-1"/>
                             </t>
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links">
@@ -738,9 +738,7 @@
                         <!-- Social Links -->
                         <t t-call="website.placeholder_header_social_links"/>
                         <!-- Text element -->
-                        <t t-call="website.placeholder_header_text_element">
-                            <t t-set="_link_class" t-valuef="nav-link"/>
-                        </t>
+                        <t t-call="website.placeholder_header_text_element"/>
                     </ul>
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
@@ -1201,7 +1199,6 @@
                         <t t-call="website.placeholder_header_text_element">
                             <t t-set="_txt_elt_content" t-valuef="mail"/>
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
-                            <t t-set="_link_class" t-valuef="nav-link"/>
                             <t t-set="_item_class" t-valuef="position-relative"/>
                         </t>
                         <!-- Social -->
@@ -1321,7 +1318,7 @@
                             <!-- Text element -->
                             <t t-call="website.placeholder_header_text_element">
                                 <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
-                                <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
+                                <t t-set="_link_class" t-valuef="d-block p-1"/>
                                 <t t-set="_txt_elt_content" t-valuef="phone_mail"/>
                             </t>
                             <!-- Social -->
