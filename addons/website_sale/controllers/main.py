@@ -1234,9 +1234,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 else:
                     address_mode = kw.get('mode')
                     if not address_mode:
-                        if partner_id == order.partner_invoice_id:
+                        if partner_id == order.partner_invoice_id.id:
                             address_mode = 'billing'
-                        elif partner_id == order.partner_shipping_id:
+                        elif partner_id == order.partner_shipping_id.id:
                             address_mode = 'shipping'
 
                     # Make sure the address exists and belongs to the customer of the SO
