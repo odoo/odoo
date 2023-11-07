@@ -853,6 +853,7 @@ class Task(models.Model):
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
+        is_superuser = self._uid == SUPERUSER_ID
         for vals in vals_list:
             project_id = vals.get('project_id')
             if vals.get('user_ids'):
@@ -900,6 +901,22 @@ class Task(models.Model):
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
             # user_ids change: update date_assign
+<<<<<<< HEAD
+||||||| parent of edaacfe512ea (temp)
+            if vals.get('user_ids'):
+                vals['date_assign'] = fields.Datetime.now()
+                if not project_id:
+                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
+                    if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+=======
+            if vals.get('user_ids'):
+                vals['date_assign'] = fields.Datetime.now()
+                if not project_id:
+                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
+                    if self.env.user.id not in user_ids and not is_superuser:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.uid])]
+>>>>>>> edaacfe512ea (temp)
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
