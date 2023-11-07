@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
-import { useState } from "@odoo/owl";
+import { useState, status } from "@odoo/owl";
 
 export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     static template = 'web_edior.ChatGPTAlternativesDialog';
@@ -101,6 +101,9 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
                     this.state.messages = [];
                 }
             });
+            if (status(this) === 'destroyed') {
+                return;
+            }
             messageIndex += 1;
             this.state.messagesInProgress -= 1;
             if (wasError) {
