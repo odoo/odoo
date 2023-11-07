@@ -222,7 +222,7 @@
             <field name="arch" type="xml">
                 <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id" js_class="project_project_list">
                     <field name="sequence" column_invisible="True"/>
-                    <field name="name" invisible="1"/>
+                    <field name="name" column_invisible="1"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                     <field name="is_favorite" string="Favorite" nolabel="1" widget="boolean_favorite" optional="hide"/>
