@@ -78,6 +78,23 @@ class TestPatchUtils(BaseCase):
             comparison, "<p><added>foo</added></p><p><added>bar</added></p>"
         )
 
+    def test_new_content_is_equal(self):
+        initial_content = "<p>foo</p><p>bar</p>"
+        new_content = "<p>foo</p><p>bar</p>"
+
+        patch = generate_patch(new_content, initial_content)
+        self.assertEqual(patch, "")
+        restored_initial_content = apply_patch(new_content, patch)
+        self.assertEqual(restored_initial_content, initial_content)
+
+        initial_content = ""
+        new_content = ""
+
+        patch = generate_patch(new_content, initial_content)
+        self.assertEqual(patch, "")
+        restored_initial_content = apply_patch(new_content, patch)
+        self.assertEqual(restored_initial_content, initial_content)
+
     def test_new_content_multiple_operation(self):
         initial_content = "<p>foo</p><p>bar</p><p>baz</p><p>buz</p><p>boz</p>"
         new_content = (

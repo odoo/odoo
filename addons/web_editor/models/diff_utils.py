@@ -48,6 +48,9 @@ def apply_patch(initial_content, patch):
 
     :return: string: the patched content
     """
+    if patch == "":
+        return initial_content
+
     # Replace break line in initial content to ensure they don't interfere with
     # operations
     initial_content = initial_content.replace("\n", "")
