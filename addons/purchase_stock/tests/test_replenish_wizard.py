@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
+
 from odoo.addons.stock.tests.common import TestStockCommon
+
+from odoo import fields
 
 
 class TestReplenishWizard(TestStockCommon):
@@ -36,7 +40,7 @@ class TestReplenishWizard(TestStockCommon):
         """
         self.product_uom_qty = 42
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -89,7 +93,7 @@ class TestReplenishWizard(TestStockCommon):
             'sequence': 2,
         })
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -148,7 +152,7 @@ class TestReplenishWizard(TestStockCommon):
             'sequence': 3,
         })
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -197,7 +201,7 @@ class TestReplenishWizard(TestStockCommon):
             'sequence': 1,
         })
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -250,7 +254,7 @@ class TestReplenishWizard(TestStockCommon):
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 5
         })
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -268,3 +272,110 @@ class TestReplenishWizard(TestStockCommon):
 
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
+
+    def test_supplier_delay(self):
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+        })
+        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        supplier_delay = self.env['product.supplierinfo'].create({
+            'partner_id': vendor1.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2,
+            'delay': 3
+        })
+        supplier_no_delay = self.env['product.supplierinfo'].create({
+            'partner_id': vendor1.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2,
+            'delay' : 0
+        })
+        with freeze_time("2023-01-01"):
+            wizard = self.env['product.replenish'].create({
+                'product_id': product_to_buy.id,
+                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 1,
+                'warehouse_id': self.wh.id,
+                'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id
+            })
+            wizard.supplier_id = supplier_no_delay
+            self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
+            wizard.supplier_id = supplier_delay
+            self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard.date_planned)
+
+    def test_purchase_delay(self):
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+        })
+        vendor = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        supplier1 = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2,
+            'delay': 0
+        })
+        supplier2 = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2,
+            'delay' : 0
+        })
+        self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
+        self.env.company.days_to_purchase = 0
+
+        with freeze_time("2023-01-01"):
+            wizard = self.env['product.replenish'].create({
+                'product_id': product_to_buy.id,
+                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 1,
+                'warehouse_id': self.wh.id,
+                'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id
+            })
+            wizard.supplier_id = supplier1
+            self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
+            self.env.company.days_to_purchase = 5
+            # change the supplier to trigger the date computation
+            wizard.supplier_id = supplier2
+            self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard.date_planned)
+
+    def test_purchase_supplier_route_delay(self):
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
+        })
+        vendor = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        supplier = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': 100,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'min_qty': 2,
+            'delay': 2
+        })
+        self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
+        self.env.company.days_to_purchase = 5
+
+        with freeze_time("2023-01-01"):
+            wizard = self.env['product.replenish'].create({
+                'product_id': product_to_buy.id,
+                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 1,
+                'warehouse_id': self.wh.id,
+                'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id
+            })
+            wizard.supplier_id = supplier
+            self.assertEqual(fields.Datetime.from_string('2023-01-08 00:00:00'), wizard.date_planned)
