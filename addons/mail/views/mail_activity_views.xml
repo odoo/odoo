@@ -194,6 +194,30 @@
         </field>
     </record>
 
+    <record id="mail_activity_view_form_without_record_access" model="ir.ui.view">
+        <field name="name">mail.activity.view.form.without.record.access</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="Log an Activity" create="false" delete="false">
+                <sheet string="Activity">
+                    <field name="res_model" invisible="1"/>
+                    <field name="display_name" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                    <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="mail_activity_view_search" model="ir.ui.view">
         <field name="name">mail.activity.view.search</field>
         <field name="model">mail.activity</field>
@@ -235,6 +259,25 @@
         </field>
     </record>
 
+    <record id="mail_activity_view_tree_without_record_access" model="ir.ui.view">
+        <field name="name">mail.activity.view.tree.without.record.access</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail_activity_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="duplicate">0</attribute>
+                <attribute name="js_class">archive_disabled_activity_list</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <button name="action_done" type="object" string="Mark as Done"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="mail_activity_action_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
@@ -245,6 +288,33 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="mail.mail_activity_view_form"/>
         <field name="act_window_id" ref="mail.mail_activity_action"/>
+    </record>
+
+    <record id="mail_activity_without_access_action" model="ir.actions.act_window">
+        <field name="name">Other activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="mail.mail_activity_view_search"/>
+        <field name="domain">[('id', 'in', active_ids)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activities.
+            </p>
+        </field>
+    </record>
+
+    <record id="mail_activity_action_without_access_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="mail.mail_activity_view_tree_without_record_access"/>
+        <field name="act_window_id" ref="mail.mail_activity_without_access_action"/>
+    </record>
+
+    <record id="mail_activity_action_without_access_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.mail_activity_view_form_without_record_access"/>
+        <field name="act_window_id" ref="mail.mail_activity_without_access_action"/>
     </record>
 
     <record id="mail_activity_view_calendar" model="ir.ui.view">

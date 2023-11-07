@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
+import { RPCError } from "@web/core/network/rpc_service";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -31,8 +32,13 @@ export class ActivityMenu extends Component {
         this.sortActivityGroups();
     }
 
+    /**
+     * Sort by model ID ASC but always place the activity group for "mail.activity" model at the end (other activities).
+     */
     sortActivityGroups() {
-        this.store.activityGroups.sort((g1, g2) => g1.id - g2.id);
+        const getSortId = (activityGroup) =>
+            activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
+        this.store.activityGroups.sort((g1, g2) => getSortId(g1) - getSortId(g2));
     }
 
     onBeforeOpen() {
@@ -55,6 +61,24 @@ export class ActivityMenu extends Component {
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
         };
+        if (group.model === "mail.activity") {
+            this.action
+                .doAction("mail.mail_activity_without_access_action", {
+                    additionalContext: {
+                        active_ids: group.activity_ids,
+                    },
+                })
+                .catch((error) => {
+                    if (error instanceof RPCError) {
+                        this.action.doAction("mail.mail_activity_action", {
+                            additionalContext: {
+                                active_ids: group.activity_ids,
+                            },
+                        });
+                    }
+                });
+            return;
+        }
         let domain = [["activity_user_id", "=", this.userId]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
