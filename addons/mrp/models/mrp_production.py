@@ -1517,7 +1517,7 @@ class MrpProduction(models.Model):
 
             done_qty_by_product = defaultdict(float)
             for move in order.move_raw_ids:
-                quantity = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                quantity = move.product_uom._compute_quantity(move._get_picked_quantity(), move.product_id.uom_id)
                 rounding = move.product_id.uom_id.rounding
                 # extra lines with non-zero qty picked
                 if move.product_id not in expected_qty_by_product and move.picked and not float_is_zero(quantity, precision_rounding=rounding):
@@ -2495,7 +2495,7 @@ class MrpProduction(models.Model):
             if move.has_tracking != 'serial' or not move.picked:
                 continue
             for move_line in move.move_line_ids:
-                if float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
+                if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
                     continue
                 message = _('The serial number %(number)s used for component %(component)s has already been consumed',
                     number=move_line.lot_id.name,
@@ -2623,7 +2623,7 @@ class MrpProduction(models.Model):
                 continue
             rounding = move.product_uom.rounding
             if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (any(not line.lot_id for line in move.move_line_ids if line.quantity) or not move.picked):
+                if move.has_tracking in ('serial', 'lot') and not move.picked or (any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
             error_msg = _("You need to supply Lot/Serial Number for products and 'picked' them:") + missing_lot_id_products
