@@ -3,17 +3,36 @@
 # 	* sms
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Tony Ng, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Tony Ng, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -194,6 +213,20 @@ msgid "Choose a language:"
 msgstr "選擇一種語言："
 
 #. module: sms
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+msgid "Choose a template..."
+msgstr ""
+
+#. module: sms
+=======
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+msgid "Choose a template..."
+msgstr "選擇一個範本⋯"
+
+#. module: sms
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose an example"
 msgstr "選擇一個示例"
@@ -1188,6 +1221,16 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"伺服器操作類型。可使用以下值：\n"
+"- 更新記錄：更新記錄的值\n"
+"- 創建活動：創建活動（討論）\n"
+"- 發送電子郵件：發佈信息、備註或發送電子郵件（討論）\n"
+"- 發送短信：發送短信，將其記錄在文件中（短信）\n"
+"- 添加/刪除關注者：添加或刪除記錄中的關注者（討論）\n"
+"- 創建記錄：使用新值創建新記錄（討論)\n"
+"- 執行代碼：將執行的 Python 代碼塊\n"
+"- 發送 Webhook 通知：向外部系統發送 POST 請求，也稱為 Webhook\n"
+"- 執行現有操作：定義一個可觸發多個其他服務器操作的操作\n"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc

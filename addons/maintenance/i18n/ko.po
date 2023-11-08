@@ -3,17 +3,38 @@
 # 	* maintenance
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# Sarah Park, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +65,23 @@ msgstr "<b>일련 번호 :</b>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Canceled</span>"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "<span class=\"badge text-bg-warning float-end\">취쇠됨</span>"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "<span class=\"badge text-bg-warning float-end\">Cancelled</span>"
+msgstr ""
+=======
+msgstr "<span class=\"badge text-bg-warning float-end\">취쇠됨</span>"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "<span class=\"badge text-bg-warning float-end\">Cancelled</span>"
+msgstr "<span class=\"badge text-bg-warning float-end\">취소됨</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -356,6 +393,30 @@ msgid "Custom Bounced Message"
 msgstr "고객 반송 메시지"
 
 #. module: maintenance
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__module_maintenance_worksheet
+msgid "Custom Maintenance Worksheets"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
+msgid "Custom Worksheets"
+msgstr "사용자 지정 작업 계획표"
+
+#. module: maintenance
+=======
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__module_maintenance_worksheet
+msgid "Custom Maintenance Worksheets"
+msgstr "사용자 지정 유지관리 워크시트"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
+msgid "Custom Worksheets"
+msgstr "사용자 지정 작업 계획표"
+
+#. module: maintenance
+>>>>>>> 375aec60314b (temp)
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
 msgid "Dashboard"
 msgstr "현황판"
@@ -735,7 +796,23 @@ msgstr "유지보수 장비"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
+<<<<<<< HEAD
 msgstr "유지보수 장비 범주"
+||||||| parent of 375aec60314b (temp)
+msgstr "유지보수 장비 카테고리"
+
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_mixin
+msgid "Maintenance Maintained Item"
+msgstr ""
+=======
+msgstr "유지보수 장비 카테고리"
+
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_mixin
+msgid "Maintenance Maintained Item"
+msgstr "유지관리 항목 관리"
+>>>>>>> 375aec60314b (temp)
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -1296,7 +1373,25 @@ msgstr "이 별칭으로 이메일을 받을 때 생성되는 레코드의 소�
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
 msgid "The user will be able to manage equipment."
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "사용자는 장비를 관리할 수 있습니다."
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+#: model:ir.model.fields,help:maintenance.field_maintenance_mixin__effective_date
+msgid "This date will be used to compute the Mean Time Between Failure."
+msgstr ""
+=======
+msgstr "사용자는 장비를 관리할 수 있습니다."
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+#: model:ir.model.fields,help:maintenance.field_maintenance_mixin__effective_date
+msgid "This date will be used to compute the Mean Time Between Failure."
+msgstr "해당 날짜는 평균고장간격 계산에 사용합니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1381,8 +1476,30 @@ msgstr "보증 유효기간"
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "You cannot delete an equipment category containing equipment or maintenance requests."
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"You cannot delete an equipment category containing equipment or maintenance "
+"requests."
+msgstr "장비 또는 유지 보수 요청이 있는 장비 카테고리는 삭제할 수 없습니다."
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Your instructions"
+msgstr ""
+=======
+msgid ""
+"You cannot delete an equipment category containing equipment or maintenance "
+"requests."
+msgstr "장비 또는 유지 보수 요청이 있는 장비 카테고리는 삭제할 수 없습니다."
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Your instructions"
+msgstr "내 지침"
+>>>>>>> 375aec60314b (temp)
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

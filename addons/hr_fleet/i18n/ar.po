@@ -3,17 +3,36 @@
 # 	* hr_fleet
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # Niyas Raphy, 2022
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Niyas Raphy, 2022\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -27,8 +46,26 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">الموظف</span>"
+||||||| parent of 375aec60314b (temp)
+"<span class=\"o_stat_value\">موظف</span>\n"
+"                        <span class=\"o_stat_text\">واحد</span>"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr ""
+=======
+"<span class=\"o_stat_value\">موظف</span>\n"
+"                        <span class=\"o_stat_text\">واحد</span>"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "قالب خطة النشاط "
+>>>>>>> 375aec60314b (temp)
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -115,9 +152,23 @@ msgid "Employee's vehicle %s is not linked to a fleet manager."
 msgstr ""
 
 #. module: hr_fleet
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:hr_fleet.selection__hr_plan_activity_type__responsible__fleet_manager
 msgid "Fleet Manager"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "Fleet Manager is limited to Employee plans."
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "Fleet Manager is limited to Employee plans."
+msgstr "يقتصر مدير الأسطول على خطط الموظفين. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
@@ -184,6 +235,24 @@ msgid "Services for vehicles"
 msgstr "الخدمات للمركبات"
 
 #. module: hr_fleet
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr ""
+
+#. module: hr_fleet
+=======
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr "مركبة الموظف %(employee)s غير مرتبطة بمدير الأسطول. "
+
+#. module: hr_fleet
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
 #, python-format

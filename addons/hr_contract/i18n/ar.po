@@ -3,6 +3,7 @@
 # 	* hr_contract
 #
 # Translators:
+<<<<<<< HEAD
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Waleed Mohsen <mohsen.waleed@gmail.com>, 2022
 # Martin Trigaux, 2022
@@ -10,13 +11,31 @@
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +75,7 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+<<<<<<< HEAD
 "<span attrs=\"{'invisible' : [('contracts_count', '!=', 1)]}\" class=\"o_stat_text text-danger\">\n"
 "                                    العقد\n"
 "                                </span>\n"
@@ -73,6 +93,12 @@ msgid ""
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"في العقد منذ \">\n"
+"                                    في العقد منذ\n"
+"                                </span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -81,6 +107,7 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
 "                                    في العقد منذ\n"
 "                                </span>"
@@ -89,6 +116,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In Contract Since</span>"
 msgstr "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : [('contract_warning', '=', True)]}\" title=\"في العقد منذ \"> في العقد منذ</span> "
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"في العقد منذ \"> في العقد منذ</span> "
+>>>>>>> 375aec60314b (temp)
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -105,6 +137,82 @@ msgid ""
 "                                        From\n"
 "                                    </span>"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"<span class=\"o_stat_text\">\n"
+"                                        من\n"
+"                                    </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contract\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        Contract\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "<span>Days</span>"
+msgstr "<span>أيام</span> "
+=======
+"<span class=\"o_stat_text\">\n"
+"                                        من\n"
+"                                    </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contract\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    العقد\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    العقود\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        Contract\n"
+"                                    </span>"
+msgstr ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        العقود\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        العقد\n"
+"                                    </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "<span>Days</span>"
+msgstr "<span>أيام</span> "
+>>>>>>> 375aec60314b (temp)
 
 #. module: hr_contract
 #. odoo-python
@@ -112,6 +220,8 @@ msgstr ""
 #, python-format
 msgid "According to the contract's end date, this contract has been put in red on the %s. Please advise and correct."
 msgstr ""
+"وفقًا لتاريخ انتهاء تصريح عمل الموظف، تم وضع هذا العقد باللون الأحمر على %s."
+" أرجو النصيحة والتصحيح."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -155,6 +265,20 @@ msgid "Activity Type Icon"
 msgstr "أيقونة نوع النشاط"
 
 #. module: hr_contract
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model,name:hr_contract.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr ""
+
+#. module: hr_contract
+=======
+#: model:ir.model,name:hr_contract.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "معالج خطة جدول الأنشطة "
+
+#. module: hr_contract
+>>>>>>> 375aec60314b (temp)
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Administrator"
 msgstr "المدير "
@@ -257,6 +381,32 @@ msgid "Contract End Date"
 msgstr "تاريخ انتهاء العقد "
 
 #. module: hr_contract
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract Expiration Notice Period"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
+msgid "Contract Expiry Notice Period"
+msgstr ""
+
+#. module: hr_contract
+=======
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract Expiration Notice Period"
+msgstr "فترة إشعار انتهاء العقد "
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
+msgid "Contract Expiry Notice Period"
+msgstr "فترة إشعار انتهاء العقد "
+
+#. module: hr_contract
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Contract History"
 msgstr "سِجل العقد "
@@ -716,6 +866,41 @@ msgid "Number of Actions"
 msgstr "عدد الإجراءات"
 
 #. module: hr_contract
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the contract end date that a contract expiration "
+"warning is triggered."
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the work permit expiration date that a warning is "
+"triggered."
+msgstr ""
+
+#. module: hr_contract
+=======
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the contract end date that a contract expiration "
+"warning is triggered."
+msgstr ""
+"عدد الأيام السابقة لتاريخ انتهاء العقد التي يتم فيها تشغيل تحذير انتهاء "
+"صلاحية العقد. "
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the work permit expiration date that a warning is "
+"triggered."
+msgstr ""
+"عدد الأيام التي تسبق تاريخ انتهاء تصريح العمل الذي يتم فيه إصدار التحذير. "
+
+#. module: hr_contract
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of errors"
 msgstr "عدد الأخطاء "
@@ -875,6 +1060,24 @@ msgid "The contract of %s is about to expire."
 msgstr "عقد %s على وشك أن تنتهي صلاحيته. "
 
 #. module: hr_contract
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid "The work permit of %s is about to expire."
+msgstr ""
+
+#. module: hr_contract
+=======
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid "The work permit of %s is about to expire."
+msgstr "تصريح العمل %s على وشك الانتهاء. "
+
+#. module: hr_contract
+>>>>>>> 375aec60314b (temp)
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr "للتجديد"
@@ -921,6 +1124,52 @@ msgid "Wage"
 msgstr "الأجر "
 
 #. module: hr_contract
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني "
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني "
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Work Permit Expiration Notice Period"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
+msgid "Work Permit Expiry Notice Period"
+msgstr ""
+
+#. module: hr_contract
+=======
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني "
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني "
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Work Permit Expiration Notice Period"
+msgstr "فترة إشعار انتهاء تصريح العمل "
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
+msgid "Work Permit Expiry Notice Period"
+msgstr "فترة إشعار انتهاء تصريح العمل "
+
+#. module: hr_contract
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "رقم تصريح العمل"

@@ -3,16 +3,35 @@
 # 	* event_sale
 #
 # Translators:
+<<<<<<< HEAD
 # Tony Ng, 2023
 # Martin Trigaux, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Tony Ng, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -402,6 +421,7 @@ msgid "Non-free tickets"
 msgstr ""
 
 #. module: event_sale
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
 msgid "Not Paid"
@@ -411,6 +431,19 @@ msgstr "未付"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
 msgid "Not enough seats for all registrations"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "非供出售"
+>>>>>>> 375aec60314b (temp)
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -468,6 +501,28 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: event_sale
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr ""
+
+#. module: event_sale
+=======
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr "在確認此訂單之前，請確保所有與活動相關的資料行均已配置:%s"
+
+#. module: event_sale
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
@@ -587,7 +642,23 @@ msgstr "銷售訂單明細"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sale Order Status"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "銷售訂單狀態"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr ""
+=======
+msgstr "銷售訂單狀態"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "銷售狀態"
+>>>>>>> 375aec60314b (temp)
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -670,6 +741,32 @@ msgid "Unconfirmed"
 msgstr "未確認"
 
 #. module: event_sale
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+
+#. module: event_sale
+=======
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"未確認：處於待處理狀態、等待採取行動的註冊（具體情況，特別是銷售狀態）\n"
+"已註冊：客戶認為已註冊的註冊\n"
+"已參加：參加者參加了活動的註冊\n"
+"取消：手動取消的註冊"
+
+#. module: event_sale
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
 msgstr ""

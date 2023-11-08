@@ -312,8 +312,22 @@ msgstr "ID van de actie indien gedefinieerd in een XML bestand"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
+<<<<<<< HEAD
 msgid "If present, this condition must be satisfied before executing the action rule."
 msgstr "Indien aanwezig, moet deze conditie voldaan zijn voordat de actie regel wordt uitgevoerd."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"If present, this condition must be satisfied before executing the automation"
+" rule."
+msgstr ""
+=======
+msgid ""
+"If present, this condition must be satisfied before executing the automation"
+" rule."
+msgstr ""
+"Indien aanwezig, moet aan deze voorwaarde voldaan zijn voordat de "
+"automatiseringsregel wordt uitgevoerd."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -346,9 +360,47 @@ msgid "Least Delay Msg"
 msgstr "Minste vertraging boodschap"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link Field"
 msgstr "Koppelingsveld"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
+msgid "Log Calls"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Logs"
+msgstr "Logs"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Mail event can not be configured on model %s. Only models with discussion "
+"feature can be used."
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
+msgid "Log Calls"
+msgstr "Gesprekken registreren"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Logs"
+msgstr "Logs"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Mail event can not be configured on model %s. Only models with discussion "
+"feature can be used."
+msgstr ""
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -372,8 +424,16 @@ msgstr "Model voor aanmaken/updaten van record. Stel dit veld enkel in voor een 
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
+<<<<<<< HEAD
 msgid "Model on which the server action runs."
 msgstr "Model waarop de server actie loopt."
+||||||| parent of 375aec60314b (temp)
+msgid "Model on which the automation rule runs."
+msgstr ""
+=======
+msgid "Model on which the automation rule runs."
+msgstr "Model waarop de automatiseringsregel van toepassing is."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -437,9 +497,19 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
 msgid "SMS Template"
 msgstr "SMS sjabloon"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
+msgid "Record Getter"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
+msgid "Record Getter"
+msgstr "Record Getter"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
@@ -462,14 +532,46 @@ msgid "Server Action"
 msgstr "Serveractie"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
 msgid "Server Actions"
 msgstr "Server-acties"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
+msgid ""
+"Some triggers need a reference to a selection field. This field is used to "
+"store it."
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
+msgid ""
+"Some triggers need a reference to a selection field. This field is used to "
+"store it."
+msgstr ""
+"Sommige triggers hebben een referentie naar een selectieveld nodig. Dit veld"
+" wordt gebruikt om dit op te slaan"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
 msgid "Setting a value makes this action available in the sidebar for the given model."
 msgstr "Een waarde instellen maakt de actie beschikbaar in de zijbalk voor het opgegeven model."
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
+msgid ""
+"Some triggers need a reference to another field. This field is used to store"
+" it."
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
+msgid ""
+"Some triggers need a reference to another field. This field is used to store"
+" it."
+msgstr ""
+"Sommige triggers hebben een referentie naar een ander veld nodig. Dit veld "
+"wordt gebruikt om het op te slaan."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -504,8 +606,22 @@ msgstr "De \"%(trigger_value)s\" %(trigger_label)s kan alleen gebruikt worden me
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+<<<<<<< HEAD
 msgid "The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched."
 msgstr "De actie wordt geactiveerd als en alleen als een van deze velden wordt bijgewerkt. Indien leeg, worden alle velden bekeken."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"The automation rule will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+=======
+msgid ""
+"The automation rule will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+"De automatiseringsregel wordt getriggerd als en alleen als één van deze "
+"velden wordt bijgewerkt. Indien leeg wordt er naar alle velden gekeken."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #. openerp-web
@@ -519,9 +635,39 @@ msgstr ""
 "\""
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
 msgid "The full URL to access the server action through the website."
 msgstr "De volledige URL om toegang tot de server te krijgen via de website."
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
+msgid ""
+"This code will be run to find on which record the automation rule should be "
+"run."
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Timing Conditions"
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
+msgid ""
+"This code will be run to find on which record the automation rule should be "
+"run."
+msgstr ""
+"Deze code wordt uitgevoerd om te bepalen op welk record de "
+"automatiseringsregel moet worden uitgevoerd."
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Timing Conditions"
+msgstr ""
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -534,12 +680,37 @@ msgid "Trigger Date"
 msgstr "Activeringsdatum"
 
 #. module: base_automation
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
+msgid "Trigger Field"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
+msgid "Trigger Field Model"
+msgstr ""
+
+#. module: base_automation
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
+msgid "Trigger Field"
+msgstr "Triggerveld"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
+msgid "Trigger Field Model"
+msgstr "Triggerveldmodel"
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Trigger Fields"
 msgstr "Triggervelden"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
 msgid ""
 "Type of server action. The following values are available:\n"
@@ -561,9 +732,102 @@ msgstr ""
 "- 'Volgers toevoegen': volgers toevoegen aan een record (Discussiëren)\n"
 "- 'Create Next Activity': maak een activiteit aan (Bespreek)\n"
 "- 'Stuur SMS-tekstbericht': stuur sms, log in op documenten (SMS)"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
+msgid "Trigger Reference"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
+msgid "Trigger Reference"
+msgstr "Triggerreferentie"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
+msgid "Trigger Reference Display Name"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
+msgid "Type"
+msgstr "Soort"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL"
+msgstr "URL"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL will be created once the rule is saved."
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Update"
+msgstr "Bijwerken"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Update the Record"
+msgstr "Update het record"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__url
+msgid "Url"
+msgstr "Url"
+
+#. module: base_automation
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
+msgid "Trigger Reference Display Name"
+msgstr "Weergavenaam triggerreferentie"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
+msgid "Type"
+msgstr "Soort"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL"
+msgstr "URL"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL will be created once the rule is saved."
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Update"
+msgstr "Bijwerken"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Update the Record"
+msgstr "Update het record"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__url
+msgid "Url"
+msgstr "Url"
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
@@ -617,12 +881,51 @@ msgid "Website Path"
 msgstr "Website pad"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
 msgid "Website Url"
 msgstr "Website url"
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Logs"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
+msgid "Webhook UUID"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Weeks"
+msgstr "Weken"
+=======
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Logs"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
+msgid "Webhook UUID"
+msgstr "UUID webhook"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Weeks"
+msgstr "Weken"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
+<<<<<<< HEAD
 msgid "When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days."
 msgstr "Bij het berekenen van een op een dag gebaseerde tijdsgebonden voorwaarde, is het mogelijk om een kalender te gebruiken gebaseerd op werkdagen."
 
@@ -630,6 +933,20 @@ msgstr "Bij het berekenen van een op een dag gebaseerde tijdsgebonden voorwaarde
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
 msgid "When dealing with multiple actions, the execution order is based on the sequence. Low number means high priority."
 msgstr "Wanneer je meerdere acties heeft zal de volgorde van uitvoering bepaald worden aan de hand van de sequentie. Een laag nummer betekent een hoge prioriteit."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"When calculating a day-based timed condition, it is possibleto use a "
+"calendar to compute the date based on working days."
+msgstr ""
+=======
+msgid ""
+"When calculating a day-based timed condition, it is possibleto use a "
+"calendar to compute the date based on working days."
+msgstr ""
+"Bij het berekenen van een op dag gebaseerde tijdsgebonden voorwaarde, is het"
+" mogelijk om een kalender te gebruiken om de datum te berekenen op basis van"
+" werkdagen."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id

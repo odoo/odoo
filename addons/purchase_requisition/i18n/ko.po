@@ -3,16 +3,38 @@
 # 	* purchase_requisition
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# Sarah Park, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -319,6 +341,9 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"여러 업체로부터 받은 대체 견적 요청을 추가하여 입찰요청서를 생성하세요.\n"
+"                           리드타임과 OTD, 총 금액 면에서의 최적의 조합을 찾아서 선택하세요.\n"
+"                            품목 내역을 비교하여 일부는 한 업체에서 주문하고 나머지는 다른 업체에서 주문할 수도 있습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -378,6 +403,30 @@ msgid "Description"
 msgstr "설명"
 
 #. module: purchase_requisition
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Description Demo"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: purchase_requisition
+=======
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Description Demo"
+msgstr "설명 데모"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: purchase_requisition
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__display_name
@@ -647,7 +696,23 @@ msgstr "주문한 수량"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
+<<<<<<< HEAD
 msgstr "주문 날짜"
+||||||| parent of 375aec60314b (temp)
+msgstr "주문일"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Origin Demo"
+msgstr ""
+=======
+msgstr "주문일"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Origin Demo"
+msgstr "원래 데모"
+>>>>>>> 375aec60314b (temp)
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
@@ -798,7 +863,23 @@ msgid "Reference"
 msgstr "참조"
 
 #. module: purchase_requisition
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Reference Demo"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+=======
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Reference Demo"
+msgstr "참조 데모"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+>>>>>>> 375aec60314b (temp)
 msgid "Reference:"
 msgstr "참조 :"
 
@@ -990,6 +1071,9 @@ msgstr ""
 #, python-format
 msgid "This is a blocking warning!\n"
 msgstr ""
+"해당 구매 요청 건을 마감하려면, 관련된 견적요청서를 취소하시기 바랍니다.\n"
+"\n"
+"그대로 둘 경우 주문이 중복 발생하는 문제가 발생할 수 있습니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -999,7 +1083,23 @@ msgstr "오늘 활동"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Total"
+<<<<<<< HEAD
 msgstr "합계"
+||||||| parent of 375aec60314b (temp)
+msgstr "총계"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Type Demo"
+msgstr ""
+=======
+msgstr "총계"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Type Demo"
+msgstr "유형 데모"
+>>>>>>> 375aec60314b (temp)
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
@@ -1024,7 +1124,43 @@ msgstr "계약 내역 사용"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
+<<<<<<< HEAD
 msgstr "계약 수량 사용"
+||||||| parent of 375aec60314b (temp)
+msgstr "계약서 수량 사용"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT"
+msgstr "부가가치세"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT123"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT_DEMO"
+msgstr ""
+=======
+msgstr "계약서 수량 사용"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT"
+msgstr "부가가치세"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT123"
+msgstr "VAT123"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "VAT_DEMO"
+msgstr "VAT_DEMO"
+>>>>>>> 375aec60314b (temp)
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1039,6 +1175,20 @@ msgid "Vendor"
 msgstr "공급업체"
 
 #. module: purchase_requisition
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Vendor Name"
+msgstr ""
+
+#. module: purchase_requisition
+=======
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Vendor Name"
+msgstr "공급업체명"
+
+#. module: purchase_requisition
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
 msgid "Warning Messages"
 msgstr ""
@@ -1079,6 +1229,24 @@ msgid "Website communication history"
 msgstr "웹사이트 대화 이력"
 
 #. module: purchase_requisition
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase.py:0
+#, python-format
+msgid "What about the alternative Requests for Quotations?"
+msgstr ""
+
+#. module: purchase_requisition
+=======
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase.py:0
+#, python-format
+msgid "What about the alternative Requests for Quotations?"
+msgstr "대체용 견적서 요청은 어떠신가요?"
+
+#. module: purchase_requisition
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid "Whether or not this purchase order is linked to another purchase order as an alternative."
 msgstr ""

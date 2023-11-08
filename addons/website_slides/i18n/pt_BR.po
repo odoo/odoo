@@ -3,6 +3,7 @@
 # 	* website_slides
 #
 # Translators:
+<<<<<<< HEAD
 # douglas custodio <douglascstd@yahoo.com>, 2022
 # Éder Brito <britoederr@gmail.com>, 2022
 # grazziano <gra.negocia@gmail.com>, 2022
@@ -12,13 +13,33 @@
 # Kevilyn Rosa, 2023
 # Lucas Sena, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# Layna Nascimento, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Layna Nascimento, 2023
+# Maitê Dietze, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Lucas Sena, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Maitê Dietze, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -309,6 +330,66 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Olá,<br><br>\n"
+"                        Há novidades no curso sobre <strong t-out=\"object.channel_id.name or ''\">Árvores, Madeira e Jardins</strong> que você está acompanhando:<br><br>\n"
+"                        <center><strong t-out=\"object.name or ''\">Árvores</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Ver conteúdo</a>\n"
+"                        </div>\n"
+"                        Aproveite este conteúdo exclusivo!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
+msgstr ""
+=======
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Olá,<br><br>\n"
+"                        Há novidades no curso sobre <strong t-out=\"object.channel_id.name or ''\">Árvores, Madeira e Jardins</strong> que você está acompanhando:<br><br>\n"
+"                        <center><strong t-out=\"object.name or ''\">Árvores</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Ver conteúdo</a>\n"
+"                        </div>\n"
+"                        Aproveite este conteúdo exclusivo!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
+msgstr "<i class=\"fa fa-arrow-right\"/> Comece seu aprendizado"
+>>>>>>> 375aec60314b (temp)
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1145,7 +1226,43 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "All questions must be answered!"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "Todas as perguntas devem ser respondidas."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid ""
+"All questions must have at least one correct answer and one incorrect answer: \n"
+"%s\n"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "All the courses you attend will appear here. <br/>"
+msgstr ""
+=======
+msgstr "Todas as perguntas devem ser respondidas."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid ""
+"All questions must have at least one correct answer and one incorrect answer: \n"
+"%s\n"
+msgstr ""
+"Todas as perguntas devem ter pelo menos uma resposta correta e uma incorreta:\n"
+"%s\n"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "All the courses you attend will appear here. <br/>"
+msgstr "Todos os cursos que você participar aparecerão aqui. <br/>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_5_furn2
@@ -2681,7 +2798,23 @@ msgstr "Insira ao menos duas <b>Respostas</b> possíveis."
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Enter your <b>Question</b>. Be clear and concise."
+<<<<<<< HEAD
 msgstr "Insira sua <b>Pergunta</b>. Seja claro e conciso."
+||||||| parent of 375aec60314b (temp)
+msgstr "Insira sua <b>pergunta</b>. Seja claro e conciso."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__answers_validation_error
+msgid "Error on Answers"
+msgstr ""
+=======
+msgstr "Insira sua <b>pergunta</b>. Seja claro e conciso."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__answers_validation_error
+msgid "Error on Answers"
+msgstr "Erro em respostas"
+>>>>>>> 375aec60314b (temp)
 
 #. module: website_slides
 #. odoo-javascript
@@ -2931,7 +3064,23 @@ msgstr "Dê ao seu curso uma descrição <b>Útil</b>."
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Give your course an engaging <b>Title</b>."
+<<<<<<< HEAD
 msgstr "Dê a seu curso um  <b>Titulo</b> de engajamento."
+||||||| parent of 375aec60314b (temp)
+msgstr "Dê a seu curso um  <b>titulo</b> cativante."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "Go through all its content to see a Course in this section. <br/>"
+msgstr ""
+=======
+msgstr "Dê a seu curso um  <b>titulo</b> cativante."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "Go through all its content to see a Course in this section. <br/>"
+msgstr "Passe por todo o conteúdo do curso para vê-lo nesta seção. <br/>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -5139,7 +5288,23 @@ msgstr "Slide"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
+<<<<<<< HEAD
 msgstr "Slide / Parceiro decorado m2m"
+||||||| parent of 375aec60314b (temp)
+msgstr "m2m decorado por usuário/slide"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
+msgid "Slide Icon fa-class"
+msgstr ""
+=======
+msgstr "m2m decorado por usuário/slide"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
+msgid "Slide Icon fa-class"
+msgstr "Ícone do slide fa-class"
+>>>>>>> 375aec60314b (temp)
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -5590,6 +5755,28 @@ msgid "This is the correct answer, congratulations"
 msgstr "Esta é a resposta correta, parabéns"
 
 #. module: website_slides
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid ""
+"This question must have at least one correct answer and one incorrect "
+"answer."
+msgstr ""
+
+#. module: website_slides
+=======
+#. odoo-python
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid ""
+"This question must have at least one correct answer and one incorrect "
+"answer."
+msgstr "A pergunta deve ter pelo menos uma resposta correta e uma incorreta."
+
+#. module: website_slides
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
@@ -5867,6 +6054,20 @@ msgid "User vote"
 msgstr "Voto do usuário"
 
 #. module: website_slides
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+msgid "Validation error"
+msgstr ""
+
+#. module: website_slides
+=======
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+msgid "Validation error"
+msgstr "Erro de validação"
+
+#. module: website_slides
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_category__video

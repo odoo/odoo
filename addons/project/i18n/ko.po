@@ -3,18 +3,40 @@
 # 	* project
 #
 # Translators:
+<<<<<<< HEAD
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Linkup <link-up@naver.com>, 2022
 # Sarah Park, 2023
 # Martin Trigaux, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# Sarah Park, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -330,7 +352,23 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "<small class=\"text-end\">단계:</small>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "<small class=\"text-muted\">Assignees</small>"
+msgstr ""
+=======
+msgstr "<small class=\"text-end\">단계:</small>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "<small class=\"text-muted\">Assignees</small>"
+msgstr "<small class=\"text-muted\">배정 대상자</small>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -345,7 +383,53 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"협렧\" title=\"협력사\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"fw-normal\"> Done</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"fw-normal\"> Tasks</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text order-2\">Closed</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
+msgstr ""
+=======
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"협렧\" title=\"협력사\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"fw-normal\"> Done</span>"
+msgstr "<span class=\"fw-normal\"> 완료</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"fw-normal\"> Tasks</span>"
+msgstr "<span class=\"fw-normal\"> 작업</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text order-2\">Closed</span>"
+msgstr "<span class=\"o_stat_text order-2\">종료</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
+msgstr "<span class=\"o_stat_text order-2\">하위 작업</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -385,6 +469,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Tasks</span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">평가 요청은 작업이 환경 설정 내용에 따라 정의된 단계에 도달하는 즉시 이메일을 통해 전송됩니다.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">평가 요청은 작업의 환경 설정 내용에 따라 정의된 단계에 있는 동안 이메일을 통해 전송됩니다.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1074,7 +1163,35 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
 msgid "Closed Sub-tasks Count"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "마감된 하위 작업 수"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
+#: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
+msgid "Closed Task Count"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
+msgid "Closed Task Percentage"
+msgstr ""
+=======
+msgstr "마감된 하위 작업 수"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
+#: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
+msgid "Closed Task Count"
+msgstr "마감된 작업 수"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
+msgid "Closed Task Percentage"
+msgstr "마감된 작업 비율"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1203,6 +1320,36 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
+msgid "Convert Task"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#: model:ir.actions.server,name:project.action_server_convert_to_subtask
+#, python-format
+msgid "Convert to Task/Sub-Task"
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
+msgid "Convert Task"
+msgstr "작업 전환"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#: model:ir.actions.server,name:project.action_server_convert_to_subtask
+#, python-format
+msgid "Convert to Task/Sub-Task"
+msgstr "작업/하위작업으로 전환"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -1852,9 +1999,29 @@ msgid "Folded in Kanban"
 msgstr "칸반 화면 접기"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+msgid "Follow and comments tasks of your projects"
+msgstr "내 프로젝트 작업의 팔로우 및 댓글"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+msgid "Follow the evolution of your projects"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+msgid "Follow and comments tasks of your projects"
+msgstr "내 프로젝트 작업의 팔로우 및 댓글"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+msgid "Follow the evolution of your projects"
+msgstr "프로젝트 진행을 팔로우합니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2213,9 +2380,23 @@ msgid "Is Milestone Exceeded"
 msgstr ""
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
 msgid "Is Private"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
+#, python-format
+msgid "Is toggle mode"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
+#, python-format
+msgid "Is toggle mode"
+msgstr "토글 모드입니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2632,7 +2813,27 @@ msgstr "신규 주문"
 
 #. module: project
 #. odoo-javascript
+<<<<<<< HEAD
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+||||||| parent of 375aec60314b (temp)
+#: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
+#, python-format
+msgid "New Project"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
+=======
+#: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
+#, python-format
+msgid "New Project"
+msgstr "새 프로젝트"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
+>>>>>>> 375aec60314b (temp)
 #, python-format
 msgid "New Projects"
 msgstr "신규프로젝트"
@@ -2645,6 +2846,24 @@ msgid "New Request"
 msgstr "새 요청"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
+#, python-format
+msgid "New Task"
+msgstr ""
+
+#. module: project
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
+#, python-format
+msgid "New Task"
+msgstr "새 작업"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
@@ -2960,8 +3179,38 @@ msgstr "상위 작업"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
+<<<<<<< HEAD
 msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
 msgstr "별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 alias_model_id(예 : 프로젝트(parent_model) 및 태스크(model)에서 제공하는 모델일 필요는 없습니다.)"
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 alias_model_id(예: 프로젝트(parent_model) 및 "
+"태스크(model)에서 제공하는 모델일 필요는 없습니다.)"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"People invited to collaborate on the project will have portal access rights."
+msgstr ""
+=======
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 alias_model_id(예: 프로젝트(parent_model) 및 "
+"태스크(model)에서 제공하는 모델일 필요는 없습니다.)"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"People invited to collaborate on the project will have portal access rights."
+msgstr "프로젝트에 협업하도록 초대한 사람들에게는 포탈 접근 권한을 부여합니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3003,7 +3252,23 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "개인 단계 상태"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
+msgid "Personal Stages"
+msgstr ""
+=======
+msgstr "개인 단계 상태"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
+msgid "Personal Stages"
+msgstr "개인 단계"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3118,6 +3383,38 @@ msgid "Private"
 msgstr "비공개"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Private Tasks"
+msgstr "비공개 작업"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, python-format
+msgid ""
+"Private tasks cannot be converted into sub-tasks. Please set a project for "
+"the task to gain access to this feature."
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Private Tasks"
+msgstr "비공개 작업"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, python-format
+msgid ""
+"Private tasks cannot be converted into sub-tasks. Please set a project for "
+"the task to gain access to this feature."
+msgstr "비공개 작업은 하위 작업으로 전환할 수 없습니다. 해당 기능에 접근하려면 작업에 대해 프로젝트를 설정하세요."
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
@@ -3383,6 +3680,28 @@ msgid "Quarterly"
 msgstr "분기별"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_0
+msgid ""
+"Quickly check the status of tasks for approvals or change requests and "
+"identify those on hold until dependencies are resolved with the hourglass "
+"icon."
+msgstr ""
+"작업 상태를 신속하게 확인하여 승인이나 변경 요청에 대응하며, 종속성 문제 때문에 보류 중인 작업은 모래 시계 아이콘으로 구분합니다."
+
+#. module: project
+=======
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_0
+msgid ""
+"Quickly check the status of tasks for approvals or change requests and "
+"identify those on hold until dependencies are resolved with the hourglass "
+"icon."
+msgstr ""
+"작업 상태를 신속하게 확인하여 승인이나 변경 요청에 대응하며, 종속성 문제 때문에 보류 중인 작업은 모래시계 아이콘으로 구분합니다."
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
@@ -4010,9 +4329,19 @@ msgid "Sub-tasks"
 msgstr "하위 작업"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Sub-tasks Planned Hours"
 msgstr "하위 작업의 계획된 시간"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
+msgid "Sub-tasks Allocated Time"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
+msgid "Sub-tasks Allocated Time"
+msgstr "하위 작업 할당 시간"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4124,6 +4453,20 @@ msgid "Task Logs"
 msgstr "작업 기록"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
+msgid "Task Plans"
+msgstr ""
+
+#. module: project
+=======
+#: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
+msgid "Task Plans"
+msgstr "작업 계획"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
 msgstr ""
@@ -4199,6 +4542,20 @@ msgid "Task:"
 msgstr "작업 :"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "Task: Rating Request"
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "Task: Rating Request"
+msgstr "작업: 평가 요청"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -4390,6 +4747,28 @@ msgid "There is nothing to report."
 msgstr "보고할 항목이 없습니다. "
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"They can edit shared project tasks and view specific documents in read-only "
+"mode on your website. This includes leads/opportunities, quotations/sales "
+"orders, purchase orders, invoices and bills, timesheets, and tickets."
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"They can edit shared project tasks and view specific documents in read-only "
+"mode on your website. This includes leads/opportunities, quotations/sales "
+"orders, purchase orders, invoices and bills, timesheets, and tickets."
+msgstr ""
+"공유 프로젝트를 편집하거나 특정 문서를 웹사이트에서 읽기 전용으로 볼 수 있습니다. 영업제안이나 영업기회, 견적서나 판매주문서, "
+"구매발주서, 청구서나 거래처 청구서와 작업시간표와 상담까지 아우릅니다."
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_3
@@ -4411,6 +4790,8 @@ msgstr "금주"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "This is a preview of how the project will look when it's shared with customers and they have editing access."
 msgstr ""
+"해당 프로젝트에는 회사가 연결되어 있지 않으나, 단계는 %s에 연결되어 있습니다. 몇 가지 옵션 중에서 선택하세요: 프로젝트 회사를 "
+"스테이지의 회사에 맞도록 변경하거나 단계에서 회사 지정을 삭제할 수 있습니다."
 
 #. module: project
 #. odoo-javascript
@@ -4483,6 +4864,32 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"완료하시려면, 작업 활동 및 상태를 활용하십시오.<br>\n"
+"                실시간 채팅이나 이메일을 통해 효율적으로 함께 작업합니다."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
+msgid ""
+"To transform a task into a sub-task, select a parent task. Alternatively, "
+"leave the parent task field blank to convert a sub-task into a standalone "
+"task."
+msgstr ""
+=======
+"완료하시려면, 작업 활동 및 상태를 활용하십시오.<br>\n"
+"                실시간 채팅이나 이메일을 통해 효율적으로 함께 작업합니다."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
+msgid ""
+"To transform a task into a sub-task, select a parent task. Alternatively, "
+"leave the parent task field blank to convert a sub-task into a standalone "
+"task."
+msgstr ""
+"작업을 하위 작업으로 전환하려면, 상위 작업을 선택하세요. 또는 상위 작업 필드가 공란으로 비워져 있으면 하위 작업이 독립형 작업으로 "
+"전환됩니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #. odoo-python
@@ -4522,7 +4929,31 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "성공하기 위해서 반드시 도달해야 하는 주요 진행 사항을 추적합니다. "
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid ""
+"Track project costs, revenues, and margin by setting the analytic account "
+"associated with the project on relevant documents."
+msgstr ""
+=======
+msgstr "성공하기 위해서 반드시 도달해야 하는 주요 진행 사항을 추적합니다. "
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid ""
+"Track project costs, revenues, and margin by setting the analytic account "
+"associated with the project on relevant documents."
+msgstr "프로젝트 비용과 수익, 마진을 추적하세요. 관련 문서에서 프로젝트에 연결되어 있는 분석 계정을 설정합니다."
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4798,6 +5229,42 @@ msgid "Weeks"
 msgstr "주"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
+"                    Collaborators will be able to view and modify part of the tasks' information."
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
+"                    These people will be able to view the tasks, but not edit them."
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
+"                    Collaborators will be able to view and modify part of the tasks' information."
+msgstr ""
+"프로젝트를 편집 모드로 공유하면, 작업 항목에서 칸반 및 목록 화면에 대한 접근 권한을 부여하게 됩니다.\n"
+"                     공동 작업자는 작업 정보 일부를 보기 및 편집할 수 있습니다."
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid ""
+"When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
+"                    These people will be able to view the tasks, but not edit them."
+msgstr ""
+"프로젝트를 읽기 전용으로 공유하면, 해당 작업자 포털에서 작업 항목에 접근하는 권한을 부여하게 됩니다.\n"
+"                     해당 작업자는 작업 정보 보기를 할 수 있으나, 편집할 수는 없습니다."
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "Working Days to Assign"
@@ -4877,6 +5344,8 @@ msgstr "년"
 #, python-format
 msgid "You can only set a personal stage on a private task."
 msgstr ""
+"이 단계에서는 %(company_name)s 회사로 변경할 수 없습니다. 현재 %(project_company_name)s 회사에 "
+"연결되어 있는 프로젝트가 있습니다. 현재 단계에서 모든 프로젝트가 %(company_name)s 회사에 연결되어 있는지 확인하세요."
 
 #. module: project
 #. odoo-python
@@ -4932,6 +5401,24 @@ msgid "You have been assigned to the"
 msgstr "다음에 할당되었습니다"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"You have full control and can revoke portal access anytime. Are you ready to"
+" proceed?"
+msgstr ""
+
+#. module: project
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
+msgid ""
+"You have full control and can revoke portal access anytime. Are you ready to"
+" proceed?"
+msgstr "전체 권한이 있으며 포탈 접근을 언제든 취소할 수 있습니다. 계속 진행할까요?"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
@@ -5045,7 +5532,23 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "예: 제품 출시"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "fs-4"
+msgstr ""
+=======
+msgstr "예: 제품 출시"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "fs-4"
+msgstr "fs-4"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #. odoo-javascript

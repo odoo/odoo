@@ -3,18 +3,39 @@
 # 	* payment_transfer
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Maitê Dietze, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: grazziano <gra.negocia@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Maitê Dietze, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+>>>>>>> 375aec60314b (temp)
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -45,6 +66,7 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+<<<<<<< HEAD
 "<div>\n"
 "<h3>Utilize os seguintes detalhes de transferência</h3>\n"
 "<h4>%(bank_title)s</h4>\n"
@@ -52,9 +74,94 @@ msgstr ""
 "<h4>Comunicação</h4>\n"
 "<p>Por favor utilize o nome da ordem como referência de comunicação.</p>\n"
 "</div>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<small class=\"text-center text-wrap lh-sm\">Escaneie no app do seu "
+"banco</small>"
+>>>>>>> 375aec60314b (temp)
 
+<<<<<<< HEAD
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:0
+||||||| parent of 375aec60314b (temp)
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Código"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Personalizado"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Modo personalizado"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "Habilitar códigos QR"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "Ativar o uso de códigos QR em pagamentos por transferência bancária."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "Finalize your payment"
+msgstr ""
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+=======
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">Comunicação: </strong>"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Código"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Personalizado"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Modo personalizado"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "Habilitar códigos QR"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "Ativar o uso de códigos QR em pagamentos por transferência bancária."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "Finalize your payment"
+msgstr "Finalize o pagamento"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+>>>>>>> 375aec60314b (temp)
 #, python-format
 msgid "Bank Account"
 msgstr "Conta Bancária"

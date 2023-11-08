@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_payulatam
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__code
+msgid "Code"
+msgstr "コード"
+
+#. module: payment_payulatam
+#. odoo-python
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid payment status."
+msgstr "無効な支払ステータス"
+
+#. module: payment_payulatam
+#. odoo-python
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "参照に一致する取引が見つかりません%s。"
+
+#. module: payment_payulatam
+#: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_provider__code__payulatam
+#: model:payment.provider,name:payment_payulatam.payment_provider_payulatam
+msgid "PayU Latam"
+msgstr "PayU Latam"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_api_key
+msgid "PayU Latam API Key"
+msgstr "PayU Latam APIキー"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_account_id
+msgid "PayU Latam Account ID"
+msgstr "PayU Latam アカウントID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_merchant_id
+msgid "PayU Latam Merchant ID"
+msgstr "PayU LatamマーチャントID"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_provider
+msgid "Payment Provider"
+msgstr "決済プロバイダー"
+
+#. module: payment_payulatam
+#: model:ir.model,name:payment_payulatam.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "決済トランザクション"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_merchant_id
+msgid "The ID solely used to identify the account with PayULatam"
+msgstr "PayULatamのアカウントを識別するためにのみ使用されるID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_account_id
+msgid ""
+"The ID solely used to identify the country-dependent shop with PayULatam"
+msgstr "PayULatamの国別店舗を識別するためにのみ使用されるID"
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "この決済プロバイダーのテクニカルコード。"
+
+#. module: payment_payulatam
+#: model_terms:ir.ui.view,arch_db:payment_payulatam.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Mercado Pago</strong>."
+msgstr ""
+"このプロバイダーは非推奨です。\n"
+"                    無効にし、 <strong>Mercado Pago</strong>に移行することを検討して下さい。"
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,auth_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been authorized."
+msgstr "お支払いは承認されました。"
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,cancel_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been cancelled."
+msgstr "お支払いはキャンセルされました。"
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,pending_msg:payment_payulatam.payment_provider_payulatam
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "お支払いは無事処理されましたが、承認待ちとなっています。"
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,done_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been successfully processed."
+msgstr "お支払いは無事処理されました。"

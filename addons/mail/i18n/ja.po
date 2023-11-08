@@ -1054,6 +1054,32 @@ msgid "Activity Mixin"
 msgstr "アクティビティミックスイン"
 
 #. module: mail
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model,name:mail.model_mail_activity_plan
+msgid "Activity Plan"
+msgstr ""
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_activity_plan_action
+#: model:ir.ui.menu,name:mail.menu_mail_activity_plan
+msgid "Activity Plans"
+msgstr ""
+
+#. module: mail
+=======
+#: model:ir.model,name:mail.model_mail_activity_plan
+msgid "Activity Plan"
+msgstr "アクティビティ計画"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_activity_plan_action
+#: model:ir.ui.menu,name:mail.menu_mail_activity_plan
+msgid "Activity Plans"
+msgstr ""
+
+#. module: mail
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Activity Settings"
 msgstr "活動の設定"
@@ -1087,10 +1113,30 @@ msgid "Activity Types"
 msgstr "活動タイプ"
 
 #. module: mail
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "Activity User Type"
 msgstr "活動ユーザタイプ"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model,name:mail.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr ""
+=======
+#: model:ir.model,name:mail.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "活動計画テンプレート"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "活動予定計画ウィザード"
+>>>>>>> 375aec60314b (temp)
 
 #. module: mail
 #. odoo-javascript
@@ -1248,6 +1294,50 @@ msgid "Alias Domain"
 msgstr "エイリアスドメイン"
 
 #. module: mail
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
+#: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_name
+msgid "Alias Domain Name"
+msgstr "エイリアスドメイン名"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_alias_domain_action
+#: model:ir.ui.menu,name:mail.mail_alias_domain_menu
+#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
+msgid "Alias Domains"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
+msgid "Alias Email"
+msgstr ""
+
+#. module: mail
+=======
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
+#: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_name
+msgid "Alias Domain Name"
+msgstr "エイリアスドメイン名"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_alias_domain_action
+#: model:ir.ui.menu,name:mail.mail_alias_domain_menu
+#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
+msgid "Alias Domains"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
+msgid "Alias Email"
+msgstr "エイリアスEメール"
+
+#. module: mail
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
 msgid "Alias Name"
 msgstr "エイリアス名"
@@ -5198,6 +5288,20 @@ msgid "Local Server"
 msgstr "ローカルサーバ"
 
 #. module: mail
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr ""
+
+#. module: mail
+=======
+#: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "ローカルパートに基づく着信検知"
+
+#. module: mail
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -9450,6 +9554,13 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
 msgid "Used as context used to evaluate composer domain"
 msgstr ""
+"メッセージジェネレーターの分類に使用されます\n"
+"email': mailgatewayなどの受信メールによって生成されます\n"
+"comment': ディスカッションやコンポーザーなどのユーザー入力によって生成されます\n"
+"email_outgoing': メーリングによって生成されたもの\n"
+"notification」: トラッキングメッセージなど、システムによって生成されます。\n"
+"auto_comment': 自動通知メカニズム（acknowledgementなど）によって生成されます。\n"
+"user_notification': 特定の受信者のために生成されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id

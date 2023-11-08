@@ -3,6 +3,7 @@
 # 	* mass_mailing
 #
 # Translators:
+<<<<<<< HEAD
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Mehjabin Farsana, 2022
 # Niyas Raphy, 2022
@@ -10,13 +11,33 @@
 # Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Mustafa Rawi <mustafa@cubexco.com>, 2023
+# Wil Odoo, 2023
+# 
+=======
+# Mustafa Rawi <mustafa@cubexco.com>, 2023
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +94,38 @@ msgid "% of recipients"
 msgstr "نسبة المستلمين "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "%(contact_name)s subscribed to the following mailing list(s)"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "%(contact_name)s unsubscribed from the following mailing list(s)"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "%(contact_name)s subscribed to the following mailing list(s)"
+msgstr "%(contact_name)s مشترك في القوائم البريدية التالية "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "%(contact_name)s unsubscribed from the following mailing list(s)"
+msgstr "%(contact_name)s قم بإلغاء الاشتراك من القوائم البريدية التالية "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "%Click (Total)"
 msgstr "نسبة النقرات (الإجمالي) "
@@ -253,9 +306,29 @@ msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font
 msgstr "<font style=\"font-size: 62px; font-weight: bold;\">عنوان جاذب للانتباه</font>"
 
 #. module: mass_mailing
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
 msgid "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is blacklisted for mass mailings\" aria-label=\"Blacklisted\" attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" groups=\"base.group_user\"/>"
 msgstr "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"وُضع هذا البريد في القائمة السوداء للمراسلات الجماعية \" aria-label=\"Blacklisted\" attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" groups=\"base.group_user\"/>"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
+"is_blacklisted\" groups=\"base.group_user\"/>"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+msgid ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
+"is_blacklisted\" groups=\"base.group_user\"/>"
+msgstr ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"لقد تم وضع هذا "
+"البريد الإلكتروني في القائمة السوداء للمراسلة الجماعية \" aria-"
+"label=\"Blacklisted\" invisible=\"not is_blacklisted\" "
+"groups=\"base.group_user\"/>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -341,9 +414,16 @@ msgid ""
 "                                                    To track replies, this address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
+<<<<<<< HEAD
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" attrs=\"{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}\">\n"
 "                                                    لتتبع الردود، يجب أن ينتمي هذا العنوان إلى قاعدة البيانات هذه.\n"
 "                                                </small>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"                                                    لتتبع الردود، يجب أن ينتمي هذا العنوان إلى قاعدة البيانات هذه.\n"
+"                                                </small>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -400,6 +480,22 @@ msgid "<span class=\"text-muted\">Opt-out</span>"
 msgstr "<span class=\"text-muted\">الانسحاب </span>"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "<span invisible=\"not mailing_on_mailing_list\">Mailing Contact</span>"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid "<span invisible=\"not mailing_on_mailing_list\">Mailing Contact</span>"
+msgstr ""
+"<span invisible=\"not mailing_on_mailing_list\">جهة اتصال المراسلة "
+"البريدية</span> "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"canceled_text\">emails have been canceled and will not be sent.</span>"
 msgstr "<span name=\"canceled_text\">تم إلغاء رسائل البريد الإلكتروني ولن يتم إرسالها.</span>"
@@ -416,10 +512,60 @@ msgstr "<span name=\"failed_text\">تعذر إرسال رسائل البريد �
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"<span name=\"mailing_schedule_type_now_text\">This mailing will be sent as "
+"soon as possible.</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+=======
+msgid ""
+"<span name=\"mailing_schedule_type_now_text\">This mailing will be sent as "
+"soon as possible.</span>"
+msgstr ""
+"<span name=\"mailing_schedule_type_now_text\">سيتم إرسال هذه المراسلات "
+"البريدية في أقرب وقت ممكن.</span> "
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+>>>>>>> 375aec60314b (temp)
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
 msgstr "<span name=\"next_departure_text\">هذا البريد الإلكتروني مجدول لـ </span>"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<span name=\"process_text\">emails are being processed.</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"refresh_text\">This mailing will be sent as soon as "
+"possible.</span>"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<span name=\"process_text\">emails are being processed.</span>"
+msgstr "<span name=\"process_text\">تتم معالجة رسائل البريد الإلكتروني.</span> "
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<span name=\"refresh_text\">This mailing will be sent as soon as "
+"possible.</span>"
+msgstr ""
+"<span name=\"refresh_text\">سيتم إرسال هذه المراسلات البريدية في أقرب فرصة "
+"ممكنة.</span> "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 msgid "<span name=\"scheduled_text\">email(s) scheduled for </span>"
 msgstr "<span name=\"scheduled_text\">رسالة (رسائل) البريد مجدولة لـ </span>"
@@ -533,6 +679,39 @@ msgid "<span>​</span>"
 msgstr "<span>​</span>"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
+"                            </strong>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
+"                            </strong>"
+msgstr ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">لم يكن هناك عدد كافٍ من المستلمين في هذه الرسالة. </span>\n"
+"                            </strong>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
+msgstr "<u>تحديث <i class=\"fa fa-refresh ms-1\"/></u> "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -813,6 +992,20 @@ msgid "Allow A/B Testing"
 msgstr "السماح باختبار A/B "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
+msgid "Allow Feedback"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
+msgid "Allow Feedback"
+msgstr "السماح بالملاحظات "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
 msgstr "السماح للمستلمين بإضافة أنفسهم إلى القائمة السوداء "
@@ -856,15 +1049,31 @@ msgstr "صفحات مذهلة "
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "An error occurred. Please try again later or contact us."
 msgstr "لقد حدث خطأ ما. يرجى المحاولة من جديد لاحقاً أو تواصل معنا. "
+||||||| parent of 375aec60314b (temp)
+msgid "An error occurred. Please retry later or contact us."
+msgstr ""
+=======
+msgid "An error occurred. Please retry later or contact us."
+msgstr "حدث خطأ ما. يرجى إعادة المحاولة لاحقاً أو تواصل معنا. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "An error occurred. Your changes have not been saved, try again later."
 msgstr "لقد حدث خطأ ما. لم يتم حفظ تغييراتك، حاول مجدداً لاحقاً. "
+||||||| parent of 375aec60314b (temp)
+msgid "An error occurred. Please retry later."
+msgstr ""
+=======
+msgid "An error occurred. Please retry later."
+msgstr "حدث خطأ ما. يرجى إعادة المحاولة من جديد لاحقاً. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_alternation_image_text_template
@@ -890,6 +1099,20 @@ msgid "Another feature"
 msgstr "خاصية أخرى "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Apply changes"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Apply changes"
+msgstr "تطبيق التغييرات "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Archive"
 msgstr "الأرشيف "
@@ -1053,6 +1276,8 @@ msgstr ""
 #, python-format
 msgid "Blocklist request from portal"
 msgstr ""
+"طلب قائمة الحظر من رابط إلغاء الاشتراك البريدي %(mailing_link)s (استخدام "
+"الرابط المباشر) "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1293,6 +1518,20 @@ msgid "Check the email address and click send."
 msgstr "تحقق من عنوان البريد الإلكتروني ثم اضغط على إرسال. "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
+msgid "Choose a date"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
+msgid "Choose a date"
+msgstr "اختر تاريخاً "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
@@ -1729,6 +1968,24 @@ msgid "Domain"
 msgstr "النطاق"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+#, python-format
+msgid "Domain field"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+#, python-format
+msgid "Domain field"
+msgstr "حقل النطاق "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "Don't forget to send your preferred version"
 msgstr "لا تنس إرسال النسخة التي تفضلها "
@@ -1833,11 +2090,47 @@ msgid "Email Thread"
 msgstr "المحادثة البريدية"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+#, python-format
+msgid "Email added to our blocklist"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+#, python-format
+msgid "Email added to our blocklist"
+msgstr "تمت إضافة البريد الإلكتروني إلى قائمة الحظر "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "معالج تأليف رسالة بريد إلكتروني"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+#, python-format
+msgid "Email removed from our blocklist"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
+#, python-format
+msgid "Email removed from our blocklist"
+msgstr "تمت إزالة البريد الإلكتروني من قائمة الحظر "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -1882,6 +2175,20 @@ msgid "Exclude Blacklisted Emails"
 msgstr "استثناء عناوين البريد الإلكتروني المدرجة في القائمة السوداء "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Exclude Me"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Exclude Me"
+msgstr "قم باستثنائي "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Opt Out"
 msgstr "استثناء عناوين البريد المنسحبة "
@@ -1972,8 +2279,16 @@ msgstr "شبكة الخصائص "
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "ملاحظات من %(email)s: %(feedback)s "
+||||||| parent of 375aec60314b (temp)
+msgid "Feedback from %(author_name)s"
+msgstr ""
+=======
+msgid "Feedback from %(author_name)s"
+msgstr "ملاحظات من %(author_name)s "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2155,6 +2470,40 @@ msgid "Highest Reply Rate"
 msgstr "أعلى معدل رد "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
+msgid "I changed my mind"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_0
+msgid "I never subscribed to this list"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_2
+msgid "I receive too many emails from this list"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
+msgid "I changed my mind"
+msgstr "لقد غيرت رأيي "
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_0
+msgid "I never subscribed to this list"
+msgstr "لم أشترك قط في هذه القائمة "
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_2
+msgid "I receive too many emails from this list"
+msgstr "تصلني العديد من الرسائل من هذه القائمة "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__id
@@ -2275,6 +2624,24 @@ msgid "In Queue"
 msgstr "في قائمة الانتظار"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
+#, python-format
+msgid "Inline field"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
+#, python-format
+msgid "Inline field"
+msgstr "حقل ضمني "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Inner Content"
 msgstr "المحتوى الداخلي "
@@ -2290,6 +2657,20 @@ msgid "Invalid email address"
 msgstr "عنوان البريد الإلكتروني غير صالح"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_invalid
+msgid "Invalid from address"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_invalid
+msgid "Invalid from address"
+msgstr "عنوان \"من\" غير صالح "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid "Iris Joe, CFO"
 msgstr "Iris Joe، المدير المالي"
@@ -2591,6 +2972,20 @@ msgid "Mailing List"
 msgstr "القائمة البريدية"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Mailing List #"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Mailing List #"
+msgstr "رقم القائمة البريدية "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -2645,7 +3040,21 @@ msgid "Mailing Statistics"
 msgstr "إحصائيات البريد "
 
 #. module: mass_mailing
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model,name:mass_mailing.model_mailing_subscription_optout
+msgid "Mailing Subscription Reason"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.model,name:mass_mailing.model_mailing_subscription_optout
+msgid "Mailing Subscription Reason"
+msgstr "سبب الاشتراك في المراسلات البريدية "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Mailing Subscriptions"
 msgstr "الاشتراكات البريدية"
@@ -2834,6 +3243,24 @@ msgid "Medium"
 msgstr "متوسط "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#, python-format
+msgid "Membership updated"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#, python-format
+msgid "Membership updated"
+msgstr "تم تحديث العضوية "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge"
@@ -2902,6 +3329,20 @@ msgid "Missing email address"
 msgstr "عنوان البريد الإلكتروني المفقود "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_missing
+msgid "Missing from address"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_missing
+msgid "Missing from address"
+msgstr "عنوان \"من\" غير موجود "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
@@ -2909,6 +3350,24 @@ msgid "Mobile Preview"
 msgstr "معاينة الهاتف المحمول "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+#, python-format
+msgid "Model field"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
+#, python-format
+msgid "Model field"
+msgstr "حقل النموذج "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model,name:mass_mailing.model_ir_model
 msgid "Models"
 msgstr "كائنات"
@@ -3005,6 +3464,20 @@ msgid "Next Activity Type"
 msgstr "نوع النشاط التالي"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure_is_past
+msgid "Next Departure Is Past"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure_is_past
+msgid "Next Departure Is Past"
+msgstr "تاريخ المغادرة التالي مر "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -3057,6 +3530,22 @@ msgid "No data yet!"
 msgstr "لا توجد أي بيانات بعد! "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_optout_action
+msgid "No data yet."
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_optout_action
+msgid "No data yet."
+msgstr "لا توجد بيانات بعد "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
@@ -3108,6 +3597,26 @@ msgid "Normalized email address"
 msgstr "عنوان البريد الإلكتروني العادي "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Not subscribed"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Not subscribed"
+msgstr "غير مشترك "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction_counter
 msgid "Number of Actions"
@@ -3204,6 +3713,26 @@ msgid "Once the best version is identified, we will send the best one to the rem
 msgstr "بمجرد أن يتم تحديد أفضل نسخة، سوف نقوم بإرسالها إلى بقية المستلمين. "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"Once you send these emails, they'll be making a grand entrance in all the "
+"inboxes, creating quite the buzz!"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"Once you send these emails, they'll be making a grand entrance in all the "
+"inboxes, creating quite the buzz!"
+msgstr ""
+"بمجرد إرسال رسائل البريد الإلكتروني هذه، ستدخل بشكل كبير إلى جميع صناديق "
+"البريد الوارد، مما يؤدي إلى إثارة ضجة كبيرة! "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Open Date"
 msgstr "تاريخ الفتح"
@@ -3269,8 +3798,76 @@ msgstr "انسحب "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__lang
+<<<<<<< HEAD
 msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. {{ object.partner_id.lang }}."
 msgstr "لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
+"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
+"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ "
+"object.partner_id.lang }}. "
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_subscribe_reason
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+msgid "Optout"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+msgid "Optout Reason"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
+#: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
+msgid "Optout Reasons"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
+msgid "Other"
+msgstr "غير ذلك"
+=======
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
+"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
+"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ "
+"object.partner_id.lang }}. "
+
+#. module: mass_mailing
+#: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_subscribe_reason
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+msgid "Optout"
+msgstr "الانسحاب "
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
+msgid "Optout Reason"
+msgstr "سبب الانسحاب "
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
+#: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
+msgid "Optout Reasons"
+msgstr "أسباب الانسحاب "
+
+#. module: mass_mailing
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
+msgid "Other"
+msgstr "غير ذلك"
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
@@ -3341,6 +3938,40 @@ msgstr "نص بسيط "
 
 #. module: mass_mailing
 #. odoo-javascript
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Please let us know why you updated your subscription."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+#, python-format
+msgid "Please let us know why you want to be in our block list."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+=======
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Please let us know why you updated your subscription."
+msgstr "أخبرنا رجاءً عن سبب تحديثك لاشتراكك. "
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/mailing_portal_subscription_feedback.js:0
+#, python-format
+msgid "Please let us know why you want to be in our block list."
+msgstr "أخبرنا رجاءً عن سبب رغبتك في أن تكون ضمن قائمة الحظر لدينا. "
+
+#. module: mass_mailing
+#. odoo-javascript
+>>>>>>> 375aec60314b (temp)
 #: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Please provide a name for the filter"
@@ -3782,7 +4413,7 @@ msgstr "إرسال تقرير إلى المسؤول عن البريد بعد ي�
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr "إرسال عينة بريدية لأغراض الاختبار إلى العنوان أدناه. "
+msgstr "أرسل رسائل بريدية تجريبية لأغراض الاختبار إلى العنوان أدناه. "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__now
@@ -3850,6 +4481,24 @@ msgid "Sent on #{record.sent_date.value}"
 msgstr "تم الإرسال في #{record.sent_date.value} "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
+#, python-format
+msgid "Sent. Thanks you for your feedback!"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
+#, python-format
+msgid "Sent. Thanks you for your feedback!"
+msgstr "تم الإرسال. شكراً لملاحظاتك! "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Separator"
 msgstr "الفاصل"
@@ -3990,12 +4639,72 @@ msgid "Subject"
 msgstr "الموضوع "
 
 #. module: mass_mailing
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_list_ids
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Subscribed"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
+msgid "Subscription Date"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_ids
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "Subscribed"
+msgstr "مشترك "
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
+msgid "Subscription Date"
+msgstr "تاريخ الاشتراك "
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_ids
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__subscription_ids
 msgid "Subscription Information"
 msgstr "معلومات الاشتراك"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_action_report_optout
+msgid "Subscriptions"
+msgstr "الاشتراكات"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Successfully Unsubscribed"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_action_report_optout
+msgid "Subscriptions"
+msgstr "الاشتراكات"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Successfully Unsubscribed"
+msgstr "تم إلغاء الاشتراك بنجاح "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Tags"
@@ -4114,6 +4823,20 @@ msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr "اختارت جهة الاتصال عدم تلقي رسائل من هذه القائمة بعد الآن"
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_3
+msgid "The content of these emails is not relevant to me"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_3
+msgid "The content of these emails is not relevant to me"
+msgstr "محتوى رسائل البريد تلك لا علاقة له بي "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_filter.py:0
 #, python-format
@@ -4595,8 +5318,60 @@ msgstr "اكتب ما سيرغب العميل بمعرفته، لا ما ترغ�
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "You are not authorized to do this!"
 msgstr "لا تملك صلاحية فعل هذا!"
+||||||| parent of 375aec60314b (temp)
+msgid "You are no longer part of our mailing list(s)."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"You are no longer part of our services and will not be contacted again."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "You are no longer part of the %(mailing_name)s mailing list."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "You are no longer part of the %(mailing_names)s mailing list."
+msgstr ""
+=======
+msgid "You are no longer part of our mailing list(s)."
+msgstr "لم تعد جزءاً من قائمتنا البريدية. "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"You are no longer part of our services and will not be contacted again."
+msgstr "لم تعد جزءاً من خدماتنا لن نتواصل معك مجدداً. "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "You are no longer part of the %(mailing_name)s mailing list."
+msgstr "لم تعد جزءاً من القائمة البريدية %(mailing_name)s بعد الآن. "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "You are no longer part of the %(mailing_names)s mailing list."
+msgstr "لم تعد جزءاً من القائمة البريدية %(mailing_names)s بعد الآن. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -4688,16 +5463,83 @@ msgid "You have to much emails, please upload a file."
 msgstr "لديك عدد كبير من عناوين البريد الإلكتروني، يرجى رفع ملف. "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "You may also be interested in"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "You may also be interested in"
+msgstr "قد تمون مهتماً أيضاً بـ"
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "You should give either list_ids, either subscription_list_ids to create new contacts."
 msgstr "عليك إما إعطاء list_ids، أو subscription_list_ids لإنشاء جهات اتصال جديدة. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"You should give either list_ids, either subscription_ids to create new "
+"contacts."
+msgstr ""
+=======
+msgid ""
+"You should give either list_ids, either subscription_ids to create new "
+"contacts."
+msgstr ""
+"عليك إما إعطاء list_ids، أو subscription_ids لإنشاء جهات اتصال جديدة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
 msgid "You were still subscribed to those newsletters. You will not receive any news from them anymore:"
 msgstr "كنت لا تزال مشتركاً في تلك النشرات الأخبارية. لن تستلم أي أخبار منهم بعد الآن: "
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "You will not hear from us anymore."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid ""
+"You will not receive any news from those mailing lists you are a member of:"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid "You will not hear from us anymore."
+msgstr "لن يصلك أي شيء منا بعد الآن. "
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+#, python-format
+msgid ""
+"You will not receive any news from those mailing lists you are a member of:"
+msgstr "لن تتلقى أي أخبار من تلك القوائم البريدية التي أنت عضو فيها: "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_title
@@ -4708,8 +5550,26 @@ msgstr "لك العنوان"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "Your changes have been saved."
 msgstr "تم حفظ التغييرات."
+||||||| parent of 375aec60314b (temp)
+msgid "Your email is currently"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Your email is currently <strong>in our block list</strong>."
+msgstr ""
+=======
+msgid "Your email is currently"
+msgstr "بريد الإلكتروني "
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
+msgid "Your email is currently <strong>in our block list</strong>."
+msgstr "بريدك الإلكتروني <strong>في قائمة الحظر لدينا</strong> حالياً. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4754,6 +5614,24 @@ msgid "having the"
 msgstr "وجود "
 
 #. module: mass_mailing
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#, python-format
+msgid "in our block list"
+msgstr ""
+
+#. module: mass_mailing
+=======
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
+#, python-format
+msgid "in our block list"
+msgstr "في قائمة الحظر لدينا "
+
+#. module: mass_mailing
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "is the winner of the A/B testing campaign and has been sent to all remaining recipients."
 msgstr "هو الفائز في حملة اختبار A/B وقد تم إرساله إلى كافة المستلمين المتبقين. "

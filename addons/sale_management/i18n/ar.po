@@ -3,16 +3,35 @@
 # 	* sale_management
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -338,7 +357,47 @@ msgstr "بنود المنتجات الاختيارية"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Options"
+<<<<<<< HEAD
 msgstr "الخيارات "
+||||||| parent of 375aec60314b (temp)
+msgstr "الخيارات"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Prepayment amount"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Prepayment percentage must be a valid percentage."
+msgstr ""
+=======
+msgstr "الخيارات"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Prepayment amount"
+msgstr "مبلغ الدفع "
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr "نسبة الدفع "
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Prepayment percentage must be a valid percentage."
+msgstr "يجب أن تكون نسبة الدفع المسبق نسبة صالحة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -508,8 +567,34 @@ msgstr "الشروط والأحكام"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+<<<<<<< HEAD
 msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
 msgstr "يمكن للمسؤول تعيين الشروط والأحكام الافتراضية في إعدادات المبيعات. ستظهر الشروط المعينة هنا بدلًا منها إذا اخترت قالب عرض الأسعار هذا."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"يمكن للمسؤول تعيين الشروط والأحكام الافتراضية في إعدادات المبيعات. ستظهر "
+"الشروط المعينة هنا بدلًا منها إذا اخترت قالب عرض الأسعار هذا."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr ""
+=======
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"يمكن للمسؤول تعيين الشروط والأحكام الافتراضية في إعدادات المبيعات. ستظهر "
+"الشروط المعينة هنا بدلًا منها إذا اخترت قالب عرض الأسعار هذا."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr "النسبة المئوية للمبلغ المطلوب دفعه لتأكيد عروض الأسعار. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id

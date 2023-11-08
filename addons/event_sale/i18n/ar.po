@@ -3,17 +3,36 @@
 # 	* event_sale
 #
 # Translators:
+<<<<<<< HEAD
 # Niyas Raphy, 2023
 # Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -403,6 +422,7 @@ msgid "Non-free tickets"
 msgstr "التذاكر المدفوعة "
 
 #. module: event_sale
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
 msgid "Not Paid"
@@ -412,6 +432,19 @@ msgstr "غير مدفوع "
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
 msgid "Not enough seats for all registrations"
 msgstr "لا توجد مقاعد كافية لكافة التسجيلات "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "لم تباع "
+>>>>>>> 375aec60314b (temp)
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -469,6 +502,30 @@ msgid "Phone"
 msgstr "رقم الهاتف"
 
 #. module: event_sale
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr ""
+
+#. module: event_sale
+=======
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr ""
+"يرجى التأكد من أن كافة البنود المتعلقة بالفعالية قد تمت تهيئتها قبل تأكيد "
+"هذا الطلب: %s"
+
+#. module: event_sale
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
@@ -591,6 +648,20 @@ msgid "Sale Order Status"
 msgstr "حالة أمر البيع "
 
 #. module: event_sale
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr ""
+
+#. module: event_sale
+=======
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "حالة البيع "
+
+#. module: event_sale
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
 msgstr "المبيعات"
@@ -671,6 +742,32 @@ msgid "Unconfirmed"
 msgstr "غير مؤكد"
 
 #. module: event_sale
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+
+#. module: event_sale
+=======
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"غير مؤكدة: التسجيلات في حالة معلقة في انتظار الإجراء (حالة محددة، لا سيما حالة البيع)\n"
+"مسجلة: التسجيلات التي تم أخذها من قبل العميل\n"
+"حضر: التسجيلات التي حضر الحضور من أجلها الحدث\n"
+"ملغاة: تم إلغاء التسجيلات يدويا "
+
+#. module: event_sale
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
 msgstr "الإيرادات غير شاملة الضريبة "

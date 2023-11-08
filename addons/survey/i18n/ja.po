@@ -3,19 +3,39 @@
 # 	* survey
 #
 # Translators:
+<<<<<<< HEAD
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
 # Noma Yuki, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Junko Augias, 2023
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Andy Yiu, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -70,6 +90,24 @@ msgstr "% 完了"
 
 #. module: survey
 #. odoo-python
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "%(participant) just participated in \"%(survey_title)s\"."
+msgstr ""
+
+#. module: survey
+#. odoo-python
+=======
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "%(participant) just participated in \"%(survey_title)s\"."
+msgstr "%(participant)が \"%(survey_title)s\"に参加しました"
+
+#. module: survey
+#. odoo-python
+>>>>>>> 375aec60314b (temp)
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s (copy)"
@@ -92,7 +130,23 @@ msgstr "%s 資格を検証"
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
 msgid "'Certification - %s' % (object.survey_id.display_name)"
+<<<<<<< HEAD
 msgstr "'Certification - %s' % (object.survey_id.display_name)"
+||||||| parent of 375aec60314b (temp)
+msgstr "'検定 - %s' % (object.survey_id.display_name)"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "0000000010"
+msgstr ""
+=======
+msgstr "'検定 - %s' % (object.survey_id.display_name)"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "0000000010"
+msgstr "0000000010"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q2_sug2
@@ -140,6 +194,20 @@ msgid "16.2 kg"
 msgstr "16.2 kg"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "2023-08-18"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "2023-08-18"
+msgstr "2023-08-18"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q1_sug2
 msgid "3700 km"
 msgstr "3700 km"
@@ -306,8 +374,40 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" title=\"Checked\"/>"
 msgstr "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" title=\"Checked\"/>"
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+msgstr ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
+"pass this assessment because no question is configured to give any points."
+msgstr ""
+=======
+msgid ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+msgstr ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
+"pass this assessment because no question is configured to give any points."
+msgstr ""
+"<i class=\"fa fa-exclamation-"
+"triangle\"/>現在、どの問題も得点を与えるように設定されていないため、この評価に合格することはできません。 "
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -376,13 +476,69 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
+<<<<<<< HEAD
 msgid "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum </span>"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
+"</span>"
+msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最小 "
+"</span>"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-muted\">Responded</span>"
+msgstr ""
+=======
+msgid ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
+"</span>"
+msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最小 "
+"</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-muted\">Responded</span>"
+msgstr "<span class=\"d-block text-muted\">回答済</span>"
+>>>>>>> 375aec60314b (temp)
+
+#. module: survey
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span class=\"fa fa-filter me-1\"/>Filters"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-muted\">Skipped</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-success\">Correct</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-warning\">Partial</span>"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-muted\">Skipped</span>"
+msgstr "<span class=\"d-block text-muted\">スキップ済</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-success\">Correct</span>"
+msgstr "<span class=\"d-block text-success\">正解</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"d-block text-warning\">Partial</span>"
+msgstr "<span class=\"d-block text-warning\">部分的</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -409,6 +565,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"mx-1\">-</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">検定</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">検定</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -416,6 +574,7 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">Certification</span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&lt;', 2)]}\">資格</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_company_count', '&gt;', 1)]}\">資格</span>"
 
@@ -427,6 +586,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&lt;', 2)]}\">資格</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('certifications_count', '&gt;', 1)]}\">資格</span>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">検定</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">検定</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -437,6 +601,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
 msgid "<span class=\"o_survey_key text-center position-absolute bg-white rounded-start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 position-relative\">Key</span></span>"
 msgstr ""
+"<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
+"                                <i class=\"fa fa-trash me-1\"/>全てのフィルタを削除\n"
+"                            </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -473,6 +640,30 @@ msgid "<span class=\"text-muted\">Success</span>"
 msgstr "<span class=\"text-muted\">成功</span>"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span invisible=\"not is_scored_question\">Points</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span invisible=\"not is_time_limited\"> seconds</span>"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span invisible=\"not is_scored_question\">Points</span>"
+msgstr "<span invisible=\"not is_scored_question\">ポイント</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "<span invisible=\"not is_time_limited\"> seconds</span>"
+msgstr "<span invisible=\"not is_time_limited\">秒</span>"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr "<span>\"赤\"は分類ではありません。何をしたいかは分かっています;）</span>"
@@ -572,6 +763,30 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"<span>以下にこの証明書を贈呈します:</span>\n"
+"                                <br/>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid ""
+"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
+"right\"/>Edit Survey"
+msgstr ""
+=======
+"<span>以下にこの証明書を贈呈します:</span>\n"
+"                                <br/>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid ""
+"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
+"right\"/>Edit Survey"
+msgstr ""
+"<span> これはテストアンケート調査エントリです。</span><i class=\"oi oi-fw oi-arrow-"
+"right\"/>アンケート調査を編集"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -655,6 +870,8 @@ msgstr ""
 #, python-format
 msgid "A question can either be skipped or answered, not both."
 msgstr ""
+"採点されたアンケートは、少なくとも 1 つは得点を与える質問が必要です。\n"
+"回答と点数を確認してください。"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -797,6 +1014,20 @@ msgid "All surveys"
 msgstr "すべてのアンケート"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Allow Roaming"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
+msgid "Allow Roaming"
+msgstr "ローミングを許可"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
 msgstr ""
@@ -888,6 +1119,20 @@ msgid "Archived"
 msgstr "アーカイブ済"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:survey.question,title:survey.survey_demo_food_preferences_q1
+msgid "Are you vegetarian?"
+msgstr ""
+
+#. module: survey
+=======
+#: model:survey.question,title:survey.survey_demo_food_preferences_q1
+msgid "Are you vegetarian?"
+msgstr "ベジタリアンですか？"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p1_q1_sug4
 msgid "Art & Culture"
@@ -975,7 +1220,23 @@ msgstr "平均"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
 msgid "Average Duration"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "平均所要時間"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+msgid "Average Score"
+msgstr ""
+=======
+msgstr "平均所要時間"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+msgid "Average Score"
+msgstr "平均スコア"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
@@ -1197,7 +1458,33 @@ msgstr "選択肢"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "好きな科目を選び、実力を見せて下さい。準備はできましたか？"
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_food_preferences_q3
+msgid "Choose your green meal"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_food_preferences_q4
+msgid "Choose your meal"
+msgstr ""
+=======
+msgstr "好きな科目を選び、実力を見せて下さい。準備はできましたか？"
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_food_preferences_q3
+msgid "Choose your green meal"
+msgstr "菜食を選ぶ"
+
+#. module: survey
+#: model:survey.question,title:survey.survey_demo_food_preferences_q4
+msgid "Choose your meal"
+msgstr "食事を選ぶ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1249,6 +1536,30 @@ msgid "Color Index"
 msgstr "カラーインデクス"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
+"- %(survey_names)s"
+msgstr ""
+
+#. module: survey
+=======
+#. odoo-python
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
+"- %(survey_names)s"
+msgstr ""
+"ローミングと\"各ページ後の回答による採点\"を組み合わせることはできません: \n"
+"- %(survey_names)s"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "Come back once you have added questions to your Surveys."
 msgstr ""
@@ -1298,9 +1609,19 @@ msgid "Computing score requires a question in arguments."
 msgstr "スコアを計算するには、引数に質問が必要です。"
 
 #. module: survey
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
 msgid "Conditional Display"
 msgstr "条件付き表示"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Conditional display"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Conditional display"
+msgstr "条件付き表示"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #. odoo-javascript
@@ -1542,6 +1863,20 @@ msgid "Customizable Lamp"
 msgstr "カスタマイズ可能なランプ"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "DEMO_CERTIFIED_NAME"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "DEMO_CERTIFIED_NAME"
+msgstr "DEMO_CERTIFIED_NAME"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
 msgid "Date"
@@ -1626,8 +1961,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "Displayed if \"%s: %s\""
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid "Displayed if \"%s\"."
+msgstr ""
+=======
+msgid "Displayed if \"%s\"."
+msgstr "もし\"%s\"であれば表示"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1806,6 +2149,20 @@ msgid "Final Leaderboard"
 msgstr "最終的なリーダーボード"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
+msgid "Fish"
+msgstr ""
+
+#. module: survey
+=======
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
+msgid "Fish"
+msgstr "魚"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__message_follower_ids
 msgid "Followers"
@@ -1824,6 +2181,20 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesomeのアイコン 例. fa-tasks"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:survey.survey,title:survey.survey_demo_food_preferences
+msgid "Food Preferences"
+msgstr ""
+
+#. module: survey
+=======
+#: model:survey.survey,title:survey.survey_demo_food_preferences
+msgid "Food Preferences"
+msgstr "食事の好み"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
 msgid "Free Text"
 msgstr "自由記入欄"
@@ -1849,6 +2220,20 @@ msgid "Fruits and vegetables"
 msgstr "果物と野菜"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "Functional Training"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
+msgid "Functional Training"
+msgstr "機能トレーニング"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model,name:survey.model_gamification_badge
 msgid "Gamification Badge"
 msgstr "ゲーミフィケーションのバッジ"
@@ -1897,6 +2282,20 @@ msgid "Good value for money"
 msgstr "お金に良い値"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
+msgid "Got it!"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
+msgid "Got it!"
+msgstr "了解です！"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug2
 msgid "Grapefruits"
 msgstr "グレープフルーツ"
@@ -2311,8 +2710,16 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
+<<<<<<< HEAD
 msgid "Is this question placed before its trigger question?"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid "Is this question placed before any of its trigger questions?"
+msgstr ""
+=======
+msgid "Is this question placed before any of its trigger questions?"
+msgstr "この質問は、トリガとなる質問の前に置かれていますか？"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2320,11 +2727,21 @@ msgid "Istanbul"
 msgstr "イスタンブール"
 
 #. module: survey
+<<<<<<< HEAD
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It does not mean anything specific"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug3
+msgid "It depends"
+msgstr ""
+=======
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug3
+msgid "It depends"
+msgstr "以下によります:"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #. odoo-python
@@ -2634,6 +3051,20 @@ msgid "Maximum Text Length"
 msgstr "最大文字数"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_max_obtainable
+msgid "Maximum obtainable score"
+msgstr ""
+
+#. module: survey
+=======
+#: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_max_obtainable
+msgid "Maximum obtainable score"
+msgstr "最大獲得可能点数"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_float_value
 msgid "Maximum value"
 msgstr "最大値"
@@ -2802,6 +3233,20 @@ msgid "New invite"
 msgstr "新しい招待"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
+msgid "New participation completed."
+msgstr ""
+
+#. module: survey
+=======
+#: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
+msgid "New participation completed."
+msgstr "新規参加が完了しました。"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
@@ -2833,6 +3278,20 @@ msgid "Next Activity Type"
 msgstr "次の活動タイプ"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Next Skipped"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "Next Skipped"
+msgstr "次のスキップされた質問"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
 msgid "Nickname"
 msgstr "ニックネーム"
@@ -2888,8 +3347,16 @@ msgstr "ユーザ入力行が見つかりません"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug2
+<<<<<<< HEAD
 msgid "No, it's to small for the human eye."
 msgstr "いいえ、それは人間の目には小さすぎます。"
+||||||| parent of 375aec60314b (temp)
+msgid "No, it's too small for the human eye."
+msgstr ""
+=======
+msgid "No, it's too small for the human eye."
+msgstr "いいえ、それは人間の目には小さすぎます。"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug2
@@ -3102,7 +3569,23 @@ msgstr "オープンセッションマネージャ"
 #: code:addons/survey/static/src/question_page/description_page_field.xml:0
 #, python-format
 msgid "Open section"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "セクションを開く"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Optional previous answers required"
+msgstr ""
+=======
+msgstr "セクションを開く"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Optional previous answers required"
+msgstr "任意で過去の回答が必要です"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3208,6 +3691,32 @@ msgid "Participate to {{ object.survey_id.display_name }} survey"
 msgstr "{{ object.survey_id.display_name }} 調査へご参加ください"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:mail.message.subtype,name:survey.mt_survey_survey_user_input_completed
+#: model:mail.message.subtype,name:survey.mt_survey_user_input_completed
+msgid "Participation completed"
+msgstr ""
+
+#. module: survey
+#: model:mail.message.subtype,description:survey.mt_survey_user_input_completed
+msgid "Participation completed."
+msgstr ""
+
+#. module: survey
+=======
+#: model:mail.message.subtype,name:survey.mt_survey_survey_user_input_completed
+#: model:mail.message.subtype,name:survey.mt_survey_user_input_completed
+msgid "Participation completed"
+msgstr "新規参加が完了しました"
+
+#. module: survey
+#: model:mail.message.subtype,description:survey.mt_survey_user_input_completed
+msgid "Participation completed."
+msgstr "参加が完了しました"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3291,6 +3800,26 @@ msgid "Pick a subject"
 msgstr "対象を選んでください"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_ids
+msgid ""
+"Picking any of these answers will trigger this question.\n"
+"Leave the field empty if the question should always be displayed."
+msgstr ""
+
+#. module: survey
+=======
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_ids
+msgid ""
+"Picking any of these answers will trigger this question.\n"
+"Leave the field empty if the question should always be displayed."
+msgstr ""
+"これら回答のいずれかを選択すると、この質問が表示されます。\n"
+"質問が常に表示されるようにする場合は、フィールドを空のままにします。"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Pie Graph"
 msgstr "円グラフ"
@@ -3320,6 +3849,20 @@ msgid "Please enter at least one valid recipient."
 msgstr "少なくとも一つの有効な受信者を入力してください。"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:survey.survey,description:survey.survey_demo_food_preferences
+msgid "Please give us your preferences for this event's dinner!"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:survey.survey,description:survey.survey_demo_food_preferences
+msgid "Please give us your preferences for this event's dinner!"
+msgstr "このイベントのディナーのご希望をお聞かせ下さい！"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "Please make sure you have at least one question in your survey. You also need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr "アンケートにおいて少なくとも一つの設問があることを確認してください。、'セクションごとに1ページ'のレイアウトを選択した場合は、少なくとも1つのセクションを必要とします。<br/>"
@@ -3446,7 +3989,27 @@ msgstr "質問"
 #. module: survey
 #: model:ir.ui.menu,name:survey.survey_menu_questions
 msgid "Questions & Answers"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "質問＆回答"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_question_ids
+msgid ""
+"Questions containing the triggering answer(s) to display the current "
+"question."
+msgstr ""
+=======
+msgstr "質問＆回答"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_question__triggering_question_ids
+msgid ""
+"Questions containing the triggering answer(s) to display the current "
+"question."
+msgstr "現在の質問を表示するためのトリガとなる答えを含む質問"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -3679,14 +4242,36 @@ msgid "Scoring Type"
 msgstr "スコアリングタイプ"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
+msgid "Scoring with answers after each page"
+msgstr ""
+
+#. module: survey
+=======
+#: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
+msgid "Scoring with answers after each page"
+msgstr "各ページの後に解答がある採点"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
 msgid "Scoring with answers at the end"
 msgstr "最後に回答とスコア"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_without_answers
+<<<<<<< HEAD
 msgid "Scoring without answers at the end"
 msgstr "最後に回答なしスコアのみ"
+||||||| parent of 375aec60314b (temp)
+msgid "Scoring without answers"
+msgstr ""
+=======
+msgid "Scoring without answers"
+msgstr "回答なし採点"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -3726,6 +4311,20 @@ msgid "See results"
 msgstr "結果を参照"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
+msgid "See you soon!"
+msgstr ""
+
+#. module: survey
+=======
+#: model_terms:survey.survey,description_done:survey.survey_demo_food_preferences
+msgid "See you soon!"
+msgstr "お会いできるのを楽しみにしております。"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
 msgid "Select all the available customizations for our Customizable Desk"
 msgstr "カスタマイザブルデスクで利用可能なすべてのカスタマイズを選択します"
@@ -3899,7 +4498,27 @@ msgstr ""
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2
 msgid "Some questions about our company. Do you really know us?"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "当社についての質問。当社を本当にご存知ですか？"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "Someone just participated in \"%(survey_title)s\"."
+msgstr ""
+=======
+msgstr "当社についての質問。当社を本当にご存知ですか？"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "Someone just participated in \"%(survey_title)s\"."
+msgstr "以下に今参加した人がいます: \"%(survey_title)s\"."
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -3987,10 +4606,32 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+<<<<<<< HEAD
 "活動に基づく状態\n"
 "延滞：期限は既に過ぎました\n"
 "当日：活動日は本日です\n"
 "予定：将来の活動。"
+||||||| parent of 375aec60314b (temp)
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
+
+#. module: survey
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug1
+msgid "Steak with french fries"
+msgstr ""
+=======
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
+
+#. module: survey
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug1
+msgid "Steak with french fries"
+msgstr "ステーキとポテトフライ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_row2
@@ -4024,8 +4665,16 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
+<<<<<<< HEAD
 msgid "Success rate:"
 msgstr "成功率:"
+||||||| parent of 375aec60314b (temp)
+msgid "Success rate"
+msgstr ""
+=======
+msgid "Success rate"
+msgstr "成功率"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.survey_question_answer_action
@@ -4077,6 +4726,20 @@ msgid "Survey Answer Line"
 msgstr "調査の回答行"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
+msgid "Survey First Submitted"
+msgstr ""
+
+#. module: survey
+=======
+#: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
+msgid "Survey First Submitted"
+msgstr "アンケート調査が初めて提出されました"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
 msgid "Survey Ids"
 msgstr "アンケートのIds"
@@ -4413,8 +5076,32 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "They are technical parameters that guarantees the responsiveness of the page"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"They are technical parameters that guarantees the responsiveness of the page"
+msgstr "これらは、ページの応答性を保証する技術的なパラメーターです。"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "This answer cannot be overwritten."
+msgstr ""
+=======
+msgid ""
+"They are technical parameters that guarantees the responsiveness of the page"
+msgstr "これらは、ページの応答性を保証する技術的なパラメーターです。"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_user_input.py:0
+#, python-format
+msgid "This answer cannot be overwritten."
+msgstr "この回答は上書きできません"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #. odoo-python
@@ -4596,14 +5283,54 @@ msgid "Trees"
 msgstr "木"
 
 #. module: survey
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_id
 msgid "Triggering Answer"
 msgstr "トリガ回答"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
+msgid "Triggering Answers"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
+msgid "Triggering Answers"
+msgstr "トリガ回答"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_id
 msgid "Triggering Question"
 msgstr "質問のトリガ"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
+msgid "Triggering Questions"
+msgstr ""
+
+#. module: survey
+#. odoo-javascript
+#: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
+#, python-format
+msgid ""
+"Triggers based on the following questions will not work because they are positioned after this question:\n"
+"\"%s\"."
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
+msgid "Triggering Questions"
+msgstr "トリガ質問"
+
+#. module: survey
+#. odoo-javascript
+#: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
+#, python-format
+msgid ""
+"Triggers based on the following questions will not work because they are positioned after this question:\n"
+"\"%s\"."
+msgstr ""
+"以下の質問に基づくトリガは、この質問の後に配置されているため、機能しません。\n"
+"\"%s\""
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
@@ -4767,6 +5494,30 @@ msgid "Vegetables"
 msgstr "野菜"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug2
+msgid "Vegetarian burger"
+msgstr ""
+
+#. module: survey
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug1
+msgid "Vegetarian pizza"
+msgstr ""
+
+#. module: survey
+=======
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug2
+msgid "Vegetarian burger"
+msgstr "ベジタリアンバーガー"
+
+#. module: survey
+#: model:survey.question.answer,value:survey.survey_demo_food_preferences_q3_sug1
+msgid "Vegetarian pizza"
+msgstr "ベジタリアンピザ"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_3_choice_1
 msgid "Very underpriced"
 msgstr "非常に低く価格付された"
@@ -5003,6 +5754,20 @@ msgid "Winter"
 msgstr "冬"
 
 #. module: survey
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:survey.question,title:survey.survey_demo_food_preferences_q2
+msgid "Would you prefer a veggie meal if possible?"
+msgstr ""
+
+#. module: survey
+=======
+#: model:survey.question,title:survey.survey_demo_food_preferences_q2
+msgid "Would you prefer a veggie meal if possible?"
+msgstr "可能であれば菜食をお好みですか？"
+
+#. module: survey
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD\n"
@@ -5113,7 +5878,27 @@ msgstr ""
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoomed Image"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "拡大画像"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "[Question Title]"
+msgstr ""
+=======
+msgstr "拡大画像"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "[Question Title]"
+msgstr "[質問タイトル]"
+>>>>>>> 375aec60314b (temp)
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5265,5 +6050,17 @@ msgstr "to"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+<<<<<<< HEAD
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"⚠️ This question is positioned before some or all of its triggers and could "
+"be skipped."
+msgstr ""
+=======
+msgid ""
+"⚠️ This question is positioned before some or all of its triggers and could "
+"be skipped."
+msgstr "⚠️この質問は、いくつかの、あるいはすべてのトリガの前に置かれ、スキップすることもできます。"
+>>>>>>> 375aec60314b (temp)

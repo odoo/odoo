@@ -3,17 +3,37 @@
 # 	* sale_management
 #
 # Translators:
+<<<<<<< HEAD
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 #
+||||||| parent of 375aec60314b (temp)
+# Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -251,6 +271,26 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: sale_management
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+
+#. module: sale_management
+=======
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"หากตั้งค่าไว้ SO ที่มีเทมเพลตนี้จะออกใบแจ้งหนี้ในสมุดรายวันนี้ "
+"ไม่เช่นนั้นจะใช้สมุดรายวันการขายที่มีลำดับต่ำสุด"
+
+#. module: sale_management
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
 msgid "If unchecked, it will allow you to hide the quotation template without removing it."
 msgstr "หากไม่เลือก จะอนุญาตให้คุณซ่อนเทมเพลตใบเสนอราคาโดยไม่ต้องลบออก"
@@ -334,7 +374,7 @@ msgstr "สินค้าตัวเลือก"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
 msgid "Optional Products Lines"
-msgstr "ไลน์สินค้าที่ให้เลือก"
+msgstr "รายการสินค้าที่ให้เลือก"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -342,6 +382,44 @@ msgid "Options"
 msgstr "ตัวเลือก"
 
 #. module: sale_management
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Prepayment amount"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Prepayment percentage must be a valid percentage."
+msgstr ""
+
+#. module: sale_management
+=======
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Prepayment amount"
+msgstr "จำนวนเงินที่ชำระล่วงหน้า"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr "เปอร์เซ็นต์การชำระเงินล่วงหน้า"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Prepayment percentage must be a valid percentage."
+msgstr "เปอร์เซ็นต์การชำระเงินล่วงหน้าต้องเป็นเปอร์เซ็นต์ที่ถูกต้อง"
+
+#. module: sale_management
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
 msgstr "แสดงบนใบเสนอราคา"
@@ -388,12 +466,12 @@ msgstr "เทมเพลตใบเสนอราคา"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "ไลน์เทมเพลตใบเสนอราคา"
+msgstr "รายการเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "ไลน์เทมเพลตใบเสนอราคา"
+msgstr "รายการเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
@@ -458,7 +536,7 @@ msgstr "คำสั่งขาย"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "ไลน์คำสั่งขาย"
+msgstr "รายการคำสั่งขาย"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
@@ -468,7 +546,7 @@ msgstr "การอ้างอิงคำสั่งขาย"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr "ไลน์เทมเพลตใบเสนอราคาขาย"
+msgstr "รายการเทมเพลตใบเสนอราคาขาย"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -509,8 +587,34 @@ msgstr "เงื่อนไขและข้อกำหนด"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+<<<<<<< HEAD
 msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
 msgstr "ผู้ดูแลระบบสามารถตั้งค่าข้อกำหนดและเงื่อนไขเริ่มต้นในการตั้งค่าการขาย ข้อกำหนดที่ตั้งไว้ที่นี่จะปรากฏขึ้นแทนหากคุณเลือกเทมเพลตใบเสนอราคานี้"
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"ผู้ดูแลระบบสามารถตั้งค่าข้อกำหนดและเงื่อนไขเริ่มต้นในการตั้งค่าการขาย "
+"ข้อกำหนดที่ตั้งไว้ที่นี่จะปรากฏขึ้นแทนหากคุณเลือกเทมเพลตใบเสนอราคานี้"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr ""
+=======
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"ผู้ดูแลระบบสามารถตั้งค่าข้อกำหนดและเงื่อนไขเริ่มต้นในการตั้งค่าการขาย "
+"ข้อกำหนดที่ตั้งไว้ที่นี่จะปรากฏขึ้นแทนหากคุณเลือกเทมเพลตใบเสนอราคานี้"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr "เปอร์เซ็นต์ของจำนวนเงินที่ต้องชำระเพื่อยืนยันใบเสนอราคา"
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -519,8 +623,20 @@ msgstr "เทมเพลตอีเมลนี้จะถูกส่งไ
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
+<<<<<<< HEAD
 msgid "This field will be checked if the option line's product is already present in the quotation."
 msgstr "ฟิลด์นี้จะถูกเลือกหากตัวเลือกไลน์สินค้าแสดงอยู่แล้วในใบเสนอราคา"
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
+msgstr "ฟิลด์นี้จะถูกเลือกหากตัวเลือกไลน์สินค้าแสดงอยู่แล้วในใบเสนอราคา"
+=======
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
+msgstr "ฟิลด์นี้จะถูกเลือกหากตัวเลือกรายการสินค้าแสดงอยู่แล้วในใบเสนอราคา"
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0

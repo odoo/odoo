@@ -3,16 +3,35 @@
 # 	* sale_stock
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -31,8 +50,26 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>예비</b>"
+||||||| parent of 375aec60314b (temp)
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>도착 대기 중</b>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
+msgstr ""
+=======
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>도착 대기 중</b>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>예비"
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -41,8 +78,16 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> <b>취소됨</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+<<<<<<< HEAD
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
 msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>선적됨</b>"
+||||||| parent of 375aec60314b (temp)
+msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
+msgstr ""
+=======
+msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
+msgstr "<i class=\"fa fa-fw fa-times\"/>취소됨"
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -61,6 +106,9 @@ msgstr "<span class=\"o_stat_text\">판매</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_product_catalog_kanban_view_inherit
 msgid "<span>On Hand: </span>"
 msgstr ""
+"<span invisible=\"not display_delivery_alert\">\n"
+"                    배송이 이미 일부 완료되었습니다. 반품 시 배송주문서에서 생성할 수 있습니다.\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -295,10 +343,30 @@ msgid "Incoterm Location"
 msgstr "인코텀즈 위치"
 
 #. module: sale_stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "인코텀즈"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Incoterm details"
+msgstr "인코텀즈 세부 정보"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Incoterm:"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Incoterm details"
+msgstr "인코텀즈 세부 정보"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Incoterm:"
+msgstr "인코텀즈:"
+>>>>>>> 375aec60314b (temp)
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm

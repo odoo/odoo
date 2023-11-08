@@ -306,6 +306,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"Satisfied\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -339,8 +342,16 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
+<<<<<<< HEAD
 msgid "<small class=\"text-end\">Stage:</small>"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid "<small class=\"text-muted\">Customer</small>"
+msgstr ""
+=======
+msgid "<small class=\"text-muted\">Customer</small>"
+msgstr "<small class=\"text-muted\">顧客</small>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -543,7 +554,23 @@ msgstr "活動"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
+<<<<<<< HEAD
 msgstr "例外の活動を示す文字装飾"
+||||||| parent of 375aec60314b (temp)
+msgstr "例外活動文字装飾"
+
+#. module: project
+#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_task
+msgid "Activity Plan"
+msgstr ""
+=======
+msgstr "例外活動文字装飾"
+
+#. module: project
+#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_task
+msgid "Activity Plan"
+msgstr "アクティビティ計画"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
@@ -634,6 +661,40 @@ msgid "Alias Contact Security"
 msgstr "エイリアス連絡先セキュリティ"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
+msgid "Alias Domain"
+msgstr "エイリアスドメイン"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_domain
+msgid "Alias Domain Name"
+msgstr "エイリアスドメイン名"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
+msgid "Alias Email"
+msgstr ""
+
+#. module: project
+=======
+#: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
+msgid "Alias Domain"
+msgstr "エイリアスドメイン"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_domain
+msgid "Alias Domain Name"
+msgstr "エイリアスドメイン名"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
+msgid "Alias Email"
+msgstr "エイリアスEメール"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
 msgstr "エイリアス名"
@@ -1152,9 +1213,19 @@ msgid ""
 msgstr ""
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
 msgstr "会社"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "Communication history"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "Communication history"
+msgstr "通信履歴"
+>>>>>>> 375aec60314b (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -2400,6 +2471,20 @@ msgid "Live"
 msgstr "有効"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr ""
+
+#. module: project
+=======
+#: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "ローカルパートに基づく着信検知"
+
+#. module: project
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format

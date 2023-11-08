@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_holidays
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry_holidays
+#. odoo-python
+#: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%s\n"
+"\n"
+"Contracts:\n"
+"%s"
+msgstr ""
+"不能在具有不同工作時間表的多個合同中設置休假。\n"
+"\n"
+"請為每份合同創建一個假期。\n"
+"\n"
+"休假時間：\n"
+"%s\n"
+"合約：\n"
+"%s"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "一般員工"
+
+#. module: hr_work_entry_holidays
+#. odoo-python
+#: code:addons/hr_work_entry_holidays/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Changing the contract on this employee changes their working schedule in a "
+"period they already took leaves. Changing this working schedule changes the "
+"duration of these leaves in such a way the employee no longer has the "
+"required allocation for them. Please review these leaves and/or allocations "
+"before changing the contract."
+msgstr ""
+"更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期的持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期和/或分配。"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "員工契約"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "HR工時紀錄"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "HR工時紀錄類型"
+
+#. module: hr_work_entry_holidays
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
+msgid "Payroll"
+msgstr "薪資表"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid "Status"
+msgstr "狀態"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry__leave_state
+msgid ""
+"The status is set to 'To Submit', when a time off request is created.\n"
+"The status is 'To Approve', when time off request is confirmed by user.\n"
+"The status is 'Refused', when time off request is refused by manager.\n"
+"The status is 'Approved', when time off request is approved by manager."
+msgstr ""
+"建立休假請求時，狀態設定為「待提交」。\n"
+"當使用者確認休假請求時，狀態為「待批准」\n"
+"當經理退回請假停止請求時，狀態為「已退回」\n"
+"當經理批准休假時，狀態為「已批准」。"
+
+#. module: hr_work_entry_holidays
+#. odoo-python
+#: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr "沒有員工安排休假。請確保您登入了正確的公司。"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_id
+msgid "Time Off"
+msgstr "休假"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Time Off Type"
+msgstr "休假類型"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
+msgid "Work Entry Type"
+msgstr "工時紀錄類型"
+
+#. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid "Work entry used in the payslip."
+msgstr "工資單中使用的工作條目。"

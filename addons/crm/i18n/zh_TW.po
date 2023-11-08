@@ -157,17 +157,55 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\">會議</span>\n"
 "                                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\">會議</span>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"透過儲存此更改，客戶電子郵件也將更新。\" invisible=\"not partner_email_update\"/>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
+||||||| parent of 375aec60314b (temp)
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
+=======
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"儲存此變更後，客戶電話號碼也將更新。\" invisible=\"not partner_phone_update\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
+>>>>>>> 375aec60314b (temp)
+msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">類似潛在商機</span>\n"
 "                                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">類似潛在商機</span>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">類似潛在客戶</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">類似潛在客戶</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -175,8 +213,14 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">潛在商機</span>\n"
 "                                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">商機</span>"
+||||||| parent of 375aec60314b (temp)
+=======
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">潛在客戶</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">銷售機會</span>"
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -243,6 +287,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>根據規則定期分配潛在客戶</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    所有銷售團隊預設使用此設置，\n"
+"                                    除非另有指定。\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -395,6 +444,20 @@ msgid "Activity Exception Decoration"
 msgstr "活動異常圖示"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
+msgid "Activity Plan"
+msgstr ""
+
+#. module: crm
+=======
+#: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
+msgid "Activity Plan"
+msgstr "活動計劃"
+
+#. module: crm
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
 msgid "Activity State"
 msgstr "活動狀態"
@@ -469,6 +532,40 @@ msgid "Alias Contact Security"
 msgstr "別名聯絡人安全"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
+msgid "Alias Domain"
+msgstr "別名域"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
+msgid "Alias Domain Name"
+msgstr "別名域名"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
+msgid "Alias Email"
+msgstr ""
+
+#. module: crm
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
+msgid "Alias Domain"
+msgstr "別名域"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
+msgid "Alias Domain Name"
+msgstr "別名域名"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
+msgid "Alias Email"
+msgstr "別名電子郵件"
+
+#. module: crm
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
 msgid "Alias Name"
 msgstr "別名"
@@ -1692,7 +1789,33 @@ msgstr "語言"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Language:"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "語言："
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_automation_last
+msgid "Last Action"
+msgstr "最近行動"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Last Automation:"
+msgstr ""
+=======
+msgstr "語言："
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_automation_last
+msgid "Last Action"
+msgstr "最近行動"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Last Automation:"
+msgstr "最近一次自動化："
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1788,6 +1911,20 @@ msgid "Lead Mining"
 msgstr "潛在商機挖掘"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
+msgid "Lead Plans"
+msgstr ""
+
+#. module: crm
+=======
+#: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
+msgid "Lead Plans"
+msgstr "潛在客戶計劃"
+
+#. module: crm
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
 msgstr ""
@@ -1981,6 +2118,20 @@ msgid "Linked partner (optional). Usually created when converting the lead. You 
 msgstr "串連的合作夥伴（可選）。通常在轉換潛在商機時建立。您可以通過名稱，統一發票，電子郵件或內部參考找到合作夥伴。"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr ""
+
+#. module: crm
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "基於本地部件的來件檢測"
+
+#. module: crm
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
 msgid "Locale Code"
 msgstr "地區代碼"
@@ -2120,7 +2271,33 @@ msgstr "媒體"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Medium:"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "媒介："
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
+msgid "Meeting Display Date"
+msgstr "面試顯示日期"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
+msgid "Meeting Display Label"
+msgstr ""
+=======
+msgstr "媒介："
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
+msgid "Meeting Display Date"
+msgstr "面試顯示日期"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
+msgid "Meeting Display Label"
+msgstr "會議顯示標籤"
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #. odoo-python
@@ -3584,8 +3761,20 @@ msgstr "使用左上角的“<i>建立</i>”按鈕，或發送電子郵件至"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Use the top left <i>Create</i> button, or send an email to %(email_link)s to test the email gateway."
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Use the <i>New</i> button, or send an email to %(email_link)s to test the "
+"email gateway."
+msgstr ""
+=======
+msgid ""
+"Use the <i>New</i> button, or send an email to %(email_link)s to test the "
+"email gateway."
+msgstr "使用「<b>新增</b>」按鈕，或發送電子郵件至 %(email_link)s，以測試電子郵件閘道。"
+>>>>>>> 375aec60314b (temp)
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

@@ -40,7 +40,23 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
 msgid "API Key"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "Chave de API"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "API URL Prefix"
+msgstr ""
+=======
+msgstr "Chave de API"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "API URL Prefix"
+msgstr "Prefixo do URL da API"
+>>>>>>> 375aec60314b (temp)
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -57,6 +73,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "An error occurred when displayed this payment form."
 msgstr ""
 
@@ -64,6 +81,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "Checkout API URL"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid "Cannot display the payment form"
+msgstr ""
+=======
+msgid "Cannot display the payment form"
+msgstr "Não é possível exibir o formulário de pagamento"
+>>>>>>> 375aec60314b (temp)
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
@@ -90,8 +114,16 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "Incorrect Payment Details"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid "Incorrect payment details"
+msgstr ""
+=======
+msgid "Incorrect payment details"
+msgstr "Informações de pagamento incorretas"
+>>>>>>> 375aec60314b (temp)
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -186,7 +218,45 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "A chave HMAC do webhook"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The amount processed by Adyen for the transaction %s is different than the "
+"one requested. Another transaction is created with the correct amount."
+msgstr ""
+"O valor processado pelo Adyen para a transação %s é diferente do valor "
+"solicitado. Outra transação foi criada com o valor correto."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "The base URL for the API endpoints"
+msgstr ""
+=======
+msgstr "A chave HMAC do webhook"
+
+#. module: payment_adyen
+#. odoo-python
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The amount processed by Adyen for the transaction %s is different than the "
+"one requested. Another transaction is created with the correct amount."
+msgstr ""
+"O valor processado pelo Adyen para a transação %s é diferente do valor "
+"solicitado. Outra transação foi criada com o valor correto."
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "The base URL for the API endpoints"
+msgstr "O URL de base dos endpoints da API"
+>>>>>>> 375aec60314b (temp)
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
@@ -202,7 +272,7 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The capture of the transaction with reference %s failed."
-msgstr ""
+msgstr "A captura da transação com referência %s falhou."
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -246,7 +316,7 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The void of the transaction with reference %s failed."
-msgstr ""
+msgstr "A anulação da transação com referência %s falhou."
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/utils.py:0

@@ -3,6 +3,7 @@
 # 	* stock
 #
 # Translators:
+<<<<<<< HEAD
 # Noma Yuki, 2022
 # Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
@@ -11,13 +12,32 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Tatsuki Kanda, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Junko Augias, 2023
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Tatsuki Kanda, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -124,6 +144,8 @@ msgstr "-製品:%s、シリアル番号:%s"
 #: model:ir.model.fields,help:stock.field_stock_quant__cyclic_inventory_frequency
 msgid " When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency."
 msgstr ""
+"%(warehouse)s は %(free_qty)s %(uom)sのみ提供できます。オーダするべき数量は %(qty_to_order)s "
+"%(uom)sです。"
 
 #. module: stock
 #. odoo-python
@@ -143,6 +165,24 @@ msgstr "%s (コピー)"
 
 #. module: stock
 #. odoo-python
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+=======
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr "%s --> プロダクト単位は %s (%s) - 移動単位は%s (%s)"
+
+#. module: stock
+#. odoo-python
+>>>>>>> 375aec60314b (temp)
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
@@ -284,9 +324,153 @@ msgid "1 Week"
 msgstr "1週間"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
+msgid "1234567890"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "12345678901"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
+msgid "2 x 7 with price"
+msgstr "2 x 7 価格あり"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "2021-9-01"
+msgstr "2021-9-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "2023-01-01"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "2023-09-24"
+msgstr "2023-09-24"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "3.00"
+msgstr "3.00"
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
+msgid "1234567890"
+msgstr "1234567890"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "12345678901"
+msgstr "12345678901"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
+msgid "2 x 7 with price"
+msgstr "2 x 7 価格あり"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "2021-9-01"
+msgstr "2021-9-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "2023-01-01"
+msgstr "2023-01-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "2023-09-24"
+msgstr "2023-09-24"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "3.00"
+msgstr "3.00"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
 msgid "4 x 12"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "4 x 12"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
+msgid "4 x 12 - One per lot/SN"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
+msgid "4 x 12 - One per unit"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
+msgid "4 x 12 with price"
+msgstr "4 x 12 価格あり"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
+msgid "4 x 7 with price"
+msgstr "4 x 7 価格あり"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "54326786758"
+msgstr "54326786758"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "98"
+msgstr ""
+=======
+msgstr "4 x 12"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
+msgid "4 x 12 - One per lot/SN"
+msgstr "4 x 12 - ロット/シリアル番号ごとに１"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
+msgid "4 x 12 - One per unit"
+msgstr "4 x 12 - 単位ごとに１"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
+msgid "4 x 12 with price"
+msgstr "4 x 12 価格あり"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
+msgid "4 x 7 with price"
+msgstr "4 x 7 価格あり"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "54326786758"
+msgstr "54326786758"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "98"
+msgstr "98"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -753,6 +937,7 @@ msgid "Activity Type Icon"
 msgstr "活動種別アイコン"
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
 msgstr "プロダクトを追加"
@@ -761,6 +946,15 @@ msgstr "プロダクトを追加"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Add a line"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
+msgid "Activity view"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
+msgid "Activity view"
+msgstr "活動ビュー"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -895,7 +1089,23 @@ msgstr "許可された場所"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
 msgid "Always"
+<<<<<<< HEAD
 msgstr "常に作成"
+||||||| parent of 375aec60314b (temp)
+msgstr "常に可能"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Andrwep"
+msgstr ""
+=======
+msgstr "常に可能"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Andrwep"
+msgstr "アントワープ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1071,6 +1281,90 @@ msgid "Auto"
 msgstr "自動"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid "Auto Print Delivery Slip"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
+msgid "Auto Print Lot/SN Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
+msgid "Auto Print Package Label"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
+msgid "Auto Print Packages"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
+msgid "Auto Print Product Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
+msgid "Auto Print Reception Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid "Auto Print Reception Report Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
+msgid "Auto Print Return Slip"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid "Auto Print Delivery Slip"
+msgstr "配送伝票の自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
+msgid "Auto Print Lot/SN Labels"
+msgstr "ロット/シリアル番号ラベルの自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
+msgid "Auto Print Package Label"
+msgstr "梱包ラベルの自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
+msgid "Auto Print Packages"
+msgstr "パッケージ自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
+msgid "Auto Print Product Labels"
+msgstr "プロダクトラベル自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
+msgid "Auto Print Reception Report"
+msgstr "入荷レポート自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid "Auto Print Reception Report Labels"
+msgstr "入荷レポートラベル自動印刷"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
+msgid "Auto Print Return Slip"
+msgstr "返品伝票自動印刷"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
 msgstr ""
@@ -1164,6 +1458,20 @@ msgid "Barcode"
 msgstr "バーコード"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Barcode Demo"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Barcode Demo"
+msgstr "バーコードデモ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
 msgstr "バーコード表現規則"
@@ -1204,6 +1512,24 @@ msgid "Blocking Message"
 msgstr "阻止メッセージ"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Blocking: %s"
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Blocking: %s"
+msgstr "ブロック中: %s"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "梱包内容"
@@ -1982,7 +2308,83 @@ msgstr "顧客ロケーション"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "周期的カウンティング"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_DATE"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PARTNER_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_QUANTITY"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_UOM"
+msgstr ""
+=======
+msgstr "周期的カウンティング"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2104,7 +2506,23 @@ msgstr "%sの遅延により期限が更新されました"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
 msgid "December"
+<<<<<<< HEAD
 msgstr "12月"
+||||||| parent of 375aec60314b (temp)
+msgstr "十二月"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Barcode Name"
+msgstr ""
+=======
+msgstr "十二月"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Barcode Name"
+msgstr "デフォルトバーコード名"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
@@ -2112,6 +2530,40 @@ msgid "Default Destination Location"
 msgstr "デフォルト移動先ロケーション"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default O-BTN.return Barcode"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Return Name"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Name"
+msgstr "デフォルト名"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default O-BTN.return Barcode"
+msgstr "デフォルトO-BTN.returnバーコード"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Return Name"
+msgstr "デフォルト返品名"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
 msgstr "デフォルト移動元ロケーション"
@@ -2311,9 +2763,49 @@ msgid "Demand"
 msgstr "要求"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__demand_qty
 msgid "Demand Qty"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Demo Address and Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Demo Display Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Product"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Demo Address and Name"
+msgstr "デモ住所および名前"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Demo Display Name"
+msgstr "デモ表示名"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Name"
+msgstr "デモ名"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Product"
+msgstr "デモプロダクト"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -2378,6 +2870,40 @@ msgid "Description picking"
 msgstr "説明ピッキング"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
+msgid "Dest Location"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
+msgid "Dest Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
+msgid "Dest Package Id Domain"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
+msgid "Dest Location"
+msgstr "出荷先ロケーション"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
+msgid "Dest Package"
+msgstr "出荷先パッケージ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
+msgid "Dest Package Id Domain"
+msgstr "出荷先梱包IDドメイン"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
 msgid "Destination Address "
 msgstr "移動先アドレス (引当用)"
@@ -2593,7 +3119,23 @@ msgstr "完了"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "以下によって実施された："
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
+msgid "Done Packaging Quantity"
+msgstr ""
+=======
+msgstr "以下によって実施された："
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
+msgid "Done Packaging Quantity"
+msgstr "完了梱包数量"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3052,6 +3594,48 @@ msgid "Future Receipts"
 msgstr "入荷予定"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General"
+msgstr "一般"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate"
+msgstr "作成"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Generate Serials numbers"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General"
+msgstr "一般"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate"
+msgstr "作成"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Generate Serials numbers"
+msgstr "シリアル番号を生成"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "仕入から販売までの在庫追跡"
@@ -3101,7 +3685,37 @@ msgstr "グル―プ化…"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "移動作業をウェーブ転送でグループ化し、まとめて処理します。"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "HTML reports cannot be auto-printed, skipping report: %s"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Hardware"
+msgstr ""
+=======
+msgstr "移動作業をウェーブ転送でグループ化し、まとめて処理します。"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "HTML reports cannot be auto-printed, skipping report: %s"
+msgstr "HTMLレポートが自動印刷されず、レポートがスキップされます: %s"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Hardware"
+msgstr "ハードウエア"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -3322,8 +3936,138 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
+<<<<<<< HEAD
 msgid "If this checkbox is ticked, Odoo will automatically pre-fill the detailed operations with the corresponding products, locations and lot/serial numbers."
 msgstr "このチェックボックスがチェックされている場合、Odooは対応する製品、場所、ロット/シリアル番号を詳細な操作に自動的に事前入力します。"
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+"operations with the corresponding products, locations and lot/serial "
+"numbers. For moves that are returns, the detailed operations will always be "
+"prefilled, regardless of this option."
+msgstr ""
+"このチェックボックスをオンにすると、Odooは対応するプロダクト、ロケーション、ロット/シリアル番号をオペレーション詳細に自動的に事前入力します。返品の場合は、このオプションに関係なく、常にオペレーション詳細が事前に入力されます。"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the delivery slip "
+"of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
+"of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the package label "
+"when \"Put in Pack\" button is used."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the packages and "
+"their contents of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the product labels"
+" of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report labels of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report of a picking when it is validated and has assigned moves."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the return slip of"
+" a picking when it is validated."
+msgstr ""
+=======
+msgid ""
+"If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+"operations with the corresponding products, locations and lot/serial "
+"numbers. For moves that are returns, the detailed operations will always be "
+"prefilled, regardless of this option."
+msgstr ""
+"このチェックボックスをオンにすると、Odooは対応するプロダクト、ロケーション、ロット/シリアル番号をオペレーション詳細に自動的に事前入力します。返品の場合は、このオプションに関係なく、常にオペレーション詳細が事前に入力されます。"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the delivery slip "
+"of a picking when it is validated."
+msgstr "このチェックボックスにチェックを入れると、Odooはピッキングが認証されると自動的に配送伝票を印刷します。"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
+"of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the package label "
+"when \"Put in Pack\" button is used."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the packages and "
+"their contents of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the product labels"
+" of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report labels of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report of a picking when it is validated and has assigned moves."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the return slip of"
+" a picking when it is validated."
+msgstr ""
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report

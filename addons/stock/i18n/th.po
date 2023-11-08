@@ -3,6 +3,7 @@
 # 	* stock
 #
 # Translators:
+<<<<<<< HEAD
 # Somchart Jabsung <jabsung.s@gmail.com>, 2022
 # Krisa C, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
@@ -13,13 +14,32 @@
 # Wichanon Jamwutthipreecha, 2022
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 #
+||||||| parent of 375aec60314b (temp)
+# Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Amin Cheloh <amincheloh@gmail.com>, 2022\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -129,6 +149,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_quant__cyclic_inventory_frequency
 msgid " When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency."
 msgstr ""
+"%(warehouse)sสามารถระบุได้เพียง %(free_qty)s %(uom)s "
+"ในขณะที่ปริมาณการสั่งซื้อคือ %(qty_to_order)s %(uom)s"
 
 #. module: stock
 #. odoo-python
@@ -148,6 +170,24 @@ msgstr "%s (สำเนา)"
 
 #. module: stock
 #. odoo-python
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+=======
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr "%s --> สินค้า UoM คือ %s (%s) - ย้าย UoM คือ %s (%s)"
+
+#. module: stock
+#. odoo-python
+>>>>>>> 375aec60314b (temp)
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
@@ -289,9 +329,153 @@ msgid "1 Week"
 msgstr "1 สัปดาห์"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
+msgid "1234567890"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "12345678901"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
+msgid "2 x 7 with price"
+msgstr "2 x 7 พร้อมราคา"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "2021-9-01"
+msgstr "2021-9-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "2023-01-01"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "2023-09-24"
+msgstr "2023-09-24"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "3.00"
+msgstr "3.00"
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
+msgid "1234567890"
+msgstr "1234567890"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "12345678901"
+msgstr "12345678901"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
+msgid "2 x 7 with price"
+msgstr "2 x 7 พร้อมราคา"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "2021-9-01"
+msgstr "2021-9-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "2023-01-01"
+msgstr "2023-01-01"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "2023-09-24"
+msgstr "2023-09-24"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "3.00"
+msgstr "3.00"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
 msgid "4 x 12"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "4 x 12"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
+msgid "4 x 12 - One per lot/SN"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
+msgid "4 x 12 - One per unit"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
+msgid "4 x 12 with price"
+msgstr "4 x 12 พร้อมราคา"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
+msgid "4 x 7 with price"
+msgstr "4 x 7 พร้อมราคา"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "54326786758"
+msgstr "54326786758"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "98"
+msgstr ""
+=======
+msgstr "4 x 12"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
+msgid "4 x 12 - One per lot/SN"
+msgstr "4 x 12 - หนึ่งรายการต่อล็อต/SN"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
+msgid "4 x 12 - One per unit"
+msgstr "4 x 12 - หนึ่งอันต่อหน่วย"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
+msgid "4 x 12 with price"
+msgstr "4 x 12 พร้อมราคา"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
+msgid "4 x 7 with price"
+msgstr "4 x 7 พร้อมราคา"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "54326786758"
+msgstr "54326786758"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "98"
+msgstr "98"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -763,6 +947,20 @@ msgid "Activity Type Icon"
 msgstr "ไอคอนประเภทกิจกรรม"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
+msgid "Activity view"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
+msgid "Activity view"
+msgstr "มุมมองกิจกรรม"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
 msgstr "เพิ่มสินค้า"
@@ -910,6 +1108,20 @@ msgid "Always"
 msgstr "เสมอ"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Andrwep"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Andrwep"
+msgstr "Andrwep"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
 msgstr ""
@@ -1083,6 +1295,90 @@ msgid "Auto"
 msgstr "ออโต้"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid "Auto Print Delivery Slip"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
+msgid "Auto Print Lot/SN Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
+msgid "Auto Print Package Label"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
+msgid "Auto Print Packages"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
+msgid "Auto Print Product Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
+msgid "Auto Print Reception Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid "Auto Print Reception Report Labels"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
+msgid "Auto Print Return Slip"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid "Auto Print Delivery Slip"
+msgstr "การพิมพ์สลิปการจัดส่งอัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
+msgid "Auto Print Lot/SN Labels"
+msgstr "การพิมพ์ฉลากล็อต/SN อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
+msgid "Auto Print Package Label"
+msgstr "การพิมพ์ฉลากบรรจุภัณฑ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
+msgid "Auto Print Packages"
+msgstr "การพิมพ์บรรจุภัณฑ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
+msgid "Auto Print Product Labels"
+msgstr "การพิมพ์ฉลากผลิตภัณฑ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
+msgid "Auto Print Reception Report"
+msgstr "รายงานการรับพิมพ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid "Auto Print Reception Report Labels"
+msgstr "พิมพ์ฉลากรายงานการรับอัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
+msgid "Auto Print Return Slip"
+msgstr "พิมพ์สลิปส่งคืนอัตโนมัติ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
 msgstr ""
@@ -1176,6 +1472,20 @@ msgid "Barcode"
 msgstr "บาร์โค้ด"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Barcode Demo"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Barcode Demo"
+msgstr "การสาธิตบาร์โค้ด"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
 msgstr "การตีความบาร์โค้ด"
@@ -1216,6 +1526,24 @@ msgid "Blocking Message"
 msgstr "บล็อกข้อความ"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Blocking: %s"
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Blocking: %s"
+msgstr "การบล็อก: %s"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "เนื้อหาปริมาณมาก"
@@ -1557,7 +1885,23 @@ msgstr "คํานวณค่าใช้จ่ายการขนส่ง
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Sendcloud"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr ""
+=======
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Sendcloud"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Shiprocket"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1994,7 +2338,83 @@ msgstr "ตำแหน่งลูกค้า"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "การนับแบบวนรอบ"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_DATE"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PARTNER_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_QUANTITY"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_UOM"
+msgstr ""
+=======
+msgstr "การนับแบบวนรอบ"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2119,11 +2539,59 @@ msgid "December"
 msgstr "ธันวาคม"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Barcode Name"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Barcode Name"
+msgstr "ชื่อบาร์โค้ดเริ่มต้น"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
 msgstr "สถานที่ปลายทางเริ่มต้น"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default O-BTN.return Barcode"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Return Name"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Name"
+msgstr "ชื่อเริ่มต้น"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default O-BTN.return Barcode"
+msgstr "บาร์โค้ด O-BTN.return เริ่มต้น"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Default Return Name"
+msgstr "ชื่อการส่งคืนเริ่มต้น"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
 msgstr "ตำแหน่งต้นทางเริ่มต้น"
@@ -2325,9 +2793,49 @@ msgid "Demand"
 msgstr "ต้องการ"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__demand_qty
 msgid "Demand Qty"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Demo Address and Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Demo Display Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Name"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Product"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+msgid "Demo Address and Name"
+msgstr "ที่อยู่และชื่อการสาธิต"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Demo Display Name"
+msgstr "ชื่อที่แสดงการสาธิต"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Name"
+msgstr "ชื่อสาธิต"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "Demo Product"
+msgstr "สาธิตการใช้งานสินค้า"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -2392,6 +2900,40 @@ msgid "Description picking"
 msgstr "ปลายทางของการหยิบสินค้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
+msgid "Dest Location"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
+msgid "Dest Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
+msgid "Dest Package Id Domain"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
+msgid "Dest Location"
+msgstr "สถานที่ปลายทาง"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
+msgid "Dest Package"
+msgstr "แพ็คเกจปลายทาง"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
+msgid "Dest Package Id Domain"
+msgstr "โดเมน ID แพ็คเกจปลายทาง"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
 msgid "Destination Address "
 msgstr "ที่อยู่ปลายทาง "
@@ -2607,7 +3149,23 @@ msgstr "เสร็จสิ้น"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ทำโดย"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
+msgid "Done Packaging Quantity"
+msgstr ""
+=======
+msgstr "ทำโดย"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
+msgid "Done Packaging Quantity"
+msgstr "ปริมาณบรรจุภัณฑ์เสร็จแล้ว"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3059,6 +3617,48 @@ msgid "Future Receipts"
 msgstr "การรับในอนาคต"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General"
+msgstr "ทั่วไป"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate"
+msgstr "สร้าง"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Generate Serials numbers"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "General"
+msgstr "ทั่วไป"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate"
+msgstr "สร้าง"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Generate Serials numbers"
+msgstr "สร้างหมายเลขซีเรียล"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr ""
@@ -3109,6 +3709,36 @@ msgstr "จัดกลุ่มโดย…"
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"จัดกลุ่มการดำเนินการย้ายของคุณในการถ่ายโอนย้ายเป็นกลุ่มเพื่อดำเนินการร่วมกัน"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "HTML reports cannot be auto-printed, skipping report: %s"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Hardware"
+msgstr ""
+=======
+"จัดกลุ่มการดำเนินการย้ายของคุณในการถ่ายโอนย้ายเป็นกลุ่มเพื่อดำเนินการร่วมกัน"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "HTML reports cannot be auto-printed, skipping report: %s"
+msgstr "รายงาน HTML ไม่สามารถพิมพ์อัตโนมัติได้ ข้ามรายงาน:%s"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Hardware"
+msgstr "ฮาร์ดแวร์"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -3329,8 +3959,158 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
+<<<<<<< HEAD
 msgid "If this checkbox is ticked, Odoo will automatically pre-fill the detailed operations with the corresponding products, locations and lot/serial numbers."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+"operations with the corresponding products, locations and lot/serial "
+"numbers. For moves that are returns, the detailed operations will always be "
+"prefilled, regardless of this option."
 msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะกรอกรายละเอียดการดำเนินงานล่วงหน้าด้วยสินค้า สถานที่ "
+"และหมายเลขล็อต/ซีเรียลที่เกี่ยวข้องโดยอัตโนมัติ สำหรับการเคลื่อนไหวที่ส่งคืน"
+" การดำเนินการโดยละเอียดจะถูกกรอกไว้ล่วงหน้าเสมอ โดยไม่คำนึงถึงตัวเลือกนี้"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the delivery slip "
+"of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
+"of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the package label "
+"when \"Put in Pack\" button is used."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the packages and "
+"their contents of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the product labels"
+" of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report labels of a picking when it is validated."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report of a picking when it is validated and has assigned moves."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the return slip of"
+" a picking when it is validated."
+=======
+msgid ""
+"If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
+"operations with the corresponding products, locations and lot/serial "
+"numbers. For moves that are returns, the detailed operations will always be "
+"prefilled, regardless of this option."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะกรอกรายละเอียดการดำเนินงานล่วงหน้าด้วยสินค้า สถานที่ "
+"และหมายเลขล็อต/ซีเรียลที่เกี่ยวข้องโดยอัตโนมัติ สำหรับการเคลื่อนไหวที่ส่งคืน"
+" การดำเนินการโดยละเอียดจะถูกกรอกไว้ล่วงหน้าเสมอ โดยไม่คำนึงถึงตัวเลือกนี้"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the delivery slip "
+"of a picking when it is validated."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์สลิปการส่งมอบของการเบิกสินค้าโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
+"of a picking when it is validated."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ฉลากล็อต/SN "
+"ของการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the package label "
+"when \"Put in Pack\" button is used."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo จะพิมพ์ฉลากบรรจุภัณฑ์โดยอัตโนมัติเมื่อใช้ปุ่ม"
+" \"ใส่ในแพ็ค\""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the packages and "
+"their contents of a picking when it is validated."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์บรรจุภัณฑ์และเนื้อหาในการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the product labels"
+" of a picking when it is validated."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์ฉลากผลิตภัณฑ์ของการหยิบสินค้าโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report labels of a picking when it is validated."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์ป้ายรายงานการรับของการเลือกโดยอัตโนมัติเมื่อได้รับการตรวจสอบความถูกต้อง"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the reception "
+"report of a picking when it is validated and has assigned moves."
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์รายงานการรับของการเลือกโดยอัตโนมัติเมื่อมีการตรวจสอบและกำหนดการย้ายแล้ว"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the return slip of"
+" a picking when it is validated."
+>>>>>>> 375aec60314b (temp)
+msgstr ""
+"หากทำเครื่องหมายในช่องนี้ Odoo "
+"จะพิมพ์ใบส่งคืนของการรับสินค้าโดยอัตโนมัติเมื่อมีการตรวจสอบความถูกต้อง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -3420,6 +4200,24 @@ msgid "Import"
 msgstr "นำเข้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Import Lots"
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/generate_serial.js:0
+#, python-format
+msgid "Import Lots"
+msgstr "นำเข้าล็อต"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -3470,6 +4268,24 @@ msgid "Incoming Shipments"
 msgstr "การขนส่งขาเข้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "Incorrect type of action submitted as a report, skipping action"
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "Incorrect type of action submitted as a report, skipping action"
+msgstr "ประเภทการดำเนินการที่ส่งเป็นรายงานไม่ถูกต้อง ข้ามการดำเนินการ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
 msgid "Indicates the gap between the product's theoretical quantity and its counted quantity."
 msgstr ""
@@ -3687,9 +4503,19 @@ msgid "Inventory Quantity Set"
 msgstr ""
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Inventory Reference / Reason"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
+msgid "Inventory Reason"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
+msgid "Inventory Reason"
+msgstr "เหตุผลด้านสินค้าคงคลัง"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -3730,6 +4556,30 @@ msgid "Is Locked"
 msgstr "ถูกล็อก"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_multi_location
+msgid "Is Multi Location"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
+msgid "Is Partial Package"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_multi_location
+msgid "Is Multi Location"
+msgstr "มีหลายตำแหน่ง"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
+msgid "Is Partial Package"
+msgstr "เป็นแพ็คเกจบางส่วน"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
 msgid "Is Signed"
 msgstr ""
@@ -3825,6 +4675,7 @@ msgid "Keep Difference"
 msgstr ""
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
 msgstr ""
@@ -3833,11 +4684,40 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep the <strong>Difference</strong> (the Counted Quantity will be updated to reflect the same difference as when you counted)"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "LOT-PR-00012"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "LOT-PR-00012"
+msgstr "LOT-PR-00012"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ฉลากที่จะพิมพ์"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "Laptop"
+msgstr ""
+=======
+msgstr "ฉลากที่จะพิมพ์"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "Laptop"
+msgstr "แล็ปท็อป"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4161,6 +5041,30 @@ msgid "Lot"
 msgstr "ล็อต"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
+msgid "Lot Label Format to auto-print"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
+msgid "Lot Properties"
+msgstr "คุณสมบัติล็อต"
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
+msgid "Lot Label Format to auto-print"
+msgstr "รูปแบบฉลากล็อตที่จะพิมพ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
+msgid "Lot Properties"
+msgstr "คุณสมบัติล็อต"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 msgid "Lot/SN Labels"
 msgstr ""
@@ -4214,9 +5118,23 @@ msgid "Lot/Serial Number Name"
 msgstr ""
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 msgid "Lot/Serial Numbers"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/stock/models/stock_lot.py:0
+#, python-format
+msgid "Lot/Serial Number Relocated"
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/stock/models/stock_lot.py:0
+#, python-format
+msgid "Lot/Serial Number Relocated"
+msgstr "ย้ายล็อต/หมายเลขซีเรียลแล้ว"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -4253,11 +5171,49 @@ msgid "Lots/Serial Numbers"
 msgstr "ล็อต/หมายเลขซีเรียล"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Lots/Serial numbers"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
+=======
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Lots/Serial numbers"
+msgstr "ล็อต/หมายเลขซีเรียล"
+
+#. module: stock
+#: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid ""
 "Lots/Serial numbers help you tracking the path followed by your products.\n"
 "            From their traceability report you will see the full history of their use, as well as their composition."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+"ล็อต/หมายเลขซีเรียลช่วยให้คุณติดตามเส้นทางที่ตามด้วยสินค้าของคุณ\n"
+"            จากรายงานการตรวจสอบย้อนกลับ คุณจะเห็นประวัติการใช้งานทั้งหมด รวมถึงองค์ประกอบต่างๆ"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_product_replenish
+msgid "Low on stock? Let's replenish."
+msgstr ""
+=======
+"ล็อต/หมายเลขซีเรียลช่วยให้คุณติดตามเส้นทางที่ตามด้วยสินค้าของคุณ\n"
+"            จากรายงานการตรวจสอบย้อนกลับ คุณจะเห็นประวัติการใช้งานทั้งหมด รวมถึงองค์ประกอบต่างๆ"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_product_replenish
+msgid "Low on stock? Let's replenish."
+msgstr "สต็อกเหลือน้อยใช่ไหม? มาเติมกันได้เลย"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -4438,6 +5394,22 @@ msgid "Move"
 msgstr "ย้าย"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.actions.act_window,name:stock.stock_move_action
+#: model:ir.ui.menu,name:stock.stock_move_menu
+msgid "Move Analysis"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.actions.act_window,name:stock.stock_move_action
+#: model:ir.ui.menu,name:stock.stock_move_menu
+msgid "Move Analysis"
+msgstr "การวิเคราะห์การย้าย"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
 msgstr ""
@@ -4548,6 +5520,20 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Name Demo"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Name Demo"
+msgstr "ชื่อสาธิต"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,field_description:stock.field_product_template__nbr_moves_in
 msgid "Nbr Moves In"
@@ -4746,6 +5732,8 @@ msgid ""
 "No rule has been found to replenish \"%s\" in \"%s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"ไม่พบกฎที่จะเติม %r ใน %r\n"
+"ตรวจสอบการกำหนดค่าเส้นทางบนสินค้า"
 
 #. module: stock
 #. odoo-python
@@ -4876,6 +5864,39 @@ msgid "October"
 msgstr "ตุลาคม"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid ""
+"Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,\n"
+"                                        install the IoT App on a computer that is on the same local network as the\n"
+"                                        barcode operator and configure the routing of the reports."
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "Office Chair"
+msgstr "เก้าอี้สำนักงาน"
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid ""
+"Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,\n"
+"                                        install the IoT App on a computer that is on the same local network as the\n"
+"                                        barcode operator and configure the routing of the reports."
+msgstr ""
+"Odoo เปิดตัวอย่าง PDF ตามค่าเริ่มต้น หากคุณ (ผู้ใช้ระดับองค์กรเท่านั้น) ต้องการพิมพ์ทันที\n"
+"                                        ติดตั้ง IoT App บนคอมพิวเตอร์ที่อยู่ในเครือข่ายในพื้นที่เดียวกันกับ\n"
+"                                        ตัวดำเนินการบาร์โค้ดและกำหนดค่าการกำหนดเส้นทางของรายงาน"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "Office Chair"
+msgstr "เก้าอี้สำนักงาน"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
@@ -4919,7 +5940,23 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "มีเพียงผู้จัดการสต็อกเท่านั้นที่สามารถตรวจสอบการปรับสินค้าคงคลังได้"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
+msgid "Operation Quantities"
+msgstr ""
+=======
+msgstr "มีเพียงผู้จัดการสต็อกเท่านั้นที่สามารถตรวจสอบการปรับสินค้าคงคลังได้"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
+msgid "Operation Quantities"
+msgstr "ปริมาณการดำเนินงาน"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -5034,7 +6071,27 @@ msgstr "คำสั่ง"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "สั่งซื้อครั้งเดียว"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
+#, python-format
+msgid "Order To Max"
+msgstr ""
+=======
+msgstr "สั่งซื้อครั้งเดียว"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
+#, python-format
+msgid "Order To Max"
+msgstr "สั่งซื้อสูงสุด"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -5184,7 +6241,23 @@ msgstr "แพ็ค"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "วันที่แพ็ค"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Pack Date Demo"
+msgstr ""
+=======
+msgstr "วันที่แพ็ค"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Pack Date Demo"
+msgstr "วันที่แพ็คสาธิต"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -5241,7 +6314,33 @@ msgstr ""
 #: code:addons/stock/models/stock_package_level.py:0
 #, python-format
 msgid "Package Content"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "เนื้อหาแพ็คเกจ"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Package Label"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__package_label_to_print
+msgid "Package Label to Print"
+msgstr ""
+=======
+msgstr "เนื้อหาแพ็คเกจ"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Package Label"
+msgstr "ฉลากบรรจุภัณฑ์"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__package_label_to_print
+msgid "Package Label to Print"
+msgstr "ฉลากบรรจุภัณฑ์ที่จะพิมพ์"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__package_level_id
@@ -5284,6 +6383,20 @@ msgstr "ประเภทแพ็คเกจ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+msgid "Package Type Demo"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+=======
+msgid "Package Type Demo"
+msgstr "ประเภทแพ็คเกจสาธิต"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+>>>>>>> 375aec60314b (temp)
 msgid "Package Type:"
 msgstr ""
 
@@ -5388,6 +6501,20 @@ msgid "Partial"
 msgstr "บางส่วน"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__partial_package_names
+msgid "Partial Package Names"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__partial_package_names
+msgid "Partial Package Names"
+msgstr "ชื่อแพ็คเกจบางส่วน"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__partially_available
 msgid "Partially Available"
 msgstr "มีอยุ่บางส่วน"
@@ -5423,7 +6550,23 @@ msgid "Pick Type"
 msgstr "ชนิดการรับ"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__picking_ids
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_move__picked
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
+msgid "Picked"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_move__picked
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
+msgid "Picked"
+msgstr "รับสินค้าแล้ว"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_id
@@ -5444,6 +6587,20 @@ msgid "Picking Operations"
 msgstr "กระบวนการหยิบสินค้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
+msgid "Picking Properties"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
+msgid "Picking Properties"
+msgstr "การเลือกคุณสมบัติ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
 msgstr "ประเภทการรับ"
@@ -5569,6 +6726,40 @@ msgid "Print Labels"
 msgstr "พิมพ์ฉลาก"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print label as:"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print on \"Put in Pack\""
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print on Validation"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print label as:"
+msgstr "พิมพ์ฉลากเป็น:"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print on \"Put in Pack\""
+msgstr "พิมพ์บน \"ใส่ในแพ็ค\""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Print on Validation"
+msgstr "พิมพ์เมื่อตรวจสอบ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
 msgid "Printed"
 msgstr "พิมพ์แล้ว"
@@ -5704,14 +6895,38 @@ msgid "Product Category"
 msgstr "หมวดหมู่สินค้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
+msgid "Product Display Name"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
+msgid "Product Display Name"
+msgstr "ชื่อที่แสดงสินค้า"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.actions.report,name:stock.label_product_product
 msgid "Product Label (ZPL)"
 msgstr "ฉลากผลิตภัณฑ์ (ZPL)"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model,name:stock.model_report_stock_label_product_product_view
 msgid "Product Label Report"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
+msgid "Product Label Format to auto-print"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
+msgid "Product Label Format to auto-print"
+msgstr "รูปแบบฉลากสินค้าที่จะพิมพ์อัตโนมัติ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
@@ -5759,6 +6974,20 @@ msgid "Product Quantity Updated"
 msgstr "ปริมาณผลิตภัณฑ์ล่าสุด"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "Product Relocated"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "Product Relocated"
+msgstr "ย้ายสินค้าแล้ว"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
@@ -6051,7 +7280,27 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities To Reset"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ปริมาณที่จะรีเซ็ต"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantities unpacked"
+msgstr ""
+=======
+msgstr "ปริมาณที่จะรีเซ็ต"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantities unpacked"
+msgstr "ปริมาณที่แกะออกแล้ว"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-javascript
@@ -6096,8 +7345,26 @@ msgid "Quantity On Hand"
 msgstr "ปริมาณในมือ"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantity Relocated"
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantity Relocated"
+msgstr "จำนวนที่ย้าย"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity Reserved"
 msgstr "ปริมาณที่สำรองไว้"
@@ -6119,7 +7386,23 @@ msgstr "ปริมาณเป็นค่าลบไม่ได้"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__is_outdated
 msgid "Quantity has been moved since last count"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "จำนวนถูกย้ายตั้งแต่การนับครั้งล่าสุด"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
+msgid "Quantity in Product UoM"
+msgstr ""
+=======
+msgstr "จำนวนถูกย้ายตั้งแต่การนับครั้งล่าสุด"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
+msgid "Quantity in Product UoM"
+msgstr "ปริมาณในสินค้า UoM"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
@@ -6156,8 +7439,34 @@ msgstr "ปริมาณของสินค้าในการวิเค
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__reserved_quantity
+<<<<<<< HEAD
 msgid "Quantity of reserved products in this quant, in the default unit of measure of the product"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Quantity of reserved products in this quant, in the default unit of measure "
+"of the product"
+msgstr "ปริมาณของสินค้าที่สำรองไว้ในปริมาณนี้บนหน่วยวัดเริ่มต้นของสินค้า"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantity or Reserved Quantity should be set."
+msgstr ""
+=======
+msgid ""
+"Quantity of reserved products in this quant, in the default unit of measure "
+"of the product"
+msgstr "ปริมาณของสินค้าที่สำรองไว้ในปริมาณนี้บนหน่วยวัดเริ่มต้นของสินค้า"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Quantity or Reserved Quantity should be set."
+msgstr "ควรกำหนดปริมาณหรือปริมาณที่จองไว้"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -6229,9 +7538,29 @@ msgid "Real Quantity"
 msgstr "ปริมาณจริง"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__reserved_qty
 msgid "Real Reserved Quantity"
 msgstr "ปริมาณที่จองไว้จริง"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Reason"
+msgstr "เหตุผล"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
+msgid "Reason for relocation"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+msgid "Reason"
+msgstr "เหตุผล"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
+msgid "Reason for relocation"
+msgstr "เหตุผลในการย้ายที่อยู่"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-javascript
@@ -6321,7 +7650,23 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
 msgid "Reception Report Label"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ฉลากรายงานการรับสินค้า"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Reception Report Labels"
+msgstr ""
+=======
+msgstr "ฉลากรายงานการรับสินค้า"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Reception Report Labels"
+msgstr "ฉลากรายงานการรับสินค้า"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-javascript
@@ -6363,14 +7708,46 @@ msgid "Reference:"
 msgstr "อ้างอิง:"
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Register lots, packs, location"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_procurement_group__stock_move_ids
+msgid "Related Stock Moves"
+msgstr "การย้ายของสต็อกที่เกี่ยวข้อง"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+msgid "Relocate"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:stock.field_procurement_group__stock_move_ids
+msgid "Related Stock Moves"
+msgstr "การย้ายของสต็อกที่เกี่ยวข้อง"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+msgid "Relocate"
+msgstr "การย้ายที่อยู่"
+>>>>>>> 375aec60314b (temp)
+
+#. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_procurement_group__stock_move_ids
 msgid "Related Stock Moves"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "Relocate your stock"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "Relocate your stock"
+msgstr "ย้ายสต็อกของคุณ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6442,7 +7819,23 @@ msgstr "เติมสินค้า"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
 msgid "Replenish Location"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "สถานที่การเติมสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
+msgid "Replenish Quantities"
+msgstr ""
+=======
+msgstr "สถานที่การเติมสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
+msgid "Replenish Quantities"
+msgstr "การเติมปริมาณ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -6497,7 +7890,39 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ค้นหารายงานการเติมสินค้า"
+
+#. module: stock
+#: model:ir.model,name:stock.model_ir_actions_report
+msgid "Report Action"
+msgstr "การดําเนินการรายงาน"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "Report Printing Error"
+msgstr ""
+=======
+msgstr "ค้นหารายงานการเติมสินค้า"
+
+#. module: stock
+#: model:ir.model,name:stock.model_ir_actions_report
+msgid "Report Action"
+msgstr "การดําเนินการรายงาน"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#: code:addons/stock/static/src/client_actions/multi_print.js:0
+#, python-format
+msgid "Report Printing Error"
+msgstr "รายงานข้อผิดพลาดในการพิมพ์"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -6582,6 +8007,22 @@ msgid "Reserved"
 msgstr "สำรองแล้ว"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
+msgid "Reserved Packaging Quantity"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
+msgid "Reserved Packaging Quantity"
+msgstr "ปริมาณบรรจุภัณฑ์ที่สงวนไว้"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
 msgstr "ปริมาณที่จองไว้"
@@ -6641,7 +8082,23 @@ msgstr "ส่งคืนการรับ"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "รายการการส่งคืนสินค้า"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Return Slip"
+msgstr ""
+=======
+msgstr "รายการการส่งคืนสินค้า"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+msgid "Return Slip"
+msgstr "สลิปการส่งคืน"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__return_type_id
@@ -6810,6 +8267,20 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+msgid "SSCC Demo"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+=======
+msgid "SSCC Demo"
+msgstr "การสาธิต SSCC"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
+>>>>>>> 375aec60314b (temp)
 msgid "SSCC:"
 msgstr ""
 
@@ -6877,7 +8348,29 @@ msgstr "ย้ายเศษซากผลิตภัณฑ์"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "คำสั่งซื้อเศษสินค้า"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
+#, python-format
+msgid "Scrap Products"
+msgstr ""
+=======
+msgstr "คำสั่งซื้อเศษสินค้า"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
+#, python-format
+msgid "Scrap Products"
+msgstr "ผลิตภัณฑ์เศษเหล็ก"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -7123,6 +8616,30 @@ msgid "Settings"
 msgstr "การตั้งค่า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Shelf 1"
+msgstr "ชั้นวาง 1"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "Shelf A"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Shelf 1"
+msgstr "ชั้นวาง 1"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_inventory
+msgid "Shelf A"
+msgstr "ชั้นวาง A"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
 msgid "Shelves (Y)"
 msgstr "ชั้นวาง (Y)"
@@ -7155,7 +8672,23 @@ msgstr ""
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "การจัดส่ง: ส่งทางอีเมล"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
+msgid "Shiprocket Connector"
+msgstr ""
+=======
+msgstr "การจัดส่ง: ส่งทางอีเมล"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
+msgid "Shiprocket Connector"
+msgstr "ตัวเชื่อมต่อ Shiprocket"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -7224,7 +8757,23 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "แสดงประเภทการเบิกสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
+msgid "Show Quant"
+msgstr ""
+=======
+msgstr "แสดงประเภทการเบิกสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
+msgid "Show Quant"
+msgstr "แสดงปริมาณ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -7253,6 +8802,30 @@ msgid "Show all records which has next action date is before today"
 msgstr "แสดงระเบียนทั้งหมดที่มีวันที่ดำเนินการถัดไปคือก่อนวันนี้"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
+msgid "Show lot_id"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_text
+msgid "Show lot_name"
+msgstr ""
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
+msgid "Show lot_id"
+msgstr "แสดง lot_id"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_text
+msgid "Show lot_name"
+msgstr "แสดง lot_name"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
 msgid "Show the routes that apply on selected warehouses."
 msgstr ""
@@ -7505,7 +9078,23 @@ msgstr "ปริมาณสต็อค"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
 msgid "Stock Quantity History"
+<<<<<<< HEAD
 msgstr "ประวัติปริมาณสต็อค"
+||||||| parent of 375aec60314b (temp)
+msgstr "ประวัติปริมาณสต็อก"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_quant_relocate
+msgid "Stock Quantity Relocation"
+msgstr ""
+=======
+msgstr "ประวัติปริมาณสต็อก"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_quant_relocate
+msgid "Stock Quantity Relocation"
+msgstr "การย้ายปริมาณสต็อค"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -7556,8 +9145,16 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
+<<<<<<< HEAD
 msgid "Stock moves not in package"
 msgstr "ย้ายสต็อกไม่ได้อยู่ในแพคเกจ"
+||||||| parent of 375aec60314b (temp)
+msgid "Stock move"
+msgstr ""
+=======
+msgid "Stock move"
+msgstr "ย้ายสต็อก"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7785,7 +9382,23 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
 msgid "The first in the sequence is the default one."
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "อันแรกในลำดับคืออันที่ถูกกำหนดโดยค่าเริ่มต้น"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
+msgid "The forecasted quantity of"
+msgstr ""
+=======
+msgstr "อันแรกในลำดับคืออันที่ถูกกำหนดโดยค่าเริ่มต้น"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
+msgid "The forecasted quantity of"
+msgstr "ปริมาณที่คาดการณ์ไว้ของ"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-javascript
@@ -7859,6 +9472,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
 msgid "The product's counted quantity."
 msgstr ""
+"ปริมาณที่เลือกไม่ใช่ทั้งหมดอยู่ในสถานที่เดียวกัน\n"
+"                    คุณไม่สามารถกำหนดแพ็คเกจให้พวกเขาโดยไม่ย้ายไปยังตำแหน่งทั่วไปได้"
 
 #. module: stock
 #. odoo-python
@@ -7940,6 +9555,8 @@ msgstr ""
 #, python-format
 msgid "There are no inventory adjustments to revert."
 msgstr ""
+"ไม่มีสิทธิ์ใส่ในแพ็ค "
+"อาจไม่มีปริมาณที่ต้องใส่ในแพ็คหรือสินค้าทั้งหมดอยู่ในแพ็คแล้ว"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7957,6 +9574,8 @@ msgstr ""
 #, python-format
 msgid "This analysis gives you an overview of the current stock level of your products."
 msgstr ""
+"ช่องทำเครื่องหมายนี้เป็นเพียงการบ่งชี้เท่านั้น "
+"ไม่ได้ตรวจสอบหรือสร้างการเคลื่อนย้ายสินค้าใดๆ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7982,6 +9601,10 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_qty
 msgid "This is the quantity of products from an inventory point of view. For moves in the state 'done', this is the quantity of products that were actually moved. For other moves, this is the quantity of product that is planned to be moved. Lowering this quantity does not generate a backorder. Changing this quantity on assigned moves affects the product reservation, and should be done with care."
 msgstr ""
+"นี่คือปริมาณของสินค้าที่วางแผนจะย้าย "
+"การลดปริมาณนี้จะไม่สร้างใบสั่งที่ถูกจดทะเบียนแล้ว "
+"การเปลี่ยนแปลงปริมาณนี้ในการเคลื่อนย้ายที่กำหนดจะส่งผลต่อการจองสินค้า "
+"และควรดำเนินการด้วยความระมัดระวัง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -8155,6 +9778,20 @@ msgid "To Do"
 msgstr "ที่จะทำ"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "To Location"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "To Location"
+msgstr "ไปยังที่ตั้ง"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
@@ -8162,7 +9799,21 @@ msgid "To Order"
 msgstr "จำนวนคำสั่ง"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "To Package"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
+msgid "To Package"
+msgstr "ที่จะแพ็ค"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
 msgstr "ที่จะดำเนินการ"
@@ -8190,9 +9841,19 @@ msgid "Today Activities"
 msgstr "กิจกรรมวันนี้"
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Forecasted"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
+msgid "Total Demand"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
+msgid "Total Demand"
+msgstr "ความต้องการทั้งหมด"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -8571,6 +10232,20 @@ msgid "Update Product Quantity"
 msgstr "ปรับปรุงปริมาณสินค้า"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
+msgid "Update Quantities"
+msgstr ""
+
+#. module: stock
+=======
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
+msgid "Update Quantities"
+msgstr "อัปเดตปริมาณ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #. odoo-python
 #. odoo-javascript
 #: code:addons/stock/models/product.py:0
@@ -9053,9 +10728,29 @@ msgid "Wizard"
 msgstr "ตัวช่วย"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Write one lot/serial name per line, followed by the quantity."
+msgstr ""
+
+#. module: stock
+=======
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Write one lot/serial name per line, followed by the quantity."
+msgstr "เขียนชื่อล็อต/ซีเรียลต่อบรรทัด ตามด้วยปริมาณ"
+
+#. module: stock
+>>>>>>> 375aec60314b (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr ""
+"คุณกำลังจะย้ายปริมาณในบรรจุภัณฑ์โดยไม่ได้ย้ายบรรจุภัณฑ์ทั้งหมด\n"
+"                    ปริมาณเหล่านั้นจะถูกลบออกจากบรรจุภัณฑ์ต่อไปนี้:"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9143,6 +10838,7 @@ msgstr ""
 #, python-format
 msgid "You can only enter positive quantities."
 msgstr ""
+"คุณสามารถย้ายปริมาณบวกที่จัดเก็บไว้ในสถานที่ที่ใช้โดยบริษัทเดียวต่อการย้ายสถานที่เท่านั้น"
 
 #. module: stock
 #. odoo-python
@@ -9155,8 +10851,38 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "You can't deactivate the multi-location if you have more than once warehouse by company"
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"You can't deactivate the multi-location if you have more than once warehouse"
+" by company"
+msgstr ""
+"คุณไม่สามารถปิดใช้งานสถานที่หลายแห่งได้ "
+"ถ้าคุณมีคลังสินค้ามากกว่าหนึ่งแห่งโดยเรียงตามบริษัท"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#, python-format
+msgid "You can't disable locations %s because they still contain products."
+msgstr ""
+=======
+msgid ""
+"You can't deactivate the multi-location if you have more than once warehouse"
+" by company"
+msgstr ""
+"คุณไม่สามารถปิดใช้งานสถานที่หลายแห่งได้ "
+"ถ้าคุณมีคลังสินค้ามากกว่าหนึ่งแห่งโดยเรียงตามบริษัท"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#, python-format
+msgid "You can't disable locations %s because they still contain products."
+msgstr "คุณไม่สามารถปิดการใช้งานสถานที่ %s ได้ เนื่องจากยังคงมีสินค้าอยู่"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #. odoo-python
@@ -9290,6 +11016,8 @@ msgstr ""
 #, python-format
 msgid "You cannot use the same serial number twice. Please correct the serial numbers encoded."
 msgstr ""
+"คุณไม่สามารถตรวจสอบการโอนย้ายได้หากไม่มีการจองจำนวนไว้ "
+"หากต้องการบังคับให้โอนย้าย ให้เข้ารหัสปริมาณ"
 
 #. module: stock
 #. odoo-python
@@ -9297,6 +11025,8 @@ msgstr ""
 #, python-format
 msgid "You cannot validate a transfer if no quantities are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities."
 msgstr ""
+"คุณไม่สามารถตรวจสอบการโอนย้ายที่ว่างเปล่าได้ "
+"โปรดเพิ่มสินค้าบางอย่างเพื่อย้ายก่อนดำเนินการต่อ"
 
 #. module: stock
 #. odoo-python
@@ -9439,7 +11169,33 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 msgid "ZPL Labels"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ฉลาก ZPL"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
+msgid "ZPL Labels - One per lot/SN"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
+msgid "ZPL Labels - One per unit"
+msgstr ""
+=======
+msgstr "ฉลาก ZPL"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
+msgid "ZPL Labels - One per lot/SN"
+msgstr "ฉลาก ZPL - หนึ่งรายการต่อล็อต/SN"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
+msgid "ZPL Labels - One per unit"
+msgstr "ฉลาก ZPL - หนึ่งรายการต่อหน่วย"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
@@ -9587,7 +11343,23 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of 375aec60314b (temp)
+msgstr "ควรจะเติมสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
+msgid "stock.putaway.rule"
+msgstr ""
+=======
+msgstr "ควรจะเติมสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
+msgid "stock.putaway.rule"
+msgstr "stock.putaway.rule"
+>>>>>>> 375aec60314b (temp)
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

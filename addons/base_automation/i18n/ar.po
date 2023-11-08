@@ -3,16 +3,35 @@
 # 	* base_automation
 #
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 #
+||||||| parent of 375aec60314b (temp)
+# Wil Odoo, 2023
+# 
+=======
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+>>>>>>> 375aec60314b (temp)
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+||||||| parent of 375aec60314b (temp)
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+=======
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+>>>>>>> 375aec60314b (temp)
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -32,17 +51,289 @@ msgstr ""
 "                (المعرف:"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_published
 msgid "A code server action can be executed from the website, using a dedicated controller. The address is <base>/website/action/<website_path>. Set this field as True to allow users to run this action. If it is set to False the action cannot be run through the website."
 msgstr "يمكن تنفيذ إجراء خادم من نوع كود من الموقع، باستخدام متحكم مخصص لهذا. العنوان هو <base>/website/action/<website_path>. اجعل قيمة هذا الحقل 'صحيح' للسماح للمستخدمين بتنفيذ هذا الإجراء. إذا كانت قيمته 'خطأ' لا يمكن تنفيذ هذا الإجراء من خلال الموقع الإلكتروني. "
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/kanban_header_patch.js:0
+#, python-format
+msgid "\"%s\" tag is added"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/kanban_header_patch.js:0
+#, python-format
+msgid "\"%s\" tag is added"
+msgstr "تمت إضافة علامة التصنيف \"%s\"  "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
 msgid "Action Description"
 msgstr "وصف الإجراء"
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"\"On live update\" automation rules can only be used with \"Execute Python "
+"Code\" action type."
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"\"On live update\" automation rules can only be used with \"Execute Python "
+"Code\" action type."
+msgstr ""
+"لا يمكن استخدام قواعد الأتمتة \"عند التحديث المباشر\" إلا مع نوع الإجراء "
+"\"تنفيذ كود Python\". "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "%s actions"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "1 action"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<code>env</code>: environment on which the action is triggered"
+msgstr "<code>البيئة</code>: البيئة التي تم تشغيل الإجراء فيها. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>model</code>: model of the record on which the action is triggered; is"
+" a void recordset"
+msgstr ""
+"<code>النموذج</code>: النموذج في السجل الذي يتم تشغيل الإجراء فيه؛ هو مجموعة"
+" سجلات باطلة "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>payload</code>: the payload of the call (GET parameters, JSON body), "
+"as a dict."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: useful Python libraries"
+msgstr ""
+"مكتبات <code>time</code>، <code>datetime</code>، <code>dateutil</code>، "
+"<code>timezone</code>: مكتبات بايثون مفيدة "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-info-circle\"/> The default target record getter will work "
+"out-of-the-box for any webhook coming from another Odoo instance."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-warning\"/> Automation rules triggered by UI changes will "
+"be executed <em>every time</em> the watched fields change, <em>whether you "
+"save or not</em>."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span class=\"text-muted\"> Available variables: </span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<span invisible=\"evaluation_type != 'value'\">to</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by adding</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by clearing it</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by removing</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by setting it to</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__name
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "%s actions"
+msgstr "%s إجراءات "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "1 action"
+msgstr "إجراء واحد "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<code>env</code>: environment on which the action is triggered"
+msgstr "<code>البيئة</code>: البيئة التي تم تشغيل الإجراء فيها. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>model</code>: model of the record on which the action is triggered; is"
+" a void recordset"
+msgstr ""
+"<code>النموذج</code>: النموذج في السجل الذي يتم تشغيل الإجراء فيه؛ هو مجموعة"
+" سجلات باطلة "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>payload</code>: the payload of the call (GET parameters, JSON body), "
+"as a dict."
+msgstr ""
+"<code>payload</code>: the payload of the call (GET parameters, JSON body), "
+"as a dict."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: useful Python libraries"
+msgstr ""
+"مكتبات <code>time</code>، <code>datetime</code>، <code>dateutil</code>، "
+"<code>timezone</code>: مكتبات بايثون مفيدة "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"الإجراءات \"/>"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-info-circle\"/> The default target record getter will work "
+"out-of-the-box for any webhook coming from another Odoo instance."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> سيعمل مُحضر السجل الهدف الافتراضي بشكل جاهز"
+" لأي خطاف ويب قادم من مثيل أودو آخر. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-warning\"/> Automation rules triggered by UI changes will "
+"be executed <em>every time</em> the watched fields change, <em>whether you "
+"save or not</em>."
+msgstr ""
+"<i class=\"fa fa-warning\"/> سيتم تنفيذ قواعد الأتمتة الناتجة عن تغييرات "
+"واجهة المستخدم <em>في كل مرة</em> تتغير فيها الحقول المراقَبة <em>سواءً قمت "
+"بالحفظ أم لا</em>. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span class=\"text-muted\"> Available variables: </span>"
+msgstr "<span class=\"text-muted\"> المتغيرات المتاحة: </span> "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<span invisible=\"evaluation_type != 'value'\">to</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
+msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">إلى</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">كـ</span>"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">بعد الإنشاء</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">بعد آخر تحديث</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">بعد</span> "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by adding</span>"
+msgstr "<span>عن طريق إضافة</span> "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by clearing it</span>"
+msgstr "<span>عن طريق المسح</span> "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by removing</span>"
+msgstr "<span>عن طريق الإزالة</span> "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span>by setting it to</span>"
+msgstr "<span>عن الطريق التعيين كـ</span>"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgstr "<strong><i class=\"fa fa-lock\"/> أبقِ الأمر سراً، وأبقه بأمان.</strong> "
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__name
+>>>>>>> 375aec60314b (temp)
 msgid "Action Name"
 msgstr "اسم الإجراء"
 
@@ -52,9 +343,19 @@ msgid "Action To Do"
 msgstr "إجراء مطلوب"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
 msgid "Action Type"
 msgstr "نوع الإجراء"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Actions To Do"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Actions To Do"
+msgstr "الإجراءات المطلوبة "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -62,19 +363,79 @@ msgid "Active"
 msgstr "نشط"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
 msgid "Activity"
 msgstr "النشاط"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Add an action"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Add an action"
+msgstr "أضف إجراءاً "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
 msgstr "نوع مستخدم النشاط"
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Add followers"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Add followers"
+msgstr "إضافة متابعين "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
 msgid "Add Followers"
 msgstr "إضافة متابعين"
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Add followers: %(partner_names)s"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
+msgid "After creation"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
+msgid "After last update"
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Add followers: %(partner_names)s"
+msgstr "أضف متابعين: %(partner_names)s "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
+msgid "After creation"
+msgstr "بعد الإنشاء "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
+msgid "After last update"
+msgstr "بعد التحديث الأخير "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -87,10 +448,44 @@ msgid "Archived"
 msgstr "مؤرشف"
 
 #. module: base_automation
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Automate <em>everything</em> with Automation Rules"
+msgstr ""
+
+#. module: base_automation
+=======
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Automate <em>everything</em> with Automation Rules"
+msgstr "تمكن من أتمتة <em>كل شيء</em> باستخدام قواعد الأتمتة "
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model,name:base_automation.model_base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
+<<<<<<< HEAD
 msgid "Automated Action"
 msgstr "إجراء تلقائي"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Automation Rule"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__name
+msgid "Automation Rule Name"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Automation Rule"
+msgstr "قاعدة الأتمتة "
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__name
+msgid "Automation Rule Name"
+msgstr "اسم قاعدة الأتمتة "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -100,6 +495,7 @@ msgstr "الإجراءات التلقائية"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+<<<<<<< HEAD
 msgid "Automation"
 msgstr "تشغيل تلقائي"
 
@@ -107,13 +503,28 @@ msgstr "تشغيل تلقائي"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
 msgid "Available on the Website"
 msgstr "متوفر في الموقع الإلكتروني "
+||||||| parent of 375aec60314b (temp)
+msgid "Automation Rules"
+msgstr ""
+=======
+msgid "Automation Rules"
+msgstr "قواعد الأتمتة "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
+<<<<<<< HEAD
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "قاعدة الإجراء الأساسي: التحقق والتنفيذ"
+||||||| parent of 375aec60314b (temp)
+msgid "Automation Rules: check and execute"
+msgstr ""
+=======
+msgid "Automation Rules: check and execute"
+msgstr "قواعد الأتمتة: التحقق والتنفيذ "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -122,8 +533,16 @@ msgstr "بناء على تعديل النموذج "
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
+<<<<<<< HEAD
 msgid "Based on Timed Condition"
 msgstr "على أساس شرط زمني"
+||||||| parent of 375aec60314b (temp)
+msgid "Based on date field"
+msgstr ""
+=======
+msgid "Based on date field"
+msgstr "بناءً على حقل التاريخ "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -163,12 +582,19 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+<<<<<<< HEAD
 "اختر طريقة إرسال الرسائل النصية القصيرة: \n"
 "الرسائل النصية القصيرة: الرسائل النصية القصيرة الجماعية \n"
 "النشر كرسالة: التسجيل في المستند \n"
 "النشر كملاحظة: الرسائل النصية القصيرة الجماعية مع الأرشيف "
+||||||| parent of 375aec60314b (temp)
+=======
+"قم بتغيير سر عنوان URL إذا كنت تعتقد أن عنوان URL لم يعد آمنًا. سيتعين عليك "
+"تحديث أي نظام آلي يستدعي خطاف الويب هذا إلى عنوان URL الجديد. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
 msgid ""
 "Choose method for email sending:\n"
@@ -180,6 +606,79 @@ msgstr ""
 "البريد الإلكتروني: إرسال رسائل البريد الإلكتروني مباشرة\n"
 "النشر كرسالة: قم بالنشر في المستند وإخطار المتابعين\n"
 "النشر كملاحظة: قم بتسجيل ملاحظة في مستند "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Compute"
+msgstr "احتساب "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Create %(model_name)s with name %(value)s"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Create a new Record"
+msgstr "إنشاء سجل جديد"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Create activity: %(activity_name)s"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Create next activity"
+msgstr "إنشاء نشاط تالي"
+=======
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Compute"
+msgstr "احتساب "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Create %(model_name)s with name %(value)s"
+msgstr "أنشئ %(model_name)s مع الاسم %(value)s "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Create a new Record"
+msgstr "إنشاء سجل جديد"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Create activity: %(activity_name)s"
+msgstr "أنشئ النشاط: %(activity_name)s "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Create next activity"
+msgstr "إنشاء نشاط تالي"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -203,9 +702,15 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+<<<<<<< HEAD
 "التأخير بعد تاريخ التشغيل.\n"
 "        يمكنك وضع عدد سالب إذا أردت أن يكون التأخير قبل\n"
 "        تاريخ التشغيل، كإرسال تذكير قبل 15 دقيقة من بدء الاجتماع. "
+||||||| parent of 375aec60314b (temp)
+=======
+"التأخير بعد تاريخ التشغيل. يمكنك وضع عدد سالب إذا أردت أن يكون التأخير قبل "
+"تاريخ التشغيل، كإرسال تذكير قبل 15 دقيقة من بدء الاجتماع. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -218,15 +723,73 @@ msgid "Delay type"
 msgstr "نوع المهلة "
 
 #. module: base_automation
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
-#, python-format
-msgid "Disable Action"
-msgstr "تعطيل الإجراء "
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Delete Action"
+msgstr ""
 
 #. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Delete Action"
+msgstr "حذف الإجراء "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+>>>>>>> 375aec60314b (temp)
+#, python-format
+<<<<<<< HEAD
+msgid "Disable Action"
+msgstr "تعطيل الإجراء "
+||||||| parent of 375aec60314b (temp)
+msgid "Deprecated (do not use)"
+msgstr ""
+=======
+msgid "Deprecated (do not use)"
+msgstr "مهمل (لا تستخدمه) "
+>>>>>>> 375aec60314b (temp)
+
+#. module: base_automation
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Automation Rule"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Automation Rule"
+msgstr "تعطيل قاعدة الأتمتة "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+>>>>>>> 375aec60314b (temp)
 #, python-format
 msgid ""
 "Disabling this automated action will enable you to continue your workflow\n"
@@ -234,10 +797,18 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+<<<<<<< HEAD
 "سيمَكِّنك تعطيل هذا الإجراء المؤتمت من متابعة سير عملك\n"
 "                ولكن قد تتلف أي بيانات يتم إنشاؤها بعد ذلك،\n"
 "                حيث إنك تقوم بتعطيل تخصيصات قد تكون أعدت\n"
 "                حقولاً مهمة أو/و مطلوبة. "
+||||||| parent of 375aec60314b (temp)
+=======
+"سيمَكِّنك تعطيل قاعدة الأتمتة هذه من متابعة سير عملك\n"
+"                ولكن قد تتلف أي بيانات يتم إنشاؤها بعد ذلك،\n"
+"                حيث إنك تقوم بتعطيل تخصيصات قد تكون أعدت\n"
+"                حقولاً مهمة أو/و مطلوبة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -245,9 +816,23 @@ msgid "Display Name"
 msgstr "اسم العرض "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
 msgstr "تاريخ الاستحقاق في"
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit Automation Rule"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit Automation Rule"
+msgstr "تحرير قاعدة الأتمتة "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
@@ -258,6 +843,7 @@ msgstr "نوع الاستحقاق"
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
+<<<<<<< HEAD
 msgid "Edit action"
 msgstr "تحرير الإجراء "
 
@@ -265,17 +851,94 @@ msgstr "تحرير الإجراء "
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
 msgstr "قالب البريد الإلكتروني"
+||||||| parent of 375aec60314b (temp)
+msgid "Email Events"
+msgstr ""
+=======
+msgid "Email Events"
+msgstr "فعاليات البريد الإلكتروني "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Email, followers or activities action types cannot be used when deleting records."
 msgstr "لا يمكن استخدام أنواع إجراءات الأنشطة أو البريد الإلكتروني أو المتابعين عند حذف السجلات. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Email, follower or activity action types cannot be used when deleting "
+"records, as there are no more records to apply these changes to!"
+msgstr ""
+=======
+msgid ""
+"Email, follower or activity action types cannot be used when deleting "
+"records, as there are no more records to apply these changes to!"
+msgstr ""
+"لا يمكن استخدام أنواع إجراءات البريد الإلكتروني أو المتابعين أو النشاط عند "
+"حذف السجلات، حيث لا يوجد المزيد من السجلات لتطبيق هذه التغييرات عليها! "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
 msgstr "معرف خارجي"
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Execute Python Code"
+msgstr "تنفيذ كود بايثون"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Execute several actions"
+msgstr "تنفيذ العديد من الإجراءات"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "External"
+msgstr "خارجي"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Extra Conditions"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Execute Python Code"
+msgstr "تنفيذ كود بايثون"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Execute several actions"
+msgstr "تنفيذ العديد من الإجراءات"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "External"
+msgstr "خارجي"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Extra Conditions"
+msgstr "الشروط الإضافية "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -285,8 +948,16 @@ msgstr "الحقول التي تقوم بتشغيل onchange. "
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Form Modification based actions can only be used with code action type."
 msgstr "يمكن استخدام إجراءات التعديل \"من\" فقط مع نوع إجراء الكود. "
+||||||| parent of 375aec60314b (temp)
+msgid "Generic User"
+msgstr ""
+=======
+msgid "Generic User"
+msgstr "مستخدم عام "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -310,8 +981,20 @@ msgstr "معرف الإجراء إن كان معرفًا في ملف XML"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
+<<<<<<< HEAD
 msgid "If present, this condition must be satisfied before executing the action rule."
 msgstr "إذا كان موجودًا، يتوجب استيفاء هذا الشرط قبل تنفيذ قاعدة الإجراء."
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"If present, this condition must be satisfied before executing the automation"
+" rule."
+msgstr ""
+=======
+msgid ""
+"If present, this condition must be satisfied before executing the automation"
+" rule."
+msgstr "إذا كان موجودًا، يتوجب استيفاء هذا الشرط قبل تنفيذ قاعدة الأتمتة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -319,9 +1002,19 @@ msgid "If present, this condition must be satisfied before the update of the rec
 msgstr "إذا كان موجودًا، فسيتوجب استيفاء هذا الشرط قبل تحديث السجل."
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Keep track of what this automation does and why it exists..."
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Keep track of what this automation does and why it exists..."
+msgstr "تتبع ما تفعله هذه الأتمتة وسبب وجودها... "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -344,9 +1037,49 @@ msgid "Least Delay Msg"
 msgstr "رسالة أقل تأخير "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link Field"
 msgstr "حقل الرابط "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
+msgid "Log Calls"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Logs"
+msgstr "السجلات"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Mail event can not be configured on model %s. Only models with discussion "
+"feature can be used."
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
+msgid "Log Calls"
+msgstr "تسجيل المكالمات "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Logs"
+msgstr "السجلات"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Mail event can not be configured on model %s. Only models with discussion "
+"feature can be used."
+msgstr ""
+"لا يمكن تكوين حدث البريد على النموذج %s. يمكن استخدام النماذج التي تحتوي على"
+" ميزة المناقشة فقط. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -364,14 +1097,42 @@ msgid "Model Name"
 msgstr "اسم النموذج "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
 msgid "Model for record creation / update. Set this field only to specify a different model than the base model."
 msgstr "النموذج المستخدم لإنشاء أو تحديث السجل. قم بضبط هذا الحقل فقط إذا كنت تريد نموذجاً مختلفاً عن النموذج الأساسي. "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid ""
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid ""
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
+msgstr ""
+"يجب أن يطابق نموذج الإجراء %(action_name)sنموذج الإجراء الموجود في القاعدة "
+"المؤتمتة %(rule_name)s. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
+<<<<<<< HEAD
 msgid "Model on which the server action runs."
 msgstr "النموذج الذي تجرى فيه إجراءات الخادم. "
+||||||| parent of 375aec60314b (temp)
+msgid "Model on which the automation rule runs."
+msgstr ""
+=======
+msgid "Model on which the automation rule runs."
+msgstr "النموذج الذي تعمل فيه قواعد الأتمتة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -379,15 +1140,53 @@ msgid "Months"
 msgstr "شهور"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
 msgid "Note"
 msgstr "ملاحظة "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "No record to run the automation on was found."
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "No record to run the automation on was found."
+msgstr "لم يتم العثور على سجل لتشغيل الأتمتة فيه. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Note that this action can be triggered up to %d minutes after its schedule."
 msgstr "يرجى ملاحظة أنه يمكن تشغيل هذا الإجراء بعد فترة تصل إلى %d دقيقة من وقت جدولته. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Note that this automation rule can be triggered up to %d minutes after its "
+"schedule."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Notes"
+msgstr "الملاحظات"
+=======
+msgid ""
+"Note that this automation rule can be triggered up to %d minutes after its "
+"schedule."
+msgstr ""
+"لاحظ أنه يمكن تشغيل قاعدة الأتمتة هذه لمدة تصل إلى %d دقائق بعد جدولها "
+"الزمني. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Notes"
+msgstr "الملاحظات"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -395,29 +1194,127 @@ msgid "On Change Fields Trigger"
 msgstr "التشغيل عند تغير قيمة الحقول "
 
 #. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
-msgid "On Creation"
-msgstr "عند الإنشاء"
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
+msgid "On UI change"
+msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
-msgid "On Creation & Update"
-msgstr "عند الإنشاء والتحديث"
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
+msgid "On archived"
+msgstr ""
+
+#. module: base_automation
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
+msgid "On UI change"
+msgstr "عند تغير واجهة المستخدم "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
+msgid "On archived"
+msgstr "عند الأرشفة "
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
+<<<<<<< HEAD
+msgid "On Creation"
+msgstr "عند الإنشاء"
+||||||| parent of 375aec60314b (temp)
+msgid "On creation"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
+msgid "On deletion"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
+msgid "On incoming message"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
+msgid "On outgoing message"
+msgstr ""
+=======
+msgid "On creation"
+msgstr "عند الإنشاء "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
+msgid "On deletion"
+msgstr "عند الحذف "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
+msgid "On incoming message"
+msgstr "عند الرسائل الواردة "
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
+msgid "On outgoing message"
+msgstr "عند الرسائل الصادرة "
+>>>>>>> 375aec60314b (temp)
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
+<<<<<<< HEAD
+msgid "On Creation & Update"
+msgstr "عند الإنشاء والتحديث"
+||||||| parent of 375aec60314b (temp)
+msgid "On save"
+msgstr ""
+=======
+msgid "On save"
+msgstr "عند الحفظ "
+>>>>>>> 375aec60314b (temp)
+
+#. module: base_automation
+<<<<<<< HEAD
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On Deletion"
 msgstr "عند الحذف"
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
+msgid "On unarchived"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
+msgid "On unarchived"
+msgstr "عند الإزالة من الأرشيف "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
+<<<<<<< HEAD
 msgid "On Update"
 msgstr "عند التحديث"
+||||||| parent of 375aec60314b (temp)
+msgid "On update"
+msgstr ""
+=======
+msgid "On update"
+msgstr "عند التحديث "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
 msgid "Optional help text for the users with a description of the target view, such as its usage and purpose."
 msgstr "نص مساعد اختياري للمستخدمين يشمل وصفًا للعرض المستهدف. مثال: طريقة الاستخدام، والغرض من الإنشاء. "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
+msgid "On webhook"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
+msgid "On webhook"
+msgstr "في webhook "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
@@ -430,29 +1327,212 @@ msgid "Python Code"
 msgstr "كود بايثون"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 msgid "Responsible"
 msgstr "المسؤول "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
+msgid "Priority is set to"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
+msgid "Priority is set to"
+msgstr "تم تعيين الأولوية إلى "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
 msgid "SMS Template"
 msgstr "قالب الرسائل النصية القصيرة "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
+msgid "Record Getter"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
+msgid "Record Getter"
+msgstr "أداة جلب السجلات "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
 msgstr "الإرسال كـ"
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Remove followers"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Remove followers"
+msgstr "إزالة المتابعين "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
 msgstr "الإرسال كـ (رسالة نصية قصيرة) "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Remove followers: %(partner_names)s"
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Remove followers: %(partner_names)s"
+msgstr "إزالة المتابعين: %(partner_names)s "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
 msgstr "التسلسل "
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Rotate Secret"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a date field..."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a value..."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select fields..."
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "إرسال رسالة نصية قصيرة "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send SMS: %(template_name)s"
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send Webhook Notification"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"Send an email when an object changes state, archive records\n"
+"                after a month of inactivity or remind yourself to follow-up on\n"
+"                tasks when a specific tag is added."
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Send email"
+msgstr "إرسال بريد إلكتروني "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send email: %(template_name)s"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Rotate Secret"
+msgstr "سر التدوير "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a date field..."
+msgstr "قم بتحديد حقل للتاريخ... "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a value..."
+msgstr "قم بتحديد قيمة... "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select fields..."
+msgstr "قم بتحديد الحقول... "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "إرسال رسالة نصية قصيرة "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send SMS: %(template_name)s"
+msgstr "أرسل رسالة نصية قصيرة: %(template_name)s"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send Webhook Notification"
+msgstr "أرسل إشعارات Webhook "
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"Send an email when an object changes state, archive records\n"
+"                after a month of inactivity or remind yourself to follow-up on\n"
+"                tasks when a specific tag is added."
+msgstr ""
+"إرسال بريد إلكتروني عندما يتغير كائن الحالة، وسجلات الأرشيف\n"
+"بعد شهر من عدم النشاط أو ذكّر نفسك بالمتابعة\n"
+"المهام عند إضافة علامة محددة. "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Send email"
+msgstr "إرسال بريد إلكتروني "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Send email: %(template_name)s"
+msgstr "أرسل بريداً إلكترونياً: %(template_name)s "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -460,14 +1540,42 @@ msgid "Server Action"
 msgstr "إجراء الخادم "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
 msgid "Server Actions"
 msgstr "إجراءات الخادم "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
+msgid ""
+"Some triggers need a reference to a selection field. This field is used to "
+"store it."
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
+msgid ""
+"Some triggers need a reference to a selection field. This field is used to "
+"store it."
+msgstr "تحتاج بعض المشغلات إلى مرجع لحقل اختيار. يُستخدَم هذا الحقل لتخزينه. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
 msgid "Setting a value makes this action available in the sidebar for the given model."
 msgstr "عند تعيين قيمة سيكون هذا الإجراء متاحًا في الشريط الجانبي للنموذج. "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
+msgid ""
+"Some triggers need a reference to another field. This field is used to store"
+" it."
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
+msgid ""
+"Some triggers need a reference to another field. This field is used to store"
+" it."
+msgstr "تحتاج بعض المشغلات إلى مرجع لحقل آخر. يُستخدَم هذا الحقل لتخزينه. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -475,35 +1583,141 @@ msgid "Setup a new automated automation"
 msgstr "ضبط عملية أتمتة آلية جديدة "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
 msgstr "مستلمو الاشتراك "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
+msgid "Stage is set to"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
+msgid "Stage is set to"
+msgstr "تم تعيين المرحلة إلى "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
 msgid "Summary"
 msgstr "الملخص"
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/kanban_header_patch.js:0
+#, python-format
+msgid "Stage is set to \"%s\""
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/kanban_header_patch.js:0
+#, python-format
+msgid "Stage is set to \"%s\""
+msgstr "تم تعيين المرحلة إلى \"%s\" "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Target Model"
 msgstr "النموذج المستهدف "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
+msgid "State is set to"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
+msgid "State is set to"
+msgstr "تم تعيين الحالة كـ "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
 msgstr "اسم النموذج المستهدف "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
+msgid "Tag is added"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
+msgid "Tag is added"
+msgstr "تمت إضافة علامة التصنيف "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Target Record"
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Target Record"
+msgstr "السجل المستهدف "
+
+#. module: base_automation
+#. odoo-python
+>>>>>>> 375aec60314b (temp)
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%(state_value)s\" action type"
 msgstr "لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء \"%(state_value)s\""
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"Target model of actions %(action_names)s are different from rule model."
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
+"لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء "
+"\"%(state_value)s\""
+=======
+msgid ""
+"Target model of actions %(action_names)s are different from rule model."
+msgstr "النموذج المستهدف للإجراءات %(action_names)s مختلف عن نموذج القاعدة. "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
+"لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء "
+"\"%(state_value)s\""
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+<<<<<<< HEAD
 msgid "The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched."
 msgstr "سوف يتم تشغيل الإجراء فقط إذا كانت إحدى تلك الحقول محدثة. إذا كانت فارغة، فستتم مراقبة كافة الحقول. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"The automation rule will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+=======
+msgid ""
+"The automation rule will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+"سوف يتم تشغيل قاعدة الأتمتة فقط إذا كانت إحدى تلك الحقول محدثة. إذا كانت "
+"فارغة، فستتم مراقبة كافة الحقول. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #. openerp-web
@@ -513,13 +1727,49 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+<<<<<<< HEAD
 "حدث الخطأ أثناء تنفيذ الإجراء المؤتمت\n"
 "                \""
+||||||| parent of 375aec60314b (temp)
+=======
+"حدث الخطأ أثناء تنفيذ قاعدة الأتمتة\n"
+"                \""
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
 msgid "The full URL to access the server action through the website."
 msgstr "الرابط الكامل المستخدم للوصول إلى إجراءات الخادم من خلال الموقع الإلكتروني. "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
+msgid ""
+"This code will be run to find on which record the automation rule should be "
+"run."
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Timing Conditions"
+msgstr ""
+=======
+#: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
+msgid ""
+"This code will be run to find on which record the automation rule should be "
+"run."
+msgstr ""
+"سيتم تشغيل هذا الكود للعثور على أي السجلات يجب أن يتم تشغيل قاعدة الأتمتة "
+"عليها. "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Timing Conditions"
+msgstr "شروط التوقيت "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -532,12 +1782,37 @@ msgid "Trigger Date"
 msgstr "تاريخ التشغيل  "
 
 #. module: base_automation
+<<<<<<< HEAD
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
+msgid "Trigger Field"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
+msgid "Trigger Field Model"
+msgstr ""
+
+#. module: base_automation
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
+msgid "Trigger Field"
+msgstr "تشغيل الحقل "
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
+msgid "Trigger Field Model"
+msgstr "تشغيل نموذج الحقل "
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Trigger Fields"
 msgstr "تشغيل الحقول "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
 msgid ""
 "Type of server action. The following values are available:\n"
@@ -559,9 +1834,102 @@ msgstr ""
 "- 'إضافة متابعين': إضافة متابعين إلى سجل (المناقشة)\n"
 "- 'إنشاء النشاط التالي': إنشاء نشاط (المناقشة) \n"
 "- 'إرسال الرسائل النصية القصيرة': أرسل الرسائل النصية القصيرة وسجلها في المستندات (الرسائل النصية القصيرة) "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
+msgid "Trigger Reference"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
+msgid "Trigger Reference"
+msgstr "تشغيل المرجع "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
+msgid "Trigger Reference Display Name"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
+msgid "Type"
+msgstr "النوع"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL"
+msgstr "رابط URL "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL will be created once the rule is saved."
+msgstr ""
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Update"
+msgstr "تحديث"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Update the Record"
+msgstr "تحديث السجل"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__url
+msgid "Url"
+msgstr "رابط URL "
+
+#. module: base_automation
+=======
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
+msgid "Trigger Reference Display Name"
+msgstr "تشغيل اسم عرض المرجع "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
+msgid "Type"
+msgstr "النوع"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL"
+msgstr "رابط URL "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "URL will be created once the rule is saved."
+msgstr "سيتم إنشاء رابط URL بمجرد أن قد تم حفظ القاعدة. "
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+#, python-format
+msgid "Update"
+msgstr "تحديث"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Update the Record"
+msgstr "تحديث السجل"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__url
+msgid "Url"
+msgstr "رابط URL "
+
+#. module: base_automation
+>>>>>>> 375aec60314b (temp)
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
@@ -578,6 +1946,7 @@ msgid "Use Calendar"
 msgstr "استخدام التقويم"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
@@ -590,8 +1959,18 @@ msgstr ""
 "                شاشات مختلفة. مثال: يمكن لعميل مهتم أُنشئ من قِبَل مستخدم ما\n"
 "                أن يُعين تلقائياً لفريق مبيعات محدد، أو قد تقوم فرصة لا تزال\n"
 "                معلقة لـ 14 يوم أن تُفعل تلقائياً رسالة بريد إلكتروني تذكيرية. "
+||||||| parent of 375aec60314b (temp)
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
+msgid "User is set"
+msgstr ""
+=======
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
+msgid "User is set"
+msgstr "تم إعداد المستخدم "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
 msgstr "اسم حقل المستخدم"
@@ -600,6 +1979,19 @@ msgstr "اسم حقل المستخدم"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
 msgstr "تخطيط القيمة "
+||||||| parent of 375aec60314b (temp)
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Values Updated"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+#, python-format
+msgid "Values Updated"
+msgstr "تم تحديث القيم "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -608,17 +2000,70 @@ msgid "Warning"
 msgstr "تحذير"
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
 msgid "Website Path"
 msgstr "مسار الموقع الإلكتروني "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Log"
+msgstr ""
+=======
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Log"
+msgstr "سجل Webhook "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
 msgid "Website Url"
 msgstr "رابط URL للموقع الإلكتروني "
+||||||| parent of 375aec60314b (temp)
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Logs"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
+msgid "Webhook UUID"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Weeks"
+msgstr "أسابيع"
+=======
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Webhook Logs"
+msgstr "سجلات Webhook "
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
+msgid "Webhook UUID"
+msgstr "Webhook UUID"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+#, python-format
+msgid "Weeks"
+msgstr "أسابيع"
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
+<<<<<<< HEAD
 msgid "When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days."
 msgstr "عند حساب شروط زمنية تعتمد على الأيام، من الممكن استخدام التقويم لحساب التاريخ المطلوب وفقًا لأيام العمل."
 
@@ -626,6 +2071,19 @@ msgstr "عند حساب شروط زمنية تعتمد على الأيام، م�
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
 msgid "When dealing with multiple actions, the execution order is based on the sequence. Low number means high priority."
 msgstr "عند التعامل مع عدة إجراءات، يعتمد ترتيب التنفيذ على تسلسلها. الرقم الأصغر يعني أولوية أعلى. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"When calculating a day-based timed condition, it is possibleto use a "
+"calendar to compute the date based on working days."
+msgstr ""
+=======
+msgid ""
+"When calculating a day-based timed condition, it is possibleto use a "
+"calendar to compute the date based on working days."
+msgstr ""
+"عند حساب شروط زمنية تعتمد على الأيام، من الممكن استخدام التقويم لحساب "
+"التاريخ المطلوب وفقًا لأيام العمل."
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -642,26 +2100,142 @@ msgid "When unchecked, the rule is hidden and will not be executed."
 msgstr "عند إلغاء التحديد، سوف يتم إخفاء هذه القاعدة ولن يتم تنفيذها. "
 
 #. module: base_automation
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid "Write Python code that the action will execute. Some variables are available for use; help about python expression is given in the help tab."
 msgstr "اكتب كود بايثون سيتمكن الإجراء من تنفيذه. بعض المتغيرات متاحة للاستخدام؛ وستجد المساعدة فيما يتعلق بكيفية الكتابة بلغة بايثون في علامة تبويب المساعدة. "
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "When updating"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "When updating"
+msgstr "عند التحديث "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+||||||| parent of 375aec60314b (temp)
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"With Automation Rules, you can automate\n"
+"                <em>any</em> workflow."
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+=======
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"With Automation Rules, you can automate\n"
+"                <em>any</em> workflow."
+msgstr ""
+"باستخدام قواعد الأتمتة، يمكنك أتمتة\n"
+"                <em>أي</em> سير عمل. "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+>>>>>>> 375aec60314b (temp)
 #, python-format
+<<<<<<< HEAD
 msgid "You can ask an administrator to disable or correct this automated action."
 msgstr "يمكنك أن تطلب من أحد المدراء تعطيل أو تصحيح هذا الإجراء المؤتمت. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"You can ask an administrator to disable or correct this automation rule."
+msgstr ""
+=======
+msgid ""
+"You can ask an administrator to disable or correct this automation rule."
+msgstr "يمكنك أن تطلب من أحد المدراء تعطيل أو تصحيح قاعدة الأتمتة هذه. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
+<<<<<<< HEAD
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr "بإمكانك تعطيل هذا الإجراء المؤتمت أو تحريره لحل المشكلة. "
+||||||| parent of 375aec60314b (temp)
+msgid "You can disable this automation rule or edit it to solve the issue."
+msgstr ""
+=======
+msgid "You can disable this automation rule or edit it to solve the issue."
+msgstr "بإمكانك تعطيل قاعدة الأتمتة هذه أو تحريرها لحل المشكلة. "
+>>>>>>> 375aec60314b (temp)
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "You cannot send an email, add followers or create an activity for a deleted record.  It simply does not work."
 msgstr "لا يمكنك إرسال رسائل بريد إلكتروني أو إضافة متابعين أو إنشاء أي نشاط لسجل محذوف. إنه لا يعمل بكل بساطة. "
+||||||| parent of 375aec60314b (temp)
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""
+"لا يمكنك إرسال رسائل بريد إلكتروني أو إضافة متابعين أو إنشاء أي نشاط لسجل "
+"محذوف. إنه لا يعمل بكل بساطة. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"Your webhook URL contains a secret. Don't share it online or carelessly."
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "based on"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "e.g. Support flow"
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
+#, python-format
+msgid "no action defined..."
+msgstr ""
+=======
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""
+"لا يمكنك إرسال رسائل بريد إلكتروني أو إضافة متابعين أو إنشاء أي نشاط لسجل "
+"محذوف. إنه لا يعمل بكل بساطة. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"Your webhook URL contains a secret. Don't share it online or carelessly."
+msgstr ""
+"رابط URL لـ Webhook الخاص بك يحتوي على سر. لا تقم بمشاركته عبر الإنترنت أو "
+"دون حذر. "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "based on"
+msgstr "بناءً على "
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "e.g. Support flow"
+msgstr "مثال: سير عمل الدعم "
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
+#, python-format
+msgid "no action defined..."
+msgstr "لم يتم تحديد إجراء... "
+>>>>>>> 375aec60314b (temp)
