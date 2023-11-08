@@ -2,7 +2,7 @@
 
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { Loader } from "@point_of_sale/app/loader/loader";
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { App, mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";

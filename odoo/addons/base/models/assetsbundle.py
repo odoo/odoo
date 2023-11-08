@@ -337,11 +337,12 @@ class AssetsBundle(object):
                     *  Templates                               *
                     *******************************************/
 
-                    odoo.define('{self.name}.bundle.xml', ['@web/core/registry'], function(require){{
-                        'use strict';
-                        const {{ registry }} = require('@web/core/registry');
-                        registry.category(`xml_templates`).add(`{self.name}`, `{templates}`);
-                    }});""")
+                    odoo.define("{self.name}.bundle.xml", ["@web/core/templates"], function(require) {{
+                        "use strict";
+                        const {{ registerTemplate }} = require("@web/core/templates");
+                        registerTemplate(`{self.name}`, `{templates}`);
+                    }});
+                """)
 
             if is_minified:
                 content_bundle = ';\n'.join(asset.minify() for asset in self.javascripts)
