@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Chloe Wang, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,15 +35,15 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s at %(time_start)s To\n"
-" %(date_end)s at %(time_end)s (%(timezone)s)"
+"%(date_start)s 于 %(time_start)s 至\n"
+" %(date_end)s 在 %(time_end)s （%(timezone)s）"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s 在 (%(start)s 到 %(end)s) (%(timezone)s)"
+msgstr "%(day)s 在 （%(start)s 到 %(end)s） （%(timezone)s）"
 
 #. module: calendar
 #. odoo-python
@@ -179,36 +179,36 @@ msgid ""
 msgstr ""
 "<div>\n"
 "\n"
-"   <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"></t>\n"
-"   <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()\"></t>\n"
+"    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()\"></t>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
-"   <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
 "     <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "\n"
-"   <p>\n"
-"        你好，<t t-out=\"object.common_name or ''\">就绪垫</t>、<br><br>\n"
-"       <t t-if=\"is_online and target_responsible\">\n"
-"           <t t-if=\"customer\">\n"
-"                您与<t t-out=\"customer.name or ''\">杰西-布朗</t>的预约日期已更新。\n"
-"           </t>\n"
-"           <t t-else=\"\">\n"
-"                您的预约已更新。\n"
-"           </t>\n"
-"            预约<strong t-out=\"object.event_id.appointment_type_id.name or ''\">\"安排演示</strong>\"现在定于\n"
-"           <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">2021 年 4 月 5 日（11:00:00 至 11:30:00）（欧洲/布鲁塞尔）</t>\n"
-"       </t>\n"
-"       <t t-elif=\"is_online and target_customer\">\n"
-"            您与<t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>的预约日期已更新。\n"
-"            <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> 现在定于\n"
-"           <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">2021 年 4 月 5 日（11:00:00 至 11:30:00）（欧洲/布鲁塞尔）</t>。\n"
-"       </t>\n"
-"       <t t-else=\"\">\n"
+"    <p>\n"
+"       <t t-out=\"object.common_name or ''\">Ready Mat</t>您好！<br><br>\n"
+"        <t t-if=\"is_online and target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                您预约的活动（由<t t-out=\"customer.name or ''\">Jesse Brown</t>主持）日期已更新。 \n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                您的预约信息已更新。\n"
+"            </t>\n"
+"            预约的活动 “<strong t-out=\"object.event_id.appointment_type_id.name or ''\">预约功能示范</strong>” 现已改期至\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 于 11:00:00 至 11:30:00（欧洲/布鲁塞尔）</t>举行。\n"
+"        </t>\n"
+"        <t t-elif=\"is_online and target_customer\">\n"
+"            您预约的活动（由<t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>主持）日期已更新。 \n"
+"            预约的活动<strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> 现已改期至\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 于 11:00:00 至 11:30:00 （欧洲/布鲁塞尔）</t>举行。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            会议日期已更新。\n"
-"           <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>创建的<strong t-out=\"object.event_id.name or ''\">项目提案的后续</strong>会议现定于\n"
-"           <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">2021 年 4 月 5 日（11:00:00 至 11:30:00）（欧洲/布鲁塞尔）</t>。\n"
-"       </t>\n"
-"   </p>\n"
+"            会议<strong t-out=\"object.event_id.name or ''\">项目提案跟进</strong>（由<t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>创建）现已改期至\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 于 11:00:00 至 11:30:00 （欧洲/布鲁塞尔）</t>举行。\n"
+"        </t>\n"
+"    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            接受</a>\n"
@@ -223,19 +223,19 @@ msgstr ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>星期二</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>2021 年 5 月</t>\n"
+"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>2021年5月</t>\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
 "                 <t t-if=\"not object.event_id.allday\">\n"
 "                    <div>\n"
-"                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format=\"short\", lang_code=object.env.lang) or \"\"'>上午 11:00</t>\n"
+"                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format=\"short\", lang_code=object.env.lang) or \"\"'>11:00 AM</t>\n"
 "                    </div>\n"
 "                    <t t-if=\"object.mail_tz\">\n"
 "                        <div style=\"font-size: 10px; font-weight: normal\">\n"
-"                           <t t-out=\"object.mail_tz or ''\">(欧洲/布鲁塞尔）</t>\n"
+"                            （<t t-out=\"object.mail_tz or ''\">欧洲/布鲁塞尔</t>）\n"
 "                        </div>\n"
 "                    </t>\n"
 "                </t>\n"
@@ -246,22 +246,22 @@ msgstr ""
 "            <p><strong>活动详情</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
-"                    <li>地点： 布鲁塞尔<t t-out=\"object.event_id.location or ''\">布鲁塞尔</t>\n"
-"                       <a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}\">(查看地图</a>)\n"
+"                    <li>地点：<t t-out=\"object.event_id.location or ''\">布鲁塞尔</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}\">查看地图</a>)\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>时间<t t-out=\"object.recurrence_id.name or ''\">每 1 周举办 3 次活动</t></li>\n"
+"                    <li>时间：<t t-out=\"object.recurrence_id.name or ''\">每周 1 次，共 3 次</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
-"                    <li>时间<t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                    <li>时长：<t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0 小时 30 分钟</t></li>\n"
 "                </t>\n"
-"                <li>参加者\n"
+"                <li>参与者：\n"
 "                <ul>\n"
 "                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
 "                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: {{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
 "                        <t t-if=\"attendee.common_name != object.common_name\">\n"
-"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">米切尔管理员</span>\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <span style=\"margin-left:5px\">您</span>\n"
@@ -270,21 +270,21 @@ msgstr ""
 "                </ul></li>\n"
 "                <t t-if=\"object.event_id.videocall_location\">\n"
 "                    <li>\n"
-"                        如何加入：\n"
-"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> 通过 Odoo 讨论加入</t>\n"
-"                        <t t-else=\"\"> 加入</t><br>\n"
-"                       <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        如何参与：\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> 使用 Odoo Discuss 参与</t>\n"
+"                        <t t-else=\"\"> 参与链接：</t><br>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>活动描述\n"
-"                   <t t-out=\"object.event_id.description\">讨论产品和服务新定价的内部会议。</t></li>\n"
+"                    <li>活动介绍：\n"
+"                    <t t-out=\"object.event_id.description\">内部会议，讨论产品及服务新定价。</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
-"   <br>\n"
-"    谢谢、\n"
+"    <br>\n"
+"    谢谢！\n"
 "    <t t-if=\"object.event_id.user_id.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -876,7 +876,7 @@ msgstr "<span class=\"fw-bold pe-3\">重复</span>"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr "<span class=\"me-1 o_form_label\">谷歌日历</span>"
+msgstr "<span class=\"me-1 o_form_label\">Google 日历</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -936,7 +936,7 @@ msgstr "所需操作"
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr "操作可能触发特定的行为，如打开日历视图或在上传单据时自动标记"
+msgstr "操作可能触发特定的行为，如打开日历视图或在上传单据时自动标记为已完成"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -957,7 +957,7 @@ msgstr "活动"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "活动Mixin"
+msgstr "活动混入"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1020,7 +1020,7 @@ msgstr "全天"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr "全天, %(day)s"
+msgstr "全天，%(day)s"
 
 #. module: calendar
 #. odoo-javascript
@@ -1062,7 +1062,7 @@ msgstr "参加者"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr "参与者计数"
+msgstr "参加者数量"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -1073,12 +1073,12 @@ msgstr "出席？"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Available"
-msgstr "可用"
+msgstr "有空"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr "可用/繁忙"
+msgstr "有空/繁忙"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
@@ -1105,7 +1105,7 @@ msgstr "忙碌"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__byday
 msgid "By day"
-msgstr "按 天"
+msgstr "按天"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1138,12 +1138,12 @@ msgstr "日历事件"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr "日历过滤"
+msgstr "日历筛选"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr "日程邀请"
+msgstr "日历邀请"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
@@ -1178,7 +1178,7 @@ msgstr "日历：活动提醒"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr "日历:活动更新"
+msgstr "日历：活动更新"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
@@ -1202,8 +1202,8 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
-"检查组织者是否单独参加该活动，即组织者是否是唯一没有拒绝的人\n"
-"        活动（只有当组织者不是唯一的参与者时）。"
+"检查组织者是否单独参加该活动，即是否只有组织者没有拒绝\n"
+"        活动（仅当组织者不是唯一参与者时）。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
@@ -1220,12 +1220,12 @@ msgstr "选择要配置的外部日历"
 msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
-msgstr "选择对重复中的其他事件处理方式。修改日期或时间时不允许更新所有事件"
+msgstr "选择如何处理递归中的其他事件。修改日期或时间时，不允许更新所有事件"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr "客户ID"
+msgstr "客户 ID"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1286,7 +1286,7 @@ msgstr "联系人"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Contact Attendees"
-msgstr "联系与会者"
+msgstr "联系参加者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -1354,7 +1354,7 @@ msgstr "天"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr "天"
+msgstr "日期"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
@@ -1455,12 +1455,12 @@ msgstr "显示名称"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "文档ID"
+msgstr "文档 ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "单据模型"
+msgstr "文档模型"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1486,12 +1486,12 @@ msgstr "时长"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr "持续几分钟"
+msgstr "时长（分钟）"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr "EMAIL"
+msgstr "电子邮件"
 
 #. module: calendar
 #. odoo-javascript
@@ -1503,7 +1503,7 @@ msgstr "编辑周期事件"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr "编辑周期事件"
+msgstr "编辑定期事件"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -1524,7 +1524,7 @@ msgstr "电子邮件 - 6 小时"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
 msgid "Email Template"
-msgstr "EMail模板"
+msgstr "电子邮件模板"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
@@ -1585,7 +1585,7 @@ msgstr "每个%(count)s%(period)s"
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: %(feedback)s"
-msgstr "反馈:%(feedback)s"
+msgstr "反馈：%(feedback)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -1598,12 +1598,12 @@ msgstr "第一个"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "首先，必须确定邀请的日期."
+msgstr "首先，必须确定邀请的日期。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr "持续关注"
+msgstr "追踪循环活动"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1657,12 +1657,12 @@ msgstr "谷歌日历图标"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
 msgid "Google Client_id"
-msgstr "谷歌Client_id"
+msgstr "Google 客户_ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
 msgid "Google Client_key"
-msgstr "谷歌 Client_key"
+msgstr "Google Client_密钥"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
@@ -1716,7 +1716,7 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr "如果启用字段设为false，它将允许您隐藏提醒信息而不需要删除它。"
+msgstr "如果启用字段设为 false，您可以无需删除就隐藏提醒信息。"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1724,8 +1724,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
-"如果时间显示为\"繁忙\"，其他人就可以看到该活动，根据隐私程度，显示完整信息或者仅显示\"繁忙\"。使用此选项可表示您在该时段内无法参加其他活动。\n"
-"如果显示为\"空闲\"，则表示您在该时间段内有空。"
+"如果时间显示为 \"繁忙\"，其他人就可以看到该活动，根据隐私程度，显示完整信息或者仅显示 \"繁忙\"。使用此选项可表示您在该时段内无法参加其他活动。\n"
+"如果显示为 \"空闲\"，则表示您在该时间段内有空。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1756,7 +1756,7 @@ msgstr "邀请详情"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr "向新与会者发送邀请电子邮件"
+msgstr "向新参加者发送邀请电子邮件"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1786,7 +1786,7 @@ msgstr "事件是否突出显示"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr "是单独组织"
+msgstr "是否仅组织者一人"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
@@ -1829,13 +1829,13 @@ msgstr "上次更新日期"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "最后的提醒已经标志为已读"
+msgstr "从基本日历中标记为已读的最后一条通知"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type_ui
 msgid "Let the event automatically repeat at that interval"
-msgstr "让事件在该时间间隔自动重复"
+msgstr "让活动在该时间间隔自动循环"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -1879,7 +1879,7 @@ msgstr "会议"
 #, python-format
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
-msgstr "会议“%(name)s”从“%(start_datetime)s”开始，到“%(end_datetime)s”结束"
+msgstr "会议 “%(name)s” 从 “%(start_datetime)s” 开始，到 “%(end_datetime)s” 结束"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
@@ -2022,7 +2022,7 @@ msgstr "我不会去。"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr "还没有反馈"
+msgstr "尚无反馈"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2037,32 +2037,32 @@ msgstr "通知"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr "提醒-1天"
+msgstr "提醒 - 1 天"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr "提醒-1小时"
+msgstr "提醒 - 1 小时"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr "提醒-15分钟"
+msgstr "提醒 - 15 分钟"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr "提醒-2小时"
+msgstr "提醒 - 2 小时"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr "提醒-30分钟"
+msgstr "提醒 - 30 分钟"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr "向所有与会者发送通知，以提醒会议的召开。"
+msgstr "向所有参加者发送会议通知。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2087,25 +2087,25 @@ msgstr "需要采取行动的消息数量"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "发送错误的消息的数量"
+msgstr "发送错误的消息数量"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__count
 msgid "Number of repetitions"
-msgstr "收件人数量"
+msgstr "重复的数量"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "确定"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_onboarding_onboarding
 msgid "Onboarding"
-msgstr "入职"
+msgstr "新手入门"
 
 #. module: calendar
 #: model:onboarding.onboarding.step,step_image_alt:calendar.onboarding_onboarding_step_setup_calendar_integration
@@ -2125,12 +2125,12 @@ msgstr "在线会议"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr "只有内部用户"
+msgstr "仅限内部用户"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 msgid "Only internal users"
-msgstr "仅内部用户"
+msgstr "仅限内部用户"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
@@ -2152,17 +2152,17 @@ msgstr "组织者"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 msgid "Outlook"
-msgstr "微软个人邮件"
+msgstr "Outlook"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr "Outlook客户端 ID"
+msgstr "Outlook 客户端 ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr "Outlook客户端密码"
+msgstr "Outlook 客户端密码"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
@@ -2172,17 +2172,17 @@ msgstr "Outlook 同步已暂停"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr "参与者"
+msgstr "参加者"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "用户的业务伙伴相关数据"
+msgstr "该用户的业务伙伴相关数据"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr "此事件将对其可见的人。"
+msgstr "该事件的可见用户。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -2214,18 +2214,18 @@ msgstr "阅读更多"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr "重新提起"
+msgstr "重复周期"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr "递归规则"
+msgstr "定期规则"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "重复终止"
+msgstr "定期终止"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
@@ -2236,12 +2236,12 @@ msgstr "定期更新"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Recurrent"
-msgstr "循环"
+msgstr "定期"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr "循环规则"
+msgstr "定期规则"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
@@ -2262,7 +2262,7 @@ msgstr "重复"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr "不重复"
+msgstr "重复周期"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -2272,7 +2272,7 @@ msgstr "重复直到"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Repeat every"
-msgstr "每次循环"
+msgstr "重复间隔为每"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -2282,7 +2282,7 @@ msgstr "重复间隔 (日/周/月/年)"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr "重复 N 次"
+msgstr "重复 x 次"
 
 #. module: calendar
 #. odoo-javascript
@@ -2299,12 +2299,12 @@ msgstr "负责人"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
 msgid "Rrule"
-msgstr "Rrule"
+msgstr "规则"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr "Rrule 类型"
+msgstr "规则类型"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
@@ -2321,7 +2321,7 @@ msgstr "周六"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr "已预定"
+msgstr "规划人"
 
 #. module: calendar
 #. odoo-python
@@ -2346,12 +2346,12 @@ msgstr "秒"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr "选择参会者..."
+msgstr "选择参加者..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr "向参会者发送电子邮件"
+msgstr "向参加者发送电子邮件"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2366,12 +2366,12 @@ msgstr "发送邮件"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
 msgid "Sent to all attendees if a reminder is set"
-msgstr "如果设置了提醒，则发送给所有与会者"
+msgstr "如果设置了提醒，则发送给所有参加者"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
 msgid "Sent to all attendees if the schedule change"
-msgstr "如果日程安排更改，则发送给所有与会者"
+msgstr "如果日程安排更改，则发送给所有参加者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
@@ -2404,7 +2404,7 @@ msgstr "开始日期"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "一个事件的开始日期，不包括全天事件的时间"
+msgstr "一个活动的开始日期，不包括全天活动的时间"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -2414,7 +2414,7 @@ msgstr "状态"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr "状态:"
+msgstr "状态："
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -2451,7 +2451,7 @@ msgstr "周日"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr "将日历与Google日历同步"
+msgstr "将日历与 Google 日历同步"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2476,7 +2476,7 @@ msgstr "用来呈现邮件提醒内容的模板。"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "尝试"
+msgstr "暂定的"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
@@ -2497,12 +2497,12 @@ msgid ""
 msgstr ""
 "该日历可在员工之间共享，并与\n"
 "            其他应用程序（例如员工休假或商机）\n"
-"            全面集成。"
+"            全面整合。"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "日期必须介于1到31之间"
+msgstr "日期必须介于 1 到 31 之间"
 
 #. module: calendar
 #. odoo-python
@@ -2538,7 +2538,7 @@ msgstr "重复次数不能为负数。"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr "这些活动中没有人参加"
+msgstr "这些活动没有参加者"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2552,7 +2552,7 @@ msgstr "第三个"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr "本事件及后续事件"
+msgstr "此活动及以下活动"
 
 #. module: calendar
 #. odoo-javascript
@@ -2595,7 +2595,7 @@ msgstr "今天的会议"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
 msgid "Trigger"
-msgstr "触发器"
+msgstr "触发"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -2619,7 +2619,7 @@ msgstr "类型"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr "此事件无法保存为重复事件."
+msgstr "无法保存 \"此事件\" 的重复活动"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2640,7 +2640,7 @@ msgstr "直到"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notifiy attendees"
-msgstr "用于手动通知与会者"
+msgstr "用于手动通知参加者"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -2707,7 +2707,7 @@ msgstr "使用 Outlook 或 Google"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
 msgid "Yearly"
-msgstr "每年"
+msgstr "年度"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
@@ -2733,7 +2733,7 @@ msgstr "我会去。"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr "没有基础活动，您就不能更新一个递归。"
+msgstr "没有基础活动，您将不能更新重复活动。"
 
 #. module: calendar
 #. odoo-python
@@ -2785,14 +2785,14 @@ msgstr "已拒绝"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "例如:商务午餐"
+msgstr "例如：商务午餐"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
-msgstr "对于 %s 事件"
+msgstr "%s 活动"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2816,7 +2816,7 @@ msgstr "在 %s"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
-msgstr "在%(position)s%(weekday)s上"
+msgstr "在%(position)s%(weekday)s"
 
 #. module: calendar
 #. odoo-javascript

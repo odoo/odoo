@@ -46,6 +46,10 @@ msgid ""
 "                                Odoo regarding this payment method. Any change may result in errors\n"
 "                                and should be tested on a test database first."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> 해당 속성은 결제 방법과 관련하여\n"
+"                                대행업체에서의 작업이 Odoo와 통합 진행되도록\n"
+"                                일치하도록 설정됩니다. 변경 시 오류가 발생할 수 있으므로\n"
+"                                테스트 데이터베이스에서 먼저 테스트해야 합니다."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -194,7 +198,7 @@ msgstr ""
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
-msgstr ""
+msgstr "<strong>주의</strong> 결제를 진행하기 전에 로그인한 협력사가 맞는지 확인하시기 바랍니다."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -761,6 +765,8 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"빠른 결제를 통해 신속하게 결제할 수 있습니다. 필수적인 청구 및 배송 정보 전체가 결제 방법에서 제공되므로 결제 단계를 건너뛸 수 "
+"있습니다. "
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -792,7 +798,7 @@ msgstr "결제 링크 생성 및 복사"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr ""
+msgstr "내 계정으로 가기 <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1371,7 +1377,7 @@ msgstr "공급업체"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
 msgid "Provider Code"
-msgstr ""
+msgstr "업체 코드"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
@@ -1436,7 +1442,7 @@ msgstr "환불"
 msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
-msgstr ""
+msgstr "환불 기능으로 결제 금액을 Odoo에서 고객에게 직접 환불합니다."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1476,7 +1482,7 @@ msgstr "저장"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select countries. Leave empty to allow any."
-msgstr ""
+msgstr "국가를 선택하세요. 제한하지 않으려면 비워두세요."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1491,7 +1497,7 @@ msgstr "통화를 선택하십시오. 제한을 두지 않으려면 공란으로
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select currencies. Leave empty to allow any."
-msgstr ""
+msgstr "통화를 선택하세요. 제한하지 않으려면 비워두세요."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1603,12 +1609,12 @@ msgstr "부분 매입 지원"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
 msgid "Supported Countries"
-msgstr ""
+msgstr "지원 국가"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
 msgid "Supported Currencies"
-msgstr ""
+msgstr "지원 통화"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1618,7 +1624,7 @@ msgstr "지원되는 결제 방법"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Supported by"
-msgstr ""
+msgstr "지원 대상"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1644,14 +1650,14 @@ msgstr "매입할 금액은 양수여야 하며 %s보다 클 수 없습니다."
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
+msgstr "이 결제 방법에서 사용되는 기본 이미지입니다. 64x64 픽셀 형식으로 지원됩니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
 "The brands of the payment methods that will be displayed on the payment "
 "form."
-msgstr ""
+msgstr "결제 양식에 표시될 결제 방법 브랜드입니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -1699,7 +1705,7 @@ msgstr "다음 필드는 필수 입력 항목입니다: %s"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The following kwargs are not whitelisted: %s"
-msgstr ""
+msgstr "다음은 허용 목록에 없습니다: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -1713,6 +1719,8 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"이 결제 방법을 사용할 수 있는 국가 목록입니다 (업체에서 허용하는 경우). 다른 국가에서는 고객이 해당 결제 방법을 사용할 수 "
+"없습니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -1721,11 +1729,13 @@ msgid ""
 " provider allows it). When paying with another currency, this payment method"
 " is not available to customers."
 msgstr ""
+"이 결제 방법을 사용할 수 있는 통화 목록입니다 (업체에서 허용하는 경우). 다른 통화로 결제하는 경우 고객은 해당 결제 방법을 사용할 "
+"수 없습니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "이 결제 방법을 지원하는 대행업체 목록입니다"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1781,11 +1791,13 @@ msgid ""
 "The primary payment method of the current payment method, if the latter is a brand.\n"
 "For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
 msgstr ""
+"현재 결제 방법의 기본 결제 방법입니다. 현재 방법이 브랜드인 경우에 해당합니다.\n"
+"예를 들어, 'Visa' 카드 브랜드의 기본 결제 수단은 '카드'입니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction."
-msgstr ""
+msgstr "거래용 토큰의 업체 참조"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
@@ -1795,7 +1807,7 @@ msgstr "거래의 업체 참조"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
 msgid "The resized image displayed on the payment form."
-msgstr ""
+msgstr "결제 양식에 크기가 조정된 이미지가 표시됩니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1812,7 +1824,7 @@ msgstr "관련 하위 거래의 원 거래입니다"
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "이 결제 방법의 기술 코드입니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1902,7 +1914,7 @@ msgstr "지불할 금액이 없습니다."
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method. Archiving tokens is irreversible."
-msgstr ""
+msgstr "이 작업으로 결제 방법에 등록되어 있는 %s 토큰도 보관 처리합니다. 보관 처리된 토큰은 취소할 수 없습니다."
 
 #. module: payment
 #. odoo-python
@@ -1950,7 +1962,7 @@ msgstr ""
 msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
-msgstr ""
+msgstr "해당 결제 방법에 관련된 협력사에 문제가 있습니다. 먼저 해당 방법을 지원하는 결제대행업체를 활성화하세요."
 
 #. module: payment
 #. odoo-python
@@ -1978,6 +1990,7 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"토큰화는 결제 세부 정보를 토큰으로 저장하는 프로세스입니다. 결제 세부 정보를 다시 입력하지 않고도 나중에 다시 사용할 수 있습니다."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
@@ -2004,7 +2017,7 @@ msgstr "지원되는 환불 유형"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Unable to contact the server. Please wait."
-msgstr ""
+msgstr "서버에 접속할 수 없습니다. 잠시만 기다리세요."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -2065,7 +2078,7 @@ msgstr "귀하의 결제를 찾을 수 없지만 걱정하지 마십시오."
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment. Please wait."
-msgstr ""
+msgstr "결제를 처리 중입니다. 잠시만 기다리세요."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2241,7 +2254,7 @@ msgstr "정보"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "payment method"
-msgstr ""
+msgstr "결제 방법"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server

@@ -3,9 +3,9 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Sarah Park, 2023
 # Wil Odoo, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,19 +64,19 @@ msgstr "환경설정"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
 msgid "Footer pages"
-msgstr ""
+msgstr "바닥글 페이지"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
 msgid "Header pages"
-msgstr ""
+msgstr "머리글 페이지"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
-msgstr ""
+msgstr "내부 견적"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -90,12 +90,12 @@ msgstr "견적서를 꾸미려면 견적서의 머리말 페이지 및 품목 �
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
+msgstr "견적서 내부에는 PDF 문서만 첨부할 수 있습니다."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "PDF Quote Builder"
-msgstr ""
+msgstr "PDF 견적서 제작기"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -116,6 +116,11 @@ msgid ""
 "                            in the quote, if the product has an \"inside quotes\" document, this document\n"
 "                            will be added after header pages and before the quotation details."
 msgstr ""
+"품목 설명은 품목에 직접 추가할 수 있는 PDF 문서입니다.\n"
+"                            추가하려면, 품목의 '품목 문서' 버튼을 이용하여, 확인 범위를 '내부 견적'\n"
+"                            으로 설정하여 PDF 문서를 추가합니다. 견적서의 각 품목이\n"
+"                           '내부 견적' 문서가 있는 경우에는 해당 문서는 머리말 페이지 뒤와\n"
+"                            견적 세부 내역 앞에 추가됩니다."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -125,6 +130,10 @@ msgid ""
 "                            The pdf of your quotes will be built by putting together header pages,\n"
 "                            product descriptions, details of the quote and then the footer pages."
 msgstr ""
+"견적서를 한층 멋지게 만들기 위해서 머리글 페이지와 바닥글 페이지에 \n"
+"                            회사 및 품목, 서비스에 대해서 자세한 정보를 기재합니다.\n"
+"                            견적서의 PDF는 머리글 페이지와 품목 설명 및 \n"
+"                            세부 내역, 그리고 바닥글 페이지로 구성됩니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -146,14 +155,14 @@ msgstr "보고서 작업"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
 msgid "Sale Footer Name"
-msgstr ""
+msgstr "판매 바닥글 이름"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
 msgid "Sale Header Name"
-msgstr ""
+msgstr "판매 머리글 이름"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -167,8 +176,11 @@ msgid ""
 "                            can be injected in these documents using pdf forms.\n"
 "                            Refer to the documentation to know more about this feature."
 msgstr ""
+"견적과 관련된 특정 정보 (고객명, 견적 참조 번호 등)을\n"
+"                            PDF 양식을 사용하여 문서에 삽입할 수 있습니다.\n"
+"                            해당 기능에 대한 자세한 내용은 문서를 참조하시기 바랍니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
-msgstr ""
+msgstr "다음에 표시"

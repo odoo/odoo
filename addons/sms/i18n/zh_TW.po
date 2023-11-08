@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,7 +221,7 @@ msgstr "選擇一種語言："
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "選擇一個範本⋯"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1335,6 +1336,16 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"伺服器操作類型。可使用以下值：\n"
+"- 更新記錄：更新記錄的值\n"
+"- 創建活動：創建活動（討論）\n"
+"- 發送電子郵件：發佈信息、備註或發送電子郵件（討論）\n"
+"- 發送短信：發送短信，將其記錄在文件中（短信）\n"
+"- 添加/刪除關注者：添加或刪除記錄中的關注者（討論）\n"
+"- 創建記錄：使用新值創建新記錄（討論)\n"
+"- 執行代碼：將執行的 Python 代碼塊\n"
+"- 發送 Webhook 通知：向外部系統發送 POST 請求，也稱為 Webhook\n"
+"- 執行現有操作：定義一個可觸發多個其他服務器操作的操作\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

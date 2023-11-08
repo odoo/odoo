@@ -503,12 +503,12 @@ msgstr "<span class=\"fw-normal\"> Attività</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">Chiusa</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">Sotto-attività</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -548,6 +548,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">Verrà inviata una richiesta di valutazione non appena l'attività raggiunge una fase per la quale è definito un modello e-mail di valutazione.</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">Le richieste di valutazione verranno inviate finché l'attività rimane in una fase per la quale è definito un modello e-mail di valutazione.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1284,12 +1289,12 @@ msgstr "Numero di sub-attività chiuse"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "Numero attività chiuse"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "Percentuale attività chiusa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1429,7 +1434,7 @@ msgstr "Contatto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "Converti attività"
 
 #. module: project
 #. odoo-python
@@ -1437,7 +1442,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "Converti in attività/sotto-attività"
 
 #. module: project
 #. odoo-javascript
@@ -1830,6 +1835,9 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"L'eliminazione di un'attività comporta l'eliminazione delle sotto-attività "
+"associate. Se vuoi preservare le sotto-attività, assicurati di eliminare il "
+"collegamento con l'attività principale. Sei sicuro di voler procedere?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -2007,6 +2015,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"Ogni utente dovrebbe avere almeno una fase personale. Crea una nuova fase in"
+" cui trasferire le attività dopo che quelle selezionate vengono eliminate."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2146,12 +2156,12 @@ msgstr "Minimizzata nel kanban"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Segui e commenta le attività dei tuoi progetti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Segui l'evoluzione dei tuoi progetti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2584,7 +2594,7 @@ msgstr "Milestone superata"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "È modalità attiva"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -3420,6 +3430,8 @@ msgstr ""
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"Le persone invitate a collaborare sul progetto avranno diritti di accesso al"
+" portale."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3477,7 +3489,7 @@ msgstr "Stato fase personale"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "Fasi personali"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3604,6 +3616,9 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
+"Le attività private non possono essere convertite in sotto-attività. Per "
+"favore, configura un progetto per l'attività al fine di avere accesso alla "
+"funzionalità."
 
 #. module: project
 #. odoo-javascript
@@ -4543,7 +4558,7 @@ msgstr "Sottolavori"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "Tempo assegnato alle sotto-attività"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4994,6 +5009,10 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Sul tuo sito web, possono modificare le attività del progetto condivise e "
+"visualizzare documenti specifici in modalità di sola lettura.Questo "
+"comprende contatti/opportunità, preventivi/ordini di vendita, ordini di "
+"acquisto, fatture, fogli ore e ticket."
 
 #. module: project
 #. odoo-python
@@ -5033,6 +5052,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"Il progetto è associato a %s, anche se la fase selezionata appartiene a %s. "
+"Ci sono alcune opzioni da considerare: rimuovere l'azienda dal progetto o "
+"dalla fase. In alternativa, puoi aggiornare le informazioni dell'azienda per"
+" questi record per allinearli con la stessa azienda."
 
 #. module: project
 #. odoo-python
@@ -5044,6 +5067,9 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"Questo progetto non è associato a nessuna azienda, mentre la fase associata "
+"è %s. Ci sono un paio di opzioni da considerare: modificare l'azienda del "
+"progetto per allinearla con la fase o eliminare l'azienda dalla fase"
 
 #. module: project
 #. odoo-javascript
@@ -5143,6 +5169,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Seleziona un'attività principale per trasformare un'attività in una sotto-"
+"attività. In alternativa, non compilare il campo dell'attività principale "
+"per convertire la sotto-attività in un'attività indipendente."
 
 #. module: project
 #. odoo-python
@@ -5197,6 +5226,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"Traccia i costi del progetto, le entrate e il margine configurando il conto "
+"analitico associato al progetto su documenti importanti."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5506,6 +5537,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"Quando condividi un progetto in modalità di modifica, stai fornendo l'accesso alle viste kanban ed elenco delle tue attività.\n"
+"                    I collaboratori saranno in grado di visualizzare e modificare una parte delle informazioni delle attività."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5513,6 +5546,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"Quando condividi un progetto in modalità di sola lettura, stai fornendo l'accesso alle attività nel portale.\n"
+"                    Le persone saranno in grado di visualizzare le attività ma non di modificarle."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5605,6 +5640,10 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Non sei in grado di modificare l'azienda di questa fase in %(company_name)s "
+"perché include attualmente progetti associati a %(project_company_name)s. "
+"Per favore, assicurati che la fase sia caratterizzata esclusivamente da "
+"progetti collegati a %(company_name)s."
 
 #. module: project
 #. odoo-python
@@ -5682,6 +5721,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"Hai pieno controllo e puoi revocare l'accesso al portale in qualsiasi "
+"momento. Sei pronto a procedere?"
 
 #. module: project
 #. odoo-python
