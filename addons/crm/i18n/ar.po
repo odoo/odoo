@@ -163,6 +163,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"عندما تقوم بحفظ هذا التغيير، سيتم تحديث بريد العميل الإلكتروني "
+"أيضاً. \" invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -171,6 +174,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"عندما تقوم بحفظ هذا التغيير، سيتم تحديث رقم هاتف العميل أيضاً. \" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -178,6 +184,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">عملاء مهتمين مشابهين</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">عميل مهتم مشابه</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -185,6 +193,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">العملاء المهتمون</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">الفرص</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -253,6 +263,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>قم بتعيين العملاء المهتمين دورياً حسب القواعد</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    سوف تستخدم كافة فرق المبيعات هذا الإعداد اقتراضياً إلا إذا\n"
+"                                    تم تحديد خلاف ذلك.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -490,7 +505,7 @@ msgstr "زخرفة استثناء النشاط"
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
 msgid "Activity Plan"
-msgstr ""
+msgstr "خطة النشاط "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -583,7 +598,7 @@ msgstr "اسم نطاق اللقب "
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "لقب البريد الإلكتروني "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -1918,7 +1933,7 @@ msgstr "الإجراء الأخير "
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "آخر عملية أتمتة: "
 
 #. module: crm
 #. odoo-python
@@ -2013,7 +2028,7 @@ msgstr "استقطاب العملاء المهتمين "
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Plans"
-msgstr ""
+msgstr "خطط العملاء المهتمين "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2049,7 +2064,7 @@ msgstr "تاريخ بداية تصنيف العملاء المهتمين في ا
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_tree
 msgid "Lead Tags"
-msgstr "وسوم الترشيح"
+msgstr "علامات تصنيف العميل المهتم "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2235,7 +2250,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "الكشف عن الوارد على أساس الجزء المحلي"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2396,7 +2411,7 @@ msgstr "تاريخ عرض الإجتماع "
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "تسمية عرض الاجتماع "
 
 #. module: crm
 #. odoo-python
@@ -4015,6 +4030,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
+"استخدم زر <i>جديد</i> أو أرسل بريداً إلكترونياً إلى %(email_link)s لاختبار "
+"بوابة البريد الإلكتروني. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

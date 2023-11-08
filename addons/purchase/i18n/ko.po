@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Sarah Park, 2023
 # Wil Odoo, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:54+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -275,12 +275,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/>Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>결제 완료"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>결제 대기 중"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -318,7 +318,7 @@ msgstr "<i class=\"fa fa-print\"/> 상세 보기"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<small class=\"text-muted\">Purchase Representative</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">매입 담당자</small>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -353,6 +353,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">견적서 요청 </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">발주서 </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -366,6 +368,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">(공급업체 "
+"확인 완료)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -373,6 +377,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">(공급업체 "
+"확인 완료)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -878,7 +884,7 @@ msgstr "취소된 발주서 #"
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Cannot delete a purchase order line which is in state %r."
-msgstr ""
+msgstr "발주서 내역이 %r. 상태인 경우에는 삭제할 수 없습니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1218,12 +1224,12 @@ msgstr "재정 위치"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Follow orders you have to fulfill"
-msgstr ""
+msgstr "진행할 주문서를 팔로우하세요."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Follow your Requests for Quotation"
-msgstr ""
+msgstr "견적서 요청을 팔로우하세요."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -1837,7 +1843,7 @@ msgstr "기타 정보"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Our Orders"
-msgstr ""
+msgstr "주문서"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id

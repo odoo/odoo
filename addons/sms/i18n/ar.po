@@ -227,7 +227,7 @@ msgstr "اختر لغة: "
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "اختر قالباً "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -260,13 +260,13 @@ msgstr "المحتوى"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "الدولة غير مدعومة "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "مطلوب التسجيل الخاص بكل بلد "
 
 #. module: sms
 #. odoo-python
@@ -572,7 +572,7 @@ msgstr "الرصيد غير كافٍ "
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "الوجهة غير صالحة "
 
 #. module: sms
 #. odoo-python
@@ -628,7 +628,7 @@ msgstr "آخر تحديث في"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "ربط الرسائل القصيرة بنماذج تتبع البريد/الرسائل القصيرة "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -1076,7 +1076,7 @@ msgstr "تم إعادة تعيين قوالب الرسائل النصية الق
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "متتبعات الرسائل النصية القصيرة "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1367,6 +1367,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"نوع إجراء الخادم. القيم التالية متاحة:\n"
+"- 'تحديث السجل': قم بتحديث قيم السجل\n"
+"- 'إنشاء نشاط': أنشئ نشاطاً (المناقشة)\n"
+"- 'إرسال بريد إلكتروني': قم بنشر رسالة أو ملاحظة أو أرسل بريداً إلكترونياً (المناقشة)\n"
+"- 'إرسال الرسائل النصية القصيرة': قم بإرسال الرسائل النصية القصيرة وسجلها في المستند (SMS)- 'إضافة/إزالة المتابعين': قم بإزالة أو إضافة المابعين إلى سجل (المناقشة)\n"
+"- 'أنشئ سجلاً': أنشئ سجلاً جديداً بقيم جديدة\n"
+"- 'تنفيذ الكود': سيتم تنفيذ كود بايثون\n"
+"- 'إرسال إشعارات Webhook': أرسل طلب منشور إلى النظام الخارجي، والذي يعرف أيضاً بـ Webhook\n"
+"- 'تنفيذ الإجراءات الموجودة': قم بتحديد إجراء يؤدي إلى تشغيل عدة إجراءات أخرى للخادم\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

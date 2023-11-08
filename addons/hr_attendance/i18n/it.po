@@ -34,7 +34,7 @@ msgstr "L'orario di \"Uscita\" non può precedere quello di \"Ingresso\"."
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%s : (%s-%s)"
-msgstr ""
+msgstr "%s : (%s-%s)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -45,6 +45,11 @@ msgid ""
 "                            </span>\n"
 "                            <br/>"
 msgstr ""
+"<br/>\n"
+"                            <span>\n"
+"                                Se il tuo indirizzo è compromesso, puoi aggiornarlo per generarne uno nuovo.\n"
+"                            </span>\n"
+"                            <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -59,6 +64,9 @@ msgid ""
 "                            This Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Questo mese\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -149,7 +157,7 @@ msgstr "Tutti"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Allow Users to Check in/out from Odoo."
-msgstr ""
+msgstr "Consenti agli utenti di effettuare il check-in/out da Odoo."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -177,7 +185,7 @@ msgstr "Conteggio di ore extra"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "At Work"
-msgstr ""
+msgstr "Al lavoro"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -200,7 +208,7 @@ msgstr "Presenza"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
 msgid "Attendance From Systray"
-msgstr ""
+msgstr "Presenza dal systray"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
@@ -211,20 +219,20 @@ msgstr "Tempo di risposta in modalità tutto schermo"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
 msgid "Attendance Kiosk Key"
-msgstr ""
+msgstr "Chiave presenza chiosco"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
 msgid "Attendance Kiosk Url"
-msgstr ""
+msgstr "Url presenza chiosco"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_manager_id
 msgid "Attendance Manager"
-msgstr ""
+msgstr "Responsabile presenze"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
@@ -259,12 +267,12 @@ msgstr "Presenze"
 #: code:addons/hr_attendance/models/res_users.py:0
 #, python-format
 msgid "Attendances This Month"
-msgstr ""
+msgstr "Presenze mese corrente"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr ""
+msgstr "Presenze dal backend"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -518,17 +526,18 @@ msgstr "Ufficio"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_extra_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours"
-msgstr ""
+msgstr "Visualizza ore extra"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours in Kiosk mode and on User profile."
 msgstr ""
+"Visualizza gli straordinari in modalità tutto schermo e sul profilo utente."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours."
-msgstr ""
+msgstr "Visualizza ore extra."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
@@ -567,7 +576,7 @@ msgstr "Dipendente"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
 msgid "Employee PIN Identification"
-msgstr ""
+msgstr "Identificazione PIN dipendente"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -590,7 +599,7 @@ msgstr "Errore: impossibile trovare il dipendente corrispondente."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
-msgstr ""
+msgstr "Errori"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -648,12 +657,12 @@ msgstr "Fotocamera anteriore"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "GPS Coordinates"
-msgstr ""
+msgstr "Coordinate GPS"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Generate a new Kiosk Mode URL"
-msgstr ""
+msgstr "Genera un nuovo URL modalità chiosco"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -709,14 +718,14 @@ msgstr "Visualizzazione ore mese scorso"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_previously_today
 msgid "Hours Previously Today"
-msgstr ""
+msgstr "Ore precedenti oggi"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Hours Previously Today:"
-msgstr ""
+msgstr "Ore precedenti oggi:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -729,7 +738,7 @@ msgstr "Ore odierne"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Hours Today :"
-msgstr ""
+msgstr "Ore oggi: "
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -793,12 +802,12 @@ msgstr "Kiosk Mode"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode Adress"
-msgstr ""
+msgstr "Modalità chiosco indirizzo"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Settings"
-msgstr ""
+msgstr "Impostazioni chiosco"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -819,7 +828,7 @@ msgstr "Ultima presenza"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
 msgid "Last Attendance Worked Hours"
-msgstr ""
+msgstr "Ultima presenza ore lavorative"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -841,7 +850,7 @@ msgstr "Latitudine"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Localisation"
-msgstr ""
+msgstr "Localizzazione"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -883,7 +892,7 @@ msgstr "Modalità"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Modes"
-msgstr ""
+msgstr "Modalità"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -938,53 +947,53 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
-msgstr ""
+msgstr "Responsabile: gestisce tutte le presenze"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.open_kiosk_url
 msgid "Open Kiosk Url"
-msgstr ""
+msgstr "Apri URL chiosco"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_browser
 msgid "Out Browser"
-msgstr ""
+msgstr "Browser uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_city
 msgid "Out City"
-msgstr ""
+msgstr "Città uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_country_name
 msgid "Out Country Name"
-msgstr ""
+msgstr "Nome nazione uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_ip_address
 msgid "Out Ip Address"
-msgstr ""
+msgstr "Indirizzo IP uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_latitude
 msgid "Out Latitude"
-msgstr ""
+msgstr "Latitudine uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_longitude
 msgid "Out Longitude"
-msgstr ""
+msgstr "Longitudine uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_mode
 msgid "Out Mode"
-msgstr ""
+msgstr "Modalità uscita"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Over Time"
-msgstr ""
+msgstr "Straordinario"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1020,7 +1029,7 @@ msgstr "Torna al menu principale."
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #, python-format
 msgid "Previously"
-msgstr ""
+msgstr "Precedentemente"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -1099,7 +1108,7 @@ msgstr "Comincia da"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__systray
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__systray
 msgid "Systray"
-msgstr ""
+msgstr "Systray"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -1109,7 +1118,7 @@ msgstr "Le presenze dei tuoi dipendenti saranno mostrate qui."
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
 msgid "The attendance reporting of your employees will be displayed here."
-msgstr ""
+msgstr "Il resoconto delle presenze dei tuoi dipendenti verrà mostrato qui."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_manager_id
@@ -1119,6 +1128,8 @@ msgid ""
 "The user set in Attendance will access the attendance of the employee "
 "through the dedicated app and will be able to edit them."
 msgstr ""
+"L'utente impostato in Presenze accederà alle presenze del dipendente "
+"attraverso l'app dedicata e potrà modificarle."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
@@ -1126,6 +1137,8 @@ msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
 msgstr ""
+"L'utente avrà accesso alle proprie prensenze nel proprio profilo "
+"utente/dipendente"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
@@ -1133,6 +1146,8 @@ msgid ""
 "The user will have access to the attendance records and reporting of "
 "employees where he's set as an attendance manager"
 msgstr ""
+"L'utente avrà accesso ai resoconti e report delle presenze dei dipendenti "
+"dove figura come responsabile"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1191,6 +1206,8 @@ msgid ""
 "Use this url to access your kiosk mode from any device. Warning, anybody "
 "with the link can access your kiosk."
 msgstr ""
+"Utilizza l'URL per accedere alla modalità chiosco da qualsiasi dispositivo. "
+"Attenzione, chiunque in possesso del link può accedere al chiosco."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -1200,12 +1217,12 @@ msgstr "Utente"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
 msgid "User: Read his own attendances"
-msgstr ""
+msgstr "Utente: leggere le proprie presenze"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "View on Maps"
-msgstr ""
+msgstr "Mostra su Maps"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1262,14 +1279,14 @@ msgstr "Ore lavorate"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours this month"
-msgstr ""
+msgstr "Ore lavorative mese corrente"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 #, python-format
 msgid "Wrong Pin"
-msgstr ""
+msgstr "Pin errato"
 
 #. module: hr_attendance
 #. odoo-python

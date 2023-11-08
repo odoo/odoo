@@ -3,8 +3,8 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Marianna Ciofani, 2023
 # Wil Odoo, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
+"%s non è più disponibile quindi è stato eliminato dal tuo ordine. Rivedi "
+"l'ordine e convalidalo di nuovo."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -40,6 +42,8 @@ msgid ""
 "<br/>\n"
 "                    URL:"
 msgstr ""
+"<br/>\n"
+"                    URL:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -57,6 +61,8 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
+"I diritti di accesso di questo utente saranno utilizzati quando si visita il"
+" sito web con ordine fai da te quando non è aperta alcuna sessione."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -155,13 +161,13 @@ msgstr "Lingue disponibili"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr ""
+msgstr "Disponibile in self"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr ""
+msgstr "Disponibile nell'ordine fai da te"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -230,14 +236,14 @@ msgstr "Scegli quando deve pagare il cliente"
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #, python-format
 msgid "Choose your"
-msgstr ""
+msgstr "Scegli la tua"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Choose your eating location"
-msgstr ""
+msgstr "Scegli il luogo dove vuoi mangiare"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -253,22 +259,22 @@ msgstr "Chiudi"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Combo"
-msgstr ""
+msgstr "Combo"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr ""
+msgstr "Righe combo"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr ""
+msgstr "Combo principale"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo line reference"
-msgstr ""
+msgstr "Riferimento riga combo"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -294,7 +300,7 @@ msgstr "Connessione persa, riprova più tardi"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Could you please confirm your table number?"
-msgstr ""
+msgstr "Potresti confermare il numero del tavolo?"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
@@ -404,13 +410,15 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
+"Ad ogni tavolo presente al piano terra è assegnato un unico codice QR in base alle impostazioni. Per motivi di sicurezza,\n"
+"                    Sia il nome del punto vendita che quello del tavolo sono criptati nell'URL generato, come mostrato nell'esempio seguente:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Eat In"
-msgstr ""
+msgstr "Mangia all'interno"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -429,7 +437,7 @@ msgstr "Modifica"
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 #, python-format
 msgid "Enter your custom value"
-msgstr ""
+msgstr "Inserisci il tuo valore personalizzato"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -437,6 +445,8 @@ msgid ""
 "Feel free to use and print this QR code as many times as needed according to"
 " your requirements."
 msgstr ""
+"Sentiti libero di utilizzare e stampare questo codice QR tutte le volte che "
+"vuoi in base alle tue esigenze."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -467,7 +477,7 @@ msgstr "Generico"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 #, python-format
 msgid "Get a tracker and enter its number here"
-msgstr ""
+msgstr "Ottieni un cercapersone e inserisci il numero qui"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -482,6 +492,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"Hey, sembra che tu abbia dimenticato di creare prodotti o aggiungerli a "
+"pos_config. Fallo prima di utilizzare l'ordine fai da te"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -503,7 +515,7 @@ msgstr "Come personalizzare"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "How to use"
-msgstr ""
+msgstr "Come usare"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
@@ -514,7 +526,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr ""
+msgstr "Se il prodotto è disponibile negli schermi per l'ordine fai da te"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -522,6 +534,8 @@ msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
 "                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
 msgstr ""
+"Se hai bisogno di codici QR personalizzati, inizia a scansionare il codice QR in questione per acquisire l'URL. In seguito, utilizza\n"
+"                un generatore di codici QR come https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -539,6 +553,8 @@ msgstr "Immagine da visualizzare sullo schermo per l'ordine fai da te"
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
+"Nella modalità ordine fai da te, devi avere almeno un tavolo per generare "
+"codici QR"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -615,6 +631,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online or order with the QR codes on your tables"
 msgstr ""
+"Permetti ai tuoi clienti di leggere il menu\n"
+"                online o ordinare grazie ai codici QR presenti sui tavoli"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -622,6 +640,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online with the QR codes on your tables"
 msgstr ""
+"Permetti ai tuoi clienti di leggere il menu\n"
+"                online grazie ai codici QR presenti sui tavoli"
 
 #. module: pos_self_order
 #. odoo-python
@@ -645,7 +665,7 @@ msgstr "Ordine fai da te e cassa dispositivi mobili"
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
 #, python-format
 msgid "My Order"
-msgstr ""
+msgstr "Il mio ordine"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -697,7 +717,7 @@ msgstr "Non disponibile"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr ""
+msgstr "Non disponibile in self"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -711,7 +731,7 @@ msgstr "Ok"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid "Only pay after each is available with kiosk mode."
-msgstr ""
+msgstr "Paga solo dopo che ciascuno è disponibile con la modalità chiosco."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -721,7 +741,7 @@ msgstr "Apri chiosco multimediale"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
 msgid "Open in New Tab"
-msgstr ""
+msgstr "Apri in una nuova scheda"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -746,21 +766,21 @@ msgstr "Ordina ora"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Order number:"
-msgstr ""
+msgstr "Numero ordine:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Order to pick-up at the counter"
-msgstr ""
+msgstr "Ordine da ritirare alla cassa"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Orders not found on server"
-msgstr ""
+msgstr "Ordini non trovati sul server"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -794,7 +814,7 @@ msgstr "Paga in seguito"
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Pay at the cashier"
-msgstr ""
+msgstr "Paga alla cassa"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -810,7 +830,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Pickup At Counter"
-msgstr ""
+msgstr "Ritira alla cassa"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
@@ -822,7 +842,7 @@ msgstr "Area di ritiro"
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
 msgid "PoS Order by Session"
-msgstr ""
+msgstr "Ordine POS per sessione"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_config
@@ -852,7 +872,7 @@ msgstr "Sessione punto vendita"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Point of sale:"
-msgstr ""
+msgstr "Punto vendita:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -889,7 +909,7 @@ msgstr "Prodotto"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Product Description for Self Order"
-msgstr ""
+msgstr "Descrizione prodotto per ordine fai da te"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -928,11 +948,13 @@ msgstr "Codici QR"
 #, python-format
 msgid "QR codes can only be generated in mobile or consultation mode."
 msgstr ""
+"I codici QR possono essere generati solo in modalità mobile o di "
+"consultazione."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
 msgid "QR menu"
-msgstr ""
+msgstr "Menu QR"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1005,24 +1027,24 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Self Kiosk"
-msgstr ""
+msgstr "Chiosco self"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr ""
+msgstr "Brand immagine chiosco ordine fai da te "
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr ""
+msgstr "Nome brand immagine chiosco ordine fai da te"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr ""
+msgstr "Ordine fai da te:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1073,7 +1095,7 @@ msgstr "Servizio"
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Service at Table"
-msgstr ""
+msgstr "Servizio al tavolo"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1122,14 +1144,14 @@ msgstr "Numero tavolo"
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Table Tracker:"
-msgstr ""
+msgstr "Cercapersone tavolo:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Table detective time!"
-msgstr ""
+msgstr "Giochiamo a chi indovina il tavolo!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1146,13 +1168,13 @@ msgstr "Asporto"
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Take Out"
-msgstr ""
+msgstr "Asporto"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Takeaway"
-msgstr ""
+msgstr "Asporto"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1173,21 +1195,21 @@ msgstr "Imposte:"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Thanks a lot!"
-msgstr ""
+msgstr "Grazie mille!"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "The Self-Order default user must be a POS user"
-msgstr ""
+msgstr "L'utente predefinito per l'ordine fai da te deve essere un utente POS"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid "The user must be a POS user"
-msgstr ""
+msgstr "L'utente deve essere un utente POS"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
@@ -1215,14 +1237,14 @@ msgstr "URL"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Uncategorised"
-msgstr ""
+msgstr "Non categorizzato"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1234,14 +1256,14 @@ msgstr "Avviso"
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 #, python-format
 msgid "We're currently closed."
-msgstr ""
+msgstr "Al momento siamo chiusi."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "We're preparing your order!"
-msgstr ""
+msgstr "Stiamo preparando il tuo ordine!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1253,7 +1275,7 @@ msgstr "Sì"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
 msgid "You cannot edit a posted orderline !"
-msgstr ""
+msgstr "Non è possibile modificare una riga d'ordine già registrata!"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1282,7 +1304,7 @@ msgstr "Il tuo ordine"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #, python-format
 msgid "Your Selection"
-msgstr ""
+msgstr "La tua selezione"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1303,7 +1325,7 @@ msgstr "Il tuo ordine è stato pagato"
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Your order number"
-msgstr ""
+msgstr "Il tuo numero di ordine"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1332,4 +1354,4 @@ msgstr "odoo"
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "options"
-msgstr ""
+msgstr "opzioni"

@@ -3,9 +3,9 @@
 # 	* base_automation
 # 
 # Translators:
-# Rasareeyar Lappiam, 2023
 # Ped Sansiri, 2023
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,12 +226,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Automation Rule"
-msgstr ""
+msgstr "กฎอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "ชื่อกฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -239,7 +239,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "กฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -349,6 +349,9 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"ความล่าช้าหลังจากวันที่เปิดใช้งาน "
+"คุณสามารถใส่ตัวเลขติดลบได้หากต้องการให้เกิดความล่าช้าก่อนวันที่เปิดใช้งาน "
+"เช่น การส่งการแจ้งเตือน 15 นาทีก่อนการประชุม"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -490,7 +493,7 @@ msgstr "ไอดี"
 msgid ""
 "If present, this condition must be satisfied before executing the automation"
 " rule."
-msgstr ""
+msgstr "หากมี ต้องปฏิบัติตามเงื่อนไขนี้ก่อนที่จะดำเนินการกฎอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -527,7 +530,7 @@ msgstr "ข้อความที่เกี่ยวกับความล
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "บันทึกการโทร"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -570,7 +573,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "แบบจำลองที่กฎการทำงานอัตโนมัติทำงาน"
 
 #. module: base_automation
 #. odoo-javascript
@@ -678,7 +681,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "บันทึก Getter"
 
 #. module: base_automation
 #. odoo-javascript
@@ -771,6 +774,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องการเลือก "
+"ช่องนี้ใช้เพื่อจัดเก็บ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -778,6 +783,8 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
 msgstr ""
+"การเปิดใช้งานบางตัวจำเป็นต้องมีการอ้างอิงไปยังช่องอื่น "
+"ช่องนี้ใช้เพื่อจัดเก็บ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -836,6 +843,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"กฎอัตโนมัติจะถูกเปิดใช้งานหากมีการอัปเดตช่องใดช่องหนึ่งเหล่านี้ หากว่างเปล่า"
+" ระบบจะเฝ้าดูช่องทั้งหมด"
 
 #. module: base_automation
 #. odoo-javascript
@@ -851,7 +860,7 @@ msgstr ""
 msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
-msgstr ""
+msgstr "รหัสนี้จะถูกเรียกใช้เพื่อค้นหาว่าควรรันบันทึกใดที่กฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -873,12 +882,12 @@ msgstr "วันที่เปิดใช้งาน"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "การเปิดการใช้งานฟิลด์"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "การเปิดใช้งานแบบจำลองฟิลด์"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -888,12 +897,12 @@ msgstr "ทริกเกอร์ฟิลด์"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "การอ้างอิงการเปิดใช้งานา"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
 msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "ชื่อที่แสดงการอ้างอิงการเปิดใช้งาน"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
@@ -978,7 +987,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "Webhook UUID"
 
 #. module: base_automation
 #. odoo-javascript
@@ -993,6 +1002,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"เมื่อคำนวณเงื่อนไขการกำหนดเวลาตามวัน "
+"คุณสามารถใช้ปฏิทินเพื่อคำนวณวันที่ตามวันทำการได้"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id

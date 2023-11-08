@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>กำลังรอการม�
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>การเตรียมการ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -46,7 +47,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> <b>ยกเลิกแล้ว</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/>ยกเลิกแล้ว"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -76,6 +77,9 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span invisible=\"not display_delivery_alert\">\n"
+"                    จัดส่งบางส่วนเรียบร้อยแล้ว สามารถสร้างการคืนสินค้าได้จากคำสั่งการจัดส่ง\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -327,7 +331,7 @@ msgstr "รายละเอียด Incoterm"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm

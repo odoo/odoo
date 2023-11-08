@@ -50,6 +50,9 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"                                    Em contrato desde\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -57,6 +60,8 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
 "title=\"In Contract Since\"> In Contract Since</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> Em contrato desde</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -90,6 +95,12 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contrato\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contratos\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -101,6 +112,12 @@ msgid ""
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Contratos\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        Contrato\n"
+"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -115,6 +132,8 @@ msgid ""
 "According to Employee's Working Permit Expiration Date, this contract has "
 "been put in red on the %s. Please advise and correct."
 msgstr ""
+"De acordo com a data de expiração da permissão de trabalho do funcionário, "
+"esse contrato foi colocado em vermelho no %s. Notifique e corrija-o."
 
 #. module: hr_contract
 #. odoo-python
@@ -279,8 +298,8 @@ msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
-"Contrato %(contract)s: data de início (%(start)s) deve ser anterior à data "
-"de término do contrato (%(end)s)."
+"Contrato %(contract)s: a data de início (%(start)s) deve ser anterior à data"
+" de término do contrato (%(end)s)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
@@ -302,13 +321,13 @@ msgstr "Data de término do contrato"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr ""
+msgstr "Período de aviso de expiração do contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
 msgid "Contract Expiry Notice Period"
-msgstr ""
+msgstr "Período de aviso de expiração do contrato"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -386,7 +405,7 @@ msgstr "Contratos"
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Contracts to Review"
-msgstr "Contrato a revisar"
+msgstr "Contratos a revisar"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -781,6 +800,8 @@ msgid ""
 "Number of days prior to the contract end date that a contract expiration "
 "warning is triggered."
 msgstr ""
+"Número de dias antes da data final do contrato em que um aviso de expiração "
+"do contrato é acionado."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -788,6 +809,8 @@ msgid ""
 "Number of days prior to the work permit expiration date that a warning is "
 "triggered."
 msgstr ""
+"Número de dias antes da data de expiração da permissão de trabalho em que um"
+" aviso é acionado."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
@@ -965,7 +988,7 @@ msgstr "O contrato de %s está prestes a expirar."
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The work permit of %s is about to expire."
-msgstr ""
+msgstr "A permissão de trabalho de %s está prestes a expirar."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
@@ -1021,13 +1044,13 @@ msgstr "Histórico de comunicação do site"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Work Permit Expiration Notice Period"
-msgstr ""
+msgstr "Período de aviso de expiração da permissão de trabalho"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
 msgid "Work Permit Expiry Notice Period"
-msgstr ""
+msgstr "Período de aviso de expiração da permissão de trabalho"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

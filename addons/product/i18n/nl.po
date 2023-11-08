@@ -29,6 +29,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Opmerking: producten waar je geen toegang tot hebt worden hierboven niet weergegeven."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -44,12 +47,12 @@ msgstr "# Producten"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "$ 14,00"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "$ 15,00"
 
 #. module: product
 #. odoo-python
@@ -138,12 +141,12 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 stuks"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -199,6 +202,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Extra prijzen\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Extra prijs\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -310,12 +319,12 @@ msgstr "Toegangstoken"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "Acme Widget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "Acme Widget - Blauw"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -574,14 +583,14 @@ msgstr "Beschikbaarheid"
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Order"
-msgstr ""
+msgstr "Terug naar order"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Terug naar offerte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -799,7 +808,7 @@ msgstr "Configureren"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Labels configureren"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -904,7 +913,7 @@ msgstr "Maak een nieuwe productvariant aan"
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "Maak een product aan"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1007,7 +1016,7 @@ msgstr "Standaard prijslijst %s "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Standaard extra prijs"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1114,7 +1123,7 @@ msgstr "Korting op regels"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Korting"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1219,7 +1228,7 @@ msgstr "Dynamisch"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "E.G: product description, ebook, legal notice, ..."
-msgstr ""
+msgstr "bijv, productbeschrijving, ebook, wettelijke vermeldingen,..."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1231,7 +1240,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "Milieuvriendelijke houten stoel"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1419,7 +1428,7 @@ msgstr "Geeft de reeks volgorde wanneer een productlijst getoond wordt"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "Gold member prijslijst"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1865,13 +1874,15 @@ msgstr "Min. hoeveelheid"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox (option)"
-msgstr ""
+msgstr "Meerdere selectievakjes (optie)"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
+"Het weergavetype meerdere selectievakjes is niet compatibel met het aanmaken"
+" van varianten"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
@@ -1954,7 +1965,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "No products could be found."
-msgstr ""
+msgstr "Er konden geen producen worden gevonden."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2069,7 +2080,7 @@ msgstr "Andere prijslijst"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "Verpassing soort A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2343,7 +2354,7 @@ msgstr "Productkenmerken"
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Productcatalogus mixin"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2378,22 +2389,22 @@ msgstr "Productlabel (PDF)"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "Productlabel 2x7 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "Productlabel 4x12 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "Productlabel 4x12 Geen prijs (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "Productlabel 4x7 (PDF)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
@@ -2403,22 +2414,22 @@ msgstr "Productlabelrapport"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "Productlabelrapport 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "Productlabelrapport 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "Productlabelrapport 4x12 Geen prijs"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "Produclabelrapport 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2455,7 +2466,7 @@ msgstr "Productverpakkingen"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 msgid "Product Properties"
-msgstr ""
+msgstr "Producteigenschappen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -3075,6 +3086,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"Het aantal te genereren varianten overschrijdt de toegestane limiet. Je moet"
+" niet voor elke combinatie varianten genereren of ze op verzoek genereren "
+"vanuit de verkooporder. Open hiervoor de formulierweergave van de kenmerken "
+"en wijzig de modus in *Varianten maken*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3249,7 +3264,7 @@ msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "Maateenheid"
 
 #. module: product
 #. odoo-python
@@ -3314,7 +3329,7 @@ msgstr "Upload"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Upload bestanden naar je product"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3335,6 +3350,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers."
 msgstr ""
+"Gebruik deze functie om alle bestanden op te slaan die je wilt delen met je "
+"klanten."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3655,6 +3672,8 @@ msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
 msgstr ""
+"Je kan een afbeeling uploaden die gebruikt zal worden als de kleur van de "
+"kenmerkwaarde."
 
 #. module: product
 #. odoo-javascript
@@ -3838,6 +3857,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Je moet een product definiëren voor alles dat je verkoopt of inkoopt,\n"
+"of het nu een fysiek product, een verbruiksartikel of een dienst is."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

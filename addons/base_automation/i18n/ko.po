@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -352,6 +353,8 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"동작되는 날짜 이후로 연기합니다. 동작일 이전으로 날짜를 연기해야 하는 경우에는 음수를 입력하면 되며, 예를 들어 회의 15분 전에 알림"
+" 을 전송할 때 사용할 수 있습니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -497,7 +500,7 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the automation"
 " rule."
-msgstr ""
+msgstr "조건이 있는 경우, 자동 규칙을 실행하기 전에 해당 조건을 충족해야 합니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -534,7 +537,7 @@ msgstr "최소 지연 메시지"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "통화 기록"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -577,7 +580,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "자동 규칙이 실행되는 모델입니다."
 
 #. module: base_automation
 #. odoo-javascript
@@ -685,7 +688,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "레코드 게터"
 
 #. module: base_automation
 #. odoo-javascript
@@ -867,7 +870,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Timing Conditions"
-msgstr ""
+msgstr "시간 조건"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -882,12 +885,12 @@ msgstr "트리거된 날짜"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "트리거 필드"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "트리거 필드 모델"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -897,12 +900,12 @@ msgstr "트리거 필드"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "트리거 참조"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
 msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "트리거 참조 표시명ㅇ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation

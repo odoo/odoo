@@ -3,9 +3,9 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Tony Ng, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "\"下班打卡\"時間不能早於\"上班打卡\"時間。"
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%s : (%s-%s)"
-msgstr ""
+msgstr "%s : (%s - %s)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -44,6 +44,11 @@ msgid ""
 "                            </span>\n"
 "                            <br/>"
 msgstr ""
+"<br/>\n"
+"                            <span>\n"
+"                                如果您的地址已損壞，您可以刷新它以生成一個新地址。\n"
+"                            </span>\n"
+"                            <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -58,6 +63,9 @@ msgid ""
 "                            This Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            本月\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -71,6 +79,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
 "me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"可用\" title=\"可用\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -78,6 +88,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"不可用\" title=\"不可用\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -91,11 +103,14 @@ msgid ""
 "                                <br/>\n"
 "                                <br/>"
 msgstr ""
+"<span> 分鐘</span>\n"
+"                                <br/>\n"
+"                                <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> seconds</span>"
-msgstr ""
+msgstr "<span>秒</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -141,7 +156,7 @@ msgstr "所有"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Allow Users to Check in/out from Odoo."
-msgstr ""
+msgstr "允許用戶從 Odoo 簽到/簽出。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -165,7 +180,7 @@ msgstr "加班時數"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "At Work"
-msgstr ""
+msgstr "工作中"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -188,37 +203,37 @@ msgstr "出勤"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
 msgid "Attendance From Systray"
-msgstr ""
+msgstr "系統匣出勤情況"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr ""
+msgstr "自助考勤終端延遲"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
 msgid "Attendance Kiosk Key"
-msgstr ""
+msgstr "自助考勤終端密鑰"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
 msgid "Attendance Kiosk Url"
-msgstr ""
+msgstr "自助考勤終端網址"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_manager_id
 msgid "Attendance Manager"
-msgstr ""
+msgstr "考勤管理員"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
-msgstr ""
+msgstr "考勤模式"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
@@ -247,33 +262,33 @@ msgstr "考勤"
 #: code:addons/hr_attendance/models/res_users.py:0
 #, python-format
 msgid "Attendances This Month"
-msgstr ""
+msgstr "本月出勤次數"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr ""
+msgstr "後台出勤情況"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
 msgid "Back Camera"
-msgstr ""
+msgstr "後方攝錄器"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
-msgstr ""
+msgstr "條碼 / RFID"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode_manual
 msgid "Barcode / RFID and Manual Selection"
-msgstr ""
+msgstr "條碼 / RFID 及手動選擇"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
 msgid "Barcode Source"
-msgstr ""
+msgstr "條碼來源"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__in_country_name
@@ -327,7 +342,7 @@ msgstr "在 %(empl_name)s上無法執行下班打卡, 無法找到相應的上�
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check IN"
-msgstr ""
+msgstr "簽到"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -345,7 +360,7 @@ msgstr "上班打卡"
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check OUT"
-msgstr ""
+msgstr "簽出"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -384,7 +399,7 @@ msgstr "下班打卡時間"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Choose how long the greeting message will be displayed."
-msgstr ""
+msgstr "選擇問候訊息的顯示時間。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_city
@@ -476,12 +491,12 @@ msgstr "日"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the camera used for the barcode scan."
-msgstr ""
+msgstr "定義掃瞄條碼的攝錄器"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the way the user will be identified by the application."
-msgstr ""
+msgstr "定義應用程式識別用戶的方式"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -497,17 +512,17 @@ msgstr "部門"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_extra_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours"
-msgstr ""
+msgstr "顯示加班時數"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours in Kiosk mode and on User profile."
-msgstr ""
+msgstr "在自助點模式及用戶個人檔案顯示加班時數。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours."
-msgstr ""
+msgstr "顯示加班時數。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
@@ -518,7 +533,7 @@ msgstr "顯示名稱"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Time"
-msgstr ""
+msgstr "顯示時間"
 
 #. module: hr_attendance
 #. odoo-python
@@ -526,7 +541,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Do not have access, user cannot edit the attendances that are not his own."
-msgstr ""
+msgstr "無訪問權限，用戶無法編輯非本人的出勤情況"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -544,7 +559,7 @@ msgstr "員工"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
 msgid "Employee PIN Identification"
-msgstr ""
+msgstr "員工個人識別密碼"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -567,7 +582,7 @@ msgstr "錯誤: 找不到相應的員工。"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
-msgstr ""
+msgstr "錯誤"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -593,7 +608,7 @@ msgstr "加班開始日期"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Extra hours today:"
-msgstr ""
+msgstr "今天加班："
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
@@ -615,22 +630,22 @@ msgstr "關注人（業務夥伴）"
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "From %s"
-msgstr ""
+msgstr "從 %s"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
 msgid "Front Camera"
-msgstr ""
+msgstr "前方攝錄器"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "GPS Coordinates"
-msgstr ""
+msgstr "GPS 座標"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Generate a new Kiosk Mode URL"
-msgstr ""
+msgstr "產生新的自助點模式網址"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -686,14 +701,14 @@ msgstr "上月上班時間顯示"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_previously_today
 msgid "Hours Previously Today"
-msgstr ""
+msgstr "今天之前的小時數"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Hours Previously Today:"
-msgstr ""
+msgstr "今天之前的小時數："
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -706,7 +721,7 @@ msgstr "今日上班時間"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Hours Today :"
-msgstr ""
+msgstr "今天時數："
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -748,7 +763,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Invalid request"
-msgstr ""
+msgstr "無效請求"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_is_follower
@@ -759,7 +774,7 @@ msgstr "是關注者"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__kiosk
 msgid "Kiosk"
-msgstr ""
+msgstr "自助考勤終端"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
@@ -770,12 +785,12 @@ msgstr "打卡鐘模式"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode Adress"
-msgstr ""
+msgstr "自助考勤模式地址"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Settings"
-msgstr ""
+msgstr "自助考勤終端設定"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -796,7 +811,7 @@ msgstr "最後一次出勤"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
 msgid "Last Attendance Worked Hours"
-msgstr ""
+msgstr "上次出勤工作時數"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -818,7 +833,7 @@ msgstr "Latitude"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Localisation"
-msgstr ""
+msgstr "本地化"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -834,7 +849,7 @@ msgstr "手動"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
 msgid "Manual Selection"
-msgstr ""
+msgstr "手動選擇"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -860,7 +875,7 @@ msgstr "模式"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Modes"
-msgstr ""
+msgstr "模式"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -915,12 +930,12 @@ msgstr "確定"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
-msgstr ""
+msgstr "主管:管理出勤"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.open_kiosk_url
 msgid "Open Kiosk Url"
-msgstr ""
+msgstr "開啟自助考勤終端網址"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_browser
@@ -961,7 +976,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Over Time"
-msgstr ""
+msgstr "超時"
 
 #. module: hr_attendance
 #. odoo-python
@@ -997,7 +1012,7 @@ msgstr "請返回到主選單。"
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #, python-format
 msgid "Previously"
-msgstr ""
+msgstr "之前"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -1074,7 +1089,7 @@ msgstr "開始於"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__systray
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__systray
 msgid "Systray"
-msgstr ""
+msgstr "系統匣"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -1084,7 +1099,7 @@ msgstr "您的員工出勤記錄將顯示在此處。"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
 msgid "The attendance reporting of your employees will be displayed here."
-msgstr ""
+msgstr "員工出勤報告會在這裏顯示。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_manager_id
@@ -1093,21 +1108,21 @@ msgstr ""
 msgid ""
 "The user set in Attendance will access the attendance of the employee "
 "through the dedicated app and will be able to edit them."
-msgstr ""
+msgstr "考勤設置中的用戶可通過專用應用程序訪問員工的考勤，並可對其進行編輯。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
 msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
-msgstr ""
+msgstr "用戶可在其用戶/員工檔案中查看自己的出勤情況"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
 msgid ""
 "The user will have access to the attendance records and reporting of "
 "employees where he's set as an attendance manager"
-msgstr ""
+msgstr "如果用戶被設為考勤經理，則可查看員工的考勤記錄和報告"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1156,14 +1171,14 @@ msgstr "未知"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr ""
+msgstr "使用 PIN 碼（個人識別密碼，在員工檔案中定義）簽到。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Use this url to access your kiosk mode from any device. Warning, anybody "
 "with the link can access your kiosk."
-msgstr ""
+msgstr "使用此網址可從任何設備訪問您的自助考勤模式。警告：擁有該鏈接的任何人都可以訪問您的自助考勤點。"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -1173,12 +1188,12 @@ msgstr "使用者"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
 msgid "User: Read his own attendances"
-msgstr ""
+msgstr "用戶：閱讀自己的考勤情況"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "View on Maps"
-msgstr ""
+msgstr "在地圖上查看"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1235,14 +1250,14 @@ msgstr "工作時數"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours this month"
-msgstr ""
+msgstr "本月工作時數"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 #, python-format
 msgid "Wrong Pin"
-msgstr ""
+msgstr "個人識別密碼 PIN 錯誤"
 
 #. module: hr_attendance
 #. odoo-python

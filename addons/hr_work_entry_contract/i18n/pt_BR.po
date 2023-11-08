@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +33,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Define a origem para a geração de registros de trabalho\n"
+"Define a origem para a geração de registros de trabalho\n"
 "\n"
-"        Horário de trabalho: Os registros de trabalho serão gerados a partir das horas de trabalho abaixo.\n"
+"Horário de trabalho: os registros de trabalho serão gerados a partir das horas de trabalho abaixo.\n"
 "\n"
-"        Presença: Os registros de trabalho serão gerados a partir das presenças do funcionário (requer o aplicativo Controle de Presença).\n"
-"        Planejamento: Os registros de trabalho serão gerados a partir do planejamento do funcionário (requer o aplicativo Planejamento)."
+"Presença: os registros de trabalho serão gerados a partir das presenças do funcionário (requer o aplicativo Controle de Presença).\n"
+"Planejamento: os registros de trabalho serão gerados a partir do planejamento do funcionário (requer o aplicativo Planejamento)."
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -84,7 +85,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
 msgstr ""
-"Permitir que o tipo de entrada de trabalho seja vinculado a tipos de folga."
+"Permitir que o tipo de registro de trabalho seja vinculado a tipos de folga."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -187,12 +188,12 @@ msgstr "RH – Registro de trabalho"
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Tipo de registro de trabalho de RH"
+msgstr "RH – Tipo de registro de trabalho"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
 msgid "Home Working"
-msgstr "Trabalho remoto"
+msgstr "Home-office"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
@@ -209,7 +210,7 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"Para regenerar as entradas de trabalho, é necessário fornecer employee_id, "
+"Para regenerar os registros de trabalho, é necessário fornecer employee_id, "
 "date_from e date_to ao assistente. Além disso, o intervalo definido entre "
 "date_from e date_to não pode conter nenhum registro de trabalho validado."
 
@@ -270,7 +271,7 @@ msgstr "Tempo de trabalho do recurso"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
 msgid "Search Criteria Completed"
-msgstr "Critérios de busca concluídos"
+msgstr "Critérios de busca: concluído"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
@@ -296,7 +297,7 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
-"A data \"a partir de' deve ser >= '%(earliest_available_date)s' e a data "
+"A data \"a partir de\" deve ser >= '%(earliest_available_date)s' e a data "
 "\"até\" deve ser  <= '%(latest_available_date)s', o que corresponde ao "
 "intervalo dos registros de trabalho gerados."
 

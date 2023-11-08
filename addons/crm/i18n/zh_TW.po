@@ -151,6 +151,8 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"透過儲存此更改，客戶電子郵件也將更新。\" invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -159,6 +161,8 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"儲存此變更後，客戶電話號碼也將更新。\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -166,6 +170,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">類似潛在客戶</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">類似潛在客戶</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -173,6 +179,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">潛在客戶</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">銷售機會</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -241,6 +249,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>根據規則定期分配潛在客戶</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    所有銷售團隊預設使用此設置，\n"
+"                                    除非另有指定。\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -473,7 +486,7 @@ msgstr "活動異常圖示"
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
 msgid "Activity Plan"
-msgstr ""
+msgstr "活動計劃"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -564,7 +577,7 @@ msgstr "別名域名"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "別名電子郵件"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -1849,7 +1862,7 @@ msgstr "最近行動"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "最近一次自動化："
 
 #. module: crm
 #. odoo-python
@@ -1944,7 +1957,7 @@ msgstr "潛在商機挖掘"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Plans"
-msgstr ""
+msgstr "潛在客戶計劃"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2155,7 +2168,7 @@ msgstr "串連的合作夥伴（可選）。通常在轉換潛在商機時建立
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "基於本地部件的來件檢測"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2312,7 +2325,7 @@ msgstr "面試顯示日期"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "會議顯示標籤"
 
 #. module: crm
 #. odoo-python
@@ -3865,7 +3878,7 @@ msgstr "請使用「<b>新增</b>」按鈕，或發送電郵至"
 msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
-msgstr ""
+msgstr "使用「<b>新增</b>」按鈕，或發送電子郵件至 %(email_link)s，以測試電子郵件閘道。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

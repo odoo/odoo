@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,14 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"不能在具有不同工作時間表的多個合同中設置休假。\n"
+"\n"
+"請為每份合同創建一個假期。\n"
+"\n"
+"休假時間：\n"
+"%s\n"
+"合約：\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_employee_base
@@ -51,6 +60,7 @@ msgid ""
 "required allocation for them. Please review these leaves and/or allocations "
 "before changing the contract."
 msgstr ""
+"更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期的持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期和/或分配。"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -119,4 +129,4 @@ msgstr "工時紀錄類型"
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "工資單中使用的工作條目。"

@@ -82,6 +82,44 @@ msgid ""
 " </table>\n"
 "</div>"
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"    <tbody>\n"
+"        <tr>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>\n"
+"                    恭喜\n"
+"                    <span t-out=\"object.name or ''\">Joel Willis</span>！\n"
+"                </p>\n"
+"                <p>\n"
+"                    你剛達到新的等級： <strong t-out=\"object.rank_id.name or ''\">新手</strong>\n"
+"                </p>\n"
+"                <t t-if=\"object.next_rank_id.name\">\n"
+"                    <p>繼續努力，成為一名<strong t-out=\"object.next_rank_id.name or ''\">學生</strong>！</p>\n"
+"                </t>\n"
+"                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                    <t t-set=\"gamification_redirection_data\" t-value=\"object.get_gamification_redirection_data()\"></t>\n"
+"                    <t t-foreach=\"gamification_redirection_data\" t-as=\"data\">\n"
+"                        <t t-set=\"url\" t-value=\"data['url']\"></t>\n"
+"                        <t t-set=\"label\" t-value=\"data['label']\"></t>\n"
+"                        <a t-att-href=\"url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\" t-out=\"label or ''\">LABEL</a>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p style=\"text-align: center;\">\n"
+"                    <img t-attf-src=\"/web/image/gamification.karma.rank/{{ object.rank_id.id }}/image_128\">\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr>\n"
+"        <tr t-if=\"user.signature\">\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+" </table>\n"
+"</div>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -114,6 +152,8 @@ msgid ""
 "<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
 "Progress\" aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"目標正在進行中\" "
+"aria-label=\"目標正在進行中\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -121,6 +161,8 @@ msgid ""
 "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
 "Failed\" aria-label=\"Goal Failed\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"目標失敗\" aria-"
+"label=\"目標失敗\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -128,11 +170,13 @@ msgid ""
 "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
 "Reached\" aria-label=\"Goal Reached\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"目標達成\" "
+"aria-label=\"目標達成\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "<span class=\"o_stat_text\">Related Goals</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">相關目標</span>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
@@ -784,7 +828,7 @@ msgstr "啟用"
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 #, python-format
 msgid "Add Manually"
-msgstr ""
+msgstr "手動加入"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1038,7 +1082,7 @@ msgstr "綜合"
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 #, python-format
 msgid "Consolidation from %s to %s"
-msgstr ""
+msgstr "合併由 %s 至 %s"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -1247,7 +1291,7 @@ msgstr "草稿"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure!"
-msgstr ""
+msgstr "賺取第一個積分，加入冒險之旅！"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1396,12 +1440,12 @@ msgstr "遊戲化挑戰的一般目標"
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
 msgid "Gamification: Badge Received"
-msgstr ""
+msgstr "遊戲化：獲得徽章"
 
 #. module: gamification
 #: model:mail.template,name:gamification.simple_report_template
 msgid "Gamification: Challenge Report"
-msgstr ""
+msgstr "遊戲化：挑戰報告"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
@@ -1416,12 +1460,12 @@ msgstr "遊戲化：活躍度跟踪整合"
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
 msgid "Gamification: New Rank Reached"
-msgstr ""
+msgstr "遊戲化：達到新等級"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_goal_reminder
 msgid "Gamification: Reminder For Goal Update"
-msgstr ""
+msgstr "遊戲化：目標更新提醒"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1522,7 +1566,7 @@ msgstr "授予這枚獎章"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Granted By"
-msgstr ""
+msgstr "頒授者"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -1708,20 +1752,20 @@ msgstr "活躍度變化"
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Karma Owner"
-msgstr ""
+msgstr "貢獻值擁有人"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "貢獻值追蹤"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "Karma Updates"
-msgstr ""
+msgstr "貢獻值更新"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -1849,7 +1893,7 @@ msgstr "勵志"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank on your profile page"
-msgstr ""
+msgstr "在您的個人資料頁面上達到此排名的激勵短語"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -1859,7 +1903,7 @@ msgstr "我的目標"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "My Karma"
-msgstr ""
+msgstr "我的貢獻值"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -1924,7 +1968,7 @@ msgstr "下次報告日期"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "No Karma Tracking"
-msgstr ""
+msgstr "沒有追蹤貢獻值"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -1953,7 +1997,7 @@ msgstr "沒有人完成已分配的挑戰"
 msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
-msgstr ""
+msgstr "若無人成功完成目標，則暫不會發放此挑戰的徽章。"
 
 #. module: gamification
 #. odoo-python
@@ -2063,7 +2107,7 @@ msgstr "期間"
 msgid ""
 "Period of automatic goal assignment. If none is selected, should be launched"
 " manually."
-msgstr ""
+msgstr "自動分配目標的周期。如果未選擇任何選項，則應手動啟動。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
@@ -2073,7 +2117,7 @@ msgstr "周期"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Previous Total"
-msgstr ""
+msgstr "上期總計"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -2127,22 +2171,22 @@ msgstr "排名清單"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
-msgstr ""
+msgstr "達到下一個等級，獲得神奇魔杖！"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat!"
-msgstr ""
+msgstr "達到下一等級，獲得漂亮帽子！"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug!"
-msgstr ""
+msgstr "達到下一等級，獲得精美杯子！"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
-msgstr ""
+msgstr "達到下一等級，獲得可愛獨角獸！"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2243,7 +2287,7 @@ msgstr "獎勵"
 msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
-msgstr ""
+msgstr "成功獎勵（徽章 %(badge_name)s）已被發送到 %(users)s。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
@@ -2330,7 +2374,7 @@ msgstr "發送報告"
 #. module: gamification
 #: model:mail.template,description:gamification.simple_report_template
 msgid "Send a challenge report to all participants"
-msgstr ""
+msgstr "向所有參加者發送挑戰報告"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
@@ -2345,17 +2389,17 @@ msgstr "發送者"
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
 msgid "Sent automatically to participant who haven't updated their goal"
-msgstr ""
+msgstr "自動發送給尚未更新目標的參加者"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
 msgid "Sent automatically to the user who received a badge"
-msgstr ""
+msgstr "自動發送給收到徽章的用戶"
 
 #. module: gamification
 #: model:mail.template,description:gamification.mail_template_data_new_rank_reached
 msgid "Sent automatically when user reaches a new rank"
-msgstr ""
+msgstr "當用戶達到新排名時自動發送"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -2420,7 +2464,7 @@ msgstr "來源類型"
 msgid ""
 "Special rewards were sent to the top competing users. The ranking for this "
 "challenge is:"
-msgstr ""
+msgstr "排名靠前的用戶將獲得特別獎勵。本次挑戰賽的排名是："
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2495,7 +2539,7 @@ msgstr "目標：少於"
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 #, python-format
 msgid "Test Reason"
-msgstr ""
+msgstr "測試原因"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
@@ -2672,7 +2716,7 @@ msgstr "單元目標和目前值"
 msgid ""
 "The users that have succeeded these goals will receive automatically the "
 "badge."
-msgstr ""
+msgstr "成功實現這些目標的用戶將自動收到徽章。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
@@ -2728,7 +2772,7 @@ msgstr "跟踪活躍度變化"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "Track the sources of the users karma and monitor"
-msgstr ""
+msgstr "追蹤用戶貢獻值的來源並監控"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
@@ -2785,7 +2829,7 @@ msgstr "使用者"
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "User Creation"
-msgstr ""
+msgstr "建立用戶"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
@@ -2948,7 +2992,7 @@ msgstr "例如問題解決"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug!"
-msgstr ""
+msgstr "例如：達到此等級，獲得免費杯子！"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view

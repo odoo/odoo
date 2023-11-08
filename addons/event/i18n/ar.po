@@ -84,12 +84,12 @@ msgstr "%s (نسخة)"
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'قائمة الحاضرين - %s' % (object.name) "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'قائمة الحاضرين' "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -97,11 +97,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'الشارة - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
+"(object.name or '').replace('/','')) "
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Badge - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -120,7 +122,7 @@ msgstr "'تذكرة كامل الصفحة - %s' % (object.name or 'Event').repla
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "+123456789"
-msgstr ""
+msgstr "+123456789"
 
 #. module: event
 #. odoo-python
@@ -148,7 +150,7 @@ msgstr "10-14"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "1000 Brussels"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
@@ -163,7 +165,7 @@ msgstr "18+"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 لكل ورقة "
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
@@ -262,7 +264,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"شركة الحاضر \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -270,6 +272,8 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"تأكيد الحضور \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -301,7 +305,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"الحاضرون \"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -324,7 +328,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"الموقع \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -368,7 +372,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">شركتي (العنصر النائب)</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -377,6 +381,9 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    التسجيل\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1040,6 +1047,222 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"></t>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"></t>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"></t>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">تسجيلك</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or 'Guest'\"></t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                        تنزيل الشارة\n"
+"                    </a>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or 'Guest'\"></t>،<br>\n"
+"                        ستجد أدناه شارتك لـ\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</strong>.\n"
+"                        </t>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br>\n"
+"                        <strong>أضف هذه الفعالية إلى تقويمك</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Yahoo\n"
+"                        </a>\n"
+"                        <br><br>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        نراك قريباً<br>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">شركتك</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</t></div>\n"
+"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">مايو 4، 2021، 7:00:00 صباحاً</t></div>\n"
+"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">مايو 6، 2021، 5:00:00 مساءً</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">أوروبا/براسيلز</t>)</i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"></t>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.street2}}\"></t>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.city}}\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.state_id.name}}\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip\">98450</t>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.zip}}\"></t>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name\">الأرجنتين</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.country_id.name}}\"></t>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أسئلة حول هذه الفعالية؟</span>\n"
+"                            <div>يرجى التواصل مع المنظم:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">شركتك</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>البريد الإلكتروني: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>رقم الهاتف: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>احصل على تجربة رائعة على الهاتف المحمول.</strong>\n"
+"                            <a href=\"/event\">قم بتثبيت تطبيق الهاتف المحمول</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address and location\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <i class=\"fa fa-map-marker\"></i>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-att-src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\">\n"
+"                                    <t t-else=\"\">ألقِ نظرة على الموقع على خرائط Google</t>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            تم الإرسال بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br>\n"
+"                اكتشف <a href=\"/event\" style=\"color:#875A7B;\">كافة فعالياتنا</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -1280,6 +1503,241 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"></t>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and object.event_id.is_published\"></t>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and object.sale_order_id\"></t>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"></t>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"></t>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">تسجيلك</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or 'Guest'\"></t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <div style=\"margin-bottom: 5px;\">\n"
+"                        <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                            عرض التذكرة\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.barcode\"> \n"
+"                        <div style=\"margin-bottom: 5px;\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" alt=\"QR Code\">\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or 'Guest'\"></t>,<br>\n"
+"                        يسرنا تأكيد اشتراكك للفعالية\n"
+"                        <t t-if=\"is_online\">\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</strong>\n"
+"                        </t>.\n"
+"                        <t t-if=\"object.partner_id and object.partner_id.name and object.partner_id.name != object.name\">\n"
+"                            تم تسجيل هذه التذكرة بواسطة <t t-out=\"object.partner_id.name\"></t>.\n"
+"                        </t>\n"
+"                    </div>\n"
+"                    <div t-if=\"is_sale\">\n"
+"                        <br>\n"
+"                        مرجع طلب هذه التذكرة <t t-out=\"object.sale_order_id.name\"></t>\n"
+"                        تم إنشاؤه في <t t-out=\"object.sale_order_id.date_order.date()\"></t>\n"
+"                        <t t-if=\"object.sale_order_line_id.price_unit\"> بمبلغ\n"
+"                            <t t-out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"></t>\n"
+"                        </t>.\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        <br>\n"
+"                        <strong>أضف هذه الفعالية إلى تقويمك</strong>\n"
+"                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
+"                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
+"                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                            <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Yahoo\n"
+"                        </a>\n"
+"                        <br><br>\n"
+"                    </div>\n"
+"                    <div>\n"
+"                        نراك قريباً<br>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name\">شركتك</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</t></div>\n"
+"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">مايو 4، 2021، 7:00:00 صباحاً</t></div>\n"
+"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">مايو 6، 2021، 5:00:00 مساءً</t></div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">أوروبا/براسيلز</t>)</i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\">\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"></t>\n"
+"                                    <t t-if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-value=\"object.event_id.address_id.street\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-out=\"object.event_id.address_id.street2\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.street2}}\"></t>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-out=\"object.event_id.address_id.city\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.city}}\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.state_id.name}}\"></t>\n"
+"                                    </t>\n"
+"                                    <t t-if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-out=\"object.event_id.address_id.zip\">98450</t>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.zip}}\"></t>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name\">الأرجنتين</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.country_id.name}}\"></t>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أسئلة حول هذه الفعالية؟</span>\n"
+"                            <div>يرجى التواصل مع المنظم:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">شركتك</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>البريد الإلكتروني: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>رقم الهاتف: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>احصل على أفضل تجربة على الهاتف المحمول.</strong>\n"
+"                            <a href=\"/event\">قم بتثبيت تطبيق الهاتف المحمول</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address and location\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <i class=\"fa fa-map-marker\"></i>\n"
+"                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-att-src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\">\n"
+"                                    <t t-else=\"\">ألقِ نظرة على الموقع على خرائط Google</t>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            تم الإرسال بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br>\n"
+"                اكتشف <a href=\"/event\" style=\"color:#875A7B;\">كافة فعالياتنا</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -1291,7 +1749,7 @@ msgstr "وصف للتذكرة التي ترغب في التواصل بشأنها
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 قابلة للطي "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
@@ -1397,6 +1855,8 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"ستتم ترجمة جميع رسائل البريد الإلكتروني الخاصة بالتواصل المرسلة إلى الحضور "
+"بهذه اللغة. "
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1506,7 +1966,7 @@ msgstr "الحاضر"
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "قائمة الحاضرين "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1516,7 +1976,7 @@ msgstr "اسم الحاضر"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "قائمة الحاضرين "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1545,17 +2005,17 @@ msgstr "الشارة"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "خلفية الشارة "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "أبعاد الشارة "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "مثال على الشارة "
 
 #. module: event
 #. odoo-python
@@ -2012,12 +2472,12 @@ msgstr "قوالب البريد الإلكتروني "
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "تفعيل خاصية مسح الباركود "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr ""
+msgstr "تمكين أو تعطيل وظيفة الرمز الشريطي للحدث. "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -3082,7 +3542,7 @@ msgstr "عدد التسجيلات"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "عدد المقاعد المشغولة "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -3110,7 +3570,7 @@ msgstr "الأهداف "
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
-msgstr ""
+msgstr "أيام أودو المجتمعية "
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3401,7 +3861,7 @@ msgstr "رسائل التسجيل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "خصائص التسجيل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -3486,12 +3946,12 @@ msgstr "المستخدم المسؤول"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "تذكرة صفحة كاملة مستجيبة لـ Html"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Rue de la Paix 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -3757,7 +4217,7 @@ msgstr "تم أخذها "
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "المقاعد المشغولة "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3999,7 +4459,7 @@ msgstr "نوع التذكرة"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "نوع التذكرة "
 
 #. module: event
 #. odoo-javascript
@@ -4110,6 +4570,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"غير مؤكدة: التسجيلات في حالة معلقة في انتظار الإجراء (حالة محددة، لا سيما حالة البيع)\n"
+"مسجلة: التسجيلات التي تم أخذها من قبل العميل\n"
+"حضر: التسجيلات التي حضر الحضور من أجلها الحدث\n"
+"ملغاة: تم إلغاء التسجيلات يدويا "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4143,12 +4607,12 @@ msgstr "القادمة/الجارية"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "استخدم الباركود "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "استخدم باركود الفعالية "
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -4388,7 +4852,7 @@ msgstr "events@yourcompany.com"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr ""
+msgstr "https://www.example.com"
 
 #. module: event
 #. odoo-python
@@ -4442,7 +4906,7 @@ msgstr "أو"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr ""
+msgstr "organizer@email.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

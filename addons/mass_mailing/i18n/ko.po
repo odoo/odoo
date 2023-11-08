@@ -6,6 +6,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Wil Odoo, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,14 +82,14 @@ msgstr "수신자의 % "
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "%(contact_name)s subscribed to the following mailing list(s)"
-msgstr ""
+msgstr "%(contact_name)s 님이 다음의 메일링 리스트를 구독했습니다."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "%(contact_name)s unsubscribed from the following mailing list(s)"
-msgstr ""
+msgstr "%(contact_name)s 님이 다음의 메일링 리스트를 구독 취소했습니다."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -301,6 +302,9 @@ msgid ""
 "blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
 "is_blacklisted\" groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" invisible=\"not "
+"is_blacklisted\" groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -391,6 +395,9 @@ msgid ""
 "                                                    To track replies, this address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"                                                    답장을 추적하려면 이 주소가 데이터베이스에 있어야 합니다.\n"
+"                                                </small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -452,7 +459,7 @@ msgstr "<span class=\"text-muted\">옵트아웃</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "<span invisible=\"not mailing_on_mailing_list\">Mailing Contact</span>"
-msgstr ""
+msgstr "<span invisible=\"not mailing_on_mailing_list\">메일링 연락처</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -476,7 +483,7 @@ msgstr "<span name=\"failed_text\">이메일을 보낼 수 없습니다.</span>"
 msgid ""
 "<span name=\"mailing_schedule_type_now_text\">This mailing will be sent as "
 "soon as possible.</span>"
-msgstr ""
+msgstr "<span name=\"mailing_schedule_type_now_text\">최대한 빨리 해당 메일을 발송합니다.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -486,14 +493,14 @@ msgstr "<span name=\"next_departure_text\"> 메일 보내기 예정 </span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed.</span>"
-msgstr ""
+msgstr "<span name=\"process_text\">이메일 처리가 완료되었습니다</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<span name=\"refresh_text\">This mailing will be sent as soon as "
 "possible.</span>"
-msgstr ""
+msgstr "<span name=\"refresh_text\">최대한 빨리 해당 메일을 발송합니다.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -628,11 +635,14 @@ msgid ""
 "                                <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
 "                            </strong>"
 msgstr ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">이 메일에 지정된 수신자 수가 충분하지 않습니다. </span>\n"
+"                            </strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr ""
+msgstr "<u>새로고침 <i class=\"fa fa-refresh ms-1\"/></u>"
 
 #. module: mass_mailing
 #. odoo-python
@@ -928,7 +938,7 @@ msgstr "A/B 테스트를 허용"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
 msgid "Allow Feedback"
-msgstr ""
+msgstr "피드백 허용"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -984,7 +994,7 @@ msgstr "놀라운 페이지"
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
 #, python-format
 msgid "An error occurred. Please retry later or contact us."
-msgstr ""
+msgstr "오류가 발생했습니다. 나중에 다시 시도하거나 문의해 주세요."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -992,7 +1002,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
 #, python-format
 msgid "An error occurred. Please retry later."
-msgstr ""
+msgstr "오류가 발생했습니다. 나중에 다시 시도하세요."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_alternation_image_text_template
@@ -1020,7 +1030,7 @@ msgstr "다른 기능"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Apply changes"
-msgstr ""
+msgstr "변경 사항 적용"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -1201,7 +1211,7 @@ msgstr "메일링 %(mailing_link)s의 포털에서 차단 목록 요청 (문서 
 msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct "
 "link usage)"
-msgstr ""
+msgstr "메일링 %(mailing_link)s (링크 직접 사용)의 구독 취소에서 차단 목록 요청"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1438,7 +1448,7 @@ msgstr "이메일 주소를 확인한 후 보내기를 클릭합니다."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Choose a date"
-msgstr ""
+msgstr "날짜를 선택하세요."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1916,7 +1926,7 @@ msgstr "도메인"
 #: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Domain field"
-msgstr ""
+msgstr "도메인 필드"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -2028,7 +2038,7 @@ msgstr "이메일 스레드"
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
 #, python-format
 msgid "Email added to our blocklist"
-msgstr ""
+msgstr "차단 목록에 이메일을 추가합니다."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
@@ -2040,7 +2050,7 @@ msgstr "이메일 구성 마법사"
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml:0
 #, python-format
 msgid "Email removed from our blocklist"
-msgstr ""
+msgstr "차단 목록에서 이메일을 삭제합니다."
 
 #. module: mass_mailing
 #. odoo-python
@@ -2089,7 +2099,7 @@ msgstr "블랙리스트 이메일 제외"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Exclude Me"
-msgstr ""
+msgstr "본인을 제외합니다."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -2183,7 +2193,7 @@ msgstr "그리드 기능"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Feedback from %(author_name)s"
-msgstr ""
+msgstr "%(author_name)s의 피드백"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2386,17 +2396,17 @@ msgstr "가장 높은 회신율"
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
 msgid "I changed my mind"
-msgstr ""
+msgstr "생각을 바꾸었습니다."
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_0
 msgid "I never subscribed to this list"
-msgstr ""
+msgstr "이 목록을 구독한 적이 없습니다."
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_2
 msgid "I receive too many emails from this list"
-msgstr ""
+msgstr "이 목록에서 받는 이메일이 너무 많습니다."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__id
@@ -2546,7 +2556,7 @@ msgstr "대기열"
 #: code:addons/mass_mailing/static/src/js/mass_mailing_html_field.js:0
 #, python-format
 msgid "Inline field"
-msgstr ""
+msgstr "인라인 필드"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2566,7 +2576,7 @@ msgstr "잘못된 이메일 주소"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_invalid
 msgid "Invalid from address"
-msgstr ""
+msgstr "주소가 잘못되었습니다."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -2893,7 +2903,7 @@ msgstr "메일링 목록"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Mailing List #"
-msgstr ""
+msgstr "메일링 리스트 번호"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -2953,7 +2963,7 @@ msgstr "메일링 통계"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_subscription_optout
 msgid "Mailing Subscription Reason"
-msgstr ""
+msgstr "메일링 수신 거부 사유"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -3146,7 +3156,7 @@ msgstr "중간"
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
 #, python-format
 msgid "Membership updated"
-msgstr ""
+msgstr "멤버십 업데이트"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
@@ -3224,7 +3234,7 @@ msgstr "누락된 이메일 주소"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_from_missing
 msgid "Missing from address"
-msgstr ""
+msgstr "주소가 누락되었습니다."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3238,7 +3248,7 @@ msgstr "모바일 미리보기"
 #: code:addons/mass_mailing/static/src/js/mailing_m2o_filter.js:0
 #, python-format
 msgid "Model field"
-msgstr ""
+msgstr "모델 필드"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_model
@@ -3339,7 +3349,7 @@ msgstr "다음 활동 유형"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure_is_past
 msgid "Next Departure Is Past"
-msgstr ""
+msgstr "다음 출발은 이전 항목입니다."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3399,7 +3409,7 @@ msgstr "데이터가 아직 없습니다."
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_optout_action
 msgid "No data yet."
-msgstr ""
+msgstr "아직 데이터가 없습니다."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3462,7 +3472,7 @@ msgstr "표준화된 이메일 주소"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 #, python-format
 msgid "Not subscribed"
-msgstr ""
+msgstr "구독하지 않음"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
@@ -3567,7 +3577,7 @@ msgstr "가장 좋은 버전이 확인되면 다른 수신자에게도 가장 �
 msgid ""
 "Once you send these emails, they'll be making a grand entrance in all the "
 "inboxes, creating quite the buzz!"
-msgstr ""
+msgstr "해당 이메일을 전송하게 되면 받은편지함마다 멋지게 등장하여 큰 화제를 불러일으킬 것입니다!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -3651,18 +3661,18 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_subscribe_reason
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout"
-msgstr ""
+msgstr "거부"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout Reason"
-msgstr ""
+msgstr "거부 사유"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
 msgid "Optout Reasons"
-msgstr ""
+msgstr "거부 사유"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4

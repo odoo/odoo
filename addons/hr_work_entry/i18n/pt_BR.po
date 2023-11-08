@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,8 +79,8 @@ msgid ""
 "Careful, the Code is used in many references, changing it could lead to "
 "unwanted changes."
 msgstr ""
-"Atenção! O código é usado em muitas referências e alterá-lo pode gerar a "
-"alterações indesejadas."
+"Atenção! O código é usado em muitas referências e alterá-lo pode gerar "
+"outras alterações indesejadas."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -191,7 +192,7 @@ msgstr "RH – Registro de trabalho"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Tipo de registro de trabalho de RH"
+msgstr "RH – Tipo de registro de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -247,7 +248,7 @@ msgstr "Nota: Registros de trabalho validados não podem ser modificados."
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr "Horas de trabalho extra"
+msgstr "Horas extras de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
@@ -263,12 +264,12 @@ msgstr "Informações de folga do recurso"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr "Pesquisar registros de trabalho"
+msgstr "Buscar registros de trabalho"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr "Pesquisar tipo de registro de trabalho"
+msgstr "Buscar tipo de registro de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -290,12 +291,12 @@ msgstr "Data de início"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr "A data de início deve ser anterior à data de encerramento."
+msgstr "A data de início deve ser anterior à data de término."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "Estado"
+msgstr "Status"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
@@ -312,7 +313,7 @@ msgstr "Opções de folga"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
-msgstr "Para"
+msgstr "Até"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -347,7 +348,7 @@ msgstr "Validado"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr "Registros de trabalho validados não podem se validar"
+msgstr "Registros de trabalho validados não podem se sobrepor"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -400,8 +401,8 @@ msgstr "Tipos de registro de trabalho"
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr ""
-"O registro de trabalho deve ser encerrado. Defina uma data de encerramento "
-"ou uma duração."
+"O registro de trabalho deve terminar. Defina uma data de término ou uma "
+"duração."
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

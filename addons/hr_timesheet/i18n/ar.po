@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,28 +25,28 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s / %(allocated)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s / %(allocated)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
-msgstr ""
+msgstr "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
-msgstr ""
+msgstr "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -111,7 +112,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> عرض التفاصيل "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -125,6 +126,8 @@ msgid ""
 "<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">الساعات المقضية في المهام الفرعية:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">الأيام المقضية في المهام الفرعية:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -142,6 +145,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        لا يمكنك حذف الموظفين الذين لديهم جداول زمنية.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            يمكنك إما أرشفة هؤلاء الموظفين أو حذف كافة جداولهم الزمنية أولاً.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            يرجى أولا حذف كافة الجداول الزمنية الخاصة بهم.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        هل أنت متأكد من أنك ترغب في حذف هؤلاء الموظفين؟\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -171,7 +186,7 @@ msgstr "<span>الموظف</span> "
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Days recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>الأيام المسجلة في المهام الفرعية: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -181,7 +196,7 @@ msgstr "<strong>المدة: </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Hours recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>الساعات المسجلة في المهام الفرعية: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -191,17 +206,17 @@ msgstr "<strong>مدى التقدم:</strong> "
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Remaining Days: </strong>"
-msgstr ""
+msgstr "<strong>الأيام المتبقية: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Remaining Hours: </strong>"
-msgstr ""
+msgstr "<strong>الساعات المتبقية: </strong> "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total: </strong>"
-msgstr ""
+msgstr "<strong>الإجمالي: </strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
@@ -316,7 +331,7 @@ msgstr "Audrey Peterson"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Average of Progress"
-msgstr ""
+msgstr "متوسط مستوى التقدم "
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
@@ -472,7 +487,7 @@ msgstr "اسم العرض "
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__display_timesheet_stats
 msgid "Display Timesheet Stats"
-msgstr ""
+msgstr "عرض حالة الجداول الزمنية "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -550,7 +565,7 @@ msgstr "وحدة قياس الترميز "
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Extra Time"
-msgstr ""
+msgstr "الوقت الإضافي "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -891,12 +906,12 @@ msgstr "البحث والتطوير "
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Research and Development/New Portal System"
-msgstr ""
+msgstr "البحث والتطوير/نظام البوابة الجديد "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr ""
+msgstr "قم بمراجعة كافة الجداول الزمنية المتعلقة بمشاريعك "
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1187,7 +1202,7 @@ msgstr "وحدة ترميز الجداول الزمنية "
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_percentage
 msgid "Timesheet Percentage"
-msgstr ""
+msgstr "نسبة الجداول الزمنية "
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
@@ -1197,7 +1212,7 @@ msgstr "تقرير الجداول الزمنية "
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
 msgid "Timesheet Time"
-msgstr ""
+msgstr "وقت الجداول الزمنية "
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1407,7 +1422,7 @@ msgstr "التدريب"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__uom_id
 msgid "Unit Of Measure"
-msgstr ""
+msgstr "وحدة القياس "
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1449,7 +1464,7 @@ msgstr "المستخدم: جداول المستخدم الزمنية فقط "
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "View Details"
-msgstr ""
+msgstr "عرض التفاصيل "
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget

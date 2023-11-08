@@ -35,6 +35,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; '1'\">\n"
+"                                        有效用戶\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= '1'\">\n"
+"                                        有效用戶\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -47,6 +53,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; '1'\">\n"
+"                                        公司\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= '1'\">\n"
+"                                        公司\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -58,6 +71,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; '1'\">\n"
+"                                            語言\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= '1'\">\n"
+"                                            語言\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -71,7 +90,7 @@ msgstr "<strong>儲存</strong>此頁面，然後返回此處選擇您的GEO供�
 msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
-msgstr ""
+msgstr "<strong>儲存</strong> 此頁面並返回此處進行 Cloudflare Turnstile 設置。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -95,7 +114,7 @@ msgstr "API密鑰"
 msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
-msgstr ""
+msgstr "通過API密鑰，您的用戶在啟用多因素身份驗證時可以使用外部工具訪問Odoo。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -176,7 +195,7 @@ msgstr "選擇文檔的佈局"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -191,7 +210,7 @@ msgstr "公司"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "公司所在國家/地區代碼"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -246,7 +265,7 @@ msgstr "找不到預設使用者模板。"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "文件版面格式"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -339,7 +358,7 @@ msgstr "公司間交易"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "是根公司"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -460,7 +479,7 @@ msgstr "啟用分析直到"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "漸進式網絡應用程式"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -470,7 +489,7 @@ msgstr "保護您的表單免受垃圾訊息或濫用。"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "使用 CF Turnstile 保護您的表單。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -521,7 +540,7 @@ msgstr ""
 msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
-msgstr ""
+msgstr "如果Odoo通過瀏覽器安裝了PWA，則將以此名稱命名。"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
