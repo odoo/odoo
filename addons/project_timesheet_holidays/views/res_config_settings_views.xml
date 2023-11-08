@@ -11,7 +11,7 @@
                     <div class="row mt16">
                         <div class="w-100">
                             <label string="Project" for="internal_project_id" class="col-2 col-lg-3"/>
-                            <field name="internal_project_id" context="{'active_test': False}" class="oe_inline ml16"/>
+                            <field name="internal_project_id" context="{'active_test': False, 'default_company_id': company_id}" class="oe_inline ml16"/>
                         </div>
                         <div class="w-100">
                             <label string="Task" for="leave_timesheet_task_id" class="col-2 col-lg-3"/>
