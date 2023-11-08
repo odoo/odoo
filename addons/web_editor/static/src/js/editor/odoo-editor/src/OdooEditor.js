@@ -2011,6 +2011,15 @@ export class OdooEditor extends EventTarget {
         return didDeselectTable;
     }
 
+    /**
+     * `activateContenteditable` serves as an interface for external use,
+     * allowing users to conveniently trigger `_activateContenteditable`
+     * from outside the odooEditor.
+     */
+    activateContenteditable() {
+        this._activateContenteditable();
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
