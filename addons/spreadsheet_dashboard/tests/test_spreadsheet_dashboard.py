@@ -22,6 +22,22 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
             dashboard._empty_spreadsheet_data()
         )
 
+    def test_copy_name(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a group"}
+        )
+        dashboard = self.env["spreadsheet.dashboard"].create(
+            {
+                "name": "a dashboard",
+                "dashboard_group_id": group.id,
+            }
+        )
+        copy = dashboard.copy()
+        self.assertEqual(copy.name, "a dashboard (copy)")
+
+        copy = dashboard.copy({"name": "a copy"})
+        self.assertEqual(copy.name, "a copy")
+
     def test_unlink_prevent_spreadsheet_group(self):
         group = self.env["spreadsheet.dashboard.group"].create(
             {"name": "a_group"}

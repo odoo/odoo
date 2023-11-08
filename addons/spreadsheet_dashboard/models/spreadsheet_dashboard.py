@@ -1,6 +1,6 @@
 import json
 
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class SpreadsheetDashboard(models.Model):
@@ -24,3 +24,11 @@ class SpreadsheetDashboard(models.Model):
             'snapshot': snapshot,
             'revisions': [],
         }
+
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % self.name
+        return super().copy(default=default)
