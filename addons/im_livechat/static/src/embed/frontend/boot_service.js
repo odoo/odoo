@@ -6,7 +6,7 @@ import { isAvailable } from "@im_livechat/embed/common/livechat_data";
 import { _t } from "@web/core/l10n/translation";
 import { App } from "@odoo/owl";
 
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { registry } from "@web/core/registry";
 
 registry.category("main_components").remove("mail.ChatWindowContainer");

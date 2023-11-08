@@ -2,7 +2,7 @@
 
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 
 class ComponentManager {
