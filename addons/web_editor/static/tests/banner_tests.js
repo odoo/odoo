@@ -81,5 +81,24 @@ QUnit.module(
                     </div><p><br></p>`,
             );
         });
+        QUnit.test("should have focus inside banner when new banner is created", async function (assert) {
+            const { editor, editable } = onMount();
+            const node = editable.querySelector("p");
+            setSelection(node, 0);
+            insertText(editor, "Test");
+            setSelection(node.firstChild, 3, node.firstChild, 3);
+            insertText(editor, '/banner');
+            triggerEvent(editor.editable, "keydown", { key: "Enter" });
+            await nextTick();
+            assert.strictEqual(
+                editable.innerHTML,
+                `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
+                        <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
+                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                            <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
+                        </div>
+                    </div><p><br></p>`,
+            );
+        });
     }
 );
