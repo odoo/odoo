@@ -26,9 +26,7 @@ class SaleOrderLine(models.Model):
             )
 
     def unlink(self):
-        for line in self:
-            if line.is_delivery:
-                line.order_id.carrier_id = False
+        self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
         return super().unlink()
 
     def _is_delivery(self):
