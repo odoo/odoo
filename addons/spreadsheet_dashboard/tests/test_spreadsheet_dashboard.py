@@ -21,6 +21,37 @@ class TestSpreadsheetDashboard(TransactionCase):
             b'{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}',
         )
 
+    def test_copy_name(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a group"}
+        )
+        dashboard = self.env["spreadsheet.dashboard"].create(
+            {
+                "name": "a dashboard",
+                "dashboard_group_id": group.id,
+            }
+        )
+        copy = dashboard.copy()
+        self.assertEqual(copy.name, "a dashboard (copy)")
+
+        copy = dashboard.copy({"name": "a copy"})
+        self.assertEqual(copy.name, "a copy")
+
+
+    def test_write_raw_data(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a group"}
+        )
+        dashboard = self.env["spreadsheet.dashboard"].create(
+            {
+                "name": "a dashboard",
+                "dashboard_group_id": group.id,
+            }
+        )
+        data = b'{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}'
+        dashboard.raw = data
+        self.assertEqual(dashboard.data, base64.encodebytes(data))
+
     def test_unlink_prevent_spreadsheet_group(self):
         group = self.env["spreadsheet.dashboard.group"].create(
             {"name": "a_group"}

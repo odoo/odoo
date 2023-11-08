@@ -14,7 +14,7 @@ class SpreadsheetDashboard(models.Model):
     name = fields.Char(required=True, translate=True)
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True)
     data = fields.Binary(required=True, default=lambda self: empty_spreadsheet_data_base64())
-    raw = fields.Binary(compute='_compute_raw')
+    raw = fields.Binary(compute='_compute_raw', inverse='_inverse_raw')
     thumbnail = fields.Binary()
     sequence = fields.Integer()
     group_ids = fields.Many2many('res.groups', default=lambda self: self.env.ref('base.group_user'))
@@ -24,6 +24,10 @@ class SpreadsheetDashboard(models.Model):
         for dashboard in self:
             dashboard.raw = base64.decodebytes(dashboard.data)
 
+    def _inverse_raw(self):
+        for dashboard in self:
+            dashboard.data = base64.encodebytes(dashboard.raw)
+
     @api.onchange('data')
     def _onchange_data_(self):
         if self.data:
@@ -32,3 +36,11 @@ class SpreadsheetDashboard(models.Model):
                 json.loads(data_str)
             except:
                 raise ValidationError(_('Invalid JSON Data'))
+
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % self.name
+        return super().copy(default=default)
