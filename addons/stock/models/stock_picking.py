@@ -1442,9 +1442,10 @@ class Picking(models.Model):
             package = self.env['stock.quant.package'].create({})
 
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
-                for line in move_line_ids:
-                    line.qty_done = line.reserved_uom_qty
+            for line in move_line_ids.filtered(
+                lambda ml: float_is_zero(ml.qty_done, precision_digits=precision_digits)
+            ):
+                line.qty_done = line.reserved_uom_qty
 
             for ml in move_line_ids:
                 if float_compare(ml.qty_done, ml.reserved_uom_qty,
