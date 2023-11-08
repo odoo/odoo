@@ -4040,13 +4040,20 @@ export class OdooEditor extends EventTarget {
         // and the toolbar so we need to fix the selection to be based on the
         // editable children. Calling `getDeepRange` ensure the selection is
         // limited to the editable.
+        const containerSelector = '#wrap>*, .oe_structure>*, [contenteditable]';
+        const container =
+            (selection &&
+                closestElement(selection.anchorNode, containerSelector)) ||
+            // In case a suitable container could not be found then the
+            // selection is restricted inside the editable area.
+            this.editable;
         if (
-            selection.anchorNode === this.editable &&
-            selection.focusNode === this.editable &&
+            selection.anchorNode === container &&
+            selection.focusNode === container &&
             selection.anchorOffset === 0 &&
-            selection.focusOffset === [...this.editable.childNodes].length
+            selection.focusOffset === [...container.childNodes].length
         ) {
-            getDeepRange(this.editable, {select: true});
+            getDeepRange(container, {select: true});
             // The selection is changed in `getDeepRange` and will therefore
             // re-trigger the _onSelectionChange.
             return;
