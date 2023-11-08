@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { App, Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";

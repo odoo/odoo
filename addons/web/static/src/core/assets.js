@@ -3,7 +3,7 @@
 import { browser } from "./browser/browser";
 import { registry } from "./registry";
 import { session } from "@web/session";
-import { Component, xml, onWillStart, App } from "@odoo/owl";
+import { Component, xml, onWillStart } from "@odoo/owl";
 
 /**
  * This export is done only in order to modify the behavior of the exported
@@ -153,35 +153,6 @@ export const getBundle = function (bundleName) {
 export const loadBundle = function (bundleName) {
     return assets.loadBundle(bundleName);
 };
-
-/**
- * Container dom containing all the owl templates that have been loaded.
- * This can be imported by the modules in order to use it when loading the
- * application and the components.
- */
-export const templates = new DOMParser().parseFromString("<odoo/>", "text/xml");
-/**
- * Each template is registered in xml_templates registry.
- * When a new template is added in the registry, it's also added to each owl App.
- */
-registry.category("xml_templates").addEventListener("UPDATE", (ev) => {
-    const { operation, value } = ev.detail;
-    if (operation === "add") {
-        const doc = new DOMParser().parseFromString(value, "text/xml");
-        if (doc.querySelector("parsererror")) {
-            // The generated error XML is non-standard so we log the full content to
-            // ensure that the relevant info is actually logged.
-            throw new Error(doc.querySelector("parsererror").textContent.trim());
-        }
-
-        for (const element of doc.querySelectorAll("templates > [t-name]")) {
-            templates.documentElement.appendChild(element);
-        }
-        for (const app of App.apps) {
-            app.addTemplates(templates, app);
-        }
-    }
-});
 
 /**
  * Utility component that loads an asset bundle before instanciating a component

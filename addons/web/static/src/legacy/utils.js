@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { App, Component, useState, xml } from "@odoo/owl";
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 
 const rootTemplate = xml`<SubComp t-props="state"/>`;

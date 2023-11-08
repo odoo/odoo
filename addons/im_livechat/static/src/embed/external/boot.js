@@ -6,7 +6,7 @@ import { serverUrl } from "@im_livechat/embed/common/livechat_data";
 
 import { mount, whenReady } from "@odoo/owl";
 
-import { templates } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";

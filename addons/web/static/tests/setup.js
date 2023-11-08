@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { assets, templates } from "@web/core/assets";
+import { assets } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";

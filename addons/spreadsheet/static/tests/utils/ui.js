@@ -4,7 +4,8 @@ import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { loadBundle, templates } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
+import { templates } from "@web/core/templates";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
 
 import { App } from "@odoo/owl";
