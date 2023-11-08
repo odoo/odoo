@@ -1195,7 +1195,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
             elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
-                value = self.convert_to_cache(record._origin[self.name], record)
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
                 env.cache.set(record, self, value)
 
             elif self.compute:
@@ -1992,10 +1992,10 @@ class Html(_String):
         }
 
         if self.sanitize_overridable:
-            if record.env.su or record.user_has_groups('base.group_sanitize_override'):
+            if record.user_has_groups('base.group_sanitize_override'):
                 return value
 
-            original_value = record.sudo()[self.name]
+            original_value = record[self.name]
             if original_value:
                 # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
