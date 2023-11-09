@@ -32,6 +32,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during 24 hours:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                                이 이메일에 연결된 Odoo 계정에 대한 비밀번호 재설정이 요청되었습니다.\n"
+"                                24시간 이내로 이 링크에 접속하여 비밀번호를 변경해 주세요:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -40,6 +43,9 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                        새로운 기기를 사용하여 계정에 로그인했습니다. <br/><br/>\n"
+"                        로그인에 관한 몇 가지 정보입니다:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -580,7 +586,7 @@ msgstr "비밀번호 변경"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "City, Region, Country"
-msgstr ""
+msgstr "시/도, 지역, 국가"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -673,20 +679,22 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"원치 않는 경우 이 이메일은 무시하셔도 됩니다.<br/><br/>\n"
+"                                감사합니다."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr ""
+msgstr "비밀번호를 모르는 경우 이 링크를 통해 즉시 비밀번호를 변경해 주세요:<br/>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "In %(country)s"
-msgstr ""
+msgstr "%(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -730,7 +738,7 @@ msgstr "미접속"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "계정에 대한 새로운 연결"
 
 #. module: auth_signup
 #. odoo-python
@@ -765,7 +773,7 @@ msgstr "초대한 사람만"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "그렇지 않은 경우 이 이메일은 무시하셔도 됩니다."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

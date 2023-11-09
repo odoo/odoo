@@ -3,11 +3,11 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # Lucia Pacheco, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lucia Pacheco, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -710,6 +710,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Activity"
@@ -1279,6 +1280,11 @@ msgstr ""
 "la lista negra?"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
+msgid "Ask at launch"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
@@ -1293,21 +1299,15 @@ msgid "Assign to me"
 msgstr "Asignarme a mí"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Assignation summary"
-msgstr "Resumen de la asignación"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
-msgid "Assigned To (On demand)"
-msgstr "Asignado a (a petición)"
+msgid "Assigned To"
+msgstr "Asignado a"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 #, python-format
 msgid "Assigned to"
@@ -1324,6 +1324,11 @@ msgid ""
 msgstr ""
 "El usuario asignado %s no tiene acceso a este documento y no puede realizar "
 "esta acción."
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Asignación"
 
 #. module: mail
 #. odoo-python
@@ -2741,6 +2746,11 @@ msgstr ""
 "Destinatarios predeterminados del registro:\n"
 "- contacto (usa el id del contacto o partner_id) O\n"
 "- correo electrónico (usa email_from o el correo electrónico)"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
+msgid "Default user"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -5388,11 +5398,13 @@ msgstr "Registrar eventos de RTC"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log a note..."
 msgstr "Registrar una nota..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
 msgstr "Registrar una actividad"
 
@@ -5689,6 +5701,7 @@ msgstr "Marcar todo como leído"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree_without_record_access
 msgid "Mark as Done"
 msgstr "Marcar como hecho"
 
@@ -6291,6 +6304,11 @@ msgid "No Record"
 msgstr "No hay registro"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
+msgid "No activities."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/command_palette.js:0
 #, python-format
@@ -6690,11 +6708,6 @@ msgid "Old values"
 msgstr "Valores antiguos"
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
-msgid "On demand"
-msgstr "A petición"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
@@ -6881,16 +6894,6 @@ msgstr ""
 #, python-format
 msgid "Original message was deleted"
 msgstr "Se eliminó el mensaje original"
-
-#. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
-msgid "Other"
-msgstr "Otro"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
-msgid "Other Responsible"
-msgstr "Otro responsable"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7185,13 +7188,24 @@ msgstr "Plan disponible"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
-msgid "Plan Due Date"
-msgstr "Fecha de vencimiento del plan"
+msgid "Plan Date"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Plan Name"
 msgstr "Nombre del plan"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
+msgid "Plan Summary"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Plan summary"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7936,7 +7950,6 @@ msgstr "Reestablecer su contraseña"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
 msgstr "Responsable"
@@ -8699,12 +8712,6 @@ msgstr "Idioma de origen"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
 msgstr "Usuario específico"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__responsible_id
-msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
-"Responsable específico de la actividad si no está vinculada al empleado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10469,8 +10476,9 @@ msgstr "¿Cuál es su nombre?"
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 #, python-format
-msgid "When selecting responsible \"other\", you must specify a responsible."
-msgstr "Si selecciona \"otro\" responsable, debe especificar a un responsable."
+msgid ""
+"When selecting \"Default user\" assignment, you must specify a responsible."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -11023,6 +11031,7 @@ msgstr "por ejemplo: contacto"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
 msgstr "Por ejemplo, hablar de la propuesta"

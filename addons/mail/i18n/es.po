@@ -4,11 +4,10 @@
 # 
 # Translators:
 # Lucia Pacheco, 2023
-# kikopeiro <francisco.peiro@factorlibre.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Ana Sanjuán, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -677,6 +676,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Activity"
@@ -1235,6 +1235,11 @@ msgstr ""
 "correo electrónico?"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
+msgid "Ask at launch"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
@@ -1249,21 +1254,15 @@ msgid "Assign to me"
 msgstr "Asignar a mí"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Assignation summary"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
-msgid "Assigned To (On demand)"
-msgstr ""
+msgid "Assigned To"
+msgstr "Asignado a"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 #, python-format
 msgid "Assigned to"
@@ -1280,6 +1279,11 @@ msgid ""
 msgstr ""
 "El usuario asignado %s no tiene acceso a este documento y no puede ejecutar "
 "esta actividad."
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Asignación"
 
 #. module: mail
 #. odoo-python
@@ -2563,7 +2567,7 @@ msgstr "Fecha y hora en la que se debe enviar la notificación."
 #: model:ir.model.fields,help:mail.field_mail_mail__pinned_at
 #: model:ir.model.fields,help:mail.field_mail_message__pinned_at
 msgid "Datetime at which the message has been pinned"
-msgstr ""
+msgstr "Fecha y hora en la que se ancló el mensaje"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -2678,6 +2682,11 @@ msgstr ""
 "Destinatarios por defecto del registro:\n"
 "- Empresa (usando el id de la empresa o del campo partner_id) O\n"
 "- Correo electrónico (usando los campos email_from o email)"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
+msgid "Default user"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -5279,11 +5288,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log a note..."
 msgstr "Registrar una nota..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
 msgstr "Registrar una actividad"
 
@@ -5575,6 +5586,7 @@ msgstr "Marcar todo como leido"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree_without_record_access
 msgid "Mark as Done"
 msgstr "Marcar como Hecho"
 
@@ -6173,6 +6185,11 @@ msgid "No Record"
 msgstr "No hay registro"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
+msgid "No activities."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/command_palette.js:0
 #, python-format
@@ -6563,11 +6580,6 @@ msgid "Old values"
 msgstr "Valores antiguos"
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
-msgid "On demand"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
@@ -6750,16 +6762,6 @@ msgstr ""
 #, python-format
 msgid "Original message was deleted"
 msgstr "Se eliminó el mensaje original"
-
-#. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
-msgid "Other"
-msgstr "Otro"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
-msgid "Other Responsible"
-msgstr "Otro responsable"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7054,13 +7056,24 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
-msgid "Plan Due Date"
+msgid "Plan Date"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Plan Name"
 msgstr "Nombre del plan"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
+msgid "Plan Summary"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Plan summary"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7793,7 +7806,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
 msgstr "Responsable"
@@ -8549,12 +8561,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
 msgstr "Usuario específico"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__responsible_id
-msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
-"Responsable específico de la actividad si no está vinculada al empleado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10262,7 +10268,8 @@ msgstr "¿Cuál es su nombre?"
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 #, python-format
-msgid "When selecting responsible \"other\", you must specify a responsible."
+msgid ""
+"When selecting \"Default user\" assignment, you must specify a responsible."
 msgstr ""
 
 #. module: mail
@@ -10803,6 +10810,7 @@ msgstr "p. ej. contacto"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
 msgstr "Por ejemplo, conversación de una propuesta"

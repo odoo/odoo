@@ -5769,6 +5769,10 @@ msgid ""
 "===========================================================\n"
 "\n"
 msgstr ""
+"\n"
+"サウジアラビア王国の給与および勤務終了に関する規定\n"
+"===========================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -5813,6 +5817,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"リトアニア給与規定\n"
+"=========================\n"
+"\n"
+"     * 従業員詳細\n"
+"　 * 従業員契約\n"
+"　 * パスポートに基づいた契約\n"
+"     * 手当/控除\n"
+"     * 基本給／総支給額／純支給額の設定が可能\n"
+"     * 従業員給与明細\n"
+"     * 休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_saft
@@ -5823,6 +5838,11 @@ msgid ""
 "The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"リトアニアSAF-Tは、XML形式を使用してさまざまなタイプの会計トランザクションデータをエクスポートするための標準ファイル形式です。\n"
+"使用されているXSDのバージョンはv2.01(2019年以降)です。リトアニア当局で使用されている最新のものです。\n"
+"SAF-T Financialの最初のバージョンは、顧客やサプライヤとの取引を含む総勘定元帳レベルに限定されています。\n"
+" 必要なマスタデータも含まれています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -5861,6 +5881,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"ルクセンブルグ給与規定\n"
+"=========================\n"
+"\n"
+"     * 従業員詳細\n"
+"　 * 従業員契約\n"
+"　 * パスポートに基づいた契約\n"
+"     * 手当/控除\n"
+"     * 基本給／総支給額／純支給額の設定が可能\n"
+"     * 従業員給与明細\n"
+"     * 休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_mobile
@@ -5873,6 +5904,14 @@ msgid ""
 "* Push notifications to registered devices for direct messages, chatter messages and channel.\n"
 "* Redirection to the Android/iOS mobile app when you click on an Odoo URL.\n"
 msgstr ""
+"\n"
+"メールモバイル\n"
+"===========\n"
+"このモジュールは、メールアドオンを変更して、以下を提供します。\n"
+"\n"
+"\n"
+"*ダイレクトメッセージ、チャターメッセージ、およびチャネルの登録済みデバイスへのプッシュ通知。 \n"
+"* Odoo URLをクリックすると、Android /iOSモバイルアプリにリダイレクトされます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -5957,6 +5996,24 @@ msgid ""
 "    - No (The bill cannot be paid, nothing has been delivered yet)\n"
 "    - Exception (Received and invoiced quantities differ)\n"
 msgstr ""
+"\n"
+"仕入先請求書の3者照合管理\n"
+"=====================================\n"
+"\n"
+"製造業では、購入品を受け取る前に仕入先請求書を受け取ることがよくありますが、商品が納品されるまで\n"
+"支払をしたくないという場合があります。\n"
+"\n"
+"このような状況に対する解決策は、仕入先請求書を受け取る際に(オーダ数量に基づいて)作成するが、\n"
+"請求書の支払いは(購買オーダ行の）入荷数量が\n"
+"記録された仕入先請求書と一致した場合にのみ、請求書を支払うことです。\n"
+"\n"
+"このモジュールは、各仕入先請求書について、支払可能か否かをマークする \"支払リリース\"メカニズムを導入しています。\n"
+"\n"
+"各仕入先請求書は、以下の 3 つのステートのいずれかを受信します: \n"
+"\n"
+"- はい (支払可能)\n"
+"- いいえ (請求書は支払えない。まだ何も納入されていない)\n"
+"- 例外 (受取数量と請求数量が異なる)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_stock
@@ -5964,6 +6021,8 @@ msgid ""
 "\n"
 "Manage Product returns from helpdesk tickets\n"
 msgstr ""
+"\n"
+"ヘルプデスクチケットからのプロダクト返品の管理\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_work_entry_holidays
@@ -6002,6 +6061,23 @@ msgid ""
 "Note that discount lines (with a negative price) will have no taxes applied to them,\n"
 "but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 msgstr ""
+"\n"
+"Taxclouds計算の値引を管理します。\n"
+" 右記参照https://taxcloud.com/support/discounts あるいは\n"
+"https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"概要: 消費税を計算する前に、販売者が提供するすべての値引を販売価格に適用する必要があります。\n"
+"売り手は、値引申請ポリシーで顧客に方法論を開示する必要があります。\n"
+"\n"
+"アルゴリズムは次のとおりです:\n"
+" - 行固有の割引は、適用される予定の回線に最初に適用されます。\n"
+"これは、プロダクト固有の値引または最も安い行の値引を意味します。\n"
+" - 次に、グローバルな値引が有料回線全体に可能な限り均等に適用されます。\n"
+"余りがある場合は、行の順に、順次値引がなくなるか、\n"
+"値引可能な回線がなくなるまで適用されます。\n"
+"\n"
+"値引行(負の価格で)が何の税金もないことに注意してください。\n"
+"それらに適用されるのではなく、これらの行の税は、税金の計算中に適用され適用されます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud_delivery
@@ -6014,6 +6090,13 @@ msgid ""
 "There is an added option for discount (free shipping) on deliveries.\n"
 "With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 msgstr ""
+"\n"
+"Taxclouds計算での配信による値引の管理。\n"
+"このモジュールは \"Account Taxcloud - Sale (coupon)\"と同じロジックになっています。\n"
+"TaxCloudの値引計算方法の詳細については、そちらをご覧ください。\n"
+"\n"
+"配送の値引（送料無料）の追加オプションがあります。\n"
+"セールクーポン配信では、値引計算は配送ラインには適用されません。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -6179,6 +6262,8 @@ msgid ""
 "\n"
 "Manage the after sale of the products from helpdesk tickets.\n"
 msgstr ""
+"\n"
+"ヘルプデスクチケットからのプロダクトのアフターセールを管理します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -6325,6 +6410,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"メキシコ給与規定\n"
+"=========================\n"
+"\n"
+"     * 従業員詳細\n"
+"　 * 従業員契約\n"
+"　 * パスポートに基づいた契約\n"
+"　 * 手当/控除\n"
+"     * 基本給／総支給額／純支給額の設定が可能\n"
+"     * 従業員給与明細\n"
+"     * 休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -6423,6 +6519,22 @@ msgid ""
 "https://github.com/DGFiP/Test-Compta-Demat\n"
 "\n"
 msgstr ""
+"\n"
+"会計履歴のインポートに便利なFEC標準ファイルのインポート用モジュール。\n"
+"\n"
+"FECファイル(fichier des écritures comptables) フランス企業が税務当局に提出しなければならない標準的な会計報告書です。\n"
+"このモジュールでは、これらのファイルから勘定科目、仕訳帳、取引先、仕訳をインポートすることができます。\n"
+"\n"
+"FECのCSVフォーマットのみ実装しています。\n"
+"  'utf-8', 'utf-8-sig' and 'iso8859_15' はエンコードのみ許可しています。\n"
+" いくつかの区切り文字が許可されています。: ';' or '|' or ',' or '\t'.\n"
+"\n"
+"公式技術仕様 (fr)\n"
+"        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"税務当局によるFECテストツール\n"
+"https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -6438,6 +6550,16 @@ msgid ""
 "Official website: https://sie.se/\n"
 "XSD and documentation: https://sie.se/format/\n"
 msgstr ""
+"\n"
+"SIE 5 標準ファイルのインポート用モジュール\n"
+"\n"
+"現在のモジュールの範囲では、口座残高のインポートによる会計の初期化が可能で\n"
+"取引先(顧客とサプライヤー)、仕訳(仕訳データはファイルに存在する必要があります)をインポートすることによって、会計を初期化することができます。\n"
+"\n"
+"アナリティクス、資産、\"アカウント・リンケージ\"データはインポートできません。\n"
+"\n"
+"公式ウェブサイト：https://sie.se/\n"
+"XSDとドキュメント: https://sie.se/format/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -6499,6 +6621,11 @@ msgid ""
 "\n"
 "Improve the import of bank statement feature to support the SEPA recommended Cash Management format (CAMT.053).\n"
 msgstr ""
+"\n"
+"Module to import CAMT bank statements.\n"
+"======================================\n"
+"\n"
+"Improve the import of bank statement feature to support the SEPA recommended Cash Management format (CAMT.053).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -6637,6 +6764,14 @@ msgid ""
 "Bank Statements may be generated containing a subset of the OFX information (only those transaction lines that are required for the\n"
 "creation of the Financial Accounting records).\n"
 msgstr ""
+"\n"
+"OFX銀行取引明細書をインポートするモジュール。\n"
+"======================================\n"
+"このモジュールを使用すると、マシンで読み取り可能なOFXファイルをインポートできます。\n"
+"Odoo:それらは解析され、会計\\銀行および現金\\銀行取引明細書に人間が読める形式で保存されます。\n"
+"\n"
+"OFX情報のサブセットを含む銀行取引明細書を生成できます\n"
+"(財務会計レコードの作成に必要なトランザクションラインのみ)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -6715,6 +6850,12 @@ msgid ""
 "    * Employee Details\n"
 "    * Employee Contracts\n"
 msgstr ""
+"\n"
+"モロッコ給与規定\n"
+"=========================\n"
+"\n"
+"    * 従業員詳細\n"
+"    * 従業員契約\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz
@@ -6801,6 +6942,10 @@ msgid ""
 "The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"    ノルウェーのSAF-Tは、XML形式を使用してさまざまなタイプの会計トランザクションデータをエクスポートするための標準ファイル形式です。\n"
+"    SAF-T Financialの最初のバージョンは、顧客およびサプライヤの取引を含む総勘定元帳レベルに制限されています。\n"
+"    必要なマスタデータも含まれています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_account_accountant
@@ -6808,6 +6953,8 @@ msgid ""
 "\n"
 "Notify that a matching sale order exists in the reconciliation widget.\n"
 msgstr ""
+"\n"
+"一致する販売オーダが消込ウィジェットに存在することを通知します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -6827,6 +6974,11 @@ msgid ""
 "\n"
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 msgstr ""
+"\n"
+"Odoo企業版Web顧客\n"
+"===========================\n"
+"\n"
+"このモジュールは、企業版デザインと応答性を提供するようにWebアドオンを変更します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -7021,6 +7173,9 @@ msgid ""
 "PLM for workorder.\n"
 "=================================================\n"
 msgstr ""
+"\n"
+"作業オーダ用の製品ライフサイクル管理(PLM)\n"
+"=================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -7183,6 +7338,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"ポーランド給与規定\n"
+"=========================\n"
+"\n"
+"    *従業員詳細\n"
+"　*従業員契約\n"
+"　*パスポートに基づいた契約\n"
+"　*手当/控除\n"
+"　*基本給/総支給額/純支給額の設定が可能\n"
+"　*従業員給与明細\n"
+"　*休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -7209,6 +7375,8 @@ msgid ""
 "\n"
 "Project and task integration with holidays\n"
 msgstr ""
+"\n"
+"休暇とプロジェクトおよびタスクの統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_http_routing
@@ -7224,6 +7392,8 @@ msgid ""
 "\n"
 "Publish your customers as business references on your website to attract new potential prospects.\n"
 msgstr ""
+"\n"
+"新しい潜在的な見込み客を引き付けるためにあなたのウェブサイトでビジネスリファレンスとしてあなたの顧客を公開して下さい。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -7231,6 +7401,8 @@ msgid ""
 "\n"
 "Publish your members/association directory publicly.\n"
 msgstr ""
+"\n"
+"メンバー/アソシエーションディレクトリを公開します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_ebay
@@ -7249,6 +7421,19 @@ msgid ""
 "* Automatic creation of sales order and invoices\n"
 "\n"
 msgstr ""
+"\n"
+"eBayでプロダクトを公開する\n"
+"=============================\n"
+"eBayインテグレーターは、eBayでOdooの製品を管理する機会を提供します。\n"
+"\n"
+"\n"
+"主な機能\n"
+"------------ \n"
+"* eBayでの製品の公開\n"
+"* eBayでの改訂、再リスト、最終品目\n"
+"*在庫移動との統合\n"
+"*販売注文と請求書の自動作成\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_boletas
@@ -7282,6 +7467,34 @@ msgid ""
 "Highlights from this SII Guide:\n"
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 msgstr ""
+"\n"
+"モジュールの目的:\n"
+"======================\n"
+"\n"
+"SII要件(チリにおける法的要件)の一環として、\n"
+"2021年3月以降、Boletas取引は電子請求書とは異なるウェブサービスを使用して、電子ワークフローの下でSIIに送信されなければなりません。\n"
+"以前は日報のみで、BoletasをSIIに送る必要はありませんでした。\n"
+"\n"
+"営業日報\n"
+"\"Libro de ventas diarias\" (former \"reporte de consumo de folios\" または RCOF)の送付業務は2022年8月1日より\n"
+"当局によって廃止されました。そのため、このOdooの新バージョンから削除されました。\n"
+"\n"
+"電子請求書Boletasと電子請求書のワークフローの違い:\n"
+"=========================================================================\n"
+"\n"
+"これらのワークフローにはいくつかの重要な違いがあるため、今回のPRでは具体的な変更を加えることにしました。\n"
+"以下が違いです:\n"
+"\n"
+"* 電子請求書の情報を送信する仕組みは、電子請求書の受付で使用されるものとは異なる専用サーバが必要です。 (本番環境には\"Palena\"  - palena.sii.cl そしてテスト環境には \"Maullin\" - maullin.sii.cl)\n"
+"* 認証サービス、配送状況の照会、ドキュメントのステータスが異なります。\n"
+"* 認証トークンの取得\n"
+"* 電子Boletasを送信するためのXMLスキーマが更新され、新しいタグが組込まれました。\n"
+"* 電子Boletasの検証診断は、配送の追跡IDを入力とする \"REST \"ウェブサービスを通じて配信されます。\n"
+"電子請求書は引き続きEメールで診断書を受け取ることができます。\n"
+"* 電子Boletasと関連した追跡ID(\"identificador de envío\") は15桁の長さです。(電子請求書は10)\n"
+"\n"
+"SIIガイドのハイライト:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -7332,6 +7545,11 @@ msgid ""
 "\n"
 "This application allows you to reimburse expenses in payslips.\n"
 msgstr ""
+"\n"
+"給与明細での経費の償還\n"
+"=====================================\n"
+"\n"
+"このアプリケーションでは、給与明細で経費精算ができます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -7355,6 +7573,8 @@ msgid ""
 "\n"
 "Repair Products from helpdesk tickets\n"
 msgstr ""
+"\n"
+"ヘルプデスクチケットでプロダクトを修理する\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports_sbr_icp
@@ -7364,6 +7584,10 @@ msgid ""
 "========================\n"
 "Submit your Intracommunity Services to the Dutch tax authorities.\n"
 msgstr ""
+"\n"
+"SBR オランダ語ローカライズ\n"
+"========================\n"
+"オランダ税務当局にイントラコミュニティサービスを提出します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports_sbr
@@ -7373,6 +7597,10 @@ msgid ""
 "========================\n"
 "Submit your Tax Reports to the Dutch tax authorities\n"
 msgstr ""
+"\n"
+"SBR オランダ語ローカライズ\n"
+"========================\n"
+"オランダ税務当局に税レポートを提出します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_sms
@@ -7383,6 +7611,11 @@ msgid ""
 "\n"
 "Bridge module adding UX requirements to ease SMS marketing o, event attendees.\n"
 msgstr ""
+"\n"
+"イベント参加者のSMSマーケティング\n"
+"================================\n"
+"\n"
+"SMSマーケティングを容易にするためにUX要件を追加するブリッジモジュール、イベント参加者。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_track_sms
@@ -7394,6 +7627,10 @@ msgid ""
 "Bridge module adding UX requirements to ease SMS marketing on event track\n"
 "speakers..\n"
 msgstr ""
+"\n"
+"イベントトラックスピーカーでのSMSマーケティング\n"
+"=====================================\n"
+"ブリッジモジュールがUX要件を簡単に追加イベントトラックスピーカーでのSMSマーケティング。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -7401,6 +7638,8 @@ msgid ""
 "\n"
 "Schedule your teams across projects and estimate deadlines more accurately.\n"
 msgstr ""
+"\n"
+"プロジェクト全体でチームをスケジュールし、期限をより正確に見積もります。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning
@@ -7408,6 +7647,8 @@ msgid ""
 "\n"
 "Schedule your teams and employees with shift.\n"
 msgstr ""
+"\n"
+"チームと従業員をシフトでスケジュールします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_hr_skills
@@ -7415,6 +7656,8 @@ msgid ""
 "\n"
 "Search planning slots by skill\n"
 msgstr ""
+"\n"
+"スキルごとに計画スロットを検索\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -7422,6 +7665,8 @@ msgid ""
 "\n"
 "Sell event tickets through eCommerce app.\n"
 msgstr ""
+"\n"
+"eコマースアプリを介してイベントチケットを販売します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_booth_sale
@@ -7429,6 +7674,8 @@ msgid ""
 "\n"
 "Sell your event booths and track payments on sale orders.\n"
 msgstr ""
+"\n"
+"イベントブースを販売し販売オーダの支払を追跡します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest
@@ -7452,6 +7699,15 @@ msgid ""
 "\n"
 "See: https://www.bpost.be/portal/goHome\n"
 msgstr ""
+"\n"
+"bpostを介して配送を送信し、オンラインで追跡します\n"
+"=======================================================\n"
+"\n"
+"\n"
+"ベルギーにある会社は、地元の郵便会社との配送を利用できます。\n"
+"\n"
+"\n"
+"参照:https://www.bpost.be/portal/goHome\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_link_tracker
@@ -7466,6 +7722,8 @@ msgid ""
 "\n"
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 msgstr ""
+"\n"
+"Googleマップに会社の住所/パートナーの住所を表示します。 ウェブサイトの設定でAPIキーを構成します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -7475,6 +7733,10 @@ msgid ""
 "\n"
 "Let your customers follow the signature process easily.\n"
 msgstr ""
+"\n"
+"文書に簡単に署名して記入します。テキストフィールドと署名フィールドを使用してドキュメントをカスタマイズし、受信者に送信します。\n"
+"\n"
+"顧客が署名プロセスを簡単に実行できるようにします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -7489,6 +7751,14 @@ msgid ""
 " - Field PermitNo and PermitNoDate on invoice\n"
 "\n"
 msgstr ""
+"\n"
+"シンガポール勘定科目とローカリゼーション\n"
+"=======================================================\n"
+"\n"
+"このモジュールは、会計のために以下を追加します。\n"
+"-シンガポールの勘定科目表\n"
+"-会社およびパートナーのフィールドUEN(一意のエンティティ番号)\n"
+"-請求書のフィールドPermitNoおよびPermitNoDate\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills
@@ -7499,6 +7769,11 @@ msgid ""
 "\n"
 "This module introduces skills and resume management for employees.\n"
 msgstr ""
+"\n"
+"HR用のスキルと履歴書\n"
+"========================\n"
+"\n"
+"このモジュールは従業員用にスキルと履歴書の管理を提供します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk_hr_payroll
@@ -7515,6 +7790,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"スロバキア給与規定\n"
+"=========================\n"
+"\n"
+"    *従業員詳細\n"
+"　*従業員契約\n"
+"　*パスポートに基づいた契約\n"
+"　*手当/控除\n"
+"　*基本給/総支給額/純支給額の設定が可能\n"
+"　*従業員給与明細\n"
+"　*休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk
@@ -7534,6 +7820,20 @@ msgid ""
 "Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.\n"
 "\n"
 msgstr ""
+"\n"
+"スロバキア勘定科目とローカリゼーション: 勘定科目表 2020、基本VATレート +\n"
+"財政ポジション\n"
+"\n"
+"Tento modul definuje:\n"
+"• Slovenskú účtovú osnovu za rok 2020\n"
+"\n"
+"• Základné sadzby pre DPH z predaja a nákupu\n"
+"\n"
+"• Základné fiškálne pozície pre slovenskú legislatívu\n"
+"\n"
+"\n"
+"Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -7572,6 +7872,10 @@ msgid ""
 "Manage status of products, rentals, delays\n"
 "Manage user and manager notifications\n"
 msgstr ""
+"\n"
+"プロダクトのレンタルを指定します（プロダクト、見積もり、請求書など）\n"
+" プロダクト、レンタル、遅延のステータスを管理します\n"
+"ユーザとマネジャーの通知を管理します\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -7625,6 +7929,12 @@ msgid ""
 "This is the base module to manage the accounting chart for Sweden in Odoo.\n"
 "It also includes the invoice OCR payment reference handling.\n"
 msgstr ""
+"\n"
+"スウェーデン会計\n"
+"------------------\n"
+"\n"
+"Odooでスウェーデンの勘定科目を管理する基本モジュールです。\n"
+"請求書OCR支払い参照処理も含まれます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7644,6 +7954,20 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail. \n"
 "\n"
 msgstr ""
+"\n"
+"スイスローカリゼーション\n"
+"==================\n"
+"このモジュールはスイスの勘定科目表 (Swiss PME/KMU 2015)、税を定義し、 請求書を印刷またはメールで送信する際に、QR請求書の生成を許可します。\n"
+"QR請求書は請求書に添付され、決済を簡単にします。\n"
+"\n"
+"QR請求書は以下の場合に生成されます:\n"
+"    - 請求書に記載された取引先が、スイスに完全な住所（番地、都市名、郵便番号、国名）を有している\n"
+"    - 請求書上でスイスQRコードを生成するオプションが選択されている（デフォルトで選択されている）\n"
+"    - 銀行ジャーナルに正しい口座番号/QR IBANが設定されている\n"
+"    - (QR-IBAN使用時): 請求書の支払参照がQR参照である\n"
+"\n"
+"上記の条件を満たせば、QR請求書は自動的に作成されます。QR請求書は、印刷または郵送の際、請求書の後に付加されます。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -7660,6 +7984,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"スイス給与規定\n"
+"==========================\n"
+"\n"
+"    *従業員詳細\n"
+"　*従業員契約\n"
+"　*パスポートに基づいた契約\n"
+"　*手当/控除\n"
+"　*基本給/総支給額/純支給額の設定が可能\n"
+"　*従業員給与明細\n"
+"　*休暇管理との統合\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -7680,6 +8015,8 @@ msgid ""
 "\n"
 "Technical module.\n"
 msgstr ""
+"\n"
+"技術モジュール\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_configurator
@@ -7690,6 +8027,11 @@ msgid ""
 "\n"
 "It also enables the \"optional products\" feature.\n"
 msgstr ""
+"\n"
+"技術モジュール:\n"
+"主な目的は、販売オーダフォームでプロダクトを設定できるようにsale_orderビューをオーバーライドすることです。\n"
+"\n"
+"また、 \"オプションプロダクト\" 機能も有効にします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_saft
@@ -7697,6 +8039,8 @@ msgid ""
 "\n"
 "The Austrian Standard Audit File for Tax (SAF-T) is a standard file format for exporting various types of accounting transactional data using the XML format.\n"
 msgstr ""
+"\n"
+"Austrian Standard Audit File for Tax (SAF-T)は、XMLフォーマットを用いて様々なタイプの会計取引データをエクスポートするための標準ファイルフォーマットです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -7742,6 +8086,19 @@ msgid ""
 "\n"
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 msgstr ""
+"\n"
+"ランチを管理する基本モジュール。\n"
+"==================\n"
+"\n"
+"多くの企業では、従業員がより多くの施設を提供できるように、通常のベンダーからサンドイッチ、ピザなどを注文しています。\n"
+"\n"
+"しかし、会社内の昼食管理は、特に従業員またはベンダーの数が重要な場合に適切な管理が必要です。\n"
+"\n"
+"“ランチオーダ”モジュールは、この管理を容易にするだけでなく、従業員により多くのツールとユーザビリティを提供するために開発されました。\n"
+"\n"
+"完全な食事と仕入先の管理に加えて、このモジュールは警告を表示し、従業員の好みに基づいて迅速な注文の選択を提供します。\n"
+"\n"
+"従業員の時間を節約し、ポケットに常に小銭を持たなくてよいようにするには、このモジュールが不可欠です。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock
@@ -7753,6 +8110,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"AからBの間で商品を送った証明として配送ガイド (Complemento XML Carta de Porte)\n"
+"が必要です。\n"
+"\n"
+"配送ガイドを作成できるのは、配送オーダが検証されて\n"
+"からです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
@@ -7764,6 +8127,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"AからBの間で商品を送った証明として配送ガイド (Guía de Remisión) \n"
+"が必要です。\n"
+"\n"
+"配送ガイドを作成できるのは、配送オーダが検証されて\n"
+"からです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -7780,6 +8149,16 @@ msgid ""
 "guide.  Then it will follow the same flow as for the invoices, sending it to\n"
 "the SII.\n"
 msgstr ""
+"\n"
+"AからBの間で商品を送った証明として配送ガイド (guia de despacho) \n"
+"が必要です。\n"
+"\n"
+"それが取引先で設定可能なのは価格が配送ガイドで必要で\n"
+"それが販売オーダまたはプロダクト自体に由来する\n"
+"必要がある場合です\n"
+"\n"
+"配送ガイドを作成できるのは、配送オーダが検証されてからです。その後、請求書と同じ流れで\n"
+"SIIに送られます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -7822,6 +8201,10 @@ msgid ""
 "limitation on the number of columns in a table. The values of all sparse\n"
 "fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 msgstr ""
+"\n"
+"このモジュールの目的は、\"スパース\"フィールド、つまりほとんどがnullのフィールドを実装することです。\n"
+"この実装は、テーブルの列数に関するPostgreSQLの制限を回避します。\n"
+"全てのスパースフィールドの値は、JSONマッピングの形式で「シリアル化された」フィールドに格納されます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_media
@@ -7830,6 +8213,8 @@ msgid ""
 "The purpose of this technical module is to provide a front for\n"
 "social media configuration for any other module that might need it.\n"
 msgstr ""
+"\n"
+"この技術モジュールの目的は、それを必要とする可能性のある他のモジュールのソーシャルメディア構成のフロントを提供することです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
@@ -7872,6 +8257,8 @@ msgid ""
 "\n"
 "This bridge module adds some smart buttons between Purchase and Subcontracting\n"
 msgstr ""
+"\n"
+"このブリッジモジュールは、購買と外注の間にスマートボタンをいくつか追加します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -7879,6 +8266,8 @@ msgid ""
 "\n"
 "This bridge module allows to manage subcontracting with the dropshipping module.\n"
 msgstr ""
+"\n"
+"このブリッジモジュールを使用すると、直送モジュールとの下請けを管理できます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account
@@ -7886,6 +8275,8 @@ msgid ""
 "\n"
 "This bridge module allows to manage subcontracting with valuation.\n"
 msgstr ""
+"\n"
+"このブリッジモジュールを使用すると、評価を使用して外注を管理できます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise_holidays
@@ -7893,6 +8284,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules sale_timesheet_enterprise and project_timesheet_holidays are installed.\n"
 msgstr ""
+"\n"
+"このブリッジモジュールは、sale_timesheet_enterprise および project_timesheet_holidays モジュールがインストールされると自動的にインストールされます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_mrp_subcontracting
@@ -7900,6 +8293,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 msgstr ""
+"\n"
+"このブリッジモジュールは、モジュールstock_barcodeおよびmrp_subcontractingがインストールされると自動インストールされます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -7907,6 +8302,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 msgstr ""
+"\n"
+"このブリッジモジュールは、stock_barcodeモジュールとquality_controlモジュールがインストールされると自動インストールされます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
@@ -7914,6 +8311,8 @@ msgid ""
 "\n"
 "This is a base module. It holds website-related stuff for Contact model (res.partner).\n"
 msgstr ""
+"\n"
+"これは基本モジュールです。 連絡先モデル(res.partner)のウェブサイト関連のものを保持しています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -7921,6 +8320,8 @@ msgid ""
 "\n"
 "This is a bridge module that adds multi-website support for payment providers.\n"
 msgstr ""
+"\n"
+"これは決済プロバイダーにマルチサイトサポートを追加するブリッジモジュールです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -7936,6 +8337,16 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
+"\n"
+"これはフル機能のカレンダーシステムです。\n"
+"==========================\n"
+"\n"
+"サポートしているもの：\n"
+"------------\n"
+"- イベントのカレンダー\n"
+"- 定期的なイベント\n"
+"\n"
+"打ち合わせを管理する必要がある場合は、CRMモジュールをインストールする必要があります\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mrp
@@ -7943,6 +8354,8 @@ msgid ""
 "\n"
 "This is a link module between Point of Sale and Mrp.\n"
 msgstr ""
+"\n"
+"これはPOSとMRPのリンクモジュールです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi
@@ -7959,6 +8372,17 @@ msgid ""
 "\n"
 "Set the payment reference type from the Sales Journal.\n"
 msgstr ""
+"\n"
+"フィンランドの会計を管理するOdooモジュールです。\n"
+"============================================================\n"
+"\n"
+"このモジュールをインストール後、以下にアクセスできます:\n"
+"    * フィンランド勘定科目表\n"
+"    * 財政ポジション\n"
+"    * 請求書支払参照タイプ (フィンランド標準参照 & フィンランド債権者照会 (RF))\n"
+"    * 販売オーダ用フィンランド参照フォーマット\n"
+"\n"
+"売上仕訳帳から支払参照タイプを設定します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -7967,6 +8391,9 @@ msgid ""
 "This is the base module for managing Units of measure.\n"
 "========================================================================\n"
 msgstr ""
+"\n"
+"これは、測定単位を管理するための基本モジュールです。\n"
+"========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -7991,6 +8418,24 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"\n"
+"これは、Odooのプロダクトと価格リストを管理するための基本モジュールです。\n"
+"====================================================\n"
+"\n"
+"プロダクトサポートバリアント、さまざまな価格設定方法、仕入先情報、在庫/オーダ、計量単位、梱包、属性等。\n"
+"\n"
+"プライスリストサポート：\n"
+"-------------------\n"
+"*複数レベル値引(製品、カテゴリ、数量別)\n"
+"*異なる基準に基づいて価格を計算する：\n"
+"*その他の価格表\n"
+"* 原価\n"
+"* 定価\n"
+"*仕入先価格\n"
+"\n"
+"プロダクトおよび/またはパートナーによる価格設定。\n"
+"\n"
+"プロダクトラベルにバーコードを印刷します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs
@@ -8000,6 +8445,10 @@ msgid ""
 "This module is based on the official document \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 msgstr ""
+"\n"
+"これはセルビア語ローカライゼーションの基本モジュールです。勘定科目表と税金を管理します。\n"
+"このモジュールは公式文書\"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"に基づいています。\n"
+"参照元: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -8033,6 +8482,33 @@ msgid ""
 "        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 msgstr ""
+"\n"
+"Odooでベルギーの勘定科目表を管理する基本モジュールです。\n"
+"==============================================================================\n"
+"\n"
+"このモジュールをインストールすると、会計用の設定ウィザードが起動します。\n"
+"    * 勘定科目表を作成するのに役立つ勘定科目表テンプレートがあります。\n"
+"    * そのウィザードでは、会社名、フォローする表テンプレート、生成する\n"
+"桁数、口座と銀行口座のコード、仕訳帳を作成する通貨を記入します。\n"
+"\n"
+"こうして、表テンプレートの純粋なコピーが生成されます。\n"
+"\n"
+"このモジュールで提供されるウィザード:\n"
+"--------------------------------\n"
+"    * 取引先VATイントラ： 関連するVATおよび請求金額とともに取引先を\n"
+"登録する。\n"
+"XMLファイル形式を準備します。\n"
+"\n"
+"        **アクセスへのパス:** 請求/レポーティング/法的レポート/ベルギーステートメント/パートナーVATイントラ\n"
+"    * 期間VAT申告: 現在ログインしているユーザの主な会社のVat申告用XMLファイルを作成します。\n"
+"\n"
+"        **アクセスへのパス:**請求/レポーティング/法的レポート/ベルギー明細書/定期的 VAT レポート\n"
+"    * VAT対象顧客の年間リスト: VAT用XMLファイル作成\n"
+"会計年度に基づき現在ログインしているユーザの本社の\n"
+"申告書。\n"
+"  \n"
+"        **アクセスのパス:** 請求/レポーティング/法的レポート/ベルギー明細書/VAT対象顧客の年間リスト\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -8041,6 +8517,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Egypt in Odoo.\n"
 "==============================================================================\n"
 msgstr ""
+"\n"
+"Odooでエジプトの勘定科目を管理する基本モジュールです。\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ee
@@ -8048,6 +8527,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 msgstr ""
+"\n"
+"Odooでエストニアの勘定科目を管理する基本モジュールです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -8058,6 +8539,11 @@ msgid ""
 "\n"
 "Greek accounting chart and localization.\n"
 msgstr ""
+"\n"
+"ギリシャの勘定科目を管理するための基本モジュールです。\n"
+"==================================================================\n"
+"\n"
+"ギリシャの勘定科目とローカライゼーション\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -8133,6 +8619,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Malaysia in Odoo.\n"
 "==============================================================================\n"
 msgstr ""
+"\n"
+"Odooでマレーシアの勘定科目を管理する基本モジュールです。\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -8153,6 +8642,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo. \n"
 msgstr ""
+"\n"
+"Odooでアイルランド共和国の勘定科目を管理する基本モジュールです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -8161,6 +8652,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Taiwan in Odoo.\n"
 "==============================================================================\n"
 msgstr ""
+"\n"
+"Odooで台湾の勘定科目を管理する基本モジュールです。\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id
@@ -8208,6 +8702,14 @@ msgid ""
 " - Taxes and tax report\n"
 " - Multiple Fiscal positions\n"
 msgstr ""
+"\n"
+"イスラエルでOdooを利用するために必要な最新の基本的なイスラエル語ローカライゼーションです:\n"
+"================================================================================\n"
+"\n"
+"このモジュールは以下で構成されています:\n"
+" - 一般的なイスラエルの勘定科目表\n"
+" - 税と税務申告書\n"
+" - 複数の財務ポジション\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -8233,6 +8735,13 @@ msgid ""
 "\n"
 "Romanian accounting chart and localization.\n"
 msgstr ""
+"\n"
+"ルーマニア用VATモジュール\n"
+"This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.\n"
+"It also adds the Registration Number for Romania in Odoo.\n"
+"================================================================================================================\n"
+"\n"
+"Romanian accounting chart and localization.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -8264,6 +8773,32 @@ msgid ""
 "4) An international vendor charge you your provincial tax. They are registered with your\n"
 "position.\n"
 msgstr ""
+"\n"
+"これは、Odooでカナダ勘定科目を管理するためのモジュールです。\n"
+"===========================================================================================\n"
+"\n"
+"Canadian accounting charts and localizations.\n"
+"\n"
+"Fiscal positions\n"
+"----------------\n"
+"\n"
+"When considering taxes to be applied, it is the province where the delivery occurs that matters.\n"
+"Therefore we decided to implement the most common case in the fiscal positions: delivery is the\n"
+"responsibility of the vendor and done at the customer location.\n"
+"\n"
+"Some examples:\n"
+"\n"
+"1) You have a customer from another province and you deliver to his location.\n"
+"On the customer, set the fiscal position to his province.\n"
+"\n"
+"2) You have a customer from another province. However this customer comes to your location\n"
+"with their truck to pick up products. On the customer, do not set any fiscal position.\n"
+"\n"
+"3) An international vendor doesn't charge you any tax. Taxes are charged at customs\n"
+"by the customs broker. On the vendor, set the fiscal position to International.\n"
+"\n"
+"4) An international vendor charge you your provincial tax. They are registered with your\n"
+"position.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -8279,6 +8814,16 @@ msgid ""
 "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 msgstr ""
+"\n"
+"これはOdooのポーランドの会計勘定科目と税を管理するためのモジュールです。\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dz
@@ -8423,6 +8968,8 @@ msgid ""
 "\n"
 "This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 msgstr ""
+"\n"
+"モジュールは、Twitterスクローラービルディングブロックをウェブサイトビルダーに追加して、Webサイトの任意のページにTwitterフィードを表示できるようにします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -8434,6 +8981,12 @@ msgid ""
 "\n"
 "Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).\n"
 msgstr ""
+"\n"
+"モジュールは、eコマースショップに比較ツールを追加して、買い物客が属性に基づいてプロダクトを簡単に比較できるようにします。それは彼らの購入決定をかなり加速するでしょう。\n"
+"\n"
+"プロダクト属性を構成するには、ウェブサイト設定で*属性とバリアント*をアクティブにします。これにより、製品フォームに専用のセクションが追加されます。構成では、モジュールは、買い物客の比較テーブルを構造化するために、プロダクト属性にカテゴリーフィールドを追加します。\n"
+"\n"
+"最後に、モジュールには、プロダクトのウェブページに属性の要約テーブルを表示するオプションが付属しています('カスタマイズ'メニューで利用可能)。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_dashboard
@@ -8443,6 +8996,10 @@ msgid ""
 "This new type of view contains some basic statistics, a graph, and a pivot subview that allow you to get a quick overview of your online sales.\n"
 "It also provides new tools to analyse your data.\n"
 msgstr ""
+"\n"
+"モジュールは、ウェブサイトアプリケーションに新しいダッシュボードビューを追加します。\n"
+"新しいタイプのビューには、いくつかの基本的な統計、グラフ、およびピボットサブビューが含まれており、オンライン販売の概要をすばやく確認できます。\n"
+"また、データを分析するための新しいツールも提供します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing_sms
@@ -8451,6 +9008,8 @@ msgid ""
 "This module adds a new template to the Newsletter Block to allow \n"
 "your visitors to subscribe with their phone number.\n"
 msgstr ""
+"\n"
+"このモジュールはニュースレターブロックに新しいテンプレートを追加します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting_crm
@@ -8461,6 +9020,10 @@ msgid ""
 "\n"
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 msgstr ""
+"\n"
+"モジュールは、CRMの1つまたは複数の案件ケースにショートカットを追加します。\n"
+"===========================================================================\n"
+"ショートカットを使用すると、選択したケースに基づいてレンタルオーダを生成できます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -8476,6 +9039,14 @@ msgid ""
 "We suggest you to install this module, if you installed both the sale and the crm\n"
 "modules.\n"
 msgstr ""
+"\n"
+"モジュールは、CRMの1つまたは複数の案件ケースにショートカットを追加します。\n"
+"===========================================================================\n"
+"ショートカットを使用すると、選択したケースに基づいて販売オーダを生成できます。\n"
+"異なるケースが開いている場合(リスト)、ケースごとに1つの受注が生成されます。\n"
+"その後、ケースはクローズされ、生成された販売オーダにリンクされます。\n"
+"\n"
+"販売モジュールとCRMモジュールの両方をインストールした場合は、モジュールをインストールすることをお勧めします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
@@ -8483,6 +9054,8 @@ msgid ""
 "\n"
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 msgstr ""
+"\n"
+"モジュールは、調査との統合を追加して、記入する調査に基づいて、従業員にフィードバックを求めます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_product_configurator
@@ -8504,6 +9077,13 @@ msgid ""
 "- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"このモジュールは、(ウェブサービスからのリクエストを経由して)データを受信するプロキシにOdoo DBを登録する汎用機能を追加します。\n"
+"- edi_proxy_user はユーザあてのドキュメントを受信する際に、\n"
+"ユーザの識別を許可することができる特定のプロキシタイプ (例: l10n_it_edi, peppol) 上で一意な識別子を持ちます。それは特定のOdooデータベース上で特定の会社に\n"
+"リンクしています。\n"
+"- 暗号化機能により、プロキシからの受信時にすべてのユーザーデータを復号化できる。\n"
+"- 認証は、万が一誰かがユーザーのデータベースに侵入した場合に備えて、なりすましを避けるための追加のセキュリティレベルを提供します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal

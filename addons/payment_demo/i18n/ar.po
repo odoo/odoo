@@ -38,51 +38,65 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Successful payment\">\n"
+"                        تم بنجاح\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Payment processing\">\n"
+"                        قيد الانتظار\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                        تم الإلغاء\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Processing error\">\n"
+"                        خطأ\n"
+"                    </option>\n"
+"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>City</b></small>"
-msgstr ""
+msgstr "<small><b>المدينة</b></small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Country</b></small>"
-msgstr ""
+msgstr "<small><b>الدولة</b></small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>الاسم</b></small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>الشارع والرقم</b></small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>الرمز البريدي</b></small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Email</small>"
-msgstr ""
+msgstr "<small>البريد الإلكتروني</small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>تفاصيل الدفع (البيانات التجريبية)</small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>حالة الدفع</small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Street 2</small>"
-msgstr ""
+msgstr "<small>شارع 2</small> "
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -143,7 +157,7 @@ msgstr "النسخة التجريبية"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "الدفع والخروج السريع التجريبي "
 
 #. module: payment_demo
 #. odoo-python
@@ -172,7 +186,7 @@ msgstr "الدفع "
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Pay with Demo"
-msgstr ""
+msgstr "الدفع بواسطة التجريبي "
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider

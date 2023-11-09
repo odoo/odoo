@@ -545,6 +545,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">タスクが評価メールテンプレートが定義された段階に達すると、すぐに評価リクエストが送信されます。</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">評価リクエストは、評価メールテンプレートが定義されているステージにタスクが残っている限り送信されます。</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1265,12 +1270,12 @@ msgstr "終了済サブタスク数"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "終了済タスク数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "終了済タスクパーセンテージ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1407,7 +1412,7 @@ msgstr "連絡先"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "タスクを変換"
 
 #. module: project
 #. odoo-python
@@ -1415,7 +1420,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "タスク/サブタスクに変換"
 
 #. module: project
 #. odoo-javascript
@@ -1790,6 +1795,7 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"タスクを削除すると、関連するサブタスクも削除されます。サブタスクを保存したい場合は、事前に親タスクからリンクを解除して下さい。続行してもよろしいですか？"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1963,6 +1969,7 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"各ユーザは少なくとも1つの個人ステージを持つ必要があります。選択したステージを削除した後、タスクを転送できる新しいステージを作成してください。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2100,12 +2107,12 @@ msgstr "かんばんで折り込む"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "プロジェクトのタスクをフォローしコメントする"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "プロジェクトの変化をフォローする"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2515,7 +2522,7 @@ msgstr "マイルストンが過ぎていますか？"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "トグルモード"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2982,7 +2989,7 @@ msgstr "新規オーダ"
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "新規プロジェクト"
 
 #. module: project
 #. odoo-javascript
@@ -3003,7 +3010,7 @@ msgstr "新規依頼"
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "新規タスク"
 
 #. module: project
 #. odoo-python
@@ -3337,7 +3344,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
-msgstr ""
+msgstr "プロジェクトに協力するために招待された人々には、ポータルへのアクセス権が与えられます。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3395,7 +3402,7 @@ msgstr "個人ステージステータス"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 msgid "Personal Stages"
-msgstr ""
+msgstr "パーソナルステージ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3516,7 +3523,7 @@ msgstr "非公開タスク"
 msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
-msgstr ""
+msgstr "プライベートタスクをサブタスクに変換することはできません。この機能を利用するには、タスクにプロジェクトを設定して下さい。"
 
 #. module: project
 #. odoo-javascript
@@ -4443,7 +4450,7 @@ msgstr "サブタスク"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "サブタスク割当時間"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4561,7 +4568,7 @@ msgstr "タスクログ"
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
 msgid "Task Plans"
-msgstr ""
+msgstr "タスク計画"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4877,6 +4884,7 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"共有されたプロジェクトタスクを編集したり、ウェブサイト上で特定のドキュメントを読み取り専用モードで閲覧することができます。これには、リード/案件、見積書/販売オーダ、購買オーダ、請求書、タイムシート、チケットなどが含まれます。"
 
 #. module: project
 #. odoo-python
@@ -4914,6 +4922,8 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"このプロジェクトは、 %sに関連していますが、選択されたステージは、 %sに属しています。 "
+"プロジェクトまたはステージから会社の指定を削除します。または、これらのレコードの会社情報を更新して、同じ会社の下に揃えることもできます。"
 
 #. module: project
 #. odoo-python
@@ -4925,6 +4935,8 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"このプロジェクトはどの会社にも関連していないが、ステージは%sに関連しています。 考慮すべきオプションはいくつかあります: "
+"プロジェクトの会社をステージの会社と一致するように変更するか、ステージから会社の指定を削除するかです。"
 
 #. module: project
 #. odoo-javascript
@@ -5018,6 +5030,7 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"タスクをサブタスクに変換するには、親タスクを選択します。または、親タスクフィールドを空白のままにして、 サブタスクを独立したタスクに変換します。"
 
 #. module: project
 #. odoo-python
@@ -5067,7 +5080,7 @@ msgstr "成功するために到達すべき重要な進捗ポイントを管理
 msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
-msgstr ""
+msgstr "プロジェクトに関連する分析アカウントを関連文書に設定することで、プロジェクトの原価、収益、マージンを追跡します。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5368,6 +5381,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"編集モードでプロジェクトを共有すると、タスクのかんばんビューとリストビューにアクセスできるようになります。\n"
+"　　　　　共同作業者はタスクの情報の一部を見たり変更したりすることができます。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5375,6 +5390,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"読み取り専用モードでプロジェクトを共有する場合、ポータル内のタスクへのアクセス権を人に与えることになります。\n"
+"　　　　　この人たちはタスクを見ることはできますが、編集することはできません。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5465,6 +5482,7 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"現在、このステージの会社を%(company_name)sに切り替えることはできません。このステージに%(project_company_name)sに関連するプロジェクトが含まれているためです。このステージが%(company_name)sに関連したプロジェクトのみで構成されるようにして下さい。"
 
 #. module: project
 #. odoo-python
@@ -5532,7 +5550,7 @@ msgstr "次のドキュメントに割り当てられました:"
 msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
-msgstr ""
+msgstr "いつでもポータルへのアクセスを取り消すことができます。準備はできましたか？"
 
 #. module: project
 #. odoo-python
@@ -5637,7 +5655,7 @@ msgstr "例: タスク"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "例: To Do"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5658,7 +5676,7 @@ msgstr "例: プロダクトのローンチ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "fs-4"
-msgstr ""
+msgstr "fs-4"
 
 #. module: project
 #. odoo-javascript
