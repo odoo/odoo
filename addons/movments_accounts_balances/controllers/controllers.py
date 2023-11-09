@@ -133,6 +133,10 @@ class AccountBalance(models.Model):
             bill = self.env['account.move'].create({
                 'name': data.get('bill_number'),
                 'date': data.get('bill_date'),
+                'invoice_date': data.get('bill_date'),
+                'invoice_date_due': data.get('bill_date_due'),
+                'ref': data.get('reference'),
+                'narration': data.get('narration'),
                 'partner_id': data.get('supplier_id'),
                 'amount_total': data.get('total_amount'),
                 'move_type': data.get('move_type', 'in_invoice'),  # You may adjust the move_type as needed
@@ -140,11 +144,14 @@ class AccountBalance(models.Model):
             })
 
             # Create an account.move.line for the bill
+            currency = self.env.user.company_id.currency_id
             move_line = self.env['account.move.line'].create({
                 'move_id': bill.id,
                 'account_id': data.get('account_id'),  # Replace with the actual account ID
                 'name': data.get('account_entry_description', 'Account Entry Description'),
                 'price_unit': data.get('price_unit'),
+                'quantity': 1,
+                'currency_id': currency.id,
                 # Add more fields as needed
             })
 
@@ -157,10 +164,6 @@ class AccountBalance(models.Model):
                     'move_line_id': move_line.id,
                     'date': bill.date,
                     'amount': data.get('price_unit'),
-                    # 'partner_id': 2,
-                    # 'account_id': 2,
-
-                    # Add more fields as needed
                 })
 
             # Append the created bill record to the list
