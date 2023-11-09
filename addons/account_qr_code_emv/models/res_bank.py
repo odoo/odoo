@@ -32,6 +32,7 @@ class ResPartnerBank(models.Model):
         self.country_proxy_keys = ""
 
     @api.depends('country_code')
+    @api.depends_context("company")
     def _compute_display_qr_setting(self):
         self.display_qr_setting = False
 
@@ -53,6 +54,9 @@ class ResPartnerBank(models.Model):
     def _get_additional_data_field(self, comment):
         return None
 
+    def _get_merchant_category_code(self):
+        return '0000'
+
     def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         tag, merchant_account_info = self._get_merchant_account_info()
         currency_code = CURRENCY_MAPPING[currency.name]
@@ -65,11 +69,12 @@ class ResPartnerBank(models.Model):
         comment = structured_communication or free_communication or ''
         comment = re.sub(r'[^ A-Za-z0-9_@.\\/#&+-]+', '', self._remove_accents(comment))
         additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
+        merchant_category_code = self._get_merchant_category_code()
         return [
             (0, '01'),                                                              # Payload Format Indicator
             (1, '12'),                                                              # Dynamic QR Codes
             (tag, merchant_account_info),                                           # Merchant Account Information
-            (52, '0000'),                                                           # Merchant Category Code
+            (52, merchant_category_code),                                           # Merchant Category Code
             (53, currency_code),                                                    # Transaction Currency
             (54, amount),                                                           # Transaction Amount
             (58, self.country_code),                                                # Country Code
