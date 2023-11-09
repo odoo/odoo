@@ -2193,22 +2193,22 @@
 </template>
 
 <template id="website.header_call_to_action_large" inherit_id="website.header_call_to_action" name="Header Call to Action - Large" primary="True">
-    <xpath expr="//a[hasclass('btn')]" position="attributes">
+    <xpath expr="//a[hasclass('oe_unremovable')]" position="attributes">
         <attribute name="class" remove="" add="w-100" separator=" "/>
     </xpath>
 </template>
 
 <template id="website.header_call_to_action_sidebar" inherit_id="website.header_call_to_action_large" name="Header Call to Action - Sidebar" primary="True">
-    <xpath expr="//div[hasclass('container')]" position="attributes">
+    <xpath expr="//section/div" position="attributes">
         <attribute name="class" remove="" add="p-0" separator=" "/>
     </xpath>
 </template>
 
 <template id="website.header_call_to_action_stretched" inherit_id="website.header_call_to_action" name="Header Call to Action - Stretched" primary="True">
-    <xpath expr="//div[hasclass('container')]" position="attributes">
+    <xpath expr="//section/div" position="attributes">
         <attribute name="class" remove="" add="h-100" separator=" "/>
     </xpath>
-    <xpath expr="//a[hasclass('btn')]" position="attributes">
+    <xpath expr="//a[hasclass('oe_unremovable')]" position="attributes">
         <attribute name="class" remove="" add="d-flex align-items-center h-100 rounded-0" separator=" "/>
     </xpath>
 </template>
