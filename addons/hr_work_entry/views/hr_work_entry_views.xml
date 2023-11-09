@@ -17,6 +17,14 @@
         <field name="context">{
             'search_default_work_entries_error': True
         }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+            <p>
+                Try to add some records, or make sure that there is no active filter in the search bar.
+            </p>
+        </field>
     </record>
 
     <record id="hr_work_entry_view_calendar" model="ir.ui.view">
@@ -149,6 +157,11 @@
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new work entry type
+            </p>
+        </field>
     </record>
 
     <record id="hr_work_entry_type_view_tree" model="ir.ui.view">
