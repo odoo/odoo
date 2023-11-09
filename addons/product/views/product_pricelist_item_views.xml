@@ -105,7 +105,10 @@
                     <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
                         <group>
                             <field name="price" invisible="1"/>
-                            <field name="fixed_price" widget="monetary" invisible="compute_price != 'fixed'"/>
+                            <field name="fixed_price"
+                                widget="monetary"
+                                invisible="compute_price != 'fixed'"
+                                options="{'field_digits': True}"/>
                             <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
                             <div class="o_row" invisible="compute_price != 'percentage'">
                                 <field name="percent_price" class="oe_inline" invisible="compute_price != 'percentage'"/>%
@@ -121,9 +124,19 @@
                             <field name="price_round" string="Rounding Method" invisible="compute_price != 'formula'"/>
                             <label string="Margins" for="price_min_margin" invisible="compute_price != 'formula'"/>
                             <div class="o_row" invisible="compute_price != 'formula'">
-                                <field name="price_min_margin" string="Min. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
+                                <field name="price_min_margin"
+                                    string="Min. Margin"
+                                    class="oe_inline"
+                                    widget="monetary"
+                                    nolabel="1"
+                                    options="{'field_digits': True}"/>
                                 <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
-                                <field name="price_max_margin" string="Max. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
+                                <field name="price_max_margin"
+                                    string="Max. Margin"
+                                    class="oe_inline"
+                                    widget="monetary"
+                                    nolabel="1"
+                                    options="{'field_digits': True}"/>
                             </div>
                         </group>
                         <div class="alert alert-info" role="alert" style="white-space: pre;" invisible="compute_price != 'formula'">
