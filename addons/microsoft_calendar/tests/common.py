@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from markupsafe import Markup
 from unittest.mock import patch, MagicMock
 
+from odoo import fields
+
 from odoo.tests.common import HttpCase
 
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
@@ -55,6 +57,10 @@ class TestCommon(HttpCase):
                 'login': 'john@attendee.com',
                 'partner_id': partner.id,
             })
+
+        # Add token validity with one hour of time window for properly checking the sync status.
+        for user in [self.organizer_user, self.attendee_user]:
+            user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
 
         # -----------------------------------------------------------------------------------------
         # To create Odoo events

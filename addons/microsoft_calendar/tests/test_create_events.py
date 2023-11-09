@@ -1,6 +1,8 @@
 from unittest.mock import patch
 from datetime import timedelta, datetime
 
+from odoo import Command
+
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
@@ -379,3 +381,46 @@ class TestCreateEvents(TestCommon):
 
         # Assert that the Microsoft Insert was called once.
         mock_insert.assert_called_once()
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_create_event_for_another_user(self, mock_insert, mock_get_events):
+        """
+        Allow the creation of event for another user only if the proposed user have its Odoo Calendar synced.
+        User A (self.organizer_user) is creating an event with user B as organizer (self.attendee_user).
+        """
+        # Ensure that the calendar synchronization of user A is active. Deactivate user B synchronization for throwing an error.
+        self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
+        self.attendee_user.microsoft_synchronization_stopped = True
+
+        # Try creating an event with the organizer as the user B (self.attendee_user).
+        # A ValidationError must be thrown because user B's calendar is not synced.
+        self.simple_event_values['user_id'] = self.attendee_user.id
+        self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id])]
+        with self.assertRaises(ValidationError):
+            self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+
+        # Activate the calendar synchronization of user B (self.attendee_user).
+        self.attendee_user.microsoft_synchronization_stopped = False
+        self.assertTrue(self.env['calendar.event'].with_user(self.attendee_user)._check_microsoft_sync_status())
+
+        # Try creating an event with organizer as the user B but not inserting B as an attendee. A ValidationError must be thrown.
+        with self.assertRaises(ValidationError):
+            self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+
+        # Set mock return values for the event creation.
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_get_events.return_value = ([], None)
+
+        # Create event matching the creation conditions: user B is synced and now listed as an attendee. Set mock return values.
+        self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])]
+        event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+
+        # Ensure that event was inserted and user B (self.attendee_user) is the organizer and is also listed as attendee.
+        mock_insert.assert_called_once()
+        self.assertEqual(event.user_id, self.attendee_user, "Event organizer must be user B (self.attendee_user) after event creation by user A (self.organizer_user).")
+        self.assertTrue(self.attendee_user.partner_id.id in event.partner_ids.ids, "User B (self.attendee_user) should be listed as attendee after event creation.")
