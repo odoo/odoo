@@ -230,14 +230,7 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            quantity_move_line_ids = self.move_line_ids.filtered(
-                lambda ml:
-                    float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
-                    not ml.result_package_id
-            )
-            move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
-            if not move_line_ids:
-                move_line_ids = quantity_move_line_ids
+            move_line_ids = self.picking_ids[0]._package_move_lines()
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
