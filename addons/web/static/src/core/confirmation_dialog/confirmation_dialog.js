@@ -1,14 +1,16 @@
 /** @odoo-module */
 
 import { Dialog } from "../dialog/dialog";
-import { _t, _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
 
-export const deleteConfirmationMessage = _lt("Ready to make your record disappear into thin air? Are you sure?\n\
-Poof! It will be gone forever!\n\
-\nThink twice before you click that 'Delete' button!");
+export const deleteConfirmationMessage = _t(
+    "Ready to make your record disappear into thin air? Are you sure?\n\
+It will be gone forever!\n\n\
+Think twice before you click that 'Delete' button!"
+);
 
 export class ConfirmationDialog extends Component {
     setup() {
