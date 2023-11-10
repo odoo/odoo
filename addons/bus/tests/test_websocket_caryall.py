@@ -17,6 +17,7 @@ except ImportError:
 from odoo.api import Environment
 from odoo.tests import common, new_test_user
 from .common import WebsocketCase
+from .. import websocket as websocket_module
 from ..models.bus import dispatch
 from ..websocket import (
     CloseCode,
@@ -32,7 +33,7 @@ from ..websocket import (
 class TestWebsocketCaryall(WebsocketCase):
     def test_lifecycle_hooks(self):
         events = []
-        with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
+        with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
             @Websocket.onopen
             def onopen(env, websocket):  # pylint: disable=unused-variable
                 self.assertIsInstance(env, Environment)
@@ -51,10 +52,10 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(events, ['open', 'close'])
 
     def test_instances_weak_set(self):
-        with patch.object(Websocket, "_instances", WeakSet()):
+        with patch.object(websocket_module, "_websocket_instances", WeakSet()):
             first_ws = self.websocket_connect()
             second_ws = self.websocket_connect()
-            self.assertEqual(len(Websocket._instances), 2)
+            self.assertEqual(len(websocket_module._websocket_instances), 2)
             first_ws.close(CloseCode.CLEAN)
             second_ws.close(CloseCode.CLEAN)
             self.wait_remaining_websocket_connections()
@@ -62,7 +63,7 @@ class TestWebsocketCaryall(WebsocketCase):
             # collected. Stop it now.
             self._serve_forever_patch.stop()
             gc.collect()
-            self.assertEqual(len(Websocket._instances), 0)
+            self.assertEqual(len(websocket_module._websocket_instances), 0)
 
     def test_timeout_manager_no_response_timeout(self):
         with freeze_time('2022-08-19') as frozen_time:
@@ -202,7 +203,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(mock.call_args[0][2], client_last_notification_id)
 
     def test_no_cursor_when_no_callback_for_lifecycle_event(self):
-        with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
+        with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
             with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)
