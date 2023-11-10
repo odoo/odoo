@@ -432,18 +432,16 @@ class IrFieldsConverter(models.AbstractModel):
             field_type = _(u"database id")
             if isinstance(value, str) and not self._str_to_boolean(model, field, value)[0]:
                 return False, field_type, warnings
-            try: tentative_id = int(value)
-            except ValueError: tentative_id = value
             try:
-                if RelatedModel.search([('id', '=', tentative_id)]):
-                    id = tentative_id
-            except psycopg2.DataError:
-                # type error
+                tentative_id = int(value)
+            except ValueError:
                 raise self._format_import_error(
                     ValueError,
                     _(u"Invalid database id '%s' for the field '%%(field)s'"),
                     value,
                     {'moreinfo': action})
+            if RelatedModel.browse(tentative_id).exists():
+                id = tentative_id
         elif subfield == 'id':
             field_type = _(u"external id")
             if not self._str_to_boolean(model, field, value)[0]:

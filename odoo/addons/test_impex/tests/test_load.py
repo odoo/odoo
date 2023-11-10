@@ -706,6 +706,13 @@ class test_m2o(ImporterCase):
             u"name, external id or database id")])
         self.assertIs(result['ids'], False)
 
+    def test_fail_id(self):
+        record = self.env['export.integer'].create({'value': 42})
+        result = self.import_(['value/.id'], [["lorem"], [record.id]])
+        self.assertFalse(result['ids'])
+        self.assertTrue(result['messages'])
+        self.assertEqual(result['messages'][0]['message'], "Invalid database id 'lorem' for the field 'Value'")
+
     def test_name_create_enabled_m2o(self):
         result = self.import_(['value'], [[101]])
         self.assertEqual(result['messages'], [message(
