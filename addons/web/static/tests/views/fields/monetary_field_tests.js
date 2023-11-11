@@ -258,7 +258,7 @@ QUnit.module("Fields", (hooks) => {
                 3: {
                     name: "VEF",
                     symbol: "Bs.F",
-                    position: "after",
+                    position: "before",
                     digits: [0, 4],
                 },
             },
@@ -352,9 +352,9 @@ QUnit.module("Fields", (hooks) => {
             "The input should be rendered without the currency symbol."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget input").parentNode.children[0].textContent,
+            target.querySelector(".o_field_widget input").parentNode.children[1].textContent,
             "Bs.F",
-            "The input should be preceded by a span containing the currency symbol."
+            "The input should be followed by a span containing the currency symbol."
         );
 
         await editInput(target, ".o_field_widget input", "99.111111111");
@@ -592,9 +592,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").textContent +
-                target.querySelector(".o_field_monetary div :last-child").value,
-            "€4.20",
+            target.querySelector(".o_field_monetary div :first-child").value +
+                target.querySelector(".o_field_monetary div :last-child").textContent,
+            "4.20€",
             "The value should be formatted with new currency on blur."
         );
 
@@ -636,9 +636,9 @@ QUnit.module("Fields", (hooks) => {
         await click(euroM2OListItem);
 
         assert.strictEqual(
-            target.querySelector(".o_field_monetary div :first-child").textContent +
-                target.querySelector(".o_field_monetary div :last-child").value,
-            "€4.20",
+            target.querySelector(".o_field_monetary div :first-child").value +
+                target.querySelector(".o_field_monetary div :last-child").textContent,
+            "4.20€",
             "The value should be formatted with new currency on blur."
         );
 
