@@ -104,6 +104,8 @@ export class ListRenderer extends Component {
         this.resizing = false;
         this.preventReorder = false;
 
+        this.creating = false;
+
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
             : [{ type: "create", string: _t("Add a line") }];
@@ -242,9 +244,14 @@ export class ListRenderer extends Component {
         return this.props.allowSelectors && !this.env.isSmall;
     }
 
-    add(params) {
-        if (this.canCreate) {
-            this.props.onAdd(params);
+    async add(params) {
+        if (this.canCreate && !this.creating) {
+            this.creating = true;
+            try {
+                await this.props.onAdd(params);
+            } finally {
+                this.creating = false;
+            }
         }
     }
 
@@ -441,7 +448,7 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             nbCols++;
         }
-        if (this.activeActions.onDelete || this.displayOptionalFields) {
+        if (this.props.deleteRecord || this.displayOptionalFields) {
             nbCols++;
         }
         if (this.props.onOpenFormView) {
@@ -1136,8 +1143,8 @@ export class ListRenderer extends Component {
                 return;
             }
         }
-        if (this.activeActions.onDelete) {
-            this.activeActions.onDelete(record);
+        if (this.props.deleteRecord) {
+            this.props.deleteRecord(record);
         }
     }
 
@@ -2126,6 +2133,7 @@ ListRenderer.props = [
     "activeActions?",
     "list",
     "archInfo",
+    "deleteRecord?",
     "openRecord",
     "evalViewModifier",
     "onAdd?",

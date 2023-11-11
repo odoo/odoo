@@ -7,7 +7,6 @@ import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
 import {
     useActiveActions,
-    useAddInlineRecord,
     useOpenX2ManyRecord,
     useSelectCreate,
     useX2ManyCrud,
@@ -65,9 +64,7 @@ export class X2ManyField extends Component {
         }
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
-            crudOptions: Object.assign({}, this.props.crudOptions, {
-                onDelete: removeRecord,
-            }),
+            crudOptions: this.props.crudOptions,
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
             getEvalParams: (props) => {
@@ -76,10 +73,6 @@ export class X2ManyField extends Component {
                     readonly: props.readonly,
                 };
             },
-        });
-
-        this.addInLine = useAddInlineRecord({
-            addNew: (...args) => this.list.addNewRecord(...args),
         });
 
         const openRecord = useOpenX2ManyRecord({
@@ -93,6 +86,12 @@ export class X2ManyField extends Component {
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
+            let onDeleteRecord;
+            if (this.props.viewMode === "kanban") {
+                if (this.isMany2Many ? this.activeActions.unlink : this.activeActions.delete) {
+                    onDeleteRecord = removeRecord;
+                }
+            }
             openRecord({
                 ...params,
                 onClose: () => {
@@ -100,6 +99,7 @@ export class X2ManyField extends Component {
                         activeElement.focus();
                     }
                 },
+                onDeleteRecord,
             });
         };
         this.canOpenRecord =
@@ -192,6 +192,12 @@ export class X2ManyField extends Component {
         const props = {
             archInfo,
             list: this.list,
+            deleteRecord: (record) => {
+                if (this.isMany2Many) {
+                    return this.list.forget(record);
+                }
+                return this.list.delete(record);
+            },
             openRecord: this.openRecord.bind(this),
             evalViewModifier: (modifier) => {
                 return evaluateBooleanExpr(modifier, this.list.evalContext);
@@ -202,13 +208,6 @@ export class X2ManyField extends Component {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
             props.readonly = this.props.readonly;
-            // TODO: apply same logic in the list case
-            props.deleteRecord = (record) => {
-                if (this.isMany2Many) {
-                    return this.list.forget(record);
-                }
-                return this.list.delete(record);
-            };
             return props;
         }
 
@@ -218,11 +217,13 @@ export class X2ManyField extends Component {
         props.cycleOnTab = false;
         props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
+
         props.onAdd = (params) => {
             params.editable =
                 !this.props.readonly && ("editable" in params ? params.editable : editable);
-            this.onAdd(params);
+            return this.onAdd(params);
         };
+
         const openFormView = props.editable ? archInfo.openFormView : false;
         props.onOpenFormView = openFormView ? this.switchToForm.bind(this) : undefined;
         return props;
@@ -242,6 +243,10 @@ export class X2ManyField extends Component {
         );
     }
 
+    addInlineRecord({ context, position }) {
+        return this.list.addNewRecord({ context, position });
+    }
+
     async onAdd({ context, editable } = {}) {
         const domain =
             typeof this.props.domain === "function" ? this.props.domain() : this.props.domain;
@@ -259,7 +264,7 @@ export class X2ManyField extends Component {
                 await this.list.leaveEditMode({ canAbandon: false });
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context, editable });
+                return this.addInlineRecord({ context, position: editable });
             }
             return;
         }
