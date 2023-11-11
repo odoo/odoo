@@ -3544,7 +3544,8 @@ export class OdooEditor extends EventTarget {
                         td.remove();
                     }
                 }
-                for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                const trsWithoutTd = Array.from(tableClone.querySelectorAll('tr')).filter(row => !row.querySelector('td'));
+                for (const tr of trsWithoutTd) {
                     if (closestElement(tr, 'table') === tableClone) { // ignore nested
                         tr.remove();
                     }
