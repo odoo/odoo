@@ -439,27 +439,6 @@ export const editorCommands = {
     justifyFull: editor => align(editor, 'justify'),
 
     // Link
-    createLink: (editor, link, content) => {
-        const sel = editor.document.getSelection();
-        if (content && !sel.isCollapsed) {
-            editor.deleteRange(sel);
-        }
-        if (sel.isCollapsed) {
-            insertText(sel, content || 'link');
-        }
-        const currentLink = closestElement(sel.focusNode, 'a');
-        link = link || prompt('URL or Email', (currentLink && currentLink.href) || 'http://');
-        const res = editor.document.execCommand('createLink', false, link);
-        if (res) {
-            setSelection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
-            const node = findNode(closestPath(sel.focusNode), node => node.tagName === 'A');
-            for (const [param, value] of Object.entries(editor.options.defaultLinkAttributes)) {
-                node.setAttribute(param, `${value}`);
-            }
-            const pos = [node.parentElement, childNodeIndex(node) + 1];
-            setSelection(...pos, ...pos, false);
-        }
-    },
     unlink: editor => {
         const sel = editor.document.getSelection();
         const isCollapsed = sel.isCollapsed;
