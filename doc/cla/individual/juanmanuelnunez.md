@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Juan Nunez juanmanuelnunez@gmail.com https://github.com/juanmanuelnunez
+Juan Manuel Nunez juanmanuelnunez@gmail.com https://github.com/juanmanuelnunez
