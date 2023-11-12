@@ -371,7 +371,7 @@ export class AutoComplete extends Component {
 Object.assign(AutoComplete, {
     template: "web.AutoComplete",
     props: {
-        value: { type: String },
+        value: { type: String, optional: true },
         id: { type: String, optional: true },
         onSelect: { type: Function },
         sources: {
@@ -398,6 +398,7 @@ Object.assign(AutoComplete, {
         class: { type: String, optional: true },
     },
     defaultProps: {
+        value: "",
         placeholder: "",
         autoSelect: false,
         dropdown: true,
