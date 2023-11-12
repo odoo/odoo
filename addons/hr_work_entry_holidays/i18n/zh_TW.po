@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +21,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_work_entry_holidays
+#. odoo-python
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
 msgstr "%s:休假"
 
 #. module: hr_work_entry_holidays
+#. odoo-python
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -39,6 +42,14 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"不能在具有不同工作時間表的多個合同中設置休假。\n"
+"\n"
+"請為每份合同創建一個假期。\n"
+"\n"
+"休假時間：\n"
+"%s\n"
+"合約：\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -79,6 +90,7 @@ msgstr ""
 "當經理批准休假時，狀態為「已批准」。"
 
 #. module: hr_work_entry_holidays
+#. odoo-python
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
@@ -106,4 +118,4 @@ msgstr "工時紀錄類型"
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "工資單中使用的工作條目。"
