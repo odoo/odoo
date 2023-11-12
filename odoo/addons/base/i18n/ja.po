@@ -7336,7 +7336,7 @@ msgid ""
 "A non-profit international educational and scientific organisation, hosting "
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
-msgstr ""
+msgstr "航空・宇宙、環境・応用流体力学、ターボ機械・推進の3部門を擁する非営利の国際教育科学団体。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -7392,6 +7392,7 @@ msgid ""
 "create his own holidays and manage the requests of the users he's manager "
 "of."
 msgstr ""
+"タイムオフの権限を持たないユーザは、アプリケーションを見ることができ、自分の休日を作成し、マネジャーであるユーザのリクエストを管理することができます。"
 
 #. module: base
 #. odoo-python
@@ -9895,6 +9896,9 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
+"一部の国では、国内法に従い、請求書の金額に対して源泉徴収が適用されます。源泉徴収は、クライアントが税務当局に支払うことになります。いかなる場合においても、My"
+" Company（San Francisco）は、その国の法律に関連する費用に関与することはできません。従って、請求書の金額は、その全額がMy "
+"Company (San Francisco)に対するものであり、顧客が所在する国の法律に関連する費用は含まれません。"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -15607,6 +15611,15 @@ msgstr "無効な型"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "%s。%sの値が無効です:%s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python
