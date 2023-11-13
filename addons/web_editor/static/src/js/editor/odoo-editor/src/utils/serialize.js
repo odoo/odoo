@@ -6,7 +6,7 @@ export function serializeNode(node, nodesToStripFromChildren = new Set()) {
         oid: node.oid,
     };
     if (!node.oid) {
-        throw new Error('node.oid can not be falsy.');
+        return;
     }
     if (node.nodeType === Node.TEXT_NODE) {
         result.textValue = node.nodeValue;
@@ -22,7 +22,10 @@ export function serializeNode(node, nodesToStripFromChildren = new Set()) {
         if (!["true", ""].includes(node.dataset.oeTransientContent)) {
             while (child) {
                 if (!nodesToStripFromChildren.has(child.oid)) {
-                    result.children.push(serializeNode(child, nodesToStripFromChildren));
+                    const serializedChild = serializeNode(child, nodesToStripFromChildren);
+                    if (serializedChild) {
+                        result.children.push(serializedChild);
+                    }
                 }
                 child = child.nextSibling;
             }
