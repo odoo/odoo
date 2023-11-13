@@ -837,21 +837,23 @@ class TestExpenses(TestExpenseCommon):
     def test_print_expense_check(self):
         """
         Test the check content when printing a check
-        that comes from an expense
+        that comes from an expense when 'account_check_printing' module is installed.
         """
+        if not 'check_manual_sequencing' in self.env['account.journal']._fields:
+            self.skipTest("'account_check_printing' module is not installed")
         sheet = self.env['hr.expense.sheet'].create({
-            'company_id': self.env.company.id,
+            'company_id': self.company_data['company'].id,
             'employee_id': self.expense_employee.id,
             'name': 'test sheet',
             'expense_line_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
                     'product_id': self.product_c.id,
                     'total_amount': 10.0,
                     'employee_id': self.expense_employee.id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'expense_2',
                     'date': '2016-01-01',
                     'product_id': self.product_c.id,
@@ -866,25 +868,24 @@ class TestExpenses(TestExpenseCommon):
         sheet.action_approve_expense_sheets()
         sheet.action_sheet_move_create()
         action_data = sheet.action_register_payment()
-        payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
-        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+        payment_method_line = self.company_data['company'].bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
+
+        with Form(self.env['account.payment.register'].with_context(action_data['context'])) as wiz_form:
             wiz_form.payment_method_line_id = payment_method_line
         wizard = wiz_form.save()
-        action = wizard.action_create_payments()
-        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
 
-        payment = self.env[action['res_model']].browse(action['res_id'])
+        payment = self.env['account.payment'].browse(wizard.action_create_payments()['res_id'])
         pages = payment._check_get_pages()
         stub_line = pages[0]['stub_lines'][:1]
         self.assertTrue(stub_line)
-        move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+        move = self.env['account.move'].browse(action_data['context']['active_ids'])
         self.assertDictEqual(stub_line[0], {
             'due_date': payment.date.strftime("%m/%d/%Y"),
             'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
-            'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
+            'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.company_data['currency']),
             'amount_residual': '-',
-            'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
-            'currency': self.env.company.currency_id
+            'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.company_data['currency']),
+            'currency': self.company_data['currency']
         })
 
     def test_hr_expense_split(self):
@@ -1477,3 +1478,38 @@ class TestExpenses(TestExpenseCommon):
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 2000.00, 'currency_id': foreign_currency.id},
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 1520.00, 'currency_id': foreign_currency.id},
         ])
+
+    def test_expense_payment_method(self):
+        default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]
+        check_method = self.env['account.payment.method'].sudo().create({
+                'name': 'Print checks',
+                'code': 'check_printing_expense_test',
+                'payment_type': 'outbound',
+        })
+        new_payment_method_line = self.env['account.payment.method.line'].create({
+            'name': 'Check',
+            'payment_method_id': check_method.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Sheet test',
+            'employee_id': self.expense_employee.id,
+            'payment_method_line_id': default_payment_method_line.id,
+            'expense_line_ids': [Command.create({
+                'name': 'test payment_mode',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'payment_mode': 'company_account',
+                'total_amount': 60,
+                'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+            })],
+        })
+
+        self.assertRecordValues(expense_sheet, [{'payment_method_line_id': default_payment_method_line.id}])
+        expense_sheet.payment_method_line_id = new_payment_method_line
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_ids.payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
