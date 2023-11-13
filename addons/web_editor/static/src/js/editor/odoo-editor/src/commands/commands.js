@@ -376,6 +376,13 @@ export const editorCommands = {
                     "h1", "h2", "h3", "h4", "h5", "h6"
                 );
             }
+            // Unwrap sub-elements
+            for (const el of
+                    newEl.querySelectorAll("h1, h2, h3, h4, h5, h6, p, pre, blockquote, small")) {
+                if (el.attributes.length === 0) {
+                    unwrapContents(el);
+                }
+            }
             if (extraClass) {
                 newEl.classList.add(extraClass);
             }
