@@ -242,12 +242,6 @@ QUnit.module("test_mail", {}, function () {
     });
 
     QUnit.test("activity view: Activity rendering with done activities", async function (assert) {
-        function containsN(domElement, selector, containings) {
-            return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
-                containings.every((containing) => sel.textContent.includes(containing))
-            );
-        }
-
         const activityTypeUpload = pyEnv["mail.activity.type"].create({
             category: "upload_file",
             name: "Test Upload document",
@@ -344,9 +338,10 @@ QUnit.module("test_mail", {}, function () {
         );
         await contains(`.o-mail-Avatar`, { target: domRowOfficeCellUpload, count: 0 }); // all activity are done
         // Cells counters
-        assert.ok(
-            containsN(domRowMeetingCellUpload, ".o-mail-ActivityCell-counter", ["3", "/", "4"])
-        );
+        await contains(".o-mail-ActivityCell-counter", {
+            target: domRowMeetingCellUpload,
+            text: "3 / 4",
+        });
         await contains(".o-mail-ActivityCell-counter", {
             text: "3",
             target: domRowOfficeCellUpload,
