@@ -396,7 +396,6 @@
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="show_reserved" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0"/>

@@ -180,7 +180,6 @@ class StockMove(models.Model):
     product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
     product_packaging_quantity = fields.Float(
         string="Done Packaging Quantity", compute='_compute_product_packaging_quantity')
-    show_reserved = fields.Boolean(compute='_compute_show_reserved')
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
@@ -308,11 +307,6 @@ class StockMove(models.Model):
                 move.delay_alert_date = prev_max_date
             else:
                 move.delay_alert_date = False
-
-    @api.depends('picking_type_id', 'origin_returned_move_id')
-    def _compute_show_reserved(self):
-        for move in self:
-            move.show_reserved = move.picking_type_id.show_reserved or move.origin_returned_move_id
 
     def _quantity_sml(self):
         self.ensure_one()

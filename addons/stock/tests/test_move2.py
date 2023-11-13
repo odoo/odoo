@@ -2295,7 +2295,6 @@ class TestSinglePicking(TestStockCommon):
         # Changes config of receipt type to allow to edit move lines directly.
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
         picking_type.show_operations = True
-        picking_type.show_reserved = True
 
         receipt_form = Form(self.env['stock.picking'].with_context(
             force_detailed_view=True
