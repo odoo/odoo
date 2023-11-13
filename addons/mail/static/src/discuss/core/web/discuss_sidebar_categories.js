@@ -51,7 +51,6 @@ export class DiscussSidebarCategories extends Component {
         });
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
-        this.userSettings = useService("mail.user_settings");
         this.orm = useService("orm");
         onExternalClick("selector", () => {
             this.state.editing = false;
@@ -166,7 +165,7 @@ export class DiscussSidebarCategories extends Component {
         await this.orm.call(
             "res.users.settings",
             "set_res_users_settings",
-            [[this.userSettings.id]],
+            [[this.store.settings.id]],
             {
                 new_settings: {
                     [category.serverStateKey]: category.isOpen,

@@ -100,10 +100,10 @@ export class PersonaService {
     }
 
     updateUserNotificationPreference({ id, notification_preference }) {
-        if (this.store.user.user.id !== id) {
+        if (this.store.self.user.id !== id) {
             return;
         }
-        this.store.user.notification_preference = notification_preference;
+        this.store.self.notification_preference = notification_preference;
     }
 }
 

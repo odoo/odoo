@@ -130,10 +130,12 @@ class TestDiscussFullPerformance(HttpCase):
             'hasGifPickerFeature': False,
             'hasLinkPreviewFeature': True,
             'hasMessageTranslationFeature': False,
-            'needaction_inbox_counter': 1,
-            'starred_counter': 1,
+            'discuss': {
+                'inbox': {'counter': 1, 'id': "inbox", 'model': "mail.box"},
+                'starred': {'counter': 1, 'id': "starred", 'model': "mail.box"},
+            },
             'odoobotOnboarding': False,
-            'channels': [
+            'Thread': [
                 {
                     'allow_public_upload': False,
                     'authorizedGroupFullName': self.group_user.full_name,
@@ -474,18 +476,18 @@ class TestDiscussFullPerformance(HttpCase):
                     "custom_notifications": False,
                     'mute_until_dt': False,
                     'seen_message_id': False,
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[12].partner_id).id,
-                            'partner_id': self.users[12].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[12].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         }
                     ],
                     'state': 'open',
@@ -565,18 +567,18 @@ class TestDiscussFullPerformance(HttpCase):
                     'rtcSessions': [('ADD', [])],
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[14].partner_id).id,
-                            'partner_id': self.users[14].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[14].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                     ],
                     'seen_message_id': False,
@@ -657,18 +659,18 @@ class TestDiscussFullPerformance(HttpCase):
                     'rtcSessions': [('ADD', [])],
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[15].partner_id).id,
-                            'partner_id': self.users[15].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[15].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                     ],
                     'seen_message_id': False,
@@ -749,18 +751,18 @@ class TestDiscussFullPerformance(HttpCase):
                     'rtcSessions': [('ADD', [])],
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_3.channel_member_ids.filtered(lambda m: m.partner_id == self.users[2].partner_id).id,
-                            'partner_id': self.users[2].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[2].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                     ],
                     'seen_message_id': False,
@@ -841,18 +843,18 @@ class TestDiscussFullPerformance(HttpCase):
                     'rtcSessions': [('ADD', [])],
                     "custom_notifications": False,
                     'mute_until_dt': False,
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_chat_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[3].partner_id).id,
-                            'partner_id': self.users[3].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[3].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                     ],
                     'seen_message_id': False,
@@ -933,18 +935,18 @@ class TestDiscussFullPerformance(HttpCase):
                         'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date)
                     },
                     'rtcSessions': [('ADD', [])],
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                         {
-                            'fetched_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
+                            'lastFetchedMessage': {'id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids())},
                             'id': self.channel_livechat_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[1].partner_id).id,
-                            'partner_id': self.users[1].partner_id.id,
-                            'seen_message_id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids()),
+                            'partner': {'id': self.users[1].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': {'id': next(res['message_id'] for res in self.channel_livechat_1._channel_last_message_ids())},
                         },
                     ],
                     'seen_message_id': False,
@@ -1019,12 +1021,12 @@ class TestDiscussFullPerformance(HttpCase):
                         'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date)
                     },
                     'rtcSessions': [('ADD', [])],
-                    'seen_partners_info': [
+                    'seenInfos': [
                         {
-                            'fetched_message_id': False,
+                            'lastFetchedMessage': False,
                             'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'partner_id': self.users[0].partner_id.id,
-                            'seen_message_id': False,
+                            'partner': {'id': self.users[0].partner_id.id, 'type': "partner"},
+                            'lastSeenMessage': False,
                         },
                     ],
                     'seen_message_id': False,
@@ -1033,7 +1035,7 @@ class TestDiscussFullPerformance(HttpCase):
                 },
             ],
             'companyName': 'YourCompany',
-            'shortcodes': [
+            'CannedResponse': [
                 {
                     'id': self.shortcodes[0].id,
                     'source': 'hello',
@@ -1061,8 +1063,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'user': False,
                 'write_date': fields.Datetime.to_string(self.user_root.partner_id.write_date),
             },
-            'currentGuest': False,
-            'current_partner': {
+            'self': {
                 'active': True,
                 'email': 'e.e@example.com',
                 'id': self.users[0].partner_id.id,
@@ -1079,7 +1080,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'write_date': fields.Datetime.to_string(self.users[0].partner_id.write_date),
             },
             'current_user_id': self.users[0].id,
-            'current_user_settings': {
+            'settings': {
                 'id': self.env['res.users.settings']._find_or_create_for_user(self.users[0]).id,
                 'is_discuss_sidebar_category_channel_open': True,
                 'is_discuss_sidebar_category_chat_open': True,
@@ -1090,6 +1091,6 @@ class TestDiscussFullPerformance(HttpCase):
                 'livechat_username': False,
                 'user_id': {'id': self.users[0].id},
                 'voice_active_duration': 0,
-                'volume_settings_ids': [('ADD', [])],
+                'volumes': [('ADD', [])],
             },
         }

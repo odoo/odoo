@@ -318,6 +318,7 @@ patch(MockServer.prototype, {
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
+                starredPersonas: message.starred_partner_ids.map((id) => ({ id, type: "partner" })),
                 trackingValues: formattedTrackingValues,
                 pinned_at: message.pinned_at,
             });
@@ -336,7 +337,17 @@ patch(MockServer.prototype, {
                 guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
             }
             response.author = author || guestAuthor;
-            response["module_icon"] = "/base/static/description/icon.png";
+            if (response["model"] && response["res_id"]) {
+                const originThread = {
+                    model: response["model"],
+                    id: response["res_id"],
+                    module_icon: "/base/static/description/icon.png",
+                };
+                if (response["model"] !== "discuss.channel") {
+                    originThread.name = response["record_name"];
+                }
+                Object.assign(response, { originThread });
+            }
             return response;
         });
     },
@@ -350,7 +361,6 @@ patch(MockServer.prototype, {
     _mockMailMessageFormatPersonalize(ids) {
         const messages = this._mockMailMessageMessageFormat(ids);
         messages.forEach((message) => {
-            let user_follower_id = false;
             if (message.model && message.res_id) {
                 const follower = this.getRecords("mail.followers", [
                     ["res_model", "=", message.model],
@@ -358,10 +368,14 @@ patch(MockServer.prototype, {
                     ["partner_id", "=", this.pyEnv.currentPartnerId],
                 ]);
                 if (follower.length !== 0) {
-                    user_follower_id = follower[0].id;
+                    const follower_id = follower[0].id;
+                    message.originThread.selfFollower = {
+                        id: follower_id,
+                        is_active: true,
+                        partner: { id: this.pyEnv.currentPartnerId, type: "partner" },
+                    };
                 }
             }
-            message.user_follower_id = user_follower_id;
         });
         return messages;
     },
@@ -390,10 +404,14 @@ patch(MockServer.prototype, {
                 date: message.date,
                 id: message.id,
                 message_type: message.message_type,
-                model: message.model,
                 notifications: notifications,
-                res_id: message.res_id,
-                res_model_name: message.res_model_name,
+                originThread: message.res_id
+                    ? {
+                          id: message.res_id,
+                          model: message.model,
+                          modelName: message.res_model_name,
+                      }
+                    : false,
             };
         });
     },

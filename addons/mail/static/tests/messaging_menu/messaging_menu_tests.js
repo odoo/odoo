@@ -1050,20 +1050,32 @@ QUnit.test("failure notifications are shown before channel preview", async () =>
 QUnit.test("messaging menu should show new needaction messages from chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-    await start();
+    const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-text", { count: 0, text: "@Mitchell Admin" });
+    await contains(".o-mail-NotificationItem-text", {
+        count: 0,
+        text: "Frodo Baggins: @Mitchel Admin",
+    });
     // simulate receiving a new needaction message
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
+    const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
-        body: "@Mitchell Admin",
-        id: 100,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        body: "@Mitchel Admin",
+        needaction: true,
         model: "res.partner",
         res_id: partnerId,
-        record_name: "Frodo Baggins",
+        needaction_partner_ids: [pyEnv.currentPartnerId],
     });
-    await contains(".o-mail-NotificationItem-text", { text: "@Mitchell Admin" });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
+        [messageId],
+    ]);
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", formattedMessage);
+    await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
 });
 
 QUnit.test("can open messaging menu even if messaging is not initialized", async () => {

@@ -22,30 +22,36 @@ patch(MockServer.prototype, {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
         const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         return {
-            channels: this._mockDiscussChannelChannelInfo(
+            Thread: this._mockDiscussChannelChannelInfo(
                 this._mockResPartner_GetChannelsAsMember(user.partner_id).map(
                     (channel) => channel.id
                 )
             ),
-            current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(
-                user.partner_id
-            ),
+            self: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.pyEnv.currentUserId,
-            current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(
-                userSettings.id
-            ),
+            settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             hasGifPickerFeature: true,
             hasMessageTranslationFeature: true,
             initBusId: this.lastBusNotificationId,
             menu_id: false, // not useful in QUnit tests
-            needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
+            discuss: {
+                inbox: {
+                    counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
+                    id: "inbox",
+                    model: "mail.box",
+                },
+                starred: {
+                    counter: this.getRecords("mail.message", [
+                        ["starred_partner_ids", "in", user.partner_id],
+                    ]).length,
+                    id: "starred",
+                    model: "mail.box",
+                },
+            },
             odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-            shortcodes: this.pyEnv["mail.shortcode"].searchRead([], {
+            CannedResponse: this.pyEnv["mail.shortcode"].searchRead([], {
                 fields: ["source", "substitution"],
             }),
-            starred_counter: this.getRecords("mail.message", [
-                ["starred_partner_ids", "in", user.partner_id],
-            ]).length,
             hasLinkPreviewFeature: true,
         };
     },

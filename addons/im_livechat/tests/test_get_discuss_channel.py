@@ -159,7 +159,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         self.assertFalse(member.is_pinned, "channel should not be pinned for operator initially")
         self.env["discuss.channel"].browse(channel_id).message_post(body="cc")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
-        self.assertIn(channel_id, [c["id"] for c in operator._init_messaging()["channels"]], "channel should be fetched by operator on new page")
+        self.assertIn(channel_id, [c["id"] for c in operator._init_messaging()["Thread"]], "channel should be fetched by operator on new page")
 
     def test_operator_livechat_username(self):
         """Ensures the operator livechat_username is returned by `_channel_fetch_message`, which is

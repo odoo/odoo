@@ -42,7 +42,6 @@ export class Notification extends Record {
             return this.isFailure
                 ? {
                       id: failure ? failure.id : this._store.Failure.nextId.value++,
-                      resId: thread?.id,
                   }
                 : false;
         },

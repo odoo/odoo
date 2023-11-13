@@ -17,7 +17,7 @@ export class LivechatCoreWeb {
 
     setup() {
         this.messagingService.isReady.then((data) => {
-            if (data.current_user_settings?.is_discuss_sidebar_category_livechat_open) {
+            if (data.settings?.is_discuss_sidebar_category_livechat_open) {
                 this.store.discuss.livechat.isOpen = true;
             }
             this.busService.subscribe("res.users.settings", (payload) => {

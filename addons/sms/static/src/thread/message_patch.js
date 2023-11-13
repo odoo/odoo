@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Message.prototype, {
     onClickFailure() {
-        if (this.message.type === "sms") {
+        if (this.message.message_type === "sms") {
             this.env.services.action.doAction("sms.sms_resend_action", {
                 additionalContext: {
                     default_mail_message_id: this.message.id,

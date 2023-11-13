@@ -10,7 +10,7 @@ patch(AttachmentService.prototype, {
         this.voiceMessageService = services["discuss.voice_message"];
     },
     remove(attachment) {
-        if (attachment.isVoice && attachment.id > 0) {
+        if (attachment.voice && attachment.id > 0) {
             this.voiceMessageService.activePlayer = null;
         }
         super.remove(...arguments);

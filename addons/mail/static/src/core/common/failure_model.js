@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { assignIn } from "@mail/utils/common/misc";
 import { markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -11,16 +10,6 @@ export class Failure extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Failure>} */
     static records = {};
-    static new(data) {
-        /** @type {import("models").Failure} */
-        const failure = super.new(data);
-        Record.onChange(failure, "notifications", () => {
-            if (failure.notifications.length === 0) {
-                failure.delete();
-            }
-        });
-        return failure;
-    }
     /** @returns {import("models").Failure} */
     static get(data) {
         return super.get(data);
@@ -29,43 +18,42 @@ export class Failure extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static _insert() {
-        /** @type {import("models").Failure} */
-        const failure = super._insert(...arguments);
-        if (failure.notifications.length === 0) {
-            failure.delete();
-        } else {
-            this.store.failures.add(failure);
-        }
-        return failure;
-    }
 
-    update(data) {
-        assignIn(this, data, ["notifications"]);
-        this.lastMessage = this.notifications[0]?.message;
-        for (const notification of this.notifications) {
-            if (this.lastMessage?.id < notification.message?.id) {
-                this.lastMessage = notification.message;
+    notifications = Record.many("Notification", {
+        /** @this {import("models").Failure} */
+        onUpdate() {
+            if (this.notifications.length === 0) {
+                this.delete();
+            } else {
+                this._store.failures.add(this);
             }
-        }
-        this.resIds.add(data.resId);
-    }
-
-    delete() {
-        this._store.failures.delete(this);
-        super.delete();
-    }
-
-    notifications = Record.many("Notification");
+        },
+    });
     get modelName() {
         return this.notifications?.[0]?.message?.originThread?.modelName;
     }
     get resModel() {
         return this.notifications?.[0]?.message?.originThread?.model;
     }
-    lastMessage = Record.one("Message");
-    /** @type {Set<number>} */
-    resIds = new Set();
+    get resIds() {
+        return new Set([
+            ...this.notifications
+                .map((notif) => notif.message?.originThread?.id)
+                .filter((id) => !!id),
+        ]);
+    }
+    lastMessage = Record.one("Message", {
+        /** @this {import("models").Failure} */
+        compute() {
+            let lastMsg = this.notifications[0]?.message;
+            for (const notification of this.notifications) {
+                if (lastMsg?.id < notification.message?.id) {
+                    lastMsg = notification.message;
+                }
+            }
+            return lastMsg;
+        },
+    });
     /** @type {'sms' | 'email'} */
     get type() {
         return this.notifications?.[0]?.notification_type;
