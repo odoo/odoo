@@ -17,6 +17,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { addLoadingEffect } from "@web/core/utils/ui";
 const { DateTime } = luxon;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
@@ -270,7 +271,7 @@ const { DateTime } = luxon;
             const $button = this.$el.find('.s_website_form_send, .o_website_form_send');
             $button.addClass('disabled') // !compatibility
                    .attr('disabled', 'disabled');
-            this.restoreBtnLoading = dom.addButtonLoadingEffect($button[0]);
+            this.restoreBtnLoading = addLoadingEffect($button[0]);
 
             var self = this;
 
