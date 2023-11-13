@@ -1392,8 +1392,40 @@ class PurchaseOrderLine(models.Model):
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'purchase_line_id': self.id,
         }
+<<<<<<< HEAD
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
+||||||| parent of 39f3939c6153 (temp)
+        if not move:
+            return res
+
+        if self.currency_id == move.company_id.currency_id:
+            currency = False
+        else:
+            currency = move.currency_id
+
+        res.update({
+            'move_id': move.id,
+            'currency_id': currency and currency.id or False,
+            'date_maturity': move.invoice_date_due,
+            'partner_id': move.partner_id.id,
+        })
+=======
+        if not move:
+            return res
+
+        if self.currency_id == move.company_id.currency_id:
+            currency = False
+        else:
+            currency = move.currency_id
+
+        res.update({
+            'move_id': move.id,
+            'currency_id': currency and currency.id or False,
+            'date_maturity': move.invoice_date_due,
+            'partner_id': move.commercial_partner_id.id,
+        })
+>>>>>>> 39f3939c6153 (temp)
         return res
 
     @api.model
