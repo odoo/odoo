@@ -1267,12 +1267,17 @@ class AccountMove(models.Model):
                 sent_move.l10n_it_edi_transaction = False
                 message = nl2br(escape(_("Error uploading the e-invoice file %s.\n%s", filename, vals['error'])))
             else:
-                is_demo = vals['id_transaction'] == 'demo'
                 sent_move.l10n_it_edi_state = 'processing'
                 sent_move.l10n_it_edi_transaction = vals['id_transaction']
-                message = (
-                    _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
-                    if is_demo else _("The e-invoice file %s was sent to the SdI for processing.", filename))
+
+                edi_mode = sent_move.company_id.l10n_it_edi_proxy_user_id.edi_mode
+                if edi_mode == 'demo':
+                    message = _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
+                elif edi_mode == 'test':
+                    message = _("The e-invoice file %s was sent to the test service of the SdI for processing, it won't be fiscally relevant.", filename)
+                elif edi_mode == 'prod':
+                    message = _("The e-invoice file %s was sent to the SdI for processing.", filename)
+
             sent_move.l10n_it_edi_header = message
             sent_move.sudo().message_post(body=message)
 
@@ -1459,6 +1464,13 @@ class AccountMove(models.Model):
         partner_name = partner.display_name
         filename = transformed_notification['filename']
         new_state = transformed_notification['l10n_it_edi_state']
+
+        edi_mode = self.company_id.l10n_it_edi_proxy_user_id.edi_mode
+        if edi_mode == 'test':
+            edi_server = _("test service of the SdI")
+        elif edi_mode == 'prod':
+            edi_server = _("SdI")
+
         if new_state == 'rejected':
             DUPLICATE_MOVE = '00404'
             DUPLICATE_FILENAME = '00002'
@@ -1468,33 +1480,33 @@ class AccountMove(models.Model):
                 if error_code == DUPLICATE_MOVE:
                     error_description_copy = _(
                         "The e-invoice file %s is duplicated.\n"
-                        "Original message from the SdI: %s",
+                        "Original message: %s",
                         filename, error_description_copy)
                 elif error_code == DUPLICATE_FILENAME:
                     error_description_copy = _(
                         "The e-invoice filename %s is duplicated. Please check the FatturaPA Filename sequence.\n"
-                        "Original message from the SdI: %s",
+                        "Original message: %s",
                         filename, error_description_copy)
                 error_descriptions.append(error_description_copy)
 
-            return self._l10n_it_edi_format_errors(_('The e-invoice has been refused by the SdI.'), error_descriptions)
+            return self._l10n_it_edi_format_errors(_('The e-invoice has been refused by the %s.', edi_server), error_descriptions)
 
         elif partner._l10n_it_edi_is_public_administration():
             pa_specific_map = {
                 'forwarded': nl2br(escape(_(
-                    "The e-invoice file %s was succesfully sent to the SdI.\n"
+                    "The e-invoice file %s was succesfully sent to the %s.\n"
                     "%s has 15 days to accept or reject it.",
-                    filename, partner_name))),
+                    filename, edi_server, partner_name))),
                 'forward_attempt': nl2br(escape(_(
-                    "The e-invoice file %s can't be forward to %s (Public Administration) by the SdI at the moment.\n"
+                    "The e-invoice file %s can't be forward to %s (Public Administration) by the %s at the moment.\n"
                     "It will try again for 10 days, after which it will be considered accepted, but "
                     "you will still have to send it by post or e-mail.",
-                    filename, partner_name))),
+                    filename, edi_server, partner_name))),
                 'accepted_by_pa_partner_after_expiry': nl2br(escape(_(
-                    "The e-invoice file %s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
+                    "The e-invoice file %s is succesfully sent to the %s. The invoice is now considered fiscally relevant.\n"
                     "The %s (Public Administration) had 15 days to either accept or refused this document,"
                     "but since they did not reply, it's now considered accepted.",
-                    filename, partner_name))),
+                    filename, edi_server, partner_name))),
                 'rejected_by_pa_partner': nl2br(escape(_(
                     "The e-invoice file %s has been refused by %s (Public Administration).\n"
                     "You have 5 days from now to issue a full refund for this invoice, "
@@ -1512,21 +1524,21 @@ class AccountMove(models.Model):
             False: _(
                 "The e-invoice file %s has not been found on the EDI Proxy server.", filename),
             'processing': nl2br(escape(_(
-                "The e-invoice file %s was sent to the SdI for validation.\n"
+                "The e-invoice file %s was sent to the %s for validation.\n"
                 "It is not yet considered accepted, please wait further notifications.",
-                filename))),
+                filename, edi_server))),
             'forwarded': _(
-                "The e-invoice file %s was accepted and succesfully forwarded it to %s by the SdI.",
-                filename, partner_name),
+                "The e-invoice file %s was accepted and succesfully forwarded it to %s by the %s.",
+                filename, partner_name, edi_server),
             'forward_attempt': nl2br(escape(_(
-                "The e-invoice file %s has been accepted by the SdI.\n"
-                "The SdI is trying to forward it to %s.\n"
+                "The e-invoice file %s has been accepted by the %s.\n"
+                "The %s is trying to forward it to %s.\n"
                 "It will try for up to 2 days, after which you'll eventually "
                 "need to send it the invoice to the partner by post or e-mail.",
-                filename, partner_name))),
+                filename, edi_server, edi_server, partner_name))),
             'forward_failed': nl2br(escape(_(
-                "The e-invoice file %s couldn't be forwarded to %s.\n"
+                "The e-invoice file %s couldn't be forwarded to %s by the %s.\n"
                 "Please remember to send it via post or e-mail.",
-                filename, partner_name)))
+                filename, partner_name, edi_server)))
         }
         return new_state_messages_map.get(new_state)
