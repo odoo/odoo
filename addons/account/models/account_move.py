@@ -3758,6 +3758,7 @@ class AccountMove(models.Model):
         })
 
         draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
+        to_post.line_ids._reconcile_marked()
 
         for invoice in to_post:
             invoice.message_subscribe([
