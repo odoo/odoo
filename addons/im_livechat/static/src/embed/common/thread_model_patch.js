@@ -34,17 +34,15 @@ patch(Thread, {
             if (this.env.services["im_livechat.chatbot"].isChatbotThread(thread)) {
                 thread.chatbotTypingMessage = {
                     id: this.env.services["mail.message"].getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
                     author: thread.operator,
+                    originThread: thread,
                 };
             } else {
                 thread.livechatWelcomeMessage = {
                     id: this.env.services["mail.message"].getNextTemporaryId(),
                     body: livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
                     author: thread.operator,
+                    originThread: thread,
                 };
             }
         }

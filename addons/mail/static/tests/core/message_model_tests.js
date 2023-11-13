@@ -30,6 +30,7 @@ QUnit.test("Message model properties", async (assert) => {
         starred_partner_ids: [3],
         isStarred: true,
         model: "res.partner",
+        originThread: { id: 3, model: "res.partner" },
         res_id: 3,
     });
     assert.ok(message);

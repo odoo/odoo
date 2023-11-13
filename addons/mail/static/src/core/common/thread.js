@@ -360,7 +360,7 @@ export class Thread extends Component {
         if (!msg.author?.eq(prevMsg.author)) {
             return false;
         }
-        if (msg.model !== prevMsg.model || msg.res_id !== prevMsg.res_id) {
+        if (!msg.originThread?.eq(prevMsg.originThread)) {
             return false;
         }
         if (msg.parentMessage) {

@@ -98,13 +98,15 @@ export class ThreadService {
             this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
-            }).then(() => {
-                this.updateSeen(thread, newestPersistentMessage.id);
-            }).catch((e) => {
-                if (e.code !== 404) {
-                    throw e;
-                }
-            });
+            })
+                .then(() => {
+                    this.updateSeen(thread, newestPersistentMessage.id);
+                })
+                .catch((e) => {
+                    if (e.code !== 404) {
+                        throw e;
+                    }
+                });
         } else if (newestPersistentMessage) {
             this.updateSeen(thread);
         }
@@ -704,8 +706,7 @@ export class ThreadService {
                 {
                     ...tmpData,
                     body: prettyContent,
-                    res_id: thread.id,
-                    model: thread.model,
+                    originThread: thread,
                     temporary_id: tmpId,
                 },
                 { html: true }
@@ -867,10 +868,16 @@ export class ThreadService {
         }
         if (thread?.model === "discuss.channel") {
             if (persona.type === "partner") {
-                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`, urlParams);
+                return url(
+                    `/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`,
+                    urlParams
+                );
             }
             if (persona.type === "guest") {
-                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`, urlParams);
+                return url(
+                    `/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`,
+                    urlParams
+                );
             }
         }
         if (persona.type === "partner" && persona?.id) {

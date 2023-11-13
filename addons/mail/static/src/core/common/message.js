@@ -259,11 +259,8 @@ export class Message extends Component {
         return _t("Message");
     }
 
-    /**
-     * @returns {boolean}
-     */
     get canAddReaction() {
-        return Boolean(!this.message.is_transient && this.message.res_id);
+        return Boolean(!this.message.is_transient && this.message.originThread);
     }
 
     get deletable() {
@@ -281,11 +278,8 @@ export class Message extends Component {
         return this.props.messageToReplyTo;
     }
 
-    /**
-     * @returns {boolean}
-     */
     get canToggleStar() {
-        return Boolean(!this.message.is_transient && this.message.res_id && this.store.user);
+        return Boolean(!this.message.is_transient && this.message.originThread && this.store.user);
     }
 
     get showUnfollow() {

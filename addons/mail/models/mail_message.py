@@ -1059,8 +1059,13 @@ class Message(models.Model):
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
-            if vals['model'] and self.env[vals['model']]._original_module:
-                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
+            if vals['model'] and vals['res_id']:
+                originThread = {'model': vals['model'], 'id': vals['res_id']}
+                if vals['model'] != 'discuss.channel':
+                    originThread.update({'name': vals['record_name']})
+                if self.env[vals['model']]._original_module:
+                    originThread.update({'module_icon': modules.module.get_module_icon(self.env[vals['model']]._original_module)})
+                vals['originThread'] = originThread
         return vals_list
 
     @api.model
@@ -1132,7 +1137,7 @@ class Message(models.Model):
         return [
             'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
-            'model', 'res_id', 'record_name',  # document related
+            'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]
 
@@ -1146,13 +1151,15 @@ class Message(models.Model):
         return [{
             'author': {'id': message.author_id.id, 'type': "partner"} if message.author_id else False,
             'id': message.id,
-            'res_id': message.res_id,
-            'model': message.model,
-            'res_model_name': message.env['ir.model']._get(message.model).display_name,
             'date': message.date,
             'message_type': message.message_type,
             'body': message.body,
             'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
+            'originThread': {
+                'id': message.res_id,
+                'model': message.model,
+                'modelName': message.env['ir.model']._get(message.model).display_name,
+            } if message.res_id else False,
         } for message in self]
 
     def _notify_message_notification_update(self):

@@ -37,25 +37,10 @@ export class Message extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static _insert(data) {
-        if (data.res_id) {
-            this.store.Thread.insert({
-                model: data.model,
-                id: data.res_id,
-            });
-        }
-        return super._insert(...arguments);
-    }
 
     /** @param {Object} data */
     update(data) {
-        const {
-            message_type: type = this.type,
-            module_icon,
-            record_name,
-            res_model_name,
-            ...remainingData
-        } = data;
+        const { message_type: type = this.type, ...remainingData } = data;
         assignDefined(this, remainingData);
         assignDefined(this, {
             isStarred: this._store.user
@@ -63,17 +48,6 @@ export class Message extends Record {
                 : false,
             type,
         });
-        // origin thread before other information (in particular notification insert uses it)
-        if (this.originThread) {
-            assignDefined(this.originThread, {
-                modelName: res_model_name || undefined,
-                module_icon: module_icon || undefined,
-                name:
-                    this.originThread.model === "discuss.channel"
-                        ? undefined
-                        : record_name || undefined,
-            });
-        }
         assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
         if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
             this.originThread.selfFollower = {
@@ -115,10 +89,7 @@ export class Message extends Record {
     reactions = Record.many("MessageReactions", { inverse: "message" });
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
-    /** @type {number|string} */
-    res_id;
-    /** @type {string|undefined} */
-    model;
+    originThread = Record.one("Thread");
     /** @type {string} */
     scheduledDatetime;
     /** @type {Number[]} */
@@ -192,7 +163,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.model === "discuss.channel";
+        return this.isSelfMentioned && this.originThread?.model === "discuss.channel";
     }
 
     get isSelfAuthored() {
@@ -221,7 +192,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get isNotification() {
-        return this.type === "notification" && this.model === "discuss.channel";
+        return this.type === "notification" && this.originThread?.model === "discuss.channel";
     }
 
     get isSubjectSimilarToOriginThreadName() {
@@ -241,12 +212,8 @@ export class Message extends Record {
         return candidates.has(this.subject?.toLowerCase());
     }
 
-    get originThread() {
-        return this._store.Thread.get({ model: this.model, id: this.res_id });
-    }
-
     get resUrl() {
-        return `${url("/web")}#model=${this.model}&id=${this.res_id}`;
+        return `${url("/web")}#model=${this.originThread?.model}&id=${this.originThread?.id}`;
     }
 
     get editDate() {

@@ -1179,8 +1179,7 @@ class Channel(models.Model):
         """
         self.env['bus.bus']._sendone(partner_to, 'discuss.channel/transient_message', {
             'body': f"<span class='o_mail_notification'>{content}</span>",
-            'model': self._name,
-            'res_id': self.id,
+            'originThread': {'model': self._name, 'id': self.id},
         })
 
     def execute_command_help(self, **kwargs):

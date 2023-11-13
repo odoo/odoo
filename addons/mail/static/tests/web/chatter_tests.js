@@ -228,7 +228,7 @@ QUnit.test("chatter: drop attachments", async () => {
 
 QUnit.test("should display subject when subject isn't infered from the record", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         model: "res.partner",

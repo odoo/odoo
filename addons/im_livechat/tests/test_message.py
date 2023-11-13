@@ -78,9 +78,13 @@ class TestImLivechatMessage(HttpCase):
             'message_type': 'notification',
             'reactions': [],
             'model': 'discuss.channel',
-            'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],
             'notifications': [],
+            'originThread': {
+                'id': channel_livechat_1.id,
+                'model': 'discuss.channel',
+                'module_icon': '/mail/static/description/icon.png',
+            },
             'pinned_at': False,
             'rating': {
                 'id': record_rating.id,

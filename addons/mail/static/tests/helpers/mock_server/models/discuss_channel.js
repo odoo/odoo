@@ -186,8 +186,7 @@ patch(MockServer.prototype, {
             "discuss.channel/transient_message",
             {
                 body: notifBody,
-                model: "discuss.channel",
-                res_id: channel.id,
+                originThread: { model: "discuss.channel", id: channel.id },
             }
         );
         return true;
@@ -892,8 +891,7 @@ patch(MockServer.prototype, {
                 "discuss.channel/transient_message",
                 {
                     body: `<span class="o_mail_notification">${message}</span>`,
-                    model: "discuss.channel",
-                    res_id: channel.id,
+                    originThread: { model: "discuss.channel", id: channel.id },
                 }
             );
         }

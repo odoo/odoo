@@ -409,31 +409,53 @@ QUnit.test("Can reply to history message", async () => {
 });
 
 QUnit.test("receive new needaction messages", async () => {
-    const { openDiscuss, pyEnv } = await start();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    const { env, openDiscuss } = await start();
     openDiscuss();
     await contains("button.o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Thread .o-mail-Message", { count: 0 });
-
     // simulate receiving a new needaction message
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
+    const messageId_1 = pyEnv["mail.message"].create({
+        author_id: partnerId,
         body: "not empty 1",
-        id: 100,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction: true,
         model: "res.partner",
-        res_id: 20,
+        res_id: partnerId,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
     });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId_1,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const [message1] = await env.services.orm.call("mail.message", "message_format", [
+        [messageId_1],
+    ]);
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", message1);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
-
-    // simulate receiving another new needaction message
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
+    // simulate receiving a new needaction message
+    const messageId_2 = pyEnv["mail.message"].create({
+        author_id: partnerId,
         body: "not empty 2",
-        id: 101,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
+        needaction: true,
         model: "res.partner",
-        res_id: 20,
+        res_id: partnerId,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
     });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId_2,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const [message2] = await env.services.orm.call("mail.message", "message_format", [
+        [messageId_2],
+    ]);
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", message2);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });

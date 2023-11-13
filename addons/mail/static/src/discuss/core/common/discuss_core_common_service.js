@@ -110,11 +110,8 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-                const channel = this.store.Thread.get({
-                    model: "discuss.channel",
-                    id: payload.res_id,
-                });
-                const { body, res_id, model } = payload;
+                const { body, originThread } = payload;
+                const channel = this.store.Thread.get(originThread);
                 const lastMessageId = this.messageService.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
@@ -123,8 +120,7 @@ export class DiscussCoreCommon {
                         id: lastMessageId + 0.01,
                         is_note: true,
                         is_transient: true,
-                        res_id,
-                        model,
+                        originThread,
                     },
                     { html: true }
                 );

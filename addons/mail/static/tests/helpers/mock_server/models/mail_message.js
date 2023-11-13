@@ -336,7 +336,17 @@ patch(MockServer.prototype, {
                 guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
             }
             response.author = author || guestAuthor;
-            response["module_icon"] = "/base/static/description/icon.png";
+            if (response["model"] && response["res_id"]) {
+                const originThread = {
+                    model: response["model"],
+                    id: response["res_id"],
+                    module_icon: "/base/static/description/icon.png",
+                };
+                if (response["model"] !== "discuss.channel") {
+                    originThread.name = response["record_name"];
+                }
+                Object.assign(response, { originThread });
+            }
             return response;
         });
     },
@@ -390,10 +400,14 @@ patch(MockServer.prototype, {
                 date: message.date,
                 id: message.id,
                 message_type: message.message_type,
-                model: message.model,
                 notifications: notifications,
-                res_id: message.res_id,
-                res_model_name: message.res_model_name,
+                originThread: message.res_id
+                    ? {
+                          id: message.res_id,
+                          model: message.model,
+                          modelName: message.res_model_name,
+                      }
+                    : false,
             };
         });
     },
