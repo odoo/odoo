@@ -23,7 +23,6 @@ declare module "services" {
     import { storeService } from "@mail/core/common/store_service";
     import { suggestionService } from "@mail/core/common/suggestion_service";
     import { threadService } from "@mail/core/common/thread_service";
-    import { userSettingsService } from "@mail/core/common/user_settings_service";
 
     export interface Services {
         "discuss.channel.member": ReturnType<typeof channelMemberService.start>;
@@ -49,6 +48,5 @@ declare module "services" {
         "mail.store": ReturnType<typeof storeService.start>;
         "mail.suggestion": ReturnType<typeof suggestionService.start>;
         "mail.thread": ReturnType<typeof threadService.start>;
-        "mail.user_settings": ReturnType<typeof userSettingsService.start>;
     }
 }

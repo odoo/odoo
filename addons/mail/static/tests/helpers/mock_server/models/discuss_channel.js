@@ -186,8 +186,7 @@ patch(MockServer.prototype, {
             "discuss.channel/transient_message",
             {
                 body: notifBody,
-                model: "discuss.channel",
-                res_id: channel.id,
+                originThread: { model: "discuss.channel", id: channel.id },
             }
         );
         return true;
@@ -668,7 +667,7 @@ patch(MockServer.prototype, {
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
-                    res["rtc_inviting_session"] = {
+                    res["rtcInvitingSession"] = {
                         id: memberOfCurrentUser.rtc_inviting_session_id,
                     };
                 }
@@ -682,13 +681,14 @@ patch(MockServer.prototype, {
                 ];
             }
             if (channel.channel_type !== "channel") {
-                res["seen_partners_info"] = members
+                res["seenInfos"] = members
                     .filter((member) => member.partner_id)
                     .map((member) => {
                         return {
-                            partner_id: member.partner_id,
-                            seen_message_id: member.seen_message_id,
-                            fetched_message_id: member.fetched_message_id,
+                            id: member.partner_id,
+                            partner: { id: member.partner_id, type: "partner" },
+                            lastSeenMessage: { id: member.seen_message_id },
+                            lastFetchedMessage: { id: member.fetched_message_id },
                         };
                     });
                 res["channelMembers"] = [
@@ -892,8 +892,7 @@ patch(MockServer.prototype, {
                 "discuss.channel/transient_message",
                 {
                     body: `<span class="o_mail_notification">${message}</span>`,
-                    model: "discuss.channel",
-                    res_id: channel.id,
+                    originThread: { model: "discuss.channel", id: channel.id },
                 }
             );
         }
@@ -992,39 +991,15 @@ patch(MockServer.prototype, {
         const memberCount = this.pyEnv["discuss.channel.member"].searchCount([
             ["channel_id", "in", channel_ids],
         ]);
-        const membersData = [];
-        for (const member of members) {
-            let persona;
-            if (member.partner_id) {
-                const [partner] = this.pyEnv["res.partner"].searchRead(
-                    [["id", "=", member.partner_id[0]]],
-                    { fields: ["id", "name", "im_status"], context: { active_test: false } }
-                );
-                persona = {
-                    id: partner.id,
-                    name: partner.name,
-                    im_status: partner.im_status,
-                    type: "partner",
-                };
-            }
-            if (member.guest_id) {
-                const [guest] = this.pyEnv["mail.guest"].searchRead(
-                    [["id", "=", member.guest_id[0]]],
-                    { fields: ["id", "name"] }
-                );
-                persona = {
-                    id: guest.id,
-                    name: guest.name,
-                    type: "guest",
-                };
-            }
-            membersData.push({
-                id: member.id,
-                persona: persona,
-            });
-        }
         return {
-            channelMembers: [["ADD", membersData]],
+            channelMembers: [
+                [
+                    "ADD",
+                    this._mockDiscussChannelMember_DiscussChannelMemberFormat(
+                        members.map((m) => m.id)
+                    ),
+                ],
+            ],
             memberCount,
         };
     },

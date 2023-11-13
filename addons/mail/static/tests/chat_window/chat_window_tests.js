@@ -629,10 +629,10 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
         "should have enough space to open 3 chat windows simultaneously"
     );
     await start();
-    // FIXME: assumes ordering: MyProject, MyTeam, General
+    // FIXME: assumes ordering: General, MyTeam, MyProject
     await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 3 });
     await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow", { text: "MyProject" }],
+        parent: [".o-mail-ChatWindow", { text: "General" }],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
@@ -641,12 +641,12 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
-        text: "General",
+        text: "MyProject",
         contains: [".o-mail-Composer-input:focus"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
-        text: "MyProject",
+        text: "General",
         contains: [".o-mail-Composer-input:focus"],
     });
 });

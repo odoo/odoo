@@ -42,18 +42,18 @@ export class Store extends BaseStore {
     Persona;
     /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
     RtcSession;
+    /** @type {typeof import("@mail/core/common/settings_model").Settings} */
+    Settings;
     /** @type {typeof import("@mail/core/common/thread_model").Thread} */
     Thread;
-
-    get registeredImStatusPartners() {
-        return this.imStatusTrackedPersonas.map((persona) => persona.id);
-    }
+    /** @type {typeof import("@mail/core/common/thread_seen_info_model").ThreadSeenInfo} */
+    ThreadSeenInfo;
+    /** @type {typeof import("@mail/core/common/volume_model").Volume} */
+    Volume;
 
     lastChannelSubscription = "";
-    /** This is the current logged partner */
-    user = Record.one("Persona");
-    /** This is the current logged guest */
-    guest = Record.one("Persona");
+    /** This is the current logged partner / guest */
+    self = Record.one("Persona");
     /**
      * The last id of bus notification at the time for fetch init_messaging.
      * When receiving a notification:
@@ -70,22 +70,29 @@ export class Store extends BaseStore {
     inPublicPage = false;
     companyName = "";
     odoobot = Record.one("Persona");
+    /** @type {boolean} */
     odoobotOnboarding;
     users = {};
     internalUserGroupId = null;
+    /** @type {string} */
+    mt_comment_id;
+    /** @type {boolean} */
+    hasMessageTranslationFeature;
     imStatusTrackedPersonas = Record.many("Persona", {
+        /** @this {import("models").Store} */
         compute() {
             return Object.values(this.Persona?.records ?? []).filter(
-                (persona) =>
-                    persona.type === "partner" &&
-                    persona.im_status !== "im_partner" &&
-                    !persona.is_public
+                (persona) => persona.im_status !== "im_partner" && !persona.is_public
             );
         },
-        onUpdate() {
-            this.updateImStatusRegistration();
-        },
         eager: true,
+        /** @this {import("models").Store} */
+        onUpdate() {
+            this.env.services["im_status"].registerToImStatus(
+                "res.partner",
+                this.imStatusTrackedPersonas.map((p) => p.id)
+            );
+        },
     });
     hasLinkPreviewFeature = true;
     // messaging menu
@@ -178,16 +185,7 @@ export class Store extends BaseStore {
     });
     activityCounter = 0;
     isMessagingReady = false;
-
-    get self() {
-        return this.guest ?? this.user;
-    }
-
-    updateImStatusRegistration() {
-        this.env.services.im_status?.registerToImStatus("res.partner", [
-            ...this.registeredImStatusPartners,
-        ]);
-    }
+    settings = Record.one("Settings");
 
     /**
      * @param {'chat' | 'group'} tab
@@ -221,15 +219,15 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "ui"],
+    dependencies: ["bus_service", "im_status", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
      */
     start(env, services) {
         const store = makeStore(env);
-        store.discuss = {};
-        store.discuss.activeTab = "main";
+        store.discuss = { activeTab: "main" };
+        store.settings = {};
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";

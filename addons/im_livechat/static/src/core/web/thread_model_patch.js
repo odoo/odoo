@@ -1,22 +1,16 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
-import { assignIn } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread, {
-    _insert(data) {
-        const thread = super._insert(...arguments);
-        if (thread.type === "livechat") {
-            assignIn(thread, data, ["anonymous_name", "anonymous_country"]);
-            this.store.discuss.livechat.threads.add(thread);
-        }
-        return thread;
-    },
-});
-
 patch(Thread.prototype, {
+    onUpdateType() {
+        super.onUpdateType();
+        this._store.discuss.livechat.threads = [
+            [this.type === "livechat" ? "ADD" : "DELETE", this],
+        ];
+    },
     get hasMemberList() {
         return this.type === "livechat" || super.hasMemberList;
     },

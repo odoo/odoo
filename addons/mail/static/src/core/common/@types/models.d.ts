@@ -4,6 +4,7 @@ declare module "models" {
     import { ChannelMember as ChannelMemberClass } from "@mail/core/common/channel_member_model";
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
+    import { Country as CountryClass } from "@mail/core/common/country_model";
     import { DiscussApp as DiscussAppClass } from "@mail/core/common/discuss_app_model";
     import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/core/common/discuss_app_category_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
@@ -13,8 +14,11 @@ declare module "models" {
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
+    import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
+    import { ThreadSeenInfo as ThreadSeenInfoClass } from "@mail/core/common/thread_seen_info_model";
+    import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
     // define interfaces for jsdoc, including with patches
     export interface Attachment extends AttachmentClass {}
@@ -22,6 +26,7 @@ declare module "models" {
     export interface ChannelMember extends ChannelMemberClass {}
     export interface ChatWindow extends ChatWindowClass {}
     export interface Composer extends ComposerClass {}
+    export interface Country extends CountryClass {}
     export interface DiscussApp extends DiscussAppClass {}
     export interface DiscussAppCategory extends DiscussAppCategoryClass {}
     export interface Failure extends FailureClass {}
@@ -31,8 +36,11 @@ declare module "models" {
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
+    export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
+    export interface ThreadSeenInfo extends ThreadSeenInfoClass {}
+    export interface Volume extends VolumeClass {}
 
     // required to propagate types in relational fields
     export interface Models {
@@ -41,6 +49,7 @@ declare module "models" {
         "ChannelMember": ChannelMember,
         "ChatWindow": ChatWindow,
         "Composer": Composer,
+        "Country": Country,
         "DiscussApp": DiscussApp,
         "DiscussAppCategory": DiscussAppCategory,
         "Failure": Failure,
@@ -50,7 +59,10 @@ declare module "models" {
         "MessageReactions": MessageReactions,
         "Notification": Notification,
         "Persona": Persona,
+        "Settings": Settings,
         "Store": Store,
         "Thread": Thread,
+        "ThreadSeenInfo": ThreadSeenInfo,
+        "Volume": Volume,
     }
 }

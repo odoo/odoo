@@ -25,7 +25,7 @@ export class Follower extends Record {
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-        return this.partner.eq(this._store.user)
+        return this.partner.eq(this._store.self)
             ? this.followedThread.hasReadAccess
             : hasWriteAccess;
     }

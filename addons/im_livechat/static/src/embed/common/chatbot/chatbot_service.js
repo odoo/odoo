@@ -216,8 +216,7 @@ export class ChatBotService {
                     chatbotStep: welcomeStep,
                     id: this.messageService.getNextTemporaryId(),
                     body: welcomeStep.message,
-                    res_id: this.livechatService.thread.id,
-                    model: this.livechatService.thread.model,
+                    originThread: this.livechatService.thread,
                     author: this.livechatService.thread.operator,
                 },
             };

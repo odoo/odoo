@@ -37,7 +37,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 export class LivechatService {
     TEMPORARY_ID = "livechat_temporary_thread";
     SESSION_COOKIE = "im_livechat_session";
-    OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
+    OPERATOR_COOKIE = "im_livechat_previous_operator";
     GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
     /** @type {keyof typeof SESSION_STATE} */
     state = SESSION_STATE.NONE;
@@ -214,7 +214,7 @@ export class LivechatService {
             ...threadData,
             id: threadData.id ?? this.TEMPORARY_ID,
             model: "discuss.channel",
-            type: "livechat",
+            channel_type: "livechat",
         });
         this.state = thread.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         if (this.state === SESSION_STATE.PERSISTED && !this.sessionInitialized) {

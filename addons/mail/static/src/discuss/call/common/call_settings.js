@@ -15,7 +15,7 @@ export class CallSettings extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.userSettings = useState(useService("mail.user_settings"));
+        this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({
             userDevices: [],
@@ -37,7 +37,7 @@ export class CallSettings extends Component {
     }
 
     get pushToTalkKeyText() {
-        const { shiftKey, ctrlKey, altKey, key } = this.userSettings.pushToTalkKeyFormat();
+        const { shiftKey, ctrlKey, altKey, key } = this.store.settings.pushToTalkKeyFormat();
         const f = (k, name) => (k ? name : "");
         const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
             Boolean
@@ -46,36 +46,36 @@ export class CallSettings extends Component {
     }
 
     _onKeyDown(ev) {
-        if (!this.userSettings.isRegisteringKey) {
+        if (!this.store.settings.isRegisteringKey) {
             return;
         }
         ev.stopPropagation();
         ev.preventDefault();
-        this.userSettings.setPushToTalkKey(ev);
+        this.store.settings.setPushToTalkKey(ev);
     }
 
     _onKeyUp(ev) {
-        if (!this.userSettings.isRegisteringKey) {
+        if (!this.store.settings.isRegisteringKey) {
             return;
         }
         ev.stopPropagation();
         ev.preventDefault();
-        this.userSettings.isRegisteringKey = false;
+        this.store.settings.isRegisteringKey = false;
     }
 
     onChangeLogRtcCheckbox(ev) {
-        this.userSettings.logRtc = ev.target.checked;
+        this.store.settings.logRtc = ev.target.checked;
     }
 
     onChangeSelectAudioInput(ev) {
-        this.userSettings.setAudioInputDevice(ev.target.value);
+        this.store.settings.setAudioInputDevice(ev.target.value);
     }
 
     onChangePushToTalk() {
-        if (this.userSettings.usePushToTalk) {
-            this.userSettings.isRegisteringKey = false;
+        if (this.store.settings.use_push_to_talk) {
+            this.store.settings.isRegisteringKey = false;
         }
-        this.userSettings.togglePushToTalk();
+        this.store.settings.togglePushToTalk();
     }
 
     onClickDownloadLogs() {
@@ -93,19 +93,19 @@ export class CallSettings extends Component {
     }
 
     onClickRegisterKeyButton() {
-        this.userSettings.isRegisteringKey = !this.userSettings.isRegisteringKey;
+        this.store.settings.isRegisteringKey = !this.store.settings.isRegisteringKey;
     }
 
     onChangeDelay(ev) {
-        this.userSettings.setDelayValue(ev.target.value);
+        this.store.settings.setDelayValue(ev.target.value);
     }
 
     onChangeThreshold(ev) {
-        this.userSettings.setThresholdValue(parseFloat(ev.target.value));
+        this.store.settings.setThresholdValue(parseFloat(ev.target.value));
     }
 
     onChangeBlur(ev) {
-        this.userSettings.useBlur = ev.target.checked;
+        this.store.settings.useBlur = ev.target.checked;
     }
 
     onChangeVideoFilterCheckbox(ev) {
@@ -118,11 +118,11 @@ export class CallSettings extends Component {
     }
 
     onChangeBackgroundBlurAmount(ev) {
-        this.userSettings.backgroundBlurAmount = Number(ev.target.value);
+        this.store.settings.backgroundBlurAmount = Number(ev.target.value);
     }
 
     onChangeEdgeBlurAmount(ev) {
-        this.userSettings.edgeBlurAmount = Number(ev.target.value);
+        this.store.settings.edgeBlurAmount = Number(ev.target.value);
     }
 
     get title() {

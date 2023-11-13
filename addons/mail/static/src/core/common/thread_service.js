@@ -73,11 +73,7 @@ export class ThreadService {
             channelMembers = results["channelMembers"][0][1];
         }
         thread.memberCount = results["memberCount"];
-        for (const channelMember of channelMembers) {
-            if (channelMember.persona || channelMember.partner) {
-                thread.channelMembers.add({ ...channelMember, thread });
-            }
-        }
+        thread.channelMembers.add(...channelMembers);
     }
 
     /**
@@ -404,23 +400,13 @@ export class ThreadService {
     }
 
     pin(thread) {
-        if (thread.model !== "discuss.channel" || !this.store.user) {
+        if (thread.model !== "discuss.channel" || !this.store.self?.type === "partner") {
             return;
         }
         thread.is_pinned = true;
         return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
             pinned: true,
         });
-    }
-
-    /** @deprecated */
-    sortChannels() {
-        this.store.discuss.channels.threads.sort((t1, t2) =>
-            String.prototype.localeCompare.call(t1.name, t2.name)
-        );
-        this.store.discuss.chats.threads.sort(
-            (t1, t2) => t2.lastInterestDateTime.ts - t1.lastInterestDateTime.ts
-        );
     }
 
     /**
@@ -533,13 +519,13 @@ export class ThreadService {
 
     async joinChannel(id, name) {
         await this.orm.call("discuss.channel", "add_members", [[id]], {
-            partner_ids: [this.store.user.id],
+            partner_ids: [this.store.self.id],
         });
         const thread = this.store.Thread.insert({
             id,
             model: "discuss.channel",
             name,
-            type: "channel",
+            channel_type: "channel",
             channel: { avatarCacheKey: "hello" },
         });
         this.open(thread);
@@ -553,7 +539,7 @@ export class ThreadService {
         const thread = this.store.Thread.insert({
             ...data,
             model: "discuss.channel",
-            type: "chat",
+            channel_type: "chat",
         });
         return thread;
     }
@@ -700,8 +686,7 @@ export class ThreadService {
                 {
                     ...tmpData,
                     body: prettyContent,
-                    res_id: thread.id,
-                    model: thread.model,
+                    originThread: thread,
                     temporary_id: tmpId,
                 },
                 { html: true }
@@ -738,12 +723,13 @@ export class ThreadService {
         thread,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions = this.store.user
-            ? this.messageService.getMentionsFromText(body, {
-                  mentionedChannels,
-                  mentionedPartners,
-              })
-            : undefined;
+        const validMentions =
+            this.store.self?.type === "partner"
+                ? this.messageService.getMentionsFromText(body, {
+                      mentionedChannels,
+                      mentionedPartners,
+                  })
+                : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id);
         let recipientEmails = [];
         if (!isNote) {
@@ -924,7 +910,7 @@ export class ThreadService {
     notifyMessageToUser(thread, message) {
         if (
             thread.type === "channel" &&
-            message.recipients?.includes(this.store.user) &&
+            message.recipients?.includes(this.store.self) &&
             message.notIn(thread.needactionMessages)
         ) {
             thread.needactionMessages.add(message);
@@ -935,7 +921,7 @@ export class ThreadService {
             thread.muteUntilDateTime ||
             thread.custom_notifications === "no_notif" ||
             (thread.custom_notifications === "mentions" &&
-                !message.recipients?.includes(this.store.user))
+                !message.recipients?.includes(this.store.self))
         ) {
             return;
         }

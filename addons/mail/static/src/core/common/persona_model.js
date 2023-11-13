@@ -40,8 +40,7 @@ export class Persona extends Record {
     name;
     /** @type {string} */
     displayName;
-    /** @type {{ code: string, id: number, name: string}|undefined} */
-    country;
+    country = Record.one("Country");
     /** @type {string} */
     email;
     /** @type {Array | Object | undefined} */

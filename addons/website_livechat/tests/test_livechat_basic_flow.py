@@ -101,7 +101,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         res = self.opener.post(self.message_info_url, json={})
         self.assertEqual(res.status_code, 200)
         messages_info = res.json().get('result', {})
-        livechat_info = next(c for c in messages_info['channels'] if c['id'] == channel.id)
+        livechat_info = next(c for c in messages_info['Thread'] if c['id'] == channel.id)
         self.assertIn('visitor', livechat_info)
 
         # Remove access to visitors and try again, visitors info shouldn't be included
@@ -109,7 +109,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         res = self.opener.post(self.message_info_url, json={})
         self.assertEqual(res.status_code, 200)
         messages_info = res.json().get('result', {})
-        livechat_info = next(c for c in messages_info['channels'] if c['id'] == channel.id)
+        livechat_info = next(c for c in messages_info['Thread'] if c['id'] == channel.id)
         self.assertNotIn('visitor', livechat_info)
 
     def _common_basic_flow(self):

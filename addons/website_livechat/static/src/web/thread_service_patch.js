@@ -11,9 +11,9 @@ patch(ThreadService.prototype, {
      */
     avatarUrl(persona, thread) {
         if (persona?.type === "visitor" && thread?.id) {
-            return persona.partner_id
+            return persona.visitorPartner
                 ? `/discuss/channel/${encodeURIComponent(thread.id)}/partner/${encodeURIComponent(
-                      persona.partner_id
+                      persona.visitorPartner.id
                   )}/avatar_128`
                 : DEFAULT_AVATAR;
         }

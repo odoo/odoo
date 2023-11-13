@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -24,18 +23,8 @@ export class DiscussCoreCommon {
         this.threadService = services["mail.thread"];
     }
 
-    /** @returns {import("models").Thread} */
-    insertInitChannel(data) {
-        return this.createChannelThread(data);
-    }
-
     setup() {
         this.messagingService.isReady.then((data) => {
-            Record.MAKE_UPDATE(() => {
-                for (const channelData of data.channels) {
-                    this.insertInitChannel(channelData);
-                }
-            });
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert({
@@ -43,7 +32,7 @@ export class DiscussCoreCommon {
                     model: "discuss.channel",
                     type: channel.channel_type,
                 });
-                if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
+                if (invitedByUserId && invitedByUserId !== this.store.self?.user?.id) {
                     this.notificationService.add(
                         _t("You have been invited to #%s", thread.displayName),
                         { type: "info" }
@@ -114,11 +103,8 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-                const channel = this.store.Thread.get({
-                    model: "discuss.channel",
-                    id: payload.res_id,
-                });
-                const { body, res_id, model } = payload;
+                const { body, originThread } = payload;
+                const channel = this.store.Thread.get(originThread);
                 const lastMessageId = this.messageService.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
@@ -127,8 +113,7 @@ export class DiscussCoreCommon {
                         id: lastMessageId + 0.01,
                         is_note: true,
                         is_transient: true,
-                        res_id,
-                        model,
+                        originThread,
                     },
                     { html: true }
                 );
@@ -165,7 +150,11 @@ export class DiscussCoreCommon {
                     // knowledge of the channel
                     return;
                 }
-                if (partner_id && partner_id === this.store.user?.id) {
+                if (
+                    partner_id &&
+                    this.store.self?.type === "partner" &&
+                    partner_id === this.store.self?.id
+                ) {
                     this.threadService.updateSeen(channel, last_message_id);
                 }
                 const seenInfo = channel.seenInfos.find(
@@ -197,7 +186,7 @@ export class DiscussCoreCommon {
             type: serverData.channel_type,
             isAdmin:
                 serverData.channel_type !== "group" &&
-                serverData.create_uid === this.store.user?.user?.id,
+                serverData.create_uid === this.store.self?.user?.id,
         });
         return thread;
     }
@@ -279,7 +268,7 @@ export class DiscussCoreCommon {
         if (
             !channel.chatPartner?.eq(this.store.odoobot) &&
             channel.type !== "channel" &&
-            this.store.user
+            this.store.self?.type === "partner"
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
@@ -289,7 +278,7 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            !this.store.guest &&
+            this.store.self?.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
             this.threadService.markAsRead(channel);

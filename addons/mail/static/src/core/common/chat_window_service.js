@@ -123,7 +123,7 @@ export class ChatWindowService {
             thread.state = "closed";
         }
         if (escape && this.store.discuss.chatWindows.length > 0) {
-            this.focus(this.store.discuss.chatWindows[index - 1]);
+            this.focus(this.store.discuss.chatWindows.at(index - 1));
         }
         await this._onClose(chatWindow, options);
         chatWindow.delete();

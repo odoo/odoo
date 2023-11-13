@@ -26,14 +26,15 @@ patch(MockServer.prototype, {
                     ["id", "=", visitor.country_id],
                 ])[0];
                 channelInfo.visitor = {
-                    country_code: country && country.code,
-                    country_id: country && country.id,
-                    display_name: partner?.name ?? partner?.display_name ?? visitor.display_name,
+                    country: country ? { id: country.id, code: country.code } : false,
+                    name: partner?.name ?? partner?.display_name ?? visitor.display_name,
                     history: visitor.history, // TODO should be computed
                     id: visitor.id,
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_name,
-                    partner_id: visitor.partner_id,
+                    visitorPartner: visitor.partner_id
+                        ? { id: visitor.partner_id, type: "partner" }
+                        : false,
                     type: "visitor",
                     website_name: visitor.website_name,
                 };

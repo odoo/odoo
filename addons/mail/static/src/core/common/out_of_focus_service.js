@@ -35,7 +35,7 @@ export class OutOfFocusService {
     async notify(message, channel) {
         const modelsHandleByPush = ["mail.thread", "discuss.channel"];
         if (
-            modelsHandleByPush.includes(message.model) &&
+            modelsHandleByPush.includes(message.originThread?.model) &&
             (await this.hasServiceWorkInstalledAndPushSubscriptionActive())
         ) {
             return;

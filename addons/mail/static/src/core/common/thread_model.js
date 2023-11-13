@@ -1,17 +1,12 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { assignDefined, assignIn } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
- * @typedef SeenInfo
- * @property {{id: number|undefined}} lastFetchedMessage
- * @property {{id: number|undefined}} lastSeenMessage
- * @property {{id: number}} partner
  * @typedef SuggestedRecipient
  * @property {string} email
  * @property {import("models").Persona|false} persona
@@ -28,19 +23,6 @@ export class Thread extends Record {
     static get(data) {
         return super.get(data);
     }
-    static new(data) {
-        /** @type {import("models").Thread} */
-        const thread = super.new(data);
-        thread.composer = {};
-        Record.onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        Record.onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        Record.onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
-                this.store.discuss.thread = undefined;
-            }
-        });
-        return thread;
-    }
     /**
      * @param {string} localId
      * @returns {string}
@@ -56,83 +38,29 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
+    static new(data) {
+        const thread = super.new(data);
+        Record.onChange(thread, ["is_minimized", "state"], () => {
+            if (
+                thread.is_minimized &&
+                thread.state !== "closed" &&
+                !this.store.env.services.ui.isSmall
+            ) {
+                this.store.ChatWindow.insert({
+                    autofocus: 0,
+                    folded: thread.state === "folded",
+                    thread,
+                });
+            }
+        });
+        return thread;
+    }
 
-    /** @param {Object} data */
-    update(data) {
-        const { id, name, attachments, description, ...serverData } = data;
-        assignDefined(this, { id, name, description });
-        if (attachments) {
-            this.attachments = attachments;
-        }
-        if (serverData) {
-            assignDefined(this, serverData, [
-                "uuid",
-                "authorizedGroupFullName",
-                "avatarCacheKey",
-                "description",
-                "hasWriteAccess",
-                "is_pinned",
-                "isLoaded",
-                "isLoadingAttachments",
-                "mainAttachment",
-                "message_unread_counter",
-                "message_needaction_counter",
-                "name",
-                "seen_message_id",
-                "state",
-                "type",
-                "status",
-                "group_based_subscription",
-                "last_interest_dt",
-                "custom_notifications",
-                "mute_until_dt",
-                "is_editable",
-                "defaultDisplayMode",
-            ]);
-            assignIn(this, data, [
-                "custom_channel_name",
-                "memberCount",
-                "channelMembers",
-                "invitedMembers",
-            ]);
-            if ("channel_type" in data) {
-                this.type = data.channel_type;
-            }
-            if ("channelMembers" in data) {
-                if (this.type === "chat") {
-                    for (const member of this.channelMembers) {
-                        if (
-                            member.persona.notEq(this._store.user) ||
-                            (this.channelMembers.length === 1 &&
-                                member.persona?.eq(this._store.user))
-                        ) {
-                            this.chatPartner = member.persona;
-                        }
-                    }
-                }
-            }
-            if ("seen_partners_info" in serverData) {
-                this.seenInfos = serverData.seen_partners_info.map(
-                    ({ fetched_message_id, partner_id, seen_message_id }) => {
-                        return {
-                            lastFetchedMessage: fetched_message_id
-                                ? { id: fetched_message_id }
-                                : undefined,
-                            lastSeenMessage: seen_message_id ? { id: seen_message_id } : undefined,
-                            partner: { id: partner_id, type: "partner" },
-                        };
-                    }
-                );
-            }
-        }
-        if (this.type === "channel") {
-            this._store.discuss.channels.threads.add(this);
-        } else if (this.type === "chat" || this.type === "group") {
-            this._store.discuss.chats.threads.add(this);
-        }
-        if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
-            this.type = "chatter";
-        }
+    onUpdateType() {
+        this._store.discuss.channels.threads = [[this.type === "channel" ? "ADD" : "DELETE", this]];
+        this._store.discuss.chats.threads = [
+            [["chat", "group"].includes(this.type) ? "ADD" : "DELETE", this],
+        ];
     }
 
     /** @type {number} */
@@ -142,7 +70,7 @@ export class Thread extends Record {
     /** @type {string} */
     model;
     allMessages = Record.many("Message", {
-        inverse: "originThread2",
+        inverse: "originThread",
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
@@ -156,7 +84,13 @@ export class Thread extends Record {
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
-    channelMembers = Record.many("ChannelMember", { onDelete: (r) => r.delete() });
+    channelMembers = Record.many("ChannelMember", {
+        onDelete: (r) => r.delete(),
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this._store.updateBusSubscription();
+        },
+    });
     rtcSessions = Record.many("RtcSession", {
         /** @this {import("models").Thread} */
         onDelete(r) {
@@ -175,15 +109,40 @@ export class Thread extends Record {
         },
     });
     invitedMembers = Record.many("ChannelMember");
-    chatPartner = Record.one("Persona");
-    composer = Record.one("Composer", { inverse: "thread", onDelete: (r) => r.delete() });
+    chatPartner = Record.one("Persona", {
+        /** @this {import("models").Thread} */
+        compute() {
+            if (this.type !== "chat") {
+                return undefined;
+            }
+            for (const member of this.channelMembers) {
+                if (
+                    !member.persona?.eq(this._store.self) ||
+                    (this.channelMembers.length === 1 && member.persona?.eq(this._store.self))
+                ) {
+                    return member.persona;
+                }
+            }
+        },
+    });
+    composer = Record.one("Composer", {
+        compute: () => ({}),
+        inverse: "thread",
+        onDelete: (r) => r.delete(),
+    });
     counter = 0;
     /** @type {string} */
     custom_channel_name;
     /** @type {string} */
     description;
     followers = Record.many("Follower");
-    selfFollower = Record.one("Follower");
+    selfFollower = Record.one("Follower", {
+        /** @this {import("models").Thread} */
+        onAdd(r) {
+            r.followedThread = this;
+        },
+        onDelete: (r) => (r.followedThread = undefined),
+    });
     /** @type {integer|undefined} */
     followersCount;
     isAdmin = false;
@@ -191,7 +150,23 @@ export class Thread extends Record {
     loadNewer = false;
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
-    isLoaded = false;
+    isLoaded = Record.attr(false, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (this.isLoaded) {
+                this.isLoadedDeferred.resolve();
+            }
+        },
+    });
+    is_minimized = false;
+    is_pinned = Record.attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (!this.is_pinned && this.eq(this._store.discuss.thread)) {
+                this._store.discuss.thread = undefined;
+            }
+        },
+    });
     mainAttachment = Record.one("Attachment");
     memberCount = 0;
     message_needaction_counter = 0;
@@ -245,11 +220,26 @@ export class Thread extends Record {
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
-    type;
+    type = Record.attr("", {
+        /** @this {import("models").Thread} */
+        compute() {
+            if (this.channel_type) {
+                return this.channel_type;
+            }
+            if (this.model === "mail.box") {
+                return "mailbox";
+            }
+            return "chatter";
+        },
+        eager: true,
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            this.onUpdateType();
+        },
+    });
     /** @type {string} */
     defaultDisplayMode;
-    /** @type {SeenInfo[]} */
-    seenInfos = [];
+    seenInfos = Record.many("ThreadSeenInfo");
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
@@ -360,7 +350,7 @@ export class Thread extends Record {
         }
         if (correspondents.length === 0 && this.channelMembers.length === 1) {
             // Self-chat.
-            return this._store.user;
+            return this._store.self;
         }
         return undefined;
     }
@@ -429,15 +419,13 @@ export class Thread extends Record {
         return !this.messages.some((message) => !message.isEmpty);
     }
 
-    get offlineMembers() {
-        const orderedOnlineMembers = [];
-        for (const member of this.channelMembers) {
-            if (member.persona.im_status !== "online") {
-                orderedOnlineMembers.push(member);
-            }
-        }
-        return orderedOnlineMembers.sort((m1, m2) => (m1.persona.name < m2.persona.name ? -1 : 1));
-    }
+    offlineMembers = Record.many("ChannelMember", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
+        },
+        sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
+    });
 
     get nonEmptyMessages() {
         return this.messages.filter((message) => !message.isEmpty);
@@ -452,8 +440,8 @@ export class Thread extends Record {
     }
 
     get lastSelfMessageSeenByEveryone() {
-        const otherSeenInfos = [...this.seenInfos].filter(
-            (seenInfo) => seenInfo.partner.id !== this._store.self?.id
+        const otherSeenInfos = [...this.seenInfos].filter((seenInfo) =>
+            seenInfo.partner.notEq(this._store.self)
         );
         if (otherSeenInfos.length === 0) {
             return false;
@@ -474,14 +462,12 @@ export class Thread extends Record {
         return orderedSelfSeenMessages.slice().pop();
     }
 
-    get onlineMembers() {
-        const orderedOnlineMembers = [];
-        for (const member of this.channelMembers) {
-            if (member.persona.im_status === "online") {
-                orderedOnlineMembers.push(member);
-            }
-        }
-        return orderedOnlineMembers.sort((m1, m2) => {
+    onlineMembers = Record.many("ChannelMember", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.channelMembers.filter((member) => member.persona.im_status === "online");
+        },
+        sort: (m1, m2) => {
             const m1HasRtc = Boolean(m1.rtcSession);
             const m2HasRtc = Boolean(m2.rtcSession);
             if (m1HasRtc === m2HasRtc) {
@@ -499,8 +485,8 @@ export class Thread extends Record {
             } else {
                 return m2HasRtc - m1HasRtc;
             }
-        });
-    }
+        },
+    });
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;

@@ -14,7 +14,7 @@ patch(Thread, {
         const isUnknown = !this.get(data);
         const thread = super._insert(...arguments);
         const livechatService = this.env.services["im_livechat.livechat"];
-        if (thread.type === "livechat" && isUnknown) {
+        if (thread.channel_type === "livechat" && isUnknown) {
             onChange(
                 thread,
                 ["state", "seen_message_id", "message_unread_counter", "allow_public_upload"],
@@ -34,17 +34,15 @@ patch(Thread, {
             if (this.env.services["im_livechat.chatbot"].isChatbotThread(thread)) {
                 thread.chatbotTypingMessage = {
                     id: this.env.services["mail.message"].getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
                     author: thread.operator,
+                    originThread: thread,
                 };
             } else {
                 thread.livechatWelcomeMessage = {
                     id: this.env.services["mail.message"].getNextTemporaryId(),
                     body: livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
                     author: thread.operator,
+                    originThread: thread,
                 };
             }
         }

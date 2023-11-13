@@ -59,7 +59,7 @@ export class Composer extends Component {
         className: "",
         sidebar: true,
         showFullComposer: true,
-        allowUpload: true
+        allowUpload: true,
     };
     static props = [
         "composer",
@@ -76,7 +76,7 @@ export class Composer extends Component {
         "sidebar?",
         "type?",
         "showFullComposer?",
-        "allowUpload?"
+        "allowUpload?",
     ];
     static template = "mail.Composer";
 
@@ -116,7 +116,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = this.store.user ? useSuggestion() : undefined;
+        this.suggestion = this.store.self?.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef) {
@@ -424,12 +424,13 @@ export class Composer extends Component {
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const body = this.props.composer.textInputContent;
-        const validMentions = this.store.user
-            ? this.messageService.getMentionsFromText(body, {
-                  mentionedChannels: this.props.composer.mentionedChannels,
-                  mentionedPartners: this.props.composer.mentionedPartners,
-              })
-            : undefined;
+        const validMentions =
+            this.store.self?.type === "partner"
+                ? this.messageService.getMentionsFromText(body, {
+                      mentionedChannels: this.props.composer.mentionedChannels,
+                      mentionedPartners: this.props.composer.mentionedPartners,
+                  })
+                : undefined;
         const context = {
             default_attachment_ids: attachmentIds,
             default_body: await prettifyMessageContent(body, validMentions),

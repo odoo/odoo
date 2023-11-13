@@ -65,15 +65,6 @@ export class MessagingMenu extends Component {
         }
     }
 
-    /**
-     * @deprecated
-     * @param {'chat' | 'group'} tab
-     * @returns Thread types matching the given tab.
-     */
-    tabToThreadType(tab) {
-        return this.store.tabToThreadType(tab);
-    }
-
     get canPromptToInstall() {
         return this.installPrompt.canPromptToInstall;
     }
@@ -121,10 +112,6 @@ export class MessagingMenu extends Component {
     }
 
     get threads() {
-        return this.getThreads();
-    }
-
-    getThreads() {
         return this.store.menuThreads;
     }
 

@@ -16,7 +16,6 @@ export class MailCoreCommon {
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
-        this.userSettingsService = services["mail.user_settings"];
     }
 
     setup() {
@@ -55,20 +54,21 @@ export class MailCoreCommon {
                 const { message_ids: messageIds, starred } = payload;
                 for (const messageId of messageIds) {
                     const message = this.store.Message.insert({ id: messageId });
-                    message.isStarred = starred;
                     const starredBox = this.store.discuss.starred;
                     if (starred) {
                         starredBox.counter++;
+                        message.starredPersonas.add(this.store.self);
                         starredBox.messages.add(message);
                     } else {
                         starredBox.counter--;
+                        message.starredPersonas.delete(this.store.self);
                         starredBox.messages.delete(message);
                     }
                 }
             });
             this.busService.subscribe("res.users.settings", (payload) => {
                 if (payload) {
-                    this.userSettingsService.updateFromCommands(payload);
+                    this.store.settings.update(payload);
                 }
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
@@ -87,7 +87,6 @@ export const mailCoreCommon = {
         "mail.message",
         "mail.messaging",
         "mail.store",
-        "mail.user_settings",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env

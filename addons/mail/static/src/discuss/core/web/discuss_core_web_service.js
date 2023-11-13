@@ -25,9 +25,8 @@ export class DiscussCoreWeb {
     setup() {
         this.messagingService.isReady.then((data) => {
             this.store.discuss.channels.isOpen =
-                data.current_user_settings.is_discuss_sidebar_category_channel_open;
-            this.store.discuss.chats.isOpen =
-                data.current_user_settings.is_discuss_sidebar_category_chat_open;
+                data.settings.is_discuss_sidebar_category_channel_open;
+            this.store.discuss.chats.isOpen = data.settings.is_discuss_sidebar_category_chat_open;
             this.busService.start();
         });
         this.env.bus.addEventListener(

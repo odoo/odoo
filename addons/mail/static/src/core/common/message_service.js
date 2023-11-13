@@ -84,7 +84,7 @@ export class MessageService {
     }
 
     getMentionsFromText(body, { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (!this.store.user) {
+        if (this.store.self?.type !== "partner") {
             // mentions are not supported for guests
             return {};
         }

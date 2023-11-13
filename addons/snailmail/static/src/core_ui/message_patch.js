@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Message.prototype, {
     onClickFailure() {
-        if (this.message.type === "snailmail") {
+        if (this.message.message_type === "snailmail") {
             const failureType = this.message.notifications[0].failure_type;
             switch (failureType) {
                 case "sn_credit":

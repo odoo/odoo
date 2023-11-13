@@ -60,7 +60,7 @@ patch(MockServer.prototype, {
                 this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(
                     settings.volume_settings_ids
                 );
-            res.volume_settings_ids = [["ADD", volumeSettings]];
+            res.volumes = [["ADD", volumeSettings]];
         }
         return res;
     },

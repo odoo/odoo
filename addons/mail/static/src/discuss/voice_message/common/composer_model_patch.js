@@ -6,6 +6,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get voiceAttachment() {
-        return this.attachments.find((attachment) => attachment.isVoice);
+        return this.attachments.find((attachment) => attachment.voice);
     },
 });

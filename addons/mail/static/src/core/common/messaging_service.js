@@ -20,33 +20,27 @@ export class Messaging {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        this.userSettingsService = services["mail.user_settings"];
         this.router = services.router;
         this.isReady = new Deferred();
-        this.imStatusService = services.im_status;
         const user = services.user;
         this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",
             name: _t("Inbox"),
-            type: "mailbox",
         };
         this.store.discuss.starred = {
             id: "starred",
             model: "mail.box",
             name: _t("Starred"),
-            type: "mailbox",
             counter: 0,
         };
         this.store.discuss.history = {
             id: "history",
             model: "mail.box",
             name: _t("History"),
-            type: "mailbox",
             counter: 0,
         };
-        this.updateImStatusRegistration();
     }
 
     /**
@@ -59,43 +53,13 @@ export class Messaging {
     }
 
     initMessagingCallback(data) {
-        if (data.current_partner) {
-            this.store.user = { ...data.current_partner, type: "partner" };
-        }
-        if (data.currentGuest) {
-            this.store.guest = {
-                ...data.currentGuest,
-                type: "guest",
-            };
-        }
-        this.store.odoobot = { ...data.odoobot, type: "partner" };
-        const settings = data.current_user_settings;
-        this.userSettingsService.updateFromCommands(settings);
-        this.userSettingsService.id = settings.id;
-        this.store.companyName = data.companyName;
-        this.store.discuss.inbox.counter = data.needaction_inbox_counter;
-        this.store.internalUserGroupId = data.internalUserGroupId;
-        this.store.discuss.starred.counter = data.starred_counter;
-        this.store.mt_comment_id = data.mt_comment_id;
+        this.store.update(data);
         this.store.discuss.isActive =
             data.menu_id === this.router.current.hash?.menu_id ||
             this.router.hash?.action === "mail.action_discuss";
-        this.store.CannedResponse.insert(data.shortcodes ?? []);
-        this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
-        this.store.initBusId = data.initBusId;
-        this.store.odoobotOnboarding = data.odoobotOnboarding;
         this.isReady.resolve(data);
         this.store.isMessagingReady = true;
-        this.store.hasMessageTranslationFeature = data.hasMessageTranslationFeature;
     }
-
-    /** @deprecated */
-    get registeredImStatusPartners() {
-        return this.store.registeredImStatusPartners;
-    }
-
-    /** @deprecated */
-    updateImStatusRegistration() {}
 
     // -------------------------------------------------------------------------
     // actions that can be performed on the messaging system
@@ -143,19 +107,7 @@ export class Messaging {
 }
 
 export const messagingService = {
-    dependencies: [
-        "mail.store",
-        "rpc",
-        "orm",
-        "user",
-        "router",
-        "im_status",
-        "mail.attachment", // FIXME: still necessary until insert is managed by this service
-        "mail.user_settings",
-        "mail.thread", // FIXME: still necessary until insert is managed by this service
-        "mail.message", // FIXME: still necessary until insert is managed by this service
-        "mail.persona", // FIXME: still necessary until insert is managed by this service
-    ],
+    dependencies: ["mail.store", "rpc", "orm", "user", "router"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
