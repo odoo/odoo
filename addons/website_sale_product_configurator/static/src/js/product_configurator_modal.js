@@ -24,6 +24,9 @@ OptionalProductsModal.include({
         this._super.apply(this, arguments);
         this.isWebsite = params.isWebsite;
         this.forceDialog = params.forceDialog;
+        if (this.isWebsite) {
+            this.container = $("main");
+        }
 
         this.dialogClass = 'oe_advanced_configurator_modal' + (params.isWebsite ? ' oe_website_sale' : '');
     },
