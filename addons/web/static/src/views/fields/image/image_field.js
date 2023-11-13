@@ -9,7 +9,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {
@@ -42,15 +42,10 @@ export class ImageField extends Component {
         this.state = useState({
             isValid: true,
         });
+    }
 
-        this.rawCacheKey = this.props.record.data.__last_update;
-        onWillUpdateProps((nextProps) => {
-            const { record } = this.props;
-            const { record: nextRecord } = nextProps;
-            if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
-                this.rawCacheKey = nextRecord.data.__last_update;
-            }
-        });
+    get rawCacheKey() {
+        return this.props.record.data.__last_update;
     }
 
     get sizeStyle() {
@@ -82,9 +77,6 @@ export class ImageField extends Component {
     getUrl(previewFieldName) {
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
-                if (!this.rawCacheKey) {
-                    this.rawCacheKey = this.props.record.data.__last_update;
-                }
                 return url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
@@ -105,8 +97,6 @@ export class ImageField extends Component {
     }
     onFileUploaded(info) {
         this.state.isValid = true;
-        // Invalidate the `rawCacheKey`.
-        this.rawCacheKey = null;
         this.props.update(info.data);
     }
     onLoadFailed() {
