@@ -127,4 +127,5 @@ class WebsiteSale(main.WebsiteSale):
             # We need to update the website since `get_sale_order` is called on the website
             # and does not follow the request's context
             request.website = request.website.with_context(website_sale_loyalty_delete=True)
+            request.model_names.add('website')
         return super().cart_update_json(*args, set_qty=set_qty, **kwargs)

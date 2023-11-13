@@ -385,6 +385,7 @@ from collections.abc import Sized, Mapping
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
+from psycopg2.errors import ReadOnlySqlTransaction
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
@@ -754,6 +755,8 @@ class IrQWeb(models.AbstractModel):
                     except Exception as e:
                         if isinstance(e, TransactionRollbackError):
                             raise
+                        if isinstance(e, ReadOnlySqlTransaction):
+                             raise
                         raise QWebException("Error while render the template",
                             self, template, ref={compile_context['ref']!r}, code=code) from e
                     """, 0)]
@@ -948,6 +951,7 @@ class IrQWeb(models.AbstractModel):
             'QWebException': QWebException,
             'Exception': Exception,
             'TransactionRollbackError': TransactionRollbackError, # for SerializationFailure in assets
+            'ReadOnlySqlTransaction': ReadOnlySqlTransaction,
             'ValueError': ValueError,
             'UserError': UserError,
             'AccessDenied': AccessDenied,

@@ -41,6 +41,7 @@ class WebsiteSale(main.WebsiteSale):
         """
         if lang:
             request.website = request.website.with_context(lang=lang)
+            request.model_names.add('website')
 
         order = request.website.sale_get_order(force_create=True)
         if order.state != 'draft':

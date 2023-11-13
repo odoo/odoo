@@ -25,7 +25,7 @@ class TestProjectRecurrence(TransactionCase):
             ]
         })
 
-        cls.classPatch(cls.env.cr, 'now', fields.Datetime.now)
+        cls.classPatch(cls.env.cr._cursor, 'now', fields.Datetime.now)
 
         cls.date_01_01 = datetime.combine(datetime.now() + relativedelta(years=-1, month=1, day=1), time(0, 0))
 

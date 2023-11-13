@@ -229,12 +229,12 @@ class Http(models.AbstractModel):
         )
 
         request.website = website.with_context(request.context)
+        request.model_names.add('website')
 
     @classmethod
-    def _dispatch(cls, endpoint):
-        response = super()._dispatch(endpoint)
+    def _post_dispatch(cls, response):
+        super()._post_dispatch(response)
         cls._register_website_track(response)
-        return response
 
     @classmethod
     def _get_frontend_langs(cls):
@@ -327,8 +327,6 @@ class Http(models.AbstractModel):
         website_page = cls._serve_page()
         if website_page:
             website_page.flatten()
-            cls._register_website_track(website_page)
-            cls._post_dispatch(website_page)
             return website_page
 
         redirect = cls._serve_redirect()

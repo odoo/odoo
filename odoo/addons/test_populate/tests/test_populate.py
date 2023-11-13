@@ -14,7 +14,8 @@ _logger = logging.getLogger(__name__)
 class TestPopulate(common.TransactionCase):
     def setUp(self):
         super(TestPopulate, self).setUp()
-        patcher = patch.object(self.cr, 'commit')
+        self.cr.cache
+        patcher = patch.object(self.cr._cursor, 'commit')
         self.startPatcher(patcher)
 
     def test_dependency(self):
