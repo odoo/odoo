@@ -686,3 +686,9 @@ class TestPrivateReadGroup(common.TransactionCase):
                 (User, ["Donkey Kong"]),                            # tasks of nobody
             ],
         )
+
+    def test_float_aggregate(self):
+        records = self.env['test_read_group.aggregate'].create({'numeric_value': 42.42})
+        [[result]] = records._read_group([('id', 'in', records.ids)], [], ['numeric_value:array_agg'])
+        self.assertIsInstance(result, list)
+        self.assertIsInstance(result[0], float)
