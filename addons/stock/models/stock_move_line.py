@@ -197,6 +197,11 @@ class StockMoveLine(models.Model):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
+    @api.onchange('location_id')
+    def _onchange_location(self):
+        if self.package_id and self.package_id.location_id != self.location_id:
+            self.package_id = False
+
     @api.onchange('result_package_id', 'product_id', 'product_uom_id', 'qty_done')
     def _onchange_putaway_location(self):
         default_dest_location = self._get_default_dest_location()

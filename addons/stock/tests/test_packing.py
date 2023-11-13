@@ -832,6 +832,26 @@ class TestPacking(TestPackingCommon):
         backorders = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorders), 0, 'Should not create a backorder')
 
+    def test_change_location(self):
+        """
+        Changing source location to one different from the package location should remove it
+        """
+        package = self.env["stock.quant.package"].create({"name": "Src Pack", "location_id": self.stock_location.id})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        sml = self.env["stock.move.line"].create({
+            'company_id': self.stock_location.company_id.id,
+            "location_id": self.stock_location.id,
+            "package_id": package.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'product_uom_id':  self.productA.uom_id.id,
+            'qty_done': 1,
+        })
+        # Change source location
+        with Form(sml) as sml:
+            sml.location_id = self.pack_location
+        self.assertFalse(sml.package_id)
+
     def test_remove_package(self):
         """
         In the overshipping scenario, if I remove the package after adding it, we should not remove the associated 
