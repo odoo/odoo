@@ -124,36 +124,3 @@ class TestReadProgressBar(common.TransactionCase):
             'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
             'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
         })
-
-        # add a computed field on model
-        model.write({'field_id': [
-            (0, 0, {
-                'field_description': 'Related State',
-                'name': 'x_state_computed',
-                'ttype': 'selection',
-                'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
-                'compute': "for rec in self: rec['x_state_computed'] = rec.x_state",
-                'depends': 'x_state',
-                'readonly': True,
-                'store': False,
-            }),
-        ]})
-
-        progress_bar = {
-            'field': 'x_state_computed',
-            'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
-        }
-        result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
-        self.assertEqual(result, {
-            c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
-            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 1},
-            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 4},
-        })
-
-        result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
-        self.assertEqual(result, {
-            # first week is not the same as above, but that seems acceptable...
-            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
-            'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
-            'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
-        })

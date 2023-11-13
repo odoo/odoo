@@ -71,6 +71,20 @@ class ContractHistory(models.Model):
                         and field.type not in ['many2many', 'one2many', 'related']
                         and field.name not in ['id', 'contract_id', 'employee_id', 'date_hired', 'is_under_contract', 'active_employee'])
 
+    def _read_group_groupby(self, groupby_spec, query):
+        if groupby_spec != 'activity_state':
+            return super()._read_group_groupby(groupby_spec, query)
+
+        Contract = self.env['hr.contract']
+        query.add_join(
+            "JOIN",
+            "hr_contract",
+            "hr_contract",
+            tools.SQL("%s = %s", tools.SQL.identifier(self._table, "contract_id"), tools.SQL.identifier("hr_contract", "id"))
+        )
+
+        return Contract._read_group_groupby(groupby_spec, query)
+
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         # Reference contract is the one with the latest start_date.

@@ -2172,28 +2172,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self._check_domains_count(result)
 
-    @mute_logger('odoo.fields')
-    def test_properties_field_read_progress_bar(self):
-        """Test the fallback of "_read_progress_bar" when we read a field non-stored."""
-        Model = self.env['test_new_api.message']
-
-        self.messages.discussion = self.discussion_1
-        self.message_1.attributes = [{
-            'name': 'myinteger',
-            'type': 'integer',
-            'value': 1337,
-            'definition_changed': True,
-        }]
-        self.message_2.attributes = {'myinteger': 5}
-        self.message_3.attributes = {'myinteger': 1337}
-
-        result = Model.read_progress_bar(
-            domain=[],
-            group_by='attributes.myinteger',
-            progress_bar={'field': 'size', 'colors': [0]},
-        )
-        self.assertEqual(result, {'1337': {0: 2}, '5': {0: 1}, 'False': {0: 1}})
-
     def _properties_field_read_group_date_prepare(self, date_type='date'):
         # Format in database: 2023-03-29 09:30:16
         self.messages.discussion = self.discussion_1
