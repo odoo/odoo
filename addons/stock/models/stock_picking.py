@@ -948,7 +948,7 @@ class Picking(models.Model):
         return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'reserved_qty')
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product'), 'reserved_qty')
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
