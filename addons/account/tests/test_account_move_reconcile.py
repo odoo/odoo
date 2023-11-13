@@ -4772,3 +4772,24 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ('move_id.move_type', '=', 'entry'),
         ])
         self.assertFalse(caba_transfer_amls.move_id)
+
+    def test_reconcile_import(self):
+        """Test that the import of matchings does a real matching upon posting"""
+        comp_curr = self.company_data['currency']
+
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
+        line_1.move_id.button_draft()
+        line_2 = self.create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-400.0, -400.0, comp_curr, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2016-01-01')
+        line_4.move_id.button_draft()
+        line_5 = self.create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01')
+        (line_1 + line_2 + line_3).matching_number = 'I11111'
+        (line_4 + line_5).matching_number = 'I22222'
+        # posting triggers the matching of the imported values
+        (line_1 + line_4).move_id.action_post()
+        self.assertRegex(line_1.matching_number, r'^P\d+')
+        self.assertRegex(line_4.matching_number, r'^P\d+')
+        (line_1 + line_4).reconcile()
+        self.assertRegex(line_1.matching_number, r'^\d+')
+        self.assertTrue(line_1.full_reconcile_id)
