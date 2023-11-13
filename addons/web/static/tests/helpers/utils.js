@@ -137,6 +137,9 @@ export function patchWithCleanup(obj, patchValue, options) {
  * @returns {Element}
  */
 export function getFixture() {
+    if (!window.QUnit) {
+        return document;
+    }
     if (QUnit.config.debug) {
         return document.body;
     } else {
