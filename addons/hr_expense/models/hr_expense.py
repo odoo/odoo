@@ -726,11 +726,7 @@ class HrExpense(models.Model):
         self.ensure_one()
 
         journal = self.sheet_id.journal_id
-        payment_method_line = self.env['account.payment.method.line'].search(
-            [('payment_type', '=', 'outbound'),
-             ('journal_id', '=', journal.id),
-             ('code', '=', 'manual'),
-             ('company_id', '=', self.company_id.id)], limit=1)
+        payment_method_line = self.sheet_id.payment_method_line_id
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
