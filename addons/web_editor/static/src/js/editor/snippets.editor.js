@@ -23,7 +23,7 @@ import {
     xml,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
-import { touching, closest } from "@web/core/utils/ui";
+import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { RPCError } from "@web/core/network/rpc_service";
@@ -4525,7 +4525,7 @@ var SnippetsMenu = Widget.extend({
         // the tooltip will not be removable (see BS doc).
         this._hideTooltips();
         if (addLoadingEffect) {
-            removeLoadingEffect = dom.addButtonLoadingEffect(button);
+            removeLoadingEffect = addButtonLoadingEffect(button);
         }
         const actionButtons = this.$el[0].querySelectorAll('[data-action]');
         for (const actionButton of actionButtons) {
