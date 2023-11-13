@@ -68,10 +68,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
         nb_invoices = self.env['account.move'].search_count(domain=[])
         self.test_move.auto_post = 'at_date'
         self.test_move.date = fields.Date.today()
-        with freeze_time(fields.Date.today() - relativedelta(days=1)):
+        with freeze_time(self.test_move.date - relativedelta(days=1)):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'draft')  # can't be posted before its date
-        with freeze_time(fields.Date.today() + relativedelta(days=1)):
+        with freeze_time(self.test_move.date + relativedelta(days=1)):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'posted')  # can be posted after its date
         self.assertEqual(nb_invoices, self.env['account.move'].search_count(domain=[]))
