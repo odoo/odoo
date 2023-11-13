@@ -6,10 +6,15 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { session } from "@web/session";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
-QUnit.module("activity menu");
+QUnit.module("activity menu", {
+    beforeEach() {
+        // Avoid problem around midnight (Ex.: tomorrow activities become today activities when reaching midnight)
+        patchDate(2023, 11, 13, 8, 0, 0);
+    },
+});
 
 QUnit.test("menu with no records", async () => {
     await start({
