@@ -12,6 +12,14 @@
     opacity: $o-opacity-disabled;
 }
 
+.o_btn_loading {
+    cursor: wait;
+    opacity: $btn-disabled-opacity;
+    .fa:not(.fa-spin) {
+        display: none;
+    }
+}
+
 .o_text_overflow {
     @include o-text-overflow;
 }

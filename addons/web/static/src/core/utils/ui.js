@@ -206,3 +206,16 @@ export function getPreviousTabableElement(container = document.body) {
         ? tabableElements[tabableElements.length - 1]
         : tabableElements[index - 1] || null;
 }
+
+export function addLoadingEffect(btn) {
+    btn.setAttribute("disabled", "1");
+    btn.classList.add("o_btn_loading", "disabled");
+    const loader = document.createElement("span");
+    loader.className = "fa fa-refresh fa-spin me-2";
+    btn.prepend(loader);
+    return () => {
+        btn.removeAttribute("disabled");
+        btn.classList.remove("o_btn_loading", "disabled");
+        loader.remove();
+    };
+}
