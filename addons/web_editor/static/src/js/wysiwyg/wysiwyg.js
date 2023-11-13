@@ -2646,6 +2646,9 @@ const Wysiwyg = Widget.extend({
         return records[0];
     },
     _isLastDocumentStale() {
+        if (!this._serverLastStepId) {
+            return false;
+        }
         return !this.odooEditor.historyGetBranchIds().includes(this._serverLastStepId);
     },
     /**
