@@ -84,7 +84,13 @@ var LivechatButton = Widget.extend({
             }
             this._rule = result.rule;
         }
-        return this._loadQWebTemplate();
+        const proms = [this._loadQWebTemplate()];
+        // Translations are already loaded in Odoo frontend. Only load them if
+        // we are in an external page.
+        if (!session.is_frontend) {
+            proms.push(session.load_translations(["im_livechat"]));
+        }
+        return Promise.all(proms);
     },
     start: function () {
         this.$el.text(this.options.button_text);
