@@ -248,7 +248,7 @@ class TestEventSale(TestEventSaleCommon):
             'event_ticket_id': event_ticket.id,
         })
         sol.product_id_change()
-        self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
+        self.assertAlmostEqual(so.amount_total, 6.6, 2, "Ticket is $1000 but the event product is on a fixed pricelist. So, $6 + a 10% tax.")
 
     @users('user_salesman')
     def test_unlink_so(self):

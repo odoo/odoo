@@ -43,20 +43,30 @@ class EventTemplateTicket(models.Model):
             if not ticket.description:
                 ticket.description = False
 
-    @api.depends_context('pricelist', 'quantity')
+    @api.depends_context('pricelist', 'quantity', 'uom', 'partner', 'date')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
+        pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+
         for ticket in self:
+            if not pricelist:
+                ticket.price_reduce = ticket.price
+                continue
+
+            quantity = self._context.get('quantity')
+            uom = self._context.get('uom')
+            partner = self._context.get('partner')
+            date = self._context.get('date')
             product = ticket.product_id
-            pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
-            lst_price = product.currency_id._convert(
-                product.lst_price,
-                pricelist.currency_id,
-                self.env.company,
-                fields.Datetime.now()
-            )
-            discount = (lst_price - product.price) / lst_price if lst_price else 0.0
-            ticket.price_reduce = (1.0 - discount) * ticket.price
+
+            _, rule = pricelist.get_product_price_rule(product, quantity, partner, date=date, uom_id=uom)
+            if not rule:
+                ticket.price_reduce = ticket.price
+                continue
+
+            rule = self.env['product.pricelist.item'].browse(rule)
+            uom = self.env['uom.uom'].browse(uom)
+            ticket.price_reduce = rule._compute_price(ticket.price, uom, product, quantity=quantity, partner=partner)
 
     def _init_column(self, column_name):
         if column_name != "product_id":

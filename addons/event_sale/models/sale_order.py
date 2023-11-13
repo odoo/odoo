@@ -161,6 +161,12 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
+            return self.event_ticket_id.with_context(
+                pricelist=self.order_id.pricelist_id.id,
+                uom=self.product_uom.id,
+                partner=self.order_id.partner_id,
+                quantity=self.product_uom_qty,
+                date=self.order_id.date_order,
+            ).price_reduce
         else:
             return super()._get_display_price(product)
