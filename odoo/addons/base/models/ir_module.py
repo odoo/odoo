@@ -25,7 +25,7 @@ import psycopg2
 import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.exceptions import AccessDenied, UserError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
@@ -115,6 +115,12 @@ class ModuleCategory(models.Model):
             xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
+
+    @api.constrains('parent_id')
+    def _check_parent_not_circular(self):
+        if not self._check_recursion():
+            raise ValidationError(_("Error ! You cannot create recursive categories."))
+
 
 class MyFilterMessages(Transform):
     """
