@@ -973,9 +973,6 @@ const formatsSpecs = {
         },
         removeStyle: (node) => {
             node.classList.remove(...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
-            if (node.classList.length === 0) {
-                node.removeAttribute("class");
-            }
         },
     },
     switchDirection: {

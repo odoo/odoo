@@ -369,9 +369,6 @@ export const editorCommands = {
                     if (extraClass) {
                         newEl.classList.add(extraClass);
                     }
-                    if (newEl.classList.length === 0) {
-                        newEl.removeAttribute("class");
-                    }
                 }
             } else {
                 // eg do not change a <div> into a h1: insert the h1
