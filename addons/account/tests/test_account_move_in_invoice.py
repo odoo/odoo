@@ -2336,7 +2336,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
             else:
                 line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
-                reverse_move.write({
+                reverse_move.with_context(skip_readonly_check=True).write({
                     'line_ids': [
                         Command.update(line.id, {'balance': amount}),
                     ],
