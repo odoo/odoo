@@ -830,7 +830,9 @@ class AccountBankStatementLine(models.Model):
                 st_line_vals['journal_id'] = journal.id
             if st_line.move_id.partner_id != st_line.partner_id:
                 st_line_vals['partner_id'] = st_line.partner_id.id
+            st_line.move_id.button_draft()
             st_line.move_id.write(st_line_vals)
+            st_line.move_id.action_post()
 
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves

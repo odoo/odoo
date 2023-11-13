@@ -2327,6 +2327,12 @@ class AccountMove(models.Model):
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
 
+            # Disallow modifying readonly fields on a posted move
+            readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id', 'partner_bank_id',
+                               'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'auto_post', 'invoice_cash_rounding_id')
+            if move.state == "posted" and any(val in readonly_fields for val in vals):
+                raise UserError(_("This move has been posted. The field you're trying to change is now readonly."))
+
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
                 if not self.env.user.has_group('account.group_account_manager'):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
@@ -3905,7 +3911,8 @@ class AccountMove(models.Model):
         self.write({'state': 'draft', 'is_move_sent': False})
 
     def button_cancel(self):
-        self.write({'auto_post': 'no', 'state': 'cancel'})
+        self.write({'state': 'cancel'})
+        self.write({'auto_post': 'no'})
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})

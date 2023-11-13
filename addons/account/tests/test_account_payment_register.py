@@ -117,6 +117,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
         cls.in_refund_1.action_post()
 
+    def set_move_partner_bank_id(self, move, bank):
+        move.button_draft()
+        move.partner_bank_id = bank
+        move.action_post()
+
     def test_register_payment_single_batch_grouped_keep_open_lower_amount(self):
         ''' Pay 800.0 with 'open' as payment difference handling on two customer invoices (1000 + 2000). '''
         active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
@@ -518,8 +523,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
         })
 
-        self.in_invoice_1.partner_bank_id = bank1
-        self.in_invoice_2.partner_bank_id = bank2
+        self.set_move_partner_bank_id(self.in_invoice_1, bank1)
+        self.set_move_partner_bank_id(self.in_invoice_2, bank2)
 
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_refund_1).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
@@ -660,8 +665,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ''' Choose to pay multiple batches, one with two customer invoices (1000 + 2000)
          and one with a vendor bill of 600, by splitting payments.
          '''
-        self.in_invoice_1.partner_bank_id = self.partner_bank_account1
-        self.in_invoice_2.partner_bank_id = self.partner_bank_account2
+        self.set_move_partner_bank_id(self.in_invoice_1, self.partner_bank_account1)
+        self.set_move_partner_bank_id(self.in_invoice_2, self.partner_bank_account2)
 
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
@@ -1009,7 +1014,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     def test_suggested_default_partner_bank_inbound_payment(self):
         """ Test the suggested bank account on the wizard for inbound payment. """
-        self.out_invoice_1.partner_bank_id = False
+        self.set_move_partner_bank_id(self.out_invoice_1, False)
 
         ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
         wizard = self.env['account.payment.register'].with_context(**ctx).create({})
@@ -1019,7 +1024,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'partner_bank_id': False,
         }])
 
-        self.bank_journal_2.bank_account_id = self.out_invoice_1.partner_bank_id = self.comp_bank_account2
+        self.set_move_partner_bank_id(self.out_invoice_1, self.comp_bank_account2)
+        self.bank_journal_2.bank_account_id = self.comp_bank_account2
         wizard = self.env['account.payment.register'].with_context(**ctx).create({})
         self.assertRecordValues(wizard, [{
             'journal_id': self.bank_journal_2.id,
@@ -1036,7 +1042,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     def test_suggested_default_partner_bank_outbound_payment(self):
         """ Test the suggested bank account on the wizard for outbound payment. """
-        self.in_invoice_1.partner_bank_id = False
+        self.set_move_partner_bank_id(self.in_invoice_1, False)
 
         ctx = {'active_model': 'account.move', 'active_ids': self.in_invoice_1.ids}
         wizard = self.env['account.payment.register'].with_context(**ctx).create({})
@@ -1046,7 +1052,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'partner_bank_id': self.partner_bank_account1.id,
         }])
 
-        self.in_invoice_1.partner_bank_id = self.partner_bank_account2
+        self.set_move_partner_bank_id(self.in_invoice_1, self.partner_bank_account2)
         wizard = self.env['account.payment.register'].with_context(**ctx).create({})
         self.assertRecordValues(wizard, [{
             'journal_id': self.bank_journal_1.id,
@@ -1063,8 +1069,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     def test_register_payment_inbound_multiple_bank_account(self):
         """ Pay customer invoices with different bank accounts. """
-        self.out_invoice_1.partner_bank_id = self.comp_bank_account1
-        self.out_invoice_2.partner_bank_id = self.comp_bank_account2
+        self.set_move_partner_bank_id(self.out_invoice_1, self.comp_bank_account1)
+        self.set_move_partner_bank_id(self.out_invoice_2, self.comp_bank_account2)
         self.bank_journal_2.bank_account_id = self.comp_bank_account2
 
         ctx = {'active_model': 'account.move', 'active_ids': (self.out_invoice_1 + self.out_invoice_2).ids}

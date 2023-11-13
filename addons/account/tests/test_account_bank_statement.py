@@ -191,6 +191,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         }])
 
         # Check the account.bank.statement.line is still correct after editing the account.move.
+        statement_line.move_id.button_draft()
         statement_line.move_id.write({'line_ids': [
             (1, liquidity_lines.id, {
                 'debit': expected_liquidity_values.get('debit', 0.0),
@@ -203,6 +204,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                 'amount_currency': expected_counterpart_values.get('amount_currency', 0.0),
             }),
         ]})
+        statement_line.move_id.action_post()
         self.assertRecordValues(statement_line, [{
             'amount': amount,
             'amount_currency': amount_currency,
