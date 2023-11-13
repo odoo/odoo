@@ -28,6 +28,7 @@ class Aggregate(models.Model):
 
     key = fields.Integer()
     value = fields.Integer("Value")
+    numeric_value = fields.Float(digits=(4, 2))
     partner_id = fields.Many2one('res.partner')
     display_name = fields.Char()
 
