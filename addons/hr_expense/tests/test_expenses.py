@@ -693,3 +693,38 @@ class TestExpenses(TestExpenseCommon):
             'res_model': 'account.move',
             'res_id': expense_sheet.account_move_ids[1].id
         }])
+
+    def test_expense_payment_method(self):
+        default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]
+        check_method = self.env['account.payment.method'].sudo().create({
+                'name': 'Print checks',
+                'code': 'check_printing_expense_test',
+                'payment_type': 'outbound',
+        })
+        new_payment_method_line = self.env['account.payment.method.line'].create({
+            'name': 'Check',
+            'payment_method_id': check_method.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Sheet test',
+            'employee_id': self.expense_employee.id,
+            'payment_method_line_id': default_payment_method_line.id,
+            'expense_line_ids': [Command.create({
+                'name': 'test payment_mode',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'payment_mode': 'company_account',
+                'total_amount': 60,
+                'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+            })],
+        })
+
+        self.assertRecordValues(expense_sheet, [{'payment_method_line_id': default_payment_method_line.id}])
+        expense_sheet.payment_method_line_id = new_payment_method_line
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_ids.payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
