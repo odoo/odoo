@@ -51,9 +51,39 @@ function getCompanyIdsFromBrowser(hash) {
     return cids || [];
 }
 
+const errorHandlerRegistry = registry.category("error_handlers");
+function accessErrorHandler(env, error, originalError) {
+    const router = env.services.router;
+    const hash = router.current.hash;
+    if (!hash._company_switching) {
+        return false;
+    }
+    if (originalError?.exceptionName === "odoo.exceptions.AccessError") {
+        const { model, id, view_type } = hash;
+        if (!model || !id || view_type !== "form") {
+            return false;
+        }
+        router.pushState({ view_type: undefined });
+
+        browser.setTimeout(() => {
+            // Force the WebClient to reload the state contained in the hash.
+            env.bus.trigger("ROUTE_CHANGE");
+        });
+        if (error.event) {
+            error.event.preventDefault();
+        }
+        return true;
+    }
+    return false;
+}
+
 export const companyService = {
     dependencies: ["user", "router", "action"],
     start(env, { user, router, action }) {
+        // Push an error handler in the registry. It needs to be before "rpcErrorHandler", which
+        // has a sequence of 97. The default sequence of registry is 50.
+        errorHandlerRegistry.add("accessErrorHandlerCompanies", accessErrorHandler);
+
         const allowedCompanies = session.user_companies.allowed_companies;
         const disallowedAncestorCompanies = session.user_companies.disallowed_ancestor_companies;
         const allowedCompaniesWithAncestors = {
@@ -123,6 +153,7 @@ export const companyService = {
 
                 const cidsHash = formatCompanyIds(newCompanyIds, CIDS_HASH_SEPARATOR);
                 router.pushState({ cids: cidsHash }, { lock: true });
+                router.pushState({ _company_switching: true });
                 cookie.set("cids", formatCompanyIds(newCompanyIds));
                 browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
             },
