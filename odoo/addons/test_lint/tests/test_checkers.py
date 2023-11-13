@@ -435,3 +435,10 @@ class TestSqlLint(TransactionCase):
         """)
         with self.assertMessages("sql-injection"):
             checker.visit_call(node)
+
+        node = _odoo_checker_sql_injection.astroid.extract_node("""
+        def formatNumber(var):
+            cr.execute('LIMIT %d'  % var)#@
+        """)
+        with self.assertMessages():
+            checker.visit_call(node)
