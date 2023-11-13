@@ -190,7 +190,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         }])
 
         # Check the account.bank.statement.line is still correct after editing the account.move.
-        statement_line.move_id.write({'line_ids': [
+        statement_line.move_id.with_context(skip_readonly_check=True).write({'line_ids': [
             (1, liquidity_lines.id, {
                 'debit': expected_liquidity_values.get('debit', 0.0),
                 'credit': expected_liquidity_values.get('credit', 0.0),

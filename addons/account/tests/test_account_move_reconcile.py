@@ -1963,11 +1963,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
         pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.action_post()
         pay1.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
         ]})
+        pay1.action_post()
 
         pay2 = self.env['account.payment'].create({
             'partner_type': 'customer',
@@ -2264,11 +2264,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
         pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.action_post()
         pay1.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
         ]})
+        pay1.action_post()
 
         pay2 = self.env['account.payment'].create({
             'partner_type': 'customer',

@@ -170,49 +170,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # Editing the reference should be allowed.
         self.test_move.ref = 'whatever'
 
-        # Try to edit a line into a locked fiscal year.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
-                ],
-            })
-
         # Try to edit the account of a line.
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
-
-        # Try to edit a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
-                ],
-            })
-
-        # Try to add a new tax on a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
-                ],
-            })
-
-        # Try to create a new line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (0, None, {
-                        'name': 'revenue line 1',
-                        'account_id': self.company_data['default_account_revenue'].id,
-                        'debit': 100.0,
-                        'credit': 0.0,
-                    }),
-                ],
-            })
 
         # You can't remove the journal entry from a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -259,70 +219,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[3] = 'revenue line 2'
         lines = self.test_move.line_ids.sorted('debit')
 
-        # Try to edit a line not affecting the taxes.
-        self.test_move.write({
-            'line_ids': [
-                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
-            ],
-        })
-
         # Try to edit the account of a line.
         self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
-
-        # Try to edit a line having some taxes.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[3].id, {'debit': lines[3].debit + 100.0}),
-                ],
-            })
-
-        # Try to add a new tax on a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
-                ],
-            })
-
-        # Try to edit a tax line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (1, lines[1].id, {'debit': lines[1].debit + 100.0}),
-                ],
-            })
-
-        # Try to create a line not affecting the taxes.
-        self.test_move.write({
-            'line_ids': [
-                (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                (0, None, {
-                    'name': 'revenue line 1',
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                }),
-            ],
-        })
-
-        # Try to create a line affecting the taxes.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.write({
-                'line_ids': [
-                    (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
-                    (0, None, {
-                        'name': 'revenue line 2',
-                        'account_id': self.company_data['default_account_revenue'].id,
-                        'debit': 100.0,
-                        'credit': 0.0,
-                        'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
-                    }),
-                ],
-            })
 
         # You can't remove the journal entry from a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -393,26 +291,19 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         (lines[0] + lines[2]).reconcile()
 
-        # You can't write something impacting the reconciliation on an already reconciled line.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            draft_moves[0].write({
-                'line_ids': [
-                    (1, lines[1].id, {'credit': lines[1].credit + 100.0}),
-                    (1, lines[2].id, {'debit': lines[2].debit + 100.0}),
-                ]
-            })
-
-        # The write must not raise anything because the rounding of the monetary field should ignore such tiny amount.
-        draft_moves[0].write({
-            'line_ids': [
-                (1, lines[1].id, {'credit': lines[1].credit + 0.0000001}),
-                (1, lines[2].id, {'debit': lines[2].debit + 0.0000001}),
-            ]
-        })
-
         # You can't unlink an already reconciled line.
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
+
+    def test_modify_posted_move_readonly_fields(self):
+        self.test_move.action_post()
+
+        readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id', 'partner_bank_id',
+                           'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
+        for field in readonly_fields:
+            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"), \
+                    self.cr.savepoint():
+                self.test_move.write({field: False})
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
