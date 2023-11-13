@@ -138,7 +138,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
             ["true", "false", "false", "false", "false"]
         );
         await prom;
-        assert.verifySteps(["cids=3-2"]);
+        assert.verifySteps(["cids=3-2&_company_switching=1"]);
     });
 
     QUnit.test("can toggle multiple companies at once", async (assert) => {
@@ -181,7 +181,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
 
         assert.verifySteps([]);
         await prom; // await toggle promise
-        assert.verifySteps(["cids=2-1-4-5"]);
+        assert.verifySteps(["cids=2-1-4-5&_company_switching=1"]);
     });
 
     QUnit.test("single company selected: toggling it off will keep it", async (assert) => {
@@ -217,7 +217,10 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hulk
          */
         await click(target.querySelectorAll(".toggle_company")[0]);
-        assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 3 });
+        assert.deepEqual(scMenu.env.services.router.current.hash, {
+            cids: 3,
+            _company_switching: 1,
+        });
         assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         assert.containsOnce(target, ".dropdown-menu", "dropdown is still opened");
@@ -256,7 +259,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          */
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2"]);
+        assert.verifySteps(["cids=2&_company_switching=1"]);
     });
 
     QUnit.test("multi company mode: log into a non selected company", async (assert) => {
@@ -291,7 +294,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          */
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2"]);
+        assert.verifySteps(["cids=2&_company_switching=1"]);
     });
 
     QUnit.test("multi company mode: log into an already selected company", async (assert) => {
@@ -326,7 +329,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          */
         await click(target.querySelectorAll(".log_into")[2]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=1-4-5"]);
+        assert.verifySteps(["cids=1-4-5&_company_switching=1"]);
     });
 
     QUnit.test("companies can be logged in even if some toggled within delay", async (assert) => {
@@ -362,6 +365,6 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         await click(target.querySelectorAll(".toggle_company")[0]);
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2"]);
+        assert.verifySteps(["cids=2&_company_switching=1"]);
     });
 });
