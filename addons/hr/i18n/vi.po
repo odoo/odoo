@@ -3,8 +3,8 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -491,6 +491,11 @@ msgstr ""
 "                                bạn phải có kỹ năng giải quyết vấn đề sắc sảo."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Phân công"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
@@ -515,12 +520,12 @@ msgstr "Nhân viên đã xác thực"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.discuss_channel_view_form
 msgid "Auto Subscribe Departments"
-msgstr "Bộ phận đăng ký tự động"
+msgstr "Tự động đăng ký cho các phòng ban"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr "Tự động đăng ký thành viên của các bộ phận đó vào kênh."
+msgstr "Tự động đăng ký thành viên của các phòng ban đó vào kênh."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -678,7 +683,7 @@ msgstr "Tổng giám đốc kỹ thuật"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
-msgstr "Phòng ban cấp dưới"
+msgstr "Phòng ban con"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1004,7 +1009,7 @@ msgstr "Tổ chức bộ phận"
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr "Phòng/Ban"
+msgstr "Phòng ban"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1812,6 +1817,8 @@ msgstr "Hoạt động chậm trễ"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr "Bắt đầu kế hoạch"
 
@@ -2196,9 +2203,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
-"Cấu trúc bộ phận của Odoo được sử dụng để quản lý tất cả các tài liệu\n"
-"                     liên quan đến nhân viên theo phòng ban: chi phí, bảng chấm công,\n"
-"                     nghỉ việc, tuyển dụng, v.v."
+"Cấu trúc phòng ban của Odoo được sử dụng để quản lý tất cả tài liệu\n"
+"                    liên quan tới nhân viên theo phòng ban: chi phí, bảng chấm công,\n"
+"                    nghỉ phép, tuyển dụng,..."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -2207,9 +2214,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
-"Cấu trúc bộ phận của Odoo được sử dụng để quản lý tất cả các tài liệu\n"
+"Cấu trúc phòng ban của Odoo được sử dụng để quản lý tất cả các tài liệu\n"
 "                 liên quan đến nhân viên theo phòng ban: chi phí, bảng chấm công,\n"
-"                 thời gian nghỉ, tuyển dụng, vv."
+"                 nghỉ phép, tuyển dụng,..."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
@@ -2728,11 +2735,6 @@ msgstr "Nguồn lực"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
 msgstr "Chịu trách nhiệm"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
-msgid "Responsible"
-msgstr "Người phụ trách"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id

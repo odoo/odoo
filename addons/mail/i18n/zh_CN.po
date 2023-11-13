@@ -3,10 +3,11 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Chloe Wang, 2023
+# Wil Odoo, 2023
+# Chill Liao <chill421@qq.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Chill Liao <chill421@qq.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -689,6 +690,7 @@ msgstr "活动必须链接到具有非空res_id的记录。"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Activity"
@@ -1245,6 +1247,11 @@ msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr "您确定要将此电子邮件地址取消列入黑名单吗？"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
+msgid "Ask at launch"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
@@ -1259,21 +1266,15 @@ msgid "Assign to me"
 msgstr "分配给自己"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Assignation summary"
-msgstr "分配摘要"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
-msgid "Assigned To (On demand)"
-msgstr "分配给（按需）"
+msgid "Assigned To"
+msgstr "分派给"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 #, python-format
 msgid "Assigned to"
@@ -1288,6 +1289,11 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr "指定用户 %s 对单据无权限，无法处理这个活动 。"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "指派"
 
 #. module: mail
 #. odoo-python
@@ -2663,6 +2669,11 @@ msgstr ""
 "记录的默认收件人： \n"
 "- 合作伙伴（使用合作伙伴的Id或partner_id字段）或\n"
 "- EMail(使用发件人或email字段)"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
+msgid "Default user"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -5221,11 +5232,13 @@ msgstr "记录 RTC 事件"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log a note..."
 msgstr "记录一个备注..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
 msgstr "记录一个活动"
 
@@ -5513,6 +5526,7 @@ msgstr "标记全部已读"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree_without_record_access
 msgid "Mark as Done"
 msgstr "标记为完成"
 
@@ -6091,6 +6105,11 @@ msgid "No Record"
 msgstr "没有记录"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
+msgid "No activities."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/command_palette.js:0
 #, python-format
@@ -6479,11 +6498,6 @@ msgid "Old values"
 msgstr "旧值"
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
-msgid "On demand"
-msgstr "按需显示"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
@@ -6655,16 +6669,6 @@ msgstr ""
 #, python-format
 msgid "Original message was deleted"
 msgstr "原邮件已删除"
-
-#. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
-msgid "Other"
-msgstr "其他"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
-msgid "Other Responsible"
-msgstr "其他负责人"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -6955,13 +6959,24 @@ msgstr "可用计划"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
-msgid "Plan Due Date"
-msgstr "计划到期日"
+msgid "Plan Date"
+msgstr "计划日期"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Plan Name"
 msgstr "计划名称"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
+msgid "Plan Summary"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Plan summary"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7682,7 +7697,6 @@ msgstr "重置密码"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
 msgstr "负责人"
@@ -8429,11 +8443,6 @@ msgstr "语言"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
 msgstr "特定用户"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__responsible_id
-msgid "Specific responsible of activity if not linked to the employee."
-msgstr "如果与雇员无关，活动的具体负责人。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10136,8 +10145,9 @@ msgstr "您叫什么名字？"
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 #, python-format
-msgid "When selecting responsible \"other\", you must specify a responsible."
-msgstr "选择负责人 \"其他 \"时，必须指定负责人。"
+msgid ""
+"When selecting \"Default user\" assignment, you must specify a responsible."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -10662,6 +10672,7 @@ msgstr "例如：联系"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
 msgstr "例如.讨论提案"

@@ -3,10 +3,10 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
 # Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -492,6 +492,11 @@ msgstr ""
 "                                Este puesto requiere <b>creatividad y atención al detalle</b> innata, debe estar acostumbrado a pensar fuera de lo convencional.\n"
 "                                Esperamos que el candidato sea proactivo y tenga una mentalidad orientada a resultados. Tendrá mucho éxito si\n"
 "                                también cuenta con habilidades de resolución de problemas."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Asignación"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1819,6 +1824,8 @@ msgstr "Actividades atrasadas"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr "Iniciar plan"
 
@@ -2743,11 +2750,6 @@ msgstr "Recursos"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
 msgstr "Responsabilidades"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
-msgid "Responsible"
-msgstr "Responsable"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id

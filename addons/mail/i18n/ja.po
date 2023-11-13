@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Junko Augias, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -674,6 +674,7 @@ msgstr "活動は空の res_idでないレコードとリンクする必要が�
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Activity"
@@ -1225,6 +1226,11 @@ msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr "本当にこのメールアドレスのブラックリストを解除しますか？"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
+msgid "Ask at launch"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
@@ -1239,21 +1245,15 @@ msgid "Assign to me"
 msgstr "自分に割当"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "Assignation summary"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
-msgid "Assigned To (On demand)"
-msgstr ""
+msgid "Assigned To"
+msgstr "担当者"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_id
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 #, python-format
 msgid "Assigned to"
@@ -1268,6 +1268,11 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr "割り当てられたユーザー%sはドキュメントにアクセスできず、このアクティビティを処理できません。"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "割当"
 
 #. module: mail
 #. odoo-python
@@ -2646,6 +2651,11 @@ msgstr ""
 "レコードのデフォルト受信者：\n"
 "- パートナー(パートナーまたはpartner_idフィールドのIDを使用)または\n"
 "- 電子メール(email_fromまたは電子メールフィールドを使用)"
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
+msgid "Default user"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -5209,11 +5219,13 @@ msgstr "RTCイベントを記録"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log a note..."
 msgstr "メモを記録..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
 msgstr "その活動を記録"
 
@@ -5502,6 +5514,7 @@ msgstr "全て既読にする"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree_without_record_access
 msgid "Mark as Done"
 msgstr "完了とする"
 
@@ -6080,6 +6093,11 @@ msgid "No Record"
 msgstr "記録なし"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
+msgid "No activities."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/command_palette.js:0
 #, python-format
@@ -6468,11 +6486,6 @@ msgid "Old values"
 msgstr "古い値"
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
-msgid "On demand"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
@@ -6645,16 +6658,6 @@ msgstr ""
 #, python-format
 msgid "Original message was deleted"
 msgstr "元のメッセージが削除されました"
-
-#. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
-msgid "Other"
-msgstr "その他"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
-msgid "Other Responsible"
-msgstr "他の担当者"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -6946,13 +6949,24 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
-msgid "Plan Due Date"
+msgid "Plan Date"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Plan Name"
 msgstr "計画名"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
+msgid "Plan Summary"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Plan summary"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7676,7 +7690,6 @@ msgstr "パスワードを再設定"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
 msgstr "担当者"
@@ -8422,11 +8435,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
 msgstr "特定のユーザー"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__responsible_id
-msgid "Specific responsible of activity if not linked to the employee."
-msgstr "従業員に紐付けられない特定のアクティビティ責任"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10118,7 +10126,8 @@ msgstr "お名前を教えて下さい。"
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 #, python-format
-msgid "When selecting responsible \"other\", you must specify a responsible."
+msgid ""
+"When selecting \"Default user\" assignment, you must specify a responsible."
 msgstr ""
 
 #. module: mail
@@ -10646,6 +10655,7 @@ msgstr "例: 連絡先"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
 msgstr "例: 提案内容説明"

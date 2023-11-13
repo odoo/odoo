@@ -5,10 +5,10 @@
 # Translators:
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Fernanda Alvarez, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16802,7 +16802,7 @@ msgstr "Configure un muro de Twitter en su evento"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr "Configurar comisiones de revendedores en venta por suscripción"
+msgstr "Configurar comisiones de distribuidor en venta por suscripción"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -17142,7 +17142,7 @@ msgstr "Código del país"
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr "Grupo de país"
+msgstr "Grupo del país"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
@@ -17320,10 +17320,10 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"Crea y gestiona los usuarios que accederán al sistema. Los usuarios pueden "
-"ser desactivados si durante un periodo de tiempo no deberían acceder al "
-"sistema. Puedes asignarles grupos con el fin de darles acceso específico a "
-"las aplicaciones que necesiten usar en el sistema."
+"Crea y gestiona los usuarios que accederán al sistema. Puede desactivar "
+"usuarios si durante un periodo de tiempo no deben acceder al sistema. Puede "
+"asignarles grupos con el fin de darles acceso específico a las aplicaciones "
+"que necesiten usar en el sistema."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
@@ -17608,13 +17608,13 @@ msgstr "Cron"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
 msgid "Cron Trigger"
-msgstr "Activador de cron"
+msgstr "Activador del cron"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_tree
 msgid "Cron Triggers"
-msgstr "Activadores de cron"
+msgstr "Activadores del cron"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -17793,7 +17793,7 @@ msgstr "Referencias del cliente"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr "Gestión relaciones con el cliente (CRM)"
+msgstr "Gestión de relaciones con el cliente (CRM)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -18099,7 +18099,7 @@ msgid ""
 "                Chain processes in order to make our customers more productive,\n"
 "                responsive and profitable."
 msgstr ""
-"Deco Addict diseña, desarrolla, integra y da soporte a los procesos de RRHH y\n"
+"Deco Addict diseña, desarrolla, integra y da soporte a los procesos de RR.HH. y\n"
 "a la cadena de suministro para que nuestros clientes sean más productivos\n"
 "receptivos y rentables."
 
@@ -19086,7 +19086,7 @@ msgstr "Integración de la facturación electrónica para Egipto"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
 msgid "Egyptian Tax Authority Invoice Integration"
-msgstr "Integración con la autoridad fiscal egipta"
+msgstr "Integración con la autoridad fiscal egipcia"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
@@ -23228,6 +23228,15 @@ msgstr "Tipo no válido"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Valor no válido para %s.%s:%s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
 
 #. module: base
 #. odoo-python

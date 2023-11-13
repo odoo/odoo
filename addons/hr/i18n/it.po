@@ -3,8 +3,8 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
 # Marianna Ciofani, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -489,6 +489,11 @@ msgstr ""
 "<br/><br/>\n"
 "Questa posizione è sia <b>creativa che rigorosa</b> per natura, è necessario pensare\n"
 "\"out of the box\". Ci aspettiamo che il candidato sia proattivo e abbia uno spirito \"get it done\". Per avere successo, dovrai avere solide capacità di risolvere i problemi."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Assegnazione"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1814,6 +1819,8 @@ msgstr "Attività in ritardo"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr "Lancia il Piano"
 
@@ -2732,11 +2739,6 @@ msgstr "Risorse"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
 msgstr "Responsabilità"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
-msgid "Responsible"
-msgstr "Responsabile"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id

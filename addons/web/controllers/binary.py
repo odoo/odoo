@@ -107,6 +107,9 @@ class Binary(http.Controller):
         if not attachment:
             # try to generate one
             try:
+                if filename.endswith('.map'):
+                    _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
+                    raise request.not_found()
                 bundle_name, rtl, asset_type = request.env['ir.asset']._parse_bundle_name(filename, debug_assets)
                 css = asset_type == 'css'
                 js = asset_type == 'js'
@@ -126,6 +129,7 @@ class Binary(http.Controller):
                 elif js and bundle.javascripts:
                     attachment = bundle.js()
             except ValueError as e:
+                _logger.error(e.args[0])
                 raise request.not_found() from e
         if not attachment:
             raise request.not_found()

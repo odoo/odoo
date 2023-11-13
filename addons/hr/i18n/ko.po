@@ -3,9 +3,9 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
 # Daye Jeong, 2023
 # Sarah Park, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -476,6 +476,11 @@ msgstr ""
 "                                해당 직책은 <b>창의성과 엄격함</b> 모두를 요구하며, 틀에 벗어난 사고를 필요로 합니다..\n"
 "                                능동적이고 \"해내야 한다\"는 정신을 갖추고 있으며,\n"
 "                                탄탄한 문제 해결 능력을 지닌 지원자 여러분을 기다리고 있습니다."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "배정"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1789,6 +1794,8 @@ msgstr "지연된 활동"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
 msgstr "계획 시작"
 
@@ -2689,11 +2696,6 @@ msgstr "자원"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
 msgstr "주요 업무"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
-msgid "Responsible"
-msgstr "담당자"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
