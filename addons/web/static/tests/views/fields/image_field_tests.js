@@ -366,6 +366,49 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("save record with image field modified by onchange", async function (assert) {
+        serverData.models.partner.onchanges = {
+            foo: (data) => {
+                data.document = MY_IMAGE;
+            },
+        };
+        const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+        rec.document = "3 kb";
+        rec.write_date = "2022-08-05 08:37:00"; // 1659688620000
+
+        // 1659692220000
+        const lastUpdates = ["2022-08-05 09:37:00"];
+        let index = 0;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `
+                    <form>
+                        <field name="foo"/>
+                        <field name="document" widget="image" />
+                    </form>`,
+            mockRPC(_route, { method, args }) {
+                if (method === "write") {
+                    args[1].write_date = lastUpdates[index];
+                    args[1].document = "3 kb";
+                    index++;
+                }
+            },
+        });
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+        await editInput(target, "[name='foo'] input", "grrr");
+        assert.strictEqual(
+            target.querySelector("div[name=document] img").dataset.src,
+            `data:image/png;base64,${MY_IMAGE}`
+        );
+
+        await clickSave(target);
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659692220000");
+    });
+
     QUnit.test("ImageField: option accepted_file_extensions", async function (assert) {
         await makeView({
             type: "form",
@@ -702,14 +745,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, { method, args }) {
                 assert.step(method);
-                if (method === "onchange") {
-                    return {
-                        value: {
-                            write_date: "", // actual return of the server
-                        },
-                    };
-                }
                 if (method === "write") {
+                    // 1659692220000
                     args[1].write_date = "2022-08-05 09:37:00";
                 }
             },
@@ -730,7 +767,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.verifySteps(["write", "read"]);
 
-        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659692220000");
     });
 
     QUnit.test("unique in url change on record change", async (assert) => {
