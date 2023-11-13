@@ -262,7 +262,6 @@ class TestPacking(TestPackingCommon):
             location should trigger a wizard. This wizard applies the same destination
             location to all the move lines
         """
-        self.warehouse.in_type_id.show_reserved = True
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -436,11 +435,9 @@ class TestPacking(TestPackingCommon):
         # Settings of receipt.
         self.warehouse.in_type_id.show_operations = True
         self.warehouse.in_type_id.show_entire_packs = True
-        self.warehouse.in_type_id.show_reserved = True
         # Settings of internal transfer.
         self.warehouse.int_type_id.show_operations = True
         self.warehouse.int_type_id.show_entire_packs = True
-        self.warehouse.int_type_id.show_reserved = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -580,11 +577,9 @@ class TestPacking(TestPackingCommon):
         # Settings of receipt.
         self.warehouse.in_type_id.show_operations = True
         self.warehouse.in_type_id.show_entire_packs = True
-        self.warehouse.in_type_id.show_reserved = True
         # Settings of internal transfer.
         self.warehouse.int_type_id.show_operations = True
         self.warehouse.int_type_id.show_entire_packs = True
-        self.warehouse.int_type_id.show_reserved = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -1043,7 +1038,6 @@ class TestPacking(TestPackingCommon):
         """
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
-        self.picking_type_in.show_reserved = True
         self.productA.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
@@ -1146,7 +1140,6 @@ class TestPacking(TestPackingCommon):
         """
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
-        self.picking_type_in.show_reserved = True
         self.productA.weight = 1.0
         self.productB.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})

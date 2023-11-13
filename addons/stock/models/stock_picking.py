@@ -70,12 +70,6 @@ class PickingType(models.Model):
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
-    show_reserved = fields.Boolean(
-        'Pre-fill Detailed Operations', default=True,
-        compute='_compute_show_reserved', store=True,
-        help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
-        "operations with the corresponding products, locations and lot/serial numbers. "
-        "For moves that are returns, the detailed operations will always be prefilled, regardless of this option.")
     reservation_method = fields.Selection(
         [('at_confirm', 'At Confirmation'), ('manual', 'Manually'), ('by_date', 'Before scheduled date')],
         'Reservation Method', required=True, default='at_confirm',
@@ -305,12 +299,6 @@ class PickingType(models.Model):
             else:
                 picking_type.warehouse_id = False
 
-    @api.depends('show_operations', 'code')
-    def _compute_show_reserved(self):
-        for picking_type in self:
-            if picking_type.show_operations and picking_type.code != 'incoming':
-                picking_type.show_reserved = True
-
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
         for record in self:
@@ -505,7 +493,6 @@ class Picking(models.Model):
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
 
     show_operations = fields.Boolean(compute='_compute_show_operations')
-    show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
