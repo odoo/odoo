@@ -3006,6 +3006,9 @@ export class Wysiwyg extends Component {
         return record;
     }
     _isLastDocumentStale() {
+        if (!this._serverLastStepId) {
+            return false;
+        }
         return !this.odooEditor.historyGetBranchIds().includes(this._serverLastStepId);
     }
     /**
