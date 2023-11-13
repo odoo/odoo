@@ -72,6 +72,8 @@ patch(Thread.prototype, {
         if (this.type !== "livechat") {
             return super.imgUrl;
         }
-        return url(`/im_livechat/operator/${this.operator.id}/avatar`);
+        return url(`/im_livechat/operator/${this.operator.id}/avatar`, {
+            unique: this.operator.write_date,
+        });
     },
 });

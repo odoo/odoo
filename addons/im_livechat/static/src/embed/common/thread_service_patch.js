@@ -54,7 +54,9 @@ patch(ThreadService.prototype, {
 
     avatarUrl(persona, thread) {
         if (thread.type === "livechat" && persona.eq(thread.operator)) {
-            return url(`/im_livechat/operator/${persona.id}/avatar`);
+            return url(`/im_livechat/operator/${persona.id}/avatar`, {
+                unique: persona.write_date,
+            });
         }
         return super.avatarUrl(...arguments);
     },

@@ -116,7 +116,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/operator/<int:operator_id>/avatar',
         type='http', auth="public", cors="*")
-    def livechat_operator_get_avatar(self, operator_id):
+    def livechat_operator_get_avatar(self, operator_id, unique=False):
         """ Custom route allowing to retrieve an operator's avatar.
 
         This is done to bypass more complicated rules, notably 'website_published' when the website
@@ -144,7 +144,7 @@ class LivechatController(http.Controller):
             operator if is_livechat_member else request.env['res.partner'],
             field_name='avatar_128',
             placeholder='mail/static/src/img/smiley/avatar.jpg',
-        ).get_response()
+        ).get_response(immutable=True if unique else False)
 
     def _get_guest_name(self):
         return _("Visitor")
