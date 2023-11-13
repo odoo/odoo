@@ -164,8 +164,8 @@ class Repair(models.Model):
     picking_product_ids = fields.One2many('product.product', compute='compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
     # UI Fields
-    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
-    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')  # TODO: remove in master.
+    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')  # TODO: remove in master.
     unreserve_visible = fields.Boolean(
         'Allowed to Unreserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can unreserve')
@@ -255,11 +255,6 @@ class Repair(models.Model):
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
-        for repair in self.filtered(lambda r: r.state not in ['cancel', 'done']):
-            if any(float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding) for m in repair.move_ids):
-                repair.show_set_qty_button = True
-            elif any(not float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in repair.move_ids):
-                repair.show_clear_qty_button = True
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
@@ -267,7 +262,10 @@ class Repair(models.Model):
             already_reserved = repair.state not in ('done', 'cancel') and any(repair.mapped('move_ids.move_line_ids.quantity'))
 
             repair.unreserve_visible = already_reserved
-            repair.reserve_visible = repair.state in ('confirmed', 'under_repair') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
+            repair.reserve_visible = (
+                repair.state in ('confirmed', 'under_repair') and
+                any(not move.picked and move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
+            )
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
@@ -322,9 +320,6 @@ class Repair(models.Model):
 
     def action_assign(self):
         return self.move_ids._action_assign()
-
-    def action_clear_quantities_to_zero(self):
-        return self.move_ids.filtered(lambda m: float_compare(m.quantity, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0)._clear_quantities_to_zero()
 
     def action_create_sale_order(self):
         if any(repair.sale_order_id for repair in self):
