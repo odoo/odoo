@@ -47,7 +47,7 @@ QUnit.test("previous operator prioritized", async () => {
         user_ids: [userId],
     });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
-    cookie.set("im_livechat_previous_operator_pid", JSON.stringify(previousOperatorId));
+    cookie.set("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     start();
     click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });

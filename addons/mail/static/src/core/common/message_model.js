@@ -2,7 +2,6 @@
 
 import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { assignDefined, assignIn } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -17,18 +16,6 @@ export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
-    static new(data) {
-        const message = super.new(data);
-        Record.onChange(message, "isEmpty", () => {
-            if (message.isEmpty && message.isStarred) {
-                message.isStarred = false;
-                const starred = this.store.discuss.starred;
-                starred.counter--;
-                starred.messages.delete(message);
-            }
-        });
-        return message;
-    }
     /** @returns {import("models").Message} */
     static get(data) {
         return super.get(data);
@@ -37,52 +24,10 @@ export class Message extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static _insert(data) {
-        if (data.res_id) {
-            this.store.Thread.insert({
-                model: data.model,
-                id: data.res_id,
-            });
-        }
-        return super._insert(...arguments);
-    }
 
     /** @param {Object} data */
     update(data) {
-        const {
-            message_type: type = this.type,
-            module_icon,
-            record_name,
-            res_model_name,
-            ...remainingData
-        } = data;
-        assignDefined(this, remainingData);
-        assignDefined(this, {
-            isStarred: this._store.user
-                ? this.starred_partner_ids.includes(this._store.user.id)
-                : false,
-            type,
-        });
-        // origin thread before other information (in particular notification insert uses it)
-        if (this.originThread) {
-            assignDefined(this.originThread, {
-                modelName: res_model_name || undefined,
-                module_icon: module_icon || undefined,
-                name:
-                    this.originThread.model === "discuss.channel"
-                        ? undefined
-                        : record_name || undefined,
-            });
-        }
-        assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
-        if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
-            this.originThread.selfFollower = {
-                followedThread: this.originThread,
-                id: data.user_follower_id,
-                is_active: true,
-                partner: this._store.self,
-            };
-        }
+        super.update(data);
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
             const htmlBody = parser.parseFromString(this.body, "text/html");
@@ -103,43 +48,20 @@ export class Message extends Record {
     /** @type {boolean} */
     is_note;
     /** @type {boolean} */
-    isStarred;
-    /** @type {boolean} */
     is_transient;
     linkPreviews = Record.many("LinkPreview", { inverse: "message" });
     /** @type {number[]} */
     needaction_partner_ids = [];
-    /**
-     * @deprecated
-     * Still necessary until custom insert()/update() rely on this.
-     * Fields are computed only at end of update cycle, thus it is not
-     * computed during custom update
-     */
-    get originThread() {
-        return this._store.Thread.get({ model: this.model, id: this.res_id });
-    }
-    originThread2 = Record.one("Thread", {
-        inverse: "allMessages",
-        compute() {
-            if (this.model && this.res_id) {
-                return { model: this.model, id: this.res_id };
-            }
-        },
-    });
     /** @type {number[]} */
     history_partner_ids = [];
     parentMessage = Record.one("Message");
     reactions = Record.many("MessageReactions", { inverse: "message" });
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
-    /** @type {number|string} */
-    res_id;
-    /** @type {string|undefined} */
-    model;
+    originThread = Record.one("Thread");
     /** @type {string} */
     scheduledDatetime;
-    /** @type {Number[]} */
-    starred_partner_ids = [];
+    starredPersonas = Record.many("Persona");
     /** @type {string} */
     subject;
     /** @type {string} */
@@ -153,7 +75,7 @@ export class Message extends Record {
     /** @type {string|undefined} */
     translationErrors;
     /** @type {string} */
-    type;
+    message_type;
     /** @type {string} */
     temporary_id = null;
     /** @type {string|undefined} */
@@ -169,14 +91,11 @@ export class Message extends Record {
      */
     now = DateTime.now().set({ milliseconds: 0 });
 
-    /**
-     * @returns {boolean}
-     */
     get editable() {
-        if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
+        if (!this._store.self?.isAdmin && !this.isSelfAuthored) {
             return false;
         }
-        return this.type === "comment";
+        return this.message_type === "comment";
     }
 
     get dateDay() {
@@ -209,7 +128,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.model === "discuss.channel";
+        return this.isSelfMentioned && this.originThread?.model === "discuss.channel";
     }
 
     get isSelfAuthored() {
@@ -219,26 +138,32 @@ export class Message extends Record {
         return this.author.eq(this._store.self);
     }
 
+    get isStarred() {
+        return this._store.self?.in(this.starredPersonas);
+    }
+
     get isNeedaction() {
-        return this.needaction_partner_ids.includes(this._store.user?.id);
+        return (
+            this._store.self?.type === "partner" &&
+            this.needaction_partner_ids.includes(this._store.self?.id)
+        );
     }
 
     get hasActions() {
         return !this.is_transient;
     }
 
-    /**
-     * @returns {boolean}
-     */
     get isHistory() {
-        return this.history_partner_ids.includes(this._store.user?.id);
+        return (
+            this._store.self?.type === "partner" &&
+            this.history_partner_ids.includes(this._store.self?.id)
+        );
     }
 
-    /**
-     * @returns {boolean}
-     */
     get isNotification() {
-        return this.type === "notification" && this.model === "discuss.channel";
+        return (
+            this.message_type === "notification" && this.originThread?.model === "discuss.channel"
+        );
     }
 
     get isSubjectSimilarToOriginThreadName() {
@@ -259,7 +184,7 @@ export class Message extends Record {
     }
 
     get resUrl() {
-        return `${url("/web")}#model=${this.model}&id=${this.res_id}`;
+        return `${url("/web")}#model=${this.originThread?.model}&id=${this.originThread?.id}`;
     }
 
     get editDate() {
@@ -270,14 +195,26 @@ export class Message extends Record {
         return /*(this.editDate && this.attachments.length) || */ !this.isBodyEmpty;
     }
 
-    get isEmpty() {
-        return (
-            this.isBodyEmpty &&
-            this.attachments.length === 0 &&
-            this.trackingValues.length === 0 &&
-            !this.subtype_description
-        );
-    }
+    isEmpty = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            return (
+                this.isBodyEmpty &&
+                this.attachments.length === 0 &&
+                this.trackingValues.length === 0 &&
+                !this.subtype_description
+            );
+        },
+        /** @this {import("models").Message} */
+        onUpdate() {
+            if (this.isEmpty && this.isStarred) {
+                this.starredPersonas.delete(this._store.self);
+                const starred = this._store.discuss.starred;
+                starred.counter--;
+                starred.messages.delete(this);
+            }
+        },
+    });
     get isBodyEmpty() {
         return (
             !this.body ||

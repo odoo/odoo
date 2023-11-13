@@ -1,40 +1,18 @@
 /* @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { Record } from "./record";
 
-export class UserSettings {
+export class Settings extends Record {
     id;
 
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
-     */
-    constructor(env, services) {
-        this.orm = services.orm;
-        this.store = services["mail.store"];
+    setup() {
+        super.setup();
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
         this._loadLocalSettings();
     }
-    /**
-     * @param {Object} settings: the old model-style command with the settings from the server
-     *
-     * Parses the settings commands and updates the user settings accordingly.
-     */
-    updateFromCommands(settings) {
-        this.usePushToTalk = settings.use_push_to_talk ?? this.usePushToTalk;
-        this.pushToTalkKey = settings.push_to_talk_key ?? this.pushToTalkKey;
-        this.voiceActiveDuration = settings.voice_active_duration ?? this.voiceActiveDuration;
-        //process volume settings model command
-        if (!settings.volume_settings_ids) {
-            return;
-        }
-        const volumeRecordSet = settings.volume_settings_ids?.[0][1] ?? [];
-        this.setVolumes(volumeRecordSet);
-    }
-    partnerVolumes = new Map();
-    guestVolumes = new Map();
+    volumes = Record.many("Volume");
     /**
      * DeviceId of the audio input selected by the user
      */
@@ -46,9 +24,9 @@ export class UserSettings {
      */
     isRegisteringKey = false;
     logRtc = false;
-    pushToTalkKey;
-    usePushToTalk = false;
-    voiceActiveDuration = 0;
+    push_to_talk_key;
+    use_push_to_talk = false;
+    voice_active_duration = 0;
     useBlur = false;
     volumeSettingsTimeouts = new Map();
     /**
@@ -72,8 +50,11 @@ export class UserSettings {
     getVolume(rtcSession) {
         return (
             rtcSession.volume ||
-            this.partnerVolumes.get(rtcSession.partnerId) ||
-            this.guestVolumes.get(rtcSession.guestId) ||
+            this.volumes.find(
+                (volume) =>
+                    (volume.type === "partner" && volume.persona.id === rtcSession.partnerId) ||
+                    (volume.type === "guest" && volume.persona.id === rtcSession.guestId)
+            )?.volume ||
             0.5
         );
     }
@@ -91,18 +72,8 @@ export class UserSettings {
      * @param {string} value
      */
     setDelayValue(value) {
-        this.voiceActiveDuration = parseInt(value, 10);
+        this.voice_active_duration = parseInt(value, 10);
         this._saveSettings();
-    }
-
-    setVolumes(volumeRecordSet) {
-        for (const volumeRecord of volumeRecordSet) {
-            if (volumeRecord.partner_id) {
-                this.partnerVolumes.set(volumeRecord.partner_id.id, volumeRecord.volume);
-            } else if (volumeRecord.guest_id) {
-                this.guestVolumes.set(volumeRecord.guest_id.id, volumeRecord.volume);
-            }
-        }
     }
     /**
      * @param {event} ev
@@ -115,7 +86,7 @@ export class UserSettings {
         if (!nonElligibleKeys.has(ev.key)) {
             pushToTalkKey += `.${ev.key === " " ? "Space" : ev.key}`;
         }
-        this.pushToTalkKey = pushToTalkKey;
+        this.push_to_talk_key = pushToTalkKey;
         this._saveSettings();
     }
     /**
@@ -125,7 +96,7 @@ export class UserSettings {
      * @param {number} param0.volume
      */
     async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (this.store.self?.type === "guest") {
+        if (this._store.self?.type === "guest") {
             return;
         }
         const key = `${partnerId}_${guestId}`;
@@ -175,10 +146,10 @@ export class UserSettings {
      * @param {Object} param1
      */
     isPushToTalkKey(ev) {
-        if (!this.usePushToTalk || !this.pushToTalkKey) {
+        if (!this.use_push_to_talk || !this.push_to_talk_key) {
             return false;
         }
-        const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
+        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
         const settingsKeySet = this.buildKeySet({ shiftKey, ctrlKey, altKey, key });
         const eventKeySet = this.buildKeySet({
             shiftKey: ev.shiftKey,
@@ -192,10 +163,10 @@ export class UserSettings {
         return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
     }
     pushToTalkKeyFormat() {
-        if (!this.pushToTalkKey) {
+        if (!this.push_to_talk_key) {
             return;
         }
-        const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
+        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
         return {
             shiftKey: !!shiftKey,
             ctrlKey: !!ctrlKey,
@@ -204,7 +175,7 @@ export class UserSettings {
         };
     }
     togglePushToTalk() {
-        this.usePushToTalk = !this.usePushToTalk;
+        this.use_push_to_talk = !this.use_push_to_talk;
         this._saveSettings();
     }
     /**
@@ -237,13 +208,18 @@ export class UserSettings {
      */
     async _onSaveGlobalSettingsTimeout() {
         this.globalSettingsTimeout = undefined;
-        await this.orm.call("res.users.settings", "set_res_users_settings", [[this.id]], {
-            new_settings: {
-                push_to_talk_key: this.pushToTalkKey,
-                use_push_to_talk: this.usePushToTalk,
-                voice_active_duration: this.voiceActiveDuration,
-            },
-        });
+        await this._store.env.services.orm.call(
+            "res.users.settings",
+            "set_res_users_settings",
+            [[this.id]],
+            {
+                new_settings: {
+                    push_to_talk_key: this.push_to_talk_key,
+                    use_push_to_talk: this.use_push_to_talk,
+                    voice_active_duration: this.voice_active_duration,
+                },
+            }
+        );
     }
     /**
      * @param {Object} param0
@@ -253,7 +229,7 @@ export class UserSettings {
      */
     async _onSaveVolumeSettingTimeout({ key, partnerId, guestId, volume }) {
         this.volumeSettingsTimeouts.delete(key);
-        await this.orm.call(
+        await this._store.env.services.orm.call(
             "res.users.settings",
             "set_volume_setting",
             [[this.id], partnerId, volume],
@@ -266,7 +242,7 @@ export class UserSettings {
      * @private
      */
     async _saveSettings() {
-        if (this.store.self?.type === "guest") {
+        if (this._store.self?.type === "guest") {
             return;
         }
         browser.clearTimeout(this.globalSettingsTimeout);
@@ -277,15 +253,4 @@ export class UserSettings {
     }
 }
 
-export const userSettingsService = {
-    dependencies: ["orm", "mail.store"],
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
-     */
-    start(env, services) {
-        return new UserSettings(env, services);
-    },
-};
-
-registry.category("services").add("mail.user_settings", userSettingsService);
+Settings.register();

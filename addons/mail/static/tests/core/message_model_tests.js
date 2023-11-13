@@ -27,9 +27,9 @@ QUnit.test("Message model properties", async (assert) => {
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
         needaction_partner_ids: [3],
-        starred_partner_ids: [3],
-        isStarred: true,
+        starredPersonas: { id: 3, type: "partner" },
         model: "res.partner",
+        originThread: { id: 3, model: "res.partner" },
         res_id: 3,
     });
     assert.ok(message);

@@ -15,7 +15,7 @@ export class CallContextMenu extends Component {
     updateStatsTimeout;
 
     setup() {
-        this.userSettings = useState(useService("mail.user_settings"));
+        this.store = useState(useService("mail.store"));
         onMounted(() => {
             if (!this.env.debug) {
                 return;
@@ -50,12 +50,12 @@ export class CallContextMenu extends Component {
     }
 
     get volume() {
-        return this.userSettings.getVolume(this.props.rtcSession);
+        return this.store.settings.getVolume(this.props.rtcSession);
     }
 
     onChangeVolume(ev) {
         const volume = Number(ev.target.value);
-        this.userSettings.saveVolumeSetting({
+        this.store.settings.saveVolumeSetting({
             guestId: this.props.rtcSession?.guestId,
             partnerId: this.props.rtcSession?.partnerId,
             volume,

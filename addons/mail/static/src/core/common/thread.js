@@ -329,7 +329,7 @@ export class Thread extends Component {
 
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.user.user.id;
+        actionDescription.res_id = this.store.self.user.id;
         this.env.services.action.doAction(actionDescription);
     }
 
@@ -371,14 +371,19 @@ export class Thread extends Component {
         if (this.props.thread.model === "mail.box") {
             return false;
         }
-        if (!prevMsg || prevMsg.type === "notification" || prevMsg.isEmpty || this.env.inChatter) {
+        if (
+            !prevMsg ||
+            prevMsg.message_type === "notification" ||
+            prevMsg.isEmpty ||
+            this.env.inChatter
+        ) {
             return false;
         }
 
         if (!msg.author?.eq(prevMsg.author)) {
             return false;
         }
-        if (msg.model !== prevMsg.model || msg.res_id !== prevMsg.res_id) {
+        if (!msg.originThread?.eq(prevMsg.originThread)) {
             return false;
         }
         if (msg.parentMessage) {

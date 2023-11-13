@@ -15,6 +15,6 @@ class ChatbotScriptStep(models.Model):
                 values['email'] = visitor_id.email
             if not values.get('phone') and visitor_id.mobile:
                 values['phone'] = visitor_id.mobile
-            values['country_id'] = visitor_id.country_id
+            values['country'] = {'id': visitor_id.country_id} if visitor_id.country_id else False
 
         return values

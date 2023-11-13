@@ -14,8 +14,8 @@ patch(AttachmentUploadService.prototype, {
     },
     _makeFormData(formData, file, hooker, tmpId, options) {
         super._makeFormData(...arguments);
-        if (options?.isVoice) {
-            formData.append("voice", options.isVoice);
+        if (options?.voice) {
+            formData.append("voice", true);
         }
         return formData;
     },

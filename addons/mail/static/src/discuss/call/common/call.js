@@ -54,7 +54,6 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useState(useService("mail.store"));
-        this.userSettings = useState(useService("mail.user_settings"));
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);

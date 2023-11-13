@@ -98,7 +98,6 @@ export class Rtc {
         this.notification = services.notification;
         this.rpc = services.rpc;
         this.soundEffectsService = services["mail.sound_effects"];
-        this.userSettingsService = services["mail.user_settings"];
         this.pttExtService = services["discuss.ptt_extension"];
         this.state = reactive({
             hasPendingRequest: false,
@@ -136,21 +135,21 @@ export class Rtc {
             sourceScreenStream: null,
         });
         this.blurManager = undefined;
-        onChange(this.userSettingsService, "useBlur", () => {
+        onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
             }
         });
-        onChange(this.userSettingsService, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
+        onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
             if (this.blurManager) {
-                this.blurManager.edgeBlur = this.userSettingsService.edgeBlurAmount;
-                this.blurManager.backgroundBlur = this.userSettingsService.backgroundBlurAmount;
+                this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
             }
         });
-        onChange(this.userSettingsService, ["voiceActivationThreshold", "usePushToTalk"], () =>
+        onChange(this.store.settings, ["voiceActivationThreshold", "use_push_to_talk"], () =>
             this.linkVoiceActivation()
         );
-        onChange(this.userSettingsService, "audioInputDeviceId", async () => {
+        onChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.state.selfSession) {
                 await this.resetAudioTrack({ force: true });
             }
@@ -163,7 +162,7 @@ export class Rtc {
         browser.addEventListener(
             "keydown",
             (ev) => {
-                if (!this.userSettingsService.isPushToTalkKey(ev)) {
+                if (!this.store.settings.isPushToTalkKey(ev)) {
                     return;
                 }
                 this.onPushToTalk();
@@ -175,8 +174,8 @@ export class Rtc {
             (ev) => {
                 if (
                     !this.state.channel ||
-                    !this.userSettingsService.usePushToTalk ||
-                    !this.userSettingsService.isPushToTalkKey(ev) ||
+                    !this.store.settings.use_push_to_talk ||
+                    !this.store.settings.isPushToTalkKey(ev) ||
                     !this.state.selfSession.isTalking
                 ) {
                     return;
@@ -224,14 +223,14 @@ export class Rtc {
             if (!this.state.selfSession?.isMute) {
                 this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
             }
-        }, Math.max(this.userSettingsService.voiceActiveDuration || 0, duration));
+        }, Math.max(this.store.settings.voice_active_duration || 0, duration));
     }
 
     onPushToTalk() {
         if (
             !this.state.channel ||
-            this.userSettingsService.isRegisteringKey ||
-            !this.userSettingsService.usePushToTalk
+            this.store.settings.isRegisteringKey ||
+            !this.store.settings.use_push_to_talk
         ) {
             return;
         }
@@ -521,7 +520,7 @@ export class Rtc {
      */
     log(session, entry, { error, step, state, ...data } = {}) {
         session.logStep = entry;
-        if (!this.userSettingsService.logRtc) {
+        if (!this.store.settings.logRtc) {
             return;
         }
         if (!this.state.logs.has(session.id)) {
@@ -886,7 +885,7 @@ export class Rtc {
                 ) {
                     return;
                 }
-                if (this.userSettingsService.logRtc) {
+                if (this.store.settings.logRtc) {
                     let stats;
                     try {
                         const iterableStats = await peerConnection.getStats();
@@ -1243,11 +1242,11 @@ export class Rtc {
             return;
         }
         let videoStream = sourceStream;
-        if (this.userSettingsService.useBlur && type === "camera") {
+        if (this.store.settings.useBlur && type === "camera") {
             try {
                 this.blurManager = new BlurManager(sourceStream, {
-                    backgroundBlur: this.userSettingsService.backgroundBlurAmount,
-                    edgeBlur: this.userSettingsService.edgeBlurAmount,
+                    backgroundBlur: this.store.settings.backgroundBlurAmount,
+                    edgeBlur: this.store.settings.edgeBlurAmount,
                 });
                 videoStream = await this.blurManager.stream;
             } catch (_e) {
@@ -1255,7 +1254,7 @@ export class Rtc {
                     _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
                     { type: "warning" }
                 );
-                this.userSettingsService.useBlur = false;
+                this.store.settings.useBlur = false;
             }
         }
         track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
@@ -1338,7 +1337,7 @@ export class Rtc {
             let audioTrack;
             try {
                 const audioStream = await browser.navigator.mediaDevices.getUserMedia({
-                    audio: this.userSettingsService.audioConstraints,
+                    audio: this.store.settings.audioConstraints,
                 });
                 audioTrack = audioStream.getAudioTracks()[0];
             } catch {
@@ -1387,11 +1386,7 @@ export class Rtc {
         if (!this.state.selfSession) {
             return;
         }
-        if (
-            this.userSettingsService.usePushToTalk ||
-            !this.state.channel ||
-            !this.state.audioTrack
-        ) {
+        if (this.store.settings.use_push_to_talk || !this.state.channel || !this.state.audioTrack) {
             this.state.selfSession.isTalking = false;
             await this.refreshAudioStatus();
             return;
@@ -1401,7 +1396,7 @@ export class Rtc {
                 onThreshold: async (isAboveThreshold) => {
                     this.setTalking(isAboveThreshold);
                 },
-                volumeThreshold: this.userSettingsService.voiceActivationThreshold,
+                volumeThreshold: this.store.settings.voiceActivationThreshold,
             });
         } catch {
             /**
@@ -1446,7 +1441,7 @@ export class Rtc {
             audioElement.srcObject = stream;
             audioElement.load();
             audioElement.muted = mute;
-            audioElement.volume = this.userSettingsService.getVolume(session);
+            audioElement.volume = this.store.settings.getVolume(session);
             // Using both autoplay and play() as safari may prevent play() outside of user interactions
             // while some browsers may not support or block autoplay.
             audioElement.autoplay = true;
@@ -1568,7 +1563,6 @@ export const rtcService = {
         "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
-        "mail.user_settings",
         "notification",
         "rpc",
     ],
@@ -1605,7 +1599,7 @@ export const rtcService = {
         });
         services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
             if (payload) {
-                services["mail.user_settings"].setVolumes(payload);
+                rtc.store.Volume.insert(payload);
             }
         });
         services["bus_service"].subscribe(
