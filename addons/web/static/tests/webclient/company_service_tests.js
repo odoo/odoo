@@ -86,6 +86,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
     assert.strictEqual(env.services.company.currentCompany.id, 3);
 
     // backward compatibility
+    registry.category("error_handlers").remove("accessErrorHandlerCompanies");
     Object.assign(browser.location, { hash: "cids=3%2C1" });
     env = await makeTestEnv();
     assert.deepEqual(env.services.company.activeCompanyIds, [3, 1]);
