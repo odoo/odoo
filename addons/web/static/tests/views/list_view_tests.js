@@ -592,6 +592,28 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("basic list view and command palette", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        triggerHotkey("control+k");
+        await nextTick();
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_command_hotkey")),
+            [
+                "NewALT + C",
+                "ActionsALT + U",
+                "Search...ALT + Q",
+                "Toggle search panelALT + SHIFT + Q"
+            ]
+        );
+    });
+
     QUnit.test('list with delete="0"', async function (assert) {
         await makeView({
             type: "list",

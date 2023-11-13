@@ -5,7 +5,7 @@
         <div t-if="hasItems" class="o_cp_action_menus d-flex align-items-center pe-2 gap-1">
             <Dropdown class="'lh-1'" togglerClass="'d-print-none btn p-0 ms-1 lh-sm border-0'" menuClass="'lh-base'">
                 <t t-set-slot="toggler">
-                    <i class="fa fa-cog" data-hotkey="u"/>
+                    <i class="fa fa-cog" data-hotkey="u" data-tooltip="Actions"/>
                 </t>
 
                 <t t-if="printItems.length">
