@@ -31,8 +31,6 @@ from . import tools
 from .tools import SQL
 from .tools.func import frame_codeinfo, locked
 
-psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
-
 def undecimalize(value, cr):
     if value is None:
         return None
