@@ -36,7 +36,7 @@ def undecimalize(value, cr):
         return None
     return float(value)
 
-psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700), 'float', undecimalize))
+psycopg2.extensions.register_type(psycopg2.extensions.new_type((1700,), 'float', undecimalize))
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
