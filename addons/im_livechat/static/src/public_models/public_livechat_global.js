@@ -3,6 +3,7 @@
 import { attr, clear, many, one, Model } from "@mail/model";
 
 import { session } from "@web/session";
+import legacySession from "web.session";
 
 import { qweb } from "web.core";
 import { Markup } from "web.utils";
@@ -80,7 +81,11 @@ Model({
                 }
                 this.update({ rule: result.rule });
             }
-            return this.loadQWebTemplate();
+            const proms = [this.loadQWebTemplate()];
+            if (!session.is_frontend) {
+                proms.push(legacySession.load_translations(["im_livechat"]));
+            }
+            return Promise.all(proms);
         },
         /**
          * This override handles the following use cases:
