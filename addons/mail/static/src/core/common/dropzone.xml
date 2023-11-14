@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Dropzone">
-    <div class="o-mail-Dropzone position-fixed align-items-center justify-content-center d-flex border-primary bg-view text-primary opacity-75"
+    <div class="o-mail-Dropzone position-fixed align-items-center justify-content-center d-flex border-primary bg-100 text-primary opacity-75"
         t-att-class="{ 'o-dragging-inside': state.isDraggingInside }"
         t-attf-class="{{ props.extraClass }}"
         t-on-dragenter="() => state.isDraggingInside = true"
