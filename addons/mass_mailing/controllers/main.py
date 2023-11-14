@@ -481,11 +481,3 @@ class MassMailController(http.Controller):
                 f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'
             ) if document_id else '',
         }
-
-    # ------------------------------------------------------------
-    # PREVIEW
-    # ------------------------------------------------------------
-
-    @http.route('/mailing/mobile/preview', methods=['GET'], type='http', auth='user', website=True)
-    def mass_mailing_preview_mobile_content(self):
-        return request.render("mass_mailing.preview_content_mobile", {})

@@ -11,7 +11,7 @@
                     <div type="button" class="btn-close" aria-label="Close" t-on-click="props.close"/>
                 </div>
             </t>
-            <iframe t-ref="iframeRef" src="/mailing/mobile/preview" t-on-load="appendPreview"></iframe>
+            <div t-ref="contentRef"></div>
         </Dialog>
     </t>
 </odoo>

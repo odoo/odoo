@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { Component, markup, useEffect, useRef } from "@odoo/owl";
+import { Component, markup, useEffect, useRef, onMounted, onWillStart } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { escape } from "@web/core/utils/strings";
+import { getBundle } from "@web/core/assets";
 export class MassMailingMobilePreviewDialog extends Component {
     static components = {
         Dialog,
@@ -14,16 +15,8 @@ export class MassMailingMobilePreviewDialog extends Component {
         close: Function,
     };
 
-    appendPreview() {
-        const iframe = this.iframeRef.el.contentDocument;
-        const body = iframe.querySelector("body");
-        const isMarkup = this.props.preview instanceof markup().constructor;
-        const safePreview = isMarkup ? this.props.preview : escape(this.props.preview);
-        body.innerHTML = safePreview;
-    }
-
     setup() {
-        this.iframeRef = useRef("iframeRef");
+        this.shadowRef = useRef("contentRef");
         useEffect(
             (modalEl) => {
                 if (modalEl) {
@@ -33,6 +26,25 @@ export class MassMailingMobilePreviewDialog extends Component {
             },
             () => [document.querySelector(":not(.o_inactive_modal).o_dialog")]
         );
+        onWillStart(async () => {
+            this.bundle = await getBundle("mass_mailing.iframe_css_assets_edit");
+        });
+        onMounted(async () => {
+            const shadow = this.shadowRef.el.attachShadow({ mode: "closed" });
+            const div = document.createElement("div");
+            //Load only css assets of bundle.
+            for (const url of this.bundle.cssLibs) {
+                const linkEl = document.createElement("link");
+                linkEl.type = "text/css";
+                linkEl.rel = "stylesheet";
+                linkEl.href = url;
+                div.appendChild(linkEl);
+            }
+            const isMarkup = this.props.preview instanceof markup().constructor;
+            const safePreview = isMarkup ? this.props.preview : escape(this.props.preview);
+            div.insertAdjacentHTML("beforeend", safePreview);
+            shadow.appendChild(div);
+        });
     }
 
     toggle() {
