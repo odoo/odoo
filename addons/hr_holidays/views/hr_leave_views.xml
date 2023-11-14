@@ -265,8 +265,8 @@
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="o_hr_leave_content row my-n4">
-                    <div class="o_hr_leave_column col_left col-md-6 col-12">
-                        <div name="title" class="o_hr_leave_title" invisible="1">
+                    <div class="o_hr_leave_column col_left col-md-6 col-12 py-3">
+                        <div name="title" class="o_hr_leave_title h1" invisible="1">
                             <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
                             <field name="employee_ids" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <field name="display_name" invisible="not holiday_status_id"/>
@@ -467,7 +467,7 @@
                 <field name="name" widget="text"/>
             </field>
             <xpath expr="//div[hasclass('col_left')]" position="after">
-                <div class="o_hr_leave_column col_right col-md-6 col-12">
+                <div class="o_hr_leave_column col_right col-md-6 col-12 py-3 bg-200">
                     <widget name="hr_leave_stats"/>
                 </div>
             </xpath>

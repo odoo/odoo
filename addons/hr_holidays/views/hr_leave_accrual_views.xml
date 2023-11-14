@@ -131,7 +131,7 @@
                     </group>
                     <span class="oe_grey" invisible="1">
                     </span>
-                    <div class="o_hr_holidays_hierarchy">
+                    <div class="o_hr_holidays_hierarchy rounded-bottom bg-100 overflow-auto">
                         <div class="o_hr_holidays_title">Rules</div>
                         <div class="o_hr_holidays_hierarchy_readonly" invisible="level_ids">
                             <p>
@@ -163,9 +163,9 @@
                                 <field name="action_with_unused_accruals"/>
                                 <field name="cap_accrued_time"/>
                                 <templates>
-                                    <div t-name="kanban-box" class="border-0 bg-transparent">
+                                    <div t-name="kanban-box" class="w-auto border-0 bg-transparent">
                                         <div class="o_hr_holidays_body oe_kanban_global_click">
-                                            <div class="o_hr_holidays_timeline text-center">
+                                            <div class="o_hr_holidays_timeline border bg-view bg-opacity-100 text-center">
                                                 <t t-if="record.start_count.value > 0">
                                                     after <t t-esc="record.start_count.value"/> <t t-esc="record.start_type.value"/>
                                                 </t>
@@ -184,8 +184,8 @@
                                         </div>
                                     </div>
                                     <t t-name="level_content">
-                                        <div class="o_hr_holidays_card">
-                                            <div class="content container" style="width: 560px;">
+                                        <div class="o_hr_holidays_card position-relative ms-4 px-3 py-2 border bg-view bg-opacity-100">
+                                            <div class="content container position-relative" style="width: 560px;">
                                                 <div class="row w-100">
                                                     <div class="pe-0 me-0" style="width: 6rem;">
                                                         <field name="added_value" widget="FloatWithoutTrailingZeros"/> <field name="added_value_type"/>,

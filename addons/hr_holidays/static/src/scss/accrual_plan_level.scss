@@ -1,17 +1,11 @@
 $o-hr-holidays-border-color: map-get($grays, '300');
 
 .o_hr_holidays_hierarchy {
-    margin-left: -$o-horizontal-padding;
-    margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
-        margin-left: -$o-horizontal-padding*2;
-        margin-right: -$o-horizontal-padding*2;
-    }
-    margin-bottom:-24px;
-    padding: 10px 0px 24px 16px;
-    background-color: rgba(128, 128, 128, 0.15);
-    box-shadow: 0px 1px 1px rgba(17, 17, 17, 0.23);
-    overflow-x: auto;
+    margin-left:calc(var(--formView-sheet-padding-x) * -1);
+    margin-right: calc(var(--formView-sheet-padding-x) * -1);
+    margin-bottom: calc(var(--formView-sheet-padding-x) * -1);
+    padding: var(--formView-sheet-padding-x);
+
     .o_hr_holidays_title {
         padding: 0px 0px 0px  86px;
         font-size: 18px;
@@ -25,9 +19,9 @@ $o-hr-holidays-border-color: map-get($grays, '300');
         counter-reset: o-hr-holidays-accrual-plan-level-counter;
 
         .o-kanban-button-new {
-            padding: 2px 12px;
-            margin: 0px 0px 0px 44px;
-            border-radius: 25px;
+            margin-top: map-get($spacers, 1);
+            margin-bottom: map-get($spacers, 3) * -1;
+            margin-left: 44px;
         }
 
         .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record {
@@ -46,7 +40,7 @@ $o-hr-holidays-border-color: map-get($grays, '300');
                 @include o-position-absolute;
                 height: 100%;
                 margin-left: 8px;
-                border-left: 1px dashed darken($o-hr-holidays-border-color, 10%);
+                border-left: $border-width dashed $o-hr-holidays-border-color;
             }
 
             .o_hr_holidays_plan_level_level::before {
@@ -63,49 +57,35 @@ $o-hr-holidays-border-color: map-get($grays, '300');
                     @include o-position-absolute($top: 32px, $left: 6px);
                     width: 90px;
                     padding: 3px 0px;
-                    border-radius: 3px;
-                    background-color: $o-gray-200;
-                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
                 }
 
                 // Actual kanban card
                 .o_hr_holidays_card {
-                    position: relative;
-                    margin-left: 22px;
-                    margin-right: 2px;
                     width: 500px;
-                    border-radius: 3px;
-                    background-color: $o-gray-200;
-                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
 
                     // Triangle
                     &:before {
                         content: '';
-                        @include o-position-absolute($top: 12px, $left: -17px);
+                        @include o-position-absolute($top: 12px, $left: -18px);
                         margin-left: 10px;
                         width: 14px;
                         height: 14px;
-                        background-color: $o-gray-200;
-                        border-bottom: 1px solid $o-hr-holidays-border-color;
+                        background: $o-view-background-color;
+                        border-bottom: $border-width solid $gray-300;
+                        border-left: $border-width solid $gray-300;
                         transform: rotate(45deg);
                     }
 
                     // Circle
                     &:after {
+                        --hrHolidays-Circle-Size: 12px;
                         content: '';
-                        @include o-position-absolute($top: 14px, $left: -36px);
-                        width: 12px;
-                        height: 12px;
+                        @include o-position-absolute($top: 14px, $left: calc((var(--KanbanRecord-padding-h) + #{$spacer * 1.5} + var(--hrHolidays-Circle-Size) * .5 + #{$border-width * .5}) * -1));
+                        width: var(--hrHolidays-Circle-Size);
+                        height: var(--hrHolidays-Circle-Size);
                         border: 2px solid $o-brand-primary;
                         border-radius: 10px;
-                        background: $o-gray-200;
-                    }
-
-                    .content {
-                        position: relative;
-                        background-color: $o-gray-200;
-                        padding: 5px 7px;
-                        font-size: 14px;
+                        background: $o-view-background-color;
                     }
                 }
             }
