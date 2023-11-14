@@ -166,11 +166,13 @@ class ResUsers(models.Model):
         """ retrieve the user corresponding to login (login or email),
             and reset their password
         """
-        users = self.search([('login', '=', login)])
+        users = self.search(self._get_login_domain(login))
         if not users:
-            users = self.search([('email', '=', login)])
-        if len(users) != 1:
+            users = self.search(self._get_email_domain(login))
+        if not users:
             raise Exception(_('No account found for this login'))
+        if len(users) > 1:
+            raise Exception(_('Multiple accounts found for this login'))
         return users.action_reset_password()
 
     def action_reset_password(self):
