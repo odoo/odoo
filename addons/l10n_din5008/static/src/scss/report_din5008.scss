@@ -57,7 +57,7 @@
                 }
             }
         }
-        h2, [name=payment_communication], [name=payment_term], [name=comment], [name=note], [name=incoterm] {
+        h2 {
             margin-left: 5mm;
             margin-right: 10mm;
             margin-top: 8.46mm;
@@ -83,18 +83,6 @@
                 td {
                     vertical-align: bottom;
                 }
-            }
-        }
-        [name=payment_communication] {  // re-align payment communication (otherwise it's cropped)
-            margin-left: 5mm;
-        }
-        #right-elements {
-            margin-right: 10mm;
-
-            &.col-12 {
-                @include media-breakpoint-down(md) {
-                    width: calc(100% - 10mm);
-                 }
             }
         }
     }
