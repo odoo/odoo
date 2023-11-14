@@ -166,7 +166,8 @@
                     <table class="table table-sm">
                         <tr>
                             <t t-set="timesheets_amount" t-value="round(sum(timesheets.mapped('unit_amount')), 2)"></t>
-                            <td><strong>Total: </strong></td>
+                            <td t-if="is_uom_day"><strong>Days Spent: </strong></td>
+                            <td t-else=""><strong>Hours Spent: </strong></td>
                             <td class="text-end">
                                 <t t-if="is_uom_day">
                                     <span t-esc="timesheets._convert_hours_to_days(timesheets_amount)" t-options="{'widget': 'timesheet_uom'}"/>
@@ -180,13 +181,13 @@
                         <tr>
                             <div t-if="timesheets_by_subtask">
                                 <t t-if="is_uom_day">
-                                    <td><strong>Days recorded on sub-tasks: </strong></td>
+                                    <td><a t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Days recorded on sub-tasks: </strong></a></td>
                                     <td class="text-end">
                                         <span t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/>
                                     </td>
                                 </t>
                                 <t t-else="">
-                                    <td><strong>Hours recorded on sub-tasks: </strong></td>
+                                    <td><a t-att-href="'/my/timesheets?search_in=parent_task_id&amp;search=%s' % task.id"><strong>Hours recorded on sub-tasks: </strong></a></td>
                                     <td class="text-end">
                                         <span t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/>
                                     </td>
@@ -194,6 +195,22 @@
                             </div>
                         </tr>
                         <t t-set="allocated_time" t-value="task.allocated_hours"></t>
+                        <tr>
+                            <div t-if="task.total_hours_spent > 0 and timesheets_by_subtask" name="total_time">
+                                <t t-if="is_uom_day">
+                                    <td><strong>Total Days: </strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="timesheets._convert_hours_to_days(task.total_hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                                    </td>
+                                </t>
+                                <t t-else="">
+                                    <td><strong>Total Hours: </strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="task.total_hours_spent" t-options='{"widget": "float_time"}'/>
+                                    </td>
+                                </t>
+                            </div>
+                        </tr>
                         <tr t-attf-class="{{task.remaining_hours &lt; 0 and 'text-danger' or ''}}">
                             <div t-if="allocated_time > 0" name="allocated_time">
                                 <t t-if="is_uom_day">
