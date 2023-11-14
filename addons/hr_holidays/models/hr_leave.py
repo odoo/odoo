@@ -955,12 +955,12 @@ class HolidaysRequest(models.Model):
         now = fields.Datetime.now()
 
         if not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-            if any(hol.state not in ['draft', 'confirm'] for hol in self):
+            if any(hol.state not in ['draft', 'confirm', 'validate1'] for hol in self):
                 raise UserError(error_message % state_description_values.get(self[:1].state))
             if any(hol.date_from < now for hol in self):
                 raise UserError(_('You cannot delete a time off which is in the past'))
         else:
-            for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
+            for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm', 'validate1']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
 
     def unlink(self):
