@@ -1903,7 +1903,7 @@ var SnippetsMenu = Widget.extend({
 
         const toolbarEl = this._toolbarWrapperEl.firstChild;
         toolbarEl.classList.remove('oe-floating');
-        this.options.wysiwyg.toolbarEl.style.display = 'none';
+        this.options.wysiwyg.toolbarEl.classList.add('d-none');
         this.options.wysiwyg.setupToolbar(toolbarEl);
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
