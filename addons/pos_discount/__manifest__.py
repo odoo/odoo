@@ -16,6 +16,7 @@ discount to a customer.
 """,
     'depends': ['point_of_sale'],
     'data': [
+        'data/pos_discount_data.xml',
         'views/res_config_settings_views.xml',
         'views/pos_config_views.xml',
         ],
