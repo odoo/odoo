@@ -1,18 +1,20 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { UIPlugin, astToFormula, helpers, constants } from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 
-const { astToFormula } = spreadsheet;
+import { mergeContiguousZones } from "@spreadsheet/helpers/zones";
+const { positionToZone } = helpers;
+const { HIGHLIGHT_COLOR } = constants;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
-export class ListUIPlugin extends spreadsheet.UIPlugin {
+export class ListUIPlugin extends UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */
@@ -236,6 +238,21 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         this.dataSources.get(dataSourceId).increaseMaxPosition(position);
     }
 
+    _getVisibleListCellPositions(listId) {
+        const positions = [];
+        const sheetId = this.getters.getActiveSheetId();
+        for (const col of this.getters.getSheetViewVisibleCols()) {
+            for (const row of this.getters.getSheetViewVisibleRows()) {
+                const position = { sheetId, col, row };
+                const cellListId = this.getListIdFromPosition(position);
+                if (listId === cellListId) {
+                    positions.push(position);
+                }
+            }
+        }
+        return positions;
+    }
+
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
@@ -329,6 +346,19 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
             .getListIds()
             .map((listId) => this.getListDataSource(listId).loadMetadata());
     }
+
+    getListHighlights(listId) {
+        const sheetId = this.getters.getActiveSheetId();
+        const listCellPositions = this._getVisibleListCellPositions(listId);
+        const mergedZones = mergeContiguousZones(listCellPositions.map(positionToZone));
+        const highlights = mergedZones.map((zone) => ({
+            sheetId,
+            zone,
+            color: HIGHLIGHT_COLOR,
+            noFill: true,
+        }));
+        return highlights;
+    }
 }
 
 ListUIPlugin.getters = [
@@ -339,4 +369,5 @@ ListUIPlugin.getters = [
     "getSelectedListId",
     "getListDataSource",
     "getAsyncListDataSource",
+    "getListHighlights",
 ];

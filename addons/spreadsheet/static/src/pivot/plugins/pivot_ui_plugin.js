@@ -1,16 +1,18 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { helpers, constants, astToFormula, UIPlugin } from "@odoo/o-spreadsheet";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { PivotDataSource } from "../pivot_data_source";
+import { mergeContiguousZones } from "@spreadsheet/helpers/zones";
 
-const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
+const { positionToZone } = helpers;
+const { HIGHLIGHT_COLOR } = constants;
 
 /**
  * @typedef {import("./pivot_core_plugin").PivotDefinition} PivotDefinition
@@ -50,7 +52,7 @@ function pivotPeriodToFilterValue(timeRange, value) {
     }
 }
 
-export class PivotUIPlugin extends spreadsheet.UIPlugin {
+export class PivotUIPlugin extends UIPlugin {
     constructor(config) {
         super(config);
         /** @type {string} */
@@ -436,6 +438,19 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return this.getPivotDataSource(pivotId);
     }
 
+    getPivotHighlights(pivotId) {
+        const sheetId = this.getters.getActiveSheetId();
+        const pivotCellPositions = this._getVisiblePivotCellPositions(pivotId);
+        const mergedZones = mergeContiguousZones(pivotCellPositions.map(positionToZone));
+        const highlights = mergedZones.map((zone) => ({
+            sheetId,
+            zone,
+            color: HIGHLIGHT_COLOR,
+            noFill: true,
+        }));
+        return highlights;
+    }
+
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
@@ -501,7 +516,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     }
 
     /**
-     * @param {string} pisvotId
+     * @param {string} pivotId
      */
     _setupPivotDataSource(pivotId) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
@@ -509,6 +524,24 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         if (!this.dataSources.contains(dataSourceId)) {
             this.dataSources.add(dataSourceId, PivotDataSource, definition);
         }
+    }
+
+    /**
+     * @param {string} pivotId
+     */
+    _getVisiblePivotCellPositions(pivotId) {
+        const positions = [];
+        const sheetId = this.getters.getActiveSheetId();
+        for (const col of this.getters.getSheetViewVisibleCols()) {
+            for (const row of this.getters.getSheetViewVisibleRows()) {
+                const position = { sheetId, col, row };
+                const cellPivotId = this.getPivotIdFromPosition(position);
+                if (pivotId === cellPivotId) {
+                    positions.push(position);
+                }
+            }
+        }
+        return positions;
     }
 }
 
@@ -526,4 +559,5 @@ PivotUIPlugin.getters = [
     "getPivotDataSourceId",
     "getPivotTableStructure",
     "getPivotDomainArgsFromPosition",
+    "getPivotHighlights",
 ];

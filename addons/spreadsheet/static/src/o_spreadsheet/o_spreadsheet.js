@@ -44564,7 +44564,7 @@
             // rendering selection highlights
             const { ctx } = renderingContext;
             const sheetId = this.getters.getActiveSheetId();
-            const lineWidth = 3 * thinLineWidth;
+            const lineWidth = 2;
             ctx.lineWidth = lineWidth;
             /**
              * We only need to draw the highlights of the current sheet.
