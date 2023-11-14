@@ -267,3 +267,55 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 }).with_context(mail_notrack=True)
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
+
+    def test_notification_event_timezone(self):
+        """
+            Check the domain that decides when calendar events should be notified to the user.
+        """
+        def search_event():
+            return self.env['calendar.event'].search(self.env['res.users']._systray_get_calendar_event_domain())
+
+        self.env.user.tz = 'Europe/Brussels' # UTC +1 15th November 2023
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 15, 18, 0), # 19:00
+            'stop': datetime(2023, 11, 15, 19, 0),  # 20:00
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 18:30:00'):    # 19:30 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 19:00:00'):    # 20:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 19:30:00'):    # 20:30 after event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()
+
+        self.env.user.tz = 'America/Lima' # UTC -5 15th November 2023
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 16, 0, 0), # 19:00 15th November
+            'stop': datetime(2023, 11, 16, 1, 0),  # 20:00 15th November
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 23:30:00'):    # 18:30 before event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 00:00:00'):    # 19:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 00:30:00'):    # 19:30 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 01:00:00'):    # 20:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 01:30:00'):    # 20:30 after event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()
+
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 16, 21, 0), # 16:00 16th November
+            'stop': datetime(2023, 11, 16, 22, 0),  # 27:00 16th November
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()
