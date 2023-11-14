@@ -5,7 +5,7 @@
             <field name="implied_ids" eval="[Command.link(ref('survey.group_survey_user'))]"/>
             <field name="comment">It will also allow to send surveys and see the resume.</field>
         </record>
-        <record id="survey.survey_user_input_rule_survey_user_read" model="ir.rule">
+        <record id="survey.recruitment_survey_user_input_rule_survey_user_read" model="ir.rule">
             <field name="name">Survey user input: officer: read all non private survey answers</field>
             <field name="domain_force">[('applicant_id', '=', False)]</field>
         </record>
