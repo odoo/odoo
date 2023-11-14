@@ -1101,7 +1101,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         invoice.action_post()
 
         # Payment of 600 USD (equivalent to 1200 Gol in 2017).
-        # 600.0 USD should be computed correctly to fully paid the invoices.
+        # 600.0 USD are needed in 2017 to fully pay the invoice, but the wizard default value should still be 
+        # the old 400 USD. Remaining 200 USD will come with the exchange difference.
         wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({
@@ -1110,7 +1111,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             })
 
         self.assertRecordValues(wizard, [{
-            'amount': 600.0,
+            'amount': 400.0,
             'payment_difference': 0.0,
             'currency_id': self.company_data['currency'].id,
         }])
