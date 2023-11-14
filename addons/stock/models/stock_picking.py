@@ -533,7 +533,8 @@ class Picking(models.Model):
 
     @api.depends('state')
     def _compute_hide_picking_type(self):
-        self.hide_picking_type = self.state != "draft" and self.ids and 'default_picking_type_id' in self.env.context
+        for picking in self:
+            picking.hide_picking_type = picking.state != "draft" and picking.ids and 'default_picking_type_id' in picking.env.context
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
