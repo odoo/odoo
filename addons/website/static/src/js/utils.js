@@ -438,6 +438,29 @@ function getParsedDataFor(formId, parentEl) {
     );
 }
 
+/**
+ * Deep clones children or parses a string into elements, with or without
+ * <script> elements.
+ *
+ * @param {DocumentFragment|HTMLElement|String} content
+ * @param {Boolean} [keepScripts=false] - whether to keep script tags or not.
+ * @returns {DocumentFragment}
+ */
+export function cloneContentEls(content, keepScripts = false) {
+    let copyFragment;
+    if (typeof content === "string") {
+        copyFragment = new Range().createContextualFragment(content);
+    } else {
+        copyFragment = new DocumentFragment();
+        const els = [...content.children].map(el => el.cloneNode(true));
+        copyFragment.append(...els);
+    }
+    if (!keepScripts) {
+        copyFragment.querySelectorAll("script").forEach(scriptEl => scriptEl.remove());
+    }
+    return copyFragment;
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -452,4 +475,5 @@ export default {
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
     getParsedDataFor: getParsedDataFor,
+    cloneContentEls: cloneContentEls,
 };
