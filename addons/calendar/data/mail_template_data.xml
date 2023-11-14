@@ -74,7 +74,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -205,7 +205,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -312,7 +312,7 @@
                     </li>
                 </t>
                 <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                 </t>
                 <t t-if="not object.event_id.allday and object.event_id.duration">
                     <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
@@ -423,7 +423,7 @@
                             </li>
                         </t>
                         <t t-if="recurrent">
-                            <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                            <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
                         </t>
                         <t t-if="not object.allday and object.duration">
                             <li>Duration:
