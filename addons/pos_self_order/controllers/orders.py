@@ -20,7 +20,7 @@ class PosSelfOrderController(http.Controller):
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
 
         fiscal_position = (
-            pos_config.self_ordering_alternative_fp_id
+            pos_config.take_away_alternative_fp_id
             if is_take_away
             else pos_config.default_fiscal_position_id
         )
@@ -213,8 +213,8 @@ class PosSelfOrderController(http.Controller):
 
         fiscal_pos = pos_config.default_fiscal_position_id
 
-        if take_away and pos_config.self_ordering_alternative_fp_id:
-            fiscal_pos = pos_config.self_ordering_alternative_fp_id
+        if take_away and pos_config.take_away_alternative_fp_id:
+            fiscal_pos = pos_config.take_away_alternative_fp_id
 
         for line in lines:
             if line.get('uuid') in appended_uuid or not line.get('product_id'):

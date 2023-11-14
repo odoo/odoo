@@ -4,7 +4,7 @@
 from odoo import models, Command, api
 from odoo.tools import convert
 from itertools import groupby
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 import json
 
 class PosSession(models.Model):
@@ -34,6 +34,14 @@ class PosSession(models.Model):
                 ],
             },
         }
+
+    def _loader_params_account_fiscal_position(self):
+        params = super()._loader_params_account_fiscal_position()
+        params['search_params']['domain'] = OR([
+            params['search_params']['domain'],
+            [('id', '=', self.config_id.take_away_alternative_fp_id.id)]
+        ])
+        return params
 
     def _get_pos_ui_restaurant_floor(self, params):
         floors = self.env['restaurant.floor'].search_read(**params['search_params'])

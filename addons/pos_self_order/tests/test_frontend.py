@@ -32,9 +32,9 @@ class TestFrontendMobile(SelfOrderCommonTest):
         })
 
         self.pos_config.write({
+            'take_away': True,
             'self_ordering_mode': 'kiosk',
-            'self_ordering_takeaway': True,
-            'self_ordering_alternative_fp_id': alternative_fp.id,
+            'take_away_alternative_fp_id': alternative_fp.id,
         })
 
         self.pos_config.open_ui()

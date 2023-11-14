@@ -133,7 +133,7 @@ export class AttributeSelection extends Component {
     }
 
     _getPriceExtra(value) {
-        const isTakeAway = this.selfOrder.take_away;
+        const isTakeAway = this.selfOrder.currentOrder.take_away;
         const priceExtra = isTakeAway
             ? value.price_extra.display_price_default
             : value.price_extra.display_price_alternative;

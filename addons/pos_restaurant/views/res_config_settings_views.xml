@@ -35,6 +35,16 @@
                         </div>
                     </div>
                 </setting>
+                <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout." invisible="not pos_module_pos_restaurant">
+                    <field name="pos_take_away"/>
+                    <div class="content-group" invisible="not pos_take_away">
+                        <label string="" for="pos_take_away_alternative_fp_id" class="me-2"/>
+                        <field name="pos_take_away_alternative_fp_id" placeholder="Alternative Fiscal Position"/>
+                        <div>
+                            <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                        </div>
+                    </div>
+                </setting>
             </block>
             <div id="tip_product" position="after">
                 <div invisible="not pos_module_pos_restaurant or not pos_iface_tipproduct">
@@ -42,6 +52,9 @@
                     <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
                 </div>
             </div>
+            <setting id="flexible_taxes" position="attributes">
+                <attribute name="invisible">pos_module_pos_restaurant</attribute>
+            </setting>
         </field>
     </record>
 </odoo>

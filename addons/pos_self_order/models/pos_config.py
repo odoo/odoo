@@ -36,12 +36,6 @@ class PosConfig(models.Model):
         store=False,
     )
     self_ordering_url = fields.Char(compute="_compute_self_ordering_url")
-    self_ordering_takeaway = fields.Boolean("Takeaway")
-    self_ordering_alternative_fp_id = fields.Many2one(
-        'account.fiscal.position',
-        string='Alternative Fiscal Position',
-        help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
-    )
     self_ordering_mode = fields.Selection(
         [("nothing", "Disable"), ("consultation", "QR menu"), ("mobile", "QR menu + Ordering"), ("kiosk", "Kiosk")],
         string="Self Ordering Mode",
@@ -363,7 +357,6 @@ class PosConfig(models.Model):
                 "iface_start_categ_id": self.iface_start_categ_id.id,
                 "iface_tax_included": self.iface_tax_included == "total",
                 "self_ordering_mode": self.self_ordering_mode,
-                "self_ordering_takeaway": self.self_ordering_takeaway,
                 "self_ordering_service_mode": self.self_ordering_service_mode,
                 "self_ordering_default_language_id": default_language[0] if default_language else [],
                 "self_ordering_available_language_ids":  self.self_ordering_available_language_ids.read(["code", "display_name", "iso_code", "flag_image_url"]),
@@ -372,6 +365,7 @@ class PosConfig(models.Model):
                 "self_ordering_pay_after": self.self_ordering_pay_after,
                 "receipt_header": self.receipt_header,
                 "receipt_footer": self.receipt_footer,
+                "take_away": self.take_away,
             },
         }
 

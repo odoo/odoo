@@ -43,7 +43,6 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     table_stand_number = fields.Char(string="Table Stand Number")
-    take_away = fields.Boolean(string="Take Away", default=False)
 
     def _compute_tax_details(self):
         self.ensure_one()
@@ -66,17 +65,6 @@ class PosOrder(models.Model):
             merged_tax_details[tax_id]['amount'] += tax_obj['amount']
             merged_tax_details[tax_id]['base'] += tax_obj['base']
         return list(merged_tax_details.values())
-
-    @api.model
-    def create_from_ui(self, orders, draft=False):
-        for order in orders:
-            if order['data'].get('server_id'):
-                server_id = order['data'].get('server_id')
-                old_order = self.env['pos.order'].browse(server_id)
-                if old_order.take_away:
-                    order['data']['take_away'] = old_order.take_away
-
-        return super().create_from_ui(orders, draft)
 
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)

@@ -150,13 +150,13 @@ class ProductProduct(models.Model):
         display_price_alternative = price
 
         taxes_default = pos_config.default_fiscal_position_id.map_tax(self.taxes_id)
-        taxes_alternative = pos_config.self_ordering_alternative_fp_id.map_tax(self.taxes_id)
+        taxes_alternative = pos_config.take_away_alternative_fp_id.map_tax(self.taxes_id)
 
         price_unit_default = self._get_price_unit_after_fp(
             price, pos_config.currency_id, pos_config.default_fiscal_position_id
         )
         price_unit_alternative = self._get_price_unit_after_fp(
-            price, pos_config.currency_id, pos_config.self_ordering_alternative_fp_id
+            price, pos_config.currency_id, pos_config.take_away_alternative_fp_id
         )
 
         all_prices_default = taxes_default.compute_all(

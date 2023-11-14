@@ -10,7 +10,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
     def test_self_order_combo(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_takeaway': False,
+            'take_away': False,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',

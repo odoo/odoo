@@ -100,7 +100,7 @@ export class LandingPage extends Component {
         }
 
         if (
-            this.selfOrder.config.self_ordering_takeaway &&
+            this.selfOrder.config.take_away &&
             this.selfOrder.currentOrder.take_away === null &&
             this.selfOrder.ordering
         ) {

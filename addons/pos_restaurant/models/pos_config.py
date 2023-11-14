@@ -16,6 +16,12 @@ class PosConfig(models.Model):
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
     module_pos_restaurant_appointment = fields.Boolean("Table Booking")
+    take_away = fields.Boolean("Take Away")
+    take_away_alternative_fp_id = fields.Many2one(
+        'account.fiscal.position',
+        string='Alternative Fiscal Position',
+        help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
+    )
 
     def get_tables_order_count_and_printing_changes(self):
         self.ensure_one()

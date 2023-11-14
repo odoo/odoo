@@ -16,6 +16,7 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
+    take_away = fields.Boolean(string="Take Away", default=False)
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -81,12 +82,14 @@ class PosOrder(models.Model):
         order_fields = super(PosOrder, self)._order_fields(ui_order)
         order_fields['table_id'] = ui_order.get('table_id', False)
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
+        order_fields['take_away'] = ui_order.get('take_away', False)
         return order_fields
 
     def _export_for_ui(self, order):
         result = super(PosOrder, self)._export_for_ui(order)
         result['table_id'] = order.table_id.id
         result['customer_count'] = order.customer_count
+        result['take_away'] = order.take_away
         return result
 
     @api.model

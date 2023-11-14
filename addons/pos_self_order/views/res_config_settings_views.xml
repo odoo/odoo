@@ -59,16 +59,6 @@
                         <field name="pos_self_ordering_image_brand_name" invisible ="1"/>
                         <field name="pos_self_ordering_image_brand" class="w-100" filename="pos_self_ordering_image_brand_name"/>
                     </setting>
-                    <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout." invisible="not pos_self_ordering_mode in ['mobile', 'kiosk']">
-                        <field name="pos_self_ordering_takeaway"/>
-                        <div class="content-group" invisible="not pos_self_ordering_takeaway">
-                            <label string="" for="pos_self_ordering_alternative_fp_id" class="me-2"/>
-                            <field name="pos_self_ordering_alternative_fp_id" placeholder="Alternative Fiscal Position"/>
-                            <div>
-                                <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
-                            </div>
-                        </div>
-                    </setting>
                 </block>
             </block>
 

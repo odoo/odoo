@@ -20,6 +20,7 @@ patch(Order.prototype, {
         if (this.pos.config.module_pos_restaurant) {
             json.table_id = this.tableId;
             json.customer_count = this.customerCount;
+            json.take_away = this.take_away;
         }
 
         return json;
@@ -30,6 +31,7 @@ patch(Order.prototype, {
         if (this.pos.config.module_pos_restaurant) {
             this.tableId = json.table_id;
             this.customerCount = json.customer_count;
+            this.take_away = json.take_away;
         }
     },
     getCustomerCount() {

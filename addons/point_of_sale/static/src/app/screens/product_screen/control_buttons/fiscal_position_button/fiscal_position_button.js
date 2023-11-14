@@ -62,7 +62,7 @@ export class SetFiscalPositionButton extends Component {
 ProductScreen.addControlButton({
     component: SetFiscalPositionButton,
     condition: function () {
-        return this.pos.fiscal_positions.length > 0;
+        return this.pos.fiscal_positions.length > 0 && !this.pos.config.take_away;
     },
     position: ["before", "SetPricelistButton"],
 });

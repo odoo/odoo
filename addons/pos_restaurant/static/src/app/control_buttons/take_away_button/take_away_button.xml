@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TakeAwayButton">
+        <span t-attf-class="{{ currentOrder.take_away ? 'btn-primary' : 'btn-light'}} control-button order-split btn rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <i class="fa fa-car me-1"></i>
+            <span> </span>
+            <span>Take-away</span>
+        </span>
+    </t>
+
+</templates>
