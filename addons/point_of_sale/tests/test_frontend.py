@@ -91,9 +91,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         # Archive all existing product to avoid noise during the tours
         all_pos_product = env['product.product'].search([('available_in_pos', '=', True)])
-        discount = env.ref('point_of_sale.product_product_consumable')
         cls.tip = env.ref('point_of_sale.product_product_tip')
-        (all_pos_product - discount - cls.tip)._write({'active': False})
+        (all_pos_product - cls.tip)._write({'active': False})
 
         # In DESKS categ: Desk Pad
         pos_categ_desks = env.ref('point_of_sale.pos_category_desks')
@@ -334,13 +333,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
                 'product_id': cls.wall_shelf.id,
-            }), (0, 0, {
-                'compute_price': 'fixed',
-                'fixed_price': 2,
-                'applied_on': '0_product_variant',
-                'min_quantity': 2,
-                'product_id': env.ref('point_of_sale.product_product_consumable').id,
-            })],
+            }),
+            ],
         })
 
         env['product.pricelist'].create({
