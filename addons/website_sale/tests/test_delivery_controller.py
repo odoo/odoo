@@ -12,6 +12,7 @@ from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 
 
+
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
     def setUp(self):
@@ -72,7 +73,6 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
         self.env['delivery.carrier'].create([
             {
                 'name': 'Over 300',
-                'fixed_price': 20.0,
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
@@ -81,16 +81,32 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
                         'operator': '>=',
                         'max_value': 300,
                         'variable': 'price',
-                        'list_base_price': 0,
-                    })
-                ]
+                    }),
+                ],
             }, {
-                'name': 'No rules',
-                'fixed_price': 20.0,
+                'name': 'Under 300',
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
-            }
+                'price_rule_ids': [
+                    Command.create({
+                        'operator': '<',
+                        'max_value': 300,
+                        'variable': 'price',
+                    }),
+                ],
+            }, {
+                'name': 'No rules',
+                'delivery_type': 'base_on_rule',
+                'product_id': self.product_delivery_poste.id,
+                'website_published': True,
+            }, {
+                'name': 'Fixed',
+                'product_id': self.product_delivery_poste.id,
+                'website_published': True,
+            },
         ])
 
-        self.assertFalse(self.empty_order._get_delivery_methods())
+        self.assertEqual(
+            self.empty_order._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
+        )
