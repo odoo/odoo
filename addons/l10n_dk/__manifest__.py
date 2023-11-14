@@ -94,8 +94,8 @@ Produkt setup:
         'account',
     ],
     'data': [
-        'data/account_account_tags.xml',
         'data/account_tax_report_data.xml',
+        'data/account.account.tag.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
