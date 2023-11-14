@@ -17,6 +17,12 @@
 		<t t-else=""><t t-out="timesheet.so_line.display_name"/></t>
 	    </td>
         </xpath>
+        <xpath expr="//div[@name='allocated_time']" position="after">
+            <span t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger' or ''}}">
+                <div t-if="is_uom_day">Remaining Days on SO: <span t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/></div>
+                <div t-else="">Remaining Hours on SO: <span t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/></div>
+            </span>
+        </xpath>
     </template>
 
 </odoo>
