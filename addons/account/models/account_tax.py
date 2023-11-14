@@ -4,7 +4,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools import frozendict, groupby
+from odoo.tools import frozendict, groupby, split_every
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -183,24 +183,29 @@ class AccountTax(models.Model):
     is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
     repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
 
-    @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope')
+    @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope', 'country_id')
     def _constrains_name(self):
-        domains = []
-        for record in self:
-            if record.type_tax_use != 'none':
-                domains.append([
-                    ('company_id', 'child_of', record.company_id.root_id.id),
-                    ('name', '=', record.name),
-                    ('type_tax_use', '=', record.type_tax_use),
-                    ('tax_scope', '=', record.tax_scope),
-                    ('country_id', '=', record.country_id.id),
-                    ('id', '!=', record.id),
-                ])
-        if duplicates := self.search(expression.OR(domains)):
-            raise ValidationError(
-                _("Tax names must be unique!")
-                + "\n" + "\n".join(f"- {duplicate.name} in {duplicate.company_id.name}" for duplicate in duplicates)
-            )
+        for taxes in split_every(100, self.ids, self.browse):
+            domains = []
+            for tax in taxes:
+                if tax.type_tax_use != 'none':
+                    domains.append([
+                        ('company_id', 'child_of', tax.company_id.root_id.id),
+                        ('name', '=', tax.name),
+                        ('type_tax_use', '=', tax.type_tax_use),
+                        ('tax_scope', '=', tax.tax_scope),
+                        ('country_id', '=', tax.country_id.id),
+                        ('id', '!=', tax.id),
+                    ])
+            if duplicates := self.search(expression.OR(domains)):
+                raise ValidationError(
+                    _("Tax names must be unique!")
+                    + "\n" + "\n".join(_(
+                        "- %(name)s in %(company)s",
+                        name=duplicate.name,
+                        company=duplicate.company_id.name,
+                    ) for duplicate in duplicates)
+                )
 
     @api.constrains('tax_group_id')
     def validate_tax_group_id(self):
