@@ -670,12 +670,8 @@ QUnit.test("Unfollow message", async function () {
     const pyEnv = await startServer();
     const currentPartnerId = pyEnv.currentPartnerId;
     const [threadFollowedId, threadNotFollowedId] = pyEnv["res.partner"].create([
-        {
-            name: "Thread followed",
-        },
-        {
-            name: "Thread not followed",
-        },
+        { name: "Thread followed" },
+        { name: "Thread not followed" },
     ]);
     pyEnv["mail.followers"].create({
         partner_id: currentPartnerId,

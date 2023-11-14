@@ -49,14 +49,6 @@ export class Message extends Record {
             type,
         });
         assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
-        if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
-            this.originThread.selfFollower = {
-                followedThread: this.originThread,
-                id: data.user_follower_id,
-                is_active: true,
-                partner: this._store.self,
-            };
-        }
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
             const htmlBody = parser.parseFromString(this.body, "text/html");

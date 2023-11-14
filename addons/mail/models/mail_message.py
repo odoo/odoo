@@ -1130,7 +1130,13 @@ class Message(models.Model):
         for vals in messages_formatted:
             # set value for user being a follower, fallback to False if not prepared
             follower_id_by_pid = vals.pop('follower_id_by_partner_id', {})
-            vals['user_follower_id'] = follower_id_by_pid.get(partner_id, False)
+            follower_id = follower_id_by_pid.get(partner_id, False)
+            if follower_id:
+                vals['originThread']['selfFollower'] = {
+                    'id': follower_id,
+                    'is_active': True,
+                    'partner': {'id': partner_id, 'type': "partner"},
+                }
         return messages_formatted
 
     def _get_message_format_fields(self):

@@ -595,13 +595,14 @@ export class Record {
     /**
      * @template {keyof import("models").Models} M
      * @param {M} targetModel
-     * @param {Function} [compute] if set, the value of this relational field is declarative and
+     * @param {Object} [param1={}]
+     * @param {Function} [param1.compute] if set, the value of this relational field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
-     * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
-     * @param {(r: M) => void} [onAdd] function that is called when a record is added
+     * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
+     * @param {(r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(r: M) => void} [onDelete] function that is called when a record is removed
+     * @param {(r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M]}
      */
@@ -611,13 +612,14 @@ export class Record {
     /**
      * @template {keyof import("models").Models} M
      * @param {M} targetModel
-     * @param {Function} [compute] if set, the value of this relational field is declarative and
+     * @param {Object} [param1={}]
+     * @param {Function} [param1.compute] if set, the value of this relational field is declarative and
      *   is computed automatically. All reactive accesses recalls that function. The context of
      *   the function is the record. Returned value is new value assigned to this field.
-     * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
-     * @param {(r: M) => void} [onAdd] function that is called when a record is added
+     * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
+     * @param {(r: import("models").Models[M]) => void} [param1.onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(r: M) => void} [onDelete] function that is called when a record is removed
+     * @param {(r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M][]}
      */

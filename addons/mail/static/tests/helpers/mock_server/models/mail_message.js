@@ -360,7 +360,6 @@ patch(MockServer.prototype, {
     _mockMailMessageFormatPersonalize(ids) {
         const messages = this._mockMailMessageMessageFormat(ids);
         messages.forEach((message) => {
-            let user_follower_id = false;
             if (message.model && message.res_id) {
                 const follower = this.getRecords("mail.followers", [
                     ["res_model", "=", message.model],
@@ -368,10 +367,14 @@ patch(MockServer.prototype, {
                     ["partner_id", "=", this.pyEnv.currentPartnerId],
                 ]);
                 if (follower.length !== 0) {
-                    user_follower_id = follower[0].id;
+                    const follower_id = follower[0].id;
+                    message.originThread.selfFollower = {
+                        id: follower_id,
+                        is_active: true,
+                        partner: { id: this.pyEnv.currentPartnerId, type: "partner" },
+                    };
                 }
             }
-            message.user_follower_id = user_follower_id;
         });
         return messages;
     },

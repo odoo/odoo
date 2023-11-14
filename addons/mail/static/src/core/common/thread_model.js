@@ -83,6 +83,7 @@ export class Thread extends Record {
                 "seen_message_id",
                 "state",
                 "type",
+                "selfFollower",
                 "status",
                 "group_based_subscription",
                 "last_interest_dt",
@@ -176,7 +177,13 @@ export class Thread extends Record {
     /** @type {string} */
     description;
     followers = Record.many("Follower");
-    selfFollower = Record.one("Follower");
+    selfFollower = Record.one("Follower", {
+        /** @this {import("models").Thread} */
+        onAdd(r) {
+            r.followedThread = this;
+        },
+        onDelete: (r) => (r.followedThread = undefined),
+    });
     /** @type {integer|undefined} */
     followersCount;
     isAdmin = false;
