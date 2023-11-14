@@ -239,7 +239,7 @@
                     <!-- Header -->
                     <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 #{opt_events_list_columns and 'col-12' or 'col-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow-sm'}">
                         <!-- Image + Link -->
-                        <div class="d-block h-100 w-100">
+                        <div class="d-block h-100 w-100 o_not_editable">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="event"/>
                                 <!-- Short Date -->
