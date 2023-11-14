@@ -617,7 +617,7 @@ class StockQuant(models.Model):
         # Fetch the available packages and contents
         query = self._where_calc(domain)
         query_str, params = query.select('package_id', 'SUM(quantity - reserved_quantity) AS available_qty')
-        query_str += ' GROUP BY package_id ORDER BY available_qty DESC'
+        query_str += ' GROUP BY package_id HAVING SUM(quantity - reserved_quantity) > 0 ORDER BY available_qty DESC'
         self._cr.execute(query_str, params)
         qty_by_package = self._cr.fetchall()
 
