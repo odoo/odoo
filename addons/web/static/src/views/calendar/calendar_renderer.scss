@@ -9,6 +9,14 @@
         border-top: 1px solid var(--o-cw-border-color);
     }
 
+    .fc-bg .fc-day {
+        background-color: rgba(var(--o-cw-day-bg, initial), var(--o-bg-opacity, .5));
+
+        &.fc-today:not(.o_calendar_disabled) {
+            --o-cw-day-bg: #{$o-view-background-color};
+        }
+    }
+
     .o_event {
         // `web/lib/fullcalendar/core/main.css` gives events with links and draggable events a hand mouse pointer,
         // but doesn't take into account that events have popovers.
@@ -22,100 +30,6 @@
 
         &, &:hover {
             color: $body-color;
-        }
-
-        &:not(.o_event_dot) {
-            --o-overlay-opacity: .5;
-
-            border-color: var(--o-event-bg--subtle, #{$info});
-
-            &:hover .fc-bg {
-                --o-bg-opacity: 1;
-            }
-
-            &:not(.fc-dragging).o_cw_custom_highlight {
-                box-shadow: 0px 8px 8px -7px rgba(0, 0, 0, 0.2);
-                z-index: 2; // for the shadow to go over the events below
-            }
-
-            &.o_event_hatched, &.o_attendee_status_tentative {
-                --o-bg-opacity: .5;
-
-                &.fc-bgevent, .fc-bg {
-                    background: repeating-linear-gradient(
-                        45deg,
-                        RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3),
-                        RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .3) 10px,
-                        RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 10px,
-                        RGBA(var(--o-event-bg-rgb, #{to-rgb($info)}), .6) 20px
-                    ) !important;
-                }
-            }
-
-            &.fc-bgevent, .fc-bg {
-                background-color: var(--o-event-bg--subtle, #{$info});
-                opacity: var(--o-bg-opacity, .5);
-            }
-
-            &.fc-bgevent {
-                border-radius: $border-radius;
-
-                &.o_event_striked {
-                    background: linear-gradient(
-                        transparent 0 45%,
-                        var(--o-event-bg, #{$info}) 45% 55%,
-                        transparent 55% 100%);
-                }
-            }
-        }
-
-        &.o_event_dot {
-            --o-overlay-opacity: .25;
-
-            display: flex;
-            align-items: center;
-            gap: map-get($spacers, 1 );
-            border: none;
-            padding: 0 map-get($spacers, 1);
-            background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
-
-            @include media-breakpoint-down(md) {
-                margin: 0;
-            }
-
-            @include media-breakpoint-up(md) {
-                padding: 0 map-get($spacers, 1);
-            }
-
-            &:before {
-                content: var(--o-event-dot-icon, '\f111'); // fa-circle
-                z-index: 2;
-                display: inline-block;
-                font-family: Fontawesome;
-                color: var(--o-event-bg, #{$info});
-
-                @include media-breakpoint-down(md) {
-                    font-size: $o-font-size-base-smaller / 2;
-                }
-            }
-
-            &:hover {
-                --o-bg-opacity: .5;
-            }
-
-            &.o_event_hatched {
-                --o-event-dot-icon: '\f1db'; // fa-circle-thin
-            }
-
-            &.o_event_striked {
-                --o-event-dot-icon: '\f1db'; // fa-circle-thin
-            }
-        }
-
-        &.o_event_striked, &.o_attendee_status_declined {
-            .fc-content {
-                text-decoration: line-through;
-            }
         }
 
         &.fc-mirror, &.fc-dragging {
@@ -141,6 +55,11 @@
             display: block;
             z-index: 3;
             background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
+        }
+
+        &:not(.o_event_dot):not(.fc-dragging).o_cw_custom_highlight {
+            box-shadow: 0px 8px 8px -7px rgba(0, 0, 0, 0.2);
+            z-index: 2; // for the shadow to go over the events below
         }
 
         .fc-bg {
@@ -280,6 +199,7 @@
 
                 &.fc-today {
                     color: $primary;
+
                     .o_cw_day_number {
                         color: $o-view-background-color;
 
@@ -657,6 +577,107 @@
     }
 }
 
+//=== Event colors and styles ===//
+// Defined outside `.o_calendar_renderer` for popovers
+
+.o_event {
+
+    &, &:hover {
+        color: $body-color;
+    }
+
+    &:not(.o_event_dot) {
+        --o-overlay-opacity: .5;
+
+        border-color: var(--o-event-bg--subtle, #{$info});
+
+        &:hover {
+            --o-bg-opacity: .75;
+        }
+
+        &:not(.fc-dragging).o_cw_custom_highlight {
+            box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
+            z-index: 2; // for the shadow to go over the events below
+        }
+
+        &.o_event_hatched, &.o_attendee_status_tentative {
+            &.fc-bgevent, .fc-bg {
+                background: repeating-linear-gradient(
+                    45deg,
+                    RGBA(var(--o-event-bg--subtle-rgb, #{to-rgb($info)}), .5),
+                    RGBA(var(--o-event-bg--subtle-rgb, #{to-rgb($info)}), .5) 10px,
+                    RGBA(var(--o-event-bg--subtle-rgb, #{to-rgb($info)}), 1) 10px,
+                    RGBA(var(--o-event-bg--subtle-rgb, #{to-rgb($info)}), 1) 20px
+                ) !important;
+            }
+        }
+
+        .fc-bg, &.fc-bgevent {
+            background-color: rgba(var(--o-event-bg--subtle-rgb, #{to-rgb($info)}), var(--o-bg-opacity, 1));
+        }
+
+        &.fc-bgevent.o_event_striked {
+            background: linear-gradient(
+                transparent 0 45%,
+                var(--o-event-bg, #{$info}) 45% 55%,
+                transparent 55% 100%);
+        }
+    }
+
+    &.o_event_dot {
+        --o-overlay-opacity: .25;
+
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        border: none;
+        padding: 0 map-get($spacers, 1);
+        background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
+
+        @include media-breakpoint-down(md) {
+            margin: 0;
+        }
+
+        @include media-breakpoint-up(md) {
+            padding: 0 map-get($spacers, 1);
+        }
+
+        &:before {
+            content: var(--o-event-dot-icon, '\f111'); // fa-circle
+            z-index: 2;
+            display: inline-block;
+            font-family: Fontawesome;
+            color: var(--o-event-bg, #{$info});
+
+            @include media-breakpoint-down(md) {
+                font-size: $o-font-size-base-smaller / 2;
+            }
+        }
+
+        &:hover {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_event_hatched {
+            --o-event-dot-icon: '\f1db'; // fa-circle-thin
+        }
+
+        &.o_event_striked {
+            --o-event-dot-icon: '\f1db'; // fa-circle-thin
+        }
+    }
+
+    &.fc-bgevent {
+        border-radius: $border-radius;
+        opacity: 1;
+    }
+
+    &.o_event_striked {
+        .fc-content {
+            text-decoration: line-through;
+        }
+    }
+}
 
 // ===============  Generate color classes ===============
 @for $-i from 1 through length($o-colors-complete) {
@@ -664,11 +685,13 @@
     $-color-subtle: mix($o-white, $-color, 55%);
     $-filter-border-color: shade-color($-color, 20%);
 
-    .o_calendar_renderer .o_event.o_calendar_color_#{$-i - 1} {
-        --o-event-bg: #{$-color};
-        --o-event-bg-rgb: #{to-rgb($-color)};
-        --o-event-bg--subtle: #{$-color-subtle};
-        --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
+    .o_calendar_renderer, .o_cw_popover {
+        .o_event.o_calendar_color_#{$-i - 1} {
+            --o-event-bg: #{$-color};
+            --o-event-bg-rgb: #{to-rgb($-color)};
+            --o-event-bg--subtle: #{$-color-subtle};
+            --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
+        }
     }
 
     .o_cw_filter_color_#{$-i - 1} {

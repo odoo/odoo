@@ -24,7 +24,7 @@
     }
 }
 
-.o_calendar_renderer .o_event {
+.o_event {
     &:not(.o_event_dot) {
         &.o_attendee_status_active {
             --o-bg-opacity: 1;
@@ -38,6 +38,7 @@
 
         &.o_attendee_status_declined {
             --o-bg-opacity: 0;
+            text-decoration: line-through;
         }
     }
 

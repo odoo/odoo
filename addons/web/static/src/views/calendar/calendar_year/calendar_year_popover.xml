@@ -57,7 +57,7 @@
             href="#"
             t-on-click.prevent="() => this.onRecordClick(record)"
             t-attf-style="{{ getRecordStyle(record) }}"
-            t-attf-class="o_cw_popover_link d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
+            t-attf-class="o_cw_popover_link o_event fc-bgevent d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}} {{record.isHatched ? 'o_event_hatched' : record.isStriked ? 'o_event_striked' : '' }}"
             t-att-data-id="record.id"
             t-att-data-title="record.title"
         >
