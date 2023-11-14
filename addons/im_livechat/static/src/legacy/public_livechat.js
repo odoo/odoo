@@ -90,7 +90,14 @@ var LivechatButton = Widget.extend({
                     self._history = history;
                 });
         }
-        return ready.then(this._loadQWebTemplate.bind(this));
+        session.user_context = {};
+        return ready
+            .then(this._loadQWebTemplate.bind(this))
+            .then(() => {
+                if (!session.is_frontend) {
+                    return session.load_translations(["im_livechat"]);
+                }
+            });
     },
     start: function () {
         this.$el.text(this.options.button_text);
