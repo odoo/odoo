@@ -17,14 +17,14 @@ export class MessageInReply extends Component {
 
     get authorAvatarUrl() {
         if (
-            this.message.type &&
-            this.message.type.includes("email") &&
+            this.props.message.type &&
+            this.props.message.type.includes("email") &&
             !["partner", "guest"].includes(this.props.message.author?.type)
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
         return this.threadService.avatarUrl(
-            this.message.parentMessage.author,
+            this.props.message.parentMessage.author,
             this.props.message.parentMessage.originThread
         );
     }
