@@ -13,6 +13,11 @@
                         string="Cancel PEPPOL"
                         invisible="peppol_move_state != 'to_send' or state == 'draft'"/>
             </header>
+            <header position="after">
+                <div class="alert alert-info mb-0" role="alert" invisible="not peppol_warning">
+                    <field name="peppol_warning" nolabel="1"/>
+                </div>
+            </header>
 
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="peppol_move_state"
