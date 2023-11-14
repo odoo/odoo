@@ -29,8 +29,8 @@
 
     <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
-            <div t-if="dragState.showDragZone" class="o_dropzone">
-                <i class="fa fa-upload fa-10x"></i>
+            <div t-if="dragState.showDragZone" class="o_dropzone position-absolute top-0 start-0 w-100 h-100 bg-300 bg-opacity-75">
+                <i class="fa fa-upload fa-10x d-flex justify-content-center align-items-center h-100"></i>
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
