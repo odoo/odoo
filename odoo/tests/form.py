@@ -407,15 +407,20 @@ class Form:
         :raises AssertionError: if the form has any unfilled required field
         """
         values = self._get_save_values()
-        if self._record:
-            if values:
-                self._record.write(values)
-        else:
-            object.__setattr__(self, '_record', self._record.create(values))
-        # reload the record
-        self._init_from_record()
-        self._env.flush_all()
-        self._env.clear()  # discard cache and pending recomputations
+        if not self._record or values:
+            # save and reload
+            [record_values] = self._record.web_save(values, self._view['fields_spec'])
+            self._env.flush_all()
+            self._env.clear()  # discard cache and pending recomputations
+
+            if not self._record:
+                record = self._record.browse(record_values['id'])
+                object.__setattr__(self, '_record', record)
+
+            values = convert_read_to_form(record_values, self._view['fields'])
+            self._values.clear()
+            self._values.update(values)
+
         return self._record
 
     @property
