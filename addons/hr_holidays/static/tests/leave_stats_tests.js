@@ -135,7 +135,7 @@ QUnit.test("leave stats renders correctly", async (assert) => {
     assert.containsOnce($leaveTypeBody, "span:contains(6)");
     assert.containsN($leavesDepartmentBody, "span:contains(Richard)", 2);
     assert.containsOnce($leavesDepartmentBody, "span:contains(Jesus)");
-    assert.containsOnce($leavesDepartmentBody, "div.o_horizontal_separator:contains(R&D)");
+    assert.containsOnce($leavesDepartmentBody, "h3.o_hr_leave_subtitle.border-bottom:contains(R&D)");
 });
 
 QUnit.test("leave stats reload when employee/department changes", async (assert) => {

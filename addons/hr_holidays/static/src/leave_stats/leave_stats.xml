@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats">
+    <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats mb-3">
         <t t-if="state.multi_employee or state.holiday_type == 'company' or state.holiday_type ==  'category'" id="o_leave_stats_multi_employee">
             <div class="fst-italic">
                 Information for multiple employees cannot be displayed
             </div>
         </t>
         <div t-elif="state.employee" id="o_leave_stats_employee">
-            <div class="o_hr_leave_subtitle">
+            <h3 class="o_hr_leave_subtitle">
                 <t t-esc="state.employee[1]"/> in <t t-esc="thisYear"/>
-            </div>
+            </h3>
             <div t-if="state.leaves.length === 0">
                 None
             </div>
@@ -18,14 +18,14 @@
                 <span><t t-esc="leave.number_of_days"/> day(s)</span>
             </div>
         </div>
-        <div t-if="state.department" id="o_leave_stats_department">
-            <div class="o_horizontal_separator o_hr_leave_subtitle">
+        <div t-if="state.department" id="o_leave_stats_department" class="mt-3">
+            <h3 class="o_hr_leave_subtitle border-bottom pb-1">
                 <t t-esc="state.department[1]"/>
-            </div>
+            </h3>
             <div t-if="state.departmentLeaves.length === 0">
                 None
             </div>
-            <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave_index" t-attf-class="d-flex flex-row justify-content-between {{leave.sameEmployee ? 'fw-bold': ''}}">
+            <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave_index" t-attf-class="d-flex flex-row justify-content-between mb-1 {{leave.sameEmployee ? 'fw-bolder': ''}}">
                 <span><t t-esc="leave.employee_id[1]"/>: <t t-esc="leave.number_of_days"/> day(s)</span>
                 <span><t t-esc="leave.dateFrom"/> - <t t-esc="leave.dateTo"/></span>
             </div>
