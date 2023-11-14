@@ -137,6 +137,9 @@
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.share.xml',
+            # Stable fix, will be replaced by an `ir.asset` in master to be able
+            # to clean `<script>` tags in embed code snippets in edit mode.
+            'website/static/src/snippets/s_embed_code/000.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
