@@ -2003,7 +2003,6 @@ class IrModelAccess(models.Model):
 
         assert isinstance(model, str), 'Not a model name: %s' % (model,)
 
-        # TransientModel records have no access rights, only an implicit access rule
         if model not in self.env:
             _logger.error('Missing model %s', model)
 
