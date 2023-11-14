@@ -96,22 +96,19 @@ class WebsiteSale(main.WebsiteSale):
         if not reward_sudo or reward_sudo.multi_product:
             return request.redirect(redirect)
 
+        program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
         coupon = request.env['loyalty.card']
         for coupon_, rewards in claimable_rewards.items():
             if reward_sudo in rewards:
                 coupon = coupon_
-
-        if not coupon:
-            return request.redirect(redirect)
-        program_sudo = reward_sudo.program_id
-        if code == coupon.code and (
-            program_sudo.trigger == 'with_code'
-            or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
-        ):
-            return self.pricelist(code)
-
-        self._apply_reward(order_sudo, reward_sudo, coupon)
+                if code == coupon.code and (
+                    program_sudo.trigger == 'with_code'
+                    or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
+                ):
+                    return self.pricelist(code)
+        if coupon:
+            self._apply_reward(order_sudo, reward_sudo, coupon)
         return request.redirect(redirect)
 
     def _apply_reward(self, order, reward, coupon):
