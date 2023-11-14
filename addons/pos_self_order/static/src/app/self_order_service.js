@@ -220,10 +220,10 @@ export class SelfOrder extends Reactive {
         window.addEventListener("click", (event) => {
             this.idleTimout && clearTimeout(this.idleTimout);
             this.idleTimout = setTimeout(() => {
-                if (this.router.activeSlot !== "payment") {
+                if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
                     this.router.navigate("default");
                 }
-            }, 5 * 1000 * 60);
+            }, 40 * 1000);
         });
     }
 
