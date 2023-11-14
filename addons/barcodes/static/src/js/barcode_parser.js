@@ -220,7 +220,7 @@ var BarcodeParser = Class.extend({
             } else if (rule.encoding === 'upca' &&
                     this.check_encoding(barcode,'ean13') &&
                     barcode[0] === '0' &&
-                    this.upc_ean_conv in {'ean2upc':'','always':''} ){
+                    this.nomenclature.upc_ean_conv in {'ean2upc':'','always':''} ){
                 cur_barcode = cur_barcode.substr(1,12);
             }
 
