@@ -3182,6 +3182,52 @@ class TestHtmlField(common.TransactionCase):
         self.assertEqual(record.comment5, '',
                          "should be sanitized (not in groups)")
 
+    @patch('odoo.fields.html_sanitize', return_value='<p>comment</p>')
+    def test_onchange_sanitize(self, patch):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment2.sanitize)
+
+        record = self.env['test_new_api.mixed'].create({
+            'comment2': '<p>comment</p>',
+        })
+
+        # in a perfect world this should be 1, but at the moment the value is
+        # sanitized more than once during creation of the record
+        self.assertEqual(patch.call_count, 3)
+
+        # new value needs to be validated, so it is sanitized once more
+        record.comment2 = '<p>comment</p>'
+        self.assertEqual(patch.call_count, 4)
+
+        # the value is already sanitized for flushing
+        record.flush_recordset()
+        self.assertEqual(patch.call_count, 4)
+
+        # value coming from db does not need to be sanitized
+        record.invalidate_recordset()
+        record.comment2
+        self.assertEqual(patch.call_count, 4)
+
+        # value coming from db during an onchange does not need to be sanitized
+        new_record = record.new(origin=record)
+        new_record.comment2
+        self.assertEqual(patch.call_count, 4)
+
+    def test_read_sanitize_overridable(self):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment5.sanitize_overridable)
+
+        internal_user = self.env['res.users'].create({
+            'name': 'test internal user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        record = self.env['test_new_api.mixed'].with_user(internal_user).create({
+            'comment5': '<p>comment</p>',
+        })
+        self.assertEqual(record.comment5, '<p>comment</p>')
+        new_record = record.new(origin=record)
+        # this field access was causing an infinite loop in HTML sanitization
+        self.assertEqual(new_record.comment5, '<p>comment</p>')
+
 
 class TestMagicFields(common.TransactionCase):
 
