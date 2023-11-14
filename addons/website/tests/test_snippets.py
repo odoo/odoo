@@ -74,3 +74,6 @@ class TestSnippets(HttpCase):
 
     def test_08_parallax(self):
         self.start_tour('/', 'test_parallax', login='admin')
+
+    def test_drag_and_drop_on_non_editable(self):
+        self.start_tour('/', 'test_drag_and_drop_on_non_editable', login='admin')
