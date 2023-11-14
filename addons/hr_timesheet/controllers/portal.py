@@ -57,6 +57,8 @@ class TimesheetCustomerPortal(CustomerPortal):
             search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
         if search_in in ('task', 'all'):
             search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+        if search_in == 'parent_task_id':
+            search_domain = OR([search_domain, [('parent_task_id', '=', int(search))]])
         return search_domain
 
     def _get_groupby_mapping(self):
@@ -122,7 +124,8 @@ class TimesheetCustomerPortal(CustomerPortal):
             filterby = 'all'
         domain = AND([domain, searchbar_filters[filterby]['domain']])
 
-        if search and search_in:
+        if search:
+            search_in = search_in or 'all' # search_in could be '' and we want the 'all' filter in this case
             domain += self._get_search_domain(search_in, search)
 
         timesheet_count = Timesheet_sudo.search_count(domain)
@@ -169,7 +172,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'search_in': search_in,
-            'search': search,
+            'search': '' if search_in == 'parent_task_id' else search,
             'sortby': sortby,
             'groupby': groupby,
             'searchbar_inputs': searchbar_inputs,
