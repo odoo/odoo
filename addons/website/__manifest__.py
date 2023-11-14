@@ -134,6 +134,9 @@
             # to archive and not load that JS file if we have to create a 001.js
             # and the DB has no snippet using the 000.js left.
             'website/static/src/snippets/s_map/000.js',
+            # Stable fix, will be replaced by an `ir.asset` in master to be able
+            # to clean `<script>` tags in embed code snippets in edit mode.
+            'website/static/src/snippets/s_embed_code/000.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
