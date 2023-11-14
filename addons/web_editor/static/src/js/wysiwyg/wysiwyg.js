@@ -474,6 +474,10 @@ export class Wysiwyg extends Component {
         this.odooEditor.addEventListener('contentChanged', function () {
             self.$editable.trigger('content_changed');
         });
+        this.odooEditor.addEventListener('historyStep', () => {
+            // Flag to know if the user has made at least one change.
+            this.didUserMakeChanges = true;
+        });
         document.addEventListener("mousemove", this._signalOnline, true);
         document.addEventListener("keydown", this._signalOnline, true);
         document.addEventListener("keyup", this._signalOnline, true);
@@ -3281,11 +3285,13 @@ export class Wysiwyg extends Component {
         if (!this._isCollaborationEnabled(this.options)) {
             this._currentClientId = undefined;
             this.resetValue(value);
+            this.didUserMakeChanges = false;
             return;
         }
         this._currentClientId = this._generateClientId();
         this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.resetValue(value);
+        this.didUserMakeChanges = false;
         this.setupCollaboration(collaborationChannel);
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();

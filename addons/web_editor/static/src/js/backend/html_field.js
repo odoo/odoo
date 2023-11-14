@@ -411,6 +411,9 @@ export class HtmlField extends Component {
         this.Wysiwyg = wysiwygModule.Wysiwyg;
     }
     _isDirty() {
+        if (!this._getCodeViewEl() && !this.wysiwyg?.didUserMakeChanges) {
+            return false;
+        }
         const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
         const domParser = new DOMParser();
