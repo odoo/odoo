@@ -1,13 +1,13 @@
 /** @odoo-module **/
 // TODO: avoid empty keys when not necessary to reduce request size
 export function serializeNode(node, nodesToStripFromChildren = new Set()) {
-    let result = {
-        nodeType: node.nodeType,
-        oid: node.oid,
-    };
     if (!node.oid) {
         return;
     }
+    const result = {
+        nodeType: node.nodeType,
+        oid: node.oid,
+    };
     if (node.nodeType === Node.TEXT_NODE) {
         result.textValue = node.nodeValue;
     } else if (node.nodeType === Node.ELEMENT_NODE) {
