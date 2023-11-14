@@ -98,6 +98,7 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
+<<<<<<< HEAD
         codes_issuer_is_supplier = [
             '23', '24', '25', '26', '27', '28', '33', '43', '45', '46', '48', '58', '60', '61', '150', '151', '157',
             '158', '161', '162', '164', '166', '167', '171', '172', '180', '182', '186', '188', '332']
@@ -110,11 +111,33 @@ class AccountJournal(models.Model):
         elif self.type == 'purchase':
             return [('code', 'not in', codes_issuer_is_supplier)]
         elif afip_pos_system == 'II_IM':
+||||||| parent of cc885f6a3612 (temp)
+        if afip_pos_system == 'II_IM':
+=======
+        zeta_codes = ['80', '83']
+        if afip_pos_system == 'II_IM':
+>>>>>>> cc885f6a3612 (temp)
             # pre-printed invoice
+<<<<<<< HEAD
             codes = usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
         elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+||||||| parent of cc885f6a3612 (temp)
+            return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
+        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+=======
+            return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
+        elif afip_pos_system == 'RAW_MAW':
+>>>>>>> cc885f6a3612 (temp)
             # electronic/online invoice
+<<<<<<< HEAD
             codes = usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+||||||| parent of cc885f6a3612 (temp)
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+=======
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+        elif afip_pos_system == 'RLI_RLM':
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + zeta_codes
+>>>>>>> cc885f6a3612 (temp)
         elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             codes = usual_codes + invoice_m_code
