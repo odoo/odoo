@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { Component, useState, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { Reactive } from "@web/core/utils/reactive";
 import { TourCompiler, findStepTriggers } from "@web_tour/tour_service/tour_compilers";
 import { patch } from "@web/core/utils/patch";
@@ -262,7 +262,7 @@ const tourInteractionService = {
         const interactiveState = new InteractiveState();
         overlay.add(TourInteraction, { interactiveState });
 
-        patch(TourCompiler.prototype, "TourInteractionCompiler", {
+        patch(TourCompiler.prototype, {
             setup() {
                 this.options = { ...this.options };
                 this.interactiveTour = interactiveState.getTour(this.tour.name);
@@ -299,7 +299,7 @@ const tourInteractionService = {
             },
 
             compileTourToMacro() {
-                const macro = this._super(...arguments);
+                const macro = super.compileTourToMacro(...arguments);
                 macro.steps.unshift({
                     action: () => {
                         return this.interactiveTour.suspend("start");

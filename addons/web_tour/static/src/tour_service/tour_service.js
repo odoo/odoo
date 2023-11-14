@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { TourPointerContainer } from "./tour_pointer_container";
 import { TourCompiler } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
