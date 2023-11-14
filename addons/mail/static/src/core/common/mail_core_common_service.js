@@ -55,13 +55,14 @@ export class MailCoreCommon {
                 const { message_ids: messageIds, starred } = payload;
                 for (const messageId of messageIds) {
                     const message = this.store.Message.insert({ id: messageId });
-                    message.isStarred = starred;
                     const starredBox = this.store.discuss.starred;
                     if (starred) {
                         starredBox.counter++;
+                        message.starredPersonas.add(this.store.self);
                         starredBox.messages.add(message);
                     } else {
                         starredBox.counter--;
+                        message.starredPersonas.delete(this.store.self);
                         starredBox.messages.delete(message);
                     }
                 }

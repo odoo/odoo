@@ -1052,6 +1052,7 @@ class Message(models.Model):
             notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
             vals.update({
                 'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
+                'starredPersonas': [{'id': id, 'type': "partner"} for id in message_sudo.starred_partner_ids.ids],
                 'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
@@ -1144,7 +1145,6 @@ class Message(models.Model):
             'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related FIXME need to be kept for mobile app as iOS app cannot be updated
-            'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]
 
     def _message_notification_format(self):

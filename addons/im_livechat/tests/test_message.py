@@ -96,7 +96,7 @@ class TestImLivechatMessage(HttpCase):
             'res_id': channel_livechat_1.id,
             'scheduledDatetime': False,
             'sms_ids': [],
-            'starred_partner_ids': [],
+            'starredPersonas': [],
             'subject': False,
             'subtype_description': False,
             'subtype_id': (self.env.ref('mail.mt_note').id, 'Note'),

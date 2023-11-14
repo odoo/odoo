@@ -21,7 +21,7 @@ export class Message extends Record {
         const message = super.new(data);
         onChange(message, "isEmpty", () => {
             if (message.isEmpty && message.isStarred) {
-                message.isStarred = false;
+                message.starredPersonas.delete(this.store.self);
                 const starred = this.store.discuss.starred;
                 starred.counter--;
                 starred.messages.delete(message);
@@ -42,12 +42,7 @@ export class Message extends Record {
     update(data) {
         const { message_type: type = this.type, ...remainingData } = data;
         assignDefined(this, remainingData);
-        assignDefined(this, {
-            isStarred: this._store.user
-                ? this.starred_partner_ids.includes(this._store.user.id)
-                : false,
-            type,
-        });
+        assignDefined(this, { type });
         assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
@@ -69,8 +64,6 @@ export class Message extends Record {
     /** @type {boolean} */
     is_note;
     /** @type {boolean} */
-    isStarred;
-    /** @type {boolean} */
     is_transient;
     linkPreviews = Record.many("LinkPreview", { inverse: "message" });
     /** @type {number[]} */
@@ -84,8 +77,7 @@ export class Message extends Record {
     originThread = Record.one("Thread");
     /** @type {string} */
     scheduledDatetime;
-    /** @type {Number[]} */
-    starred_partner_ids = [];
+    starredPersonas = Record.many("Persona");
     /** @type {string} */
     subject;
     /** @type {string} */
@@ -163,6 +155,10 @@ export class Message extends Record {
             return false;
         }
         return this.author.eq(this._store.self);
+    }
+
+    get isStarred() {
+        return this._store.self.in(this.starredPersonas);
     }
 
     get isNeedaction() {
