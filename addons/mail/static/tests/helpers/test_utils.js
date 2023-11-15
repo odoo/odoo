@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { timings } from "@bus/misc";
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
@@ -371,6 +372,10 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  */
 async function start(param0 = {}) {
     const { discuss = {}, hasTimeControl } = param0;
+    patchWithCleanup(timings, {
+        // make throttle instantaneous during tests
+        throttle: (func) => func,
+    });
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     let target = param0["target"] || getFixture();
     if (param0.asTab) {
