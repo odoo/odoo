@@ -60,9 +60,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         wysiwygReady: { type: Function },
         editableElements: { type: true, optional: true },
         savableSelector: { type: String, optional: true },
-        beforeEditorActive: { type: Boolean, optional: true },
+        beforeEditorActive: { type: Function, optional: true },
         removeWelcomeMessage: { type: Function },
-    }
+    };
     /**
      * @override
      */
