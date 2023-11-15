@@ -353,7 +353,12 @@ export class Thread extends Component {
         if (this.props.thread.model === "mail.box") {
             return false;
         }
-        if (!prevMsg || prevMsg.type === "notification" || prevMsg.isEmpty || this.env.inChatter) {
+        if (
+            !prevMsg ||
+            prevMsg.message_type === "notification" ||
+            prevMsg.isEmpty ||
+            this.env.inChatter
+        ) {
             return false;
         }
 

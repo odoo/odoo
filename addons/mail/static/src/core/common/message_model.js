@@ -40,9 +40,7 @@ export class Message extends Record {
 
     /** @param {Object} data */
     update(data) {
-        const { message_type: type = this.type, ...remainingData } = data;
-        assignDefined(this, remainingData);
-        assignDefined(this, { type });
+        assignDefined(this, data);
         assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
@@ -91,7 +89,7 @@ export class Message extends Record {
     /** @type {string|undefined} */
     translationErrors;
     /** @type {string} */
-    type;
+    message_type;
     /** @type {string} */
     temporary_id = null;
     /** @type {string|undefined} */
@@ -107,14 +105,11 @@ export class Message extends Record {
      */
     now = DateTime.now().set({ milliseconds: 0 });
 
-    /**
-     * @returns {boolean}
-     */
     get editable() {
         if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
             return false;
         }
-        return this.type === "comment";
+        return this.message_type === "comment";
     }
 
     get dateDay() {
@@ -169,18 +164,14 @@ export class Message extends Record {
         return !this.is_transient;
     }
 
-    /**
-     * @returns {boolean}
-     */
     get isHistory() {
         return this.history_partner_ids.includes(this._store.user?.id);
     }
 
-    /**
-     * @returns {boolean}
-     */
     get isNotification() {
-        return this.type === "notification" && this.originThread?.model === "discuss.channel";
+        return (
+            this.message_type === "notification" && this.originThread?.model === "discuss.channel"
+        );
     }
 
     get isSubjectSimilarToOriginThreadName() {

@@ -217,8 +217,8 @@ export class Message extends Component {
 
     get authorAvatarUrl() {
         if (
-            this.message.type &&
-            this.message.type.includes("email") &&
+            this.message.message_type &&
+            this.message.message_type.includes("email") &&
             !["partner", "guest"].includes(this.message.author?.type)
         ) {
             return url("/mail/static/src/img/email_icon.png");
@@ -247,13 +247,16 @@ export class Message extends Component {
     }
 
     get messageTypeText() {
-        if (this.props.message.type === "notification") {
+        if (this.props.message.message_type === "notification") {
             return _t("System notification");
         }
-        if (this.props.message.type === "auto_comment") {
+        if (this.props.message.message_type === "auto_comment") {
             return _t("Automated message");
         }
-        if (!this.props.message.is_discussion && this.props.message.type !== "user_notification") {
+        if (
+            !this.props.message.is_discussion &&
+            this.props.message.message_type !== "user_notification"
+        ) {
             return _t("Note");
         }
         return _t("Message");
