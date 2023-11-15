@@ -728,7 +728,7 @@ class StockQuant(models.Model):
         elif removal_strategy == 'lifo':
             return domain, 'in_date DESC, id DESC'
         elif removal_strategy == 'closest':
-            return domain, 'location_id ASC, id DESC'
+            return domain, False
         elif removal_strategy == 'least_packages':
             if qty > 0:
                 return self._run_least_packages_removal_strategy_astar(domain, qty), 'in_date ASC, id'
@@ -775,6 +775,8 @@ class StockQuant(models.Model):
             res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
         else:
             res = self.search(domain, order=order)
+        if removal_strategy == "closest":
+            res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
         return res.sorted(lambda q: not q.lot_id)
 
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
