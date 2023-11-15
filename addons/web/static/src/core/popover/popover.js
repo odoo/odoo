@@ -146,7 +146,7 @@ Popover.props = {
             // target may be inside an iframe, so get the Element constructor
             // to test against from its owner document's default view
             const Element = target?.ownerDocument?.defaultView.Element;
-            return Boolean(Element) && target instanceof Element;
+            return Boolean(Element) && (target instanceof Element || target instanceof window.Element);
         },
     },
     slots: {
