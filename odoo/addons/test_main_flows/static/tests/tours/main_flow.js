@@ -557,6 +557,10 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t('Save & New'),
     position: 'right',
 }, {
+    mobile: true,
+    trigger: ".modal-footer .btn-primary:contains('Save & New'):not([disabled])",
+    run: () => {}, // check if the new record is displayed
+}, {
     /**
      * We need both triggers because the "sale_product_configurator" module replaces the
      * "product_id" field with a "product_template_id" field.
