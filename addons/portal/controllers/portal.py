@@ -190,8 +190,8 @@ class CustomerPortal(Controller):
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
-                values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
+                values = {key: post[key] for key in self._get_mandatory_fields()}
+                values.update({key: post[key] for key in self._get_optional_fields() if key in post})
                 for field in set(['country_id', 'state_id']) & set(values.keys()):
                     try:
                         values[field] = int(values[field])
@@ -376,7 +376,7 @@ class CustomerPortal(Controller):
         error_message = []
 
         # Validation
-        for field_name in self.MANDATORY_BILLING_FIELDS:
+        for field_name in self._get_mandatory_fields():
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
@@ -410,12 +410,20 @@ class CustomerPortal(Controller):
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
-        unknown = [k for k in data if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
+        unknown = [k for k in data if k not in self._get_mandatory_fields() + self._get_optional_fields()]
         if unknown:
             error['common'] = 'Unknown field'
             error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message
+
+    def _get_mandatory_fields(self):
+        """ This method is there so that we can override the mandatory fields """
+        return self.MANDATORY_BILLING_FIELDS
+
+    def _get_optional_fields(self):
+        """ This method is there so that we can override the optional fields """
+        return self.OPTIONAL_BILLING_FIELDS
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         """Check if current user is allowed to access the specified record.
