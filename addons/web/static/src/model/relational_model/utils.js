@@ -2,6 +2,7 @@
 
 import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
+import { Domain } from "@web/core/domain";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -9,6 +10,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
@@ -302,6 +304,21 @@ export function getFieldContext(
         ...record.fields[fieldName].context,
         ...makeContext([rawContext], record.evalContext),
     };
+}
+
+export function getFieldDomain(record, fieldName, domain) {
+    if (typeof domain === "function") {
+        domain = domain();
+        domain = typeof domain === "function" ? domain() : domain;
+    }
+    if (domain) {
+        return domain;
+    }
+    // Fallback to the domain defined in the field definition in python
+    domain = record.fields[fieldName].domain;
+    return typeof domain === "string"
+        ? new Domain(evaluateExpr(domain, record.evalContext)).toList()
+        : domain || [];
 }
 
 export function getBasicEvalContext(config) {

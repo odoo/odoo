@@ -194,10 +194,6 @@ export class Field extends Component {
                         if (fieldInfo.domain) {
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
-                        const { domain } = record.fields[fieldInfo.name];
-                        return typeof domain === "string"
-                            ? new Domain(evaluateExpr(domain, evalContext)).toList()
-                            : domain || [];
                     },
                     required: evaluateBooleanExpr(
                         fieldInfo.required,

@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -14,13 +15,14 @@ export class Many2ManyCheckboxesField extends Component {
     static components = { CheckBox };
     static props = {
         ...standardFieldProps,
-        domain: { type: Array, optional: true },
+        domain: { type: [Array, Function], optional: true },
     };
 
     setup() {
         this.specialData = useSpecialData((orm, props) => {
             const { relation } = props.record.fields[props.name];
-            return orm.call(relation, "name_search", ["", props.domain]);
+            const domain = getFieldDomain(props.record, props.name, props.domain);
+            return orm.call(relation, "name_search", ["", domain]);
         });
         // these two sets track pending changes in the relation, and allow us to
         // batch consecutive changes into a single replaceWith, thus saving
@@ -78,14 +80,9 @@ export const many2ManyCheckboxesField = {
     isEmpty: () => false,
     extractProps(fieldInfo, dynamicInfo) {
         return {
-            domain: dynamicInfo.domain(),
+            domain: dynamicInfo.domain,
         };
     },
 };
 
 registry.category("fields").add("many2many_checkboxes", many2ManyCheckboxesField);
-
-export function preloadMany2ManyCheckboxes(orm, record, fieldName, { domain }) {
-    const field = record.fields[fieldName];
-    return orm.call(field.relation, "name_search", ["", domain]);
-}

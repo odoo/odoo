@@ -507,6 +507,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
+        await nextTick();
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.strictEqual(rpcCount, 2, "should have done 1 more search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", "hey");

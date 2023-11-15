@@ -6,6 +6,7 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 
 /**
  * Use this hook to add "Assign to.." and "Assign/Unassign me" to the command palette.
@@ -49,10 +50,11 @@ export function useAssignUserCommand() {
 
     const provide = async (env, options) => {
         const value = options.searchValue.trim();
-        let domain =
-            typeof component.props.domain === "function"
-                ? component.props.domain()
-                : component.props.domain;
+        let domain = getFieldDomain(
+            component.props.record,
+            component.props.name,
+            component.props.domain
+        );
         const context = component.props.context;
         if (type === "many2many") {
             const selectedUserIds = getCurrentIds();

@@ -18,6 +18,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
 import { Component, useRef } from "@odoo/owl";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 
 class Many2ManyTagsFieldColorListPopover extends Component {
     static template = "web.Many2ManyTagsFieldColorListPopover";
@@ -69,7 +70,6 @@ export class Many2ManyTagsField extends Component {
             this.deleteTagByIndex.bind(this)
         );
         this.autoCompleteRef = useRef("autoComplete");
-
         const { saveRecord, removeRecord } = useX2ManyCrud(
             () => this.props.record.data[this.props.name],
             true
@@ -160,10 +160,8 @@ export class Many2ManyTagsField extends Component {
     }
 
     getDomain() {
-        const domain =
-            typeof this.props.domain === "function" ? this.props.domain() : this.props.domain;
         return Domain.and([
-            domain,
+            getFieldDomain(this.props.record, this.props.name, this.props.domain),
             Domain.not([["id", "in", this.props.record.data[this.props.name].currentIds]]),
         ]).toList(this.props.context);
     }
@@ -221,7 +219,9 @@ export const many2ManyTagsField = {
     },
     extractProps({ attrs, options, string }, dynamicInfo) {
         const noCreate = Boolean(options.no_create);
-        const canCreate = noCreate ? false : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
+        const canCreate = noCreate
+            ? false
+            : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {
