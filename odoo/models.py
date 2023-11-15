@@ -6383,11 +6383,9 @@ Fields:
             missing_names = [name for name in nametree if name not in values]
             defaults = self.default_get(missing_names)
             for name in missing_names:
+                values[name] = defaults.get(name, False)
                 if name in defaults:
-                    values[name] = defaults[name]
                     names.append(name)
-                elif not self._fields[name].compute:
-                    values[name] = False
 
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
         # to compute fields on new records as much as possible, as that can be
