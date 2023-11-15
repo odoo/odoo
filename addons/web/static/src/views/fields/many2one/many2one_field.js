@@ -13,7 +13,8 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relat
 import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillUpdateProps, useState, markup } from "@odoo/owl";
+import { Component, markup, onWillUpdateProps, useState } from "@odoo/owl";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 
 class CreateConfirmationDialog extends Component {
     static template = "web.Many2OneField.CreateConfirmationDialog";
@@ -233,11 +234,7 @@ export class Many2OneField extends Component {
         };
     }
     getDomain() {
-        let domain = this.props.domain;
-        if (typeof domain === "function") {
-            domain = domain();
-        }
-        return domain;
+        return getFieldDomain(this.props.record, this.props.name, this.props.domain);
     }
     async openAction() {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
@@ -365,8 +362,9 @@ export const many2OneField = {
     ],
     supportedTypes: ["many2one"],
     extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
-        const canCreate =
-            options.no_create ? false : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
+        const canCreate = options.no_create
+            ? false
+            : attrs.can_create && evaluateBooleanExpr(attrs.can_create);
         return {
             placeholder: attrs.placeholder,
             canOpen: !options.no_open,
