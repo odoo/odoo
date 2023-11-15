@@ -1413,6 +1413,10 @@ function makeActionManager(env) {
             if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
                 newState.active_ids = activeIds.join(",");
             }
+            const menuId = action.context?.params?.menu_id;
+            if (menuId) {
+                newState.menu_id = menuId;
+            }
         }
         if (action.type === "ir.actions.act_window") {
             const props = controller.props;
