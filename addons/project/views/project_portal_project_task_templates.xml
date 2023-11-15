@@ -188,7 +188,7 @@
                                     <t t-foreach="task.user_ids" t-as="user">
                                         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 {{ 'mb-3' if len(task.user_ids) > 1 else '' }}">
                                             <div class="d-flex justify-content-start align-items-center gap-2">
-                                                <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(user.avatar_1024)"/>
+                                                <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(user.avatar_128)"/>
                                                 <h6 class="mb-0" t-field="user.name"></h6>
                                             </div>
                                             <div t-out="user" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
