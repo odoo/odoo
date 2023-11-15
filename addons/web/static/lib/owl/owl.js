@@ -5548,12 +5548,1532 @@
         try {
             return new Function("app, bdom, helpers", code);
         }
+<<<<<<< HEAD
         catch (originalError) {
             const { name } = options;
             const nameStr = name ? `template "${name}"` : "anonymous template";
             const err = new OwlError(`Failed to compile ${nameStr}: ${originalError.message}\n\ngenerated code:\nfunction(app, bdom, helpers) {\n${code}\n}`);
             err.cause = originalError;
             throw err;
+||||||| parent of 372ae01f9a52 (temp)
+        return result;
+    }
+    function htmlToVNode(node) {
+        if (!(node instanceof Element)) {
+            if (node instanceof Comment) {
+                return h("!", node.textContent);
+            }
+            return { text: node.textContent };
+        }
+        const attrs = {};
+        for (let attr of node.attributes) {
+            attrs[attr.name] = attr.textContent;
+        }
+        const children = [];
+        for (let c of node.childNodes) {
+            children.push(htmlToVNode(c));
+        }
+        const vnode = h(node.tagName, { attrs }, children);
+        if (vnode.sel === "svg") {
+            addNS(vnode.data, vnode.children, vnode.sel);
+        }
+        return vnode;
+    }
+
+    /**
+     * Owl QWeb Directives
+     *
+     * This file contains the implementation of most standard QWeb directives:
+     * - t-esc
+     * - t-raw
+     * - t-set/t-value
+     * - t-if/t-elif/t-else
+     * - t-call
+     * - t-foreach/t-as
+     * - t-debug
+     * - t-log
+     */
+    //------------------------------------------------------------------------------
+    // t-esc and t-raw
+    //------------------------------------------------------------------------------
+    QWeb.utils.htmlToVDOM = htmlToVDOM;
+    function compileValueNode(value, node, qweb, ctx) {
+        ctx.rootContext.shouldDefineScope = true;
+        if (value === "0") {
+            if (ctx.parentNode) {
+                // the 'zero' magical symbol is where we can find the result of the rendering
+                // of  the body of the t-call.
+                ctx.rootContext.shouldDefineUtils = true;
+                const zeroArgs = ctx.escaping
+                    ? `{text: utils.vDomToString(scope[utils.zero])}`
+                    : `...scope[utils.zero]`;
+                ctx.addLine(`c${ctx.parentNode}.push(${zeroArgs});`);
+            }
+            return;
+        }
+        let exprID;
+        if (typeof value === "string") {
+            exprID = `_${ctx.generateID()}`;
+            ctx.addLine(`let ${exprID} = ${ctx.formatExpression(value)};`);
+        }
+        else {
+            exprID = `scope.${value.id}`;
+        }
+        ctx.addIf(`${exprID} != null`);
+        if (ctx.escaping) {
+            let protectID;
+            if (value.hasBody) {
+                ctx.rootContext.shouldDefineUtils = true;
+                protectID = ctx.startProtectScope();
+                ctx.addLine(`${exprID} = ${exprID} instanceof utils.VDomArray ? utils.vDomToString(${exprID}) : ${exprID};`);
+            }
+            if (ctx.parentTextNode) {
+                ctx.addLine(`vn${ctx.parentTextNode}.text += ${exprID};`);
+            }
+            else if (ctx.parentNode) {
+                ctx.addLine(`c${ctx.parentNode}.push({text: ${exprID}});`);
+            }
+            else {
+                let nodeID = ctx.generateID();
+                ctx.rootContext.rootNode = nodeID;
+                ctx.rootContext.parentTextNode = nodeID;
+                ctx.addLine(`let vn${nodeID} = {text: ${exprID}};`);
+                if (ctx.rootContext.shouldDefineResult) {
+                    ctx.addLine(`result = vn${nodeID}`);
+                }
+            }
+            if (value.hasBody) {
+                ctx.stopProtectScope(protectID);
+            }
+        }
+        else {
+            ctx.rootContext.shouldDefineUtils = true;
+            if (value.hasBody) {
+                ctx.addLine(`const vnodeArray = ${exprID} instanceof utils.VDomArray ? ${exprID} : utils.htmlToVDOM(${exprID});`);
+                ctx.addLine(`c${ctx.parentNode}.push(...vnodeArray);`);
+            }
+            else {
+                ctx.addLine(`c${ctx.parentNode}.push(...utils.htmlToVDOM(${exprID}));`);
+            }
+        }
+        if (node.childNodes.length) {
+            ctx.addElse();
+            qweb._compileChildren(node, ctx);
+        }
+        ctx.closeIf();
+    }
+    QWeb.addDirective({
+        name: "esc",
+        priority: 70,
+        atNodeEncounter({ node, qweb, ctx }) {
+            let value = ctx.getValue(node.getAttribute("t-esc"));
+            compileValueNode(value, node, qweb, ctx.subContext("escaping", true));
+            return true;
+        },
+    });
+    QWeb.addDirective({
+        name: "raw",
+        priority: 80,
+        atNodeEncounter({ node, qweb, ctx }) {
+            let value = ctx.getValue(node.getAttribute("t-raw"));
+            compileValueNode(value, node, qweb, ctx);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-set
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "set",
+        extraNames: ["value"],
+        priority: 60,
+        atNodeEncounter({ node, qweb, ctx }) {
+            ctx.rootContext.shouldDefineScope = true;
+            const variable = node.getAttribute("t-set");
+            let value = node.getAttribute("t-value");
+            ctx.variables[variable] = ctx.variables[variable] || {};
+            let qwebvar = ctx.variables[variable];
+            const hasBody = node.hasChildNodes();
+            qwebvar.id = variable;
+            qwebvar.expr = `scope.${variable}`;
+            if (value) {
+                const formattedValue = ctx.formatExpression(value);
+                let scopeExpr = `scope`;
+                if (ctx.protectedScopeNumber) {
+                    ctx.rootContext.shouldDefineUtils = true;
+                    scopeExpr = `utils.getScope(scope, '${variable}')`;
+                }
+                ctx.addLine(`${scopeExpr}.${variable} = ${formattedValue};`);
+                qwebvar.value = formattedValue;
+            }
+            if (hasBody) {
+                ctx.rootContext.shouldDefineUtils = true;
+                if (value) {
+                    ctx.addIf(`!(${qwebvar.expr})`);
+                }
+                const tempParentNodeID = ctx.generateID();
+                const _parentNode = ctx.parentNode;
+                ctx.parentNode = tempParentNodeID;
+                ctx.addLine(`let c${tempParentNodeID} = new utils.VDomArray();`);
+                const nodeCopy = node.cloneNode(true);
+                for (let attr of ["t-set", "t-value", "t-if", "t-else", "t-elif"]) {
+                    nodeCopy.removeAttribute(attr);
+                }
+                qweb._compileNode(nodeCopy, ctx);
+                ctx.addLine(`${qwebvar.expr} = c${tempParentNodeID}`);
+                qwebvar.value = `c${tempParentNodeID}`;
+                qwebvar.hasBody = true;
+                ctx.parentNode = _parentNode;
+                if (value) {
+                    ctx.closeIf();
+                }
+            }
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-if, t-elif, t-else
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "if",
+        priority: 20,
+        atNodeEncounter({ node, ctx }) {
+            let cond = ctx.getValue(node.getAttribute("t-if"));
+            ctx.addIf(typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`);
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    QWeb.addDirective({
+        name: "elif",
+        priority: 30,
+        atNodeEncounter({ node, ctx }) {
+            let cond = ctx.getValue(node.getAttribute("t-elif"));
+            ctx.addLine(`else if (${typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`}) {`);
+            ctx.indent();
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    QWeb.addDirective({
+        name: "else",
+        priority: 40,
+        atNodeEncounter({ ctx }) {
+            ctx.addLine(`else {`);
+            ctx.indent();
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-call
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "call",
+        priority: 50,
+        atNodeEncounter({ node, qweb, ctx }) {
+            // Step 1: sanity checks
+            // ------------------------------------------------
+            ctx.rootContext.shouldDefineScope = true;
+            ctx.rootContext.shouldDefineUtils = true;
+            const subTemplate = node.getAttribute("t-call");
+            const isDynamic = INTERP_REGEXP.test(subTemplate);
+            const nodeTemplate = qweb.templates[subTemplate];
+            if (!isDynamic && !nodeTemplate) {
+                throw new Error(`Cannot find template "${subTemplate}" (t-call)`);
+            }
+            // Step 2: compile target template in sub templates
+            // ------------------------------------------------
+            let subIdstr;
+            if (isDynamic) {
+                const _id = ctx.generateID();
+                ctx.addLine(`let tname${_id} = ${ctx.interpolate(subTemplate)};`);
+                ctx.addLine(`let tid${_id} = this.subTemplates[tname${_id}];`);
+                ctx.addIf(`!tid${_id}`);
+                ctx.addLine(`tid${_id} = this.constructor.nextId++;`);
+                ctx.addLine(`this.subTemplates[tname${_id}] = tid${_id};`);
+                ctx.addLine(`this.constructor.subTemplates[tid${_id}] = this._compile(tname${_id}, {hasParent: true, defineKey: true});`);
+                ctx.closeIf();
+                subIdstr = `tid${_id}`;
+            }
+            else {
+                let subId = qweb.subTemplates[subTemplate];
+                if (!subId) {
+                    subId = QWeb.nextId++;
+                    qweb.subTemplates[subTemplate] = subId;
+                    const subTemplateFn = qweb._compile(subTemplate, { hasParent: true, defineKey: true });
+                    QWeb.subTemplates[subId] = subTemplateFn;
+                }
+                subIdstr = `'${subId}'`;
+            }
+            // Step 3: compile t-call body if necessary
+            // ------------------------------------------------
+            let hasBody = node.hasChildNodes();
+            const protectID = ctx.startProtectScope();
+            if (hasBody) {
+                // we add a sub scope to protect the ambient scope
+                ctx.addLine(`{`);
+                ctx.indent();
+                const nodeCopy = node.cloneNode(true);
+                for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
+                    nodeCopy.removeAttribute(attr);
+                }
+                // this local scope is intended to trap c__0
+                ctx.addLine(`{`);
+                ctx.indent();
+                ctx.addLine("let c__0 = [];");
+                qweb._compileNode(nodeCopy, ctx.subContext("parentNode", "__0"));
+                ctx.rootContext.shouldDefineUtils = true;
+                ctx.addLine("scope[utils.zero] = c__0;");
+                ctx.dedent();
+                ctx.addLine(`}`);
+            }
+            // Step 4: add the appropriate function call to current component
+            // ------------------------------------------------
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
+            const key = ctx.generateTemplateKey();
+            const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
+            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
+            if (ctx.parentNode) {
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
+            }
+            else {
+                // this is a t-call with no parentnode, we need to extract the result
+                ctx.rootContext.shouldDefineResult = true;
+                ctx.addLine(`result = []`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
+                ctx.addLine(`result = result[0]`);
+            }
+            // Step 5: restore previous scope
+            // ------------------------------------------------
+            if (hasBody) {
+                ctx.dedent();
+                ctx.addLine(`}`);
+            }
+            ctx.stopProtectScope(protectID);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-foreach
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "foreach",
+        extraNames: ["as"],
+        priority: 10,
+        atNodeEncounter({ node, qweb, ctx }) {
+            ctx.rootContext.shouldDefineScope = true;
+            ctx = ctx.subContext("loopNumber", ctx.loopNumber + 1);
+            const elems = node.getAttribute("t-foreach");
+            const name = node.getAttribute("t-as");
+            let arrayID = ctx.generateID();
+            ctx.addLine(`let _${arrayID} = ${ctx.formatExpression(elems)};`);
+            ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
+            let keysID = ctx.generateID();
+            let valuesID = ctx.generateID();
+            ctx.addLine(`let _${keysID} = _${arrayID};`);
+            ctx.addLine(`let _${valuesID} = _${arrayID};`);
+            ctx.addIf(`!(_${arrayID} instanceof Array)`);
+            ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
+            ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
+            ctx.closeIf();
+            ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
+            let varsID = ctx.startProtectScope(true);
+            const loopVar = `i${ctx.loopNumber}`;
+            ctx.addLine(`for (let ${loopVar} = 0; ${loopVar} < _length${keysID}; ${loopVar}++) {`);
+            ctx.indent();
+            ctx.addLine(`scope.${name}_first = ${loopVar} === 0`);
+            ctx.addLine(`scope.${name}_last = ${loopVar} === _length${keysID} - 1`);
+            ctx.addLine(`scope.${name}_index = ${loopVar}`);
+            ctx.addLine(`scope.${name} = _${keysID}[${loopVar}]`);
+            ctx.addLine(`scope.${name}_value = _${valuesID}[${loopVar}]`);
+            const nodeCopy = node.cloneNode(true);
+            let shouldWarn = !nodeCopy.hasAttribute("t-key") &&
+                node.children.length === 1 &&
+                node.children[0].tagName !== "t" &&
+                !node.children[0].hasAttribute("t-key");
+            if (shouldWarn) {
+                console.warn(`Directive t-foreach should always be used with a t-key! (in template: '${ctx.templateName}')`);
+            }
+            if (nodeCopy.hasAttribute("t-key")) {
+                const expr = ctx.formatExpression(nodeCopy.getAttribute("t-key"));
+                ctx.addLine(`let key${ctx.loopNumber} = ${expr};`);
+                nodeCopy.removeAttribute("t-key");
+            }
+            else {
+                ctx.addLine(`let key${ctx.loopNumber} = i${ctx.loopNumber};`);
+            }
+            nodeCopy.removeAttribute("t-foreach");
+            qweb._compileNode(nodeCopy, ctx);
+            ctx.dedent();
+            ctx.addLine("}");
+            ctx.stopProtectScope(varsID);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-debug
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "debug",
+        priority: 1,
+        atNodeEncounter({ ctx }) {
+            ctx.addLine("debugger;");
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-log
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "log",
+        priority: 1,
+        atNodeEncounter({ ctx, value }) {
+            const expr = ctx.formatExpression(value);
+            ctx.addLine(`console.log(${expr})`);
+        },
+    });
+
+    /**
+     * Owl QWeb Extensions
+     *
+     * This file contains the implementation of non standard QWeb directives, added
+     * by Owl and that will only work on Owl projects:
+     *
+     * - t-on
+     * - t-ref
+     * - t-transition
+     * - t-mounted
+     * - t-slot
+     * - t-model
+     */
+    //------------------------------------------------------------------------------
+    // t-on
+    //------------------------------------------------------------------------------
+    // these are pieces of code that will be injected into the event handler if
+    // modifiers are specified
+    const MODS_CODE = {
+        prevent: "e.preventDefault();",
+        self: "if (e.target !== this.elm) {return}",
+        stop: "e.stopPropagation();",
+    };
+    const FNAMEREGEXP = /^[$A-Z_][0-9A-Z_$]*$/i;
+    function makeHandlerCode(ctx, fullName, value, putInCache, modcodes = MODS_CODE) {
+        let [event, ...mods] = fullName.slice(5).split(".");
+        if (mods.includes("capture")) {
+            event = "!" + event;
+        }
+        if (!event) {
+            throw new Error("Missing event name with t-on directive");
+        }
+        let code;
+        // check if it is a method with no args, a method with args or an expression
+        let args = "";
+        const name = value.replace(/\(.*\)/, function (_args) {
+            args = _args.slice(1, -1);
+            return "";
+        });
+        const isMethodCall = name.match(FNAMEREGEXP);
+        // then generate code
+        if (isMethodCall) {
+            ctx.rootContext.shouldDefineUtils = true;
+            const comp = `utils.getComponent(context)`;
+            if (args) {
+                const argId = ctx.generateID();
+                ctx.addLine(`let args${argId} = [${ctx.formatExpression(args)}];`);
+                code = `${comp}['${name}'](...args${argId}, e);`;
+                putInCache = false;
+            }
+            else {
+                code = `${comp}['${name}'](e);`;
+            }
+        }
+        else {
+            // if we get here, then it is an expression
+            // we need to capture every variable in it
+            putInCache = false;
+            code = ctx.captureExpression(value);
+            code = `const res = (() => { return ${code} })(); if (typeof res === 'function') { res(e) }`;
+        }
+        const modCode = mods.map((mod) => modcodes[mod]).join("");
+        let handler = `function (e) {if (context.__owl__.status === ${5 /* DESTROYED */}){return}${modCode}${code}}`;
+        if (putInCache) {
+            const key = ctx.generateTemplateKey(event);
+            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || ${handler};`);
+            handler = `extra.handlers[${key}]`;
+        }
+        return { event, handler };
+    }
+    QWeb.addDirective({
+        name: "on",
+        priority: 90,
+        atNodeCreation({ ctx, fullName, value, nodeID }) {
+            const { event, handler } = makeHandlerCode(ctx, fullName, value, true);
+            ctx.addLine(`p${nodeID}.on['${event}'] = ${handler};`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-ref
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "ref",
+        priority: 95,
+        atNodeCreation({ ctx, value, addNodeHook }) {
+            ctx.rootContext.shouldDefineRefs = true;
+            const refKey = `ref${ctx.generateID()}`;
+            ctx.addLine(`const ${refKey} = ${ctx.interpolate(value)};`);
+            addNodeHook("create", `context.__owl__.refs[${refKey}] = n.elm;`);
+            addNodeHook("destroy", `delete context.__owl__.refs[${refKey}];`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-transition
+    //------------------------------------------------------------------------------
+    QWeb.utils.nextFrame = function (cb) {
+        requestAnimationFrame(() => requestAnimationFrame(cb));
+    };
+    QWeb.utils.transitionInsert = function (vn, name) {
+        const elm = vn.elm;
+        // remove potential duplicated vnode that is currently being removed, to
+        // prevent from having twice the same node in the DOM during an animation
+        const dup = elm.parentElement && elm.parentElement.querySelector(`*[data-owl-key='${vn.key}']`);
+        if (dup) {
+            dup.remove();
+        }
+        elm.classList.add(name + "-enter");
+        elm.classList.add(name + "-enter-active");
+        elm.classList.remove(name + "-leave-active");
+        elm.classList.remove(name + "-leave-to");
+        const finalize = () => {
+            elm.classList.remove(name + "-enter-active");
+            elm.classList.remove(name + "-enter-to");
+        };
+        this.nextFrame(() => {
+            elm.classList.remove(name + "-enter");
+            elm.classList.add(name + "-enter-to");
+            whenTransitionEnd(elm, finalize);
+        });
+    };
+    QWeb.utils.transitionRemove = function (vn, name, rm) {
+        const elm = vn.elm;
+        elm.setAttribute("data-owl-key", vn.key);
+        elm.classList.add(name + "-leave");
+        elm.classList.add(name + "-leave-active");
+        const finalize = () => {
+            if (!elm.classList.contains(name + "-leave-active")) {
+                return;
+            }
+            elm.classList.remove(name + "-leave-active");
+            elm.classList.remove(name + "-leave-to");
+            rm();
+        };
+        this.nextFrame(() => {
+            elm.classList.remove(name + "-leave");
+            elm.classList.add(name + "-leave-to");
+            whenTransitionEnd(elm, finalize);
+        });
+    };
+    function getTimeout(delays, durations) {
+        /* istanbul ignore next */
+        while (delays.length < durations.length) {
+            delays = delays.concat(delays);
+        }
+        return Math.max.apply(null, durations.map((d, i) => {
+            return toMs(d) + toMs(delays[i]);
+        }));
+    }
+    // Old versions of Chromium (below 61.0.3163.100) formats floating pointer numbers
+    // in a locale-dependent way, using a comma instead of a dot.
+    // If comma is not replaced with a dot, the input will be rounded down (i.e. acting
+    // as a floor function) causing unexpected behaviors
+    function toMs(s) {
+        return Number(s.slice(0, -1).replace(",", ".")) * 1000;
+    }
+    function whenTransitionEnd(elm, cb) {
+        if (!elm.parentNode) {
+            // if we get here, this means that the element was removed for some other
+            // reasons, and in that case, we don't want to work on animation since nothing
+            // will be displayed anyway.
+            return;
+        }
+        const styles = window.getComputedStyle(elm);
+        const delays = (styles.transitionDelay || "").split(", ");
+        const durations = (styles.transitionDuration || "").split(", ");
+        const timeout = getTimeout(delays, durations);
+        if (timeout > 0) {
+            const transitionEndCB = () => {
+                if (!elm.parentNode)
+                    return;
+                cb();
+                browser.clearTimeout(fallbackTimeout);
+                elm.removeEventListener("transitionend", transitionEndCB);
+            };
+            elm.addEventListener("transitionend", transitionEndCB, { once: true });
+            const fallbackTimeout = browser.setTimeout(transitionEndCB, timeout + 1);
+        }
+        else {
+            cb();
+        }
+    }
+    QWeb.addDirective({
+        name: "transition",
+        priority: 96,
+        atNodeCreation({ ctx, value, addNodeHook }) {
+            if (!QWeb.enableTransitions) {
+                return;
+            }
+            ctx.rootContext.shouldDefineUtils = true;
+            let name = value;
+            const hooks = {
+                insert: `utils.transitionInsert(vn, '${name}');`,
+                remove: `utils.transitionRemove(vn, '${name}', rm);`,
+            };
+            for (let hookName in hooks) {
+                addNodeHook(hookName, hooks[hookName]);
+            }
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-slot
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "slot",
+        priority: 80,
+        atNodeEncounter({ ctx, value, node, qweb }) {
+            const slotKey = ctx.generateID();
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
+            ctx.addIf(`slot${slotKey}`);
+            let parentNode = `c${ctx.parentNode}`;
+            if (!ctx.parentNode) {
+                ctx.rootContext.shouldDefineResult = true;
+                ctx.rootContext.shouldDefineUtils = true;
+                parentNode = `children${ctx.generateID()}`;
+                ctx.addLine(`let ${parentNode}= []`);
+                ctx.addLine(`result = {}`);
+            }
+            ctx.addLine(`slot${slotKey}.call(this, context.__owl__.scope, Object.assign({}, extra, {parentNode: ${parentNode}, parent: extra.parent || context}));`);
+            if (!ctx.parentNode) {
+                ctx.addLine(`utils.defineProxy(result, ${parentNode}[0]);`);
+            }
+            if (node.hasChildNodes()) {
+                ctx.addElse();
+                const nodeCopy = node.cloneNode(true);
+                nodeCopy.removeAttribute("t-slot");
+                qweb._compileNode(nodeCopy, ctx);
+            }
+            ctx.closeIf();
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-model
+    //------------------------------------------------------------------------------
+    QWeb.utils.toNumber = function (val) {
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n;
+    };
+    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
+    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
+    QWeb.addDirective({
+        name: "model",
+        priority: 42,
+        atNodeCreation({ ctx, nodeID, value, node, fullName, addNodeHook }) {
+            const type = node.getAttribute("type");
+            let handler;
+            let event = fullName.includes(".lazy") ? "change" : "input";
+            // First step: we need to understand the structure of the expression, and
+            // from it, extract a base expression (that we can capture, which is
+            // important because it will be used in a handler later) and a formatted
+            // expression (which uses the captured base expression)
+            //
+            // Also, we support 2 kinds of values: some.expr.value or some.expr[value]
+            // For the first one, we have:
+            // - base expression = scope[some].expr
+            // - expression = exprX.value (where exprX is the var that captures the base expr)
+            // and for the expression with brackets:
+            // - base expression = scope[some].expr
+            // - expression = exprX[keyX] (where exprX is the var that captures the base expr
+            //        and keyX captures scope[value])
+            let expr;
+            let baseExpr;
+            if (hasDotAtTheEnd.test(value)) {
+                // we manage the case where the expr has a dot: some.expr.value
+                const index = value.lastIndexOf(".");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                expr = `expr${nodeID}${value.slice(index)}`;
+            }
+            else if (hasBracketsAtTheEnd.test(value)) {
+                // we manage here the case where the expr ends in a bracket expression:
+                //    some.expr[value]
+                const index = value.lastIndexOf("[");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                let exprKey = value.trimRight().slice(index + 1, -1);
+                ctx.addLine(`let exprKey${nodeID} = ${ctx.formatExpression(exprKey)};`);
+                expr = `expr${nodeID}[exprKey${nodeID}]`;
+            }
+            else {
+                throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+            }
+            const key = ctx.generateTemplateKey();
+            if (node.tagName === "select") {
+                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
+                addNodeHook("create", `n.elm.value=${expr};`);
+                event = "change";
+                handler = `(ev) => {${expr} = ev.target.value}`;
+            }
+            else if (type === "checkbox") {
+                ctx.addLine(`p${nodeID}.props = {checked: ${expr}};`);
+                handler = `(ev) => {${expr} = ev.target.checked}`;
+            }
+            else if (type === "radio") {
+                const nodeValue = node.getAttribute("value");
+                ctx.addLine(`p${nodeID}.props = {checked:${expr} === '${nodeValue}'};`);
+                handler = `(ev) => {${expr} = ev.target.value}`;
+                event = "click";
+            }
+            else {
+                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
+                const trimCode = fullName.includes(".trim") ? ".trim()" : "";
+                let valueCode = `ev.target.value${trimCode}`;
+                if (fullName.includes(".number")) {
+                    ctx.rootContext.shouldDefineUtils = true;
+                    valueCode = `utils.toNumber(${valueCode})`;
+                }
+                handler = `(ev) => {${expr} = ${valueCode}}`;
+            }
+            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || (${handler});`);
+            ctx.addLine(`p${nodeID}.on['${event}'] = extra.handlers[${key}];`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-key
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "key",
+        priority: 45,
+        atNodeEncounter({ ctx, value, node }) {
+            if (ctx.loopNumber === 0) {
+                ctx.keyStack.push(ctx.rootContext.hasKey0);
+                ctx.rootContext.hasKey0 = true;
+            }
+            ctx.addLine("{");
+            ctx.indent();
+            ctx.addLine(`let key${ctx.loopNumber} = ${ctx.formatExpression(value)};`);
+        },
+        finalize({ ctx }) {
+            ctx.dedent();
+            ctx.addLine("}");
+            if (ctx.loopNumber === 0) {
+                ctx.rootContext.hasKey0 = ctx.keyStack.pop();
+            }
+        },
+    });
+
+    const config = {
+        translatableAttributes: TRANSLATABLE_ATTRS,
+    };
+    Object.defineProperty(config, "mode", {
+        get() {
+            return QWeb.dev ? "dev" : "prod";
+        },
+        set(mode) {
+            QWeb.dev = mode === "dev";
+            if (QWeb.dev) {
+                console.info(`Owl is running in 'dev' mode.
+
+This is not suitable for production use.
+See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
+            }
+        },
+    });
+    Object.defineProperty(config, "enableTransitions", {
+        get() {
+            return QWeb.enableTransitions;
+        },
+        set(value) {
+            QWeb.enableTransitions = value;
+        },
+    });
+
+    /**
+     * We define here OwlEvent, a subclass of CustomEvent, with an additional
+     * attribute:
+     *  - originalComponent: the component that triggered the event
+     */
+    class OwlEvent extends CustomEvent {
+        constructor(component, eventType, options) {
+            super(eventType, options);
+            this.originalComponent = component;
+=======
+        return result;
+    }
+    function htmlToVNode(node) {
+        if (!(node instanceof Element)) {
+            if (node instanceof Comment) {
+                return h("!", node.textContent);
+            }
+            return { text: node.textContent };
+        }
+        const attrs = {};
+        for (let attr of node.attributes) {
+            attrs[attr.name] = attr.textContent;
+        }
+        const children = [];
+        for (let c of node.childNodes) {
+            children.push(htmlToVNode(c));
+        }
+        const vnode = h(node.tagName, { attrs }, children);
+        if (vnode.sel === "svg") {
+            addNS(vnode.data, vnode.children, vnode.sel);
+        }
+        return vnode;
+    }
+
+    /**
+     * Owl QWeb Directives
+     *
+     * This file contains the implementation of most standard QWeb directives:
+     * - t-esc
+     * - t-raw
+     * - t-set/t-value
+     * - t-if/t-elif/t-else
+     * - t-call
+     * - t-foreach/t-as
+     * - t-debug
+     * - t-log
+     */
+    //------------------------------------------------------------------------------
+    // t-esc and t-raw
+    //------------------------------------------------------------------------------
+    QWeb.utils.htmlToVDOM = htmlToVDOM;
+    function compileValueNode(value, node, qweb, ctx) {
+        ctx.rootContext.shouldDefineScope = true;
+        if (value === "0") {
+            if (ctx.parentNode) {
+                // the 'zero' magical symbol is where we can find the result of the rendering
+                // of  the body of the t-call.
+                ctx.rootContext.shouldDefineUtils = true;
+                const zeroArgs = ctx.escaping
+                    ? `{text: utils.vDomToString(scope[utils.zero])}`
+                    : `...scope[utils.zero]`;
+                ctx.addLine(`c${ctx.parentNode}.push(${zeroArgs});`);
+            }
+            return;
+        }
+        let exprID;
+        if (typeof value === "string") {
+            exprID = `_${ctx.generateID()}`;
+            ctx.addLine(`let ${exprID} = ${ctx.formatExpression(value)};`);
+        }
+        else {
+            exprID = `scope.${value.id}`;
+        }
+        ctx.addIf(`${exprID} != null`);
+        if (ctx.escaping) {
+            let protectID;
+            if (value.hasBody) {
+                ctx.rootContext.shouldDefineUtils = true;
+                protectID = ctx.startProtectScope();
+                ctx.addLine(`${exprID} = ${exprID} instanceof utils.VDomArray ? utils.vDomToString(${exprID}) : ${exprID};`);
+            }
+            if (ctx.parentTextNode) {
+                ctx.addLine(`vn${ctx.parentTextNode}.text += ${exprID};`);
+            }
+            else if (ctx.parentNode) {
+                ctx.addLine(`c${ctx.parentNode}.push({text: ${exprID}});`);
+            }
+            else {
+                let nodeID = ctx.generateID();
+                ctx.rootContext.rootNode = nodeID;
+                ctx.rootContext.parentTextNode = nodeID;
+                ctx.addLine(`let vn${nodeID} = {text: ${exprID}};`);
+                if (ctx.rootContext.shouldDefineResult) {
+                    ctx.addLine(`result = vn${nodeID}`);
+                }
+            }
+            if (value.hasBody) {
+                ctx.stopProtectScope(protectID);
+            }
+        }
+        else {
+            ctx.rootContext.shouldDefineUtils = true;
+            if (value.hasBody) {
+                ctx.addLine(`const vnodeArray = ${exprID} instanceof utils.VDomArray ? ${exprID} : utils.htmlToVDOM(${exprID});`);
+                ctx.addLine(`c${ctx.parentNode}.push(...vnodeArray);`);
+            }
+            else {
+                ctx.addLine(`c${ctx.parentNode}.push(...utils.htmlToVDOM(${exprID}));`);
+            }
+        }
+        if (node.childNodes.length) {
+            ctx.addElse();
+            qweb._compileChildren(node, ctx);
+        }
+        ctx.closeIf();
+    }
+    QWeb.addDirective({
+        name: "esc",
+        priority: 70,
+        atNodeEncounter({ node, qweb, ctx }) {
+            let value = ctx.getValue(node.getAttribute("t-esc"));
+            compileValueNode(value, node, qweb, ctx.subContext("escaping", true));
+            return true;
+        },
+    });
+    QWeb.addDirective({
+        name: "raw",
+        priority: 80,
+        atNodeEncounter({ node, qweb, ctx }) {
+            let value = ctx.getValue(node.getAttribute("t-raw"));
+            compileValueNode(value, node, qweb, ctx);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-set
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "set",
+        extraNames: ["value"],
+        priority: 60,
+        atNodeEncounter({ node, qweb, ctx }) {
+            ctx.rootContext.shouldDefineScope = true;
+            const variable = node.getAttribute("t-set");
+            let value = node.getAttribute("t-value");
+            ctx.variables[variable] = ctx.variables[variable] || {};
+            let qwebvar = ctx.variables[variable];
+            const hasBody = node.hasChildNodes();
+            qwebvar.id = variable;
+            qwebvar.expr = `scope.${variable}`;
+            if (value) {
+                const formattedValue = ctx.formatExpression(value);
+                let scopeExpr = `scope`;
+                if (ctx.protectedScopeNumber) {
+                    ctx.rootContext.shouldDefineUtils = true;
+                    scopeExpr = `utils.getScope(scope, '${variable}')`;
+                }
+                ctx.addLine(`${scopeExpr}.${variable} = ${formattedValue};`);
+                qwebvar.value = formattedValue;
+            }
+            if (hasBody) {
+                ctx.rootContext.shouldDefineUtils = true;
+                if (value) {
+                    ctx.addIf(`!(${qwebvar.expr})`);
+                }
+                const tempParentNodeID = ctx.generateID();
+                const _parentNode = ctx.parentNode;
+                ctx.parentNode = tempParentNodeID;
+                ctx.addLine(`let c${tempParentNodeID} = new utils.VDomArray();`);
+                const nodeCopy = node.cloneNode(true);
+                for (let attr of ["t-set", "t-value", "t-if", "t-else", "t-elif"]) {
+                    nodeCopy.removeAttribute(attr);
+                }
+                qweb._compileNode(nodeCopy, ctx);
+                ctx.addLine(`${qwebvar.expr} = c${tempParentNodeID}`);
+                qwebvar.value = `c${tempParentNodeID}`;
+                qwebvar.hasBody = true;
+                ctx.parentNode = _parentNode;
+                if (value) {
+                    ctx.closeIf();
+                }
+            }
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-if, t-elif, t-else
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "if",
+        priority: 20,
+        atNodeEncounter({ node, ctx }) {
+            let cond = ctx.getValue(node.getAttribute("t-if"));
+            ctx.addIf(typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`);
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    QWeb.addDirective({
+        name: "elif",
+        priority: 30,
+        atNodeEncounter({ node, ctx }) {
+            let cond = ctx.getValue(node.getAttribute("t-elif"));
+            ctx.addLine(`else if (${typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`}) {`);
+            ctx.indent();
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    QWeb.addDirective({
+        name: "else",
+        priority: 40,
+        atNodeEncounter({ ctx }) {
+            ctx.addLine(`else {`);
+            ctx.indent();
+            return false;
+        },
+        finalize({ ctx }) {
+            ctx.closeIf();
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-call
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "call",
+        priority: 50,
+        atNodeEncounter({ node, qweb, ctx }) {
+            // Step 1: sanity checks
+            // ------------------------------------------------
+            ctx.rootContext.shouldDefineScope = true;
+            ctx.rootContext.shouldDefineUtils = true;
+            const subTemplate = node.getAttribute("t-call");
+            const isDynamic = INTERP_REGEXP.test(subTemplate);
+            const nodeTemplate = qweb.templates[subTemplate];
+            if (!isDynamic && !nodeTemplate) {
+                throw new Error(`Cannot find template "${subTemplate}" (t-call)`);
+            }
+            // Step 2: compile target template in sub templates
+            // ------------------------------------------------
+            let subIdstr;
+            if (isDynamic) {
+                const _id = ctx.generateID();
+                ctx.addLine(`let tname${_id} = ${ctx.interpolate(subTemplate)};`);
+                ctx.addLine(`let tid${_id} = this.subTemplates[tname${_id}];`);
+                ctx.addIf(`!tid${_id}`);
+                ctx.addLine(`tid${_id} = this.constructor.nextId++;`);
+                ctx.addLine(`this.subTemplates[tname${_id}] = tid${_id};`);
+                ctx.addLine(`this.constructor.subTemplates[tid${_id}] = this._compile(tname${_id}, {hasParent: true, defineKey: true});`);
+                ctx.closeIf();
+                subIdstr = `tid${_id}`;
+            }
+            else {
+                let subId = qweb.subTemplates[subTemplate];
+                if (!subId) {
+                    subId = QWeb.nextId++;
+                    qweb.subTemplates[subTemplate] = subId;
+                    const subTemplateFn = qweb._compile(subTemplate, { hasParent: true, defineKey: true });
+                    QWeb.subTemplates[subId] = subTemplateFn;
+                }
+                subIdstr = `'${subId}'`;
+            }
+            // Step 3: compile t-call body if necessary
+            // ------------------------------------------------
+            let hasBody = node.hasChildNodes();
+            const protectID = ctx.startProtectScope();
+            if (hasBody) {
+                // we add a sub scope to protect the ambient scope
+                ctx.addLine(`{`);
+                ctx.indent();
+                const nodeCopy = node.cloneNode(true);
+                for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
+                    nodeCopy.removeAttribute(attr);
+                }
+                // this local scope is intended to trap c__0
+                ctx.addLine(`{`);
+                ctx.indent();
+                ctx.addLine("let c__0 = [];");
+                qweb._compileNode(nodeCopy, ctx.subContext("parentNode", "__0"));
+                ctx.rootContext.shouldDefineUtils = true;
+                ctx.addLine("scope[utils.zero] = c__0;");
+                ctx.dedent();
+                ctx.addLine(`}`);
+            }
+            // Step 4: add the appropriate function call to current component
+            // ------------------------------------------------
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
+            const key = ctx.generateTemplateKey();
+            const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
+            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
+            if (ctx.parentNode) {
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
+            }
+            else {
+                // this is a t-call with no parentnode, we need to extract the result
+                ctx.rootContext.shouldDefineResult = true;
+                ctx.addLine(`result = []`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
+                ctx.addLine(`result = result[0]`);
+            }
+            // Step 5: restore previous scope
+            // ------------------------------------------------
+            if (hasBody) {
+                ctx.dedent();
+                ctx.addLine(`}`);
+            }
+            ctx.stopProtectScope(protectID);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-foreach
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "foreach",
+        extraNames: ["as"],
+        priority: 10,
+        atNodeEncounter({ node, qweb, ctx }) {
+            ctx.rootContext.shouldDefineScope = true;
+            ctx = ctx.subContext("loopNumber", ctx.loopNumber + 1);
+            const elems = node.getAttribute("t-foreach");
+            const name = node.getAttribute("t-as");
+            let arrayID = ctx.generateID();
+            ctx.addLine(`let _${arrayID} = ${ctx.formatExpression(elems)};`);
+            ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
+            let keysID = ctx.generateID();
+            let valuesID = ctx.generateID();
+            ctx.addLine(`let _${keysID} = _${arrayID};`);
+            ctx.addLine(`let _${valuesID} = _${arrayID};`);
+            ctx.addIf(`!(_${arrayID} instanceof Array)`);
+            ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
+            ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
+            ctx.closeIf();
+            ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
+            let varsID = ctx.startProtectScope(true);
+            const loopVar = `i${ctx.loopNumber}`;
+            ctx.addLine(`for (let ${loopVar} = 0; ${loopVar} < _length${keysID}; ${loopVar}++) {`);
+            ctx.indent();
+            ctx.addLine(`scope.${name}_first = ${loopVar} === 0`);
+            ctx.addLine(`scope.${name}_last = ${loopVar} === _length${keysID} - 1`);
+            ctx.addLine(`scope.${name}_index = ${loopVar}`);
+            ctx.addLine(`scope.${name} = _${keysID}[${loopVar}]`);
+            ctx.addLine(`scope.${name}_value = _${valuesID}[${loopVar}]`);
+            const nodeCopy = node.cloneNode(true);
+            let shouldWarn = !nodeCopy.hasAttribute("t-key") &&
+                node.children.length === 1 &&
+                node.children[0].tagName !== "t" &&
+                !node.children[0].hasAttribute("t-key");
+            if (shouldWarn) {
+                console.warn(`Directive t-foreach should always be used with a t-key! (in template: '${ctx.templateName}')`);
+            }
+            if (nodeCopy.hasAttribute("t-key")) {
+                const expr = ctx.formatExpression(nodeCopy.getAttribute("t-key"));
+                ctx.addLine(`let key${ctx.loopNumber} = ${expr};`);
+                nodeCopy.removeAttribute("t-key");
+            }
+            else {
+                ctx.addLine(`let key${ctx.loopNumber} = i${ctx.loopNumber};`);
+            }
+            nodeCopy.removeAttribute("t-foreach");
+            qweb._compileNode(nodeCopy, ctx);
+            ctx.dedent();
+            ctx.addLine("}");
+            ctx.stopProtectScope(varsID);
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-debug
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "debug",
+        priority: 1,
+        atNodeEncounter({ ctx }) {
+            ctx.addLine("debugger;");
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-log
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "log",
+        priority: 1,
+        atNodeEncounter({ ctx, value }) {
+            const expr = ctx.formatExpression(value);
+            ctx.addLine(`console.log(${expr})`);
+        },
+    });
+
+    /**
+     * Owl QWeb Extensions
+     *
+     * This file contains the implementation of non standard QWeb directives, added
+     * by Owl and that will only work on Owl projects:
+     *
+     * - t-on
+     * - t-ref
+     * - t-transition
+     * - t-mounted
+     * - t-slot
+     * - t-model
+     */
+    //------------------------------------------------------------------------------
+    // t-on
+    //------------------------------------------------------------------------------
+    // these are pieces of code that will be injected into the event handler if
+    // modifiers are specified
+    const MODS_CODE = {
+        prevent: "e.preventDefault();",
+        self: "if (e.target !== this.elm) {return}",
+        stop: "e.stopPropagation();",
+    };
+    const FNAMEREGEXP = /^[$A-Z_][0-9A-Z_$]*$/i;
+    function makeHandlerCode(ctx, fullName, value, putInCache, modcodes = MODS_CODE) {
+        let [event, ...mods] = fullName.slice(5).split(".");
+        if (mods.includes("capture")) {
+            event = "!" + event;
+        }
+        if (!event) {
+            throw new Error("Missing event name with t-on directive");
+        }
+        let code;
+        // check if it is a method with no args, a method with args or an expression
+        let args = "";
+        const name = value.replace(/\(.*\)/, function (_args) {
+            args = _args.slice(1, -1);
+            return "";
+        });
+        const isMethodCall = name.match(FNAMEREGEXP);
+        // then generate code
+        if (isMethodCall) {
+            ctx.rootContext.shouldDefineUtils = true;
+            const comp = `utils.getComponent(context)`;
+            if (args) {
+                const argId = ctx.generateID();
+                ctx.addLine(`let args${argId} = [${ctx.formatExpression(args)}];`);
+                code = `${comp}['${name}'](...args${argId}, e);`;
+                putInCache = false;
+            }
+            else {
+                code = `${comp}['${name}'](e);`;
+            }
+        }
+        else {
+            // if we get here, then it is an expression
+            // we need to capture every variable in it
+            putInCache = false;
+            code = ctx.captureExpression(value);
+            code = `const res = (() => { return ${code} })(); if (typeof res === 'function') { res(e) }`;
+        }
+        const modCode = mods.map((mod) => modcodes[mod]).join("");
+        let handler = `function (e) {if (context.__owl__.status === ${5 /* DESTROYED */}){return}${modCode}${code}}`;
+        if (putInCache) {
+            const key = ctx.generateTemplateKey(event);
+            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || ${handler};`);
+            handler = `extra.handlers[${key}]`;
+        }
+        return { event, handler };
+    }
+    QWeb.addDirective({
+        name: "on",
+        priority: 90,
+        atNodeCreation({ ctx, fullName, value, nodeID }) {
+            const { event, handler } = makeHandlerCode(ctx, fullName, value, true);
+            ctx.addLine(`p${nodeID}.on['${event}'] = ${handler};`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-ref
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "ref",
+        priority: 95,
+        atNodeCreation({ ctx, value, addNodeHook }) {
+            ctx.rootContext.shouldDefineRefs = true;
+            const refKey = `ref${ctx.generateID()}`;
+            ctx.addLine(`const ${refKey} = ${ctx.interpolate(value)};`);
+            addNodeHook("create", `context.__owl__.refs[${refKey}] = n.elm;`);
+            addNodeHook("destroy", `delete context.__owl__.refs[${refKey}];`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-transition
+    //------------------------------------------------------------------------------
+    QWeb.utils.nextFrame = function (cb) {
+        requestAnimationFrame(() => requestAnimationFrame(cb));
+    };
+    QWeb.utils.transitionInsert = function (vn, name) {
+        const elm = vn.elm;
+        // remove potential duplicated vnode that is currently being removed, to
+        // prevent from having twice the same node in the DOM during an animation
+        const dup = elm.parentElement && elm.parentElement.querySelector(`*[data-owl-key='${vn.key}']`);
+        if (dup) {
+            dup.remove();
+        }
+        elm.classList.add(name + "-enter");
+        elm.classList.add(name + "-enter-active");
+        elm.classList.remove(name + "-leave-active");
+        elm.classList.remove(name + "-leave-to");
+        const finalize = () => {
+            elm.classList.remove(name + "-enter-active");
+            elm.classList.remove(name + "-enter-to");
+        };
+        this.nextFrame(() => {
+            elm.classList.remove(name + "-enter");
+            elm.classList.add(name + "-enter-to");
+            whenTransitionEnd(elm, finalize);
+        });
+    };
+    QWeb.utils.transitionRemove = function (vn, name, rm) {
+        const elm = vn.elm;
+        elm.setAttribute("data-owl-key", vn.key);
+        elm.classList.add(name + "-leave");
+        elm.classList.add(name + "-leave-active");
+        const finalize = () => {
+            if (!elm.classList.contains(name + "-leave-active")) {
+                return;
+            }
+            elm.classList.remove(name + "-leave-active");
+            elm.classList.remove(name + "-leave-to");
+            rm();
+        };
+        this.nextFrame(() => {
+            elm.classList.remove(name + "-leave");
+            elm.classList.add(name + "-leave-to");
+            whenTransitionEnd(elm, finalize);
+        });
+    };
+    function getTimeout(delays, durations) {
+        /* istanbul ignore next */
+        while (delays.length < durations.length) {
+            delays = delays.concat(delays);
+        }
+        return Math.max.apply(null, durations.map((d, i) => {
+            return toMs(d) + toMs(delays[i]);
+        }));
+    }
+    // Old versions of Chromium (below 61.0.3163.100) formats floating pointer numbers
+    // in a locale-dependent way, using a comma instead of a dot.
+    // If comma is not replaced with a dot, the input will be rounded down (i.e. acting
+    // as a floor function) causing unexpected behaviors
+    function toMs(s) {
+        return Number(s.slice(0, -1).replace(",", ".")) * 1000;
+    }
+    function whenTransitionEnd(elm, cb) {
+        if (!elm.parentNode) {
+            // if we get here, this means that the element was removed for some other
+            // reasons, and in that case, we don't want to work on animation since nothing
+            // will be displayed anyway.
+            return;
+        }
+        const styles = window.getComputedStyle(elm);
+        const delays = (styles.transitionDelay || "").split(", ");
+        const durations = (styles.transitionDuration || "").split(", ");
+        const timeout = getTimeout(delays, durations);
+        if (timeout > 0) {
+            const transitionEndCB = () => {
+                if (!elm.parentNode)
+                    return;
+                cb();
+                browser.clearTimeout(fallbackTimeout);
+                elm.removeEventListener("transitionend", transitionEndCB);
+            };
+            elm.addEventListener("transitionend", transitionEndCB, { once: true });
+            const fallbackTimeout = browser.setTimeout(transitionEndCB, timeout + 1);
+        }
+        else {
+            cb();
+        }
+    }
+    QWeb.addDirective({
+        name: "transition",
+        priority: 96,
+        atNodeCreation({ ctx, value, addNodeHook }) {
+            if (!QWeb.enableTransitions) {
+                return;
+            }
+            ctx.rootContext.shouldDefineUtils = true;
+            let name = value;
+            const hooks = {
+                insert: `utils.transitionInsert(vn, '${name}');`,
+                remove: `utils.transitionRemove(vn, '${name}', rm);`,
+            };
+            for (let hookName in hooks) {
+                addNodeHook(hookName, hooks[hookName]);
+            }
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-slot
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "slot",
+        priority: 80,
+        atNodeEncounter({ ctx, value, node, qweb }) {
+            const slotKey = ctx.generateID();
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
+            ctx.addIf(`slot${slotKey}`);
+            let parentNode = `c${ctx.parentNode}`;
+            if (!ctx.parentNode) {
+                ctx.rootContext.shouldDefineResult = true;
+                ctx.rootContext.shouldDefineUtils = true;
+                parentNode = `children${ctx.generateID()}`;
+                ctx.addLine(`let ${parentNode}= []`);
+                ctx.addLine(`result = {}`);
+            }
+            ctx.addLine(`slot${slotKey}.call(this, context.__owl__.scope, Object.assign({}, extra, {parentNode: ${parentNode}, parent: extra.parent || context}));`);
+            if (!ctx.parentNode) {
+                ctx.addLine(`utils.defineProxy(result, ${parentNode}[0]);`);
+            }
+            if (node.hasChildNodes()) {
+                ctx.addElse();
+                const nodeCopy = node.cloneNode(true);
+                nodeCopy.removeAttribute("t-slot");
+                qweb._compileNode(nodeCopy, ctx);
+            }
+            ctx.closeIf();
+            return true;
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-model
+    //------------------------------------------------------------------------------
+    QWeb.utils.toNumber = function (val) {
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n;
+    };
+    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
+    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
+    QWeb.addDirective({
+        name: "model",
+        priority: 42,
+        atNodeCreation({ ctx, nodeID, value, node, fullName, addNodeHook }) {
+            const type = node.getAttribute("type");
+            let handler;
+            let event = fullName.includes(".lazy") ? "change" : "input";
+            // First step: we need to understand the structure of the expression, and
+            // from it, extract a base expression (that we can capture, which is
+            // important because it will be used in a handler later) and a formatted
+            // expression (which uses the captured base expression)
+            //
+            // Also, we support 2 kinds of values: some.expr.value or some.expr[value]
+            // For the first one, we have:
+            // - base expression = scope[some].expr
+            // - expression = exprX.value (where exprX is the var that captures the base expr)
+            // and for the expression with brackets:
+            // - base expression = scope[some].expr
+            // - expression = exprX[keyX] (where exprX is the var that captures the base expr
+            //        and keyX captures scope[value])
+            let expr;
+            let baseExpr;
+            if (hasDotAtTheEnd.test(value)) {
+                // we manage the case where the expr has a dot: some.expr.value
+                const index = value.lastIndexOf(".");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                expr = `expr${nodeID}${value.slice(index)}`;
+            }
+            else if (hasBracketsAtTheEnd.test(value)) {
+                // we manage here the case where the expr ends in a bracket expression:
+                //    some.expr[value]
+                const index = value.lastIndexOf("[");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                let exprKey = value.trimRight().slice(index + 1, -1);
+                ctx.addLine(`let exprKey${nodeID} = ${ctx.formatExpression(exprKey)};`);
+                expr = `expr${nodeID}[exprKey${nodeID}]`;
+            }
+            else {
+                throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+            }
+            const key = ctx.generateTemplateKey();
+            if (node.tagName === "select") {
+                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
+                addNodeHook("create", `n.elm.value=${expr};`);
+                event = "change";
+                handler = `(ev) => {${expr} = ev.target.value}`;
+            }
+            else if (type === "checkbox") {
+                ctx.addLine(`p${nodeID}.props = {checked: ${expr}};`);
+                handler = `(ev) => {${expr} = ev.target.checked}`;
+            }
+            else if (type === "radio") {
+                const nodeValue = node.getAttribute("value");
+                ctx.addLine(`p${nodeID}.props = {checked:${expr} === '${nodeValue}'};`);
+                handler = `(ev) => {${expr} = ev.target.value}`;
+                event = "click";
+            }
+            else {
+                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
+                const trimCode = fullName.includes(".trim") ? ".trim()" : "";
+                let valueCode = `ev.target.value${trimCode}`;
+                if (fullName.includes(".number")) {
+                    ctx.rootContext.shouldDefineUtils = true;
+                    valueCode = `utils.toNumber(${valueCode})`;
+                }
+                handler = `(ev) => {${expr} = ${valueCode}}`;
+            }
+            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || (${handler});`);
+            ctx.addLine(`p${nodeID}.on['${event}'] = extra.handlers[${key}];`);
+        },
+    });
+    //------------------------------------------------------------------------------
+    // t-key
+    //------------------------------------------------------------------------------
+    QWeb.addDirective({
+        name: "key",
+        priority: 45,
+        atNodeEncounter({ ctx, value, node }) {
+            if (ctx.loopNumber === 0) {
+                ctx.keyStack.push(ctx.rootContext.hasKey0);
+                ctx.rootContext.hasKey0 = true;
+            }
+            ctx.addLine("{");
+            ctx.indent();
+            ctx.addLine(`let key${ctx.loopNumber} = ${ctx.formatExpression(value)};`);
+        },
+        finalize({ ctx }) {
+            ctx.dedent();
+            ctx.addLine("}");
+            if (ctx.loopNumber === 0) {
+                ctx.rootContext.hasKey0 = ctx.keyStack.pop();
+            }
+        },
+    });
+
+    const config = {
+        translatableAttributes: TRANSLATABLE_ATTRS,
+    };
+    Object.defineProperty(config, "mode", {
+        get() {
+            return QWeb.dev ? "dev" : "prod";
+        },
+        set(mode) {
+            QWeb.dev = mode === "dev";
+            if (QWeb.dev) {
+                console.info(`Owl is running in 'dev' mode.
+
+This is not suitable for production use.
+See https://github.com/odoo/owl/blob/owl-1.x/doc/reference/config.md#mode for more information.`);
+            }
+        },
+    });
+    Object.defineProperty(config, "enableTransitions", {
+        get() {
+            return QWeb.enableTransitions;
+        },
+        set(value) {
+            QWeb.enableTransitions = value;
+        },
+    });
+
+    /**
+     * We define here OwlEvent, a subclass of CustomEvent, with an additional
+     * attribute:
+     *  - originalComponent: the component that triggered the event
+     */
+    class OwlEvent extends CustomEvent {
+        constructor(component, eventType, options) {
+            super(eventType, options);
+            this.originalComponent = component;
+>>>>>>> 372ae01f9a52 (temp)
         }
     }
 
