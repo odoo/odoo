@@ -210,6 +210,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             'bounced_msg_id': [trace.message_id],
         })
         self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
+        return trace
 
     def gateway_mail_click(self, mailing, record, click_label):
         """ Simulate a click on a sent email.
@@ -241,6 +242,22 @@ class MassMailCase(MailCase, MockLinkTracker):
                 break
         else:
             raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
+        return trace
+
+    def gateway_mail_open(self, mailing, record):
+        """ Simulate opening an email through blank.gif icon access. As we
+        don't want to use the whole Http layer just for that we will just
+        call 'set_opened()' on trace, until having a better option.
+
+        :param mailing: a ``mailing.mailing`` record on which we find a trace
+          to open;
+        :param record: record which should open;
+        """
+        trace = mailing.mailing_trace_ids.filtered(
+            lambda t: t.model == record._name and t.res_id == record.id
+        )
+        trace.set_opened()
+        return trace
 
     @classmethod
     def _create_bounce_trace(cls, mailing, records, dt=None):
