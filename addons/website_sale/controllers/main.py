@@ -1055,7 +1055,7 @@ class WebsiteSale(http.Controller):
             )
         return {
             'website_sale_order': order,
-            'errors': [],
+            'errors': self._get_shop_payment_errors(order),
             'partner': order.partner_invoice_id,
             'order': order,
             'payment_action_id': request.env.ref('payment.action_payment_acquirer').id,
@@ -1071,6 +1071,15 @@ class WebsiteSale(http.Controller):
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
         }
+
+    def _get_shop_payment_errors(self, order):
+        """ Check that there is no error that should block the payment.
+
+        :param sale.order order: The sales order to pay
+        :return: A list of errors (error_title, error_message)
+        :rtype: list[tuple]
+        """
+        return []
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     def shop_payment(self, **post):
@@ -1130,6 +1139,12 @@ class WebsiteSale(http.Controller):
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
+
+        errors = self._get_shop_payment_errors(order)
+        if errors:
+            first_error = errors[0]  # only display first error
+            error_msg = f"{first_error[0]}\n{first_error[1]}"
+            raise ValidationError(error_msg)
 
         if transaction_id:
             tx = request.env['payment.transaction'].sudo().browse(transaction_id)
