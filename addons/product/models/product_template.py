@@ -171,8 +171,11 @@ class ProductTemplate(models.Model):
     def _compute_product_document_count(self):
         for template in self:
             template.product_document_count = template.env['product.document'].search_count([
-                ('res_model', '=', 'product.template'),
-                ('res_id', '=', template.id),
+                '|',
+                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id),
+                    '&',
+                        ('res_model', '=', 'product.product'),
+                        ('res_id', 'in', template.product_variant_ids.ids),
             ])
 
     @api.depends('image_1920', 'image_1024')
@@ -608,20 +611,33 @@ class ProductTemplate(models.Model):
                 'default_res_id': self.id,
                 'default_company_id': self.company_id.id,
             },
-            'domain': [('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+            'domain': [
+                '|',
+                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.id),
+                    '&',
+                        ('res_model', '=', 'product.product'),
+                        ('res_id', 'in', self.product_variant_ids.ids),
+            ],
             'target': 'current',
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     %s
-                </p><p>
+                </p>
+                <p>
                     %s
                     <br/>
                     %s
                 </p>
+                <p>
+                    <a class="oe_link" href="https://www.odoo.com/documentation/17.0/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip">
+                    %s
+                    </a>
+                </p>
             """ % (
                 _("Upload files to your product"),
-                _("Use this feature to store any files you would like to share with your customers."),
-                _("E.G: product description, ebook, legal notice, ..."),
+                _("Use this feature to store any files you would like to share with your customers"),
+                _("(e.g: product description, ebook, legal notice, ...)."),
+                _("Download examples")
             )
         }
 
