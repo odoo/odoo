@@ -2,7 +2,6 @@
 
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -194,14 +193,6 @@ export class Record extends DataPoint {
             resIds.splice(index + 1, 0, resId);
             await this.model.load({ resId, resIds, mode: "edit" });
         });
-    }
-
-    /**
-     * @param {string} fieldName
-     */
-    getFieldDomain(fieldName) {
-        const { domain } = this.fields[fieldName];
-        return domain ? new Domain(domain).toList(this.evalContext) : [];
     }
 
     async isDirty() {

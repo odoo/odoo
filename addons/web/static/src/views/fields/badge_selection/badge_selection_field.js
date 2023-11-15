@@ -3,6 +3,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -10,16 +11,22 @@ export class BadgeSelectionField extends Component {
     static template = "web.BadgeSelectionField";
     static props = {
         ...standardFieldProps,
-        domain: { type: Array, optional: true },
-        size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg"].includes(s), default: "md"},
+        domain: { type: [Array, Function], optional: true },
+        size: {
+            type: String,
+            optional: true,
+            validate: (s) => ["sm", "md", "lg"].includes(s),
+            default: "md",
+        },
     };
 
     setup() {
         this.type = this.props.record.fields[this.props.name].type;
         if (this.type === "many2one") {
             this.specialData = useSpecialData((orm, props) => {
+                const domain = getFieldDomain(props.record, props.name, props.domain);
                 const { relation } = props.record.fields[props.name];
-                return orm.call(relation, "name_search", ["", props.domain]);
+                return orm.call(relation, "name_search", ["", domain]);
             });
         }
     }
@@ -91,13 +98,14 @@ export const badgeSelectionField = {
             choices: [
                 { label: "Small", value: "sm" },
                 { label: "Medium", value: "md" },
-                { label: "Large", value: "lg" },],
+                { label: "Large", value: "lg" },
+            ],
             default: "md",
-        }
+        },
     ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
-        domain: dynamicInfo.domain(),
+        domain: dynamicInfo.domain,
         size: fieldInfo.options.size,
     }),
 };
