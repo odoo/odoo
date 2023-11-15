@@ -101,6 +101,23 @@ QUnit.module("Tour service", (hooks) => {
         assert.strictEqual(sortedTours[0].name, "Tour 3");
     });
 
+    QUnit.test("override existing tour by using saveAs", async function (assert) {
+        registry.category("web_tour.tours")
+            .add("Tour 1", {
+                steps: () => [{ trigger: "#1" }],
+                saveAs: "homepage"
+            })
+            .add("Tour 2", {
+                steps: () => [{ trigger: "#2" }],
+                saveAs: "homepage"
+            });
+        const env = await makeTestEnv({});
+        const sortedTours = env.services.tour_service.getSortedTours();
+        assert.strictEqual(sortedTours.length, 1);
+        assert.deepEqual(sortedTours[0].steps, [{ shadow_dom: undefined, trigger: "#2" }]);
+        assert.deepEqual(sortedTours[0].name, "homepage");
+    });
+
     QUnit.test("points to next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
