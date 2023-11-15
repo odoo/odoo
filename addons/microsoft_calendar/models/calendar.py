@@ -176,14 +176,16 @@ class Meeting(models.Model):
                 self._forbid_recurrence_update()
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
+        # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
         change_from_microsoft = self.env.context.get('dont_notify', False)
+        deactivated_events_ids = []
         for event in self:
             if values.get('user_id') and event.user_id.id != values['user_id'] and not change_from_microsoft:
                 sender_user, partner_ids = event._get_organizer_user_change_info(values)
                 partner_included = sender_user.partner_id in event.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
                 event._check_organizer_validation(sender_user, partner_included)
                 event._recreate_event_different_organizer(values, sender_user)
-                values['active'] = False
+                deactivated_events_ids.append(event.id)
 
         # check a Outlook limitation in overlapping the actual recurrence
         if recurrence_update_setting == 'self_only' and 'start' in values:
@@ -197,7 +199,12 @@ class Meeting(models.Model):
                     event._microsoft_delete(event._get_organizer(), event.ms_organizer_event_id, timeout=3)
                     event.microsoft_id = False
 
-        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        deactivated_events = self.browse(deactivated_events_ids)
+        res = super(Meeting, (self - deactivated_events).with_context(dont_notify=notify_context)).write(values)
+
+        # Deactivate events that were recreated after changing organizer.
+        if deactivated_events:
+            res |= super(Meeting, deactivated_events.with_context(dont_notify=notify_context)).write({**values, 'active': False})
 
         if recurrence_update_setting in ('all_events',) and len(self) == 1 \
            and values.keys() & self._get_microsoft_synced_fields():
