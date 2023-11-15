@@ -13,7 +13,7 @@ class HrEmployee(models.Model):
         SELECT id, EXISTS(SELECT 1 FROM hr_work_entry WHERE employee_id = e.id limit 1)
           FROM hr_employee e
          WHERE id in %s
-        """, (tuple(self.ids), ))
+        """, [tuple(self.ids) or (None,)])
 
         result = {eid[0]: eid[1] for eid in self.env.cr.fetchall()}
 
