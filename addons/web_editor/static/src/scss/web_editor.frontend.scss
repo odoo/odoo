@@ -48,7 +48,7 @@
 }
 
 @include media-breakpoint-up(lg) {
-    .o_grid_mode:not(.o_extra_menu_items .o_grid_mode) {
+    .o_grid_mode {
         display: grid !important;
         grid-auto-rows: 50px;
         grid-template-columns: repeat(12, 1fr);
@@ -66,6 +66,12 @@
 
     .container-fluid > .o_grid_mode {
         --gutter-x: 30px;
+    }
+
+    .o_extra_menu_items .o_grid_mode {
+        display: flex !important;
+        row-gap: 0px !important;
+        column-gap: 0px !important;
     }
 
     .o_grid_item_image {
