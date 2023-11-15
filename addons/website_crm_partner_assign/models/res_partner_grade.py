@@ -19,7 +19,7 @@ class ResPartnerGrade(models.Model):
 
     def _compute_website_url(self):
         super(ResPartnerGrade, self)._compute_website_url()
-        for grade in self:
+        for grade in self.filtered('id'):
             grade.website_url = "/partners/grade/%s" % (slug(grade))
 
     def _default_is_published(self):

@@ -14,5 +14,5 @@ class WebsiteResPartner(models.Model):
 
     def _compute_website_url(self):
         super(WebsiteResPartner, self)._compute_website_url()
-        for partner in self:
+        for partner in self.filtered('id'):
             partner.website_url = "/partners/%s" % slug(partner)

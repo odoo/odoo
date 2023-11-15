@@ -13,7 +13,7 @@ class ImLivechatChannel(models.Model):
 
     def _compute_website_url(self):
         super(ImLivechatChannel, self)._compute_website_url()
-        for channel in self:
+        for channel in self.filtered('id'):
             channel.website_url = "/livechat/channel/%s" % (slug(channel),)
 
     website_description = fields.Html(
