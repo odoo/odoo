@@ -156,7 +156,7 @@ export class VoiceRecorder extends Component {
         this.getMp3()
             .then((buffer) => {
                 const file = this._makeFile(buffer, "audio/mp3");
-                this.props.attachmentUploader.uploadFile(file, { isVoice: true });
+                this.props.attachmentUploader.uploadFile(file, { voice: true });
             })
             .catch(() => {});
         this.cleanUp();
