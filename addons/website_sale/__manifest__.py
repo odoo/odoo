@@ -60,7 +60,6 @@
         'web.assets_frontend': [
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/website_sale.scss',
-            'website_sale/static/src/scss/website_mail.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website/static/lib/multirange/multirange_custom.scss',
