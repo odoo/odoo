@@ -188,6 +188,21 @@ class HrEmployee(models.Model):
                 empl_name=self.sudo().name))
         return attendance
 
+    def _get_employee_batch_calendar_intervals(self, start, stop, leave_domain=None, lunch=False):
+        self.ensure_one()
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        expected_attendances = calendar._attendance_intervals_batch(
+            start, stop, self.resource_id, lunch=lunch
+        )[self.resource_id.id]
+        # Substract Global Leaves and Employee's Leaves
+        if leave_domain:
+            leave_intervals = calendar._leave_intervals_batch(
+                start, stop, self.resource_id, domain=leave_domain
+            )
+            expected_attendances -= leave_intervals[False] | leave_intervals[self.resource_id.id]
+
+        return expected_attendances
+
     def action_open_last_month_attendances(self):
         self.ensure_one()
         return {
