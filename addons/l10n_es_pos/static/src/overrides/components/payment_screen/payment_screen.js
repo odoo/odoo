@@ -8,14 +8,10 @@ patch(PaymentScreen.prototype, {
             return await super.validateOrder(...arguments);
         }
         const order = this.currentOrder;
-        this.currentOrder.to_invoice = true;
+        order.is_l10n_es_simplified_invoice = order.canBeSimplifiedInvoiced() && !order.to_invoice;
+        order.to_invoice = true;
         const simplified_partner =
             this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
-        if (order.canBeSimplifiedInvoiced()) {
-            order.is_l10n_es_simplified_invoice ??= true;
-        } else {
-            order.is_l10n_es_simplified_invoice = false;
-        }
         order.partner ||= simplified_partner;
         if (!order.is_l10n_es_simplified_invoice && order.partner.id === simplified_partner.id) {
             order.partner = null;
