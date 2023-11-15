@@ -27,7 +27,26 @@ const preventRaceConditionStep = [{
     }
 }];
 
-const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
+const replaceIconByImage = function (url) {
+    return [{
+        content: "Replace the icon by an image",
+        trigger: `.s_social_media a[href='${url}'] i.fa`,
+        run: "dblclick",
+    },
+    {
+        content: "Go to the Image tab in the media dialog",
+        trigger: "#editor-media-image-tab",
+    },
+    {
+        content: "Select the image",
+        trigger: ".o_select_media_dialog img[title='s_banner_default_image.jpg']",
+    },
+    ...preventRaceConditionStep,
+    ];
+};
+
+const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon = false) {
+    const replaceIconByImageSteps = replaceIcon ? replaceIconByImage("https://www.example.com") : [];
     return [{
         content: "Click on Add New Social Network",
         trigger: 'we-list we-button.o_we_list_add_optional',
@@ -42,6 +61,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
         trigger: `.s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
         run: () => {}, // This is a check.
     },
+    ...replaceIconByImageSteps,
     {
         content: "Change added Option label",
         trigger: `we-list table input:eq(${optionIndex})`,
@@ -185,4 +205,19 @@ tour.register('snippet_social_media', {
                  ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
         run: () => {}, // This is a check.
     },
+    // Create a social network but replace its icon by an image before setting
+    // the link (`replaceIcon` parameter set to `true`).
+    ...addNewSocialNetwork(8, 8, "https://google.com", true),
+    // Create a social network after replacing the first icon by an image.
+    ...replaceIconByImage("/website/social/twitter"),
+    ...addNewSocialNetwork(9, 9, "https://facebook.com"),
+    {
+        content: "Check if the result is correct after adding images",
+        trigger: ".s_social_media" +
+                 ":has(a:eq(0)[href='/website/social/twitter']:has(img))" +
+                 ":has(a:eq(8)[href='https://google.com']:has(img))" +
+                 ":has(a:eq(9)[href='https://facebook.com']:has(img))",
+        run: () => {}, // This is a check.
+    },
+    ...wTourUtils.clickOnSave(),
 ]);
