@@ -4,6 +4,7 @@ import {
     createFile,
     inputFiles,
 } from 'web.test_utils_file';
+import { contains } from '@web/../tests/utils';
 
 import tour from 'web_tour.tour';
 
@@ -16,6 +17,12 @@ import tour from 'web_tour.tour';
 tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     test: true,
 }, [{
+    content: "Wait for the chatter to be fully loaded",
+    trigger: ".o_Chatter",
+    async run() {
+        await contains(".o_Message", { count: 2 });
+    },
+}, {
     content: "Click on Send Message",
     trigger: '.o_ChatterTopbar_buttonSendMessage',
 }, {
