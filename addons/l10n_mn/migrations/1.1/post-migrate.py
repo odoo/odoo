@@ -15,7 +15,7 @@ def migrate(cr, version):
             if matching_template:
                 cashflow_tag = matching_template.tag_ids
                 if cashflow_tag:
-                    account.write({'tag_ids': [Command.link(cashflow_tag.id)]})
+                    account.write({'tag_ids': [Command.link(tag_id) for tag_id in cashflow_tag.ids]})
 
     # Update all taxes with the new tax repartition lines on templates.
     update_taxes_from_templates(cr, 'l10n_mn.mn_chart_1')
