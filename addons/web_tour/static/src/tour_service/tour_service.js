@@ -63,8 +63,9 @@ export const tourService = {
         const tours = {};
         const tourRegistry = registry.category("web_tour.tours");
         function register(name, tour) {
+            name = tour.saveAs || name
             tours[name] = {
-                name: tour.saveAs || name,
+                name,
                 get steps() {
                     if (typeof tour.steps === "function") {
                         return tour.steps().map((step) => {
