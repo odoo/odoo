@@ -497,8 +497,7 @@ class SurveyUserInput(models.Model):
         else:
             return 'skipped'
 
-    def _simple_choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers, question_incorrect_scored_answers):
-        user_input_line = user_input_lines[0]
+    def _simple_choice_question_answer_result(self, user_input_line, question_correct_suggested_answers, question_incorrect_scored_answers):
         user_answer = user_input_line.suggested_answer_id if not user_input_line.skipped else self.env['survey.question.answer']
         if user_answer in question_correct_suggested_answers:
             return 'correct'
