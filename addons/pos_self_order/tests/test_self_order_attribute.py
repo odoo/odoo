@@ -16,6 +16,11 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
             'self_ordering_service_mode': 'counter',
         })
 
+        product = self.env['product.product'].search([('name', '=', 'Desk Organizer')])[0]
+        product.attribute_line_ids[0].product_template_value_ids[0].price_extra = 0.0
+        product.attribute_line_ids[0].product_template_value_ids[1].price_extra = 1.0
+        product.attribute_line_ids[0].product_template_value_ids[2].price_extra = 2.0
+
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
 
