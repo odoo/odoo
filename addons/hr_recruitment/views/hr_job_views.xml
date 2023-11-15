@@ -281,7 +281,7 @@
             <field name="name" position="after">
                 <field name="department_id"/>
                 <field name="no_of_recruitment"/>
-                <field name="application_count" string="Applications"/>
+                <field name="application_count" string="Applications" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
             </field>
             <field name="no_of_employee" position="after">
                 <field name="expected_employees" optional="hide"/>
@@ -292,7 +292,6 @@
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
-                <field name="no_of_hired_employee" optional="hide"/>
             </field>
         </field>
     </record>
