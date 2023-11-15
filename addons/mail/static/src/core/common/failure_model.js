@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { assignIn, onChange } from "@mail/utils/common/misc";
+import { onChange } from "@mail/utils/common/misc";
 import { markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -40,16 +40,6 @@ export class Failure extends Record {
         return failure;
     }
 
-    update(data) {
-        assignIn(this, data, ["notifications"]);
-        this.lastMessage = this.notifications[0]?.message;
-        for (const notification of this.notifications) {
-            if (this.lastMessage?.id < notification.message?.id) {
-                this.lastMessage = notification.message;
-            }
-        }
-    }
-
     delete() {
         this._store.failures.delete(this);
         super.delete();
@@ -69,7 +59,18 @@ export class Failure extends Record {
                 .filter((id) => !!id),
         ]);
     }
-    lastMessage = Record.one("Message");
+    lastMessage = Record.one("Message", {
+        /** @this {import("models").Failure} */
+        compute() {
+            let lastMsg = this.notifications[0]?.message;
+            for (const notification of this.notifications) {
+                if (lastMsg?.id < notification.message?.id) {
+                    lastMsg = notification.message;
+                }
+            }
+            return lastMsg;
+        },
+    });
     /** @type {'sms' | 'email'} */
     get type() {
         return this.notifications?.[0]?.notification_type;
