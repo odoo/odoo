@@ -219,7 +219,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         sale_order_line_id: line,
                         customer_note: line.customer_note,
                     };
-                    let new_line = new Orderline({ env: this.env }, line_values);
+                    const new_line = new Orderline({ env: this.env }, line_values);
 
                     if (
                         new_line.get_product().tracking !== "none" &&
@@ -257,12 +257,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     if (product_unit && !product.get_unit().is_pos_groupable) {
                         //loop for value of quantity
                         for (let j = 0; j < new_line.quantity; j++) {
-                            let splitted_line = new Orderline({}, line_values);
+                            const splitted_line = new Orderline({ env: this.env }, line_values);
                             splitted_line.quantity = 1;
                             this.pos.get_order().add_orderline(splitted_line);
                         }
-                    }
-                    else {
+                    } else {
                         this.pos.get_order().add_orderline(new_line);
                     }
                 }
