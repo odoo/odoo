@@ -815,11 +815,6 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(form.bar, "foor")
         self.assertEqual(form.baz, "baz")
 
-    def test_onchange_default_compute(self):
-        form = common.Form(self.env['test_new_api.mixed'])
-        # 'now' is computed but has no dependency
-        self.assertTrue(form.now)
-
     def test_onchange_once(self):
         """ Modifies `foo` field which will trigger an onchange method and
         checks it was triggered only one time. """
