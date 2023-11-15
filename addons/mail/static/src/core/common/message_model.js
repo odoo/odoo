@@ -2,7 +2,7 @@
 
 import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
+import { onChange } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -40,8 +40,7 @@ export class Message extends Record {
 
     /** @param {Object} data */
     update(data) {
-        assignDefined(this, data);
-        assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
+        super.update(data);
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
             const htmlBody = parser.parseFromString(this.body, "text/html");

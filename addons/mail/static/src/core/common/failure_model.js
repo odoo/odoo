@@ -48,7 +48,6 @@ export class Failure extends Record {
                 this.lastMessage = notification.message;
             }
         }
-        this.resIds.add(data.resId);
     }
 
     delete() {
@@ -63,9 +62,14 @@ export class Failure extends Record {
     get resModel() {
         return this.notifications?.[0]?.message?.originThread?.model;
     }
+    get resIds() {
+        return new Set([
+            ...this.notifications
+                .map((notif) => notif.message?.originThread?.id)
+                .filter((id) => !!id),
+        ]);
+    }
     lastMessage = Record.one("Message");
-    /** @type {Set<number>} */
-    resIds = new Set();
     /** @type {'sms' | 'email'} */
     get type() {
         return this.notifications?.[0]?.notification_type;
