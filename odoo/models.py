@@ -4101,10 +4101,13 @@ class BaseModel(metaclass=MetaModel):
             return self
 
         # determine ids in database that satisfy ir.rules
-        self._flush_search([])
-        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
-        self._cr.execute(query.select())
-        valid_ids = {row[0] for row in self._cr.fetchall()}
+        if self.ids:
+            self._flush_search([])
+            query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
+            self._cr.execute(query.select())
+            valid_ids = {row[0] for row in self._cr.fetchall()}
+        else:
+            valid_ids = set()
 
         # return new ids without origin and ids with origin in valid_ids
         return self.browse([
