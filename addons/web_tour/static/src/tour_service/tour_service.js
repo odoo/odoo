@@ -63,8 +63,9 @@ export const tourService = {
         const tours = {};
         const tourRegistry = registry.category("web_tour.tours");
         function register(name, tour) {
+            name = tour.saveAs || name
             tours[name] = {
-                name: tour.saveAs || name,
+                name,
                 steps: tour.steps,
                 url: tour.url,
                 rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
