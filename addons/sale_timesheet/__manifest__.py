@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Sales Timesheet',
-    'category': 'Hidden',
-    'summary': 'Sell based on timesheets',
+    'name': 'Time-Based Service Invoicing',
+    'category': 'Services/Timesheets',
+    'summary': 'Sell services and invoice for your time based on recorded timesheets.',
     'description': """
 Allows to sell timesheets in your sales order
 =============================================

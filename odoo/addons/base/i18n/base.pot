@@ -1240,7 +1240,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_documents_project
 msgid ""
 "\n"
-"Add the ability to create invoices from the document module.\n"
+"Generate invoices from the Documents module.\n"
 msgstr ""
 
 #. module: base
@@ -1315,7 +1315,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_documents_project_sale
 msgid ""
 "\n"
-"Adds the ability to set workspace templates on products.\n"
+"Automate workspace template creation for project documents upon sales order confirmation.\n"
 msgstr ""
 
 #. module: base
@@ -1474,7 +1474,7 @@ msgid ""
 "\n"
 "Allows to create task from your sales order\n"
 "=============================================\n"
-"This module allows to generate a project/task from sales orders.\n"
+"Automatically generate a project and/or a task upon confirmation of sales orders.\n"
 msgstr ""
 
 #. module: base
@@ -1483,7 +1483,7 @@ msgid ""
 "\n"
 "Allows to display sale information in the SOL services apps\n"
 "===========================================================\n"
-"Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). \n"
+"Access additional information while browsing sales order items in the project and planning apps \n"
 msgstr ""
 
 #. module: base
@@ -1772,7 +1772,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_documents_fsm
 msgid ""
 "\n"
-"Avoid auto-enabling the documents feature on fsm projects.\n"
+"Prevent automatic activation of the Documents feature on Field Service projects.\n"
 msgstr ""
 
 #. module: base
@@ -2085,21 +2085,23 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_enterprise
 msgid ""
 "\n"
-"Bridge module for project and enterprise\n"
+"Plan your tasks and view your schedule in a Gantt chart.\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise_hr
 msgid ""
 "\n"
-"Bridge module for project_enterprise and hr\n"
+"View at a glance assigned availability based on their working hours when scheduling tasks in the Gantt view. "
+"This information is also considered when scheduling tasks in batches or resolving conflicts in dependencies.\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise_hr_contract
 msgid ""
 "\n"
-"Bridge module for project_enterprise and hr_contract\n"
+"View at a glance assignee availability based on their contracts when scheduling tasks in the Gantt view. This "
+"information is also considered when scheduling tasks in batches or resolving conflicts in dependencies.\n"
 msgstr ""
 
 #. module: base
@@ -2283,8 +2285,10 @@ msgid ""
 "Compare timesheets and forecast for your projects.\n"
 "==================================================\n"
 "\n"
-"In your project plan, you can compare your timesheets and your forecast to better schedule your resources.\n"
+"Analyze expected and actual costs and revenues by comparing timesheets with previous schedules.\n"
 msgstr ""
+
+
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast
@@ -4248,7 +4252,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
 msgid ""
 "\n"
-"Module linking the attendance module to the timesheet app.\n"
+"Compare attendance hours with hours recorded in timesheets.\n"
 msgstr ""
 
 #. module: base
@@ -4739,7 +4743,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_holidays
 msgid ""
 "\n"
-"Project and task integration with holidays\n"
+"View employees' time off in the Gantt view of your tasks and receive a warning when a task is scheduled during an employee's time off.\n"
 msgstr ""
 
 #. module: base
@@ -4912,7 +4916,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_forecast
 msgid ""
 "\n"
-"Schedule your teams across projects and estimate deadlines more accurately.\n"
+"Schedule shifts for your projects and estimate deadlines more accurately.\n"
 msgstr ""
 
 #. module: base
@@ -8591,6 +8595,11 @@ msgid "A payment provider covering India."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_project_forecast
+msgid "Automatically generate shifts for your projects upon sales order confirmation."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_payment_mercado_pago
 msgid "A payment provider covering several countries in Latin America."
 msgstr ""
@@ -8762,6 +8771,7 @@ msgstr ""
 msgid "Access Controls"
 msgstr ""
 
+
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
@@ -8827,6 +8837,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_audit_trail
 #: model:ir.module.module,summary:base.module_account_audit_trail
 msgid "Account Audit Trail"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_project_forecast
+msgid "Project Shifts Auto-Generation on Sales Orders"
 msgstr ""
 
 #. module: base
@@ -9147,13 +9162,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
-#: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
-#: model:ir.module.module,summary:base.module_data_merge_project
 msgid "Add Merge action in contextual menu of project task and tag models."
 msgstr ""
 
@@ -9199,7 +9212,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_project
-msgid "Add a task suggestion form to your website"
+msgid "Generate tasks in the Project app from a form published on your website."
 msgstr ""
 
 #. module: base
@@ -9398,14 +9411,15 @@ msgstr ""
 #: model:ir.module.module,description:base.module_sale_project_stock
 #: model:ir.module.module,summary:base.module_sale_project_stock
 msgid ""
-"Adds a full traceability of inventory operations on the profitability "
-"report."
+"Access full traceability of inventory operations related to the sales order associated "
+"with the analytic account of your projects in your profitability report."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_sale_expense
+#: model:ir.module.module,summary:base.module_project_sale_expense
 msgid ""
-"Adds a full traceability of reinvoice expenses on the profitability report."
+"Track the revenues of expenses associated with the analytic account of your projects."
 msgstr ""
 
 #. module: base
@@ -10517,7 +10531,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
-msgid "Avoid auto-enabling the documents feature on fsm projects"
+#: model:ir.module.module,description:base.module_documents_fsm
+msgid "Prevent automatic activation of the Documents feature on Field Service projects."
 msgstr ""
 
 #. module: base
@@ -11207,6 +11222,16 @@ msgid "Bridge between Mrp and Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_data_merge_helpdesk
+msgid "Merge helpdesk tickets together."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_data_merge_project
+msgid "Merge project tasks or tags."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
 msgid "Bridge between Sale and Accounting"
 msgstr ""
@@ -11223,24 +11248,10 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_project_hr_payroll_account
-msgid ""
-"Bridge created to add the number of contracts linked to an AA to a project "
-"form"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_project_hr_expense
 msgid ""
-"Bridge created to add the number of expenses linked to an AA to a project "
-"form"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_project_sale_subscription
-msgid ""
-"Bridge created to add the number of subscriptions linked to an AA to a "
-"project form"
+"Track the costs of expenses associated with the analytic account of your "
+"projects."
 msgstr ""
 
 #. module: base
@@ -11250,7 +11261,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_margin
-msgid "Bridge module between Sales Margin and Sales Timesheet"
+msgid "Obtain an estimate of your margin for services on your sales orders"
 msgstr ""
 
 #. module: base
@@ -11309,22 +11320,24 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk
 #: model:ir.module.module,summary:base.module_website_helpdesk
-msgid "Bridge module for helpdesk modules using the website."
+msgid "Generate tickets in the Helpdesk app from a form published on your website."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
-msgid "Bridge module for project and enterprise"
+msgid "Plan your tasks and view your schedule in a Gantt chart."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise_hr
-msgid "Bridge module for project_enterprise and hr"
+msgid "View at a glance assigned availability based on their working hours when scheduling tasks in the Gantt view. "
+"This information is also considered when scheduling tasks in batches or resolving conflicts in dependencies."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_contract
-msgid "Bridge module for project_enterprise and hr_contract"
+msgid "View at a glance assignee availability based on their contracts when scheduling tasks in the Gantt view. This "
+"information is also considered when scheduling tasks in batches or resolving conflicts in dependencies."
 msgstr ""
 
 #. module: base
@@ -12304,12 +12317,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
-msgid "Compare timesheets and forecast for your projects"
+msgid "Timesheets and Planning Margin Analysis"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
-msgid "Compare timesheets and plannings"
+msgid "Improve future planning by comparing timesheets with previous schedules and considering effective time utilization."
 msgstr ""
 
 #. module: base
@@ -12421,7 +12434,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
-msgid "Configure timesheet invoicing"
+msgid "Choose to invoice all your timesheets without distinction or only those that are approved"
 msgstr ""
 
 #. module: base
@@ -12645,12 +12658,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
-msgid "Convert Tickets from/to Leads"
+msgid "Convert tickets to opportunities and vice versa."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
-msgid "Convert emails to Helpdesk Tickets."
+msgid "Transform emails received in your mailbox into tickets."
 msgstr ""
 
 #. module: base
@@ -12818,8 +12831,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
+msgid "Design tailored worksheet templates for various interventions, complete task reports "
+"for customer sharing and signing, and analyze collected intervention data."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_report
-msgid "Create Reports for Field service workers"
+msgid "Include details about products added to tasks in the field service report."
 msgstr ""
 
 #. module: base
@@ -13433,7 +13451,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_industry_fsm
-msgid "DIN 5008 - Field Service"
+msgid "DIN 5008 Field Service Report Layout"
 msgstr ""
 
 #. module: base
@@ -14240,7 +14258,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
-msgid "Documents - FSM"
+msgid "Documents Auto-activation Off in Field Service"
 msgstr ""
 
 #. module: base
@@ -14275,12 +14293,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
-msgid "Documents - Project - Sale"
+msgid "Documents Workspace Templates on Products"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
-msgid "Documents - Projects"
+msgid "Invoice Generation from Documents"
 msgstr ""
 
 #. module: base
@@ -14305,7 +14323,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sign
-msgid "Documents Project Sign"
+msgid "Task Document Signatures"
 msgstr ""
 
 #. module: base
@@ -15394,7 +15412,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sms
-msgid "FSM - SMS"
+msgid "Field Service Task Stage Notification via SMS"
 msgstr ""
 
 #. module: base
@@ -15546,27 +15564,27 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
-msgid "Field Service - Sale"
+msgid "Time and Material Invoicing of Field Service Tasks"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_subscription
-msgid "Field Service - Sale Subscription"
+msgid "Subscription Field Service Task Recurrence Management"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
-msgid "Field Service Reports"
+msgid "Worksheets for Field Service Tasks"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
-msgid "Field Service Reports - Sale"
+msgid "Products Details in Field Service Report"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
-msgid "Field Service Stock"
+msgid "Inventory Validation on Field Service Task Completion"
 msgstr ""
 
 #. module: base
@@ -16778,7 +16796,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
-msgid "Help Center for helpdesk based on Odoo Forum"
+msgid "Enable customers to answer each other's questions on a forum and browse posts "
+"in your Help Center. Transform tickets into forum questions."
 msgstr ""
 
 #. module: base
@@ -16789,32 +16808,32 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
-msgid "Helpdesk - CRM"
+msgid "Convert tickets to opportunities and vice versa."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sms
-msgid "Helpdesk - SMS"
+msgid "Ticket Stage Notification via SMS"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
-msgid "Helpdesk Account"
+msgid "Credit Notes from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale
-msgid "Helpdesk After Sales"
+msgid "Ticket Billing"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_fsm
-msgid "Helpdesk FSM"
+msgid "Field Service Tasks from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_fsm_sale
-msgid "Helpdesk FSM - Sale"
+msgid "Ticket to Field Service Task Sales Bridge"
 msgstr ""
 
 #. module: base
@@ -16824,67 +16843,67 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_knowledge
-msgid "Helpdesk Knowledge"
+msgid "Knowledge Articles in Help Center"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_mail_plugin
-msgid "Helpdesk Mail Plugin"
+msgid "Email-to-Ticket Conversion"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
-msgid "Helpdesk Merge action"
+msgid "Ticket Merging"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
-msgid "Helpdesk Repair"
+msgid "Repairs from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_loyalty
-msgid "Helpdesk Sale Loyalty"
+msgid "Grant Discounts from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
-msgid "Helpdesk Stock"
+msgid "Product Returns from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock_account
-msgid "Helpdesk Stock Account"
+msgid "Product Return and Refund Matching on Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_holidays
-msgid "Helpdesk Time Off"
+msgid "Time-Off Consideration in Ticket Assignments"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
-msgid "Helpdesk Timesheet"
+msgid "Tickets Time Tracking"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_holidays
-msgid "Helpdesk integration with holidays"
+msgid "Account for employee time off when automatically assigning tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_knowledge
-msgid "Helpdesk integration with knowledge"
+msgid "Let customers browse through your Knowledge articles in your help center before submitting tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock_account
-msgid "Helpdesk, Stock, Account"
+msgid "Get the correct delivery orders for returns and invoices for refunds based on the product selected in the ticket."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
-msgid "Helpdesk: Help Center"
+msgid "Forum Posts in Help Center and Ticket Conversion"
 msgstr ""
 
 #. module: base
@@ -18077,7 +18096,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_mail_plugin
-msgid "Integrate your inbox with projects"
+msgid "Transform emails received in your mailbox into tasks."
 msgstr ""
 
 #. module: base
@@ -18098,7 +18117,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_service
-msgid "Interaction between Sales and services apps (project and planning)"
+msgid "Access additional information while browsing sales order items in the project and planning apps"
 msgstr ""
 
 #. module: base
@@ -19231,7 +19250,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
-msgid "Link between timesheet and time off"
+msgid "Exclude timesheets linked to time off when calculating employee overtime."
 msgstr ""
 
 #. module: base
@@ -19485,7 +19504,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp
-msgid "MRP Project"
+msgid "Project Manufacturing Analytics"
 msgstr ""
 
 #. module: base
@@ -20750,12 +20769,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_mrp
-msgid "Monitor MRP using project"
+msgid "Track the costs of manufacturing orders associated with the analytic account of your projects."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_purchase
-msgid "Monitor purchase in project"
+msgid "Track the costs of purchase orders associated with the analytic account of your projects."
 msgstr ""
 
 #. module: base
@@ -22508,7 +22527,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project
-msgid "Online Task Submission"
+msgid "Website-Form Task Creation"
 msgstr ""
 
 #. module: base
@@ -22840,7 +22859,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
-msgid "Organize and plan your projects"
+msgid "Manage projects collaboratively and meet deadlines."
 msgstr ""
 
 #. module: base
@@ -23677,7 +23696,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
-msgid "Plan your resources on project tasks"
+msgid "Schedule shifts for your projects and estimate deadlines more accurately."
 msgstr ""
 
 #. module: base
@@ -23688,32 +23707,33 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_hr_skills
-msgid "Planning - Skills"
+msgid "Planning with Skills Search"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_contract
-msgid "Planning Contract"
+msgid "Planning & Resource Contract Management"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning_hr_skills
-msgid "Planning Skills"
+msgid "Assign shifts to the right resources by searching for their skills."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_holidays
-msgid "Planning Time Off"
+msgid "Planning and Time Off Integration"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning_contract
-msgid "Planning integration with contracts"
+msgid "View resource availability based on their work contracts and ensure accurate allocation of hours."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning_holidays
-msgid "Planning integration with holidays"
+msgid " At a glance, view employee time off and public holidays in your schedule. "
+"Ensure accurate allocation of hours and receive a warning when a shift overlaps with time off."
 msgstr ""
 
 #. module: base
@@ -24077,7 +24097,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project_sale
-msgid "Products Workspace Templates"
+msgid "Automate workspace template creation for project documents upon sales order confirmation."
 msgstr ""
 
 #. module: base
@@ -24139,17 +24159,17 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account
-msgid "Project - Account"
+msgid "Other Costs and Revenues in Project Updates"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sms
-msgid "Project - SMS"
+msgid "Task Stage Notification via SMS"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_expense
-msgid "Project - Sale - Expense"
+msgid "Project Expenses Revenues Analytics"
 msgstr ""
 
 #. module: base
@@ -24160,42 +24180,42 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
-msgid "Project Accounting Assets"
+msgid "Project Asset Analytics"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_budget
-msgid "Project Budget"
+msgid "Project Budget Comparison Tool"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise
-msgid "Project Enterprise"
+msgid "Task Gantt View"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr
-msgid "Project Enterprise HR"
+msgid "Working Hours-Based Task Scheduling"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_contract
-msgid "Project Enterprise HR contract"
+msgid "Contract-Based Task Scheduling"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
-msgid "Project Expenses"
+msgid "Project Expenses Costs Analytics"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_helpdesk
-msgid "Project Helpdesk"
+msgid "Ticket-Task Conversion"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
-msgid "Project Mail Plugin"
+msgid "Email-to-Task Conversion"
 msgstr ""
 
 #. module: base
@@ -24279,67 +24299,74 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_payroll_account
-msgid "Project Payroll Accounting"
+msgid "Project Work Contracts Analytics"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
-msgid "Project Planning"
+msgid "Project Shift Scheduling"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_purchase
-msgid "Project Purchase"
+msgid "Project Purchase Analytics"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_subscription
-msgid "Project Sales Subscription"
+msgid "Project Subscriptions Analytics"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_holidays
-msgid "Project Time Off"
+msgid "Time-Off Integration in Task Scheduling"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_budget
-msgid "Project account budget"
+msgid "Add budgets to your projects to compare actual revenues and costs with expectations."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
-msgid "Project accounting assets"
+msgid "Access information about the assets associated with the analytic account of your project."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
-msgid "Project and task integration with holidays"
+msgid "View employees' time off in the Gantt view of your tasks and receive a warning when a task is scheduled during an employee's time off."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_expense
-msgid "Project expenses"
+msgid "Track the costs of expenses associated with the analytic account of your projects."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_project_account
+msgid "Get insights into additional project costs and revenues affecting profitability in the project update view."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project
-msgid "Project from documents"
+msgid "Generate invoices from the Documents module."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_helpdesk
-msgid "Project helpdesk"
+msgid "Convert tickets to tasks and vice versa."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_payroll_account
-msgid "Project payroll accounting"
+#: model:ir.module.module,description:base.module_project_hr_payroll_account
+msgid "Access information about the work contracts associated with the analytic account of your project."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
-msgid "Project sales subscriptions"
+#: model:ir.module.module,description:base.module_project_sale_subscription
+msgid "Track the revenues of subscriptions associated with the analytic account of your projects."
 msgstr ""
 
 #. module: base
@@ -24350,42 +24377,42 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
-msgid "Project, Helpdesk, FSM, Timesheet and Sale Orders"
+msgid "Ensure you have the correct sales information when creating a field service task from a helpdesk ticket."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet
-msgid "Project, Helpdesk, Timesheet and Sale Orders"
+msgid "Sell and invoice the time spent on tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_account
-msgid "Project, Tasks, Account"
+msgid "Issue credit notes from your helpdesk tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
-msgid "Project, Tasks, After Sales"
+msgid "Sell and invoice your services through helpdesk tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_repair
-msgid "Project, Tasks, Repair"
+msgid "Create repairs from your helpdesk tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale_loyalty
-msgid "Project, Tasks, Sale Loyalty"
+msgid "Grant discounts, free products, or free shipping from tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock
-msgid "Project, Tasks, Stock"
+msgid "Create product returns from your helpdesk tickets."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
-msgid "Project, Tasks, Timesheet"
+msgid "Track employee time spent on tickets"
 msgstr ""
 
 #. module: base
@@ -24545,6 +24572,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_din5008_industry_fsm
+msgid "Adapt the layout of the field service report to the DIN 5008 standard."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_project_timesheet_forecast_sale
+msgid "Analyze expected and actual costs and revenues by comparing timesheets with previous schedules."
 msgstr ""
 
 #. module: base
@@ -24882,7 +24919,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
-msgid "Record time"
+msgid "Use a timer to track the time you spend on tasks and tickets."
 msgstr ""
 
 #. module: base
@@ -25697,7 +25734,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_planning
-msgid "Sale Planning"
+msgid "Shifts Auto-Generation on Sales Orders"
 msgstr ""
 
 #. module: base
@@ -25712,12 +25749,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_stock
-msgid "Sale Project - Sale Stock"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_sale_project_forecast
-msgid "Sale Project Forecast"
+msgid "Inventory Operations Traceability in Project Updates"
 msgstr ""
 
 #. module: base
@@ -25783,12 +25815,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
-msgid "Sales - Project"
+msgid "Project Auto-Generation on Sales Orders"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
-msgid "Sales - Service"
+msgid "Enhanced Sales Order Browsing in Project and Planning"
 msgstr ""
 
 #. module: base
@@ -25814,12 +25846,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
-msgid "Sales Timesheet"
+msgid "Time-Based Service Invoicing"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_enterprise
-msgid "Sales Timesheet: Invoicing"
+msgid "Invoicing Policy for Timesheets"
 msgstr ""
 
 #. module: base
@@ -25958,12 +25990,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sale
-msgid "Schedule and track onsite operations, invoice time and material"
+msgid "Sell and invoice time spent and products added to field service tasks."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm
-msgid "Schedule and track onsite operations, time and material"
+msgid "Schedule and track onsite interventions."
 msgstr ""
 
 #. module: base
@@ -25978,7 +26010,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
-msgid "Schedule timesheet when on time off"
+msgid "Automatically log timesheets for employee time off and public holidays."
 msgstr ""
 
 #. module: base
@@ -26179,12 +26211,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
-msgid "Sell Helpdesk Timesheet"
+msgid "Time Billing for Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
-msgid "Sell based on timesheets"
+msgid "Sell services and invoice for your time based on recorded timesheets."
 msgstr ""
 
 #. module: base
@@ -26279,19 +26311,19 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sms
-msgid "Send text messages when fsm task stage move"
+msgid "Automatically send an SMS text message to your customers when a field service task reaches a specific stage of the project."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_sms
 #: model:ir.module.module,summary:base.module_project_sms
-msgid "Send text messages when project/task stage move"
+msgid "Automatically send an SMS text message to your customers when a task reaches a specific stage of the project."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sms
 #: model:ir.module.module,summary:base.module_helpdesk_sms
-msgid "Send text messages when ticket stage move"
+msgid "Automatically send an SMS text message to your customers when a ticket reaches a specific stage of the helpdesk team."
 msgstr ""
 
 #. module: base
@@ -26466,7 +26498,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_margin
-msgid "Service Margins in Sales Orders"
+msgid "Service Margin Estimation for Sales Orders"
 msgstr ""
 
 #. module: base
@@ -26642,7 +26674,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project_sign
-msgid "Sign documents attached to tasks"
+msgid "Sign documents attached to tasks."
 msgstr ""
 
 #. module: base
@@ -27089,6 +27121,11 @@ msgid "Spreadsheet"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_spreadsheet_dashboard_helpdesk
+msgid "Access a dashboard with analytics about your tickets."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_account
 msgid "Spreadsheet Accounting Formulas"
 msgstr ""
@@ -27189,7 +27226,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_helpdesk
-msgid "Spreadsheet dashboard for helpdesk"
+msgid "Spreadsheet Dashboard for Tickets"
 msgstr ""
 
 #. module: base
@@ -27252,7 +27289,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_timesheet
-msgid "Spreadsheet dashboard for time sheets"
+msgid "Spreadsheet Dashboard for Timesheets"
 msgstr ""
 
 #. module: base
@@ -27797,12 +27834,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project
-msgid "Task Generation from Sales Orders"
+msgid "Automatically generate a project and/or a task upon confirmation of sales orders."
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
-msgid "Task Logs"
+msgid "Time Tracking"
 msgstr ""
 
 #. module: base
@@ -27822,7 +27859,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_subscription
-msgid "Technical Bridge"
+msgid "Ensure the correct recurrence for field service tasks created from subscriptions."
 msgstr ""
 
 #. module: base
@@ -29267,12 +29304,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
-msgid "Ticketing, Support, Livechat"
+msgid "Create and search tickets from your live chat conversations"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
-msgid "Ticketing, Support, Slides"
+msgid "Let customers browse through your eLearning courses in your help center before submitting tickets."
 msgstr ""
 
 #. module: base
@@ -29309,7 +29346,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
-msgid "Timer"
+msgid "Timesheet Timer"
 msgstr ""
 
 #. module: base
@@ -29324,12 +29361,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
-msgid "Timesheet and Planning"
+msgid "Timesheets and Planning Analysis"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
-msgid "Timesheet when on Time Off"
+msgid "Timesheets and Time Off Automation"
 msgstr ""
 
 #. module: base
@@ -29340,12 +29377,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_holidays
-msgid "Timesheets And Timeoff"
+msgid "Time Off Exclusion for Overtime Calculation in Timesheets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
-msgid "Timesheets/attendances reporting"
+msgid "Timesheets and Attendance Analysis"
 msgstr ""
 
 #. module: base
@@ -30555,8 +30592,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_stock
 msgid ""
-"Validate stock moves for product added on sales orders through Field Service"
-" Management App"
+"Automatically validate inventory operations associated with products added "
+"to tasks during the intervention when the task is marked as completed."
 msgstr ""
 
 #. module: base
@@ -30996,12 +31033,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
-msgid "Website Helpdesk"
+msgid "Website-Form Ticket Creation"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
-msgid "Website IM Livechat Helpdesk"
+msgid "Live Chat Conversation Ticketing"
 msgstr ""
 
 #. module: base
@@ -31068,12 +31105,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides_forum
-msgid "Website Slides Forum Helpdesk"
+msgid "Website, Helpdesk, eLearning and Forum Modules Compatibility"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
-msgid "Website Slides Helpdesk"
+msgid "eLearning Courses in Help Center"
 msgstr ""
 
 #. module: base
@@ -31356,7 +31393,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_report
-msgid "Worksheet template when planning an intervention"
+msgid "Select a worksheet template when creating a field service task from a helpdesk ticket."
 msgstr ""
 
 #. module: base
@@ -32463,12 +32500,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_sale_loyalty
-msgid "website helpdesk sale"
+msgid "Share Discounts from Tickets"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_sale_loyalty
-msgid "website helpdesk sale loyalty"
+msgid "Share coupons generated from helpdesk tickets with customers."
 msgstr ""
 
 #. module: base

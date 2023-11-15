@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Timesheet when on Time Off',
+    'name': 'Timesheets and Time Off Automation',
     'version': '1.0',
-    'category': 'Human Resources',
-    'summary': 'Schedule timesheet when on time off',
+    'category': 'Services/Timesheets',
+    'summary': 'Automatically log timesheets for employee time off and public holidays.',
     'description': """
 Bridge module to integrate leaves in timesheet
 ================================================

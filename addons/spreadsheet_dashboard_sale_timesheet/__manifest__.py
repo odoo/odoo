@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': "Spreadsheet dashboard for time sheets",
+    'name': 'Spreadsheet Dashboard for Timesheets Billing Rate',
     'version': '1.0',
     'category': 'Hidden',
-    'summary': 'Spreadsheet',
+    'summary': 'Access a dashboard with analytics about the billing rate of your timesheets.',
     'description': 'Spreadsheet',
     'depends': ['spreadsheet_dashboard', 'sale_timesheet'],
     'data': [

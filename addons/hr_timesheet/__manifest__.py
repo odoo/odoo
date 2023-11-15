@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Task Logs',
+    'name': 'Time Tracking',
     'version': '1.0',
     'category': 'Services/Timesheets',
     'sequence': 23,

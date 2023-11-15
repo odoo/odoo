@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Online Task Submission',
+    'name': 'Website-Form Task Creation',
     'category': 'Website/Website',
-    'summary': 'Add a task suggestion form to your website',
+    'summary': 'Generate tasks in the Project app from a form published on your website.',
     'version': '1.0',
     'description': """
 Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module in order to build the form.

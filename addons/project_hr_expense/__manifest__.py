@@ -3,11 +3,11 @@
 
 
 {
-    'name': 'Project Expenses',
+    'name': 'Project Expenses Costs Analytics',
     'version': '1.0',
-    'category': 'Services/expenses',
-    'summary': 'Project expenses',
-    'description': 'Bridge created to add the number of expenses linked to an AA to a project form',
+    'category': 'Services/Project',
+    'summary': 'Track the costs of expenses associated with the analytic account of your projects.',
+    'description': 'Track the costs of expenses associated with the analytic account of your projects.',
     'depends': ['project_account', 'hr_expense'],
     'demo': [
         'data/project_hr_expense_demo.xml',
