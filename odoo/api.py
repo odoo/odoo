@@ -345,16 +345,6 @@ def downgrade(method, value, self, args, kwargs):
         return value.ids
 
 
-def split_context(method, args, kwargs):
-    """ Extract the context from a pair of positional and keyword arguments.
-        Return a triple ``context, args, kwargs``.
-    """
-    # altering kwargs is a cause of errors, for instance when retrying a request
-    # after a serialization error: the retry is done without context!
-    kwargs = kwargs.copy()
-    return kwargs.pop('context', None), args, kwargs
-
-
 def autovacuum(method):
     """
     Decorate a method so that it is called by the daily vacuum cron job (model
@@ -428,43 +418,32 @@ def model_create_multi(method):
     return wrapper
 
 
-def _call_kw_model(method, self, args, kwargs):
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return downgrade(method, result, recs, args, kwargs)
-
-
-def _call_kw_model_create(method, self, args, kwargs):
-    # special case for method 'create'
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {})
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return result.id if isinstance(args[0], Mapping) else result.ids
-
-
-def _call_kw_multi(method, self, args, kwargs):
-    ids, args = args[0], args[1:]
-    context, args, kwargs = split_context(method, args, kwargs)
-    recs = self.with_context(context or {}).browse(ids)
-    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
-    return downgrade(method, result, recs, args, kwargs)
-
-
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(model, name)
     api = getattr(method, '_api', None)
-    if api == 'model':
-        result = _call_kw_model(method, model, args, kwargs)
-    elif api == 'model_create':
-        result = _call_kw_model_create(method, model, args, kwargs)
+
+    if api:
+        # @api.model, @api.model_create -> no ids
+        recs = model
     else:
-        result = _call_kw_multi(method, model, args, kwargs)
-    model.env.flush_all()
+        ids, args = args[0], args[1:]
+        recs = model.browse(ids)
+
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = dict(kwargs)
+    context = kwargs.pop('context', None) or {}
+    recs = recs.with_context(context)
+
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = getattr(recs, name)(*args, **kwargs)
+    if api == "model_create":
+        # special case for method 'create'
+        result = result.id if isinstance(args[0], Mapping) else result.ids
+    else:
+        result = downgrade(method, result, recs, args, kwargs)
+
     return result
 
 
