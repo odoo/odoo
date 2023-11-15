@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
+            <div class="flex-grow-1"/>
             <t t-if="ui.isSmall and (store.discuss.activeTab !== 'main' or !env.inDiscussApp)">
                 <div t-if="state.addingChat or state.addingChannel" class="w-100 p-1 bg-light" t-ref="selector">
                     <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
