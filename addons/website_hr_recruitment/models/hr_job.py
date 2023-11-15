@@ -68,6 +68,14 @@ class Job(models.Model):
         for job in self:
             job.website_url = f'/jobs/{slug(job)}'
 
+    def create(self, vals_list):
+        if not self.env['hr.recruitment.source'].check_access_rights('create', raise_exception=False)\
+            and self.env.context.get('website_id')\
+                and self.env.user.has_group('website.group_website_designer'):
+            self = self.sudo()
+            return super().create(vals_list).sudo(False)
+        return super().create(vals_list)
+
     def set_open(self):
         self.write({'website_published': False})
         return super(Job, self).set_open()
