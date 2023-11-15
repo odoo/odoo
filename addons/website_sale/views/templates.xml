@@ -354,35 +354,36 @@
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
-
-                            <div t-cache="pricelist,products" t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
-                                <table class="table table-borderless h-100 m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
-                                    <colgroup t-ignore="true">
-                                        <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                        <col t-foreach="ppr" t-as="p"/>
-                                    </colgroup>
-                                    <tbody>
-                                        <tr t-foreach="bins" t-as="tr_product">
-                                            <t t-foreach="tr_product" t-as="td_product">
-                                                <t t-if="td_product">
-                                                    <!-- We use t-attf-class here to allow easier customization -->
-                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
-                                                        t-att-rowspan="td_product['y'] != 1 and td_product['y']"
-                                                        t-attf-class="oe_product"
-                                                        t-att-data-ribbon-id="td_product['ribbon'].id"
-                                                        t-att-data-name="product_block_name">
-                                                        <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                            <t t-call="website_sale.products_item">
-                                                                <t t-set="product" t-value="td_product['product']"/>
-                                                            </t>
-                                                        </div>
-                                                    </td>
+                            <div t-if="products">
+                                <div t-cache="pricelist,products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
+                                    <table class="table table-borderless h-100 m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
+                                        <colgroup t-ignore="true">
+                                            <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
+                                            <col t-foreach="ppr" t-as="p"/>
+                                        </colgroup>
+                                        <tbody>
+                                            <tr t-foreach="bins" t-as="tr_product">
+                                                <t t-foreach="tr_product" t-as="td_product">
+                                                    <t t-if="td_product">
+                                                        <!-- We use t-attf-class here to allow easier customization -->
+                                                        <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
+                                                            t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                            t-attf-class="oe_product"
+                                                            t-att-data-ribbon-id="td_product['ribbon'].id"
+                                                            t-att-data-name="product_block_name">
+                                                            <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                                <t t-call="website_sale.products_item">
+                                                                    <t t-set="product" t-value="td_product['product']"/>
+                                                                </t>
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <td t-else=""/>
                                                 </t>
-                                                <td t-else=""/>
-                                            </t>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
