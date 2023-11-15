@@ -7,7 +7,7 @@ import {
     popoverWidgetField,
 } from "@stock/widgets/popover_widget";
 
-class  StockRescheculingPopoverComponent extends PopoverComponent {
+export class  StockRescheculingPopoverComponent extends PopoverComponent {
     setup(){
         this.action = useService("action");
     }
@@ -23,7 +23,7 @@ class  StockRescheculingPopoverComponent extends PopoverComponent {
     }
 }
 
-class StockRescheculingPopover extends PopoverWidgetField {
+export class StockRescheculingPopover extends PopoverWidgetField {
     setup(){
         super.setup();
         this.color = this.jsonValue.color || 'text-danger';
