@@ -14387,4 +14387,38 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("edit char field and leave without bluring", async function (assert) {
+        serverData.actions[2] = {
+            id: 2,
+            name: "Partners Action 2",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            view_mode: "list",
+        };
+        serverData.views = {
+            "partner,false,list": `<tree><field name="foo"/></tree>`,
+            "partner,false,form": `<form><field name="foo"/></form>`,
+            "partner,false,search": "<search></search>",
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 2);
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        // update the value but do not blur the input
+        const input = target.querySelector(".o_field_widget[name=foo] input");
+        input.value = "What a Goal !!! JD11";
+
+        // leave the view without clicking out s.t. the input isn't blured (use keynav instead)
+        await triggerHotkey("alt+b"); // alt+b is the hotkey for breadcrumb back
+        assert.containsOnce(target, ".o_list_view");
+        assert.strictEqual(target.querySelector(".o_data_cell").innerText, "What a Goal !!! JD11");
+    });
 });
