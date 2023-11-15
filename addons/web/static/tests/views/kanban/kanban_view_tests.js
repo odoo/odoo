@@ -12613,6 +12613,50 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("quick create click on edit with an RPC error", async (assert) => {
+        assert.expect(1);
+        serverData.views = {
+            "partner,false,kanban": `
+                <kanban on_create="quick_create">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div/>
+                        </t>
+                    </templates>
+                </kanban>`,
+            "partner,false,search": '<search/>',
+            "partner,false,form": '<form/>',
+        };
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC: function (route, args) {
+                if (args.method === "name_create") {
+                    throw new RPCError();
+                }
+            },
+        });
+        await doAction(webClient, {
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            context: {
+                group_by: ["product_id"],
+            },
+        });
+
+        await quickCreateRecord(0);
+        await editQuickCreateInput("display_name", "new partner");
+        await editRecord(); // click on edit instead of add
+        await nextTick();
+
+        assert.containsOnce(target, ".modal-dialog");
+
+    });
+
     QUnit.test("Move new record with onchanges and different active fields", async (assert) => {
         serverData.models.partner.fields.foo.default = "abc";
         serverData.models.partner.onchanges = {

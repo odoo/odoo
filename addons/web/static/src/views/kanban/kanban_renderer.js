@@ -380,6 +380,9 @@ export class KanbanRenderer extends Component {
         let record = group.quickCreateRecord;
         try {
             record = await group.validateQuickCreate(record, mode);
+            if (mode === "edit" && record) {
+                await this.props.openRecord(record, "edit");
+            }
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {
@@ -406,10 +409,6 @@ export class KanbanRenderer extends Component {
                     }
                 )
             );
-        }
-
-        if (mode === "edit" && record) {
-            await this.props.openRecord(record, "edit");
         }
     }
 
