@@ -148,7 +148,7 @@ class IrModule(models.Model):
                     else:
                         attachment = IrAttachment.create(values)
                         self.env['ir.model.data'].create({
-                            'name': f"attachment_{url_path}".replace('.', '_'),
+                            'name': f"attachment_{url_path}".replace('.', '_').replace(' ', '_'),
                             'model': 'ir.attachment',
                             'module': module,
                             'res_id': attachment.id,
