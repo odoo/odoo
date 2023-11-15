@@ -147,8 +147,15 @@ class AccountAnalyticPlan(models.Model):
 
     @api.depends('account_ids', 'children_ids')
     def _compute_all_analytic_account_count(self):
+        plans_count = dict(
+            self.env['account.analytic.account']._read_group(
+                domain=[('root_plan_id', 'in', self.ids)],
+                aggregates=['id:count'],
+                groupby=['root_plan_id']
+            )
+        )
         for plan in self:
-            plan.all_account_count = self.env['account.analytic.account'].search_count([('plan_id', "child_of", plan.id)])
+            plan.all_account_count = plans_count.get(plan, 0)
 
     @api.depends('children_ids')
     def _compute_children_count(self):
@@ -185,7 +192,7 @@ class AccountAnalyticPlan(models.Model):
         record_account_ids = kwargs.get('existing_account_ids', [])
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         root_plans = (project_plan + other_plans).filtered(lambda p: (
-            bool(p.account_ids)
+            p.all_account_count > 0
             and not p.parent_id
             and p._get_applicability(**kwargs) != 'unavailable'
         ))
