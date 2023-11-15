@@ -331,6 +331,10 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _credit_debit_get(self):
+        self.debit = self.credit = False
+        if not self.ids:
+            return
+
         tables, where_clause, where_params = self.env['account.move.line']._where_calc([
             ('parent_state', '=', 'posted'),
             ('company_id', 'child_of', self.env.company.root_id.id)
@@ -361,9 +365,6 @@ class ResPartner(models.Model):
                 if partner not in treated:
                     partner.credit = False
                     treated |= partner
-        remaining = (self - treated)
-        remaining.debit = False
-        remaining.credit = False
 
     @api.depends_context('company')
     def _compute_credit_to_invoice(self):
