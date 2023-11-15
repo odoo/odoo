@@ -119,7 +119,7 @@ export class ChannelSelector extends Component {
                 const suggestions = this.suggestionService
                     .sortPartnerSuggestions(results, cleanedTerm)
                     .map((data) => {
-                        this.store.Persona.insert({ ...data, type: "partner" });
+                        this.store.Persona.insert(data);
                         return {
                             classList: "o-discuss-ChannelSelector-suggestion",
                             label: data.name,
