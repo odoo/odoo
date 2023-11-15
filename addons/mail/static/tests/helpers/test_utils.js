@@ -20,6 +20,7 @@ import {
     clearRegistryWithCleanup,
 } from "@web/../tests/helpers/mock_env";
 import { browser } from "@web/core/browser/browser";
+import { timings } from "@bus/misc";
 const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
 
@@ -371,6 +372,10 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  */
 async function start(param0 = {}) {
     const { discuss = {}, hasTimeControl } = param0;
+    patchWithCleanup(timings, {
+        // make throttle instantaneous during tests
+        throttle: (func) => func,
+    });
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     let target = param0["target"] || getFixture();
     if (param0.asTab) {
