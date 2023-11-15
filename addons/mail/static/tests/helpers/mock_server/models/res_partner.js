@@ -278,6 +278,7 @@ patch(MockServer.prototype, {
                                   isInternalUser: !mainUser.share,
                               }
                             : false,
+                        write_date: partner.write_date,
                     },
                 ];
             })
