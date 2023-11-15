@@ -520,13 +520,6 @@
                                                 <h3 class="my-1 col-8 o_text_overflow">
                                                     <field name="subject"/>
                                                 </h3>
-                                                <div class="progress border col-3 px-0 mt-2" style="background-color: inherit; height:12px;">
-                                                    <div class="progress-bar" role="progressbar"
-                                                        aria-valuemin="0"
-                                                        t-att-aria-valuenow="record.delivered.raw_value"
-                                                        t-att-aria-valuemax="record.expected.raw_value"
-                                                        t-attf-style="width: #{record.delivered.raw_value * 100 / record.expected.raw_value}%"/>
-                                                </div>
                                             </div>
                                             <h3 class="my-1"  invisible="sent_date">
                                                 <field name="subject"/>
@@ -539,31 +532,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_record_body" t-if="!selection_mode" invisible="not sent_date and not schedule_date and state != 'in_queue'">
-                                        <div>
-                                            <span invisible="not sent_date" class="me-1"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
-                                            <span invisible="sent_date" class="me-1"><b><field name='total'/></b></span>
-                                            <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
-                                            <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
-                                        </div>
-                                        <div invisible="not sent_date" class="d-flex justify-content-between">
-                                            <div name="stat_opened">
-                                                <b><field name="opened_ratio" />%</b> Opened
-                                            </div>
-                                            <div name="stat_replied">
-                                                <b><field name="replied_ratio" />%</b> Replied
-                                            </div>
-                                            <div name="stat_clicks">
-                                                <b><field name="clicks_ratio" />%</b> Clicks
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
+                                <i class="fa fa-bullseye me-2" role="img" aria-label="Lead/Opportunity"/>
+                                <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
+                                <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
                                 <div name="div_responsible_avatar" class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <span invisible="not sent_date"
                                             t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-calendar-check-o me-2 small my-auto" aria-label="Sent date"/>
+                                            <span class="fa fa-paper-plane me-2 small my-auto" aria-label="Sent date"/>
                                             <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
                                         </span>
                                         <span invisible="not schedule_date"
