@@ -23,11 +23,10 @@ source ~/.bashrc
 apt-mark hold firmware-brcm80211
 # Installations from the current Debian Bookworm (12.0) on amd64 systems are experiencing the problem that prevents
 # the kernel from being upgraded (e.g. when trying to upgrade to kernel linux-image-6.1.0-10-amd64)
-rm /etc/{initramfs/post-update.d/,kernel/{postinst.d/,postrm.d/}}z50-raspi-firmware
-apt purge raspi-firmware
-apt-get update && apt-get -y upgrade
-# Do not be too fast to upgrade to more recent firmware and kernel than 4.38
-# Firmware 4.44 seems to prevent the LED mechanism from working
+# so we need to remove apt upgrade
+
+# we need to downgrade libssl3 to 3.0.9-1 to avoid error during installing packages
+apt -y --allow-downgrades install libssl3=3.0.9-1
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
@@ -84,7 +83,6 @@ PKGS_TO_INSTALL="
     python3-tz \
     python3-urllib3 \
     python3-werkzeug \
-    python3-venv \
     rsync \
     screen \
     swig \
@@ -126,10 +124,7 @@ PIP_TO_INSTALL="
     rjsmin==1.1.0 \
     websocket-client==1.6.3"
 
-mkdir venv
-python3 -m venv venv
-venv/bin/pip3 install ${PIP_TO_INSTALL}
-rsync -avrhp venv/lib/python3.11/site-packages/* /usr/lib/python3/dist-packages/
+pip3 install ${PIP_TO_INSTALL} --break-system-package
 
 # Dowload MPD server and library for Six terminals
 wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
