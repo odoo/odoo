@@ -124,7 +124,6 @@
             'mass_mailing/static/src/scss/mass_mailing.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
-            'mass_mailing/static/src/css/email_template.css',
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
             'mass_mailing/static/src/js/mass_mailing_design_constants.js',
             'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
