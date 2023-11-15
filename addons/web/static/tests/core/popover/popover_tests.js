@@ -196,15 +196,11 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     const TestPopover = class extends Popover {
         setup() {
             // Don't call super.setup() in order to replace the use of usePosition hook...
-            usePosition(
-                "ref",
-                () => this.props.target,
-                {
-                    container,
-                    onPositioned: this.onPositioned.bind(this),
-                    position: this.props.position,
-                }
-            );
+            usePosition("ref", () => this.props.target, {
+                container,
+                onPositioned: this.onPositioned.bind(this),
+                position: this.props.position,
+            });
         }
     };
 
@@ -285,6 +281,44 @@ QUnit.test("within iframe", async (assert) => {
     expectedLeft = iframeLeft + targetLeft + popoverTarget.offsetWidth / 2 - popoverBox.width / 2;
     assert.strictEqual(popoverBox.top, expectedTop);
     assert.strictEqual(popoverBox.left, expectedLeft);
+});
+
+QUnit.test("within iframe -- wrong element class", async (assert) => {
+    /**
+     * This use case exists in real life, when adding some blocks with the OdooEditor
+     * in an iframe. The HTML spec discourages it though.
+     * https://developer.mozilla.org/en-US/docs/Web/API/Document/importNode
+     */
+    const iframe = document.createElement("iframe");
+    iframe.style.height = "200px";
+    iframe.srcdoc = `<div id="target" style="height:400px;">Within iframe</div>`;
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    fixture.appendChild(iframe);
+    await def;
+
+    const wrongElement = document.createElement("div");
+    wrongElement.classList.add("wrong-element");
+    iframe.contentDocument.body.appendChild(wrongElement);
+    class TestPopover extends Popover {
+        static props = {
+            ...Popover.props,
+            target: {
+                validate: (...args) => {
+                    const val = Popover.props.target.validate(...args);
+                    assert.step(`validate target props: "${val}"`);
+                    return val;
+                },
+            },
+        };
+    }
+    await mount(TestPopover, fixture, {
+        env,
+        props: { target: wrongElement },
+        test: true,
+    });
+    assert.containsOnce(fixture, ".o_popover");
+    assert.verifySteps(['validate target props: "true"']);
 });
 
 QUnit.test("popover fixed position", async (assert) => {
