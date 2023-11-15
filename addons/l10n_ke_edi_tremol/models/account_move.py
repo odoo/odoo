@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         headquarter_address = (self.commercial_partner_id.street or '') + (self.commercial_partner_id.street2 or '')
         customer_address = (self.partner_id.street or '') + (self.partner_id.street2 or '')
         postcode_and_city = (self.partner_id.zip or '') + '' +  (self.partner_id.city or '')
-        vat = self.commercial_partner_id.vat.strip() if self.partner_id.country_id.code == 'KE' else ''
+        vat = (self.commercial_partner_id.vat or '').strip() if self.commercial_partner_id.country_id.code == 'KE' else ''
         invoice_elements = [
             b'1',                                                   # Reserved - 1 symbol with value '1'
             b'     0',                                              # Reserved - 6 symbols with value ‘     0’
