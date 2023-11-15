@@ -93,7 +93,7 @@ export class Store extends BaseStore {
     odoobotOnboarding;
     users = {};
     internalUserGroupId = null;
-    registeredImStatusPartners = null;
+    imStatusTrackedPersonas = Record.many("Persona");
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
@@ -362,7 +362,7 @@ export function makeStore(env) {
 }
 
 export const storeService = {
-    dependencies: ["bus_service", "ui"],
+    dependencies: ["bus_service", "im_status", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
@@ -372,6 +372,12 @@ export const storeService = {
         store.discuss = {};
         store.discuss.activeTab = "main";
         onChange(store.Thread, "records", () => store.updateBusSubscription());
+        onChange(store, "imStatusTrackedPersonas", () => {
+            services["im_status"].registerToImStatus(
+                "res.partner",
+                store.imStatusTrackedPersonas.map((p) => p.id)
+            );
+        });
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
             if (

@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
+import { onChange } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -24,17 +25,17 @@ export class Persona extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-
-    update(data) {
-        super.update(data);
-        if (
-            this.type === "partner" &&
-            this.im_status !== "im_partner" &&
-            !this.is_public &&
-            !this._store.registeredImStatusPartners?.includes(this.id)
-        ) {
-            this._store.registeredImStatusPartners?.push(this.id);
-        }
+    static new(data) {
+        /** @type {import("models").Persona} */
+        const persona = super.new(data);
+        onChange(persona, ["type", "im_status", "is_public"], () => {
+            if (persona.im_status !== "im_partner" && !persona.is_public) {
+                this.store.imStatusTrackedPersonas.add(persona);
+            } else {
+                this.store.imStatusTrackedPersonas.delete(persona);
+            }
+        });
+        return persona;
     }
 
     channelMembers = Record.many("ChannelMember");

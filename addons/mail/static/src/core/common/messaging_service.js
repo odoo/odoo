@@ -2,8 +2,6 @@
 
 import { cleanTerm } from "@mail/utils/common/format";
 
-import { reactive } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -25,11 +23,8 @@ export class Messaging {
         this.userSettingsService = services["mail.user_settings"];
         this.router = services.router;
         this.isReady = new Deferred();
-        this.imStatusService = services.im_status;
         const user = services.user;
         this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
-        this.registeredImStatusPartners = reactive([], () => this.updateImStatusRegistration());
-        this.store.registeredImStatusPartners = this.registeredImStatusPartners;
         this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",
@@ -50,7 +45,6 @@ export class Messaging {
             type: "mailbox",
             counter: 0,
         };
-        this.updateImStatusRegistration();
     }
 
     /**
@@ -91,17 +85,6 @@ export class Messaging {
         this.isReady.resolve(data);
         this.store.isMessagingReady = true;
         this.store.hasMessageTranslationFeature = data.hasMessageTranslationFeature;
-    }
-
-    updateImStatusRegistration() {
-        this.imStatusService.registerToImStatus(
-            "res.partner",
-            /**
-             * Read value from registeredImStatusPartners own reactive rather than
-             * from store reactive to ensure the callback keeps being registered.
-             */
-            [...this.registeredImStatusPartners]
-        );
     }
 
     // -------------------------------------------------------------------------
@@ -156,7 +139,6 @@ export const messagingService = {
         "orm",
         "user",
         "router",
-        "im_status",
         "mail.attachment", // FIXME: still necessary until insert is managed by this service
         "mail.user_settings",
         "mail.thread", // FIXME: still necessary until insert is managed by this service
