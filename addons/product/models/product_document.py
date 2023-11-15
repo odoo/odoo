@@ -10,6 +10,7 @@ class ProductDocument(models.Model):
     _inherits = {
         'ir.attachment': 'ir_attachment_id',
     }
+    _order = 'id desc'
 
     ir_attachment_id = fields.Many2one(
         'ir.attachment',
