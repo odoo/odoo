@@ -152,6 +152,7 @@
 
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
+        <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
     </xpath>
 
     <xpath expr="//header/t[@t-cache]" position="attributes">
@@ -164,6 +165,7 @@
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="cta_btn_href">/contactus</t>
+        <t t-set="extra_items_toggle_aria_label">Extra items button</t>
     </xpath>
 
     <xpath expr="//footer" position="attributes">
