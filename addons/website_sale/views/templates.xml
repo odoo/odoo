@@ -1759,7 +1759,7 @@
         <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t t-if="xmlid == 'website_sale.payment'">
-                    <div t-if="not website_sale_order.amount_total"
+                    <div t-if="not errors and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
                         <form name="o_wsale_confirm_order"
                               class="d-flex flex-column"
@@ -2127,7 +2127,7 @@
             </div>
             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-            <t t-if="website_sale_order.amount_total">
+            <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div class="mt-4">
                     <h3>Pay with</h3>
                 </div>
