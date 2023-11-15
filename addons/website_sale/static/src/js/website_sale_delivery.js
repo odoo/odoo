@@ -2,11 +2,54 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 'use strict';
 
 var core = require('web.core');
-var publicWidget = require('web.public.widget');
+const publicWidget = require('web.public.widget');
+const checkoutForm = require('payment.checkout_form');
 
 const _t = core._t;
 const qweb = core.qweb;
 var concurrency = require('web.concurrency');
+
+checkoutForm.include({
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super(...arguments);
+        this.isDeliverable = false;
+        core.bus.on('setIsDeliverable', this, this._setIsDeliverable.bind(this));
+    },
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
+    /**
+     * Verify that the user can proceed to payment
+     *
+     * @override method from payment.payment_form_mixin
+     * @private
+     * @return {boolean} Whether the submit button can be enabled
+     */
+    _isButtonReady: function () {
+        return this.isDeliverable && this._super();
+    },
+    /**
+     * @private
+     * @param {boolean} status Whether the delivery is properly setup or not.
+     * @return {undefined}
+     */
+    _setIsDeliverable: function(status = false) {
+        this.isDeliverable = status;
+        // Force button refresh
+        if(!status) {
+            this._disableButton(false);
+        }
+        else{
+            this._enableButton(); // Will only work if all condtions specified in _isButtonReady are met
+        }
+    }
+});
+
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -15,14 +58,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         'click .o_delivery_carrier_select': '_onCarrierClick',
         "click .o_address_select": "_onClickLocation",
         "click .o_remove_order_location": "_onClickRemoveLocation",
-        "click .o_show_pickup_locations": "_onClickShowLocations",
-        "click .o_payment_option_card": "_onClickPaymentMethod"
+        "click .o_show_pickup_locations": "_onClickShowLocations"
     },
 
     /**
      * @override
      */
     start: async function () {
+        this.isStart = true;
         this.carriers = Array.from(document.querySelectorAll('input[name="delivery_type"]'));
         this.dp = new concurrency.DropPrevious();
         // Workaround to:
@@ -31,12 +74,14 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (this.carriers.length > 0) {
             const carrierChecked = this.carriers.filter(e =>e.checked)
             if (carrierChecked.length === 0) {
-                const payButton = document.querySelector('button[name="o_payment_submit_button"]');
-                payButton? payButton.disabled = true : null;
+                this.carriers[0].click()
             } else {
                 carrierChecked[0].click();
             }
             await this._getCurrentLocation();
+        }
+        else {
+            core.bus.trigger('setIsDeliverable', true);
         }
 
         await _.each(this.carriers, async carrierInput => {
@@ -46,6 +91,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (this._super && typeof(this._super.apply)==="function") {
           return this._super.apply(this, arguments);
         }
+        this.isStart = false;
     },
 
     //--------------------------------------------------------------------------
@@ -57,8 +103,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     _getCurrentLocation: async function () {
         const data = await this._rpc({
             route: "/shop/access_point/get",
-        })
-        const carriers = document.querySelectorAll('.o_delivery_carrier_select')
+        });
+        const carriers = document.querySelectorAll('.o_delivery_carrier_select');
         for (let carrier of carriers) {
             const deliveryType = carrier.querySelector('input[type="radio"]').getAttribute("delivery_type");
             const deliveryName = carrier.querySelector('label').innerText;
@@ -68,8 +114,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             }
             const orderLoc = carrier.querySelector(".o_order_location");
             if (data[deliveryType + '_access_point'] && data.delivery_name == deliveryName) {
-                orderLoc.querySelector(".o_order_location_name").innerText = data.name
-                orderLoc.querySelector(".o_order_location_address").innerText = data[deliveryType + '_access_point']
+                orderLoc.querySelector(".o_order_location_name").innerText = data.name;
+                orderLoc.querySelector(".o_order_location_address").innerText = data[deliveryType + '_access_point'];
                 orderLoc.parentElement.classList.remove("d-none");
                 showLoc.classList.add("d-none");
                 break;
@@ -104,12 +150,22 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Element} carrierInput
      */
     _showLoading: function (carrierInput) {
-        const priceTag = carrierInput.parentNode.querySelector('.o_wsale_delivery_badge_price')
+        const priceTag = carrierInput.parentNode.querySelector('.o_wsale_delivery_badge_price');
         while (priceTag.firstChild) {
             priceTag.removeChild(priceTag.lastChild);
         }
         const loadingCircle = priceTag.appendChild(document.createElement('span'));
         loadingCircle.classList.add("fa", "fa-circle-o-notch", "fa-spin");
+    },
+    /**
+     * Update the isDeliverable
+     *
+     * @private
+     * @param status : : the status of the update_carrier request
+     */
+    _updateIsDeliverable: function(status) {
+        const isDeliverable = this._isDeliverable(status);
+        core.bus.trigger('setIsDeliverable', isDeliverable);
     },
     /**
      * Update the total cost according to the selected shipping method
@@ -140,13 +196,13 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {Object} result
      */
     _handleCarrierUpdateResult: async function (carrierInput) {
-        const result = await this._rpc({
+        const result = await this.dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 'carrier_id': carrierInput.value,
             },
-        })
-        this.result = result;
+        }));
+        this.result = result; // Used by website_sale_mondialrelay
         this._handleCarrierUpdateResultBadge(result);
         if (carrierInput.checked) {
             var amountDelivery = document.querySelector('#order_delivery .monetary_field');
@@ -164,8 +220,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             }
             this._updateShippingCost(result.new_amount_delivery);
         }
-        this._enableButton(result.status);
-        let currentId = result.carrier_id
+        let currentId = result.carrier_id;
         const showLocations = document.querySelectorAll(".o_show_pickup_locations");
 
         for (const showLoc of showLocations) {
@@ -175,6 +230,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 break;
             }
         }
+        this._updateIsDeliverable(result.status);
     },
 
     /**
@@ -197,88 +253,44 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $carrierBadge.text(result.error_message);
         }
     },
-
-    _disablePayButtonNoPickupPoint : function (ev){
-        const selectedCarrierEl = ev.currentTarget.closest('.o_delivery_carrier_select');
-        const address = selectedCarrierEl.querySelector('.o_order_location_address').innerText
-        const isPickUp = selectedCarrierEl.lastChild.previousSibling.children;
-
-        document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
-
-        if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
-            var payButton = document.querySelector('button[name="o_payment_submit_button"]');
-            payButton? payButton.disabled = true : null;
-            const errorNode = document.createElement("i");
-            errorNode.classList.add("small", "error_no_pick_up_point","ms-2");
-            errorNode.textContent = _t("Select a pick-up point");
-            errorNode.style = "color:red;";
-            selectedCarrierEl.insertBefore(errorNode, selectedCarrierEl.querySelector("label").nextElementSibling);
-        }
+    /**
+     * Visually inform the user he must choose a pickup point on the current delivery method
+     * @private
+     * @param {object} selectedCarrierEl : the currently selected carrier
+     */
+    _addNoPickupErrorNode : function (selectedCarrierEl) {
+        const errorNode = document.createElement("i");
+        errorNode.classList.add("small", "error_no_pick_up_point","ms-2");
+        errorNode.textContent = _t("Select a pick-up point");
+        errorNode.style = "color:red;";
+        selectedCarrierEl.insertBefore(errorNode, selectedCarrierEl.querySelector("label").nextElementSibling);
     },
-
     _checkCarrier: async function (ev, carrier_id) {
         ev.stopPropagation();
-        await this.dp.add(this._rpc({
-            route: '/shop/update_carrier',
-            params: {
-                carrier_id: carrier_id,
-            },
-        }))
-        var closestDocElement = ev.currentTarget.closest('.o_delivery_carrier_select');
-        var radio = closestDocElement.querySelector('input[type="radio"]');
-        radio.checked = true;
-        this._disablePayButtonNoPickupPoint(ev)
-    },
-
-    _onClickPaymentMethod: async function (ev) {
-        const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'))
-        let carrierChecked = null;
-        carriers.forEach((carrier) => {
-            if (carrier.querySelector('input').checked){
-                carrierChecked = carrier;
-            }
-        })
-        if (!carrierChecked) {
-            return;
-        }
-        const carrier_id = carrierChecked?.querySelector('input')?.value;
-        const result = await this._rpc({
+        const result = await this.dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 'carrier_id': carrier_id,
             },
-        })
-        this._enableButton(result.status);
+        }));
+        var closestDocElement = ev.currentTarget.closest('.o_delivery_carrier_select');
+        var radio = closestDocElement.querySelector('input[type="radio"]');
+        radio.checked = true;
+        this._updateIsDeliverable(result.status);
     },
+
     /**
-     * Check if the submit button can be enabled.
-     * If it is the case, trigger the `_enableButton` from payment
-     *
+     * Check if the delivery method is properly configured
+     * Extend/Override this function to add condtions specific to the carrier.
      * @private
-     */
-    _enableButton: function(status){
-        if (!this._isPayable(status)) {
-            return;
-        }
-        core.bus.trigger('enableButton');
-    },
-    /**
-     * @private
-     * @param {boolean} status  : the status of the rate_shipment request
      * @return {boolean}
      */
-    // FYI we don't cover the case where the payement method is not selected because it already throws an error
-    _isPayable: function(status=false){
-        // abort if no paybutton
-        var payButton = document.querySelector('button[name="o_payment_submit_button"]');
-        if (!payButton) {
-            return false;
-        }
+    _isDeliverable: function (status) {
         // abort if the rating failed
         if (!status){
             return false;
         }
-        const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'))
+        const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'));
         let carrierChecked = null;
         carriers.forEach((carrier) => {
             if (carrier.querySelector('input').checked){
@@ -291,14 +303,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
 
         // if the carrier does not need a pickup point
-        const isPickUpPointNeeded = carrierChecked.querySelector('.o_show_pickup_locations')
+        const isPickUpPointNeeded = carrierChecked.querySelector('.o_show_pickup_locations');
         if (!isPickUpPointNeeded){
             return true;
         }
 
-        const address = carrierChecked.querySelector('.o_order_location_address').innerText
+        const address = carrierChecked.querySelector('.o_order_location_address').innerText;
         const isPickUp = carrierChecked.lastChild.previousSibling.children;
+        document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove()); // Remove existing error nodes
         if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
+            this._addNoPickupErrorNode(carrierChecked);
             return false;
         }
         return true;
@@ -308,7 +322,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         return !ev.currentTarget.closest('.o_delivery_carrier_select').querySelector(".o_order_location").parentElement.classList.contains("d-none");
     },
 
-    _shallDisplayPickupLocations: function (ev) {
+    _shouldDisplayPickupLocations: function (ev) {
         const pickupPointsAreNeeded = ev.currentTarget.querySelector('.o_show_pickup_locations');
         const pickupPointsAreDisplayed = ev.currentTarget.querySelector('.o_list_pickup_locations')?.hasChildNodes();
         return pickupPointsAreNeeded && !pickupPointsAreDisplayed && !this._isPickupLocationSelected(ev);
@@ -331,7 +345,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         })
         const deliveryTypeInput = ev.currentTarget.closest(".o_delivery_carrier_select").querySelector('input[name="delivery_type"]');
         const deliveryTypeId = deliveryTypeInput.value;
-        await Promise.all([this._getCurrentLocation(),this._checkCarrier(ev,deliveryTypeId)])
+        await Promise.all([this._getCurrentLocation(),this._checkCarrier(ev,deliveryTypeId)]);
         await this._onClickShowLocations(ev);
     },
 
@@ -356,11 +370,11 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         const deliveryTypeInput = ev.currentTarget.closest(".o_delivery_carrier_select").querySelector('input[name="delivery_type"]');
         const deliveryType = deliveryTypeInput.getAttribute("delivery_type");
         const deliveryTypeId = deliveryTypeInput.value;
-        await this._checkCarrier(ev,deliveryTypeId)
+        await this._checkCarrier(ev,deliveryTypeId);
         $(qweb.render(deliveryType + "_pickup_location_loading")).appendTo($(modal));
         const data = await this._rpc({
             route: "/shop/access_point/close_locations",
-        })
+        });
         if (modal.firstChild){
             modal.firstChild.remove();
         }
@@ -391,14 +405,13 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onCarrierClick: async function (ev) {
         const radio = ev.currentTarget.closest('.o_delivery_carrier_select').querySelector('input[type="radio"]');
-        if (radio.checked && !this._shallDisplayPickupLocations(ev)) {
+        if (radio.checked && !this._shouldDisplayPickupLocations(ev) && !this.isStart) { //Somehow, click() call in start function set checked as true before entering in _onCarrierClick()
             return;
         }
         this._showLoading(radio);
         radio.checked = true;
         await this._onClickShowLocations(ev);
         await this._handleCarrierUpdateResult(radio);
-        this._disablePayButtonNoPickupPoint(ev);
     },
 
     /**
@@ -407,7 +420,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _onClickLocation: async function (ev) {
         const carrierId = ev.currentTarget.closest(".o_delivery_carrier_select").childNodes[1].value;
-        await this._checkCarrier(ev,carrierId)
+        await this._checkCarrier(ev,carrierId);
         const modal = ev.target.closest(".o_list_pickup_locations");
         const encodedLocation = ev.target.previousElementSibling.innerText;
         await this._rpc({
@@ -415,20 +428,20 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             params: {
                 access_point_encoded: encodedLocation,
             },
-        })
+        });
         while (modal.firstChild) {
             modal.lastChild.remove();
         }
         await this._getCurrentLocation();
         document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
-        const result = await this._rpc({
+        const result = await this.dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 'carrier_id': carrierId,
                 'no_reset_access_point_address': true,
             },
-        })
-        this._enableButton(result.status);
+        }));
+        this._updateIsDeliverable(result.status);
     },
 
     /**
@@ -450,4 +463,5 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 });
+return publicWidget.registry.websiteSaleDelivery;
 });

@@ -3,6 +3,7 @@
 import PublicWidget from 'web.public.widget';
 import { patch } from 'web.utils';
 import core from 'web.core';
+import 'website_sale_delivery.checkout';
 
 const _t = core._t;
 
@@ -14,7 +15,7 @@ patch(PublicWidget.registry.websiteSaleDelivery, 'addons/website_sale_loyalty_de
     /**
      * @override
      */
-     _handleCarrierUpdateResult: async function (carrierInput) {
+    _handleCarrierUpdateResult: async function (carrierInput) {
         await this._super.apply(this, arguments);
         if (this.result.new_amount_order_discounted) {
             // Update discount of the order
