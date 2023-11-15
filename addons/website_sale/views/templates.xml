@@ -1561,7 +1561,7 @@
 
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-                            <t t-if="website_sale_order.amount_total">
+                            <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                                 <div t-if="acquirers or tokens" id="payment_method" class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
                                     <t t-call="payment.checkout">
@@ -1582,7 +1582,7 @@
                                         <i class="fa fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
-                            <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
+                            <div class="js_payment mt-3" t-if="not errors and not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
                                 <form target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <t t-call="website_sale.payment_footer">
