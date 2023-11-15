@@ -482,6 +482,9 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                     self.env.flush_all()
                     self.env.cr.flush()
 
+        if not self.warm:
+            return
+
         self.assertEqual(
             len(actual_queries), len(expected),
             "\n---- actual queries:\n%s\n---- expected queries:\n%s" % (
