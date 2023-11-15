@@ -92,7 +92,7 @@ class WebsiteSale(main.WebsiteSale):
         except ValueError:
             reward_id = None
 
-        reward_sudo = request.env['loyalty.reward'].sudo().browse(int(reward_id)).exists()
+        reward_sudo = request.env['loyalty.reward'].sudo().browse(reward_id).exists()
         if not reward_sudo or reward_sudo.multi_product:
             return request.redirect(redirect)
 
