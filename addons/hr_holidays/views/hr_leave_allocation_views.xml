@@ -30,6 +30,7 @@
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter name="refused_allocations" string="Refused" domain="[('state', '=', 'refuse')]" />
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
