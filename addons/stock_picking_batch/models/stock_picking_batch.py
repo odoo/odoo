@@ -233,10 +233,10 @@ class StockPickingBatch(models.Model):
             move_line_ids = self.picking_ids[0]._package_move_lines()
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
-                if not res:
-                    package = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
-                    return move_line_ids.picking_id[0]._post_put_in_pack_hook(package)
-                return res
+                if res:
+                    return res
+                package = move_line_ids.picking_id._put_in_pack(move_line_ids)
+                return move_line_ids.picking_id[0]._post_put_in_pack_hook(package)
             raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
     def action_view_reception_report(self):
