@@ -54,7 +54,10 @@ const useDialogDraggable = makeDraggableHook({
 class InteractiveTour extends Reactive {
     constructor() {
         super();
-        this.steps = {};
+        this.steps = {
+            start: { shouldStop: true, isCurrent: true, step: { absolutePosition: "start"} }
+        };
+        this.currentStep = "start"
     }
 
     registerStep(stepIndex, _step) {
@@ -66,28 +69,26 @@ class InteractiveTour extends Reactive {
     }
 
     nextStep() {
-        this.prom.resolve();
+        this._current.resolve()
+    }
+
+    get _current() {
+        const found = Object.entries(this.steps).find(([name, s]) => s.isCurrent && !s.isDone);
+        return this.steps[found[0]];
     }
 
     suspend(stepIndex) {
         const step = this.steps[stepIndex];
-        if (step) {
-            if (step.isDone) {
-                return;
-            }
-            if (!step.shouldStop) {
-                return;
-            }
+        if (step.isDone) {
+            return;
+        }
+        if (!step.shouldStop) {
+            return;
         }
 
-        let resolve;
-        const prom = new Promise((_resolve) => (resolve = _resolve)).then(() => {
-            if (this.prom === prom) {
-                this.prom = null;
-            }
-        });
-        prom.resolve = resolve;
-        this.prom = prom;
+        const prom = new Promise((_resolve) => {
+            step.resolve = _resolve;
+        })
         return prom;
     }
 }
@@ -193,12 +194,17 @@ class TourInteraction extends Component {
             "z-index": "9999",
             opacity: "0.8",
             cursor: "move",
+            "max-height": `${this.maxContainerHeight}px`,
         }
         return objectToStyle(style);
     }
 
     getTour(tourName) {
         return this.state.getTour(tourName);
+    }
+
+    get maxContainerHeight() {
+        return 0.8 * window.innerHeight;
     }
 
     toggleSuspend(tourName, stepIndex) {
@@ -252,7 +258,7 @@ class TourInteraction extends Component {
 }
 
 const tourInteractionService = {
-    dependencies: ["tour_service", "overlay"],
+    dependencies: ["overlay"],
     start(env, { overlay }) {
         const currentUrlParams = new URL(window.location).searchParams;
         if (currentUrlParams.get("watch") !== "1") {
@@ -283,11 +289,12 @@ const tourInteractionService = {
                             this.interactiveTour.setStepState(stepIndex, {
                                 isCurrent: true,
                             }),
+                    }, {
+                        action: () => this.interactiveTour.suspend(stepIndex)
                     });
 
                     compiled.push({
-                        action: async () => {
-                            await this.interactiveTour.suspend(stepIndex);
+                        action: () => {
                             this.interactiveTour.setStepState(stepIndex, {
                                 isDone: true,
                                 isCurrent: false,
@@ -304,6 +311,10 @@ const tourInteractionService = {
                     action: () => {
                         return this.interactiveTour.suspend("start");
                     },
+                }, {
+                    action: () => {
+                        this.interactiveTour.setStepState("start", { isDone: true, isCurrent: false})
+                    }
                 });
                 return macro;
             },

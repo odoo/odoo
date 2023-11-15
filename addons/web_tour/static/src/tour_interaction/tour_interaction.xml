@@ -6,7 +6,7 @@
       <div class="o-tour-controller--content d-flex flex-column" style="cursor: auto;">
           <h2 class="text-100">Current Tours</h2>
           <div t-foreach="activeTours" t-as="tourName" t-key="tourName" class="ms-2 me-1">
-              <div class="d-inline">Tour: "<t t-esc="tourName" />"
+              <div class="d-inline">Tour: "<span   t-esc="tourName" />"
                   <button class="btn btn-primary" t-on-click="() => this.getTour(tourName).nextStep()">Next</button>
               </div>
               <div class="overflow-auto d-flex flex-column gap-1" >
