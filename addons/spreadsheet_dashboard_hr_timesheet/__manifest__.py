@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': "Spreadsheet dashboard for time sheets",
+    'name': 'Spreadsheet Dashboard for Timesheets',
     'version': '1.0',
     'category': 'Hidden',
-    'summary': 'Spreadsheet',
+    'summary': 'Access a dashboard with analytics about your timesheets.',
     'description': 'Spreadsheet',
     'depends': ['spreadsheet_dashboard', 'hr_timesheet'],
     'data': [
