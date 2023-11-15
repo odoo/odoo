@@ -43,7 +43,10 @@ class Job(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
+    user_id = fields.Many2one('res.users', "Recruiter",
+        domain="[('share', '=', False), ('company_ids', 'in', company_id)]", default=lambda self: self.env.user,
+        tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job \
+            position. The Recruiter is automatically added to all meetings with the Applicant.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
