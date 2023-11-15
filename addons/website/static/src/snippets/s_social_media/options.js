@@ -125,8 +125,11 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl = this.$target[0].querySelector(':scope > a').cloneNode(true);
                         this._removeSocialMediaClasses(anchorEl);
                     }
-                    const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
-                    anchorEl.querySelector('i').classList.add(faIcon);
+                    const iEl = anchorEl.querySelector("i");
+                    if (iEl) {
+                        const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
+                        iEl.classList.add(faIcon);
+                    }
                     if (isDbField) {
                         anchorEl.href = `/website/social/${encodeURIComponent(entry.media)}`;
                         anchorEl.classList.add(`s_social_media_${entry.media}`);
@@ -152,7 +155,9 @@ options.registry.SocialMedia = options.Class.extend({
                             const iEl = anchorEl.querySelector('i');
                             this._removeSocialMediaClasses(anchorEl);
                             anchorEl.classList.add(`s_social_media_${socialMedia}`);
-                            iEl.classList.add(`fa-${socialMedia}`);
+                            if (iEl) {
+                                iEl.classList.add(`fa-${socialMedia}`);
+                            }
                         }
                     }
                     anchorEl.setAttribute('href', entry.display_name);
@@ -337,9 +342,11 @@ options.registry.SocialMedia = options.Class.extend({
         let regx = new RegExp('\\b' + 's_social_media_' + '[^1-9][^ ]*[ ]?\\b');
         anchorEl.className = anchorEl.className.replace(regx, '');
         const iEl = anchorEl.querySelector('i');
-        regx = new RegExp('\\b' + 'fa-' + '[^1-9][^ ]*[ ]?\\b');
-        // Remove every fa classes except fa-x sizes.
-        iEl.className = iEl.className.replace(regx, '');
+        if (iEl) {
+            regx = new RegExp('\\b' + 'fa-' + '[^1-9][^ ]*[ ]?\\b');
+            // Remove every fa classes except fa-x sizes.
+            iEl.className = iEl.className.replace(regx, '');
+        }
     },
 
     //--------------------------------------------------------------------------
