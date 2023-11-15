@@ -78,6 +78,7 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
         res_id: channelId,
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const partner = pyEnv["res.partner"].searchRead([["id", "=", pyEnv.currentPartnerId]])[0];
     pyEnv["mail.message"].create({
         body: "Howdy",
         message_type: "comment",
@@ -91,6 +92,6 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
     await contains(
         `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/discuss/channel/${channelId}/partner/${
             pyEnv.currentPartnerId
-        }/avatar_128`}']`
+        }/avatar_128?unique=${encodeURIComponent(partner.write_date)}`}']`
     );
 });
