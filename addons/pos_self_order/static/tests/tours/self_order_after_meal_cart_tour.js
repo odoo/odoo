@@ -32,8 +32,8 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         // the cart and edited, the changes are made to the orderline clicked on.
         PosSelf.check.isOrderline("Office Chair Black", "138.58", ""),
         ...PosSelf.action.editOrderline("Office Chair Black", "138.58", "", 5, "no wheels"),
-        PosSelf.check.isOrderline("Office Chair Black", "692.90", "no wheels"),
-        ...PosSelf.action.editOrderline("Office Chair Black", "692.90", "no wheels", -4, "kidding"),
+        PosSelf.check.isOrderline("Office Chair Black", "692.88", "no wheels"),
+        ...PosSelf.action.editOrderline("Office Chair Black", "692.88", "no wheels", -4, "kidding"),
         PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
 
         // Send the order to the server
@@ -69,8 +69,8 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.action.clickBack(),
         ...PosSelf.action.addProduct("Office Chair Black", 1, "kidding"),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Office Chair Black", "277.16", "kidding"),
-        ...PosSelf.action.editSentOrderline("Office Chair Black", "277.16", "kidding", -1),
+        PosSelf.check.isOrderline("Office Chair Black", "277.15", "kidding"),
+        ...PosSelf.action.editSentOrderline("Office Chair Black", "277.15", "kidding", -1),
         PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
         ...PosSelf.action.editSentOrderline("Office Chair Black", "138.58", "kidding", -1),
         PosSelf.check.isNotification("You cannot reduce the quantity"),
@@ -86,16 +86,16 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
             select: { name: "Fabric", value: "Custom" },
         }),
         PosSelf.action.clickPrimaryBtn("Review"),
-        PosSelf.check.isOrderline("Desk Organizer", "5.87", "kidding", "M, Leather"),
-        PosSelf.check.isOrderline("Desk Organizer", "11.74", "okkk", "L, Custom"),
+        PosSelf.check.isOrderline("Desk Organizer", "7.02", "kidding", "M, Leather"),
+        PosSelf.check.isOrderline("Desk Organizer", "16.33", "okkk", "L, Custom"),
 
         // Check if we can edit the product attributes, and if the changes are made to the orderline
-        ...PosSelf.action.editOrderline("Desk Organizer", "5.87", "kidding", 0, "dav", {
+        ...PosSelf.action.editOrderline("Desk Organizer", "7.02", "kidding", 0, "dav", {
             radio: { name: "Size", value: "S" },
             select: { name: "Fabric", value: "Custom" },
         }),
         PosSelf.check.isOrderline("Desk Organizer", "5.87", "dav", "S, Custom"),
-        PosSelf.check.isOrderline("Desk Organizer", "11.74", "okkk", "L, Custom"),
+        PosSelf.check.isOrderline("Desk Organizer", "16.33", "okkk", "L, Custom"),
         PosSelf.action.clickPrimaryBtn("Order"),
 
         PosSelf.check.isPrimaryBtn("My Orders"),

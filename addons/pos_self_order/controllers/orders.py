@@ -145,14 +145,26 @@ class PosSelfOrderController(http.Controller):
 
         return tables
 
+    def _get_price_extra(self, product, selected_attributes):
+        price_extra = 0
+        for attribute in product.attribute_line_ids:
+            if attribute.display_name in selected_attributes:
+                attribute_value_name = selected_attributes[attribute.display_name]
+                value_ids = attribute.product_template_value_ids.filtered(lambda v: v.name == attribute_value_name)
+                price_extra += value_ids[0].price_extra
+        return price_extra
+
     def _process_lines(self, lines, pos_config, pos_order_id):
         newLines = []
         pricelist = pos_config.pricelist_id
 
         for line in lines:
             product = pos_config.env['product.product'].browse(line.get('product_id'))
-            # todo take into account the price extra
             price_unit = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
+
+            if line.get('selected_attributes'):
+                price_extra = self._get_price_extra(product, line.get('selected_attributes'))
+                price_unit += price_extra
 
             config_fiscal_pos = pos_config.default_fiscal_position_id
             selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id

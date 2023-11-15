@@ -34,4 +34,12 @@ export class Lines extends Component {
         const productInfos = extractProductNameAndAttributes(line.full_product_name);
         return productInfos;
     }
+
+    getPriceUnit(line){
+        return this.getPriceTotal(line) / line.qty;
+    }
+
+    getPriceTotal(line){
+        return this.selfOrder.show_prices_with_tax_included ? line.price_subtotal_incl : line.price_subtotal;
+    }
 }

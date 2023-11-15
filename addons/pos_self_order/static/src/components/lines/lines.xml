@@ -14,7 +14,7 @@
                             <span class="text-primary fw-bolder small" t-esc="`${line.qty}x `" />
                             <span
                                 class="flex-grow-1 me-3 small text-muted"
-                                t-esc="selfOrder.formatMonetary(selfOrder.productByIds[line.product_id].prices)"
+                                t-esc="selfOrder.formatMonetary(getPriceUnit(line))"
                                 />
                         </div>
                         <span
@@ -29,7 +29,7 @@
                     </div>
                     <span
                         t-attf-class="card-text small"
-                        t-esc="this.selfOrder.formatMonetary(line.qty * selfOrder.productByIds[line.product_id].prices)"
+                        t-esc="this.selfOrder.formatMonetary(getPriceTotal(line))"
                         />
                 </div>
             </div>

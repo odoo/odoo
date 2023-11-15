@@ -17,6 +17,11 @@ class TestFrontendMobile(SelfOrderCommonTest):
         )
 
     def test_self_order_pay_after_meal_tour(self):
+        # to test product with attribute no create variant
+        product = self.env['product.product'].search([('name', '=', 'Desk Organizer')])[0]
+        product.attribute_line_ids[0].product_template_value_ids[0].price_extra = 0.0
+        product.attribute_line_ids[0].product_template_value_ids[1].price_extra = 1.0
+        product.attribute_line_ids[0].product_template_value_ids[2].price_extra = 2.0
         self.pos_config.self_order_table_mode = True
         self.pos_config.self_order_pay_after = "meal"
         self.pos_config.with_user(self.pos_user).open_ui()
