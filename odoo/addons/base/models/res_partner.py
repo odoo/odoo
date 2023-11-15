@@ -6,17 +6,14 @@ import collections
 import datetime
 import hashlib
 import pytz
-import threading
 import re
 
 import requests
 from collections import defaultdict
-from lxml import etree
 from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
@@ -826,18 +823,6 @@ class Partner(models.Model):
                 'target': 'current',
                 }
 
-    def open_parent(self):
-        """ Utility method used to add an "Open Parent" button in partner views """
-        self.ensure_one()
-        address_form_id = self.env.ref('base.view_partner_address_form').id
-        return {'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'form',
-                'views': [(address_form_id, 'form')],
-                'res_id': self.parent_id.id,
-                'target': 'new',
-                }
-
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat')
     def _compute_display_name(self):
@@ -972,12 +957,6 @@ class Partner(models.Model):
                 category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
             )
         return super().view_header_get(view_id, view_type)
-
-    @api.model
-    @api.returns('self')
-    def main_partner(self):
-        ''' Return the main partner '''
-        return self.env.ref('base.main_partner')
 
     @api.model
     def _get_default_address_format(self):
